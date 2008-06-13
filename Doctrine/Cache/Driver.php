@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cache_Driver
+ * Abstract cache driver class
  *
  * @package     Doctrine
  * @subpackage  Cache
@@ -38,7 +38,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     protected $_options = array();
 
     /**
-     * constructor
+     * Configure cache driver with an array of options
      *
      * @param array $_options      an array of options
      */
@@ -48,7 +48,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     }
 
     /**
-     * setOption
+     * Set option name and value
      *
      * @param mixed $option     the option name
      * @param mixed $value      option value
@@ -64,7 +64,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     }
 
     /**
-     * getOption
+     * Get value of option
      * 
      * @param mixed $option     the option name
      * @return mixed            option value

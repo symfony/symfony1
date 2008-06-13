@@ -90,10 +90,9 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * getDriver
-     * returns the current cache driver
+     * Get the current cache driver instance
      *
-     * @return Doctrine_Cache_Driver
+     * @return Doctrine_Cache_Driver $driver
      */
     public function getDriver()
     {
@@ -101,7 +100,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * setOption
+     * Set option name and value
      *
      * @param mixed $option     the option name
      * @param mixed $value      option value
@@ -122,7 +121,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * getOption
+     * Get value of option name
      * 
      * @param mixed $option     the option name
      * @return mixed            option value
@@ -137,8 +136,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * add
-     * adds a query to internal query stack
+     * Adds a query to internal query stack
      *
      * @param string|array $query           sql query string
      * @param string $namespace             connection namespace
@@ -154,7 +152,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * getQueries
+     * Get array of all executed queries
      *
      * @param string $namespace     optional query namespace
      * @return array                an array of sql query strings
@@ -173,10 +171,9 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * pop
+     * Pops a query from the stack
      *
-     * pops a query from the stack
-     * @return string
+     * @return string $query
      */
     public function pop()
     {
@@ -184,9 +181,8 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * reset
+     * Removes all queries from the query stack
      *
-     * removes all queries from the query stack
      * @return void
      */
     public function reset()
@@ -195,7 +191,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * count
+     * Count the number of queries on the stack
      *
      * @return integer          the number of queries in the stack
      */
@@ -205,7 +201,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * getIterator
+     * Get queries iterator
      *
      * @return ArrayIterator    an iterator that iterates through the query stack
      */
@@ -215,6 +211,8 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
+     * Check whether or not the last cache opration was successful or not
+     *
      * @return boolean          whether or not the last cache operation was successful
      */
     public function isSuccessful() 
@@ -223,9 +221,9 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * save
+     * Delete all cache
      *
-     * @return boolean
+     * @return void
      */
     public function clean()
     {
@@ -259,9 +257,9 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * readStats
+     * Read stats file from disk
      *
-     * @return array
+     * @return array $stats
      */
     public function readStats() 
     {
@@ -276,9 +274,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * appendStats
-     *
-     * adds all queries to stats file
+     * Append all queries to stats file
      * @return void
      */
     public function appendStats()
@@ -298,8 +294,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * preQuery
-     * listens on the Doctrine_Event preQuery event
+     * Listens on the Doctrine_Event preQuery event
      *
      * adds the issued query to internal query stack
      * and checks if cached element exists
@@ -344,8 +339,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * preFetch
-     * listens the preFetch event of Doctrine_Connection_Statement
+     * Listens the preFetch event of Doctrine_Connection_Statement
      *
      * advances the internal pointer of cached data and returns 
      * the current element
@@ -360,8 +354,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * preFetch
-     * listens the preFetchAll event of Doctrine_Connection_Statement
+     * Listens the preFetchAll event of Doctrine_Connection_Statement
      *
      * returns the current cache data array
      *
@@ -373,8 +366,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
     }
 
     /**
-     * preExecute
-     * listens the preExecute event of Doctrine_Connection_Statement
+     * Listens the preExecute event of Doctrine_Connection_Statement
      *
      * adds the issued query to internal query stack
      * and checks if cached element exists

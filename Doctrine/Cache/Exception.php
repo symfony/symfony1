@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cache_Exception
+ * Doctrine cache exception class
  *
  * @package     Doctrine
  * @subpackage  Cache

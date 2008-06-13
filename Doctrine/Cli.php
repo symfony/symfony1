@@ -20,7 +20,9 @@
  */
 
 /**
- * Doctrine_Cli
+ * Command line interface class
+ * Interface for easily executing Doctrine_Task classes from a 
+ * command line interface
  *
  * @package     Doctrine
  * @subpackage  Cli
@@ -54,9 +56,10 @@ class Doctrine_Cli
     }
 
     /**
-     * notify
+     * Notify the formatter of a message
      *
-     * @param string $notification 
+     * @param string $notification  The notification message
+     * @param string $style         Style to format the notification with(INFO, ERROR)
      * @return void
      */
     public function notify($notification = null, $style = 'HEADER')
@@ -65,9 +68,9 @@ class Doctrine_Cli
     }
 
     /**
-     * notifyException
+     * Notify the formatter of an exception
      *
-     * @param string $exception 
+     * @param  Exception $exception
      * @return void
      */
     public function notifyException($exception)
@@ -76,9 +79,9 @@ class Doctrine_Cli
     }
 
     /**
-     * run
+     * Public function to run the loaded task with the passed arguments
      *
-     * @param string $args 
+     * @param  array $args
      * @return void
      * @throws new Doctrine_Cli_Exception
      */
@@ -92,12 +95,11 @@ class Doctrine_Cli
     }
 
     /**
-     * _getTaskClassFromArgs
+     * Get the name of the task class based on the first argument
+     * which is always the task name. Do some inflection to determine the class name
      *
-     * Get the task class from an array of cli arguments
-     *
-     * @param string $args 
-     * @return void
+     * @param  array $args       Array of arguments from the cli
+     * @return string $taskClass Task class name
      */
     protected function _getTaskClassFromArgs($args)
     {
@@ -108,10 +110,11 @@ class Doctrine_Cli
     }
 
     /**
-     * _run
+     * Run the actual task execution with the passed arguments
      *
-     * @param string $args 
+     * @param  array $args Array of arguments for this task being executed
      * @return void
+     * @throws Doctrine_Cli_Exception $e
      */
     protected function _run($args)
     {        
@@ -157,10 +160,11 @@ class Doctrine_Cli
     }
 
     /**
-     * prepareArgs
+     * Prepare the raw arguments for execution. Combines with the required and optional argument
+     * list in order to determine a complete array of arguments for the task
      *
-     * @param string $args 
-     * @return array $prepared
+     * @param  array $args      Array of raw arguments
+     * @return array $prepared  Array of prepared arguments
      */
     protected function prepareArgs($args)
     {
@@ -204,8 +208,6 @@ class Doctrine_Cli
     }
 
     /**
-     * printTasks
-     *
      * Prints an index of all the available tasks in the CLI instance
      * 
      * @return void
@@ -271,10 +273,11 @@ class Doctrine_Cli
     }
 
     /**
-     * loadTasks
+     * Load tasks from the passed directory. If no directory is given it looks in the default
+     * Doctrine/Task folder for the core tasks.
      *
-     * @param string $directory 
-     * @return array $loadedTasks
+     * @param  mixed $directory   Can be a string path or array of paths
+     * @return array $loadedTasks Array of tasks loaded
      */
     public function loadTasks($directory = null)
     {
@@ -324,7 +327,12 @@ class Doctrine_Cli
         
         return $this->_tasks;
     }
-    
+
+    /**
+     * Get array of all the Doctrine_Task child classes that are loaded
+     *
+     * @return array $tasks
+     */
     public function getLoadedTasks()
     {
         $parent = new ReflectionClass('Doctrine_Task');

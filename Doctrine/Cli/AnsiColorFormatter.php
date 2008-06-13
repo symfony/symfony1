@@ -29,10 +29,16 @@
 
 /**
  * Doctrine_AnsiColorFormatter provides methods to colorize text to be displayed on a console.
+ * This class was taken from the symfony-project source
  *
  * @package    Doctrine
  * @subpackage Cli
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Jonathan H. Wage <jonwage@gmail.com>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.org
+ * @since       1.0
+ * @version     $Revision: 4252 $
  */
 class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
 {
@@ -132,7 +138,7 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
 
         $subsize = floor(($size - 3) / 2);
 
-        return substr($text, 0, $subsize).$this->format('...', 'INFO').substr($text, -$subsize);
+        return substr($text, 0, $subsize) . $this->format('...', 'INFO').substr($text, -$subsize);
     }
 
     /**

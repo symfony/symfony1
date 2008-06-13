@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Adapter_Exception
+ * Doctrine_Adapter exception class
  *
  * @package     Doctrine
  * @subpackage  Adapter

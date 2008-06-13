@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cache_Db
+ * Database cache driver
  *
  * @package     Doctrine
  * @subpackage  Cache
@@ -33,7 +33,8 @@
 class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
 {
     /**
-     * constructor
+     * Configure Database cache driver. Specify instance of Doctrine_Connection
+     * and tableName to store cache in
      *
      * @param array $_options      an array of options
      */
@@ -56,10 +57,9 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * getConnection
-     * returns the connection object associated with this cache driver
+     * Get the connection object associated with this cache driver
      *
-     * @return Doctrine_Connection      connection object
+     * @return Doctrine_Connection $connection
      */
     public function getConnection() 
     {
@@ -170,7 +170,9 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * Creates the cache table.
+     * Create the cache table
+     *
+     * @return void
      */
     public function createTable()
     {

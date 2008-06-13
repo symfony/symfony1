@@ -33,6 +33,9 @@
  */
 class Doctrine_Adapter
 {
+    /**
+     * Adapter constant
+     */
     const ATTR_AUTOCOMMIT = 0;
     const ATTR_CASE = 8;
     const ATTR_CLIENT_VERSION = 5;

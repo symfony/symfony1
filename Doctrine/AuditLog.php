@@ -60,10 +60,9 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     }
 
     /**
-     * Build definition for audit log table
+     * Set the table definition for the audit log table
      *
-     * @param   Doctrine_Table  $table
-     * @return  boolean         true on success otherwise false.
+     * @return  void
      */
     public function setTableDefinition()
     {
@@ -87,7 +86,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      * Get array of information for the passed record and the specified version
      *
      * @param   Doctrine_Record $record
-     * @param   mixed           $version
+     * @param   integer         $version
      * @return  array           An array with version information
      */
     public function getVersion(Doctrine_Record $record, $version)
@@ -113,7 +112,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     }
 
     /**
-     * Get the highest version number for a given Doctrine_Record
+     * Get the max version number for a given Doctrine_Record
      *
      * @param Doctrine_Record $record
      * @return Integer $versionnumber

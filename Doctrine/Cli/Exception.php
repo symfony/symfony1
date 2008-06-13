@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cli_Exception
+ * Cli exception class
  *
  * @package     Doctrine
  * @subpackage  Cli

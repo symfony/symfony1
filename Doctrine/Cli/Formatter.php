@@ -29,10 +29,16 @@
 
 /**
  * Doctrine_Cli_Formatter provides methods to format text to be displayed on a console.
+ * This class was taken from the symfony-project source
  *
- * @package    Doctrine
- * @subpackage Cli
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @package     Doctrine
+ * @subpackage  Cli
+ * @author      Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.org
+ * @since       1.0
+ * @version     $Revision: 2761 $
  */
 class Doctrine_Cli_Formatter
 {

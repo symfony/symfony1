@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Collection_Iterator_Normal
+ * Expandable collection iterator class
  *
  * @package     Doctrine
  * @subpackage  Collection

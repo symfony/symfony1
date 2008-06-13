@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Collection_Exception
+ * Collection exception class
  *
  * @package     Doctrine
  * @subpackage  Collection

@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Adapter_Statement
+ * Interface for Doctrine adapter statements
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL

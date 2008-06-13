@@ -20,8 +20,7 @@
  */
 
 /**
- * Doctrine_Adapter_Mysqli
- * This class is used for special testing purposes.
+ * Custom Doctrine connection adapter for mysqli
  *
  * @package     Doctrine
  * @subpackage  Adapter

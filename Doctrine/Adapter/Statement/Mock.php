@@ -20,8 +20,7 @@
  */
 
 /**
- * Doctrine_Adapter_Statement_Mock
- * This class is used for special testing purposes.
+ * Mock connection adapter statement class. Used for special testing purposes
  *
  * @package     Doctrine
  * @subpackage  Adapter
@@ -34,9 +33,9 @@
 class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Interface
 {
     /**
-     * $mock
+     * Variable which stores instance of Doctrine_Adapter_Mock
      *
-     * @var string
+     * @var Doctrine_Adapter_Mock
      */
     private $_mock;
 
@@ -47,6 +46,11 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public $queryString;
 
+    /**
+     * Constructor for mock adapter statements. Accepts instance of Doctrine_Adapter_Mock
+     *
+     * @param Doctrine_Adapter_Mock $mock
+     */
     public function __construct($mock)
     {
         $this->_mock  = $mock;
@@ -65,9 +69,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      * @return boolean              Returns TRUE on success or FALSE on failure
      */
     public function bindColumn($column, $param, $type = null)
-    {
-
-    }
+    { }
 
     /**
      * bindValue
@@ -85,9 +87,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      * @return boolean              Returns TRUE on success or FALSE on failure.
      */
     public function bindValue($param, $value, $type = null)
-    {
-
-    }
+    { }
 
     /**
      * bindParam

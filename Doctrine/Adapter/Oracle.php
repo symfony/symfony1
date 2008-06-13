@@ -20,8 +20,7 @@
  */
 
 /**
- * Doctrine_Adapter_Oracle
- * [BORROWED FROM ZEND FRAMEWORK]
+ * Custom Doctrine connection adapter for oracle
  *
  * @package     Doctrine
  * @subpackage  Adapter

@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cache_Apc
+ * APC Cache Driver
  *
  * @package     Doctrine
  * @subpackage  Cache

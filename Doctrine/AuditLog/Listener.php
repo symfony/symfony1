@@ -35,12 +35,12 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     /**
      * Instance of Doctrine_Auditlog
      *
-     * @var string
+     * @var Doctrine_AuditLog
      */
     protected $_auditLog;
 
     /**
-     * Istantiate AuditLog listener and set the Doctrine_AuditLog instance to the class
+     * Instantiate AuditLog listener and set the Doctrine_AuditLog instance to the class
      *
      * @param   Doctrine_AuditLog $auditLog 
      * @return  void
@@ -65,6 +65,7 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 
     /**
      * Post insert event hook which creates the new version record
+     * This will only insert a version record if the auditLog is enabled
      *
      * @param   Doctrine_Event $event 
      * @return  void
@@ -83,6 +84,7 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 
     /**
      * Pre delete event hook deletes all related versions
+     * This will only delete version records if the auditLog is enabled
      *
      * @param   Doctrine_Event $event
      * @return  void
@@ -104,15 +106,12 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 					  ->from($className.' obj')
 					  ->where(implode(' AND ',$conditions))
 					  ->execute($values);
-
-	        if ( ! count($rows)){
-	           throw new Doctrine_Record_Exception('Can not delete Versions!',Doctrine::ERR_CANNOT_DELETE);
-	        }
         }
     }
   
     /**
      * Pre update event hook for inserting new version record
+     * This will only insert a version record if the auditLog is enabled
      *
      * @param  Doctrine_Event $event
      * @return void
@@ -134,7 +133,7 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * Get the next version for the audit log
+     * Get the next version number for the audit log
      *
      * @param Doctrine_Record $record 
      * @return integer $nextVersion

@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Cache_Interface
+ * Array cache driver
  *
  * @package     Doctrine
  * @subpackage  Cache
