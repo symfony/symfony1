@@ -235,7 +235,7 @@ class sfFillInForm
     {
       $return = &$values[$name];
     } else {
-      $return = &sfToolkit::getArrayValueForPath($values, $name);
+      $return = &sfToolkit::getArrayValueForPathByRef($values, $name);
     }
 
     if ($shiftArray && is_array($return))
