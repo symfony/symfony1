@@ -62,13 +62,18 @@ class sfPropelDatabaseSchema
   public function loadYAML($file)
   {
     $schema_array = sfYaml::load($file);
-    
+
+    if (!is_array($schema_array))
+    {
+      return; // No defined schema here, skipping
+    }
+
     if (!isset($schema_array['classes']))
     {
       // Old schema syntax: we convert it 
       $schema_array = $this->convertOldToNewYaml($schema_array);
     }
-    
+
     $this->loadArray($schema_array);
   }
   

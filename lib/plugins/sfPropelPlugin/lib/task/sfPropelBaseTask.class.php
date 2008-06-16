@@ -102,6 +102,11 @@ abstract class sfPropelBaseTask extends sfBaseTask
     foreach ($schemas as $schema)
     {
       $schemaArray = sfYaml::load($schema);
+      
+      if (!is_array($schemaArray))
+      {
+        continue; // No defined schema here, skipping
+      }
 
       if (!isset($schemaArray['classes']))
       {
