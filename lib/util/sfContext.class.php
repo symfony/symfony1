@@ -299,7 +299,7 @@ class sfContext
   public function getModuleDirectory()
   {
     // get the last action stack entry
-    if ($this->factories['actionStack'] && $lastEntry = $this->factories['actionStack']->getLastEntry())
+    if (isset($this->factories['actionStack']) && $lastEntry = $this->factories['actionStack']->getLastEntry())
     {
       return sfConfig::get('sf_app_module_dir').'/'.$lastEntry->getModuleName();
     }
@@ -314,7 +314,7 @@ class sfContext
   public function getModuleName()
   {
     // get the last action stack entry
-    if ($this->factories['actionStack'] && $lastEntry = $this->factories['actionStack']->getLastEntry())
+    if (isset($this->factories['actionStack']) && $lastEntry = $this->factories['actionStack']->getLastEntry())
     {
       return $lastEntry->getModuleName();
     }
