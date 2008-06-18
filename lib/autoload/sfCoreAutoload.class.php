@@ -20,7 +20,7 @@ define('SYMFONY_VERSION', '1.1.0-DEV');
  * of the same class (why?).
  *
  * @package    symfony
- * @subpackage util
+ * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
