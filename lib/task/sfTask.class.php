@@ -319,10 +319,11 @@ abstract class sfTask
    * @param string  $section  The section name
    * @param string  $message  The message
    * @param int     $size     The maximum size of a line
+   * @param string  $style    The color scheme to apply to the section string (INFO, ERROR, or COMMAND)
    */
-  public function logSection($section, $message, $size = null)
+  public function logSection($section, $message, $size = null, $style = 'INFO')
   {
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection($section, $message, $size))));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection($section, $message, $size, $style))));
   }
 
   /**

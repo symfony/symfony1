@@ -40,11 +40,11 @@ abstract class sfCommandApplicationTask extends sfTask
   /**
    * @see sfTask
    */
-  public function logSection($section, $message, $size = null)
+  public function logSection($section, $message, $size = null, $style = 'INFO')
   {
     if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
     {
-      parent::logSection($section, $message, $size);
+      parent::logSection($section, $message, $size, $style);
     }
   }
 }
