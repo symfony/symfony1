@@ -297,18 +297,17 @@ class sfBrowser
     }
 
     // for HTML/XML content, create a DOM and sfDomCssSelector objects for the response content
-    $content = $response->getContentType();
-    if (preg_match('/(x|ht)ml/i', $content, $matches))
+    if (preg_match('/(x|ht)ml/i', $response->getContentType(), $matches))
     {
       $this->dom = new DomDocument('1.0', sfConfig::get('sf_charset'));
       $this->dom->validateOnParse = true;
       if ('x' == $matches[1])
       {
-        $this->dom->loadXML($content);
+        @$this->dom->loadXML($response->getContent());
       }
       else
       {
-        $this->dom->loadHTML($content);
+        @$this->dom->loadHTML($response->getContent());
       }
       $this->domCssSelector = new sfDomCssSelector($this->dom);
     }
