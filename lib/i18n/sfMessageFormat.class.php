@@ -178,6 +178,11 @@ class sfMessageFormat
    */
   protected function formatString($string, $args = array(), $catalogue = null)
   {
+    if (empty($args))
+    {
+      $args = array();
+    }
+
     if (empty($catalogue))
     {
       $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
