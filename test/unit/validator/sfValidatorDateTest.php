@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(40, new lime_output_color());
+$t = new lime_test(41, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -93,7 +93,7 @@ try
 {
   $v->clean('2005-10-18');
   $t->fail('->clean() throws a sfValidatorError if the date does not match the regex');
-  $t->skip(1);
+  $t->skip('', 2);
 }
 catch (sfValidatorError $e)
 {
@@ -106,7 +106,7 @@ $v->setOption('date_format_error', 'dd/mm/YYYY');
 try
 {
   $v->clean('2005-10-18');
-  $t->skip(1);
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
@@ -125,23 +125,14 @@ $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12,
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12, 'minute' => 10)), '2005-10-15 12:10:00', '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 0, 'minute' => 10)), '2005-10-15 00:10:00', '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => '0', 'minute' => 10)), '2005-10-15 00:10:00', '->clean() accepts an array as an input');
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 10)), '2005-10-15 10:00:00', '->clean() accepts an array as an input');
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 0)), '2005-10-15 00:00:00', '->clean() accepts an array as an input');
 try
 {
   $v->clean(array('year' => 2005, 'month' => 1, 'day' => 15, 'hour' => 12, 'minute' => '', 'second' => 12));
   $t->fail('->clean() throws a sfValidatorError if the time is not valid');
-  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
-{
-  $t->pass('->clean() throws a sfValidatorError if the time is not valid');
-}
-try
-{
-  $v->clean(array('year' => 2005, 'month' => 1, 'day' => 15, 'hour' => 12, 'minute' => ''));
-  $t->fail('->clean() throws a sfValidatorError if the time is not valid');
-  $t->skip('', 1); 
-}
-catch (sfValidatorError $e) 
 {
   $t->pass('->clean() throws a sfValidatorError if the time is not valid');
 }

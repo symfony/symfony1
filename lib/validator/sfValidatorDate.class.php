@@ -125,26 +125,17 @@ class sfValidatorDate extends sfValidatorBase
 
     if ($this->getOption('with_time'))
     {
-      // if one time value is empty, all others must be empty too
-      // but second can be empty
-      $empties =
-        (!isset($value['hour']) || in_array($value['hour'], array(null, ''), true) ? 1 : 0) +
-        (!isset($value['minute']) || in_array($value['minute'], array(null, ''), true) ? 1 : 0) +
-        (!isset($value['second']) || in_array($value['second'], array(null, ''), true) ? 1 : 0)
-      ;
-      if ($empties > 0 && $empties < 3)
+      // if second is set, minute and hour must be set
+      // if minute is set, hour must be set
+      if (
+        $this->isValueSet($value, 'second') && (!$this->isValueSet($value, 'minute') || !$this->isValueSet($value, 'hour'))
+        ||
+        $this->isValueSet($value, 'minute') && !$this->isValueSet($value, 'hour')
+      )
       {
-        if (1 == $empties && (!isset($value['second']) || in_array($value['second'], array(null, ''))))
-        {
-          // OK
-        }
-        else
-        {
-          throw new sfValidatorError($this, 'invalid', array('value' => $value));
-        }
+        throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
 
-      // if minute is not empty, hour cannot be empty
       $clean = mktime(
         isset($value['hour']) ? intval($value['hour']) : 0,
         isset($value['minute']) ? intval($value['minute']) : 0,
@@ -165,6 +156,11 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     return $clean;
+  }
+
+  protected function isValueSet($values, $key)
+  {
+    return isset($values[$key]) && !in_array($values[$key], array(null, ''), true);
   }
 
   /**
