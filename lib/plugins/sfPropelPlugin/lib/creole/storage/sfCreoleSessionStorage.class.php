@@ -46,7 +46,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
 
     try
     {
-      $stmt = $this->db->prepareStatement($sql);
+      $stmt = $this->con->prepareStatement($sql);
       $stmt->setString(1, $id);
       $stmt->executeUpdate();
     }
@@ -78,7 +78,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
 
     try
     {
-      $this->db->executeQuery($sql);
+      $this->con->executeQuery($sql);
     }
     catch (SQLException $e)
     {
@@ -109,7 +109,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
     {
       $sql = 'SELECT '.$db_data_col.' FROM '.$db_table.' WHERE '.$db_id_col.'=?';
 
-      $stmt = $this->db->prepareStatement($sql);
+      $stmt = $this->con->prepareStatement($sql);
       $stmt->setString(1, $id);
 
       $dbRes = $stmt->executeQuery(ResultSet::FETCHMODE_NUM);
@@ -125,7 +125,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
         // session does not exist, create it
         $sql = 'INSERT INTO '.$db_table.'('.$db_id_col.','.$db_data_col.','.$db_time_col.') VALUES (?,?,?)';
 
-        $stmt = $this->db->prepareStatement($sql);
+        $stmt = $this->con->prepareStatement($sql);
         $stmt->setString(1, $id);
         $stmt->setString(2, '');
         $stmt->setInt(3, time());
@@ -163,7 +163,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
 
     try
     {
-      $stmt = $this->db->prepareStatement($sql);
+      $stmt = $this->con->prepareStatement($sql);
       $stmt->setString(1, $data);
       $stmt->setString(2, $id);
       $stmt->executeUpdate();
