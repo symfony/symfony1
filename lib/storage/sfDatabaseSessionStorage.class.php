@@ -99,7 +99,7 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     $database = $this->options['database'];
 
     // get the database resource
-    $this->db = $database->getConnection();
+    $this->db = $database->getResource();
     if (is_null($this->db))
     {
       throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');

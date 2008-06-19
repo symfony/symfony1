@@ -70,7 +70,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 
     // delete the record older than the authorised session life time 
     $lifetime = $this->db_escape($lifetime); // We never know...
-    $sql = "DELETE FROM $db_table 'WHERE $db_time_col + INTERVAL $lifetime SECOND < NOW()";
+    $sql = "DELETE FROM $db_table 'WHERE $db_time_col + $lifetime < UNIX_TIMESTAMP()";
 
     if (!$this->db_query($sql))
     {
@@ -115,8 +115,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     else
     {
       // session does not exist, create it
-      $sql = "INSERT INTO $db_table ($db_id_col, $db_data_col, $db_time_col) VALUES ('$id', '', NOW())";
-
+      $sql = "INSERT INTO $db_table ($db_id_col, $db_data_col, $db_time_col) VALUES ('$id', '', UNIX_TIMESTAMP())";
       if ($this->db_query($sql))
       {
         return '';
@@ -150,7 +149,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     $data = $this->db_escape($data);
 
     // update the record associated with this id
-    $sql = "UPDATE $db_table SET $db_data_col='$data', $db_time_col=NOW() WHERE $db_id_col='$id'";
+    $sql = "UPDATE $db_table SET $db_data_col='$data', $db_time_col=UNIX_TIMESTAMP() WHERE $db_id_col='$id'";
 
     if ($this->db_query($sql))
     {

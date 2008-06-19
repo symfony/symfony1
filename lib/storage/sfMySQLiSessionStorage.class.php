@@ -32,7 +32,7 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_query($query)
   {
-    return $this->db->query($query);
+    return mysqli_query($this->db,$query);
   }
 
   /**
@@ -43,7 +43,7 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_escape($string)
   {
-    return $this->db->real_escape_string($string);
+    return mysqli_real_escape_string($this->db,$string);
   }
 
   /**
