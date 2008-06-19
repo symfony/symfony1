@@ -40,12 +40,13 @@ class sfValidatorPropelUnique extends sfValidatorSchema
    *
    * Available options:
    *
-   *  * model:       The model class (required)
-   *  * column:      The unique column name in Propel field name format (required)
-   *                 If the uniquess is for several columns, you can pass an array of field names
-   *  * primary_key: The primary key column name in Propel field name format (optional, will be introspected if not provided)
-   *                 You can also pass an array if the table has several primary keys
-   *  * connection:  The Propel connection to use (null by default)
+   *  * model:              The model class (required)
+   *  * column:             The unique column name in Propel field name format (required)
+   *                        If the uniquess is for several columns, you can pass an array of field names
+   *  * primary_key:        The primary key column name in Propel field name format (optional, will be introspected if not provided)
+   *                        You can also pass an array if the table has several primary keys
+   *  * connection:         The Propel connection to use (null by default)
+   *  * throw_global_error: Whether to throw a global error (false by default) or an error tied to the first field related to the column option array
    *
    * @see sfValidatorBase
    */
@@ -55,6 +56,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
     $this->addRequiredOption('column');
     $this->addOption('primary_key', null);
     $this->addOption('connection', null);
+    $this->addOption('throw_global_error', false);
 
     $this->setMessage('invalid', 'An object with the same "%column%" already exist.');
   }
@@ -90,7 +92,16 @@ class sfValidatorPropelUnique extends sfValidatorSchema
       return $values;
     }
 
-    throw new sfValidatorError($this, 'invalid', array('column' => implode(', ', $this->getOption('column'))));
+    $error = new sfValidatorError($this, 'invalid', array('column' => implode(', ', $this->getOption('column'))));
+
+    if ($this->getOption('throw_global_error'))
+    {
+      throw $error;
+    }
+
+    $columns = $this->getOption('column');
+
+    throw new sfValidatorErrorSchema($this, array($columns[0] => $error));
   }
 
   /**

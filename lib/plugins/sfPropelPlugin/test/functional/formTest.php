@@ -64,7 +64,20 @@ $b->
   isRequestParameter('action', 'category')->
   isStatusCode(200)->
   click('submit', array('category' => array('name' => 'foo')))->
-  checkResponseElement('.error_list li', 'An object with the same "name" already exist.')
+  checkResponseElement('td[colspan="2"] .error_list li', 0)->
+  checkResponseElement('.error_list li', 'An object with the same "name" already exist.')->
+  checkResponseElement('.error_list li', 1)
+;
+
+// same thing but with a global error
+$b->
+  get('/unique/category')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'category')->
+  isStatusCode(200)->
+  click('submit', array('category' => array('name' => 'foo'), 'global' => 1))->
+  checkResponseElement('td[colspan="2"] .error_list li', 'An object with the same "name" already exist.')->
+  checkResponseElement('td[colspan="2"] .error_list li', 1)
 ;
 
 // updating the same category again with the same name is allowed

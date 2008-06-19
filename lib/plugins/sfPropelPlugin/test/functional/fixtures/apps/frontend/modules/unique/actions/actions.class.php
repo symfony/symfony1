@@ -32,6 +32,11 @@ class uniqueActions extends sfActions
     $category = CategoryPeer::retrieveByPk($request->getParameter('category[id]'));
     $this->form = new CategoryForm($category);
 
+    if ($request->getParameter('global'))
+    {
+      $this->form->getValidatorSchema()->getPostValidator()->setOption('throw_global_error', true);
+    }
+
     if ($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('category'));
