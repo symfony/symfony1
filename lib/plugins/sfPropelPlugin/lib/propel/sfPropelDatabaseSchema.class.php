@@ -374,7 +374,6 @@ class sfPropelDatabaseSchema
 
     // conventions for database attributes
     $this->setIfNotSet($this->database['_attributes'], 'defaultIdMethod', 'native');
-    $this->setIfNotSet($this->database['_attributes'], 'noXsd', true);
     $this->setIfNotSet($this->database['_attributes'], 'package', 'lib.model');
   }
 
@@ -677,7 +676,7 @@ class sfPropelDatabaseSchema
 
   protected function getCorrectValueFor($key, $value)
   {
-    $booleans = array('required', 'primaryKey', 'autoincrement', 'autoIncrement', 'noXsd', 'isI18N', 'isCulture');
+    $booleans = array('required', 'primaryKey', 'autoincrement', 'autoIncrement', 'isI18N', 'isCulture');
     if (in_array($key, $booleans))
     {
       return $value == 1 ? 'true' : 'false';
