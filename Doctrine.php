@@ -699,7 +699,7 @@ final class Doctrine
      * FIXME: I think this method is flawed because a individual connections could have the same table name
      *
      * @param string $tableName
-     * @return object Doctrine_Connection
+     * @return Doctrine_Connection
      */
     public static function getConnectionByTableName($tableName)
     {
@@ -956,7 +956,7 @@ final class Doctrine
      * Get the Doctrine_Table object for the passed model
      *
      * @param string $componentName
-     * @return void
+     * @return Doctrine_Table
      */
     public static function getTable($componentName)
     {
