@@ -27,8 +27,17 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     {
       throw new sfInitializationException('You must pass a "symfony_lib_dir" option.');
     }
-
-    $configuration = new sfProjectConfiguration(getcwd());
+    
+    $configurationFile = getcwd().'/config/ProjectConfiguration.class.php';
+    if (is_readable($configurationFile))
+    {
+      require_once $configurationFile;
+      $configuration = new ProjectConfiguration(getcwd());
+    }
+    else
+    {
+      $configuration = new sfProjectConfiguration(getcwd());
+    }
 
     // application
     $this->setName('symfony');
