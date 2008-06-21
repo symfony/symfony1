@@ -140,7 +140,10 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     // include all config.php from plugins
     $this->loadPluginConfig();
 
-    if ($this->isDebug())
+    // Disabled by default in symfony 1.1 because it causes problems with Doctrine.
+    // If you want to enable it in your application, just copy the spl_autoload_register() line
+    // in your configuration class.
+    if (0 && $this->isDebug())
     {
       spl_autoload_register(array(sfAutoload::getInstance(), 'autoloadAgain'));
     }
