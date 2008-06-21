@@ -427,7 +427,7 @@ abstract class sfCommandApplication
 
       if (!isset($abbrev[$namespace]))
       {
-        throw new sfCommandException(sprintf('There is no task defined in the "%s" namespace.', $namespace));
+        throw new sfCommandException(sprintf('There are no tasks defined in the "%s" namespace.', $namespace));
       }
       else if (count($abbrev[$namespace]) > 1)
       {
