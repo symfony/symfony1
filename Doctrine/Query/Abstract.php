@@ -1072,13 +1072,9 @@ abstract class Doctrine_Query_Abstract
      */
     protected function _preQuery()
     {
-        if ($this->_preQueried) {
-            return;
-        }
+        if ( ! $this->_preQueried && Doctrine_Manager::getInstance()->getAttribute('use_dql_callbacks')) {
+            $this->_preQueried = true;
 
-        $this->_preQueried = true;
-
-        if (Doctrine_Manager::getInstance()->getAttribute('use_dql_callbacks')) {
             $callback = $this->_getDqlCallback();
 
             // if there is no callback for the query type, then we can return early
