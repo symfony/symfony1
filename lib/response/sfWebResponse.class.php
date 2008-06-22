@@ -505,7 +505,7 @@ class sfWebResponse extends sfResponse
   /**
    * Adds a meta header.
    *
-   * @param string  $name     Name of the header
+   * @param string  $key      Name of the header
    * @param string  $value    Meta header value (if null, remove the meta)
    * @param bool    $replace  true if it's replaceable
    * @param bool    $escape   true for escaping the header
