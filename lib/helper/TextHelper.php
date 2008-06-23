@@ -161,11 +161,11 @@ function simple_format_text($text, $options = array())
  *     Go to <a href="http://www.symfony-project.com">http://www.symfony-project.com</a> and
  *     say hello to <a href="mailto:fabien.potencier@example.com">fabien.potencier@example.com</a>
  */
-function auto_link_text($text, $link = 'all', $href_options = array())
+function auto_link_text($text, $link = 'all', $href_options = array(), $truncate = false, $truncate_len = 35, $pad = '...')
 {
   if ($link == 'all')
   {
-    return _auto_link_urls(_auto_link_email_addresses($text), $href_options);
+    return _auto_link_urls(_auto_link_email_addresses($text), $href_options, $truncate, $truncate_len, $pad);
   }
   else if ($link == 'email_addresses')
   {
@@ -173,7 +173,7 @@ function auto_link_text($text, $link = 'all', $href_options = array())
   }
   else if ($link == 'urls')
   {
-    return _auto_link_urls($text, $href_options);
+    return _auto_link_urls($text, $href_options, $truncate, $truncate_len, $pad);
   }
 }
 
@@ -212,22 +212,39 @@ if (!defined('SF_AUTO_LINK_RE'))
 /**
  * Turns all urls into clickable links.
  */
-function _auto_link_urls($text, $href_options = array())
+function _auto_link_urls($text, $href_options = array(), $truncate = false, $truncate_len = 40, $pad = '...')
 {
   $href_options = _tag_options($href_options);
+
+  $callback_function = '
+    if (preg_match("/<a\s/i", $matches[1]))
+    {
+      return $matches[0];
+    }
+    ';
+
+  if ($truncate)
+  {
+    $callback_function .= '
+      else if (strlen($matches[2].$matches[3]) > '.$truncate_len.')
+      {
+        return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"'.$href_options.'>\'.substr($matches[2].$matches[3], 0, '.$truncate_len.').\''.$pad.'</a>\'.$matches[4];
+      }
+      ';
+  }
+
+  $callback_function .= '
+    else
+    {
+      return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"'.$href_options.'>\'.$matches[2].$matches[3].\'</a>\'.$matches[4];
+    }
+    ';
+
   return preg_replace_callback(
     SF_AUTO_LINK_RE,
-    create_function('$matches', '
-      if (preg_match("/<a\s/i", $matches[1]))
-      {
-        return $matches[0];
-      }
-      else
-      {
-        return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"'.$href_options.'>\'.$matches[2].$matches[3].\'</a>\'.$matches[4];
-      }
-    ')
-  , $text);
+    create_function('$matches', $callback_function),
+    $text
+    );
 }
 
 /**
