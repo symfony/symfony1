@@ -55,7 +55,6 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
     $this->addOption('criteria', null);
     $this->addOption('connection', null);
     $this->addOption('multiple', false);
-    $this->addOption('value_method', 'getPrimaryKey');
 
     parent::configure($options, $attributes);
   }
@@ -79,15 +78,14 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
     if ($order = $this->getOption('order_by'))
     {
       $method = sprintf('add%sOrderByColumn', 0 === strpos(strtoupper($order[1]), 'ASC') ? 'Ascending' : 'Descending');
-      $criteria->$method(call_user_func(array($class, 'translateFieldName'), strtolower($order[0]), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_COLNAME));
+      $criteria->$method(call_user_func(array($class, 'translateFieldName'), $order[0], BasePeer::TYPE_PHPNAME, BasePeer::TYPE_COLNAME));
     }
     $objects = call_user_func(array($class, 'doSelect'), $criteria, $this->getOption('connection'));
 
-    $valueMethod = $this->getOption('value_method') ? $this->getOption('value_method') : 'getPrimaryKey';
     $method = $this->getOption('method');
     foreach ($objects as $object)
     {
-      $choices[$object->$valueMethod()] = $object->$method();
+      $choices[$object->getPrimaryKey()] = $object->$method();
     }
 
     return $choices;
