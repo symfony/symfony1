@@ -119,7 +119,7 @@ class sfCommandManager
     $this->parsedArgumentValues = array();
     $this->errors               = array();
 
-    while ($argument = array_shift($this->arguments))
+    while (!in_array($argument = array_shift($this->arguments), array('', null)))
     {
       if ('--' == $argument)
       {
