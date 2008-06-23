@@ -475,11 +475,11 @@ abstract class sfController
 
       if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
       {
-        throw new sfException('Your action is secured but the user is not authenticated.');
+        throw new sfException('Your action is secured, but the user is not authenticated.');
       }
       else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
       {
-        throw new sfException('Your action is secured but the user does not have access.');
+        throw new sfException('Your action is secured, but the user does not have access.');
       }
     }
 
