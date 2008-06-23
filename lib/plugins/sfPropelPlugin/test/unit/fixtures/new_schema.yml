@@ -1,5 +1,5 @@
 connection:           propel
-noXsd:                false
+noXsd:                'false'
 defaultIdMethod:      none
 package:              lib.model
 
@@ -16,7 +16,7 @@ classes:
       classes:
         tight:        Group_Tight
         loose:        Group_Loose
-  
+
   User:
     tableName:        cd_user
     isI18N:           true
@@ -27,12 +27,12 @@ classes:
       age:            { type: integer, required: true, index: true }
       ab_group_id:
       created_at:
-  
+
   CdUserI18n:
     tableName:        cd_user_i18n
     columns:
       description:    longvarchar
-  
+
   EfArticle:
     tableName:       ef_article
     columns:
@@ -43,7 +43,7 @@ classes:
       my_other_group: { type: integer, foreignTable: ab_group, foreignReference: id, onDelete: setnull }
       created_at:     timestamp
       updated_at:
-  
+
   Article:
     tableName:        ij_article
     columns:
@@ -63,13 +63,13 @@ classes:
     behaviors:
       paranoid: { column: deleted_at }
       act_as_nested_set:
-      
-  
+
+
   AbGroupI18n:
     tableName:        ab_group_i18n
     columns:
       motto:          longvarchar
-  
+
   History:
     tableName:      history
     columns:
