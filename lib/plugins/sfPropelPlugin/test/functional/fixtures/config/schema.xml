@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="propel" defaultIdMethod="native" noXsd="true" package="lib.model">
+<database name="propel" defaultIdMethod="native" package="lib.model">
 
   <table name="article">
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />

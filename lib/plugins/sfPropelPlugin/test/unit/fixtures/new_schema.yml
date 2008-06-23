@@ -1,5 +1,4 @@
 connection:           propel
-noXsd:                'false'
 defaultIdMethod:      none
 package:              lib.model
 

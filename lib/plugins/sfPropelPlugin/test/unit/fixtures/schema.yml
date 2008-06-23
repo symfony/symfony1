@@ -1,5 +1,5 @@
 propel:
-  _attributes:      { noXsd: 'false', defaultIdMethod: none, package: lib.model }
+  _attributes:      { defaultIdMethod: none, package: lib.model }
   ab_group:
     _attributes:    { phpName: Group, package: foo.bar.lib.model }
     id:

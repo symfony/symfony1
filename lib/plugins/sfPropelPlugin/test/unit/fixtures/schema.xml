@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="propel" noXsd="false" defaultIdMethod="none" package="lib.model">
+<database name="propel" defaultIdMethod="none" package="lib.model">
 
   <table name="ab_group" phpName="Group" package="foo.bar.lib.model" isI18N="true" i18nTable="ab_group_i18n">
     <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
