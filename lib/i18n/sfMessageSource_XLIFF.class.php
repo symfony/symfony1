@@ -177,8 +177,10 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
       $unit = $dom->createElement('trans-unit');
       $unit->setAttribute('id', ++$count);
 
-      $source = $dom->createElement('source', $message);
-      $target = $dom->createElement('target', '');
+      $source = $dom->createElement('source');
+      $source->appendChild($dom->createTextNode($message));
+      $target = $dom->createElement('target');
+      $target->appendChild($dom->createTextNode(''));
 
       $unit->appendChild($dom->createTextNode("\n"));
       $unit->appendChild($source);
@@ -279,13 +281,17 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
       // append a target
       if ($found && !$targetted)
       {
-        $unit->appendChild($dom->createElement('target', $target));
+        $targetNode = $dom->createElement('target');
+        $targetNode->appendChild($dom->createTextNode($target));
+        $unit->appendChild($targetNode);
       }
 
       // append a note
       if ($found && !$commented && !empty($comments))
       {
-        $unit->appendChild($dom->createElement('note',$comments));
+        $commentsNode = $dom->createElement('note');
+        $commentsNode->appendChild($dom->createTextNode($comments));
+        $unit->appendChild($commentsNode);
       }
 
       // finished searching

@@ -40,13 +40,13 @@ $t->is($format->format('New message'), 'New message', '->save() saves new messag
 
 // test new culture
 $source->setCulture('it');
-$source->append('New message (it)');
+$source->append('New message & <more> (it)');
 $source->save();
 
 $source = sfMessageSource::factory('XLIFF', $temp);
 $source->setCulture('it');
 $format = new sfMessageFormat($source);
-$t->is($format->format('New message (it)'), 'New message (it)', '->save() saves new messages');
+$t->is($format->format('New message & <more> (it)'), 'New message & <more> (it)', '->save() saves new messages');
 
 $source->setCulture('fr_FR');
 
