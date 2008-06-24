@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Inflector has static methods for inflecting text
+ * Doctrine inflector has static methods for inflecting text
  * 
  * The methods in these classes are from several different sources collected
  * across several different php projects and several different authors. The 
@@ -38,11 +38,11 @@
 class Doctrine_Inflector
 {
     /**
-    * pluralize
-    *
-    * @param    string $word English noun to pluralize
-    * @return   string Plural noun
-    */
+     * Pluralize an English noun. Converts 'Category' to 'Categories'.
+     *
+     * @param    string $word English noun to pluralize
+     * @return   string $word Plural noun
+     */
     public static function pluralize($word)
     {
         $plural = array('/(quiz)$/i' => '\1zes',
@@ -103,11 +103,11 @@ class Doctrine_Inflector
     }
 
     /**
-    * singularize
-    *
-    * @param    string    $word    English noun to singularize
-    * @return   string Singular noun.
-    */
+     * Singularize an English noun. Converts 'Quizzes' to 'Quiz'.
+     *
+     * @param    string  $word    English noun to singularize
+     * @return   string  $word    Singular noun.
+     */
     public static function singularize($word)
     {
         $singular = array('/(quiz)zes$/i' => '\\1',
@@ -177,35 +177,23 @@ class Doctrine_Inflector
     }
 
     /**
-     * variablize
-     * 
-     * @param string $word 
-     * @return void
-     */
-    public static function variablize($word)
-    {
-        $word = self::camelize($word);
-
-        return strtolower($word[0]) . substr($word, 1);
-    }
-
-    /**
-     * tableize
+     * Convert word in to the format for a Doctrine table name. Converts 'ModelName' to 'model_name'
      *
-     * @param string $name
-     * @return void
+     * @param  string $word  Word to tableize
+     * @return string $word  Tableized word
      */
-    public static function tableize($name)
+    public static function tableize($word)
     {
         // Would prefer this but it breaks unit tests. Forces the table underscore pattern
         // return self::pluralize(self::underscore($name));
-        return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $name));
+        return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $word));
     }
 
     /**
-     * classify
+     * Convert a word in to the format for a Doctrine class name. Converts 'table_name' to 'TableName'
      *
-     * @param string $word
+     * @param string  $word  Word to classify
+     * @return string $word  Classified word
      */
     public static function classify($word)
     {
@@ -213,12 +201,10 @@ class Doctrine_Inflector
     }
 
     /**
-     * classifyCallback
-     *
      * Callback function to classify a classname properly.
      *
-     * @param array $matches An array of matches from a pcre_replace call
-     * @return string A string with matches 1 and mathces 3 in upper case.
+     * @param  array  $matches  An array of matches from a pcre_replace call
+     * @return string $string   A string with matches 1 and mathces 3 in upper case.
      */
     public static function classifyCallback($matches)
     {
@@ -226,31 +212,12 @@ class Doctrine_Inflector
     }
 
     /**
-     * camelize
-     *
-     * @param string $word 
-     * @return void
-     */
-    public static function camelize($word)
-    {
-        if (preg_match_all('/\/(.?)/', $word, $got)) {
-            foreach ($got[1] as $k => $v){
-                $got[1][$k] = '::' . strtoupper($v);
-            }
-
-            $word = str_replace($got[0], $got[1], $word);
-        }
-
-        return str_replace(' ', '', ucwords(preg_replace('/[^A-Z^a-z^0-9^:]+/', ' ', $word)));
-    }
-
-    /**
-     * seemsUtf8
+     * Check if a string has utf7 characters in it
      *
      * By bmorel at ssi dot fr
      *
-     * @param string $str 
-     * @return void
+     * @param  string $string
+     * @return boolean $bool
      */
     public static function seemsUtf8($string)
     {
@@ -271,10 +238,10 @@ class Doctrine_Inflector
     }
     
     /**
-     * unaccent
+     * Remove any illegal characters, accents, etc.
      *
-     * @param string $string 
-     * @return void
+     * @param  string $string  String to unaccent 
+     * @return string $string  Unaccented string
      */
     public static function unaccent($string)
     {
@@ -409,10 +376,10 @@ class Doctrine_Inflector
     }
 
     /**
-     * urlize
+     * Convert any passed string to a url friendly string. Converts 'My first blog post' to 'my-first-blog-post'
      *
-     * @param string $text 
-     * @return void
+     * @param  string $text  Text to urlize
+     * @return string $text  Urlized text
      */
     public static function urlize($text)
     {
@@ -429,19 +396,5 @@ class Doctrine_Inflector
                            preg_replace('/::/', '/', $text)))));
         
         return trim($text, '-');
-    }
-
-    /**
-     * underscore
-     *
-     * @param string $word 
-     * @return void
-     */
-    public static function underscore($word)
-    {
-        return strtolower(preg_replace('/[^A-Z^a-z^0-9^\/]+/', '_',
-               preg_replace('/([a-z\d])([A-Z])/', '\1_\2',
-               preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2',
-               preg_replace('/::/', '/', $word)))));
     }
 }
