@@ -58,6 +58,7 @@ chmod 777 data/sandbox.db
 echo ">>> create archive"
 cd ..
 tar zcpf ${SANDBOX_NAME}.tgz ${SANDBOX_NAME}
+zip -rq ${SANDBOX_NAME}.zip ${SANDBOX_NAME}
 
 echo ">>> cleanup"
 rm -rf ${SANDBOX_NAME}
