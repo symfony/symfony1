@@ -389,6 +389,7 @@ class sfCoreAutoload
   'sfValidatorSchemaFilter' => 'validator',
   'sfValidatorSchemaForEach' => 'validator',
   'sfValidatorString' => 'validator',
+  'sfValidatorTime' => 'validator',
   'sfValidatorUrl' => 'validator',
   'sfOutputEscaper' => 'view/escaper',
   'sfOutputEscaperArrayDecorator' => 'view/escaper',

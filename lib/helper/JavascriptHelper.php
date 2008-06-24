@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @author     Fabian Lange <Fabian.Lange@web.de> 
+ * @author     Fabian Lange <fabian.lange@symfony-project.com>
  * @version    SVN: $Id$
  */
 
