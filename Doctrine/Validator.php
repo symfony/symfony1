@@ -20,8 +20,7 @@
  */
 
 /**
- * Doctrine_Validator
- * Doctrine_Validator performs validations on record properties
+ * This class is responsible for performing all validations on record properties
  *
  * @package     Doctrine
  * @subpackage  Validator
@@ -40,10 +39,10 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     private static $validators = array();
 
     /**
-     * returns a validator object
+     * Get a validator instance for the passed $name
      *
-     * @param string $name
-     * @return Doctrine_Validator_Interface
+     * @param  string   $name  Name of the validator or the validator class name
+     * @return Doctrine_Validator_Interface $validator
      */
     public static function getValidator($name)
     {
@@ -62,10 +61,9 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     }
 
     /**
-     * validates a given record and saves possible errors
-     * in Doctrine_Validator::$stack
+     * Validates a given record and saves possible errors in Doctrine_Validator::$stack
      *
-     * @param Doctrine_Record $record
+     * @param  Doctrine_Record $record
      * @return void
      */
     public function validateRecord(Doctrine_Record $record)
@@ -83,10 +81,10 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     /**
      * Validates the length of a field.
      *
-     * @param string $value
-     * @param string $type
-     * @param string $maximumLength
-     * @return boolean $success
+     * @param  string  $value         Value to validate
+     * @param  string  $type          Type of field being validated
+     * @param  string  $maximumLength Maximum length allowed for the column
+     * @return boolean $success       True/false for whether the value passed validation
      */
     public static function validateLength($value, $type, $maximumLength)
     {
@@ -104,9 +102,9 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     }
 
     /**
-     * whether or not this validator has errors
+     * Whether or not errors exist on this validator
      *
-     * @return boolean
+     * @return boolean True/false for whether or not this validate instance has error
      */
     public function hasErrors()
     {
@@ -114,11 +112,10 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     }
 
     /**
-     * returns whether or not the given variable is
-     * valid type
+     * Validate the type of the passed variable
      *
-     * @param mixed $var
-     * @param string $type
+     * @param  mixed  $var   Variable to validate
+     * @param  string $type  Type of the variable expected
      * @return boolean
      */
      public static function isValidType($var, $type)
