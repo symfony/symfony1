@@ -529,14 +529,36 @@ class Doctrine_Import_Builder
                 $build .= ', null';
             }
 
-            // The column definition is one array, everthing but name, type and length are an array of
-            // possible options. This removes the name, type and length and creates the options array for
-            // the column definition
             $options = $column;
-            $unset = array('name', 'type', 'length', 'alltypes', 'ntype');
+
+            // Remove name, alltypes, ntype. They are not needed in options array
+            unset($options['name']);
+            unset($options['alltypes']);
+            unset($options['ntype']);
+
+            // Remove notnull => true if the column is primary
+            // Primary columns are implied to be notnull in Doctrine
+            if (isset($options['primary']) && $options['primary'] == true && (isset($options['notnull']) && $options['notnull'] == true)) {
+                unset($options['notnull']);
+            }
+
+            // Remove default if the value is 0 and the column is a primary key
+            // Doctrine defaults to 0 if it is a primary key
+            if (isset($options['primary']) && $options['primary'] == true && (isset($options['default']) && $options['default'] == 0)) {
+                unset($options['default']);
+            }
+
+            // These can be removed if they are empty. They all default to a false/0/null value anyways
+            $remove = array('fixed', 'primary', 'notnull', 'autoincrement', 'unsigned');
+            foreach ($remove as $key) {
+                if (isset($options[$key]) && empty($options[$key])) {
+                    unset($options[$key]);
+                }
+            }
+
+            // Remove null and empty array values
             foreach ($options as $key => $value) {
-                // Remove column elements which are specified above or are null
-                if (in_array($key, $unset) || is_null($value) || (is_array($value) && empty($value))) {
+                if (is_null($value) || (is_array($value) && empty($value))) {
                     unset($options[$key]);
                 }
             }
