@@ -115,7 +115,7 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
         $this->dblink = $conn;
 
         if ($encoding) {
-			$this->executeUpdate("SET NAMES " . $encoding);
+			$this->dblink->set_charset( $encoding ); 
 		}
     }
 
