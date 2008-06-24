@@ -104,6 +104,30 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
+     * lists table relations
+     *
+     * Expects an array of this format to be returned with all the relationships in it where the key is 
+     * the name of the foreign table, and the value is an array containing the local and foreign column
+     * name
+     *
+     * Array
+     * (
+     *   [groups] => Array
+     *     (
+     *        [local] => group_id
+     *        [foreign] => id
+     *     )
+     * )
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableRelations($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
      * lists table constraints
      *
      * @param string $table     database table name
@@ -355,31 +379,70 @@ class Doctrine_Import extends Doctrine_Connection_Module
           $builder->setTargetPath($directory);
           $builder->setOptions($options);
 
+          $definitions = array();
           $classes = array();
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;
 
               if( ! isset($options['singularize']) || $options['singularize'] !== false) {
-                  $e = explode('_', Doctrine_Inflector::tableize($table));
-                  foreach ($e as $k => $v) {
-                      $e[$k] = Doctrine_Inflector::singularize($v);
-                  }
-                  $classTable = implode('_', $e);
+                  $classTable = $this->_singularizeTableName($table);
               } else {
                   $classTable = Doctrine_Inflector::tableize($table);
               }
 
               $definition['className'] = Doctrine_Inflector::classify($classTable);
-
               $definition['columns'] = $connection->import->listTableColumns($table);
 
-              $builder->buildRecord($definition);
+              try {
+                  $definition['relations'] = array();
+                  $relations = $connection->import->listTableRelations($table);
+                  foreach ($relations as $table => $options) {
+                      if( ! isset($options['singularize']) || $options['singularize'] !== false) {
+                          $relClassTable = $this->_singularizeTableName($table);
+                      } else {
+                          $relClassTable = Doctrine_Inflector::tableize($table);
+                      }
+                      $class = Doctrine_Inflector::classify($relClassTable);
+                      $definition['relations'][$class] = array('local'          => $options['local'],
+                                                               'foreign'        => $options['foreign']);
+                  }
+              } catch (Exception $e) {}
 
+              $definitions[$definition['className']] = $definition;
               $classes[] = $definition['className'];
+          }
+
+          // Build opposite end of relationships
+          foreach ($definitions as $defClass => $definition) {
+              foreach ($definition['relations'] as $relClass => $relation) {
+                  $definitions[$relClass]['relations'][$defClass] = array('local'   => $relation['foreign'],
+                                                                          'foreign' => $relation['local'],
+                                                                          'type'    => 'many');
+              }
+          }
+
+          // Build records
+          foreach ($definitions as $definition) {
+              $builder->buildRecord($definition);
           }
         }
 
         return $classes;
+    }
+
+    /**
+     * Singularize a table name
+     *
+     * @param string $tableName 
+     * @return $singularTableName
+     */
+    protected function _singularizeTableName($tableName)
+    {
+        $e = explode('_', Doctrine_Inflector::tableize($tableName));
+        foreach ($e as $k => $v) {
+            $e[$k] = Doctrine_Inflector::singularize($v);
+        }
+        return implode('_', $e);
     }
 }

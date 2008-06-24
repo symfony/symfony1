@@ -98,14 +98,36 @@ class Doctrine_Import_Mysql extends Doctrine_Import
     }
 
     /**
-     * lists table foreign keys
+     * lists table relations
+     *
+     * Expects an array of this format to be returned with all the relationships in it where the key is 
+     * the name of the foreign table, and the value is an array containing the local and foreign column
+     * name
+     *
+     * Array
+     * (
+     *   [groups] => Array
+     *     (
+     *        [local] => group_id
+     *        [foreign] => id
+     *     )
+     * )
      *
      * @param string $table     database table name
      * @return array
      */
-    public function listTableForeignKeys($table) 
+    public function listTableRelations($tableName)
     {
-        $sql = 'SHOW CREATE TABLE ' . $this->conn->quoteIdentifier($table, true);    
+        $relations = array();
+        $sql = "SELECT column_name, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM information_schema.key_column_usage WHERE table_name = '" . $tableName . "' AND table_schema = '" . $this->conn->getDatabaseName() . "' and REFERENCED_COLUMN_NAME is not NULL";
+        $results = $this->conn->fetchAssoc($sql);
+        foreach ($results as $result)
+        {
+            $result = array_change_key_case($result, CASE_LOWER);
+            $relations[$result['referenced_table_name']] = array('local'   => $result['column_name'],
+                                                                 'foreign' => $result['referenced_column_name']);
+        }
+        return $relations;
     }
 
     /**
