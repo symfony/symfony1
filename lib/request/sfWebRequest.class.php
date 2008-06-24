@@ -439,17 +439,26 @@ class sfWebRequest extends sfRequest
     if ($this->isSecure())
     {
       $standardPort = '443';
-      $proto = 'https';
+      $protocol = 'https';
     }
     else
     {
       $standardPort = '80';
-      $proto = 'http';
+      $protocol = 'http';
     }
 
-    $port = $pathArray['SERVER_PORT'] == $standardPort || !$pathArray['SERVER_PORT'] ? '' : ':'.$pathArray['SERVER_PORT'];
+    $host = explode(":", $pathArray['HTTP_HOST']);
+    if (count($host) == 1)
+    {
+      $host[] = $pathArray['SERVER_PORT'];
+    }
 
-    return $proto.'://'.$pathArray['SERVER_NAME'].$port;
+    if ($host[1] == $standardPort || empty($host[1]))
+    {
+      unset($host[1]);
+    }
+
+    return $protocol.'://'.implode(':', $host);;
   }
 
   /**
