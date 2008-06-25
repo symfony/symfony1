@@ -642,7 +642,7 @@ EOF;
 
     if ($column->isComponent())
     {
-      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'list'))";
+      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'filter'))";
     }
     else if ($column->isPartial())
     {
