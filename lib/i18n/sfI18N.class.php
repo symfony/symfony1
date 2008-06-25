@@ -81,7 +81,6 @@ class sfI18N
     }
   }
 
-
   /**
    * Returns the initialization options
    *
@@ -258,18 +257,19 @@ class sfI18N
   }
 
   /**
-   * Returns a timestamp from a date formatted with a given culture.
+   * Returns a timestamp from a date with time formatted with a given culture.
    *
-   * @param  string  $date  The formatted date as string
+   * @param  string  $dateTime  The formatted date with time as string
    * @param  string  $culture The culture
    *
    * @return integer The timestamp
    */
-  public function getTimestampForCulture($date, $culture = null)
+  public function getTimestampForCulture($dateTime, $culture = null)
   {
-    list($d, $m, $y) = $this->getDateForCulture($date, is_null($culture) ? $this->culture : $culture);
+    list($day, $month, $year) = $this->getDateForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
+    list($hour, $minute) = $this->getTimeForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
 
-    return is_null($d) ? null : mktime(0, 0, 0, $m, $d, $y);
+    return is_null($day) ? null : mktime($hour, $minute, 0, $month, $day, $year);
   }
 
   /**
@@ -319,6 +319,50 @@ class sfI18N
   }
 
   /**
+   * Returns the hour, minute from a date formatted with a given culture.
+   *
+   * @param  string  $date    The formatted date as string
+   * @param  string  $culture The culture
+   *
+   * @return array   An array with the hour and minute
+   */
+  public function getTimeForCulture($time, $culture)
+  {
+    if (!$time) return 0;
+
+    $culture = is_null($culture) ? $this->culture : $culture;
+
+    $timeFormatInfo = @sfDateTimeFormatInfo::getInstance($culture);
+    $timeFormat = $timeFormatInfo->getShortTimePattern();
+
+    // We construct the regexp based on time format
+    $timeRegexp = preg_replace(array('/[^hm:]+/i', '/[hm]+/i'), array('', '(\d+)'), $timeFormat);
+
+    // We parse time format to see where things are (h, m)
+    $a = array(
+      'h' => strpos($timeFormat, 'H') !== false ? strpos($timeFormat, 'H') : strpos($timeFormat, 'h'),
+      'm' => strpos($timeFormat, 'm')
+    );
+    $tmp = array_flip($a);
+    ksort($tmp);
+    $i = 0;
+    $c = array();
+    foreach ($tmp as $value) $c[++$i] = $value;
+    $timePositions = array_flip($c);
+
+    // We find all elements
+    if (preg_match("~$timeRegexp~", $time, $matches))
+    {
+      // We get matching timestamp
+      return array($matches[$timePositions['h']], $matches[$timePositions['m']]);
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  /**
    * Returns true if messages are stored in a file.
    *
    * @param  string  $source  The source name
@@ -355,4 +399,5 @@ class sfI18N
     // change message source directory to our module
     $this->setMessageSource($this->configuration->getI18NDirs($event['module']));
   }
+
 }

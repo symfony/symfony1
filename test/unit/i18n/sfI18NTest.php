@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(28, new lime_output_color());
 
 class ProjectConfiguration extends sfProjectConfiguration
 {
@@ -79,7 +79,9 @@ $t->is($i18n->getNativeName('fr'), 'français', '->getNativeName() returns the n
 $t->diag('->getTimestampForCulture()');
 $i18n = new sfI18N($configuration, $cache, array('culture' => 'fr'));
 $t->is($i18n->getTimestampForCulture('15/10/2005'), mktime(0, 0, 0, '10', '15', '2005'), '->getTimestampForCulture() returns the timestamp for a data formatted in the current culture');
+$t->is($i18n->getTimestampForCulture('15/10/2005 15:33'), mktime(15, 33, 0, '10', '15', '2005'), '->getTimestampForCulture() returns the timestamp for a data formatted in the current culture');
 $t->is($i18n->getTimestampForCulture('10/15/2005', 'en_US'), mktime(0, 0, 0, '10', '15', '2005'), '->getTimestampForCulture() can take a culture as its second argument');
+$t->is($i18n->getTimestampForCulture('10/15/2005 15:33', 'en_US'), mktime(15, 33, 0, '10', '15', '2005'), '->getTimestampForCulture() can take a culture as its second argument');
 $t->is($i18n->getTimestampForCulture('not a date'), null, '->getTimestampForCulture() returns the day, month and year for a data formatted in the current culture');
 
 // ->getDateForCulture()
@@ -88,4 +90,12 @@ $i18n = new sfI18N($configuration, $cache, array('culture' => 'fr'));
 $t->is($i18n->getDateForCulture('15/10/2005'), array('15', '10', '2005'), '->getDateForCulture() returns the day, month and year for a data formatted in the current culture');
 $t->is($i18n->getDateForCulture('10/15/2005', 'en_US'), array('15', '10', '2005'), '->getDateForCulture() can take a culture as its second argument');
 $t->is($i18n->getDateForCulture(null), null, '->getDateForCulture() returns null in case of conversion problem');
-$t->is($i18n->getDateForCulture('not a date'), null, '->getDateForCulture() returns the day, month and year for a data formatted in the current culture');
+$t->is($i18n->getDateForCulture('not a date'), null, '->getDateForCulture() returns null in case of conversion problem');
+
+// ->getTimeForCulture()
+$t->diag('->getTimeForCulture()');
+$i18n = new sfI18N($configuration, $cache, array('culture' => 'fr'));
+$t->is($i18n->getTimeForCulture('15:33'), array('15', '33'), '->getTimeForCulture() returns the hour and minuter for a time formatted in the current culture');
+$t->is($i18n->getTimeForCulture('15:33', 'en_US'), array('15', '33'), '->getTimeForCulture() can take a culture as its second argument');
+$t->is($i18n->getTimeForCulture(null), null, '->getTimeForCulture() returns null in case of conversion problem');
+$t->is($i18n->getTimeForCulture('not a time'), null, '->getTimeForCulture() returns null in case of conversion problem');
