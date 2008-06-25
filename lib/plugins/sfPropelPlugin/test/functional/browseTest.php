@@ -295,3 +295,64 @@ $b->
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/1"]', 3)->
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', 2)
 ;
+// edit page 
+$b-> 
+  click('21')-> 
+  isStatusCode(200)-> 
+  isRequestParameter('module', 'article')-> 
+  isRequestParameter('action', 'edit')-> 
+  checkResponseElement('script[src*="calendar"]', 3)-> 
+  checkResponseElement('script[src]', 3)-> 
+  checkResponseElement('link[href*="calendar"]')-> 
+  checkResponseElement('link[href="/sf/sf_admin/css/main.css"]')-> 
+  checkResponseElement('link[href][media]', 3)-> 
+ 
+  // title 
+  checkResponseElement('body h1', 'edit article')-> 
+ 
+  // parameters 
+  isRequestParameter('id', 21)-> 
+ 
+  // labels 
+  checkResponseElement('body form#sf_admin_edit_form label[for="article_title"]', 'Title:')-> 
+  checkResponseElement('body form#sf_admin_edit_form label[for="article_body"]', 'Body:')-> 
+  checkResponseElement('body form#sf_admin_edit_form label[for="article_online"]', 'Online:')-> 
+  checkResponseElement('body form#sf_admin_edit_form label[for="article_category_id"]', 'Category:')-> 
+  checkResponseElement('body form#sf_admin_edit_form label[for="article_created_at"]', 'Created at:')-> 
+ 
+  // form elements 
+  checkResponseElement('body form#sf_admin_edit_form input[name="article[title]"][id="article_title"][value="title 18"]')-> 
+  checkResponseElement('body form#sf_admin_edit_form textarea[name="article[body]"][id="article_body"]', 'body 18')-> 
+  checkResponseElement('body form#sf_admin_edit_form input[name="article[online]"][id="article_online"][type="checkbox"][checked="checked"]', false)-> 
+  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"]', true)-> 
+  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="1"]', 'Category 1')-> 
+  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="2"]', 'Category 2')-> 
+  checkResponseElement('body form#sf_admin_edit_form input[name="article[created_at]"][id="article_created_at"][value*="-"]')-> 
+ 
+  // buttons 
+  checkResponseElement('body input[class="sf_admin_action_list"][onclick*="/article/list"]', true)-> 
+  checkResponseElement('body input[name="save_and_add"]', true)-> 
+  checkResponseElement('body input[name="save"]', true)-> 
+  checkResponseElement('body input[class="sf_admin_action_delete"][onclick*="confirm"]', true) 
+; 
+ 
+$b-> 
+ 
+  // return to the list to check if we are on the second page 
+  get('/article/list')-> 
+ 
+  isStatusCode(200)-> 
+  isRequestParameter('module', 'article')-> 
+  isRequestParameter('action', 'list')-> 
+ 
+  // first line 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '21', array('position' => 0))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'title 18', array('position' => 1))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'body 18', array('position' => 2))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td img', false, array('position' => 3))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '1', array('position' => 4))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td a[href$="/article/edit/id/21"]', '21')-> 
+  // check that links for navigation are ok 
+  checkResponseElement('body table tfoot tr th a[href*="/article/list/page/1"]', 3)-> 
+  checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', 2); 
+;

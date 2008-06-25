@@ -32,7 +32,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->addSortCriteria($c);
     $this->addFiltersCriteria($c);
     $this->pager->setCriteria($c);
-    $this->pager->setPage($this->getRequestParameter('page', 1));
+    $this->pager->setPage($this->getRequestParameter('page', $this->getUser()->getAttribute('page', 1, 'sf_admin/<?php echo $this->getSingularName() ?>')));
 <?php if ($this->getParameterValue('list.peer_method')): ?>
     $this->pager->setPeerMethod('<?php echo $this->getParameterValue('list.peer_method') ?>');
 <?php endif ?>
@@ -40,6 +40,10 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->pager->setPeerCountMethod('<?php echo $this->getParameterValue('list.peer_count_method') ?>');
 <?php endif ?>
     $this->pager->init();
+    // save page
+    if ($this->getRequestParameter('page')) {
+        $this->getUser()->setAttribute('page', $this->getRequestParameter('page'), 'sf_admin/<?php echo $this->getSingularName() ?>');
+    }
   }
 
   public function executeCreate()
@@ -377,6 +381,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php endif; ?>
 <?php endforeach; ?>
 
+      $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>');
       $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>/filters');
       $this->getUser()->getAttributeHolder()->add($filters, 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
     }
