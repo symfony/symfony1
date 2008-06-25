@@ -17,6 +17,7 @@
 class sfPropel
 {
   static protected
+    $initialized    = false,
     $defaultCulture = 'en';
 
   static public function initialize(sfEventDispatcher $dispatcher, $culture = null)
@@ -31,6 +32,8 @@ class sfPropel
     {
       self::setDefaultCulture($user->getCulture());
     }
+
+    self::$initialized = true;
   }
 
   static public function setDefaultCulture($culture)
@@ -40,6 +43,11 @@ class sfPropel
 
   static public function getDefaultCulture()
   {
+    if (!self::$initialized && class_exists('sfProjectConfiguration', false))
+    {
+      self::initialized(sfProjectConfiguration::getActive()->getEventDispatcher());
+    }
+
     return self::$defaultCulture;
   }
 

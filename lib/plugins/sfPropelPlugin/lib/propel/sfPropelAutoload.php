@@ -32,5 +32,3 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 // propel initialization
 Propel::setConfiguration(sfPropelDatabase::getConfiguration());
 Propel::initialize();
-
-sfPropel::initialize($dispatcher);
