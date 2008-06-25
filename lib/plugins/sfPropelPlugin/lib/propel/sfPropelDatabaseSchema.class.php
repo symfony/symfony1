@@ -636,13 +636,13 @@ class sfPropelDatabaseSchema
     {
       if ($column['index'] === 'unique')
       {
-        $attributes_string .= "    <unique name=\"${tb_name}_${col_name}_unique\">\n";
+        $attributes_string .= "    <unique>\n";
         $attributes_string .= "      <unique-column name=\"$col_name\" />\n";
         $attributes_string .= "    </unique>\n";
       }
       else
       {
-        $attributes_string .= "    <index name=\"${tb_name}_${col_name}_index\">\n";
+        $attributes_string .= "    <index>\n";
         $attributes_string .= "      <index-column name=\"$col_name\" />\n";
         $attributes_string .= "    </index>\n";
       }
