@@ -438,7 +438,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function connect()
     {
-
         if ($this->isConnected) {
             return false;
         }
@@ -454,8 +453,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             if (in_array($e[0], PDO::getAvailableDrivers())) {
             	try {
                     $this->dbh = new PDO($this->options['dsn'], $this->options['username'], 
-                                     $this->options['password'], $this->options['other']);
-                                     
+                                     (!$this->options['password'] ? '':$this->options['password']), $this->options['other']);
+
                     $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             	} catch (PDOException $e) {
             		throw new Doctrine_Connection_Exception('PDO Connection Error: ' . $e->getMessage());
