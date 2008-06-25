@@ -78,6 +78,11 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 $enumIndex = $conn->quote($enumIndex, 'text');
             }
 
+            // FIX: Issues with "(" XXX ")"
+            if ($hasRightAggExpression) {
+                $value = '(' . $value . ')';
+            }
+
             if (substr($value, 0, 1) == '(') {
                 // trim brackets
                 $trimmed   = $this->_tokenizer->bracketTrim($value);
@@ -85,9 +90,14 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 if (substr($trimmed, 0, 4) == 'FROM' || substr($trimmed, 0, 6) == 'SELECT') {
                     // subquery found
                     $q = $this->query->createSubquery();
-                    $value = '(' . $q->parseQuery($trimmed)->getQuery() . ')';
+
+                    // Change due to bug "(" XXX ")"
+                    //$value = '(' . $q->parseQuery($trimmed)->getQuery() . ')';
+                    $value = $q->parseQuery($trimmed)->getQuery();
                 } elseif (substr($trimmed, 0, 4) == 'SQL:') {
-                    $value = '(' . substr($trimmed, 4) . ')';
+                    // Change due to bug "(" XXX ")"
+                    //$value = '(' . substr($trimmed, 4) . ')';
+                    $value = substr($trimmed, 4);
                 } else {
                     // simple in expression found
                     $e     = $this->_tokenizer->sqlExplode($trimmed, ',');
@@ -106,7 +116,10 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                             $value[] = $this->parseLiteralValue($part);
                         }
                     }
-                    $value = '(' . implode(', ', $value) . ')';
+
+                    // Change due to bug "(" XXX ")"
+                    //$value = '(' . implode(', ', $value) . ')';
+                    $value = implode(', ', $value);
                 }
             } else {
                 if ($enumIndex !== false) {
