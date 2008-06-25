@@ -14,7 +14,7 @@
     <column name="first_name" type="varchar" size="255" default="Anonymous" />
     <column name="last_name" type="varchar" size="50" />
     <column name="age" type="integer" required="true" />
-    <index name="cd_user_age_index">
+    <index>
       <index-column name="age" />
     </index>
     <column name="ab_group_id" type="integer" />
@@ -36,7 +36,7 @@
 
   <table name="ef_article">
     <column name="title" type="longvarchar" required="true" />
-    <unique name="ef_article_title_unique">
+    <unique>
       <unique-column name="title" />
     </unique>
     <column name="stripped_title" type="longvarchar" required="true" primaryKey="true" />

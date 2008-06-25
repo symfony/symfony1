@@ -889,7 +889,7 @@ class sfPropelDatabaseSchema
         foreach ($indexes as $index => $references)
         {
           // Only single indexes can be simplified
-          if (count($references) == 1 && array_key_exists(substr($index, 0, strlen($index) - 6), $columns))
+          if (count($references) == 1 && false !== substr($index, 0, strlen($index) - 6) && array_key_exists(substr($index, 0, strlen($index) - 6), $columns))
           {
             $reference = $references[0];
 
@@ -909,7 +909,7 @@ class sfPropelDatabaseSchema
         foreach ($uniques as $index => $references)
         {
           // Only single unique indexes can be simplified
-          if (count($references) == 1 && array_key_exists(substr($index, 0, strlen($index) - 7), $columns))
+          if (count($references) == 1 && false !== substr($index, 0, strlen($index) - 7) && array_key_exists(substr($index, 0, strlen($index) - 7), $columns))
           {
             $reference = $references[0];
 
