@@ -154,11 +154,20 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 
     // create a new dom, import the existing xml
     $dom = $this->createDOMDocument();
-    $dom->load($filename);
+    @$dom->load($filename);
 
     // find the body element
     $xpath = new DomXPath($dom);
     $body = $xpath->query('//body')->item(0);
+
+    if (is_null($body))
+    {
+      //create and try again
+      $this->createMessageTemplate($catalogue);
+      $dom->load($filename);
+      $xpath = new DomXPath($dom);
+      $body = $xpath->query('//body')->item(0);
+    }
 
     // find the biggest "id" used
     $lastNodes = $xpath->query('//trans-unit[not(@id <= preceding-sibling::trans-unit/@id) and not(@id <= following-sibling::trans-unit/@id)]');
