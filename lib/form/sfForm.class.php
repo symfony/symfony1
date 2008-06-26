@@ -31,7 +31,7 @@ class sfForm implements ArrayAccess
     $widgetSchema    = null,
     $validatorSchema = null,
     $errorSchema     = null,
-    $formField       = null,
+    $formFieldSchema = null,
     $formFields      = array(),
     $isBound         = false,
     $taintedValues   = array(),
@@ -104,7 +104,7 @@ class sfForm implements ArrayAccess
    */
   public function render($attributes = array())
   {
-    return $this->getFormField()->render($attributes);
+    return $this->getFormFieldSchema()->render($attributes);
   }
 
   /**
@@ -676,7 +676,7 @@ class sfForm implements ArrayAccess
   public function resetFormFields()
   {
     $this->formFields = array();
-    $this->formField = null;
+    $this->formFieldSchema = null;
   }
 
   /**
@@ -711,7 +711,7 @@ class sfForm implements ArrayAccess
 
       $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
 
-      $this->formFields[$name] = new $class($widget, $this->getFormField(), $name, isset($values[$name]) ? $values[$name] : null, $this->errorSchema[$name]);
+      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, isset($values[$name]) ? $values[$name] : null, $this->errorSchema[$name]);
     }
 
     return $this->formFields[$name];
@@ -749,14 +749,14 @@ class sfForm implements ArrayAccess
    *
    * @return sfFormFieldSchema A sfFormFieldSchema instance
    */
-  protected function getFormField()
+  protected function getFormFieldSchema()
   {
-    if (is_null($this->formField))
+    if (is_null($this->formFieldSchema))
     {
-      $this->formField = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : $this->defaults, $this->errorSchema);
+      $this->formFieldSchema = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : $this->defaults, $this->errorSchema);
     }
 
-    return $this->formField;
+    return $this->formFieldSchema;
   }
 
   /**
