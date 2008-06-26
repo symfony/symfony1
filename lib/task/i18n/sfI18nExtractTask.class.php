@@ -52,7 +52,7 @@ for the given application and target culture:
   [./symfony i18n:extract frontend fr|INFO]
 
 By default, the task only displays the number of new and old strings
-it founds in the current project.
+it found in the current project.
 
 If you want to display the new strings, use the [--display-new|COMMENT] option:
 
