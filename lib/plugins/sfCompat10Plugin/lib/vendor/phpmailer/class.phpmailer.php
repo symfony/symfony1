@@ -654,7 +654,7 @@ class PHPMailer
     /**
      * Wraps message for use with mailers that do not
      * automatically perform wrapping and for quoted-printable.
-     * Original written by philippe.  
+     * Original written by philippe.
      * @access private
      * @return string
      */
@@ -676,16 +676,26 @@ class PHPMailer
               $word = $line_part[$e];
               if ($qp_mode and (strlen($word) > $length))
               {
+                // If utf-8 encoding is used, we will need to make sure we don't
+                // split multibyte characters when we wrap
+                $is_utf8 = (strpos(strtolower($this->CharSet),'utf-8') !== False);
                 $space_left = $length - strlen($buf) - 1;
                 if ($e != 0)
                 {
                     if ($space_left > 20)
                     {
                         $len = $space_left;
-                        if (substr($word, $len - 1, 1) == "=")
-                          $len--;
-                        elseif (substr($word, $len - 2, 1) == "=")
-                          $len -= 2;
+                        if ($is_utf8)
+                        {
+                          $len = $this->UTF8CharBoundary($word,$len);
+                        }
+                        else
+                        {
+                          if (substr($word, $len - 1, 1) == "=")
+                            $len--;
+                          elseif (substr($word, $len - 2, 1) == "=")
+                            $len -= 2;
+                        }
                         $part = substr($word, 0, $len);
                         $word = substr($word, $len);
                         $buf .= " " . $part;
@@ -700,10 +710,18 @@ class PHPMailer
                 while (strlen($word) > 0)
                 {
                     $len = $length;
-                    if (substr($word, $len - 1, 1) == "=")
-                        $len--;
-                    elseif (substr($word, $len - 2, 1) == "=")
-                        $len -= 2;
+                    if ($is_utf8)
+                    {
+                      $len = $this->UTF8CharBoundary($word,$len);
+                    }
+                    else
+                    {
+                      if (substr($word, $len - 1, 1) == "=")
+                       $len--;
+                      elseif (substr($word, $len - 2, 1) == "=")
+                       $len -= 2;
+                    }
+
                     $part = substr($word, 0, $len);
                     $word = substr($word, $len);
 
@@ -730,7 +748,70 @@ class PHPMailer
 
         return $message;
     }
-    
+
+    /**
+     * Finds last character boundary prior to $maxLength in a utf-8 
+     * Quoted (Printable) Encoded string $encodedText
+     * Original written by Colin Brown.  
+     * @param string $encodedText utf8 QP text
+     * @param integer $maxLength finds last character boundary prior to this length
+     * @access private
+     * @return integer
+     */
+    function UTF8CharBoundary($encodedText, $maxLength)
+    {
+
+      $foundSplitPos = false;
+      $lookBack = 3;
+
+      while (!$foundSplitPos)
+      {
+        $lastChunk = substr($encodedText, $maxLength - $lookBack, $lookBack);
+        $encodedCharPos = strpos($lastChunk,'=');
+
+        if ($encodedCharPos !== false) {
+          // Found start of encoded character byte within last $lookBack chars
+          // Check the encoded byte value (the 2 chars after the '=')
+          $hex = substr($encodedText,$maxLength-$lookBack+$encodedCharPos+1,2);
+          $dec = hexdec($hex);
+          // construct a binary representation of this byte
+          $byte = str_pad(decbin($dec), 8,'0', STR_PAD_LEFT);
+          // First two character tell the type of character byte
+          $isFirstOfMulti = strpos($byte,'11') === 0;
+          $isMiddleOfMulti = strpos($byte,'10') === 0;
+          $isSingle = strpos($byte,'0') === 0;
+          if ($isSingle)
+          {
+            // Single byte character.
+            
+            // If the encoded char was found at pos 0, it will fit
+            // otherwise reduce maxLength to start of the encoded char
+            
+            $maxLength = $encodedCharPos == 0 ? 
+                         $maxLength :
+                         $maxLength - ($lookBack - $encodedCharPos);
+            $foundSplitPos = true;
+          }
+          elseif ($isFirstOfMulti)
+          {
+            // First byte of a multi byte character
+            // Reduce maxLength to split at start of character
+            $maxLength = $maxLength - ($lookBack - $encodedCharPos);
+            $foundSplitPos = true;
+          }
+          elseif ($isMiddleOfMulti)
+          {
+            // Middle byte of a multi byte character, look further back
+            $lookBack += 3;
+          }
+        } else {
+          // no encoded character found
+          $foundSplitPos = true;
+        }
+      }
+      return $maxLength;
+    }
+
     /**
      * Set the body wrapping.
      * @access private
@@ -937,7 +1018,7 @@ class PHPMailer
        
         return $result;
     }
-    
+
     /**
      * Returns the end of a message boundary.
      * @access private
@@ -945,7 +1026,7 @@ class PHPMailer
     function EndBoundary($boundary) {
         return $this->LE . "--" . $boundary . "--" . $this->LE; 
     }
-    
+
     /**
      * Sets the message type.
      * @access private
