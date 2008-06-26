@@ -749,7 +749,7 @@ class sfForm implements ArrayAccess
    *
    * @return sfFormFieldSchema A sfFormFieldSchema instance
    */
-  protected function getFormFieldSchema()
+  public function getFormFieldSchema()
   {
     if (is_null($this->formFieldSchema))
     {
