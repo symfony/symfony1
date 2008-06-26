@@ -23,7 +23,7 @@ class sfMixer
     $mixinParameters = array(),
     $mixinInstances  = array();
 
-  static public function register($name, $callable)
+  static public function register($name, $callable, $multiple = false)
   {
     $lazy = false;
 
@@ -71,6 +71,25 @@ class sfMixer
       $method = $mixinMethod;
       $name = $class.':'.$method;
       $hook = '';
+    }
+
+    // we ignore registration of the same callable for the same hook except if $multiple is true
+    if (!$multiple)
+    {
+      foreach (self::getCallables($name) as $localCallable)
+      {
+        if (is_array($localCallable) && is_array($callable))
+        {
+          if ($callable[1] == $localCallable[1] && (is_object($callable[0]) ? get_class($callable[0]) : $callable[0]) == (is_object($localCallable[0]) ? get_class($localCallable[0]) : $localCallable[0]))
+          {
+            return;
+          }
+        }
+        else if (is_string($localCallable) && is_string($callable) && $callable == $localCallable)
+        {
+          return;
+        }
+      }
     }
 
     // we cannot register 2 new methods with the same name

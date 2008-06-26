@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 class myClass
 {
@@ -154,6 +154,12 @@ $t->is(myClass::myStaticMethod(), "before myStaticMethod\nin myStaticMethod mixi
 
 sfMixer::register('myClass:myMethodWithArgs', array('myClassMixins', 'myMixinMethodWithArgs'));
 $t->is($m->myMethodWithArgs('value'), "before myMethodWithArgs\nin myMethodWithArgs mixin method (value, default)\nafter myMethodWithArgs\n", 'method call with arguments with a mixin');
+
+sfMixer::register('myClass:myMethodWithArgs', array('myClassMixins', 'myMixinMethodWithArgs'));
+$t->is(count(sfMixer::getCallables('myClass:myMethodWithArgs:myMethodWithArgs')), 1, '::register() registers a mixin only once');
+
+sfMixer::register('myClass:myMethodWithArgs', array('myClassMixins', 'myMixinMethodWithArgs'), true);
+$t->is(count(sfMixer::getCallables('myClass:myMethodWithArgs:myMethodWithArgs')), 2, '::register() registers a mixin multiple times if the last argument is true');
 
 sfMixer::register('myClass:myStaticMethodWithArgs', array('myClassMixins', 'myMixinStaticMethodWithArgs'));
 $t->is(myClass::myStaticMethodWithArgs('value'), "before myStaticMethodWithArgs\nin myStaticMethodWithArgs mixin method (value, default)\nafter myStaticMethodWithArgs\n", 'static method call with arguments with a mixin');
