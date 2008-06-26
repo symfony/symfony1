@@ -183,7 +183,7 @@ class sfPropelData extends sfData
     $middleClass = $middleTable->getPhpName();
     foreach ($middleTable->getColumns()  as $column)
     {
-      if ($column->isPrimaryKey() && $column->isForeignKey() && constant(get_class($obj).'Peer::TABLE_NAME') != $column->getRelatedTableName())
+      if ($column->isForeignKey() && constant(get_class($obj).'Peer::TABLE_NAME') != $column->getRelatedTableName())
       {
         $relatedClass = $this->dbMap->getTable($column->getRelatedTableName())->getPhpName();
         break;
