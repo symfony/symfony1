@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(41, new lime_output_color());
+$t = new lime_test(44, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -172,4 +172,28 @@ foreach (array(
   {
     $t->pass('->clean() throws an exception if the date is empty and required is true');
   }
+}
+
+// max and min options
+$t->diag('max and min options');
+$v->setOption('min', strtotime('1 Jan 2005'));
+$v->setOption('max', strtotime('31 Dec 2007'));
+$t->is($v->clean('18 october 2005'), '2005-10-18', '->clean() can accept a max/min option');
+try
+{
+  $v->clean('18 october 2004');
+  $t->fail('->clean() throws an exception if the date is not within the range provided by the min/max options');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an exception if the date is not within the range provided by the min/max options');
+}
+try
+{
+  $v->clean('18 october 2008');
+  $t->fail('->clean() throws an exception if the date is not within the range provided by the min/max options');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an exception if the date is not within the range provided by the min/max options');
 }
