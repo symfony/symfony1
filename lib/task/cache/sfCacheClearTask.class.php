@@ -205,6 +205,6 @@ EOF;
 
   protected function getLockFile($app, $env)
   {
-    return sfConfig::get('sf_cache_dir').'/'.$app.'_'.$env.'.lck';
+    return sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'-cli.lck';
   }
 }

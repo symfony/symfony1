@@ -119,7 +119,11 @@ EOF;
     if (!$rotateOn || ($rotateOn == $today) || $override)
     {
       // create a lock file
-      touch(sfConfig::get('sf_cache_dir').'/'.$app.'_'.$env.'.lck');
+      $lockFile = sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'-cli.lck';
+      $this->getFilesystem()->touch($lockFile);
+
+      // change mode so the web user can remove it if we die
+      $this->getFilesystem()->chmod($lockFile, 0777);
 
       // if log file exists rotate it
       if (file_exists($srcLog))
@@ -150,6 +154,9 @@ EOF;
           unlink($newLogs[0]);
         }
       }
+
+      // release lock
+      $this->getFilesystem()->remove($lockFile);
     }
   }
 }

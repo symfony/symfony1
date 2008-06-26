@@ -48,18 +48,20 @@ EOF;
     $app = $arguments['application'];
     $env = $arguments['env'];
 
-    $lockFile = $app.'_'.$env.'.lck';
-    if (!file_exists(sfConfig::get('sf_cache_dir').'/'.$lockFile))
+    $lockFile = sfConfig::get('sf_data_dir').'/'.$app.'_'.$env.'.lck';
+    if (!file_exists($lockFile))
     {
       $this->logSection('enable', sprintf('%s [%s] is currently ENABLED', $app, $env));
     }
+    else
+    {
+      $this->getFilesystem()->remove($lockFile);
 
-    $this->getFilesystem()->remove($lockFile);
+      $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
+      $clearCache->setCommandApplication($this->commandApplication);
+      $clearCache->run();
 
-    $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
-    $clearCache->setCommandApplication($this->commandApplication);
-    $clearCache->run();
-
-    $this->logSection('enable', sprintf('%s [%s] has been ENABLED', $app, $env));
+      $this->logSection('enable', sprintf('%s [%s] has been ENABLED', $app, $env));
+    }
   }
 }

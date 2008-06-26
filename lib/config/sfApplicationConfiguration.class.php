@@ -174,7 +174,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function checkLock()
   {
-    if (sfToolkit::hasLockFile(sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'.lck', 5))
+    if (
+      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'-cli.lck', 5)
+      ||
+      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'.lck')
+    )
     {
       // application is not available - we'll find the most specific unavailable page...
       $files = array(
