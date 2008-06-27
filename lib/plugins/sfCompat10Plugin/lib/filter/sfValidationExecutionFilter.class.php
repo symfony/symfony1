@@ -74,7 +74,9 @@ class sfValidationExecutionFilter extends sfFilter
    */
   protected function handleAction($filterChain, $actionInstance)
   {
-    if (sfConfig::get('sf_cache') && $this->context->getViewCacheManager()->hasActionCache($this->context->getRouting()->getCurrentInternalUri()))
+    $uri = $this->context->getRouting()->getCurrentInternalUri();
+
+    if (sfConfig::get('sf_cache') && !is_null($uri) && $this->context->getViewCacheManager()->hasActionCache($uri))
     {
       // action in cache, so go to the view
       return sfView::SUCCESS;
