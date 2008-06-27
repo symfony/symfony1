@@ -65,6 +65,14 @@ class symfony_cmd
 }
 
 $t = new lime_test(33, new lime_output_color());
+
+if (!extension_loaded('SQLite'))
+{
+  $t->skip('You need SQLite to run these tests', 33);
+
+  return;
+}
+
 $c = new symfony_cmd();
 $c->initialize($t);
 
