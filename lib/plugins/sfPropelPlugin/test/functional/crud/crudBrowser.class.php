@@ -68,10 +68,18 @@ class CrudBrowser extends sfTestBrowser
       checkResponseElement('table tbody tr td:nth(5)', '/^\d{4}\-\d{2}\-\d{2} \d{2}\:\d{2}\:\d{2}$/')->
       checkResponseElement('table tbody tr td:nth(6)', '')->
       checkResponseElement('table tbody tr td:nth(7)', '')->
+      checkResponseElement(sprintf('a[href$="/article/%s"]', in_array('non-atomic-actions', $options) ? 'edit' : 'create'), 'Create');
 
-      checkResponseElement(sprintf('a[href$="/article/%s"]', in_array('non-atomic-actions', $options) ? 'edit' : 'create'), 'Create')->
-      checkResponseElement('a[href*="/article/edit/id/"]', '/\d+/', array('count' => 2))
-    ;
+    if (in_array('with-show', $options))
+    {
+      $this->
+        checkResponseElement('a[href*="/article/show/id/"]', '/\d+/', array('count' => 2));
+    }
+    else
+    {
+      $this->
+        checkResponseElement('a[href*="/article/edit/id/"]', '/\d+/', array('count' => 2));
+    }
 
     // create page
     $this->test()->diag('create page');
@@ -119,7 +127,14 @@ class CrudBrowser extends sfTestBrowser
     // edit page
     $this->test()->diag('edit page');
     $this->
-      click('3')->
+      click('3');
+
+    if (in_array('with-show', $options))
+    {
+      $this->click('Edit');
+    }
+
+    $this->
       isStatusCode(200)->
       isRequestParameter('module', 'article')->
       isRequestParameter('action', 'edit')->
