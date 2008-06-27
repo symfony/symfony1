@@ -595,63 +595,37 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * applyInheritance
-     * applies column aggregation inheritance to DQL / SQL query
+     * Returns the inheritance condition for the passed componentAlias
+     * If no component alias is specified it defaults to the root component
      *
-     * @return string
+     * This function is used to append a SQL condition to models which have inheritance mapping
+     * The condition is applied to the FROM component in the WHERE, but the condition is applied to 
+     * JOINS in the ON condition and not the WHERE
+     *
+     * @return string $str  SQL condition string
      */
-    public function applyInheritance()
+    public function getInheritanceCondition($componentAlias)
     {
-        // get the inheritance maps
-        $array = array();
+        $map = $this->_queryComponents[$componentAlias]['table']->inheritanceMap;
 
-        foreach ($this->_queryComponents as $componentAlias => $data) {
-            $tableAlias = $this->getSqlTableAlias($componentAlias);
-            $array[$tableAlias][] = $data['table']->inheritanceMap;
+        // No inheritance map so lets just return
+        if (empty($map)) {
+          return;
         }
 
-        // apply inheritance maps
-        $str = '';
-        $c = array();
+        $tableAlias = $this->getSqlTableAlias($componentAlias);
 
-        $index = 0;
-        foreach ($array as $tableAlias => $maps) {
-            $a = array();
-
-            // don't use table aliases if the query isn't a select query
-            if ($this->_type !== Doctrine_Query::SELECT) {
-                $tableAlias = '';
-            } else {
-                $tableAlias .= '.';
-            }
-
-            foreach ($maps as $map) {
-                $b = array();
-                foreach ($map as $field => $value) {
-                    $identifier = $this->_conn->quoteIdentifier($tableAlias . $field);
-
-                    if ($index > 0) {
-                        $b[] = '(' . $identifier . ' = ' . $this->_conn->quote($value)
-                             . ' OR ' . $identifier . ' IS NULL)';
-                    } else {
-                        $b[] = $identifier . ' = ' . $this->_conn->quote($value);
-                    }
-                }
-
-                if ( ! empty($b)) {
-                    $a[] = implode(' AND ', $b);
-                }
-            }
-
-            if ( ! empty($a)) {
-                $c[] = implode(' AND ', $a);
-            }
-            $index++;
+        if ($this->_type !== Doctrine_Query::SELECT) {
+            $tableAlias = '';
+        } else {
+            $tableAlias .= '.';
         }
 
-        $str .= implode(' AND ', $c);
+        $field = key($map);
+        $value = current($map);
+        $identifier = $this->_conn->quoteIdentifier($tableAlias . $field);
 
-        return $str;
+        return $identifier . ' = ' . $this->_conn->quote($value);;
     }
 
     /**

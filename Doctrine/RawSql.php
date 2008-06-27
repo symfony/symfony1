@@ -233,7 +233,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
             }
         }
 
-        $string = $this->applyInheritance();
+        $string = $this->getInheritanceCondition($this->getRootAlias());
         if ( ! empty($string)) {
             $this->_sqlParts['where'][] = $string;
         }

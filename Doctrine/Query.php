@@ -1026,13 +1026,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             }
 
             // preserve LEFT JOINs only if needed
-			// Check if it's JOIN, if not add a comma separator instead of space
+            // Check if it's JOIN, if not add a comma separator instead of space
             if (!preg_match('/\bJOIN\b/i', $part) && !isset($this->_pendingJoinConditions[$k])) {
                 $q .= ', ' . $part;
             } else {
-                if (substr($part, 0, 9) === 'LEFT JOIN') {
-                    $e = explode(' ', $part);
+                $e = explode(' ', $part);
 
+                if (substr($part, 0, 9) === 'LEFT JOIN') {
                     $aliases = array_merge($this->_subqueryAliases,
                                 array_keys($this->_neededTables));
 
@@ -1058,7 +1058,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     unset($this->_pendingJoinConditions[$k]);
                 }
 
-                $q .= ' ' . $part;
+                $tableAlias = trim($e[3], '"');
+                $componentAlias = $this->getComponentAlias($tableAlias);
+
+                $string = $this->getInheritanceCondition($componentAlias);
+
+                if ($string) {
+                    $q .= ' ' . $part . ' AND ' . $string;
+                } else {
+                    $q .= ' ' . $part;
+                }
             }
 
             $this->_sqlParts['from'][$k] = $part;
@@ -1141,7 +1150,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $q .= ' SET ' . implode(', ', $this->_sqlParts['set']);
         }
 
-        $string = $this->applyInheritance();
+        $string = $this->getInheritanceCondition($this->getRootAlias());
 
         // apply inheritance to WHERE part
         if ( ! empty($string)) {
@@ -1781,7 +1790,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $q .= ' FROM ' . $this->_buildSqlFromPart();
 
         // append column aggregation inheritance (if needed)
-        $string = $this->applyInheritance();
+        $string = $this->getInheritanceCondition($this->getRootAlias());
 
         if ( ! empty($string)) {
             $where[] = $string;
