@@ -75,6 +75,11 @@ class sfCacheFilter extends sfFilter
 
     $uri = $this->routing->getCurrentInternalUri();
 
+    if (is_null($uri))
+    {
+      return true;
+    }
+
     // page cache
     $cacheable = $this->cacheManager->isCacheable($uri);
     if ($cacheable && $this->cacheManager->withLayout($uri))

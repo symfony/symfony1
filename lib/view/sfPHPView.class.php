@@ -152,10 +152,13 @@ class sfPHPView extends sfView
       $viewCache = $this->context->getViewCacheManager();
       $uri = $this->context->getRouting()->getCurrentInternalUri();
 
-      list($content, $decoratorTemplate) = $viewCache->getActionCache($uri);
-      if (!is_null($content))
+      if (!is_null($uri))
       {
-        $this->setDecoratorTemplate($decoratorTemplate);
+        list($content, $decoratorTemplate) = $viewCache->getActionCache($uri);
+        if (!is_null($content))
+        {
+          $this->setDecoratorTemplate($decoratorTemplate);
+        }
       }
     }
 
@@ -170,7 +173,7 @@ class sfPHPView extends sfView
       // render template file
       $content = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 
-      if (sfConfig::get('sf_cache'))
+      if (sfConfig::get('sf_cache') && !is_null($uri))
       {
         $content = $viewCache->setActionCache($uri, $content, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
       }
