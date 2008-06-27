@@ -6,6 +6,7 @@
     <column name="title" type="varchar" size="255" required="true" />
     <column name="body" type="longvarchar" />
     <column name="online" type="boolean" />
+    <column name="EXCERPT" type="varchar" />
     <column name="category_id" type="integer" required="true" />
     <foreign-key foreignTable="category">
       <reference local="category_id" foreign="id" />
@@ -16,6 +17,7 @@
     <foreign-key foreignTable="book">
       <reference local="book_id" foreign="id" onDelete="setnull" />
     </foreign-key>
+    
     <unique name="unique_title_category">
       <unique-column name="title" />
       <unique-column name="category_id" />

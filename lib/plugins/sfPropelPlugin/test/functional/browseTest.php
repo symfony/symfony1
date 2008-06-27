@@ -69,7 +69,8 @@ $b->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(1)', 'foo title')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(2)', 'bar body')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(3) img', true)->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(4)', '1')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(4)', 'foo excerpt')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(5)', '1')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td a[href$="/article/edit/id/1"]', '1')-> // clickable
 
   // second line
@@ -77,7 +78,8 @@ $b->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(1)', 'foo foo title')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(2)', 'bar bar body')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(3) img', false)->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(4)', '2')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(4)', 'foo excerpt')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(5)', '2')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td a[href$="/article/edit/id/2"]', '2')->
 
   // nb lines
@@ -350,9 +352,28 @@ $b->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'title 18', array('position' => 1))-> 
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'body 18', array('position' => 2))-> 
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td img', false, array('position' => 3))-> 
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '1', array('position' => 4))-> 
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '1', array('position' => 5))-> 
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td a[href$="/article/edit/id/21"]', '21')-> 
   // check that links for navigation are ok 
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/1"]', 3)-> 
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', 2); 
+;
+
+// sort
+$b->
+  get('/article/list/sort/title')->
+
+  isStatusCode(200)-> 
+  isRequestParameter('module', 'article')-> 
+  isRequestParameter('action', 'list')-> 
+  // sort must be case insensitve
+  get('/article/list/sort/TiTle')->
+  isStatusCode(200)-> 
+  isRequestParameter('module', 'article')-> 
+  isRequestParameter('action', 'list')->
+  // sort must be case incensitive
+  get('/article/list/sort/excerpt')->
+  isStatusCode(200)-> 
+  isRequestParameter('module', 'article')-> 
+  isRequestParameter('action', 'list')
 ;

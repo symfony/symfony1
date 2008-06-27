@@ -55,19 +55,21 @@ class CrudBrowser extends sfTestBrowser
       checkResponseElement('table thead tr th:nth(1)', 'Title')->
       checkResponseElement('table thead tr th:nth(2)', 'Body')->
       checkResponseElement('table thead tr th:nth(3)', 'Online')->
-      checkResponseElement('table thead tr th:nth(4)', 'Category')->
-      checkResponseElement('table thead tr th:nth(5)', 'Created at')->
-      checkResponseElement('table thead tr th:nth(6)', 'End date')->
-      checkResponseElement('table thead tr th:nth(7)', 'Book')->
+      checkResponseElement('table thead tr th:nth(4)', 'Excerpt')->
+      checkResponseElement('table thead tr th:nth(5)', 'Category')->
+      checkResponseElement('table thead tr th:nth(6)', 'Created at')->
+      checkResponseElement('table thead tr th:nth(7)', 'End date')->
+      checkResponseElement('table thead tr th:nth(8)', 'Book')->
 
       checkResponseElement('table tbody tr td:nth(0)', '1')->
       checkResponseElement('table tbody tr td:nth(1)', 'foo title')->
       checkResponseElement('table tbody tr td:nth(2)', 'bar body')->
       checkResponseElement('table tbody tr td:nth(3)', '1')->
-      checkResponseElement('table tbody tr td:nth(4)', '1')->
-      checkResponseElement('table tbody tr td:nth(5)', '/^\d{4}\-\d{2}\-\d{2} \d{2}\:\d{2}\:\d{2}$/')->
-      checkResponseElement('table tbody tr td:nth(6)', '')->
+      checkResponseElement('table tbody tr td:nth(4)', 'foo excerpt')->
+      checkResponseElement('table tbody tr td:nth(5)', '1')->
+      checkResponseElement('table tbody tr td:nth(6)', '/^\d{4}\-\d{2}\-\d{2} \d{2}\:\d{2}\:\d{2}$/')->
       checkResponseElement('table tbody tr td:nth(7)', '')->
+      checkResponseElement('table tbody tr td:nth(8)', '')->
       checkResponseElement(sprintf('a[href$="/article/%s"]', in_array('non-atomic-actions', $options) ? 'edit' : 'create'), 'Create');
 
     if (in_array('with-show', $options))
@@ -149,14 +151,15 @@ class CrudBrowser extends sfTestBrowser
       checkResponseElement('table tbody th:nth(0)', 'Title')->
       checkResponseElement('table tbody th:nth(1)', 'Body')->
       checkResponseElement('table tbody th:nth(2)', 'Online')->
-      checkResponseElement('table tbody th:nth(3)', 'Category id')->
-      checkResponseElement('table tbody th:nth(4)', 'Created at')->
-      checkResponseElement('table tbody th:nth(5)', 'End date')->
-      checkResponseElement('table tbody th:nth(6)', 'Book id')->
-      checkResponseElement('table tbody th:nth(7)', 'Author article list')->
-      checkResponseElement('table tbody th', 8)->
+      checkResponseElement('table tbody th:nth(3)', 'Excerpt')->
+      checkResponseElement('table tbody th:nth(4)', 'Category id')->
+      checkResponseElement('table tbody th:nth(5)', 'Created at')->
+      checkResponseElement('table tbody th:nth(6)', 'End date')->
+      checkResponseElement('table tbody th:nth(7)', 'Book id')->
+      checkResponseElement('table tbody th:nth(8)', 'Author article list')->
+      checkResponseElement('table tbody th', 9)->
 
-      checkResponseElement('table tbody td', 8)->
+      checkResponseElement('table tbody td', 9)->
       checkResponseElement('table tbody td select[id="article_category_id"][name="article[category_id]"] option', 2)->
       checkResponseElement('table tbody td select[id="article_book_id"][name="article[book_id]"] option', 2)
     ;
@@ -245,10 +248,11 @@ class CrudBrowser extends sfTestBrowser
         checkResponseElement('body table tbody tr:nth(1)', '/Title\:\s+foo foo title/')->
         checkResponseElement('body table tbody tr:nth(2)', '/Body\:\s+bar bar body/')->
         checkResponseElement('body table tbody tr:nth(3)', '/Online\:\s+/')->
-        checkResponseElement('body table tbody tr:nth(4)', '/Category\:\s+2/')->
-        checkResponseElement('body table tbody tr:nth(5)', '/Created at\:\s+[0-9\-\:\s]+/')->
-        checkResponseElement('body table tbody tr:nth(6)', '/End date\:\s+[0-9\-\:\s]+/')->
-        checkResponseElement('body table tbody tr:nth(7)', '/Book\:\s+/')
+        checkResponseElement('body table tbody tr:nth(4)', '/Excerpt\:\s+foo excerpt/')->
+        checkResponseElement('body table tbody tr:nth(5)', '/Category\:\s+2/')->
+        checkResponseElement('body table tbody tr:nth(6)', '/Created at\:\s+[0-9\-\:\s]+/')->
+        checkResponseElement('body table tbody tr:nth(7)', '/End date\:\s+[0-9\-\:\s]+/')->
+        checkResponseElement('body table tbody tr:nth(8)', '/Book\:\s+/')
       ;
     }
     else

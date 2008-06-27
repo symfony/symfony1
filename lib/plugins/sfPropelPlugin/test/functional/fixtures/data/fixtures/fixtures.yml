@@ -13,6 +13,7 @@ Article:
   article_1:
     title:       foo title
     body:        bar body
+    excerpt:     foo excerpt
     online:      true
     category_id: category_1
     created_at:  <?php echo time() ?>
@@ -20,6 +21,7 @@ Article:
   article_2:
     title:       foo foo title
     body:        bar bar body
+    excerpt:     foo excerpt
     online:      false
     category_id: category_2
     created_at:  <?php echo time() ?>
