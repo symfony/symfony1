@@ -18,6 +18,11 @@ require_once('phing/Phing.php');
  */
 class sfPhing extends Phing
 {
+  function printVersion()
+  {
+    print(self::getPhingVersion()."\n");
+  }
+
   function getPhingVersion()
   {
     return 'sfPhing';

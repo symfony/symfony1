@@ -237,6 +237,11 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $args[] = '-q';
     }
 
+    if (!is_null($this->commandApplication) && $this->commandApplication->withTrace())
+    {
+      $args[] = '-debug';
+    }
+
     // Logger
     if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(STDOUT)))
     {
