@@ -27,6 +27,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
    *  * label_separator: The separator to use between the input radio and the label
    *  * separator:       The separator to use between each input radio
    *  * formatter:       A callable to call to format the radio choices
+   *                     The formatter callable receives the widget and the array of inputs as arguments
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -76,15 +77,15 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
       }
 
       $inputs[] = array(
-        'input' => $this->renderTag('input', array_merge($baseAttributes,$attributes)),
+        'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
         'label' => $this->renderContentTag('label', $option, array('for' => $id)),
       );
     }
 
-    return call_user_func($this->getOption('formatter'), $inputs);
+    return call_user_func($this->getOption('formatter'), $this, $inputs);
   }
 
-  public function formatter($inputs)
+  public function formatter($widget, $inputs)
   {
     $rows = array();
     foreach ($inputs as $input)
