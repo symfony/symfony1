@@ -71,8 +71,10 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
           return;
         }
       }
+
+      $this->storage->regenerate(false);
     }
-  }  
+  }
 
   /**
    * Adds a credential.
@@ -108,9 +110,10 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         $this->credentials[] = $aCredential;
       }
     }
+
+    $this->storage->regenerate(false);
   }
 
-  
   /**
    * Returns true if user has credential.
    *
@@ -185,6 +188,8 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->authenticated = false;
       $this->clearCredentials();
     }
+
+    $this->storage->regenerate(false);
   }
 
   public function setTimedOut()

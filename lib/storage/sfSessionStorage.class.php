@@ -153,6 +153,20 @@ class sfSessionStorage extends sfStorage
   }
 
   /**
+   * Regenerates id that represents this storage.
+   *
+   * @param  boolean $destroy Destroy session when regenerating?
+   *
+   * @return boolean True if session regenerated, false if error
+   *
+   */
+  public function regenerate($destroy = false)
+  {
+    // regenerate a new session id
+    session_regenerate_id($destroy);
+  }
+
+  /**
    * Executes the shutdown procedure.
    *
    */

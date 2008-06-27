@@ -82,6 +82,17 @@ abstract class sfStorage
   abstract public function read($key);
 
   /**
+   * Regenerates id that represents this storage.
+   *
+   * @param  boolean destroy Destroy session when regenerating?
+   *
+   * @return boolean True if session regenerated, false if error
+   *
+   * @throws <b>sfStorageException</b> If an error occurs while regenerating this storage
+   */
+  abstract public function regenerate($destroy = false);
+
+  /**
    * Removes data from this storage.
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
