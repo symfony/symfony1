@@ -386,6 +386,27 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     { }
 
     /**
+     * Empty template method to provide Record classes with the ability to alter DQL select
+     * queries at runtime
+     */
+    public function preDqlSelect($event)
+    { }
+
+    /**
+     * Empty template method to provide Record classes with the ability to alter DQL update
+     * queries at runtime
+     */
+    public function preDqlUpdate($event)
+    { }
+
+    /**
+     * Empty template method to provide Record classes with the ability to alter DQL delete
+     * queries at runtime
+     */
+    public function preDqlDelete($event)
+    { }
+
+    /**
      * getErrorStack
      *
      * @return Doctrine_Validator_ErrorStack    returns the errorStack associated with this record

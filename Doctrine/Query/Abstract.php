@@ -1003,7 +1003,6 @@ abstract class Doctrine_Query_Abstract
         return $result;
     }
 
-
     /**
      * Get the dql call back for this query
      *
@@ -1063,14 +1062,11 @@ abstract class Doctrine_Query_Abstract
                 $table = $component['table'];
                 $record = $table->getRecordInstance();
 
-                // check (and call) preDql*() callback on the model class
-                if (method_exists($record, $callback['callback'])) {
-                    $record->$callback['callback']($this, $component, $alias);
-                }
-
-                // trigger preDql*() callback event
+                // Trigger preDql*() callback event
                 $params = array('component`' => $component, 'alias' => $alias);
                 $event = new Doctrine_Event($record, $callback['const'], $this, $params);
+
+                $record->$callback['callback']($event);
                 $table->getRecordListener()->$callback['callback']($event);
             }
         }

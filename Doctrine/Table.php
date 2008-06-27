@@ -470,12 +470,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Gets the record instance
+     * Gets the record instance for this table. The Doctrine_Table instance always holds at least one
+     * instance of a model so that it can be reused for several things, but primarily it is first
+     * used to instantiate all the internal in memory meta data
      *
      * @return object  Empty instance of the record
      */
     public function getRecordInstance()
     {
+        if ( ! $this->record) {
+            $this->record = new $this->_options['name'];
+        }
         return $this->record;
     }
 
