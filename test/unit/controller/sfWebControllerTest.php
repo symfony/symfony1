@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(17, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SCRIPT_NAME'] = '/index.php';
@@ -165,3 +165,34 @@ $t->diag('->genUrl()');
 
 $r = $context->getRouting();
 $t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('action' => 'action', 'module' => 'module', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');
+
+sfConfig::set('sf_relative_url_root', null);
+sfConfig::set('sf_no_script_name', true);
+$referenceUrl = $controller->genUrl('module/action');
+$referenceRootUrl = $controller->genUrl('@test');
+
+
+// ->genUrl() with no sf_relative_url_root
+sfConfig::set('sf_relative_url_root', null);
+
+sfConfig::set('sf_no_script_name', true);
+$t->is($controller->genUrl('module/action'), $referenceUrl, '->genUrl() with no relative_url_root and no_script_name==true');
+$t->is($controller->genUrl('@test'), $referenceRootUrl, '->genUrl() with no relative_url_root and no_script_name==true (root url)');
+
+sfConfig::set('sf_no_script_name', false);
+$t->is($controller->genUrl('module/action'), $_SERVER['SCRIPT_NAME'].$referenceUrl, '->genUrl() with no relative_url_root and no_script_name==false');
+$t->is($controller->genUrl('@test'), $_SERVER['SCRIPT_NAME'].$referenceRootUrl, '->genUrl() with no relative_url_root and no_script_name==false (root url)');
+
+
+// ->genUrl() with sf_relative_url_root to something
+sfConfig::set('sf_relative_url_root', $relativeUrlRoot='/webroot');
+$context->getRequest()->setRelativeUrlRoot($relativeUrlRoot);
+
+sfConfig::set('sf_no_script_name', true);
+$t->is($controller->genUrl('module/action'), $relativeUrlRoot.$referenceUrl, '->genUrl() with a relative_url_root set and no_script_name==true');
+$t->is($controller->genUrl('@test'), $relativeUrlRoot.$referenceRootUrl, '->genUrl() with a relative_url_root set and no_script_name==true (root url)');
+
+sfConfig::set('sf_no_script_name', false);
+$t->is($controller->genUrl('module/action'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceUrl, '->genUrl() with a relative_url_root set and no_script_name==false');
+$t->is($controller->genUrl('@test'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceRootUrl, '->genUrl() with a relative_url_root set and no_script_name==false (root url)');
+
