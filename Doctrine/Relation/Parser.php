@@ -197,6 +197,14 @@ class Doctrine_Relation_Parser
 
                 if (isset($def['localKey'])) {
                     $rel = new Doctrine_Relation_LocalKey($def);
+
+                    // Automatically index foreign keys which are not primary
+                    $foreign = (array) $def['foreign'];
+                    foreach ($foreign as $fk) {
+                        if ( ! $rel->getTable()->isIdentifier($fk)) {
+                            $rel->getTable()->addIndex($fk, array('fields' => array($fk)));
+                        }
+                    }
                 } else {
                     $rel = new Doctrine_Relation_ForeignKey($def);
                 }
