@@ -913,9 +913,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function set($fieldName, $value, $load = true)
     {
         if (isset($this->_data[$fieldName])) {
+            $type = $this->_table->getTypeOf($fieldName);
             if ($value instanceof Doctrine_Record) {
-                $type = $this->_table->getTypeOf($fieldName);
-
                 $id = $value->getIncremented();
 
                 if ($id !== null && $type !== 'object') {
@@ -929,7 +928,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $old = $this->_data[$fieldName];
             }
 
-            if ($old !== $value) {
+            if ($this->_isValueModified($type, $old, $value)) {
                 if ($value === null) {
                     $value = self::$_null;
                 }
@@ -958,6 +957,30 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         return $this;
+    }
+
+    /**
+     * Check if a value has changed according to Doctrine
+     * Doctrine is loose with type checking in the same ways PHP is for consistancy of behavior
+     *
+     * This function basically says if what is being set is of Doctrine type boolean and something
+     * like current_value == 1 && new_value = true would not be considered modified
+     *
+     * Simply doing $old !== $new will return false for boolean columns would mark the field as modified
+     * and change it in the database when it is not necessary
+     *
+     * @param string $type  Doctrine type of the column
+     * @param string $old   Old value
+     * @param string $new   New value
+     * @return boolean $modified  Whether or not Doctrine considers the value modified
+     */
+    protected function _isValueModified($type, $old, $new)
+    {
+        if ($type == 'boolean' && (is_bool($old) || is_numeric($old)) && (is_bool($new) || is_numeric($new)) && $old == $new) {
+            return false;
+        } else {
+            return $old !== $new;
+        }
     }
 
     /**
@@ -1338,15 +1361,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function fromArray($array, $deep = true)
     {
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
-                if ($deep && $this->getTable()->hasRelation($key)) {
-                    $this->$key->fromArray($value, $deep);
-                } else if ($this->getTable()->hasField($key)) {
-                    $this->set($key, $value);
-                }
-            }
-        }
+        return $this->synchronizeWithArray($array, $deep);
     }
 
     /**
@@ -1360,10 +1375,16 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param array $array representation of a Doctrine_Record
      */
-    public function synchronizeWithArray(array $array)
+    public function synchronizeWithArray(array $array, $deep = true)
     {
+        $refresh = false;
         foreach ($array as $key => $value) {
-            if ($this->getTable()->hasRelation($key)) {
+            if ($key == 'identifier') {
+                $refresh = true;
+                $this->assignIdentifier((array) $value);
+                continue;
+            }
+            if ($deep && $this->getTable()->hasRelation($key)) {
                 $this->get($key)->synchronizeWithArray($value);
             } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
@@ -1375,6 +1396,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             if ( ! isset($array[$name])) {
                 unset($this->$name);
             }
+        }
+
+        if ($refresh) {
+            $this->refresh();
         }
     }
 
