@@ -162,7 +162,7 @@ abstract class sfWebController extends sfController
       /x', $query_string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
       foreach ($matches as $match)
       {
-        $params[$match[1][0]] = $match[2][0];
+        $params[urldecode($match[1][0])] = urldecode($match[2][0]);
       }
 
       // check that all string is matched

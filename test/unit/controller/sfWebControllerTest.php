@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(25, new lime_output_color());
+$t = new lime_test(26, new lime_output_color());
 
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SCRIPT_NAME'] = '/index.php';
@@ -129,6 +129,13 @@ $tests = array(
     array(
       'id' => 12,
       'foo' => 'bar',
+    ),
+  ),
+  '@test?id=foo%26bar&foo=bar%3Dfoo' => array(
+    'test',
+    array(
+      'id' => 'foo&bar',
+      'foo' => 'bar=foo',
     ),
   ),
 );
