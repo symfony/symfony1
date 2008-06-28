@@ -800,7 +800,7 @@ class sfWebRequest extends sfRequest
 
     $pathArray = $this->getPathInfoArray();
 
-    return isset($pathArray[$name]) ? stripslashes($pathArray[$name]) : null;
+    return isset($pathArray[$name]) ? sfToolkit::stripslashesDeep($pathArray[$name]) : null;
   }
 
   /**
@@ -817,7 +817,7 @@ class sfWebRequest extends sfRequest
 
     if (isset($_COOKIE[$name]))
     {
-      $retval = get_magic_quotes_gpc() ? stripslashes($_COOKIE[$name]) : $_COOKIE[$name];
+      $retval = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_COOKIE[$name]) : $_COOKIE[$name];
     }
 
     return $retval;
