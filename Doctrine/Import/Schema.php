@@ -70,7 +70,8 @@ class Doctrine_Import_Schema
      *
      * @var array
      */
-    protected $_validation = array('root'       =>  array('connection',
+    protected $_validation = array('root'       =>  array('abstract',
+                                                          'connection',
                                                           'className',
                                                           'tableName',
                                                           'connection',
@@ -277,7 +278,8 @@ class Doctrine_Import_Schema
      */
     public function parseSchema($schema, $type)
     {
-        $defaults = array('className'           =>  null,
+        $defaults = array('abstract'            =>  false,
+                          'className'           =>  null,
                           'tableName'           =>  null,
                           'connection'          =>  null,
                           'relations'           =>  array(),
