@@ -480,12 +480,29 @@ class Doctrine_Import_Schema
 
                 // Populate the parents subclasses
                 if ($definition['inheritance']['type'] == 'column_aggregation') {
-                    $array[$extends]['inheritance']['subclasses'][$definition['className']] = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']);
+                    $parent = $this->_findBaseSuperClass($array, $definition['className']);
+                    $array[$parent]['inheritance']['subclasses'][$definition['className']] = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']);
                 }
             }
         }
 
         return $array;
+    }
+
+    /**
+     * Find the base super class for this inheritance child. We need to move all levels of children to the
+     * top most parent.
+     *
+     * @param  array  $array  Array of schema information
+     * @return string $class  Class to get find the parent for
+     */
+    protected function _findBaseSuperClass($array, $class)
+    {
+        if (isset($array[$class]['inheritance']['extends'])) {
+            return $this->_findBaseSuperClass($array, $array[$class]['inheritance']['extends']);
+        } else {
+            return $class;
+        }
     }
 
     /**
