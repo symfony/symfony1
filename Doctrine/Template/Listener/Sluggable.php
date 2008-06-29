@@ -114,7 +114,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             }
         }
 
-        $value =  Doctrine_Inflector::urlize($value);
+        $value =  call_user_func_array($this->_options['builder'], array($value, $record));
 
         return $value;
     }
@@ -135,7 +135,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         }
 
         $proposal = $record->$name ? $record->$name : $slugFromFields;
-        $proposal =  Doctrine_Inflector::urlize($proposal);
+        $proposal =  call_user_func_array($this->_options['builder'], array($proposal, $record));
         $slug = $proposal;
 
         $whereString = 'r.' . $name . ' LIKE ?';
