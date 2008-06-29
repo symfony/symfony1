@@ -471,18 +471,16 @@ class Doctrine_Import_Schema
         $moves = array('columns' => array());
         
         foreach ($array as $className => $definition) {
+            $parent = $this->_findBaseSuperClass($array, $definition['className']);
             // Move any definitions on the schema to the parent
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
-                $extends = $definition['inheritance']['extends'];
-
                 foreach ($moves as $move => $resetValue) {
-                    $array[$extends][$move] = Doctrine_Lib::arrayDeepMerge($array[$extends][$move], $definition[$move]);
+                    $array[$parent][$move] = Doctrine_Lib::arrayDeepMerge($array[$parent][$move], $definition[$move]);
                     $array[$definition['className']][$move] = $resetValue;
                 }
 
                 // Populate the parents subclasses
                 if ($definition['inheritance']['type'] == 'column_aggregation') {
-                    $parent = $this->_findBaseSuperClass($array, $definition['className']);
                     $array[$parent]['inheritance']['subclasses'][$definition['className']] = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']);
                 }
             }
