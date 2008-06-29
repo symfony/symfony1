@@ -952,7 +952,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             return $this->_columnNames[$fieldName];
         }
 
-        return $fieldName;
+        return strtolower($fieldName);
     }
 
     /**
@@ -2168,6 +2168,27 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
+     * Resolve the passed find by field name to the appropriate field name
+     * regardless of whether the user passes a column name, field name, or a Doctrine_Inflector::classified()
+     * version of their column name. It will be inflected with Doctrine_Inflector::tableize() 
+     * to get the column or field name
+     *
+     * @param string $name 
+     * @return string $fieldName
+     */
+    protected function _resolveFindByFieldName($name)
+    {
+        $fieldName = Doctrine_Inflector::tableize($name);
+        if ($this->hasColumn($name) || $this->hasField($name)) {
+            return $this->getFieldName($this->getColumnName($name));
+        } else if ($this->hasColumn($fieldName) || $this->hasField($fieldName)) {
+            return $this->getFieldName($this->getColumnName($fieldName));
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * __call
      *
      * Adds support for magic finders.
@@ -2191,9 +2212,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 throw new Doctrine_Table_Exception('You must specify the value to findBy');
             }
 
-            $fieldName = Doctrine_Inflector::tableize($by);
+            $fieldName = $this->_resolveFindByFieldName($by);
             $hydrationMode = isset($arguments[1]) ? $arguments[1]:null;
-            if ($this->hasColumn($this->getColumnName($fieldName))) {
+            if ($this->hasField($fieldName)) {
                 return $this->$method($fieldName, $arguments[0], $hydrationMode);
             } else if ($this->hasRelation($by)) {
                 $relation = $this->getRelation($by);
