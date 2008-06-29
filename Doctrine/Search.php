@@ -195,6 +195,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
             $rows = $this->readTableData($limit, $offset);
 
+            $ids = array();
             foreach ($rows as $row) {
                 $ids[] = $row[$id];
             }
