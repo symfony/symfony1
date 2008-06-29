@@ -423,15 +423,8 @@ class Doctrine_Import_Builder
      */
     public function buildSetUp(array $definition)
     {
-        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple')) {
-            return;
-        }
-
         $ret = array();
         $i = 0;
-
-        $ret[$i] = "    parent::setUp();";
-        $i++;
 
         if (isset($definition['relations']) && is_array($definition['relations']) && ! empty($definition['relations'])) {
             foreach ($definition['relations'] as $name => $relation) {
@@ -507,7 +500,19 @@ class Doctrine_Import_Builder
         $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        return PHP_EOL . '  public function setUp()' . PHP_EOL . '  {' . PHP_EOL . '    ' . $code . PHP_EOL . '  }';
+        // If the body of the function has contents then we need to 
+        if ($code) {
+            // If the body of the function has contents and we are using inheritance
+            // then we need call the parent::setUp() before the body of the function
+            if ($code && isset($definition['inheritance']['type'])) {
+                $code = "parent::setUp();" . PHP_EOL . '    ' . $code;
+            }
+        }
+
+        // If we have some code for the function then lets define it and return it
+        if ($code) {
+            return PHP_EOL . '  public function setUp()' . PHP_EOL . '  {' . PHP_EOL . '    ' . $code . PHP_EOL . '  }';
+        }
     }
 
     /**
