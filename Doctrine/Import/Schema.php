@@ -111,6 +111,7 @@ class Doctrine_Import_Schema
                                                           'refClass',
                                                           'local',
                                                           'foreign',
+                                                          'foreignClass',
                                                           'foreignAlias',
                                                           'foreignType',
                                                           'autoComplete',
