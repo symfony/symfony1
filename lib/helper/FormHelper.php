@@ -991,35 +991,6 @@ function get_id_from_name($name, $value = null)
   return $name;
 }
 
-
-/**
- * Converts specific <i>$options</i> to their correct HTML format
- *
- * @param  array $options
- * @return array returns properly formatted options 
- */
-function _convert_options($options)
-{
-  $options = _parse_attributes($options);
-
-  foreach (array('disabled', 'readonly', 'multiple') as $attribute)
-  {
-    if (array_key_exists($attribute, $options))
-    {
-      if ($options[$attribute])
-      {
-        $options[$attribute] = $attribute;
-      }
-      else
-      {
-        unset($options[$attribute]);
-      }
-    }
-  }
-
-  return $options;
-}
-
 function _convert_include_custom_for_select($options, &$select_options)
 {
   if (_get_option($options, 'include_blank'))
