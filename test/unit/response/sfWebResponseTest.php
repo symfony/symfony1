@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(72, new lime_output_color());
+$t = new lime_test(73, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -133,6 +133,8 @@ $t->diag('->getTitle() ->setTitle()');
 $t->is($response->getTitle(), '', '->getTitle() returns an empty string by default');
 $response->setTitle('my title');
 $t->is($response->getTitle(), 'my title', '->setTitle() sets the title');
+$response->setTitle('fööbäär');
+$t->is($response->getTitle(), 'fööbäär', '->setTitle() will leave encoding intact');
 
 // ->addHttpMeta()
 $t->diag('->addHttpMeta()');
