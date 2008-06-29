@@ -1,3 +1,47 @@
+Version 1.1.0
+-------------
+
+* Fixed gpc_magic_qutes and array in cookie
+* Fixed convertUrlStringToParameters breaks urlencoded parameter
+* Fixed 404 page when raised by a non existant route
+* Fixed sfForm::toString() silence exceptions
+* Added sfSession::regenerate and added calls on authentication/credential change to protect against session fixation attacks
+* Fixed addSortCriteria case sensitive problem
+* Added the widget when calling the formatter for the sfWidgetDormSelectRadio widget
+* Added debug output from Phing when using -t
+* Fixed genurl() with relative_url_root parameter set
+* Fixed m2m propel data loading
+* Added a min and a max option for sfValidatorDate
+* Fixed PHPMailer issue with UTF-8 subject being wrapped in middle of utf-8 char
+* Fixed locking issues with the cache:clear, project:disable, project:enable, and log:rotate tasks
+* Fixed Propel behavior registration when using functional tests or built-in tasks
+* Added a retry mechanism to sfMessageSource_XLIFF->save() that will recreate incorrect xml files
+* Renamed sfForm::getFormField() to sfForm::getFormFieldSchema()
+* Fixed getColumnFilterTag() component type
+* Fixed identifier name length check for Propel Generator
+* Fixed CRUD templates when using the --with-show option 
+* Fixed generated admin returning to first page regardless on which page the edit was started
+* Fixed I18N timestamp handling
+* Added generation of a .zip file when creating a sandbox
+* Added sfValidatorTime
+* sfWebRequest->isSecure now recognizes HTTP_SSL_HTTPS
+* Fixed issue with incorrect calculation of uri prefix
+* Fixed i18n XLIFF do not handle entities correctly
+* Fixed sfMemcacheCache ignores multi-memcache-server configuration and defaults to localhost
+* Fixed symfony 1.1 task argument value of 0
+* Fixed error reporting value for the test environment and added a migration task
+* Re-added getCurrentRouteName to sfPatternRouting class
+* Fixed autoload paths on windows
+* Added extension depedencies to pear package
+* Disabled the autoloadAgain feature
+* Removed noXSD attribute from Propel
+* Fixed I18N-Bug in form_error() helper
+* Fixed custom schema for plugins are not found in Win32 environments
+* Added a throw_global_error to sfPropelValidatorUnique
+* Fixed session database storage classes
+* Fixed sfValidatorDate
+* Fixed propel:build-forms when using behaviors
+
 Version 1.1.0 RC2
 ------------------
 
