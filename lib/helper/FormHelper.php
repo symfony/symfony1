@@ -958,39 +958,6 @@ function label_for($id, $label, $options = array())
   return content_tag('label', $label, array_merge(array('for' => get_id_from_name($id, null)), $options));
 }
 
-/**
- * Returns a formatted ID based on the <i>$name</i> parameter and optionally the <i>$value</i> parameter.
- *
- * This function determines the proper form field ID name based on the parameters. If a form field has an
- * array value as a name we need to convert them to proper and unique IDs like so:
- * <samp>
- *  name[] => name (if value == null)
- *  name[] => name_value (if value != null)
- *  name[bob] => name_bob
- *  name[item][total] => name_item_total
- * </samp>
- *
- * <b>Examples:</b>
- * <code>
- *  echo get_id_from_name('status[]', '1');
- * </code>
- *
- * @param  string $name   field name 
- * @param  string $value  field value
- *
- * @return string <select> tag populated with all the languages in the world.
- */
-function get_id_from_name($name, $value = null)
-{
-  // check to see if we have an array variable for a field name
-  if (strstr($name, '['))
-  {
-    $name = str_replace(array('[]', '][', '[', ']'), array((($value != null) ? '_'.$value : ''), '_', '_', ''), $name);
-  }
-
-  return $name;
-}
-
 function _convert_include_custom_for_select($options, &$select_options)
 {
   if (_get_option($options, 'include_blank'))
