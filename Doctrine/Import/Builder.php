@@ -680,7 +680,7 @@ class Doctrine_Import_Builder
         if (class_exists("Doctrine_Template_$name", true)) {
             $classname = "Doctrine_Template_$name";
         }
-        return "    \$" . strtolower($name) . "$level = new $classname($option);\n";
+        return "    \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
     }
 
     /**
@@ -693,7 +693,7 @@ class Doctrine_Import_Builder
      */
     private function emitAddChild($level, $parent, $name)
     {
-        return "    \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);\n";
+        return "    \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -706,7 +706,7 @@ class Doctrine_Import_Builder
      */
     private function emitActAs($level, $name)
     {
-        return "    \$this->actAs(\$" . strtolower($name) . "$level);\n";
+        return "    \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
 
