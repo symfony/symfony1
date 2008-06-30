@@ -25,9 +25,12 @@ class lime_symfony extends lime_harness
 }
 
 require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
-foreach (glob(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'/sf_autoload_unit_*') as $file)
+if($files = glob(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'/sf_autoload_unit_*'))
 {
-  unlink($file);
+  foreach ($files as $file)
+  {
+    unlink($file);
+  }
 }
 
 // update sfCoreAutoload
