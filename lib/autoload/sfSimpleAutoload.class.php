@@ -182,22 +182,25 @@ class sfSimpleAutoload
   public function addDirectory($dir, $ext = '.php')
   {
     $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
-    foreach (glob($dir) as $dir)
+    if($dirs = glob($dir))
     {
-      if (in_array($dir, $this->dirs))
+      foreach ($dirs as $dir)
       {
-        if ($this->cacheLoaded)
+        if (in_array($dir, $this->dirs))
         {
-          continue;
+          if ($this->cacheLoaded)
+          {
+            continue;
+          }
         }
-      }
-      else
-      {
-        $this->dirs[] = $dir;
-      }
+        else
+        {
+          $this->dirs[] = $dir;
+        }
 
-      $this->cacheChanged = true;
-      $this->addFiles($finder->in($dir), false);
+        $this->cacheChanged = true;
+        $this->addFiles($finder->in($dir), false);
+      }
     }
   }
 
