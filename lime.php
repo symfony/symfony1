@@ -74,7 +74,7 @@ class lime_test
     if (!$result)
     {
       $traces = debug_backtrace();
-      if ($_SERVER['PHP_SELF'])
+      if (!empty($_SERVER['PHP_SELF'])) 
       {
         $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : (isset($traces[1]['file']) ? 1 : 0);
       }
