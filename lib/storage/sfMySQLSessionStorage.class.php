@@ -70,7 +70,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 
     // delete the record older than the authorised session life time 
     $lifetime = $this->db_escape($lifetime); // We never know...
-    $sql = "DELETE FROM $db_table 'WHERE $db_time_col + $lifetime < UNIX_TIMESTAMP()";
+    $sql = "DELETE FROM $db_table WHERE $db_time_col + $lifetime < UNIX_TIMESTAMP()";
 
     if (!$this->db_query($sql))
     {
