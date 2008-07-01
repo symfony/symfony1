@@ -68,11 +68,12 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
           }
 
           unset($this->credentials[$key]);
+
+          $this->storage->regenerate(false);
+
           return;
         }
       }
-
-      $this->storage->regenerate(false);
     }
   }
 
@@ -103,15 +104,20 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Add credential(s) "%s"', implode(', ', $credentials)))));
     }
 
+    $added = false;
     foreach ($credentials as $aCredential)
     {
       if (!in_array($aCredential, $this->credentials))
       {
+        $added = true;
         $this->credentials[] = $aCredential;
       }
     }
 
-    $this->storage->regenerate(false);
+    if ($added)
+    {
+      $this->storage->regenerate(false);
+    }
   }
 
   /**
@@ -179,17 +185,20 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('User is %sauthenticated', $authenticated === true ? '' : 'not '))));
     }
 
-    if ($authenticated === true)
+    if ((bool) $authenticated !== $this->authenticated)
     {
-      $this->authenticated = true;
-    }
-    else
-    {
-      $this->authenticated = false;
-      $this->clearCredentials();
-    }
+      if ($authenticated === true)
+      {
+        $this->authenticated = true;
+      }
+      else
+      {
+        $this->authenticated = false;
+        $this->clearCredentials();
+      }
 
-    $this->storage->regenerate(false);
+      $this->storage->regenerate(false);
+    }
   }
 
   public function setTimedOut()

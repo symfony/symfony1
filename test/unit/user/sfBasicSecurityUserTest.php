@@ -10,11 +10,21 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(41, new lime_output_color());
+$t = new lime_test(47, new lime_output_color());
+
+class MySessionStorage extends sfSessionTestStorage
+{
+  public function regenerate($destroy = false)
+  {
+    $this->sessionId = rand(1, 9999);
+
+    return true;
+  }
+}
 
 $dispatcher = new sfEventDispatcher();
 $sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
-$storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
+$storage = new MySessionStorage(array('session_path' => $sessionPath));
 
 $user = new sfBasicSecurityUser($dispatcher, $storage);
 
@@ -35,6 +45,20 @@ $user->setAuthenticated(true);
 $t->is($user->isAuthenticated(), true, '->isAuthenticated() returns true if the user is authenticated');
 $user->setAuthenticated(false);
 $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean as its first parameter');
+
+// session id regeneration
+$user->setAuthenticated(false);
+$id = $storage->getSessionId();
+$user->setAuthenticated(true);
+$t->isnt($id, $id = $storage->getSessionId(), '->setAuthenticated() regenerates the session id if the authentication changes');
+$user->setAuthenticated(true);
+$t->is($storage->getSessionId(), $id, '->setAuthenticated() does not regenerate the session id if the authentication does not change');
+$user->addCredential('foo');
+$t->isnt($id, $id = $storage->getSessionId(), '->addCredential() regenerates the session id if a new credential is added');
+$t->is($id, $storage->getSessionId(), '->addCredential() does not regenerate the session id if the credential already exists');
+$user->removeCredential('foo');
+$t->isnt($id, $id = $storage->getSessionId(), '->removeCredential() regenerates the session id if a credential is removed');
+$t->is($id, $storage->getSessionId(), '->removeCredential() does not regenerate the session id if the credential does not exist');
 
 // ->setTimedOut() ->getTimedOut()
 $user = new sfBasicSecurityUser($dispatcher, $storage);
