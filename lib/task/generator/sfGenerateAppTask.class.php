@@ -140,7 +140,7 @@ EOF;
                        '// feel free to remove this, extend it or make something more sophisticated.'.PHP_EOL.
                        'if (!in_array(@$_SERVER[\'REMOTE_ADDR\'], array(\'127.0.0.1\')))'.PHP_EOL.
                        '{'.PHP_EOL.
-                       '  die(\'Your are not allowed to access this file. Check \'.basename(__FILE__).\' for more information.\');'.PHP_EOL.
+                       '  die(\'You are not allowed to access this file. Check \'.basename(__FILE__).\' for more information.\');'.PHP_EOL.
                        '}'.PHP_EOL,
     ));
 
