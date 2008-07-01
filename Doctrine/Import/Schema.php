@@ -532,8 +532,10 @@ class Doctrine_Import_Schema
 
                             // Set the detected foreign key type and length to the same as the primary key
                             // of the related table
-                            $array[$className]['columns'][$column['name']]['type'] = $array[$columnClassName]['columns']['id']['type'];
-                            $array[$className]['columns'][$column['name']]['length'] = $array[$columnClassName]['columns']['id']['length'];
+                            $type = isset($array[$columnClassName]['columns']['id']['type']) ? $array[$columnClassName]['columns']['id']['type']:'integer';
+                            $length = isset($array[$columnClassName]['columns']['id']['length']) ? $array[$columnClassName]['columns']['id']['length']:8;
+                            $array[$className]['columns'][$column['name']]['type'] = $type;
+                            $array[$className]['columns'][$column['name']]['length'] = $length;
                         }
                     }
                 }
