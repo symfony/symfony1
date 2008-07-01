@@ -720,7 +720,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         }
         // create new records for each new row in the array
         foreach ($array as $rowKey => $row) {
-            $this[$rowKey]->synchronizeWithArray($row);
+            $this[$rowKey]->fromArray($row);
         }
     }
     public function synchronizeFromArray(array $array)

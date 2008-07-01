@@ -1331,9 +1331,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * merge
-     *
-     * merges this record with an array of values
+     * Merges this record with an array of values
      * or with another existing instance of this object
      *
      * @param  mixed $data Data to merge. Either another instance of this model or an array
@@ -1352,22 +1350,36 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * fromArray
-     *
      * Import data from a php array
      *
      * @param   string $array Php array of data
      * @param   bool   $deep  Bool value for whether or not to merge the data deep
      * @return  void
      */
-    public function fromArray($array, $deep = true)
+    public function fromArray(array $array, $deep = true)
     {
-        return $this->synchronizeWithArray($array, $deep);
+        $refresh = false;
+        foreach ($array as $key => $value) {
+            if ($key == '_identifier') {
+                $refresh = true;
+                $this->assignIdentifier((array) $value);
+                continue;
+            }
+
+            if ($deep && $this->getTable()->hasRelation($key)) {
+                $this->$key->fromArray($value, $deep);
+            } else if ($this->getTable()->hasField($key)) {
+                $this->set($key, $value);
+            }
+        }
+
+        if ($refresh) {
+            $this->refresh();
+        }
     }
 
     /**
-     * synchronizeWithArray
-     * synchronizes a Doctrine_Record and its relations with data from an array
+     * Synchronizes a Doctrine_Record and its relations with data from an array
      *
      * it expects an array representation of a Doctrine_Record similar to the return
      * value of the toArray() method. If the array contains relations it will create
@@ -1380,11 +1392,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         $refresh = false;
         foreach ($array as $key => $value) {
-            if ($key == 'identifier') {
+            if ($key == '_identifier') {
                 $refresh = true;
                 $this->assignIdentifier((array) $value);
                 continue;
             }
+
             if ($deep && $this->getTable()->hasRelation($key)) {
                 $this->get($key)->synchronizeWithArray($value);
             } else if ($this->getTable()->hasField($key)) {
