@@ -552,7 +552,9 @@ class Doctrine_Import_Schema
             
             foreach ($relations as $alias => $relation) {
                 $class = isset($relation['class']) ? $relation['class']:$alias;
-                
+                if ( ! isset($array[$class])) {
+                    continue;
+                }
                 $relation['class'] = $class;
                 $relation['alias'] = isset($relation['alias']) ? $relation['alias'] : $alias;
                 
