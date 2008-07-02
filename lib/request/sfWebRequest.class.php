@@ -1066,6 +1066,38 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Returns the remote IP address for the request.
+   *
+   * @return string The remote IP address
+   */
+  public function getRemoteAddress()
+  {
+    $pathInfo = $this->getPathInfoArray();
+
+    return $pathInfo['REMOTE_ADDR'];
+  }
+
+  /**
+   * Returns the remote IP addressed after resolved from the forward.
+   *
+   * This is useful if you are testing to see if the user is behind a proxy. However,
+   * it should not be trusted.
+   *
+   * @return string|null The remote IP address resolved from a forward, null if none set
+   */
+  public function getForwardedRemoteAddress()
+  {
+    $pathInfo = $this->getPathInfoArray();
+
+    if (empty($pathInfo['HTTP_X_FORWARDED_FOR']))
+    {
+      return null;
+    }
+
+    return $pathInfo['HTTP_X_FORWARDED_FOR'];
+  }
+
+  /**
    * Parses the request parameters.
    *
    * This method notifies the request.filter_parameters event.

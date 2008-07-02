@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(31, new lime_output_color());
+$t = new lime_test(34, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -131,3 +131,14 @@ $_SERVER['HTTP_HOST'] = 'symfony-project.org';
 $t->is($request->getUriPrefix(), 'https://symfony-project.org', '->getUriPrefix() works fine with no port in HTTP_HOST');
 $_SERVER['HTTP_HOST'] = 'symfony-project.org:8043';
 $t->is($request->getUriPrefix(), 'https://symfony-project.org:8043', '->getUriPrefix() works for nonstandard https ports');
+
+// ->getRemoteAddress()
+$t->diag('->getRemoteAddress()');
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+$t->is($request->getRemoteAddress(), '127.0.0.1', '->getRemoteAddress() returns the remote address');
+
+// ->getForwardedRemoteAddress()
+$t->diag('->getForwardedRemoteAddress()');
+$t->is($request->getForwardedRemoteAddress(), null, '->getForwardedRemoteAddress() returns null if the request was not forwarded.');
+$_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1';
+$t->is($request->getForwardedRemoteAddress(), '10.0.0.1', '->getForwardedRemoteAddress() returns the value from HTTP_X_FORWARDED_FOR');
