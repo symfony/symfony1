@@ -195,7 +195,7 @@ END;
                 $tableForeignKeyNames[$tableName] = array();
             
                 foreach ($definitions as $definition) {
-                    $definition['name'] = $tableName . '_' . $definition['foreignTable'] . '_' . $definition['local'] . '_' . $definition['foreign'];
+                    $definition['name'] = $tableName . '_' . $definition['local'];
                 
                     $up .= $this->buildCreateForeignKey($tableName, $definition);
                     $down .= $this->buildDropForeignKey($tableName, $definition);
