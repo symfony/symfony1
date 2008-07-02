@@ -110,12 +110,12 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      *
      * Note : $data is always saved as a string
      *
-     * @param string $data      data to cache
      * @param string $id        cache id
+     * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function save($data, $id, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false)
     {
         $sql = 'INSERT INTO ' . $this->_options['tableName']
              . ' (id, data, expire) VALUES (?, ?, ?)';
