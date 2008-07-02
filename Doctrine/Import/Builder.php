@@ -36,7 +36,7 @@
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
-class Doctrine_Import_Builder
+class Doctrine_Import_Builder extends Doctrine_Builder
 {
     /**
      * _path
@@ -577,30 +577,6 @@ class Doctrine_Import_Builder
         }
 
         return $build;
-    }
-
-    /**
-     * varExport
-     *
-     * Special function for var_export()
-     * The normal code which is returned is malformed and does not follow Doctrine standards
-     * So we do some string replacing to clean it up
-     *
-     * @param string $var
-     * @return void
-     */
-    public function varExport($var)
-    {
-        $export = var_export($var, true);
-        $export = str_replace("\n", '', $export);
-        $export = str_replace('  ', ' ', $export);
-        $export = str_replace('array ( ', 'array(', $export);
-        $export = str_replace('array( ', 'array(', $export);
-        $export = str_replace(',)', ')', $export);
-        $export = str_replace(', )', ')', $export);
-        $export = str_replace('  ', ' ', $export);
-
-        return $export;
     }
 
     /*

@@ -31,7 +31,7 @@
  * @since       1.0
  * @version     $Revision: 2939 $
  */
-class Doctrine_Migration_Builder
+class Doctrine_Migration_Builder extends Doctrine_Builder
 {
     /**
      * migrationsPath
@@ -217,7 +217,7 @@ END;
      */
     public function buildCreateForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey('" . $tableName . "', " . var_export($definition, true) . ");";
+        return "\t\t\$this->createForeignKey('" . $tableName . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
@@ -242,9 +242,9 @@ END;
     {
         $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
         
-        $code .= var_export($tableData['columns'], true) . ", ";
+        $code .= $this->varExport($tableData['columns'], true) . ", ";
         
-        $code .= var_export(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
+        $code .= $this->varExport(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
         
         $code .= ");";
         
