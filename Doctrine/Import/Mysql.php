@@ -124,8 +124,9 @@ class Doctrine_Import_Mysql extends Doctrine_Import
         foreach ($results as $result)
         {
             $result = array_change_key_case($result, CASE_LOWER);
-            $relations[$result['referenced_table_name']] = array('local'   => $result['column_name'],
-                                                                 'foreign' => $result['referenced_column_name']);
+            $relations[] = array('table'   => $result['referenced_table_name'],
+                                 'local'   => $result['column_name'],
+                                 'foreign' => $result['referenced_column_name']);
         }
         return $relations;
     }

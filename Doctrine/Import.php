@@ -397,15 +397,25 @@ class Doctrine_Import extends Doctrine_Connection_Module
               try {
                   $definition['relations'] = array();
                   $relations = $connection->import->listTableRelations($table);
-                  foreach ($relations as $table => $options) {
+                  $classes = array();
+                  foreach ($relations as $relation) {
+                      $table = $relation['table'];
                       if( ! isset($options['singularize']) || $options['singularize'] !== false) {
                           $relClassTable = $this->_singularizeTableName($table);
                       } else {
                           $relClassTable = Doctrine_Inflector::tableize($table);
                       }
                       $class = Doctrine_Inflector::classify($relClassTable);
-                      $definition['relations'][$class] = array('local'          => $options['local'],
-                                                               'foreign'        => $options['foreign']);
+                      if (in_array($class, $classes)) {
+                          $alias = $class . '_' . (count($classes) + 1);
+                      } else {
+                          $alias = $class;
+                      }
+                      $classes[] = $class;
+                      $definition['relations'][$alias] = array('alias'   => $alias,
+                                                               'class'   => $class,
+                                                               'local'   => $relation['local'],
+                                                               'foreign' => $relation['foreign']);
                   }
               } catch (Exception $e) {}
 
@@ -413,14 +423,6 @@ class Doctrine_Import extends Doctrine_Connection_Module
               $classes[] = $definition['className'];
           }
 
-          // Build opposite end of relationships
-          foreach ($definitions as $defClass => $definition) {
-              foreach ($definition['relations'] as $relClass => $relation) {
-                  $definitions[$relClass]['relations'][$defClass] = array('local'   => $relation['foreign'],
-                                                                          'foreign' => $relation['local'],
-                                                                          'type'    => 'many');
-              }
-          }
 
           // Build records
           foreach ($definitions as $definition) {
