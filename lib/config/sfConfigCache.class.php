@@ -315,7 +315,7 @@ class sfConfigCache
     }
 
     // close file pointer
-    fclose($fp);
+    closedir($fp);
   }
 
   /**
