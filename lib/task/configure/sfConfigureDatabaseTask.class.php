@@ -43,20 +43,20 @@ class sfConfigureDatabaseTask extends sfBaseTask
 The [configure:database|INFO] task configures the database DSN
 for a project:
 
-  [./symfony configure:database mysql://root@mYsEcret/localhost/dbname|INFO]
+  [./symfony configure:database mysql://root:mYsEcret@localhost/dbname|INFO]
 
 By default, the task change the configuration for all environment. If you want
 to change the dsn for a specific environment, use the [env|COMMENT] option:
 
-  [./symfony configure:database --env=dev mysql://root/localhost/dbname_test|INFO]
+  [./symfony configure:database --env=dev mysql://root@localhost/dbname_test|INFO]
 
 To change the configuration for a specific application, use the [app|COMMENT] option:
 
-  [./symfony configure:database --app=frontend mysql://root/localhost/dbname|INFO]
+  [./symfony configure:database --app=frontend mysql://root@localhost/dbname|INFO]
 
 You can also specify the connection name and the database class name:
 
-  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql://root/localhost/dbname|INFO]
+  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql://root@localhost/dbname|INFO]
 
 WARNING: The [propel.ini|COMMENT] file is also updated when you use a [Propel|COMMENT] database
 and configure for [all|COMMENT] environments with no [app|COMMENT].
