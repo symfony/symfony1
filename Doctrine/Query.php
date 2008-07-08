@@ -598,7 +598,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function getExpressionOwner($expr)
     {
         if (strtoupper(substr(trim($expr, '( '), 0, 6)) !== 'SELECT') {
-            preg_match_all("/[a-z0-9_]+\.[a-z0-9_]+[\.[a-z0-9]+]*/i", $expr, $matches);
+            preg_match_all("/[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*[\.[a-z0-9]+]*/i", $expr, $matches);
 
             $match = current($matches);
 
