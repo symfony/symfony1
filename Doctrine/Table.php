@@ -237,7 +237,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
         } else {
             if ( ! isset($this->_options['tableName'])) {
-                $this->_options['tableName'] = Doctrine_Inflector::tableize($this->_options['name']);
+                $this->setTableName(Doctrine_Inflector::tableize($this->_options['name']));
             }
         }
         $this->_filters[]  = new Doctrine_Record_Filter_Standard();
@@ -351,7 +351,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $this->columnCount = count($this->_columns);
 
         if ( ! isset($this->_options['tableName'])) {
-            $this->_options['tableName'] = Doctrine_Inflector::tableize($class->getName());
+            $this->setTableName(Doctrine_Inflector::tableize($class->getName()));
         }
 
         return $record;
