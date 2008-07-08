@@ -1778,7 +1778,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // build the query base
         $q  = 'SELECT COUNT(DISTINCT ' . $tableAlias
-              . '.' . implode(', ' . $tableAlias . '.', $idColumnNames)
+              . '.' . implode(' || ' . $tableAlias . '.', $idColumnNames)
               . ') AS num_results';
 
         foreach ($this->_sqlParts['select'] as $field) {
