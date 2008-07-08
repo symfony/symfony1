@@ -232,9 +232,12 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
   
         $coll = $this->table->getConnection()->query($dql);
   
-        $max = $coll[0]->get($column);
-  
-        $max = !is_null($max) ? $max : 0;
+        if ($coll->count() > 0) {
+            $max = $coll->getFirst()->get($column);
+            $max = ! is_null($max) ? $max : 0;
+        } else {
+            $max = 0;
+        }
   
         return $max;      
     }
