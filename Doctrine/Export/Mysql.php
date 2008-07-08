@@ -156,9 +156,9 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         }
         if (isset($options['charset'])) {
             $optionStrings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
-            if (isset($options['collate'])) {
-                $optionStrings['charset'] .= ' COLLATE ' . $options['collate'];
-            }
+        }
+        if (isset($options['collate'])) {
+            $optionStrings['collate'] = 'COLLATE ' . $options['collate'];
         }
 
         $type = false;
