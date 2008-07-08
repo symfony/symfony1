@@ -48,7 +48,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         if ($options['hasManyRoots']) {
             $options['rootColumnName'] = isset($options['rootColumnName']) ? $options['rootColumnName'] : 'root_id';
         }
-        
+
         parent::__construct($table, $options);
     }
 
@@ -113,7 +113,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     {
         $q = $this->getBaseQuery();
         $q = $q->addWhere($this->_baseAlias . '.lft = ?', 1);
-        
+
         // if tree has many roots, then specify root id
         $q = $this->returnQueryWithRootId($q, $rootId);
         $data = $q->execute();
@@ -156,14 +156,14 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         } else {
             $q->addOrderBy($this->_baseAlias . ".lft ASC");
         }
-        
+
         $q = $this->returnQueryWithRootId($q, $rootId);
         $tree = $q->execute();
-        
+
         if (count($tree) <= 0) {
             return false;
         }
-        
+
         return $tree;
     }
 
@@ -183,7 +183,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
             return false;
         }
         //$depth = isset($options['depth']) ? $options['depth'] : null;
-        
+
         $q = $this->getBaseQuery();
         $params = array($record->get('lft'), $record->get('rgt'));
         $q->addWhere($this->_baseAlias . ".lft >= ? AND " . $this->_baseAlias . ".rgt <= ?", $params)
@@ -219,27 +219,27 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * calculates the current max root id
      *
      * @return integer
-     */    
+     */
     public function getMaxRootId()
-    {      
+    {
         $component = $this->table->getComponentName();
         $column    = $this->getAttribute('rootColumnName');
 
         // cannot get this dql to work, cannot retrieve result using $coll[0]->max
         //$dql = "SELECT MAX(c.$column) FROM $component c";
-        
+
         $dql = 'SELECT c.' . $column . ' FROM ' . $component . ' c ORDER BY c.' . $column . ' DESC LIMIT 1';
-  
+
         $coll = $this->table->getConnection()->query($dql);
-  
+
         if ($coll->count() > 0) {
             $max = $coll->getFirst()->get($column);
             $max = ! is_null($max) ? $max : 0;
         } else {
             $max = 0;
         }
-  
-        return $max;      
+
+        return $max;
     }
 
     /**
@@ -256,7 +256,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
                $query->addWhere($root . ' IN (' . implode(',', array_fill(0, count($rootId), '?')) . ')',
                        $rootId);
             } else {
-               $query->addWhere($root . ' = ?', $rootId); 
+               $query->addWhere($root . ' = ?', $rootId);
             }
         }
 
@@ -333,25 +333,25 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         $right = array();
         $isArray = is_array($tree);
         $rootColumnName = $this->getAttribute('rootColumnName');
-        
+
         for ($i = 0, $count = count($tree); $i < $count; $i++) {
             if ($rootColumnName && $i > 0 && $tree[$i][$rootColumnName] != $tree[$i-1][$rootColumnName]) {
                 $right = array();
             }
-            
+
             if (count($right) > 0) {
                 while (count($right) > 0 && $right[count($right)-1] < $tree[$i]['rgt']) {
                     //echo count($right);
                     array_pop($right);
                 }
             }
-     
+
             if ($isArray) {
                 $tree[$i]['level'] = count($right);
             } else {
                 $tree[$i]->getNode()->setLevel(count($right));
             }
-    
+
             $right[] = $tree[$i]['rgt'];
         }
         return $tree;
