@@ -497,6 +497,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $i++;
         }
 
+        if (isset($definition['listeners']) && is_array($definition['listeners']) && !empty($definition['listeners'])) {
+            foreach($definition['listeners'] as $listener)
+            {
+                $ret[$i] = $this->buildListener($listener);
+                $i++;
+            }
+        }
+
         $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
@@ -766,6 +774,18 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         return $build;
     }
+
+     /**
+     * buildListener
+     *
+     * @param string $listener
+     * @return string
+     */
+    public function buildListener($listener)
+    {
+        return PHP_EOL."    ".'$this->addListener(new '.$listener.'());';
+    }
+
 
     /**
      * buildAttributes

@@ -85,7 +85,8 @@ class Doctrine_Import_Schema
                                                           'package',
                                                           'inheritance',
                                                           'detect_relations',
-                                                          'generate_accessors'),
+                                                          'generate_accessors',
+                                                          'listeners'),
 
                                    'column'     =>  array('name',
                                                           'format',
