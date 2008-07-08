@@ -72,9 +72,9 @@ class Doctrine_Lib
     {
         $r[] = '<pre>';
         $r[] = 'Component  : ' . $record->getTable()->getComponentName();
-        $r[] = 'ID         : ' . $record->obtainIdentifier();
+        $r[] = 'ID         : ' . Doctrine::dump($record->identifier());
         $r[] = 'References : ' . count($record->getReferences());
-        $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->getState());
+        $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->state());
         $r[] = 'OID        : ' . $record->getOID();
         $r[] = 'data       : ' . Doctrine::dump($record->getData(), false);
         $r[] = '</pre>';
