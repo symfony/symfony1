@@ -246,6 +246,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
     protected function _setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
     {
         if ($coll === self::$_null) {
+            unset($prev[$dqlAlias]); // Ticket #1228
             return false;
         }
 
@@ -268,6 +269,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         } else if (isset($prev[$dqlAlias])) {
             unset($prev[$dqlAlias]);
         }
+        
     }
 
     /**
