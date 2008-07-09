@@ -131,6 +131,26 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
 
         return $tmp['start'] . $str . $tmp['end'];
     }
+    
+    
+    /**
+     * quoteMultipleIdentifier
+     * Quotes multiple identifier strings
+     *
+     * @param array $arr           identifiers array to be quoted
+     * @param bool $checkOption     check the 'quote_identifier' option
+     *
+     * @return string               quoted identifier string
+     */
+    public function quoteMultipleIdentifier($arr, $checkOption = true)
+    {
+        foreach ($arr as $k => $v) {
+            $arr[$k] = $this->quoteIdentifier($v, $checkOption);
+        }
+
+		return $arr;
+    }
+
 
     /**
      * quote

@@ -1777,9 +1777,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $idColumnNames = $table->getIdentifierColumnNames();
 
         // build the query base
-        $q  = 'SELECT COUNT(DISTINCT ' . $tableAlias
-              . '.' . implode(' || ' . $tableAlias . '.', $idColumnNames)
-              . ') AS num_results';
+        $q  = 'SELECT COUNT(DISTINCT ' . $this->_conn->quoteIdentifier($tableAlias)
+              . '.' . implode(
+                  ' || ' . $this->_conn->quoteIdentifier($tableAlias) . '.', 
+                  $this->_conn->quoteMultipleIdentifier($idColumnNames)
+              ) . ') AS num_results';
 
         foreach ($this->_sqlParts['select'] as $field) {
             if (strpos($field, '(') !== false) {
@@ -1806,7 +1808,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             // Default groupby to primary identifier. Database defaults to this internally
             // This is required for situations where the user has aggregate functions in the select part
             // Without the groupby it fails
-            $q .= ' GROUP BY ' . $tableAlias . '.' . implode(', ' . $tableAlias . '.', $idColumnNames);
+            $q .= ' GROUP BY ' . $this->_conn->quoteIdentifier($tableAlias) 
+			      . '.' . implode(
+                      ', ' . $this->_conn->quoteIdentifier($tableAlias) . '.', 
+                      $this->_conn->quoteMultipleIdentifier($idColumnNames)
+                  );
         }
 
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
