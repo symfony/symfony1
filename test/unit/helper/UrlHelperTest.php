@@ -37,7 +37,7 @@ class myRequest
   }
 }
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(38, new lime_output_color());
 
 $context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 
@@ -124,6 +124,7 @@ $t->is(html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8'), 'mailto:fabien.pote
 $t->diag('mail_to test');
 $t->is(mail_to('webmaster@example.com'),'<a href="mailto:webmaster@example.com">webmaster@example.com</a>','mail_to with only given email works');
 $t->is(mail_to('webmaster@example.com', 'send us an email'),'<a href="mailto:webmaster@example.com">send us an email</a>','mail_to with given email and title works');
+$t->isnt(mail_to('webmaster@example.com', 'encoded', array('encode' => true)),'<a href="mailto:webmaster@example.com">encoded</a>','mail_to with encoding works');
 
 $t->is(mail_to('webmaster@example.com', '', array(), array('subject' => 'test subject', 'body' => 'test body')),'<a href="mailto:webmaster@example.com?subject=test+subject&amp;body=test+body">webmaster@example.com</a>', 'mail_to() works with given default values in array form');
 $t->is(mail_to('webmaster@example.com', '', array(), 'subject=test subject body=test body'),'<a href="mailto:webmaster@example.com?subject=test+subject&amp;body=test+body">webmaster@example.com</a>', 'mail_to() works with given default values in string form');
