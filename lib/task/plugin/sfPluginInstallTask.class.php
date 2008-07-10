@@ -107,7 +107,7 @@ EOF;
     {
       try
       {
-        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], isset($options['channel']) ? $options['channel'] : null);
+        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], $options);
       }
       catch (Exception $e)
       {
