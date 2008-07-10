@@ -48,6 +48,6 @@ EOF;
   {
     $this->logSection('plugin', sprintf('add channel "%s"', $arguments['name']));
 
-    $this->getPluginManager()->registerChannel($arguments['name']);
+    $this->getPluginManager()->getEnvironment()->registerChannel($arguments['name']);
   }
 }
