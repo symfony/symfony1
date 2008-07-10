@@ -164,19 +164,20 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             // (related) components.
             foreach ($rowData as $dqlAlias => $data) {
                 $index = false;
-                $map   = $this->_queryComponents[$dqlAlias];
+                $map = $this->_queryComponents[$dqlAlias];
                 $table = $map['table'];
                 $componentName = $table->getComponentName();
                 $event->set('data', $data);
                 $listeners[$componentName]->preHydrate($event);
 
-                $parent   = $map['parent'];
+                $parent = $map['parent'];
                 $relation = $map['relation'];
                 $relationAlias = $map['relation']->getAlias();
 
                 $path = $parent . '.' . $dqlAlias;
 
                 if ( ! isset($prev[$parent])) {
+                    unset($prev[$dqlAlias]); // Ticket #1228
                     continue;
                 }
 
@@ -211,7 +212,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 } else {
                     // 1-1 relation
                     $oneToOne = true;
-                    if ( ! isset($nonemptyComponents[$dqlAlias])) {
+                    if ( ! isset($nonemptyComponents[$dqlAlias]) && ! isset($prev[$parent][$relationAlias])) {
                         $prev[$parent][$relationAlias] = $driver->getNullPointer();
                     } else if ( ! isset($prev[$parent][$relationAlias])) {
                         $element = $driver->getElement($data, $componentName);
@@ -224,9 +225,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         }
 
         $stmt->closeCursor();
-
         $driver->flush();
-
         //$e = microtime(true);
         //echo 'Hydration took: ' . ($e - $s) . ' for '.count($result).' records<br />';
 
@@ -234,8 +233,6 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
     }
 
     /**
-     * _setLastElement
-     *
      * sets the last element of given data array / collection
      * as previous element
      *
@@ -245,9 +242,9 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
      */
     protected function _setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
     {
-        if ($coll === self::$_null) {
+        if ($coll === self::$_null || $coll === null) {
             unset($prev[$dqlAlias]); // Ticket #1228
-            return false;
+            return;
         }
 
         if ($index !== false) {
@@ -266,10 +263,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             }
         } else if (count($coll) > 0) {
             $prev[$dqlAlias] = $coll->getLast();
-        } else if (isset($prev[$dqlAlias])) {
-            unset($prev[$dqlAlias]);
         }
-        
     }
 
     /**

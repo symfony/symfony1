@@ -927,7 +927,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             } else {
                 $old = $this->_data[$fieldName];
             }
-
+            
             if ($this->_isValueModified($type, $old, $value)) {
                 if ($value === null) {
                     $value = self::$_null;
@@ -990,7 +990,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function coreSetRelated($name, $value)
     {
         $rel = $this->_table->getRelation($name);
-
+        
+        if ($value === null) {
+            $value = self::$_null;
+        }
+        
         // one-to-many or one-to-one relation
         if ($rel instanceof Doctrine_Relation_ForeignKey || $rel instanceof Doctrine_Relation_LocalKey) {
             if ( ! $rel->isOneToOne()) {
