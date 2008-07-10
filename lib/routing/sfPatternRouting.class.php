@@ -159,10 +159,10 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-	 * Gets the current route name.
-	 *
-	 * @return string The route name
-	 */
+   * Gets the current route name.
+   *
+   * @return string The route name
+   */
   public function getCurrentRouteName()
   {
     return $this->currentRouteName;
