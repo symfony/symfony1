@@ -216,6 +216,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                         $prev[$parent][$relationAlias] = $driver->getNullPointer();
                     } else if ( ! isset($prev[$parent][$relationAlias])) {
                         $element = $driver->getElement($data, $componentName);
+
+                        $event->set('data', $element);
+                        $listeners[$componentName]->postHydrate($event);
+
                         $prev[$parent][$relationAlias] = $element;
                     }
                 }
