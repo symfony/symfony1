@@ -57,8 +57,11 @@ class Doctrine_Search extends Doctrine_Record_Generator
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
         
         if ( ! isset($this->_options['analyzer'])) {
-            $this->_options['analyzer'] = new Doctrine_Search_Analyzer_Standard();
+            $this->_options['analyzer'] = 'Doctrine_Search_Analyzer_Standard';
         }
+        
+        $this->_options['analyzer'] = new $this->_options['analyzer'];
+
         if ( ! isset($this->_options['connection'])) {
             $this->_options['connection'] = Doctrine_Manager::connection();
         }
