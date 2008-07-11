@@ -50,16 +50,18 @@ interface Doctrine_Tree_Interface {
      * optimised method to returns iterator for traversal of the entire tree from root
      *
      * @param array $options                    options
+     * @param integer $fetchmode  One of the Doctrine::HYDRATE_* constants.
      * @return object $iterator                 instance of Doctrine_Node_<Implementation>_PreOrderIterator
      */
-    public function fetchTree($options = array());
+    public function fetchTree($options = array(), $hydrationMode = Doctrine::HYDRATE_RECORD);
 
     /**
      * optimised method that returns iterator for traversal of the tree from the given record primary key
      *
      * @param mixed $pk                         primary key as used by table::find() to locate node to traverse tree from
      * @param array $options                    options
+     * @param
      * @return iterator                         instance of Doctrine_Node_<Implementation>_PreOrderIterator
      */
-    public function fetchBranch($pk, $options = array());
+    public function fetchBranch($pk, $options = array(), $hydrationMode = Doctrine::HYDRATE_RECORD);
 }
