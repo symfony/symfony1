@@ -212,17 +212,20 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 } else {
                     // 1-1 relation
                     $oneToOne = true;
+
                     if ( ! isset($nonemptyComponents[$dqlAlias]) && ! isset($prev[$parent][$relationAlias])) {
                         $prev[$parent][$relationAlias] = $driver->getNullPointer();
                     } else if ( ! isset($prev[$parent][$relationAlias])) {
                         $element = $driver->getElement($data, $componentName);
 
+						// [FIX] Tickets #1205 and #1237
                         $event->set('data', $element);
                         $listeners[$componentName]->postHydrate($event);
 
                         $prev[$parent][$relationAlias] = $element;
                     }
                 }
+                
                 $coll =& $prev[$parent][$relationAlias];
                 $this->_setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
             }
