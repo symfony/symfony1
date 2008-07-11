@@ -136,13 +136,19 @@ function get_component($moduleName, $componentName, $vars = array())
   $context = sfContext::getInstance();
   $actionName = '_'.$componentName;
 
+  $view = new sfPartialView($context, $moduleName, $actionName, '');
+  $view->setPartialVars($vars);
+
+  if ($retval = $view->getCache())
+  {
+    return $retval;
+  }
+
   $allVars = _call_component($moduleName, $componentName, $vars);
 
   if (!is_null($allVars))
   {
     // render
-    $view = new sfPartialView($context, $moduleName, $actionName, '');
-    $view->setPartialVars($vars);
     $view->getAttributeHolder()->add($allVars);
 
     return $view->render();
