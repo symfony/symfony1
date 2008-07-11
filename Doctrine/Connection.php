@@ -1439,8 +1439,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Close the temporary connection used to issue the drop database command
         $this->getManager()->closeConnection($tmpConnection);
 
-        // Re-create Doctrine style dsn
-        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+        // Re-create Doctrine or PDO style dsn
+        if ($info['unix_socket']) {
+            $dsn = array($info['scheme'] . ':unix_socket=' . $info['unix_socket'] . ';dbname=' . $info['dbname'], $this->getOption('username'), $this->getOption('password'));
+        } else {
+            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+        }
 
         // Re-open connection with the newly created database
         $this->getManager()->openConnection($dsn, $this->getName(), true);
@@ -1479,8 +1483,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Close the temporary connection used to issue the drop database command
         $this->getManager()->closeConnection($tmpConnection);
 
-        // Re-create Doctrine style dsn
-        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+        // Re-create Doctrine or PDO style dsn
+        if ($info['unix_socket']) {
+            $dsn = array($info['scheme'] . ':unix_socket=' . $info['unix_socket'] . ';dbname=' . $info['dbname'], $this->getOption('username'), $this->getOption('password'));
+        } else {
+            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+        }
 
         // Re-open connection with the newly created database
         $this->getManager()->openConnection($dsn, $this->getName(), true);
@@ -1506,7 +1514,11 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function getTmpConnection($info)
     {
-        $pdoDsn = $info['scheme'] . ':host=' . $info['host'];
+        if ($info['unix_socket']) {
+            $pdoDsn = $info['scheme'] . ':unix_socket=' . $info['unix_socket'];
+        } else {
+ 	        $pdoDsn = $info['scheme'] . ':host=' . $info['host'];
+        }
 
         if (isset($this->export->tmpConnectionDatabase) && $this->export->tmpConnectionDatabase) {
             $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
