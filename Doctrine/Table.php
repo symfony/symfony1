@@ -1216,6 +1216,32 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         return $record;
     }
+    
+    /**
+     * adds a named query in the query registry
+     *
+     * @param $queryKey  Query key name
+     * @param $query      DQL string or Doctrine_Query object
+     * @return void
+	 */
+	public function addNamedQuery($queryKey, $query)
+    {
+        $registry = Doctrine_Manager::getInstance()->getQueryRegistry();
+        $registry->add($this->getComponentName() . '/' . $queryKey, $query);
+    }
+    
+    /**
+     * creates a named query in the query registry
+     *
+     * @param $queryKey  Query key name
+     * @return Doctrine_Query
+	 */
+	public function createNamedQuery($queryKey)
+    {
+        return Doctrine_Manager::getInstance()->getQueryRegistry()
+                   ->get($queryKey, $this->getComponentName());
+    }
+
 
     /**
      * finds a record by its identifier
@@ -1304,10 +1330,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function execute($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
     {
-        return Doctrine_Manager::getInstance()
-                            ->getQueryRegistry()
-                            ->get($queryKey, $this->getComponentName())
-                            ->execute($params, $hydrationMode);
+        return $this->createNamedQuery($queryKey)->execute($params, $hydrationMode);
     }
 
     /**
@@ -1324,10 +1347,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function executeOne($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
     {
-        return Doctrine_Manager::getInstance()
-                            ->getQueryRegistry()
-                            ->get($queryKey, $this->getComponentName())
-                            ->fetchOne($params, $hydrationMode);
+        return $this->createNamedQuery($queryKey)->fetchOne($params, $hydrationMode);
     }
 
     /**
