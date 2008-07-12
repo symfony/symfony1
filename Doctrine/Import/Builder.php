@@ -352,7 +352,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     . '{'
                     . '%s' . PHP_EOL
                     . '%s' . PHP_EOL
-                    . '%s'
                     . '}';
     }
 
@@ -884,18 +883,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $setUpCode = PHP_EOL . $setUpCode;
         }
 
-        if ( ! isset($definition['generate_accessors']) || !$definition['generate_accessors']) {
-          $definition['generate_accessors'] = $this->generateAccessors();
-        }
-
-        $accessorsCode = (isset($definition['generate_accessors']) && $definition['generate_accessors'] === true) ? $this->buildAccessors($definition):null;
-
         $content = sprintf(self::$_tpl, $abstract,
                                        $className,
                                        $extends,
                                        $tableDefinitionCode,
-                                       $setUpCode,
-                                       $accessorsCode);
+                                       $setUpCode);
 
         return $content;
     }

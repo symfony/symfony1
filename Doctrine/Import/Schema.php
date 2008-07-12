@@ -85,7 +85,6 @@ class Doctrine_Import_Schema
                                                           'package',
                                                           'inheritance',
                                                           'detect_relations',
-                                                          'generate_accessors',
                                                           'listeners'),
 
                                    'column'     =>  array('name',
@@ -292,8 +291,7 @@ class Doctrine_Import_Schema
                           'options'             =>  array(),
                           'package'             =>  null,
                           'inheritance'         =>  array(),
-                          'detect_relations'    =>  false,
-                          'generate_accessors'  =>  false);
+                          'detect_relations'    =>  false);
         
         $array = Doctrine_Parser::load($schema, $type);
 
@@ -306,8 +304,7 @@ class Doctrine_Import_Schema
                             'options',
                             'package',
                             'inheritance',
-                            'detect_relations',
-                            'generate_accessors');
+                            'detect_relations');
 
         // Loop over and build up all the global values and remove them from the array
         foreach ($array as $key => $value) {
