@@ -242,7 +242,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
         $this->_filters[]  = new Doctrine_Record_Filter_Standard();
         $this->_repository = new Doctrine_Table_Repository($this);
+        
+        $this->construct();
     }
+    
+    /**
+     * construct
+     * Empty template method to provide concrete Table classes with the possibility
+     * to hook into the constructor procedure
+     *
+     * @return void
+     */
+    public function construct()
+    { }
 
     /**
      * Initializes the in-memory table definition.
