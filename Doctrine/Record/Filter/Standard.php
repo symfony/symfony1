@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1298 $
  */
@@ -41,7 +41,7 @@ class Doctrine_Record_Filter_Standard extends Doctrine_Record_Filter
      */
     public function filterSet(Doctrine_Record $record, $name, $value)
     {
-        throw new Doctrine_Record_Exception('Unknown record property / related component \'' . $name . '\'.');
+        throw new Doctrine_Record_Exception(sprintf('Unknown record property / related component "%s" on "%s"', $name, get_class($record)));
     }
 
     /**
@@ -52,6 +52,6 @@ class Doctrine_Record_Filter_Standard extends Doctrine_Record_Filter
      */
     public function filterGet(Doctrine_Record $record, $name)
     {
-        throw new Doctrine_Record_Exception('Unknown record property / related component \'' . $name . '\'.');
+        throw new Doctrine_Record_Exception(sprintf('Unknown record property / related component "%s" on "%s"', $name, get_class($record)));
     }
 }

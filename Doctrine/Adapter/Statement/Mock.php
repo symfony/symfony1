@@ -16,34 +16,49 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Adapter_Statement_Mock
- * This class is used for special testing purposes.
+ * Mock connection adapter statement class. Used for special testing purposes
  *
  * @package     Doctrine
  * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Interface
 {
-    private $mock;
-    
+    /**
+     * Variable which stores instance of Doctrine_Adapter_Mock
+     *
+     * @var Doctrine_Adapter_Mock
+     */
+    private $_mock;
+
+    /**
+     * queryString
+     *
+     * @var string
+     */
     public $queryString;
 
+    /**
+     * Constructor for mock adapter statements. Accepts instance of Doctrine_Adapter_Mock
+     *
+     * @param Doctrine_Adapter_Mock $mock
+     */
     public function __construct($mock)
     {
-        $this->mock  = $mock;
+        $this->_mock  = $mock;
     }
 
     /**
      * bindColumn
+     *
      * Bind a column to a PHP variable
      *
      * @param mixed $column         Number of the column (1-indexed) or name of the column in the result set.
@@ -54,13 +69,12 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      * @return boolean              Returns TRUE on success or FALSE on failure
      */
     public function bindColumn($column, $param, $type = null)
-    {
-        
-    }
+    { }
 
     /**
      * bindValue
-     * Binds a value to a corresponding named or question mark 
+     *
+     * Binds a value to a corresponding named or question mark
      * placeholder in the SQL statement that was use to prepare the statement.
      *
      * @param mixed $param          Parameter identifier. For a prepared statement using named placeholders,
@@ -73,19 +87,18 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      * @return boolean              Returns TRUE on success or FALSE on failure.
      */
     public function bindValue($param, $value, $type = null)
-    {
-        
-    }
+    { }
 
     /**
      * bindParam
-     * Binds a PHP variable to a corresponding named or question mark placeholder in the 
+     *
+     * Binds a PHP variable to a corresponding named or question mark placeholder in the
      * SQL statement that was use to prepare the statement. Unlike Doctrine_Adapter_Statement_Interface->bindValue(),
-     * the variable is bound as a reference and will only be evaluated at the time 
+     * the variable is bound as a reference and will only be evaluated at the time
      * that Doctrine_Adapter_Statement_Interface->execute() is called.
      *
-     * Most parameters are input parameters, that is, parameters that are 
-     * used in a read-only fashion to build up the query. Some drivers support the invocation 
+     * Most parameters are input parameters, that is, parameters that are
+     * used in a read-only fashion to build up the query. Some drivers support the invocation
      * of stored procedures that return data as output parameters, and some also as input/output
      * parameters that both send in data and are updated to receive it.
      *
@@ -106,11 +119,12 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function bindParam($column, &$variable, $type = null, $length = null, $driverOptions = array())
     {
-        
+
     }
 
     /**
      * closeCursor
+     *
      * Closes the cursor, enabling the statement to be executed again.
      *
      * @return boolean              Returns TRUE on success or FALSE on failure.
@@ -120,9 +134,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
         return true;
     }
 
-    /** 
+    /**
      * columnCount
-     * Returns the number of columns in the result set 
+     *
+     * Returns the number of columns in the result set
      *
      * @return integer              Returns the number of columns in the result set represented
      *                              by the Doctrine_Adapter_Statement_Interface object. If there is no result set,
@@ -130,12 +145,13 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function columnCount()
     {
-        return 0;        
+        return 0;
     }
 
     /**
      * errorCode
-     * Fetch the SQLSTATE associated with the last operation on the statement handle 
+     *
+     * Fetch the SQLSTATE associated with the last operation on the statement handle
      *
      * @see Doctrine_Adapter_Interface::errorCode()
      * @return string       error code string
@@ -147,13 +163,14 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * errorInfo
+     *
      * Fetch extended error information associated with the last operation on the statement handle
      *
      * @see Doctrine_Adapter_Interface::errorInfo()
      * @return array        error info array
      */
     public function errorInfo()
-    { 
+    {
         return array();
     }
 
@@ -165,10 +182,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      *                                      This value must be one of the Doctrine::FETCH_* constants,
      *                                      defaulting to Doctrine::FETCH_BOTH
      *
-     * @param integer $cursorOrientation    For a PDOStatement object representing a scrollable cursor, 
-     *                                      this value determines which row will be returned to the caller. 
+     * @param integer $cursorOrientation    For a PDOStatement object representing a scrollable cursor,
+     *                                      this value determines which row will be returned to the caller.
      *                                      This value must be one of the Doctrine::FETCH_ORI_* constants, defaulting to
-     *                                      Doctrine::FETCH_ORI_NEXT. To request a scrollable cursor for your 
+     *                                      Doctrine::FETCH_ORI_NEXT. To request a scrollable cursor for your
      *                                      Doctrine_Adapter_Statement_Interface object,
      *                                      you must set the Doctrine::ATTR_CURSOR attribute to Doctrine::CURSOR_SCROLL when you
      *                                      prepare the SQL statement with Doctrine_Adapter_Interface->prepare().
@@ -176,10 +193,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      * @param integer $cursorOffset         For a Doctrine_Adapter_Statement_Interface object representing a scrollable cursor for which the
      *                                      $cursorOrientation parameter is set to Doctrine::FETCH_ORI_ABS, this value specifies
      *                                      the absolute number of the row in the result set that shall be fetched.
-     *                                      
-     *                                      For a Doctrine_Adapter_Statement_Interface object representing a scrollable cursor for 
-     *                                      which the $cursorOrientation parameter is set to Doctrine::FETCH_ORI_REL, this value 
-     *                                      specifies the row to fetch relative to the cursor position before 
+     *
+     *                                      For a Doctrine_Adapter_Statement_Interface object representing a scrollable cursor for
+     *                                      which the $cursorOrientation parameter is set to Doctrine::FETCH_ORI_REL, this value
+     *                                      specifies the row to fetch relative to the cursor position before
      *                                      Doctrine_Adapter_Statement_Interface->fetch() was called.
      *
      * @return mixed
@@ -193,6 +210,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * fetchAll
+     *
      * Returns an array containing all of the result set rows
      *
      * @param integer $fetchStyle           Controls how the next row will be returned to the caller.
@@ -211,6 +229,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * execute
+     *
      * Executes a prepared statement
      *
      * If the prepared statement included parameter markers, you must either:
@@ -226,19 +245,20 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function execute($params = null)
     {
-        if (is_object($this->mock)) {
-            $this->mock->addQuery($this->queryString);
+        if (is_object($this->_mock)) {
+            $this->_mock->addQuery($this->queryString);
         }
         return true;
     }
 
     /**
      * fetchColumn
+     *
      * Returns a single column from the next row of a
      * result set or FALSE if there are no more rows.
      *
-     * @param integer $columnIndex          0-indexed number of the column you wish to retrieve from the row. If no 
-     *                                      value is supplied, Doctrine_Adapter_Statement_Interface->fetchColumn() 
+     * @param integer $columnIndex          0-indexed number of the column you wish to retrieve from the row. If no
+     *                                      value is supplied, Doctrine_Adapter_Statement_Interface->fetchColumn()
      *                                      fetches the first column.
      *
      * @return string                       returns a single column in the next row of a result set.
@@ -250,29 +270,31 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * fetchObject
+     *
      * Fetches the next row and returns it as an object.
      *
-     * Fetches the next row and returns it as an object. This function is an alternative to 
+     * Fetches the next row and returns it as an object. This function is an alternative to
      * Doctrine_Adapter_Statement_Interface->fetch() with Doctrine::FETCH_CLASS or Doctrine::FETCH_OBJ style.
      *
-     * @param string $className             Name of the created class, defaults to stdClass. 
+     * @param string $className             Name of the created class, defaults to stdClass.
      * @param array $args                   Elements of this array are passed to the constructor.
      *
-     * @return mixed                        an instance of the required class with property names that correspond 
+     * @return mixed                        an instance of the required class with property names that correspond
      *                                      to the column names or FALSE in case of an error.
      */
-    public function fetchObject($className = 'stdClass', $args = array()) 
+    public function fetchObject($className = 'stdClass', $args = array())
     {
         return new $className();
     }
 
     /**
      * nextRowset
+     *
      * Advances to the next rowset in a multi-rowset statement handle
-     * 
-     * Some database servers support stored procedures that return more than one rowset 
-     * (also known as a result set). The nextRowset() method enables you to access the second 
-     * and subsequent rowsets associated with a PDOStatement object. Each rowset can have a 
+     *
+     * Some database servers support stored procedures that return more than one rowset
+     * (also known as a result set). The nextRowset() method enables you to access the second
+     * and subsequent rowsets associated with a PDOStatement object. Each rowset can have a
      * different set of columns from the preceding rowset.
      *
      * @return boolean                      Returns TRUE on success or FALSE on failure.
@@ -284,23 +306,25 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * rowCount
-     * rowCount() returns the number of rows affected by the last DELETE, INSERT, or UPDATE statement 
+     *
+     * rowCount() returns the number of rows affected by the last DELETE, INSERT, or UPDATE statement
      * executed by the corresponding object.
      *
-     * If the last SQL statement executed by the associated Statement object was a SELECT statement, 
-     * some databases may return the number of rows returned by that statement. However, 
-     * this behaviour is not guaranteed for all databases and should not be 
+     * If the last SQL statement executed by the associated Statement object was a SELECT statement,
+     * some databases may return the number of rows returned by that statement. However,
+     * this behaviour is not guaranteed for all databases and should not be
      * relied on for portable applications.
      *
      * @return integer                      Returns the number of rows.
      */
     public function rowCount()
-    { 
+    {
         return 0;
     }
 
     /**
      * getColumnMeta
+     *
      * Returns metadata for a column in a result set
      *
      * @param integer $column               The 0-indexed column in the result set.
@@ -317,9 +341,11 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function getColumnMeta($column)
     { }
+
     /**
      * getAttribute
-     * Retrieve a statement attribute 
+     *
+     * Retrieve a statement attribute
      *
      * @param integer $attribute
      * @see Doctrine::ATTR_* constants
@@ -327,8 +353,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function getAttribute($attribute)
     { }
+
     /**
      * setAttribute
+     *
      * Set a statement attribute
      *
      * @param integer $attribute
@@ -337,8 +365,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function setAttribute($attribute, $value)
     { }
+
     /**
      * setFetchMode
+     *
      * Set the default fetch mode for this statement
      *
      * @param integer $mode                 The fetch mode must be one of the Doctrine::FETCH_* constants.

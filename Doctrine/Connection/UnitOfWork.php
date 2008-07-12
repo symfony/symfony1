@@ -16,124 +16,32 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * Doctrine_Connection_UnitOfWork
+ *
+ * Note: This class does not have the semantics of a real "Unit of Work" in 0.10/1.0.
+ * Database operations are not queued. All changes to objects are immediately written
+ * to the database. You can think of it as a unit of work in auto-flush mode.
+ *
+ * Referential integrity is currently not always ensured.
  *
  * @package     Doctrine
  * @subpackage  Connection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 {
     /**
-     * buildFlushTree
-     * builds a flush tree that is used in transactions
-     *
-     * The returned array has all the initialized components in
-     * 'correct' order. Basically this means that the records of those
-     * components can be saved safely in the order specified by the returned array.
-     *
-     * @param array $tables     an array of Doctrine_Table objects or component names
-     * @return array            an array of component names in flushing order
-     */
-    public function buildFlushTree(array $tables)
-    {
-        $tree = array();
-        foreach ($tables as $k => $table) {
-
-            if ( ! ($table instanceof Doctrine_Table)) {
-                $table = $this->conn->getTable($table, false);
-            }
-            $nm     = $table->getComponentName();
-
-            $index  = array_search($nm, $tree);
-
-            if ($index === false) {
-                $tree[] = $nm;
-                $index  = max(array_keys($tree));
-            }
-
-            $rels = $table->getRelations();
-
-            // group relations
-
-            foreach ($rels as $key => $rel) {
-                if ($rel instanceof Doctrine_Relation_ForeignKey) {
-                    unset($rels[$key]);
-                    array_unshift($rels, $rel);
-                }
-            }
-
-            foreach ($rels as $rel) {
-                $name   = $rel->getTable()->getComponentName();
-                $index2 = array_search($name,$tree);
-                $type   = $rel->getType();
-
-                // skip self-referenced relations
-                if ($name === $nm) {
-                    continue;
-                }
-
-                if ($rel instanceof Doctrine_Relation_ForeignKey) {
-                    if ($index2 !== false) {
-                        if ($index2 >= $index)
-                            continue;
-
-                        unset($tree[$index]);
-                        array_splice($tree,$index2,0,$nm);
-                        $index = $index2;
-                    } else {
-                        $tree[] = $name;
-                    }
-
-                } elseif ($rel instanceof Doctrine_Relation_LocalKey) {
-                    if ($index2 !== false) {
-                        if ($index2 <= $index)
-                            continue;
-
-                        unset($tree[$index2]);
-                        array_splice($tree,$index,0,$name);
-                    } else {
-                        array_unshift($tree,$name);
-                        $index++;
-                    }
-                } elseif ($rel instanceof Doctrine_Relation_Association) {
-                    $t = $rel->getAssociationFactory();
-                    $n = $t->getComponentName();
-
-                    if ($index2 !== false)
-                        unset($tree[$index2]);
-
-                    array_splice($tree, $index, 0, $name);
-                    $index++;
-
-                    $index3 = array_search($n, $tree);
-
-                    if ($index3 !== false) {
-                        if ($index3 >= $index)
-                            continue;
-
-                        unset($tree[$index]);
-                        array_splice($tree, $index3, 0, $n);
-                        $index = $index2;
-                    } else {
-                        $tree[] = $n;
-                    }
-                }
-            }
-        }
-        return array_values($tree);
-    }
-
-    /**
-     * saves the given record
+     * Saves the given record and all associated records.
+     * (The save() operation is always cascaded in 0.10/1.0).
      *
      * @param Doctrine_Record $record
      * @return void
@@ -148,20 +56,18 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         }
 
         $record->state(Doctrine_Record::STATE_LOCKED);
-        
-        $conn->beginTransaction();
+
+        $conn->beginInternalTransaction();
         $saveLater = $this->saveRelated($record);
 
         $record->state($state);
 
         if ($record->isValid()) {
             $event = new Doctrine_Event($record, Doctrine_Event::RECORD_SAVE);
-
             $record->preSave($event);
-
             $record->getTable()->getRecordListener()->preSave($event);
             $state = $record->state();
-
+            
             if ( ! $event->skipOperation) {
                 switch ($state) {
                     case Doctrine_Record::STATE_TDIRTY:
@@ -173,13 +79,16 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         break;
                     case Doctrine_Record::STATE_CLEAN:
                     case Doctrine_Record::STATE_TCLEAN:
-
                         break;
                 }
             }
 
+            // NOTE: what about referential integrity issues?
+            foreach ($record->getPendingDeletes() as $pendingDelete) {
+                $pendingDelete->delete();
+            }
+
             $record->getTable()->getRecordListener()->postSave($event);
-             
             $record->postSave($event);
         } else {
             $conn->transaction->addInvalid($record);
@@ -194,7 +103,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             if ($record->hasReference($alias)) {
                 $obj = $record->$alias;
-            
+
                 // check that the related object is not an instance of Doctrine_Null
                 if ( ! ($obj instanceof Doctrine_Null)) {
                     $obj->save($conn);
@@ -206,7 +115,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $this->saveAssociations($record);
 
         $record->state($state);
-        
+
         $conn->commit();
 
         return true;
@@ -243,13 +152,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         }
 
         $record->getTable()->getRecordListener()->postSave($event);
-        
+
         $record->postSave($event);
     }
 
     /**
-     * deletes given record and all the related composites
-     * this operation is isolated by a transaction
+     * Deletes the given record and all the related records that participate
+     * in an application-level delete cascade.
      *
      * this event can be listened by the onPreDelete and onDelete listeners
      *
@@ -257,136 +166,193 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function delete(Doctrine_Record $record)
     {
-        if ( ! $record->exists()) {
-            return false;
-        }
-        $this->conn->beginTransaction();
-
-        $event = new Doctrine_Event($record, Doctrine_Event::RECORD_DELETE);
-
-        $record->preDelete($event);
-        
-        $table = $record->getTable();
-
-        $table->getRecordListener()->preDelete($event);
-
-        $state = $record->state();
-
-        $record->state(Doctrine_Record::STATE_LOCKED);
-
-        $this->deleteComposites($record);
-
-        if ( ! $event->skipOperation) {
-            $record->state(Doctrine_Record::STATE_TDIRTY);
-            if ($table->getOption('joinedParents')) {
-
-                foreach ($table->getOption('joinedParents') as $parent) {
-                    $parentTable = $table->getConnection()->getTable($parent);
-                    
-                    $this->conn->delete($parentTable, $record->identifier());
-                }
-            }
-            $this->conn->delete($table, $record->identifier());
-
-            $record->state(Doctrine_Record::STATE_TCLEAN);
-        } else {
-            // return to original state   
-            $record->state($state);
-        }
-
-        $table->getRecordListener()->postDelete($event);
-
-        $record->postDelete($event);
-        
-        $table->removeRecord($record);
-
-        $this->conn->commit();
-
-        return true;
-    }
-    
-    /**
-     * @todo Description. See also the todo for deleteMultiple().
-     */
-    public function deleteRecord(Doctrine_Record $record)
-    {
-        $ids = $record->identifier();
-        $tmp = array();
-        
-        foreach (array_keys($ids) as $id) {
-            $tmp[] = $id . ' = ? ';
-        }
-        
-        $params = array_values($ids);
-
-        $query = 'DELETE FROM '
-               . $this->conn->quoteIdentifier($record->getTable()->getTableName())
-               . ' WHERE ' . implode(' AND ', $tmp);
-
-
-        return $this->conn->exec($query, $params);
+        $deletions = array();
+        $this->_collectDeletions($record, $deletions);
+        return $this->_executeDeletions($deletions);
     }
 
     /**
-     * deleteMultiple
-     * deletes all records from the pending delete list
+     * Collects all records that need to be deleted by applying defined
+     * application-level delete cascades.
      *
-     * @return void
-     * @todo Refactor. Maybe move to the Connection class? Sometimes UnitOfWork constructs
-     *       queries itself and sometimes it leaves the sql construction to Connection.
-     *       This should be changed.
+     * @param array $deletions  Map of the records to delete. Keys=Oids Values=Records.
      */
-    public function deleteMultiple(array $records)
-    {        
-        foreach ($this->delete as $name => $deletes) {
-            $record = false;
-            $ids = array();
-            
-            // Note: Why is the last element's table identifier checked here and then 
-            // the table object from $deletes[0] used???
-            if (is_array($deletes[count($deletes)-1]->getTable()->getIdentifier()) &&
-                    count($deletes) > 0) {
-                $table = $deletes[0]->getTable();
-                $query = 'DELETE FROM '
-                       . $this->conn->quoteIdentifier($table->getTableName())
-                       . ' WHERE ';
+    private function _collectDeletions(Doctrine_Record $record, array &$deletions)
+    {
+        if ( ! $record->exists()) {
+            return;
+        }
 
-                $params = array();
-                $cond = array();
-                foreach ($deletes as $k => $record) {
-                    $ids = $record->identifier();
-                    $tmp = array();
-                    foreach (array_keys($ids) as $id) {
-                        $tmp[] = $table->getColumnName($id) . ' = ? ';
+        $deletions[$record->getOid()] = $record;
+        $this->_cascadeDelete($record, $deletions);
+    }
+
+    /**
+     * Executes the deletions for all collected records during a delete operation
+     * (usually triggered through $record->delete()).
+     *
+     * @param array $deletions  Map of the records to delete. Keys=Oids Values=Records.
+     */
+    private function _executeDeletions(array $deletions)
+    {
+        // collect class names
+        $classNames = array();
+        foreach ($deletions as $record) {
+            $classNames[] = $record->getTable()->getComponentName();
+        }
+        $classNames = array_unique($classNames);
+
+        // order deletes
+        $executionOrder = $this->buildFlushTree($classNames);
+
+        // execute
+        try {
+            $this->conn->beginInternalTransaction();
+
+            for ($i = count($executionOrder) - 1; $i >= 0; $i--) {
+                $className = $executionOrder[$i];
+                $table = $this->conn->getTable($className);
+
+                // collect identifiers
+                $identifierMaps = array();
+                $deletedRecords = array();
+                foreach ($deletions as $oid => $record) {
+                    if ($record->getTable()->getComponentName() == $className) {
+                        $veto = $this->_preDelete($record);
+                        if ( ! $veto) {
+                            $identifierMaps[] = $record->identifier();
+                            $deletedRecords[] = $record;
+                            unset($deletions[$oid]);
+                        }
                     }
-                    $params = array_merge($params, array_values($ids));
-                    $cond[] = '(' . implode(' AND ', $tmp) . ')';
                 }
-                $query .= implode(' OR ', $cond);
 
-                $this->conn->execute($query, $params);
-            } else {
-                foreach ($deletes as $k => $record) {
-                    $ids[] = $record->getIncremented();
+                if (count($deletedRecords) < 1) {
+                    continue;
                 }
-                // looks pretty messy. $record should be already out of scope. ugly php behaviour.
-                // even the php manual agrees on that and recommends to unset() the last element
-                // immediately after the loop ends.
-                $table = $record->getTable();
-                if ($record instanceof Doctrine_Record) {
-                    $params = substr(str_repeat('?, ', count($ids)), 0, -2);
-    
-                    $query = 'DELETE FROM '
-                           . $this->conn->quoteIdentifier($record->getTable()->getTableName())
-                           . ' WHERE '
-                           . $table->getColumnName($table->getIdentifier())
-                           . ' IN(' . $params . ')';
-        
-                    $this->conn->execute($query, $ids);
+
+                // extract query parameters (only the identifier values are of interest)
+                $params = array();
+                $columnNames = array();
+                foreach ($identifierMaps as $idMap) {
+                    while (list($fieldName, $value) = each($idMap)) {
+                        $params[] = $value;
+                        $columnNames[] = $table->getColumnName($fieldName);
+                    }
+                }
+                $columnNames = array_unique($columnNames);
+
+                // delete
+                $tableName = $table->getTableName();
+                $sql = "DELETE FROM " . $this->conn->quoteIdentifier($tableName) . " WHERE ";
+
+                if ($table->isIdentifierComposite()) {
+                    $sql .= $this->_buildSqlCompositeKeyCondition($columnNames, count($identifierMaps));
+                    $this->conn->exec($sql, $params);
+                } else {
+                    $sql .= $this->_buildSqlSingleKeyCondition($columnNames, count($params));
+                    $this->conn->exec($sql, $params);
+                }
+
+                // adjust state, remove from identity map and inform postDelete listeners
+                foreach ($deletedRecords as $record) {
+                    // currently just for bc!
+                    $this->_deleteCTIParents($table, $record);
+                    //--
+                    $record->state(Doctrine_Record::STATE_TCLEAN);
+                    $record->getTable()->removeRecord($record);
+                    $this->_postDelete($record);
                 }
             }
+
+            $this->conn->commit();
+            // trigger postDelete for records skipped during the deletion (veto!)
+            foreach ($deletions as $skippedRecord) {
+                $this->_postDelete($skippedRecord);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            throw $e;
         }
     }
+
+    /**
+     * Builds the SQL condition to target multiple records who have a single-column
+     * primary key.
+     *
+     * @param Doctrine_Table $table  The table from which the records are going to be deleted.
+     * @param integer $numRecords  The number of records that are going to be deleted.
+     * @return string  The SQL condition "pk = ? OR pk = ? OR pk = ? ..."
+     */
+    private function _buildSqlSingleKeyCondition($columnNames, $numRecords)
+    {
+        $idColumn = $this->conn->quoteIdentifier($columnNames[0]);
+        return implode(' OR ', array_fill(0, $numRecords, "$idColumn = ?"));
+    }
+
+    /**
+     * Builds the SQL condition to target multiple records who have a composite primary key.
+     *
+     * @param Doctrine_Table $table  The table from which the records are going to be deleted.
+     * @param integer $numRecords  The number of records that are going to be deleted.
+     * @return string  The SQL condition "(pk1 = ? AND pk2 = ?) OR (pk1 = ? AND pk2 = ?) ..."
+     */
+    private function _buildSqlCompositeKeyCondition($columnNames, $numRecords)
+    {
+        $singleCondition = "";
+        foreach ($columnNames as $columnName) {
+            $columnName = $this->conn->quoteIdentifier($columnName);
+            if ($singleCondition === "") {
+                $singleCondition .= "($columnName = ?";
+            } else {
+                $singleCondition .= " AND $columnName = ?";
+            }
+        }
+        $singleCondition .= ")";
+        $fullCondition = implode(' OR ', array_fill(0, $numRecords, $singleCondition));
+
+        return $fullCondition;
+    }
+
+    /**
+     * Cascades an ongoing delete operation to related objects. Applies only on relations
+     * that have 'delete' in their cascade options.
+     * This is an application-level cascade. Related objects that participate in the
+     * cascade and are not yet loaded are fetched from the database.
+     * Exception: many-valued relations are always (re-)fetched from the database to
+     * make sure we have all of them.
+     *
+     * @param Doctrine_Record  The record for which the delete operation will be cascaded.
+     * @throws PDOException    If something went wrong at database level
+     * @return void
+     */
+     protected function _cascadeDelete(Doctrine_Record $record, array &$deletions)
+     {
+         foreach ($record->getTable()->getRelations() as $relation) {
+             if ($relation->isCascadeDelete()) {
+                 $fieldName = $relation->getAlias();
+                 // if it's a xToOne relation and the related object is already loaded
+                 // we don't need to refresh.
+                 if ( ! ($relation->getType() == Doctrine_Relation::ONE && isset($record->$fieldName))) {
+                     $record->refreshRelated($relation->getAlias());
+                 }
+                 $relatedObjects = $record->get($relation->getAlias());
+                 if ($relatedObjects instanceof Doctrine_Record && $relatedObjects->exists()
+                        && ! isset($deletions[$relatedObjects->getOid()])) {
+                     $this->_collectDeletions($relatedObjects, $deletions);
+                 } else if ($relatedObjects instanceof Doctrine_Collection && count($relatedObjects) > 0) {
+                     // cascade the delete to the other objects
+                     foreach ($relatedObjects as $object) {
+                         if ( ! isset($deletions[$object->getOid()])) {
+                             $this->_collectDeletions($object, $deletions);
+                         }
+                     }
+                 }
+             }
+         }
+     }
 
     /**
      * saveRelated
@@ -413,7 +379,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 // Protection against infinite function recursion before attempting to save
                 if ($obj instanceof Doctrine_Record && $obj->isModified()) {
                     $obj->save($this->conn);
-                    
+
                     /** Can this be removed?
                     $id = array_values($obj->identifier());
 
@@ -447,8 +413,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     {
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
-            
-            if ($rel instanceof Doctrine_Relation_Association) {   
+
+            if ($rel instanceof Doctrine_Relation_Association) {
                 $v->save($this->conn);
 
                 $assocTable = $rel->getAssociationTable();
@@ -464,7 +430,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     $assocRecord = $assocTable->create();
                     $assocRecord->set($assocTable->getFieldName($rel->getForeign()), $r);
                     $assocRecord->set($assocTable->getFieldName($rel->getLocal()), $record);
-
                     $this->saveGraph($assocRecord);
                 }
             }
@@ -472,23 +437,27 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     }
 
     /**
-     * deletes all related composites
-     * this method is always called internally when a record is deleted
+     * Invokes preDelete event listeners.
      *
-     * @throws PDOException         if something went wrong at database level
-     * @return void
+     * @return boolean  Whether a listener has used it's veto (don't delete!).
      */
-    public function deleteComposites(Doctrine_Record $record)
+    private function _preDelete(Doctrine_Record $record)
     {
-        foreach ($record->getTable()->getRelations() as $fk) {
-            if ($fk->isComposite()) {
-                $obj = $record->get($fk->getAlias());
-                if ($obj instanceof Doctrine_Record && 
-                        $obj->state() != Doctrine_Record::STATE_LOCKED)  {
-                    $obj->delete($this->conn);
-                }
-            }
-        }
+        $event = new Doctrine_Event($record, Doctrine_Event::RECORD_DELETE);
+        $record->preDelete($event);
+        $record->getTable()->getRecordListener()->preDelete($event);
+
+        return $event->skipOperation;
+    }
+
+    /**
+     * Invokes postDelete event listeners.
+     */
+    private function _postDelete(Doctrine_Record $record)
+    {
+        $event = new Doctrine_Event($record, Doctrine_Event::RECORD_DELETE);
+        $record->postDelete($event);
+        $record->getTable()->getRecordListener()->postDelete($event);
     }
 
     /**
@@ -506,18 +475,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         // save all records
         foreach ($tree as $name) {
             $table = $this->conn->getTable($name);
-
             foreach ($table->getRepository() as $record) {
-                $this->save($record);
-            }
-        }
-
-        // save all associations
-        foreach ($tree as $name) {
-            $table = $this->conn->getTable($name);
-
-            foreach ($table->getRepository() as $record) {
-                $this->saveAssociations($record);
+                $this->saveGraph($record);
             }
         }
     }
@@ -531,53 +490,30 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     public function update(Doctrine_Record $record)
     {
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_UPDATE);
-
         $record->preUpdate($event);
-
         $table = $record->getTable();
-
         $table->getRecordListener()->preUpdate($event);
 
         if ( ! $event->skipOperation) {
             $identifier = $record->identifier();
-
             if ($table->getOption('joinedParents')) {
-                $dataSet = $this->formatDataSet($record);
-                
-                $component = $table->getComponentName();
-
-                $classes = $table->getOption('joinedParents');
-                $classes[] = $component;
-
-                foreach ($record as $field => $value) {
-                    if ($value instanceof Doctrine_Record) {
-                        if ( ! $value->exists()) {
-                            $value->save();
-                        }
-                        $record->set($field, $value->getIncremented());
-                    }
-                }
-
-                foreach ($classes as $class) {
-                    $parentTable = $this->conn->getTable($class);
-
-                    $this->conn->update($this->conn->getTable($class), $dataSet[$class], $identifier);
-                }
+                // currrently just for bc!
+                $this->_updateCTIRecord($table, $record);
+                //--
             } else {
                 $array = $record->getPrepared();
-                
                 $this->conn->update($table, $array, $identifier);
             }
             $record->assignIdentifier(true);
         }
-        
+
         $table->getRecordListener()->postUpdate($event);
 
         $record->postUpdate($event);
 
         return true;
     }
-    
+
     /**
      * inserts a record into database
      *
@@ -586,94 +522,44 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function insert(Doctrine_Record $record)
     {
-         // listen the onPreInsert event
+        // listen the onPreInsert event
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_INSERT);
-
         $record->preInsert($event);
-        
         $table = $record->getTable();
-
         $table->getRecordListener()->preInsert($event);
 
         if ( ! $event->skipOperation) {
             if ($table->getOption('joinedParents')) {
-                $dataSet = $this->formatDataSet($record);
-                
-                $component = $table->getComponentName();
-
-                $classes = $table->getOption('joinedParents');
-                $classes[] = $component;
-
-                foreach ($classes as $k => $parent) {
-                    if ($k === 0) {
-                        $rootRecord = new $parent();
-
-                        $rootRecord->merge($dataSet[$parent]);
-
-                        $this->processSingleInsert($rootRecord);
-                    } else {
-                        foreach ((array) $rootRecord->identifier() as $id => $value) {
-                            $dataSet[$parent][$id] = $value;
-                        }
-
-                        $this->conn->insert($this->conn->getTable($parent), $dataSet[$parent]);
-                    }
-                }
+                // just for bc!
+                $this->_insertCTIRecord($table, $record);
+                //--
             } else {
                 $this->processSingleInsert($record);
             }
         }
 
         $table->addRecord($record);
-
         $table->getRecordListener()->postInsert($event);
-
         $record->postInsert($event);
 
         return true;
     }
-    
-    /**
-     * @todo DESCRIBE WHAT THIS METHOD DOES, PLEASE!
-     */
-    public function formatDataSet(Doctrine_Record $record)
-    {
-    	$table = $record->getTable();
 
-        $dataSet = array();
-    
-        $component = $table->getComponentName();
-    
-        $array = $record->getPrepared();
-    
-        foreach ($table->getColumns() as $columnName => $definition) {
-            $fieldName = $table->getFieldName($columnName);
-            if (isset($definition['primary']) && $definition['primary']) {
-                continue;
-            }
-    
-            if (isset($definition['owner'])) {
-                $dataSet[$definition['owner']][$fieldName] = $array[$fieldName];
-            } else {
-                $dataSet[$component][$fieldName] = $array[$fieldName];
-            }
-        }    
-        
-        return $dataSet;
-    }
-    
     /**
      * @todo DESCRIBE WHAT THIS METHOD DOES, PLEASE!
      */
     public function processSingleInsert(Doctrine_Record $record)
     {
         $fields = $record->getPrepared();
-
-        if (empty($fields)) {
-            return false;
-        }
-        
         $table = $record->getTable();
+
+        // Populate fields with a blank array so that a blank records can be inserted
+        if (empty($fields)) {
+            foreach ($table->getFieldNames() as $field) {
+                $fields[$field] = null;
+            }
+        }
+
         $identifier = (array) $table->getIdentifier();
 
         $seq = $record->getTable()->sequenceName;
@@ -690,8 +576,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
             $table->getIdentifierType() != Doctrine::IDENTIFIER_NATURAL) {
-
-            if (strtolower($this->conn->getName()) == 'pgsql') {
+            if (strtolower($this->conn->getDriverName()) == 'pgsql') {
                 $seq = $table->getTableName() . '_' . $identifier[0];
             }
 
@@ -700,10 +585,267 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             if ( ! $id) {
                 throw new Doctrine_Connection_Exception("Couldn't get last insert identifier.");
             }
-
             $record->assignIdentifier($id);
         } else {
             $record->assignIdentifier(true);
-        }    	
+        }
+    }
+
+    /**
+     * buildFlushTree
+     * builds a flush tree that is used in transactions
+     *
+     * The returned array has all the initialized components in
+     * 'correct' order. Basically this means that the records of those
+     * components can be saved safely in the order specified by the returned array.
+     *
+     * @param array $tables     an array of Doctrine_Table objects or component names
+     * @return array            an array of component names in flushing order
+     */
+    public function buildFlushTree(array $tables)
+    {
+        // determine classes to order. only necessary because the $tables param
+        // can contain strings or table objects...
+        $classesToOrder = array();
+        foreach ($tables as $table) {
+            if ( ! ($table instanceof Doctrine_Table)) {
+                $table = $this->conn->getTable($table, false);
+            }
+            $classesToOrder[] = $table->getComponentName();
+        }
+        $classesToOrder = array_unique($classesToOrder);
+
+        if (count($classesToOrder) < 2) {
+            return $classesToOrder;
+        }
+
+        // build the correct order
+        $flushList = array();
+        foreach ($classesToOrder as $class) {
+            $table = $this->conn->getTable($class, false);
+            $currentClass = $table->getComponentName();
+
+            $index = array_search($currentClass, $flushList);
+
+            if ($index === false) {
+                //echo "adding $currentClass to flushlist";
+                $flushList[] = $currentClass;
+                $index = max(array_keys($flushList));
+            }
+
+            $rels = $table->getRelations();
+
+            // move all foreignkey relations to the beginning
+            foreach ($rels as $key => $rel) {
+                if ($rel instanceof Doctrine_Relation_ForeignKey) {
+                    unset($rels[$key]);
+                    array_unshift($rels, $rel);
+                }
+            }
+
+            foreach ($rels as $rel) {
+                $relatedClassName = $rel->getTable()->getComponentName();
+
+                if ( ! in_array($relatedClassName, $classesToOrder)) {
+                    continue;
+                }
+
+                $relatedCompIndex = array_search($relatedClassName, $flushList);
+                $type = $rel->getType();
+
+                // skip self-referenced relations
+                if ($relatedClassName === $currentClass) {
+                    continue;
+                }
+
+                if ($rel instanceof Doctrine_Relation_ForeignKey) {
+                    // the related component needs to come after this component in
+                    // the list (since it holds the fk)
+
+                    if ($relatedCompIndex !== false) {
+                        // the component is already in the list
+                        if ($relatedCompIndex >= $index) {
+                            // it's already in the right place
+                            continue;
+                        }
+
+                        unset($flushList[$index]);
+                        // the related comp has the fk. so put "this" comp immediately
+                        // before it in the list
+                        array_splice($flushList, $relatedCompIndex, 0, $currentClass);
+                        $index = $relatedCompIndex;
+                    } else {
+                        $flushList[] = $relatedClassName;
+                    }
+
+                } else if ($rel instanceof Doctrine_Relation_LocalKey) {
+                    // the related component needs to come before the current component
+                    // in the list (since this component holds the fk).
+
+                    if ($relatedCompIndex !== false) {
+                        // already in flush list
+                        if ($relatedCompIndex <= $index) {
+                            // it's in the right place
+                            continue;
+                        }
+
+                        unset($flushList[$relatedCompIndex]);
+                        // "this" comp has the fk. so put the related comp before it
+                        // in the list
+                        array_splice($flushList, $index, 0, $relatedClassName);
+                    } else {
+                        array_unshift($flushList, $relatedClassName);
+                        $index++;
+                    }
+                } else if ($rel instanceof Doctrine_Relation_Association) {
+                    // the association class needs to come after both classes
+                    // that are connected through it in the list (since it holds
+                    // both fks)
+
+                    $assocTable = $rel->getAssociationFactory();
+                    $assocClassName = $assocTable->getComponentName();
+
+                    if ($relatedCompIndex !== false) {
+                        unset($flushList[$relatedCompIndex]);
+                    }
+
+                    array_splice($flushList, $index, 0, $relatedClassName);
+                    $index++;
+
+                    $index3 = array_search($assocClassName, $flushList);
+
+                    if ($index3 !== false) {
+                        if ($index3 >= $index) {
+                            continue;
+                        }
+
+                        unset($flushList[$index]);
+                        array_splice($flushList, $index3, 0, $assocClassName);
+                        $index = $relatedCompIndex;
+                    } else {
+                        $flushList[] = $assocClassName;
+                    }
+                }
+            }
+        }
+
+        return array_values($flushList);
+    }
+
+
+    /* The following is all the Class Table Inheritance specific code. Support dropped
+       for 0.10/1.0. */
+
+    /**
+     * Class Table Inheritance code.
+     * Support dropped for 0.10/1.0.
+     *
+     * Note: This is flawed. We also need to delete from subclass tables.
+     */
+    private function _deleteCTIParents(Doctrine_Table $table, $record)
+    {
+        if ($table->getOption('joinedParents')) {
+            foreach (array_reverse($table->getOption('joinedParents')) as $parent) {
+                $parentTable = $table->getConnection()->getTable($parent);
+                $this->conn->delete($parentTable, $record->identifier());
+            }
+        }
+    }
+
+    /**
+     * Class Table Inheritance code.
+     * Support dropped for 0.10/1.0.
+     */
+    private function _insertCTIRecord(Doctrine_Table $table, Doctrine_Record $record)
+    {
+        $dataSet = $this->_formatDataSet($record);
+        $component = $table->getComponentName();
+
+        $classes = $table->getOption('joinedParents');
+        $classes[] = $component;
+
+        foreach ($classes as $k => $parent) {
+            if ($k === 0) {
+                $rootRecord = new $parent();
+                $rootRecord->merge($dataSet[$parent]);
+                $this->processSingleInsert($rootRecord);
+                $record->assignIdentifier($rootRecord->identifier());
+            } else {
+                foreach ((array) $rootRecord->identifier() as $id => $value) {
+                    $dataSet[$parent][$id] = $value;
+                }
+
+                $this->conn->insert($this->conn->getTable($parent), $dataSet[$parent]);
+            }
+        }
+    }
+
+    /**
+     * Class Table Inheritance code.
+     * Support dropped for 0.10/1.0.
+     */
+    private function _updateCTIRecord(Doctrine_Table $table, Doctrine_Record $record)
+    {
+        $identifier = $record->identifier();
+        $dataSet = $this->_formatDataSet($record);
+
+        $component = $table->getComponentName();
+
+        $classes = $table->getOption('joinedParents');
+        $classes[] = $component;
+
+        foreach ($record as $field => $value) {
+            if ($value instanceof Doctrine_Record) {
+                if ( ! $value->exists()) {
+                    $value->save();
+                }
+                $record->set($field, $value->getIncremented());
+            }
+        }
+
+        foreach ($classes as $class) {
+            $parentTable = $this->conn->getTable($class);
+
+            if ( ! array_key_exists($class, $dataSet)) {
+                continue;
+            }
+
+            $this->conn->update($this->conn->getTable($class), $dataSet[$class], $identifier);
+        }
+    }
+
+    /**
+     * Class Table Inheritance code.
+     * Support dropped for 0.10/1.0.
+     */
+    private function _formatDataSet(Doctrine_Record $record)
+    {
+        $table = $record->getTable();
+        $dataSet = array();
+        $component = $table->getComponentName();
+        $array = $record->getPrepared();
+
+        foreach ($table->getColumns() as $columnName => $definition) {
+            if ( ! isset($dataSet[$component])) {
+                $dataSet[$component] = array();
+            }
+
+            $fieldName = $table->getFieldName($columnName);
+            if (isset($definition['primary']) && $definition['primary']) {
+                continue;
+            }
+
+            if ( ! array_key_exists($fieldName, $array)) {
+                continue;
+            }
+
+            if (isset($definition['owner'])) {
+                $dataSet[$definition['owner']][$fieldName] = $array[$fieldName];
+            } else {
+                $dataSet[$component][$fieldName] = $array[$fieldName];
+            }
+        }
+
+        return $dataSet;
     }
 }

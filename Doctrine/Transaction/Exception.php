@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Exception');
+
 /**
  * Doctrine_Transaction_Exception
  *
@@ -28,7 +28,7 @@ Doctrine::autoload('Doctrine_Exception');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @since       1.0
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  */
 class Doctrine_Transaction_Exception extends Doctrine_Exception
 { }

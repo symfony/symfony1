@@ -16,16 +16,17 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Template_Listener_Timestampable
+ * Listener for the Timestampable behavior which automatically sets the created
+ * and updated columns when a record is inserted and updated.
  *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -38,7 +39,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
      * @var string
      */
     protected $_options = array();
-    
+
     /**
      * __construct
      *
@@ -49,44 +50,42 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     {
         $this->_options = $options;
     }
-    
+
     /**
-     * preInsert
+     * Set the created and updated Timestampable columns when a record is inserted
      *
-     * @param object $Doctrine_Event 
+     * @param Doctrine_Event $event
      * @return void
      */
     public function preInsert(Doctrine_Event $event)
     {
-        if(!$this->_options['created']['disabled']) {
+        if( ! $this->_options['created']['disabled']) {
             $createdName = $this->_options['created']['name'];
             $event->getInvoker()->$createdName = $this->getTimestamp('created');
         }
 
-        if(!$this->_options['updated']['disabled']) {
+        if( ! $this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
             $updatedName = $this->_options['updated']['name'];
             $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
         }
     }
-    
+
     /**
-     * preUpdate
+     * Set updated Timestampable column when a record is updated
      *
-     * @param object $Doctrine_Event 
+     * @param Doctrine_Event $evet
      * @return void
      */
     public function preUpdate(Doctrine_Event $event)
     {
-        if(!$this->_options['updated']['disabled']) {
+        if( ! $this->_options['updated']['disabled']) {
             $updatedName = $this->_options['updated']['name'];
             $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
         }
     }
-    
+
     /**
-     * getTimestamp
-     *
-     * Gets the timestamp in the correct format
+     * Gets the timestamp in the correct format based on the way the behavior is configured
      *
      * @param string $type 
      * @return void
@@ -94,13 +93,17 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     public function getTimestamp($type)
     {
         $options = $this->_options[$type];
-        
-        if ($options['type'] == 'date') {
-            return date($options['format'], time());
-        } else if ($options['type'] == 'timestamp') {
-            return date($options['format'], time());
+
+        if ($options['expression'] !== false && is_string($options['expression'])) {
+            return new Doctrine_Expression($options['expression']);
         } else {
-            return time();
+            if ($options['type'] == 'date') {
+                return date($options['format'], time());
+            } else if ($options['type'] == 'timestamp') {
+                return date($options['format'], time());
+            } else {
+                return time();
+            }
         }
     }
 }

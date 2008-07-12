@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Query_Condition');
+
 /**
  * Doctrine_Query_Having
  *
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -93,6 +93,10 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
         $operator  = array_shift($tokens);
         $value     = implode(' ', $tokens);
         $part .= ' ' . $operator . ' ' . $value;
+        // check the RHS for aggregate functions
+        if (strpos($value, '(') !== false) {
+          $value = $this->parseAggregateFunction($value);
+        }
         return $part;
     }
 }

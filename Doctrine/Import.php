@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * class Doctrine_Import
  * Main responsible of performing import operation. Delegates database schema
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_Connection_Module');
  *
  * @package     Doctrine
  * @subpackage  Import
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
  * @version     $Revision$
@@ -99,6 +99,30 @@ class Doctrine_Import extends Doctrine_Connection_Module
      * @return array
      */
     public function listTableConstraints($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists table relations
+     *
+     * Expects an array of this format to be returned with all the relationships in it where the key is 
+     * the name of the foreign table, and the value is an array containing the local and foreign column
+     * name
+     *
+     * Array
+     * (
+     *   [groups] => Array
+     *     (
+     *        [local] => group_id
+     *        [foreign] => id
+     *     )
+     * )
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableRelations($table)
     {
         throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
     }
@@ -188,6 +212,147 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
+     * checks if a database exists
+     *
+     * @param string $database
+     * @return boolean
+     */
+    public function databaseExists($database)
+    {
+        return in_array($database, $this->listDatabases());
+    }
+
+    /**
+     * checks if a function exists
+     *
+     * @param string $function
+     * @return boolean
+     */
+    public function functionExists($function)
+    {
+        return in_array($function, $this->listFunctions());
+    }
+
+    /**
+     * checks if a trigger exists
+     *
+     * @param string $trigger
+     * @param string|null $database
+     * @return boolean
+     */
+    public function triggerExists($trigger, $database = null)
+    {
+        return in_array($trigger, $this->listTriggers($database));
+    }
+
+    /**
+     * checks if a sequence exists
+     *
+     * @param string $sequence
+     * @param string|null $database
+     * @return boolean
+     */
+    public function sequenceExists($sequence, $database = null)
+    {
+        return in_array($sequence, $this->listSequences($database));
+    }
+
+    /**
+     * checks if a table constraint exists
+     *
+     * @param string $constraint
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableConstraintExists($constraint, $table)
+    {
+        return in_array($constraint, $this->listTableConstraints($table));
+    }
+
+    /**
+     * checks if a table column exists
+     *
+     * @param string $column
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableColumnExists($column, $table)
+    {
+        return in_array($column, $this->listTableColumns($table));
+    }
+
+    /**
+     * checks if a table index exists
+     *
+     * @param string $index
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableIndexExists($index, $table)
+    {
+        return in_array($index, $this->listTableIndexes($table));
+    }
+
+    /**
+     * checks if a table exists
+     *
+     * @param string $table
+     * @param string|null $database
+     * @return boolean
+     */
+    public function tableExists($table, $database = null)
+    {
+        return in_array($table, $this->listTables($database));
+    }
+
+    /**
+     * checks if a table trigger exists
+     *
+     * @param string $trigger
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableTriggerExists($trigger, $table)
+    {
+        return in_array($trigger, $this->listTableTriggers($table));
+    }
+
+    /**
+     * checks if a table view exists
+     *
+     * @param string $view
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableViewExists($view, $table)
+    {
+        return in_array($view, $this->listTableViews($table));
+    }
+
+    /**
+     * checks if a user exists
+     *
+     * @param string $user
+     * @return boolean
+     */
+    public function userExists($user)
+    {
+        return in_array($user, $this->listUsers());
+    }
+
+    /**
+     * checks if a view exists
+     *
+     * @param string $view
+     * @param string|null $database
+     * @return boolean
+     */
+    public function viewExists($view, $database = null)
+    {
+         return in_array($view, $this->listViews($database));
+    }
+
+    /**
      * importSchema
      *
      * method for importing existing schema to Doctrine_Record classes
@@ -198,30 +363,88 @@ class Doctrine_Import extends Doctrine_Connection_Module
      */
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
+        $options['singularize'] = ! isset($options['singularize']) ? 
+                $this->conn->getAttribute('singularize_import'):$options['singularize'];
+
         $connections = Doctrine_Manager::getInstance()->getConnections();
-        
+
         foreach ($connections as $name => $connection) {
           // Limit the databases to the ones specified by $databases.
           // Check only happens if array is not empty
-          if ( ! empty($databases) && !in_array($name, $databases)) {
+          if ( ! empty($databases) && ! in_array($name, $databases)) {
             continue;
           }
-          
+
           $builder = new Doctrine_Import_Builder();
           $builder->setTargetPath($directory);
           $builder->setOptions($options);
 
+          $definitions = array();
           $classes = array();
           foreach ($connection->import->listTables() as $table) {
-              $builder->buildRecord(array('tableName' => $table,
-                                          'className' => Doctrine::classify($table)),
-                                          $connection->import->listTableColumns($table),
-                                          array());
-        
-              $classes[] = Doctrine::classify($table);
+              $definition = array();
+              $definition['tableName'] = $table;
+
+              if( ! isset($options['singularize']) || $options['singularize'] !== false) {
+                  $classTable = $this->_singularizeTableName($table);
+              } else {
+                  $classTable = Doctrine_Inflector::tableize($table);
+              }
+
+              $definition['className'] = Doctrine_Inflector::classify($classTable);
+              $definition['columns'] = $connection->import->listTableColumns($table);
+
+              try {
+                  $definition['relations'] = array();
+                  $relations = $connection->import->listTableRelations($table);
+                  $classes = array();
+                  foreach ($relations as $relation) {
+                      $table = $relation['table'];
+                      if( ! isset($options['singularize']) || $options['singularize'] !== false) {
+                          $relClassTable = $this->_singularizeTableName($table);
+                      } else {
+                          $relClassTable = Doctrine_Inflector::tableize($table);
+                      }
+                      $class = Doctrine_Inflector::classify($relClassTable);
+                      if (in_array($class, $classes)) {
+                          $alias = $class . '_' . (count($classes) + 1);
+                      } else {
+                          $alias = $class;
+                      }
+                      $classes[] = $class;
+                      $definition['relations'][$alias] = array('alias'   => $alias,
+                                                               'class'   => $class,
+                                                               'local'   => $relation['local'],
+                                                               'foreign' => $relation['foreign']);
+                  }
+              } catch (Exception $e) {}
+
+              $definitions[$definition['className']] = $definition;
+              $classes[] = $definition['className'];
+          }
+
+
+          // Build records
+          foreach ($definitions as $definition) {
+              $builder->buildRecord($definition);
           }
         }
-        
+
         return $classes;
+    }
+
+    /**
+     * Singularize a table name
+     *
+     * @param string $tableName 
+     * @return $singularTableName
+     */
+    protected function _singularizeTableName($tableName)
+    {
+        $e = explode('_', Doctrine_Inflector::tableize($tableName));
+        foreach ($e as $k => $v) {
+            $e[$k] = Doctrine_Inflector::singularize($v);
+        }
+        return implode('_', $e);
     }
 }

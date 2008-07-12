@@ -16,18 +16,18 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Import');
+
 /**
-  * @package     Doctrine
-  * @subpackage  Import
+ * @package     Doctrine
+ * @subpackage  Import
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lorenzo Alberton <l.alberton@quipo.it> (PEAR MDB2 Interbase driver)
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_Import_Firebird extends Doctrine_Import
@@ -51,7 +51,7 @@ class Doctrine_Import_Firebird extends Doctrine_Import
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    public function listTableFields($table)
+    public function listTableColumns($table)
     {
         $table = $this->conn->quote(strtoupper($table), 'text');
         $query = 'SELECT RDB$FIELD_NAME FROM RDB$RELATION_FIELDS WHERE UPPER(RDB$RELATION_NAME) = ' . $table;

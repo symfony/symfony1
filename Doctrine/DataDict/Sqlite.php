@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_DataDict');
+
 /**
  * @package     Doctrine
  * @subpackage  DataDict
@@ -26,7 +26,7 @@ Doctrine::autoload('Doctrine_DataDict');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
@@ -128,7 +128,19 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
      */
     public function getPortableDeclaration(array $field)
     {
+        $e = explode('(', $field['type']);
+        $field['type'] = $e[0];
+        if (isset($e[1])) {
+            $length = trim($e[1], ')');
+            $field['length'] = $length;
+        }
+
         $dbType = strtolower($field['type']);
+
+        if ( ! $dbType) {
+            throw new Doctrine_DataDict_Exception('Missing "type" from field definition');
+        }
+
         $length = (isset($field['length'])) ? $field['length'] : null;
         $unsigned = (isset($field['unsigned'])) ? $field['unsigned'] : null;
         $fixed = null;

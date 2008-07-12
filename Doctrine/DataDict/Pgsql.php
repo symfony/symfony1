@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_DataDict');
+
 /**
  * @package     Doctrine
  * @subpackage  DataDict
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_DataDict');
  * @author      Paul Cooper <pgc@ucecom.com>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
@@ -404,6 +404,11 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                     }
                 }
                 return 'INT';
+	    case 'inet':
+		return 'INET';
+            case 'bit':
+            case 'varbit':
+                return 'VARBIT';		
             case 'boolean':
                 return 'BOOLEAN';
             case 'date':
@@ -414,7 +419,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 return 'TIMESTAMP without time zone';
             case 'float':
             case 'double':
-                return 'FLOAT8';
+                return 'FLOAT';
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
@@ -450,6 +455,13 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
         $dbType = strtolower($field['type']);
 
         switch ($dbType) {
+	    case 'inet':
+                $type[] = 'inet';
+		break;
+	    case 'bit':
+	    case 'varbit':
+                $type[] = 'bit';
+		break;
             case 'smallint':
             case 'int2':
                 $type[] = 'integer';
@@ -486,6 +498,8 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 break;
             case 'text':
             case 'varchar':
+            case 'interval':
+            case '_varchar':
                 $fixed = false;
             case 'unknown':
             case 'char':
@@ -509,6 +523,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 break;
             case 'datetime':
             case 'timestamp':
+            case 'timestamptz':
                 $type[] = 'timestamp';
                 $length = null;
                 break;
@@ -518,7 +533,9 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 break;
             case 'float':
             case 'float4':
+            case 'float8':
             case 'double':
+            case 'double precision':
             case 'real':
                 $type[] = 'float';
                 break;

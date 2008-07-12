@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Relation');
+
 /**
  * Doctrine_Relation_Association    this class takes care of association mapping
  *                         (= many-to-many relationships, where the relationship is handled with an additional relational table
@@ -28,7 +28,7 @@ Doctrine::autoload('Doctrine_Relation');
  * @package     Doctrine
  * @subpackage  Relation
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -90,7 +90,7 @@ class Doctrine_Relation_Association extends Doctrine_Relation
         if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
             $coll = new Doctrine_Collection($this->getTable());
         } else {
-            $coll = Doctrine_Query::create()->query($this->getRelationDql(1), array($id));
+            $coll = $this->getTable()->getConnection()->query($this->getRelationDql(1), array($id));
         }
         $coll->setReference($record, $this);
         return $coll;

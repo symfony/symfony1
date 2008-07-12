@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Lib
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -72,9 +72,9 @@ class Doctrine_Lib
     {
         $r[] = '<pre>';
         $r[] = 'Component  : ' . $record->getTable()->getComponentName();
-        $r[] = 'ID         : ' . $record->obtainIdentifier();
+        $r[] = 'ID         : ' . Doctrine::dump($record->identifier());
         $r[] = 'References : ' . count($record->getReferences());
-        $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->getState());
+        $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->state());
         $r[] = 'OID        : ' . $record->getOID();
         $r[] = 'data       : ' . Doctrine::dump($record->getData(), false);
         $r[] = '</pre>';
@@ -249,7 +249,7 @@ class Doctrine_Lib
                 }
             default:
                 $args = func_get_args();
-                $args[1] = sfToolkit::arrayDeepMerge($args[0], $args[1]);
+                $args[1] = self::arrayDeepMerge($args[0], $args[1]);
                 array_shift($args);
 
                 return call_user_func_array(array('Doctrine', 'arrayDeepMerge'), $args);
@@ -363,7 +363,7 @@ class Doctrine_Lib
           return true;
         }
 
-        return mkdir($path, $mode, true);
+        return mkdir(trim($path), $mode, true);
     }
 
     /**
@@ -385,15 +385,47 @@ class Doctrine_Lib
                     if (is_dir($value)) {
                         self::removeDirectories($value);
                     } else if (is_file($value)) {
-                        @unlink($value);
+                        unlink($value);
                     }
                 }
             }
 
-            return rmdir ( $folderPath );
+            return rmdir($folderPath);
         } else {
             return false;
         }
+    }
+
+    public static function copyDirectory($source, $dest)
+    {
+        // Simple copy for a file
+        if (is_file($source)) {
+            return copy($source, $dest);
+        }
+
+        // Make destination directory
+        if ( ! is_dir($dest)) {
+            mkdir($dest);
+        }
+
+        // Loop through the folder
+        $dir = dir($source);
+        while (false !== $entry = $dir->read()) {
+            // Skip pointers
+            if ($entry == '.' || $entry == '..') {
+                continue;
+            }
+
+            // Deep copy directories
+            if ($dest !== "$source/$entry") {
+                self::copyDirectory("$source/$entry", "$dest/$entry");
+            }
+        }
+
+        // Clean up
+        $dir->close();
+
+        return true;
     }
 
     /**

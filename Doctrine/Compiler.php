@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -39,7 +39,7 @@ class Doctrine_Compiler
      * cases dozens of files) can improve performance by an order of magnitude
      *
      * @throws Doctrine_Compiler_Exception      if something went wrong during the compile operation
-     * @return void
+     * @return $target Path the compiled file was written to
      */
     public static function compile($target = null, $includedDrivers = array())
     {
@@ -133,5 +133,7 @@ class Doctrine_Compiler
         
         fwrite($fp, $stripped);
         fclose($fp);
+
+        return $target;
     }
 }

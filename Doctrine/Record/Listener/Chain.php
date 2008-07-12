@@ -16,9 +16,8 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Access');
 
 /**
  * Doctrine_Record_Listener_Chain
@@ -29,7 +28,7 @@ Doctrine::autoload('Doctrine_Access');
  * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -52,8 +51,8 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     {
         if ( ! ($listener instanceof Doctrine_Record_Listener_Interface) &&
              ! ($listener instanceof Doctrine_Overloadable)) {
-            
-            throw new Doctrine_EventListener_Exception("Couldn't add eventlistener. Record listeners should implement either Doctrine_EventListener_Interface or Doctrine_Overloadable");
+
+            throw new Doctrine_EventListener_Exception("Couldn't add eventlistener. Record listeners should implement either Doctrine_Record_Listener_Interface or Doctrine_Overloadable");
         }
         if ($name === null) {
             $this->_listeners[] = $listener;
@@ -84,55 +83,69 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
      * @param Doctrine_Record_Listener $listener    listener to be added
      * @return Doctrine_Record_Listener_Chain       this object
      */
-    public function set($key, Doctrine_EventListener $listener)
+    public function set($key, $listener)
     {
         $this->_listeners[$key] = $listener;
     }
 
     public function preSerialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSerialize($event);
         }
     }
 
     public function postSerialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSerialize($event);
         }
     }
 
     public function preUnserialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preUnserialize($event);
         }
     }
 
     public function postUnserialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postUnserialize($event);
         }
     }
 
+    public function preDqlSelect(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlSelect($event);
+        }
+    }
+
     public function preSave(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSave($event);
         }
     }
 
     public function postSave(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postSave($event);
         }
     }
 
+    public function preDqlDelete(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlDelete($event);
+        }
+    }
+
     public function preDelete(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preDelete($event);
         }
@@ -145,41 +158,48 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
+    public function preDqlUpdate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlUpdate($event);
+        }
+    }
+
     public function preUpdate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preUpdate($event);
         }
     }
 
     public function postUpdate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postUpdate($event);
         }
     }
 
     public function preInsert(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preInsert($event);
         }
     }
 
     public function postInsert(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postInsert($event);
         }
     }
-    
 
     public function preHydrate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preHydrate($event);
         }
     }
+
     public function postHydrate(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {

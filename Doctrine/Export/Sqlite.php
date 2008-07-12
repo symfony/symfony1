@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Export');
+
 /**
  * Doctrine_Export_Sqlite
  *
@@ -27,30 +27,46 @@ Doctrine::autoload('Doctrine_Export');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 class Doctrine_Export_Sqlite extends Doctrine_Export
 {
     /**
+     * dropDatabase
+     *
      * drop an existing database
      *
-     * @param string $name                  name of the database that should be dropped
+     * @param string $databaseFile          Path of the database that should be dropped
      * @throws Doctrine_Export_Exception    if the database file does not exist
      * @throws Doctrine_Export_Exception    if something failed during the removal of the database file
      * @return void
      */
-    public function dropDatabase($name)
+    public function dropDatabase($databaseFile)
     {
-        $databaseFile = $this->conn->getDatabaseFile($name);
         if ( ! @file_exists($databaseFile)) {
             throw new Doctrine_Export_Exception('database does not exist');
         }
+
         $result = @unlink($databaseFile);
+
         if ( ! $result) {
             throw new Doctrine_Export_Exception('could not remove the database file');
         }
+    }
+
+    /**
+     * createDatabase
+     *
+     * Create sqlite database file
+     *
+     * @param string $databaseFile  Path of the database that should be dropped
+     * @return void
+     */
+    public function createDatabase($databaseFile)
+    {
+        return new PDO('sqlite:' . $databaseFile);
     }
 
     /**
@@ -72,7 +88,6 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      *                                Not all DBMS support index sorting direction configuration. The DBMS
      *                                 drivers of those that do not support it ignore this property. Use the
      *                                 function support() to determine whether the DBMS driver can manage indexes.
-
      *                                 Example
      *                                    array(
      *                                        'fields' => array(
@@ -203,47 +218,8 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                 $query[] = $this->createIndexSql($name, $index, $definition);
             }
         }
+
         return $query;
-        
-        
-        /**
-        try {
-
-            if ( ! empty($fk)) {
-                $this->conn->beginTransaction();
-            }
-
-            $ret   = $this->conn->exec($query);
-
-            if ( ! empty($fk)) {
-                foreach ($fk as $definition) {
-
-                    $query = 'CREATE TRIGGER doctrine_' . $name . '_cscd_delete '
-                           . 'AFTER DELETE ON ' . $name . ' FOR EACH ROW '
-                           . 'BEGIN '
-                           . 'DELETE FROM ' . $definition['foreignTable'] . ' WHERE ';
-
-                    $local = (array) $definition['local'];
-                    foreach((array) $definition['foreign'] as $k => $field) {
-                        $query .= $field . ' = old.' . $local[$k] . ';';
-                    }
-
-                    $query .= 'END;';
-
-                    $this->conn->exec($query);
-                }
-
-                $this->conn->commit();
-            }
-
-
-        } catch(Doctrine_Exception $e) {
-
-            $this->conn->rollback();
-
-            throw $e;
-        }
-        */
     }
 
     /**
@@ -412,5 +388,20 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
         $name = $this->conn->quoteIdentifier($name, true);
         
         return 'ALTER TABLE ' . $name . ' ' . $query;
+    }
+
+    /**
+     * createForeignKey
+     *
+     * Sqlite does not support foreign keys so we are not even going to do anything if this function is called
+     * to avoid any sql errors if a user tries to use this on sqlite
+     *
+     * @param string    $table         name of the table on which the foreign key is to be created
+     * @param array     $definition    associative array that defines properties of the foreign key to be created.
+     * @return string
+     */
+    public function createForeignKey($table, array $definition)
+    {
+        return false;
     }
 }

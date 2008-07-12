@@ -16,18 +16,17 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Adapter');
+
 /**
- * Doctrine_Adapter_Db2
- * IBM DB2 Adapter  [BORROWED FROM ZEND FRAMEWORK]
+ * IBM DB2 Adapter. This class was ported from the Zend Framework
  *
  * @package     Doctrine
  * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  */
@@ -59,12 +58,13 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     );
 
     /**
-     * Execution mode
+     * Stores the execution mode
+     *
+     * Possible values DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF
      *
      * @var int execution flag (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
-     * @access protected
      */
-    protected $_execute_mode = DB2_AUTOCOMMIT_ON;
+    protected $_executeMode = DB2_AUTOCOMMIT_ON;
 
     /**
      * Table name of the last accessed table for an insert operation
@@ -72,13 +72,10 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
      * probability you might not find it in other adapters...
      *
      * @var string
-     * @access protected
      */
     protected $_lastInsertTable = null;
 
      /**
-     * Constructor.
-     *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
      *
@@ -96,32 +93,23 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     public function __construct(array $config)
     {
         if ( ! isset($config['password'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'password' for login credentials.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'password' for login credentials.");
         }
 
         if ( ! isset($config['username'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'username' for login credentials.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'username' for login credentials.");
         }
 
         if ( ! isset($config['dbname'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'dbname' that names the database instance.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'dbname' that names the database instance.");
         }
 
         // keep the config
         $this->_config = array_merge($this->_config, (array) $config);
-
-        // create a profiler object
-        $enabled = false;
-        if (array_key_exists('profiler', $this->_config)) {
-            $enabled = (bool) $this->_config['profiler'];
-            unset($this->_config['profiler']);
-        }
-
-        $this->_profiler = new Doctrine_Profiler($enabled);
     }
 
     /**
-     * Creates a connection resource.
+     * Creates the connection resource
      *
      * @return void
      */
@@ -133,7 +121,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
         }
 
         if ( ! extension_loaded('ibm_db2')) {
-            throw new Doctrine_Adapter_Db2_Exception('The IBM DB2 extension is required for this adapter but not loaded');
+            throw new Doctrine_Adapter_Exception('The IBM DB2 extension is required for this adapter but not loaded');
         }
 
         if ($this->_config['persistent']) {
@@ -151,7 +139,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 
         if ( ! isset($this->_config['options']['autocommit'])) {
             // set execution mode
-            $this->_config['options']['autocommit'] = &$this->_execute_mode;
+            $this->_config['options']['autocommit'] = &$this->_executeMode;
         }
 
         if ($this->_config['host'] !== 'localhost') {
@@ -181,12 +169,12 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 
         // check the connection
         if ( ! $this->_connection) {
-            throw new Doctrine_Adapter_Db2_Exception(db2_conn_errormsg(), db2_conn_error());
+            throw new Doctrine_Adapter_Exception(db2_conn_errormsg(), db2_conn_error());
         }
     }
 
     /**
-     * Force the connection to close.
+     * Close the connection resource
      *
      * @return void
      */
@@ -197,10 +185,10 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * Returns an SQL statement for preparation.
+     * Prepare a sql statement and return it
      *
-     * @param string $sql The SQL statement with placeholders.
-     * @return Doctrine_Statement_Db2
+     * @param   string $sql The SQL statement with placeholders.
+     * @return  Doctrine_Statement_Db2
      */
     public function prepare($sql)
     {
@@ -211,29 +199,31 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * Gets the execution mode
+     * Get the current execution mode
      *
      * @return int the execution mode (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
      */
     public function _getExecuteMode()
     {
-        return $this->_execute_mode;
+        return $this->_executeMode;
     }
 
     /**
-     * @param integer $mode
-     * @return void
+     * Set the current execution mode
+     *
+     * @param   integer $mode
+     * @return  void
      */
     public function _setExecuteMode($mode)
     {
         switch ($mode) {
             case DB2_AUTOCOMMIT_OFF:
             case DB2_AUTOCOMMIT_ON:
-                $this->_execute_mode = $mode;
+                $this->_executeMode = $mode;
                 db2_autocommit($this->_connection, $mode);
                 break;
             default:
-                throw new Doctrine_Adapter_Db2_Exception("execution mode not supported");
+                throw new Doctrine_Adapter_Exception("execution mode not supported");
                 break;
         }
     }
@@ -241,8 +231,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     /**
      * Quote a raw string.
      *
-     * @param string $value     Raw string
-     * @return string           Quoted string
+     * @param   string $value Raw string
+     * @return  string Quoted string
      */
     protected function _quote($value)
     {
@@ -260,6 +250,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * Get the symbol used for identifier quoting
+     *
      * @return string
      */
     public function getQuoteIdentifierSymbol()
@@ -287,7 +279,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     protected function _commit()
     {
         if ( ! db2_commit($this->_connection)) {
-            throw new Doctrine_Adapter_Db2_Exception(
+            throw new Doctrine_Adapter_Exception(
                 db2_conn_errormsg($this->_connection),
                 db2_conn_error($this->_connection));
         }
@@ -303,7 +295,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     protected function _rollBack()
     {
         if ( ! db2_rollback($this->_connection)) {
-            throw new Doctrine_Adapter_Db2_Exception(
+            throw new Doctrine_Adapter_Exception(
                 db2_conn_errormsg($this->_connection),
                 db2_conn_error($this->_connection));
         }
@@ -313,7 +305,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     /**
      * Set the fetch mode.
      *
-     * @param integer $mode
+     * @param  integer $mode
      * @return void
      */
     public function setFetchMode($mode)
@@ -326,7 +318,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
                 $this->_fetchMode = $mode;
                 break;
             default:
-                throw new Doctrine_Adapter_Db2_Exception('Invalid fetch mode specified');
+                throw new Doctrine_Adapter_Exception('Invalid fetch mode specified');
                 break;
         }
     }

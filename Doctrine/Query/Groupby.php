@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Query_Part');
+
 /**
  * Doctrine_Query_Groupby
  *
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -44,20 +44,7 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
         $r = array();
         foreach (explode(',', $str) as $reference) {
             $reference = trim($reference);
-            
-            /**
-            if (count($e) > 1) {
-                $field = array_pop($e);
-                $ref   = implode('.', $e);
-                $this->query->load($ref);
 
-                $r[] = $this->query->getTableAlias($ref) . '.' . $field;
-            } else {
-                $alias = end($e);
-
-                $r[] = $this->query->getAggregateAlias($alias);
-            }
-            */
             $r[] = $this->query->parseClause($reference);
         }
         return implode(', ', $r);

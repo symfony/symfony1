@@ -16,33 +16,41 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Plugin
+ * Doctrine_Record_Generator
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @package     Doctrine
  * @subpackage  Plugin
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
-abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
+abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
 {
     /**
+     * _options
+     *
      * @var array $_options     an array of plugin specific options
      */
     protected $_options = array('generateFiles' => false,
+                                'generatePath'  => false,
                                 'identifier'    => false,
-                                'generateFiles' => false,
                                 'table'         => false,
                                 'pluginTable'   => false,
                                 'children'      => array());
-                                
+
+    /**
+     * _initialized
+     *
+     * @var bool $_initialized
+     */
     protected $_initialized = false;
+
     /**
      * __get
      * an alias for getOption
@@ -76,7 +84,7 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
     public function getOption($name)
     {
         if ( ! isset($this->_options[$name])) {
-            throw new Doctrine_Plugin_Exception('Unknown option ' . $name);
+            throw new Doctrine_Exception('Unknown option ' . $name);
         }
         
         return $this->_options[$name];
@@ -96,12 +104,22 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
         return $this;
     }
 
-    public function addChild(Doctrine_Template $template)
+    /**
+     * addChild
+     *
+     * Add child record generator 
+     *
+     * @param  Doctrine_Record_Generator $generator 
+     * @return void
+     */
+    public function addChild($generator)
     {
-        $this->_options['children'][] = $template;
+        $this->_options['children'][] = $generator;
     }
 
     /**
+     * getOptions
+     *
      * returns all options and their associated values
      *
      * @return array    all options as an associative array
@@ -111,17 +129,26 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
         return $this->_options;
     }
 
+    /**
+     * initialize
+     *
+     * Initialize the plugin. Call in Doctrine_Template setTableDefinition() in order to initiate a generator in a template
+     * SEE: Doctrine_Template_I18n for an example
+     *
+     * @param  Doctrine_Table $table 
+     * @return void
+     */
     public function initialize(Doctrine_Table $table)
     {
-    	if ($this->_initialized) {
-    	    return false;
-    	}
+      	if ($this->_initialized) {
+      	    return false;
+      	}
         
         $this->_initialized = true;
 
         $this->initOptions();
 
-        $table->addPlugin($this, get_class($this));
+        $table->addGenerator($this, get_class($this));
 
         $this->_options['table'] = $table;
 
@@ -130,18 +157,14 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
                                                    $this->_options['className']);
 
         // check that class doesn't exist (otherwise we cannot create it)
-        if (class_exists($this->_options['className'])) {
+        if ($this->_options['generateFiles'] === false && class_exists($this->_options['className'])) {
             return false;
         }
 
-        $conn = $this->_options['table']->getConnection();
-
-        $this->_table = new Doctrine_Table($this->_options['className'], $conn);
-        
-        $conn->addTable($this->_table);
+        $this->buildTable();
 
         $fk = $this->buildForeignKeys($this->_options['table']);
-        
+
         $this->_table->setColumns($fk);
 
         $this->buildRelation();
@@ -149,11 +172,47 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
         $this->setTableDefinition();
         $this->setUp();
 
-        $this->generateClass($this->_table->getColumns());
+        $definition = array();
+        $definition['columns'] = $this->_table->getColumns();
+        $definition['tableName'] = $this->_table->getTableName();
+
+        $this->generateClass($definition);
 
         $this->buildChildDefinitions();
 
+        $this->_table->initIdentifier();
     }
+
+    public function buildTable()
+    {
+        // Bind model 
+        $conn = $this->_options['table']->getConnection();
+        $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
+
+        // Create table
+        $this->_table = new Doctrine_Table($this->_options['className'], $conn);
+
+        // If custom table name set then lets use it
+        if (isset($this->_options['tableName']) && $this->_options['tableName']) {
+            $this->_table->setTableName($this->_options['tableName']);
+        }
+
+        // Maintain some options from the parent table
+        $options = $this->_options['table']->getOptions();
+
+        $newOptions = array();
+        $maintain = array('type', 'collate', 'charset'); // This list may need updating
+        foreach ($maintain as $key) {
+            if (isset($options[$key])) {
+                $newOptions[$key] = $options[$key];
+            }
+        }
+
+        $this->_table->setOptions($newOptions);
+
+        $conn->addTable($this->_table);
+    }
+
     /** 
      * empty template method for providing the concrete plugins the ability
      * to initialize options before the actual definition is being built
@@ -164,22 +223,37 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
     {
         
     }
+
+    /**
+     * buildChildDefinitions
+     *
+     * @return void
+     */
     public function buildChildDefinitions()
     {
         if ( ! isset($this->_options['children'])) {
-            throw new Doctrine_Plugin_Exception("Unknown option 'children'.");
+            throw new Doctrine_Record_Exception("Unknown option 'children'.");
         }
 
         foreach ($this->_options['children'] as $child) {
-            $this->_table->addTemplate(get_class($child), $child);
+            if ($child instanceof Doctrine_Template) {
+                if ($child->getPlugin() !== null) {
+                    $this->_table->addGenerator($child->getPlugin(), get_class($child->getPlugin()));
+                }
 
-            $child->setTable($this->_table);
-
-            $child->setUp();
+                $child->setTable($this->_table);
+                $child->setTableDefinition();
+                $child->setUp();
+            } else {
+                $this->_table->addGenerator($child, get_class($child));
+                $child->initialize($this->_table);
+            }
         }
     }
 
     /**
+     * buildForeignKeys
+     *
      * generates foreign keys for the plugin table based on the owner table
      *
      * the foreign keys generated by this method can be used for 
@@ -207,6 +281,11 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
         return $fk;
     }
 
+    /**
+     * buildLocalRelation
+     *
+     * @return void
+     */
     public function buildLocalRelation()
     {
         $options = array('local'    => $this->_options['table']->getIdentifier(),
@@ -219,7 +298,13 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
 
         $this->_table->getRelationParser()->bind($this->_options['table']->getComponentName(), $options);
     }
-    
+
+    /**
+     * buildForeignRelation
+     *
+     * @param string $alias Alias of the foreign relation
+     * @return void
+     */
     public function buildForeignRelation($alias = null)
     {
         $options = array('local'    => $this->_options['table']->getIdentifier(),
@@ -237,12 +322,13 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
     }
 
     /**
-     * build a relation array to given table
+     * buildRelation
      *
      * this method can be used for generating the relation from the plugin 
-     * table to the owner table
+     * table to the owner table. By default buildForeignRelation() and buildLocalRelation() are called
+     * Those methods can be overridden or this entire method can be overridden
      *
-     * @return array                    the generated relation array
+     * @return void
      */
     public function buildRelation()
     {
@@ -251,20 +337,17 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
     }
 
     /**
+     * generateClass
+     *
      * generates the class definition for plugin class
      *
-     * @param array $columns    the plugin class columns, keys representing the column names
-     *                          and values as column definitions
-     *
-     * @param array $relations  the bound relations of the plugin class
-     *
-     * @param array $options    plugin class options, keys representing the option names
-     *                          and values as option values
+     * @param array $definition  Definition array defining columns, relations and options
+     *                           for the model
      * @return void
      */
-    public function generateClass(array $columns = array(), array $relations = array(), array $options = array())
+    public function generateClass(array $definition = array())
     {
-        $options['className'] = $this->_options['className'];
+        $definition['className'] = $this->_options['className'];
 
         $builder = new Doctrine_Import_Builder();
 
@@ -272,12 +355,12 @@ abstract class Doctrine_Plugin extends Doctrine_Record_Abstract
             if (isset($this->_options['generatePath']) && $this->_options['generatePath']) {
                 $builder->setTargetPath($this->_options['generatePath']);
 
-                $builder->buildRecord($options, $columns, $relations);
+                $builder->buildRecord($definition);
             } else {
-                throw new Doctrine_Plugin_Exception('If you wish to generate files then you must specify the path to generate the files in.');
+                throw new Doctrine_Record_Exception('If you wish to generate files then you must specify the path to generate the files in.');
             }
         } else {
-            $def = $builder->buildDefinition($options, $columns, $relations);
+            $def = $builder->buildDefinition($definition);
 
             eval($def);
         }

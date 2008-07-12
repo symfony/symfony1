@@ -16,18 +16,17 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
  * Doctrine_Configurable
  * the base for Doctrine_Table, Doctrine_Manager and Doctrine_Connection
  *
- *
  * @package     Doctrine
  * @subpackage  Configurable
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -57,6 +56,54 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     protected $_params = array();
 
     /**
+     * getAttributeFromString
+     *
+     * Will accept the name of an attribute and return the attribute value
+     * Example: ->getAttributeFromString('portability') will be converted to Doctrine::ATTR_PORTABILITY
+     * and returned
+     *
+     * @param string $stringAttributeName 
+     * @return void
+     */
+    public function getAttributeFromString($stringAttributeName)
+    {
+      if (is_string($stringAttributeName)) {
+          $upper = strtoupper($stringAttributeName);
+
+          $const = 'Doctrine::ATTR_' . $upper; 
+
+          if (defined($const)) {
+              return constant($const);
+          } else {
+              throw new Doctrine_Exception('Unknown attribute: "' . $stringAttributeName . '"');
+          }
+      } else {
+        return false;
+      }
+    }
+
+    /**
+     * getAttributeValueFromString
+     *
+     * Will get the value for an attribute by the string name
+     * Example: ->getAttributeFromString('portability', 'all') will return Doctrine::PORTABILITY_ALL
+     *
+     * @param string $stringAttributeName 
+     * @param string $stringAttributeValueName 
+     * @return void
+     */
+    public function getAttributeValueFromString($stringAttributeName, $stringAttributeValueName)
+    {
+        $const = 'Doctrine::' . strtoupper($stringAttributeName) . '_' . strtoupper($stringAttributeValueName);
+
+        if (defined($const)) {
+            return constant($const);
+        } else {
+            throw new Doctrine_Exception('Unknown attribute value: "' . $value . '"');
+        }
+    }
+
+    /**
      * setAttribute
      * sets a given attribute
      *
@@ -66,6 +113,10 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      * // or
      *
      * $manager->setAttribute('portability', Doctrine::PORTABILITY_ALL);
+     *
+     * // or
+     *
+     * $manager->setAttribute('portability', 'all');
      * </code>
      *
      * @param mixed $attribute              either a Doctrine::ATTR_* integer constant or a string
@@ -75,21 +126,21 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      * @throws Doctrine_Exception           if the value is invalid
      * @return void
      */
-    public function setAttribute($attribute,$value)
+    public function setAttribute($attribute, $value)
     {
         if (is_string($attribute)) {
-            $upper = strtoupper($attribute);
-
-            $const = 'Doctrine::ATTR_' . $attribute;
-            if (defined($const)) {
-                $this->_state = constant($const);
-            } else {
-                throw new Doctrine_Exception('Unknown attribute ' . $attribute);
-            }
+            $stringAttribute = $attribute;
+            $attribute = $this->getAttributeFromString($attribute);
+            $this->_state = $attribute;
         }
+
+        if (is_string($value) && isset($stringAttribute)) {
+            $value = $this->getAttributeValueFromString($stringAttribute, $value);
+        }
+
         switch ($attribute) {
             case Doctrine::ATTR_FETCHMODE:
-                throw new Doctrine_Exception('Deprecated attribute. See http://doctrine.pengus.net/doctrine/manual/new/?chapter=configuration');
+                throw new Doctrine_Exception('Deprecated attribute. See http://www.phpdoctrine.org/documentation/manual?chapter=configuration');
             case Doctrine::ATTR_LISTENER:
                 $this->setEventListener($value);
                 break;
@@ -97,8 +148,8 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
                 if ( ! ($this instanceof Doctrine_Table)) {
                     throw new Doctrine_Exception("This attribute can only be set at table level.");
                 }
-                if ($value !== null && ! $this->hasColumn($value)) {
-                    throw new Doctrine_Exception("Couldn't set collection key attribute. No such column '$value'");
+                if ($value !== null && ! $this->hasField($value)) {
+                    throw new Doctrine_Exception("Couldn't set collection key attribute. No such field '$value'.");
                 }
                 break;
             case Doctrine::ATTR_CACHE:
@@ -124,6 +175,13 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_RECORD_LISTENER:
             case Doctrine::ATTR_THROW_EXCEPTIONS:
             case Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE:
+            case Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES:
+            case Doctrine::ATTR_MODEL_LOADING:
+            case Doctrine::ATTR_RESULT_CACHE_LIFESPAN:
+            case Doctrine::ATTR_QUERY_CACHE_LIFESPAN:
+            case Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES;
+            case Doctrine::ATTR_SINGULARIZE_IMPORT;
+            case Doctrine::ATTR_USE_DQL_CALLBACKS;
 
                 break;
             case Doctrine::ATTR_SEQCOL_NAME:
@@ -148,7 +206,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
         }
 
         $this->attributes[$attribute] = $value;
-
     }
 
     public function getParams($namespace = null)
@@ -166,7 +223,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     
     public function getParamNamespaces()
     {
-        return array_keys($this->_params);	
+        return array_keys($this->_params);
     }
 
     public function setParam($name, $value, $namespace = null) 
@@ -180,7 +237,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     	return $this;
     }
     
-    public function getParam($name, $value, $namespace) 
+    public function getParam($name, $namespace = null) 
     {
     	if ($namespace == null) {
     	    $namespace = $this->getAttribute(Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE);
@@ -188,11 +245,12 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     	
         if ( ! isset($this->_params[$name])) {
             if (isset($this->parent)) {
-                return $this->parent->getParam($name);
+                return $this->parent->getParam($name, $namespace);
             }
             return null;
         }
-        return $this->_params[$name];
+        
+        return $this->_params[$namespace][$name];
     }
     /**
      * setImpl
@@ -226,6 +284,18 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             return null;
         }
         return $this->_impl[$template];
+    }
+    
+    
+    public function hasImpl($template)
+    {
+        if ( ! isset($this->_impl[$template])) {
+            if (isset($this->parent)) {
+                return $this->parent->hasImpl($template);
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -349,6 +419,19 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      */
     public function getAttribute($attribute)
     {
+        if (is_string($attribute)) {
+            $upper = strtoupper($attribute);
+
+            $const = 'Doctrine::ATTR_' . $upper; 
+
+            if (defined($const)) {
+                $attribute = constant($const);
+                $this->_state = $attribute;
+            } else {
+                throw new Doctrine_Exception('Unknown attribute: "' . $attribute . '"');
+            }
+        }
+
         $attribute = (int) $attribute;
 
         if ($attribute < 0) {

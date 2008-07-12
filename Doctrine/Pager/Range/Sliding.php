@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  $Id$
  *
@@ -17,10 +16,8 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
- 
-Doctrine::autoload('Doctrine_Pager_Range');
 
 /**
  * Doctrine_Pager_Range_Sliding
@@ -30,30 +27,30 @@ Doctrine::autoload('Doctrine_Pager_Range');
  * @subpackage  Pager
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
- * @since       1.0
+ * @link        www.phpdoctrine.org
+ * @since       0.9
  */
 class Doctrine_Pager_Range_Sliding extends Doctrine_Pager_Range
 {
     /**
-     * @var int $chunkLength     Chunk length to be returned
+     * @var int $_chunkLength     Chunk length to be returned
      */
-    private $chunkLength;
+    private $_chunkLength;
 
 
     /**
-     * initialize
+     * _initialize
      *
      * Initialize Doctrine_Pager_Range_Sliding and does custom assignments
      *
      * @return void
      */
-    protected function initialize()
+    protected function _initialize()
     {
-        if (isset($this->options['chunk'])) {
-            $this->setChunkLength($this->options['chunk']);
+        if (isset($this->_options['chunk'])) {
+            $this->_setChunkLength($this->_options['chunk']);
         } else {
-            throw new Doctrine_Pager_Exception('Missing parameter \'chunk\' that must be define in options.');
+            throw new Doctrine_Pager_Exception('Missing parameter \'chunk\' that must be defined in options.');
         }
     }
 
@@ -67,21 +64,26 @@ class Doctrine_Pager_Range_Sliding extends Doctrine_Pager_Range
      */
     public function getChunkLength()
     {
-        return $this->chunkLength;
+        return $this->_chunkLength;
     }
 
 
     /**
-     * setChunkLength
+     * _setChunkLength
      *
      * Defines the size of the chunk
      *
      * @param $chunkLength       Chunk length
      * @return void
      */
-    protected function setChunkLength($chunkLength)
+    protected function _setChunkLength($chunkLength)
     {
-        $this->chunkLength = $chunkLength;
+        $chunkLength = (int) $chunkLength;
+        if (!$chunkLength) {
+            $chunkLength = 1;
+        } else {
+            $this->_chunkLength = $chunkLength;
+        }
     }
 
 
@@ -95,25 +97,37 @@ class Doctrine_Pager_Range_Sliding extends Doctrine_Pager_Range
     public function rangeAroundPage()
     {
         $pager = $this->getPager();
-        $page = $pager->getPage();
 
-        // Define initial assignments for StartPage and EndPage
-        $startPage = $page - floor($this->getChunkLength() - 1) / 2;
-        $endPage = ($startPage + $this->getChunkLength()) - 1;
+        if ($pager->getExecuted()) {
+            $page  = $pager->getPage();
+            $pages = $pager->getLastPage();
 
-        // Check for EndPage out-range
-        if ($endPage > $pager->getLastPage()) {
-            $offset = $endPage - $pager->getLastPage();
+            $chunk = $this->getChunkLength();
 
-            $endPage = $pager->getLastPage();
-            $startPage = $startPage - $offset;
+            if ($chunk > $pages) {
+                $chunk = $pages;
+            }
+
+            $chunkStart = $page - (floor($chunk / 2));
+            $chunkEnd   = $page + (ceil($chunk / 2)-1);
+
+            if ($chunkStart < 1) {
+                $adjust = 1 - $chunkStart;
+                $chunkStart = 1;
+                $chunkEnd = $chunkEnd + $adjust;
+            }
+
+            if ($chunkEnd > $pages) {
+                $adjust = $chunkEnd - $pages;
+                $chunkStart = $chunkStart - $adjust;
+                $chunkEnd = $pages;
+            }
+
+            return range($chunkStart, $chunkEnd);
         }
 
-        // Check for StartPage out-range
-        if ($startPage < $pager->getFirstPage()) {
-            $startPage = $pager->getFirstPage();
-        }
-
-        return range($startPage, $endPage);
+        throw new Doctrine_Pager_Exception(
+            'Cannot retrieve the range around the page of a not yet executed Pager query'
+        );
     }
 }

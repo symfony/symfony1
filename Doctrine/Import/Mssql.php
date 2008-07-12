@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Import');
+
 /**
  * @package     Doctrine
  * @subpackage  Import
@@ -28,7 +28,7 @@ Doctrine::autoload('Doctrine_Import');
  * @author      Frank M. Kromann <frank@kromann.info> (PEAR MDB2 Mssql driver)
  * @author      David Coallier <davidc@php.net> (PEAR MDB2 Mssql driver)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_Import_Mssql extends Doctrine_Import
@@ -73,6 +73,8 @@ class Doctrine_Import_Mssql extends Doctrine_Import
                 $type .= '(' . $val['length'] . ')';
             }
 
+            $val['type'] = $type;
+            $val['identity'] = $identity;
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
             $description  = array(
@@ -83,7 +85,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
                 'length'    => $decl['length'],
                 'fixed'     => $decl['fixed'],
                 'unsigned'  => $decl['unsigned'],
-                'notnull'   => (bool) ($val['is_nullable'] === 'NO'),
+                'notnull'   => (bool) (trim($val['is_nullable']) === 'NO'),
                 'default'   => $val['column_def'],
                 'primary'   => (strtolower($identity) == 'identity'),
             );
@@ -112,7 +114,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
      */
     public function listTables($database = null)
     {
-        $sql = "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
+        $sql = "SELECT name FROM sysobjects WHERE type = 'U' AND name <> 'dtproperties' ORDER BY name";
 
         return $this->conn->fetchColumn($sql);
     }

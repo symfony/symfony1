@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,11 +27,11 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jwage@mac.com>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2939 $
  */
-class Doctrine_Migration_Builder
+class Doctrine_Migration_Builder extends Doctrine_Builder
 {
     /**
      * migrationsPath
@@ -52,6 +52,13 @@ class Doctrine_Migration_Builder
     private $suffix = '.class.php';
 
     /**
+     * migration
+     *
+     * @var string
+     */
+    private $migration;
+
+    /**
      * tpl
      *
      * Class template used for writing classes
@@ -69,6 +76,7 @@ class Doctrine_Migration_Builder
     {
         if ($migrationsPath) {
             $this->setMigrationsPath($migrationsPath);
+            $this->migration = new Doctrine_Migration($migrationsPath);
         }
         
         $this->loadTemplate();
@@ -139,11 +147,11 @@ END;
         $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tmp_doctrine_models';
 
         Doctrine::generateModelsFromDb($directory);
-        
-        $result = $this->generateMigrationsFromModels($directory);
-        
+
+        $result = $this->generateMigrationsFromModels($directory, Doctrine::MODEL_LOADING_CONSERVATIVE);
+
         Doctrine_Lib::removeDirectories($directory);
-        
+
         return $result;
     }
 
@@ -153,14 +161,16 @@ END;
      * @param string $modelsPath 
      * @return void
      */
-    public function generateMigrationsFromModels($modelsPath = null)
+    public function generateMigrationsFromModels($modelsPath = null, $modelLoading = null)
     {
-        if ($modelsPath) {
-            $models = Doctrine::loadModels($modelsPath);
+        if ($modelsPath !== null) {
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($modelsPath, $modelLoading));
         } else {
             $models = Doctrine::getLoadedModels();
         }
-        
+
+        $models = Doctrine::initializeModels($models);
+
         $foreignKeys = array();
         
         foreach ($models as $model) {
@@ -171,27 +181,29 @@ END;
             $up = $this->buildCreateTable($export);
             $down = $this->buildDropTable($export);
             
-            $className = 'Add' . Doctrine::classify($export['tableName']);
-            
+            $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
+
             $this->generateMigrationClass($className, array(), $up, $down);
         }
         
-        $className = 'ApplyForeignKeyConstraints';
+        if ( ! empty($foreignKeys)) {
+            $className = 'ApplyForeignKeyConstraints';
         
-        $up = '';
-        $down = '';
-        foreach ($foreignKeys as $tableName => $definitions)    {
-            $tableForeignKeyNames[$tableName] = array();
+            $up = '';
+            $down = '';
+            foreach ($foreignKeys as $tableName => $definitions)    {
+                $tableForeignKeyNames[$tableName] = array();
             
-            foreach ($definitions as $definition) {
-                $definition['name'] = $tableName . '_' . $definition['foreignTable'] . '_' . $definition['local'] . '_' . $definition['foreign'];
+                foreach ($definitions as $definition) {
+                    $definition['name'] = $tableName . '_' . $definition['local'];
                 
-                $up .= $this->buildCreateForeignKey($tableName, $definition);
-                $down .= $this->buildDropForeignKey($tableName, $definition);
+                    $up .= $this->buildCreateForeignKey($tableName, $definition);
+                    $down .= $this->buildDropForeignKey($tableName, $definition);
+                }
             }
-        }
         
-        $this->generateMigrationClass($className, array(), $up, $down);
+            $this->generateMigrationClass($className, array(), $up, $down);
+        }
         
         return true;
     }
@@ -205,7 +217,7 @@ END;
      */
     public function buildCreateForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey('" . $tableName . "', " . var_export($definition, true) . ");";
+        return "\t\t\$this->createForeignKey('" . $tableName . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
@@ -230,9 +242,9 @@ END;
     {
         $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
         
-        $code .= var_export($tableData['columns'], true) . ", ";
+        $code .= $this->varExport($tableData['columns'], true) . ", ";
         
-        $code .= var_export(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
+        $code .= $this->varExport(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
         
         $code .= ");";
         
@@ -257,23 +269,32 @@ END;
      */
     public function generateMigrationClass($className, $options = array(), $up = null, $down = null, $return = false)
     {
-        if ($return || !$this->getMigrationsPath()) {
+        $className = Doctrine_Inflector::urlize($className);
+        $className = str_replace('-', '_', $className);
+        $className = Doctrine_Inflector::classify($className);
+
+        if ($return || ! $this->getMigrationsPath()) {
             return $this->buildMigrationClass($className, null, $options, $up, $down);
         } else {
             if ( ! $this->getMigrationsPath()) {
                 throw new Doctrine_Migration_Exception('You must specify the path to your migrations.');
             }
             
-            $migration = new Doctrine_Migration($this->getMigrationsPath());
-            $next = (string) $migration->getNextVersion();
+            $next = (string) $this->migration->getNextVersion();
             
-            $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine::tableize($className) . $this->suffix;
+            $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine_Inflector::tableize($className) . $this->suffix;
             
             $class = $this->buildMigrationClass($className, $fileName, $options, $up, $down);
             
             $path = $this->getMigrationsPath() . DIRECTORY_SEPARATOR . $fileName;
             
+            if ( class_exists($className) || file_exists($path)) {
+                return false;
+            }
+            
             file_put_contents($path, $class);
+
+            return true;
         }
     }
 

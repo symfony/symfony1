@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * Doctrine_Formatter
  *
  * @package     Doctrine
  * @subpackage  Formatter
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -131,6 +131,26 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
 
         return $tmp['start'] . $str . $tmp['end'];
     }
+    
+    
+    /**
+     * quoteMultipleIdentifier
+     * Quotes multiple identifier strings
+     *
+     * @param array $arr           identifiers array to be quoted
+     * @param bool $checkOption     check the 'quote_identifier' option
+     *
+     * @return string               quoted identifier string
+     */
+    public function quoteMultipleIdentifier($arr, $checkOption = true)
+    {
+        foreach ($arr as $k => $v) {
+            $arr[$k] = $this->quoteIdentifier($v, $checkOption);
+        }
+
+		return $arr;
+    }
+
 
     /**
      * quote
@@ -158,6 +178,9 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
         case 'array':
         case 'object':
             $input = serialize($input);
+        case 'date':
+        case 'time':
+        case 'timestamp':
         case 'string':
         case 'char':
         case 'varchar':
@@ -237,6 +260,6 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
     public function getTableName($table)
     {
         return sprintf($this->conn->getAttribute(Doctrine::ATTR_TBLNAME_FORMAT),
-            preg_replace('/[^a-z0-9_\$]/i', '_', $table));
+                $table);
     }
 }

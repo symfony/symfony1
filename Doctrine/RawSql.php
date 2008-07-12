@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Query_Abstract');
+
 /**
  * Doctrine_RawSql
  *
@@ -31,7 +31,7 @@ Doctrine::autoload('Doctrine_Query_Abstract');
  * @package     Doctrine
  * @subpackage  RawSql
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -211,7 +211,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         foreach ($this->getTableAliasMap() as $tableAlias => $componentAlias) {
             $map = $this->_queryComponents[$componentAlias];
 
-            foreach ((array) $map['table']->getIdentifier() as $key) {
+            foreach ((array) $map['table']->getIdentifierColumnNames() as $key) {
                 $field = $tableAlias . '.' . $key;
 
                 if ( ! isset($this->_sqlParts['select'][$field])) {
@@ -233,7 +233,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
             }
         }
 
-        $string = $this->applyInheritance();
+        $string = $this->getInheritanceCondition($this->getRootAlias());
         if ( ! empty($string)) {
             $this->_sqlParts['where'][] = $string;
         }

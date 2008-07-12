@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @subpackage  Data
  * @author      Jonathan H. Wage <jwage@mac.com>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2552 $
  */
@@ -46,39 +46,60 @@ class Doctrine_Data_Export extends Doctrine_Data
     /**
      * doExport
      *
+     * FIXME: This function has ugly hacks in it for temporarily disabling INDEXBY query parts of tables 
+     * to export.
+     *
+     * Update from jwage: I am not sure if their is any other better solution for this. It may be the correct
+     * solution to disable the indexBy settings for tables when exporting data fixtures. Maybe a better idea 
+     * would be to extract this functionality to a pair of functions to enable/disable the index by settings 
+     * so simply turn them on and off when they need to query for the translations standalone and don't need 
+     * it to be indexed by the lang.
+     *
      * @return void
      */
     public function doExport()
     {
         $models = Doctrine::getLoadedModels();
         $specifiedModels = $this->getModels();
-        
+
         $data = array();
-        
-        $outputAll = true;
-        
+
 		    // for situation when the $models array is empty, but the $specifiedModels array isn't
         if (empty($models)) {
           $models = $specifiedModels;
         }
-        
+
+        $models = Doctrine::initializeModels($models);
+
+        // temporarily disable indexBy query parts of selected and related tables
+        $originalIndexBy = array();
         foreach ($models AS $name) {
-            
-            if ( ! empty($specifiedModels) AND !in_array($name, $specifiedModels)) {
+          $table = Doctrine::getTable($name);
+          if (!is_null($indexBy = $table->getBoundQueryPart('indexBy'))) {
+            $originalIndexBy[$name] = $indexBy;
+            $table->bindQueryPart('indexBy', null);
+          }
+        }
+
+        foreach ($models AS $name) {
+            if ( ! empty($specifiedModels) AND ! in_array($name, $specifiedModels)) {
                 continue;
             }
-            
-            $class = new $name();
-            $table = $class->getTable();
-            $result = $table->findAll();
-            
-            if ( ! empty($result)) {
-                $data[$name] = $result;
+
+            $results = Doctrine::getTable($name)->findAll();
+
+            if ($results->count() > 0) {
+                $data[$name] = $results;
             }
         }
-        
+
+        // Restore the temporarily disabled indexBy query parts
+        foreach($originalIndexBy AS $name => $indexBy) {
+            Doctrine::getTable($name)->bindQueryPart('indexBy', $indexBy);
+        }
+
         $data = $this->prepareData($data);
-        
+
         return $this->dumpData($data);
     }
 
@@ -94,15 +115,14 @@ class Doctrine_Data_Export extends Doctrine_Data
     {
         $directory = $this->getDirectory();
         $format = $this->getFormat();
-        
+
         if ($this->exportIndividualFiles()) {
-            
             if (is_array($directory)) {
                 throw new Doctrine_Data_Exception('You must specify a single path to a folder in order to export individual files.');
             } else if ( ! is_dir($directory) && is_file($directory)) {
                 $directory = dirname($directory);
             }
-            
+
             foreach ($data as $className => $classData) {
                 if ( ! empty($classData)) {
                     Doctrine_Parser::dump(array($className => $classData), $format, $directory.DIRECTORY_SEPARATOR.$className.'.'.$format);
@@ -112,7 +132,7 @@ class Doctrine_Data_Export extends Doctrine_Data
             if (is_dir($directory)) {
                 $directory .= DIRECTORY_SEPARATOR . 'data.' . $format;
             }
-            
+
             if ( ! empty($data)) {
                 return Doctrine_Parser::dump($data, $format, $directory);
             }
@@ -130,55 +150,56 @@ class Doctrine_Data_Export extends Doctrine_Data
     public function prepareData($data)
     {
         $preparedData = array();
-        
+
         foreach ($data AS $className => $classData) {
-            
             foreach ($classData as $record) {
                 $className = get_class($record);
                 $recordKey = $className . '_' . implode('_', $record->identifier());
-                
-                $recordData = $record->toArray();
-                
+
+                $recordData = $record->toArray(false);
+
                 foreach ($recordData as $key => $value) {
                     if ( ! $value) {
                         continue;
                     }
-                    
+
                     // skip single primary keys, we need to maintain composite primary keys
                     $keys = $record->getTable()->getIdentifier();
-                    
+
                     if ( ! is_array($keys)) {
                       $keys = array($keys);
                     }
-                    
+
                     if (count($keys) <= 1 && in_array($key, $keys)) {
                         continue;
                     }
-                    
+
                     if ($relation = $this->isRelation($record, $key)) {
                         $relationAlias = $relation['alias'];
                         $relationRecord = $record->$relationAlias;
-                        
+
                         // If collection then get first so we have an instance of the related record
                         if ($relationRecord instanceof Doctrine_Collection) {
                             $relationRecord = $relationRecord->getFirst();
                         }
-                        
+
                         // If relation is null or does not exist then continue
                         if ($relationRecord instanceof Doctrine_Null || !$relationRecord) {
                             continue;
                         }
-                        
+
                         // Get class name for relation
                         $relationClassName = get_class($relationRecord);
-                        
+
                         $relationValue = $relationClassName . '_' . $value;
-                        
+
                         $preparedData[$className][$recordKey][$relationAlias] = $relationValue;
-                    } else {                        
+                    } else if ($record->getTable()->hasColumn($key)) {                        
                         $preparedData[$className][$recordKey][$key] = $value;
                     }
                 }
+
+                $record->free();
             }
         }
         

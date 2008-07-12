@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Parser
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -126,7 +126,7 @@ abstract class Doctrine_Parser
         }
 
         include($path);
-        $contents = ob_get_clean();
+        $contents = iconv("UTF-8", "UTF-8", ob_get_clean());
 
         return $contents;
     }

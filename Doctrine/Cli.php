@@ -16,16 +16,18 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Cli
+ * Command line interface class
+ * Interface for easily executing Doctrine_Task classes from a 
+ * command line interface
  *
  * @package     Doctrine
  * @subpackage  Cli
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -54,9 +56,10 @@ class Doctrine_Cli
     }
 
     /**
-     * notify
+     * Notify the formatter of a message
      *
-     * @param string $notification 
+     * @param string $notification  The notification message
+     * @param string $style         Style to format the notification with(INFO, ERROR)
      * @return void
      */
     public function notify($notification = null, $style = 'HEADER')
@@ -65,9 +68,9 @@ class Doctrine_Cli
     }
 
     /**
-     * notifyException
+     * Notify the formatter of an exception
      *
-     * @param string $exception 
+     * @param  Exception $exception
      * @return void
      */
     public function notifyException($exception)
@@ -76,9 +79,9 @@ class Doctrine_Cli
     }
 
     /**
-     * run
+     * Public function to run the loaded task with the passed arguments
      *
-     * @param string $args 
+     * @param  array $args
      * @return void
      * @throws new Doctrine_Cli_Exception
      */
@@ -92,26 +95,26 @@ class Doctrine_Cli
     }
 
     /**
-     * _getTaskClassFromArgs
+     * Get the name of the task class based on the first argument
+     * which is always the task name. Do some inflection to determine the class name
      *
-     * Get the task class from an array of cli arguments
-     *
-     * @param string $args 
-     * @return void
+     * @param  array $args       Array of arguments from the cli
+     * @return string $taskClass Task class name
      */
     protected function _getTaskClassFromArgs($args)
     {
         $taskName = str_replace('-', '_', $args[1]);
-        $taskClass = 'Doctrine_Task_' . Doctrine::classify($taskName);
+        $taskClass = 'Doctrine_Task_' . Doctrine_Inflector::classify($taskName);
         
         return $taskClass;
     }
 
     /**
-     * _run
+     * Run the actual task execution with the passed arguments
      *
-     * @param string $args 
+     * @param  array $args Array of arguments for this task being executed
      * @return void
+     * @throws Doctrine_Cli_Exception $e
      */
     protected function _run($args)
     {        
@@ -124,7 +127,7 @@ class Doctrine_Cli
             return;
         }
         
-        if (isset($args[1]) && isset($args[2]) && $args[2] == 'help') {
+        if (isset($args[1]) && isset($args[2]) && $args[2] === 'help') {
             echo $this->printTasks($args[1], true);
             return;
         }
@@ -157,10 +160,11 @@ class Doctrine_Cli
     }
 
     /**
-     * prepareArgs
+     * Prepare the raw arguments for execution. Combines with the required and optional argument
+     * list in order to determine a complete array of arguments for the task
      *
-     * @param string $args 
-     * @return array $prepared
+     * @param  array $args      Array of raw arguments
+     * @return array $prepared  Array of prepared arguments
      */
     protected function prepareArgs($args)
     {
@@ -204,15 +208,13 @@ class Doctrine_Cli
     }
 
     /**
-     * printTasks
-     *
      * Prints an index of all the available tasks in the CLI instance
      * 
      * @return void
      */
     public function printTasks($task = null, $full = false)
     {
-        $task = Doctrine::classify(str_replace('-', '_', $task));
+        $task = Doctrine_Inflector::classify(str_replace('-', '_', $task));
         
         $tasks = $this->getLoadedTasks();
         
@@ -226,7 +228,7 @@ class Doctrine_Cli
             
             $className = 'Doctrine_Task_' . $taskName;
             $taskInstance = new $className();
-            $taskInstance->taskName = str_replace('_', '-', Doctrine::tableize($taskName));         
+            $taskInstance->taskName = str_replace('_', '-', Doctrine_Inflector::tableize($taskName));         
             
             $syntax = $this->_scriptName . ' ' . $taskInstance->getTaskName();
             
@@ -271,10 +273,11 @@ class Doctrine_Cli
     }
 
     /**
-     * loadTasks
+     * Load tasks from the passed directory. If no directory is given it looks in the default
+     * Doctrine/Task folder for the core tasks.
      *
-     * @param string $directory 
-     * @return array $loadedTasks
+     * @param  mixed $directory   Can be a string path or array of paths
+     * @return array $loadedTasks Array of tasks loaded
      */
     public function loadTasks($directory = null)
     {
@@ -286,34 +289,50 @@ class Doctrine_Cli
         
         $tasks = array();
         
-        foreach ((array) $directory as $dir) {
-            $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-                                                    RecursiveIteratorIterator::LEAVES_ONLY);
+        if (is_dir($directory)) {
+            foreach ((array) $directory as $dir) {
+                $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
+                                                        RecursiveIteratorIterator::LEAVES_ONLY);
 
-            foreach ($it as $file) {
-                $e = explode('.', $file->getFileName());
-                if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+                foreach ($it as $file) {
+                    $e = explode('.', $file->getFileName());
+                    if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
                     
-                    $className = 'Doctrine_Task_' . $e[0];
+                        $className = 'Doctrine_Task_' . $e[0];
                     
-                    if ( ! class_exists($className)) {
-                        require_once($file->getPathName());
+                        if ( ! class_exists($className)) {
+                            require_once($file->getPathName());
                     
-                        $class = new ReflectionClass($className);
+                            $class = new ReflectionClass($className);
                     
-                        if ($class->isSubClassOf($parent)) {
-                            $tasks[$e[0]] = $e[0];
+                            if ($class->isSubClassOf($parent)) {
+                                $tasks[$e[0]] = $e[0];
+                            }
                         }
                     }
                 }
             }
         }
-        
+
+        $classes = get_declared_classes();
+        foreach ($classes as $className) {
+            $class = new Reflectionclass($className);
+            if ($class->isSubClassOf($parent)) {
+                $task = str_replace('Doctrine_Task_', '', $className);
+                $tasks[$task] = $task;
+            }
+        }
+
         $this->_tasks = array_merge($this->_tasks, $tasks);
         
         return $this->_tasks;
     }
-    
+
+    /**
+     * Get array of all the Doctrine_Task child classes that are loaded
+     *
+     * @return array $tasks
+     */
     public function getLoadedTasks()
     {
         $parent = new ReflectionClass('Doctrine_Task');

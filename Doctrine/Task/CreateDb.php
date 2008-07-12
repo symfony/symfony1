@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,8 +39,8 @@ class Doctrine_Task_CreateDb extends Doctrine_Task
     {
         $results = Doctrine::createDatabases();
         
-        foreach ($results as $dbName => $bool) {
-            $msg = $bool ? 'Successfully created database named: "' . $dbName . '"':'Could not create database named: "' .$dbName . '"';
+        foreach ($results as $name => $result) {
+            $msg = $result instanceof Exception ? 'Could not create database for connection: "' .$name . '." Failed with exception: ' . $result->getMessage():$result;
             
             $this->notify($msg);
         }

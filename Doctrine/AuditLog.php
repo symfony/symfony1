@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,27 +25,34 @@
  * @package     Doctrine
  * @subpackage  AuditLog
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_AuditLog extends Doctrine_Plugin
+class Doctrine_AuditLog extends Doctrine_Record_Generator
 {
+    /**
+     * Array of AuditLog Options
+     *
+     * @var string
+     */
     protected $_options = array(
                             'className'     => '%CLASS%Version',
                             'versionColumn' => 'version',
+                            'tableName'     => false,
                             'generateFiles' => false,
                             'table'         => false,
                             'pluginTable'   => false,
                             'children'      => array(),
+                            'auditLog'      => true,
                             );
 
     /**
-     * Create a new auditlog_ 
-     * 
-     * @param array $options An array of options
-     * @return void
+     * Accepts array of options to configure the AuditLog
+     *
+     * @param   array $options An array of options
+     * @return  void
      */
     public function __construct(array $options = array())
     {
@@ -53,43 +60,13 @@ class Doctrine_AuditLog extends Doctrine_Plugin
     }
 
     /**
-     * Get the version 
-     * 
-     * @param Doctrine_Record $record 
-     * @param mixed $version 
-     * @return array An array with version information
-     */
-    public function getVersion(Doctrine_Record $record, $version)
-    {           
-        $className = $this->_options['className'];
-
-        $q = new Doctrine_Query();
-
-        $values = array();
-        foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-            $conditions[] = $className . '.' . $id . ' = ?';
-            $values[] = $record->get($id);
-        }
-        $where = implode(' AND ', $conditions) . ' AND ' . $className . '.' . $this->_options['versionColumn'] . ' = ?';
-        
-        $values[] = $version;
-
-        $q->from($className)
-          ->where($where);
-
-        return $q->execute($values, Doctrine::HYDRATE_ARRAY);
-    }
-
-    /**
-     * buildDefinition for a table 
-     * 
-     * @param Doctrine_Table $table 
-     * @return boolean true on success otherwise false.
+     * Set the table definition for the audit log table
+     *
+     * @return  void
      */
     public function setTableDefinition()
     {
         $name = $this->_options['table']->getComponentName();
-
         $columns = $this->_options['table']->getColumns();
 
         // remove all sequence, autoincrement and unique constraint definitions
@@ -103,5 +80,60 @@ class Doctrine_AuditLog extends Doctrine_Plugin
 
         // the version column should be part of the primary key definition
         $this->hasColumn($this->_options['versionColumn'], 'integer', 8, array('primary' => true));
+    }
+
+    /**
+     * Get array of information for the passed record and the specified version
+     *
+     * @param   Doctrine_Record $record
+     * @param   integer         $version
+     * @return  array           An array with version information
+     */
+    public function getVersion(Doctrine_Record $record, $version)
+    {
+        $className = $this->_options['className'];
+
+        $q = new Doctrine_Query();
+
+        $values = array();
+        foreach ((array) $this->_options['table']->getIdentifier() as $id) {
+            $conditions[] = $className . '.' . $id . ' = ?';
+            $values[] = $record->get($id);
+        }
+
+        $where = implode(' AND ', $conditions) . ' AND ' . $className . '.' . $this->_options['versionColumn'] . ' = ?';
+
+        $values[] = $version;
+
+        $q->from($className)
+          ->where($where);
+
+        return $q->execute($values, Doctrine::HYDRATE_ARRAY);
+    }
+
+    /**
+     * Get the max version number for a given Doctrine_Record
+     *
+     * @param Doctrine_Record $record
+     * @return Integer $versionnumber
+     */
+    public function getMaxVersion(Doctrine_Record $record)
+    {
+        $className = $this->_options['className'];
+        $select = 'MAX(' . $className . '.' . $this->_options['versionColumn'] . ') max_version';
+
+        foreach ((array) $this->_options['table']->getIdentifier() as $id) {
+            $conditions[] = $className . '.' . $id . ' = ?';
+            $values[] = $record->get($id);
+        }
+
+        $q = Doctrine_Query::create()
+                ->select($select)
+                ->from($className)
+                ->where(implode(' AND ',$conditions));
+
+        $result = $q->execute($values, Doctrine::HYDRATE_ARRAY);
+
+        return isset($result[0]['max_version']) ? $result[0]['max_version']:0;
     }
 }

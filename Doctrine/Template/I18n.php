@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Template_I18n
+ * Add multilingual capabilities to your Doctrine models
  *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -42,8 +42,9 @@ class Doctrine_Template_I18n extends Doctrine_Template
     {
         $this->_plugin = new Doctrine_I18n($options);
     }
+
     /**
-     * setUp
+     * Initialize the I18n plugin for the template
      *
      * @return void
      */
@@ -53,7 +54,7 @@ class Doctrine_Template_I18n extends Doctrine_Template
     }
 
     /**
-     * getI18n
+     * Get the plugin instance for the I18n template
      *
      * @return void
      */

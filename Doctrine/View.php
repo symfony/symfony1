@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  View
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -52,17 +52,27 @@ class Doctrine_View
     /**
      * @var string $name                the name of the view
      */
-    protected $name;
+    protected $_name;
 
     /**
      * @var Doctrine_Query $query       the DQL query object this view is hooked into
      */
-    protected $query;
+    protected $_query;
 
     /**
      * @var Doctrine_Connection $conn   the connection object
      */
-    protected $conn;
+    protected $_conn;
+
+    /**
+     * @var string $_dql The view dql string
+     */
+    protected $_dql;
+
+    /**
+     * @var string $_sql The view sql string
+     */
+    protected $_sql;
 
     /**
      * constructor
@@ -71,47 +81,45 @@ class Doctrine_View
      */
     public function __construct(Doctrine_Query $query, $viewName)
     {
-        $this->name  = $viewName;
-        $this->query = $query;
-        $this->query->setView($this);
-        $this->conn   = $query->getConnection();
+        $this->_name  = $viewName;
+        $this->_query = $query;
+        $this->_query->setView($this);
+        $this->_conn   = $query->getConnection();
+        $this->_dql = $query->getDql();
+        $this->_sql = $query->getSql();
     }
 
     /**
-     * getQuery
      * returns the associated query object
      *
      * @return Doctrine_Query
      */
     public function getQuery()
     {
-        return $this->query;
+        return $this->_query;
     }
 
     /**
-     * getName
      * returns the name of this view
      *
      * @return string
      */
     public function getName()
     {
-        return $this->name;
+        return $this->_name;
     }
 
     /**
-     * getConnection
      * returns the connection object
      *
      * @return Doctrine_Connection
      */
     public function getConnection()
     {
-        return $this->conn;
+        return $this->_conn;
     }
 
     /**
-     * create
      * creates this view
      *
      * @throws Doctrine_View_Exception
@@ -119,16 +127,15 @@ class Doctrine_View
      */
     public function create()
     {
-        $sql = sprintf(self::CREATE, $this->name, $this->query->getQuery());
+        $sql = sprintf(self::CREATE, $this->_name, $this->_query->getQuery());
         try {
-            $this->conn->execute($sql);
+            $this->_conn->execute($sql);
         } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
 
     /**
-     * drop
      * drops this view from the database
      *
      * @throws Doctrine_View_Exception
@@ -137,32 +144,49 @@ class Doctrine_View
     public function drop()
     {
         try {
-            $this->conn->execute(sprintf(self::DROP, $this->name));
+            $this->_conn->execute(sprintf(self::DROP, $this->_name));
         } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
 
     /**
-     * execute
-     * executes the view
      * returns a collection of Doctrine_Record objects
      *
      * @return Doctrine_Collection
      */
     public function execute()
     {
-        return $this->query->execute();
+        return $this->_query->execute();
     }
 
     /**
-     * getSelectSql
      * returns the select sql for this view
      *
      * @return string
      */
     public function getSelectSql()
     {
-        return sprintf(self::SELECT, $this->name);
+        return sprintf(self::SELECT, $this->_name);
+    }
+
+    /**
+     * Get the view sql string
+     *
+     * @return string $sql
+     */
+    public function getViewSql()
+    {
+        return $this->_sql;
+    }
+
+    /**
+     * Get the view dql string
+     *
+     * @return string $dql
+     */
+    public function getViewDql()
+    {
+        return $this->_dql;
     }
 }

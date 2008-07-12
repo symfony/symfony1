@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -53,7 +53,7 @@ abstract class Doctrine_Task
     {
         $this->dispatcher = $dispatcher;
         
-        $this->taskName = str_replace('_', '-', Doctrine::tableize(str_replace('Doctrine_Task_', '', get_class($this))));
+        $this->taskName = str_replace('_', '-', Doctrine_Inflector::tableize(str_replace('Doctrine_Task_', '', get_class($this))));
     }
 
     /**
@@ -68,8 +68,10 @@ abstract class Doctrine_Task
             $args = func_get_args();
             
             return call_user_func_array(array($this->dispatcher, 'notify'), $args);
-        } else {
+        } else if ( $notification !== null ) {
             return $notification;
+        } else {
+            return false;
         }
     }
 

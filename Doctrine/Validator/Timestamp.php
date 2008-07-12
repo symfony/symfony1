@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Interface.php 3155 2007-11-14 13:13:23Z jwage $
+ *  $Id: Timestamp.php 3884 2008-02-22 18:26:35Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,26 +16,51 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
+ * Doctrine_Validator_Timestamp
+ *
  * @package     Doctrine
- * @subpackage  Log
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3155 $
+ * @version     $Revision: 3884 $
+ * @author      Mark Pearson <mark.pearson0@googlemail.com>
  */
-interface Doctrine_Log_Formatter_Interface
+class Doctrine_Validator_Timestamp
 {
     /**
-     * Formats data into a single line to be written by the writer.
+     * checks if given value is a valid timestamp (YYYY-MM-DD HH:MM:SS)
      *
-     * @param  array    $event    event data
-     * @return string             formatted line to write to the log
+     * @param mixed $value
+     * @return boolean
      */
-    public function format($event);
+    public function validate($value)
+    {
+        if ($value === null) {
+            return true;
+        }
+
+        if ( ! preg_match('/^ *[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} *$/', $value)) {
+            return false;
+        }
+
+        list($date, $time) = explode(' ', trim($value));
+
+        $dateValidator = Doctrine_Validator::getValidator('date');
+        $timeValidator = Doctrine_Validator::getValidator('time');
+
+        if ( ! $dateValidator->validate($date)) {
+            return false;
+        }
+
+        if ( ! $timeValidator->validate($time)) {
+            return false;
+        } 
+
+        return true;
+    }
 }

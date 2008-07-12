@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  *
  * @package     Doctrine
  * @subpackage  Locking
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @author      Roman Borschel <roman@code-factory.org>
  * @author      Pierre Minnieur <pm@pierre-minnieur.de>
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -101,7 +101,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function getLock(Doctrine_Record $record, $userIdent)
     {
         $objectType = $record->getTable()->getComponentName();
-        $key        = $record->obtainIdentifier();
+        $key        = $record->getTable()->getIdentifier();
 
         $gotLock = false;
         $time = time();
@@ -113,7 +113,7 @@ class Doctrine_Locking_Manager_Pessimistic
 
         try {
             $dbh = $this->conn->getDbh();
-            $dbh->beginTransaction();
+            $this->conn->beginTransaction();
 
             $stmt = $dbh->prepare('INSERT INTO ' . $this->_lockTable
                                   . ' (object_type, object_key, user_ident, timestamp_obtained)'
@@ -150,9 +150,9 @@ class Doctrine_Locking_Manager_Pessimistic
                     $stmt->execute();
                 }
             }
-            $dbh->commit();
+            $this->conn->commit();
         } catch (Exception $pdoe) {
-            $dbh->rollback();
+            $this->conn->rollback();
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
 
@@ -170,7 +170,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function releaseLock(Doctrine_Record $record, $userIdent)
     {
         $objectType = $record->getTable()->getComponentName();
-        $key        = $record->obtainIdentifier();
+        $key        = $record->getTable()->getIdentifier();
 
         if (is_array($key)) {
             // Composite key
@@ -241,7 +241,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function getLockOwner($lockedRecord)
     {
         $objectType = $lockedRecord->getTable()->getComponentName();
-        $key        = $lockedRecord->obtainIdentifier();
+        $key        = $lockedRecord->getTable()->getIdentifier();
         return $this->_getLockingUserIdent($objectType, $key);
     }
 
@@ -288,5 +288,4 @@ class Doctrine_Locking_Manager_Pessimistic
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
     }
-
 }

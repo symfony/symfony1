@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -36,7 +36,7 @@ final class Doctrine
     /**
      * VERSION
      */
-    const VERSION                   = '1.0.0';
+    const VERSION                   = '0.11.0';
 
     /**
      * ERROR CONSTANTS
@@ -191,6 +191,11 @@ final class Doctrine
     const ATTR_DEFAULT_PARAM_NAMESPACE  = 156;
     const ATTR_QUERY_CACHE              = 157;
     const ATTR_QUERY_CACHE_LIFESPAN     = 158;
+    const ATTR_AUTOLOAD_TABLE_CLASSES   = 160;
+    const ATTR_MODEL_LOADING            = 161;
+    const ATTR_RECURSIVE_MERGE_FIXTURES = 162;
+    const ATTR_SINGULARIZE_IMPORT       = 163;
+    const ATTR_USE_DQL_CALLBACKS        = 164;
 
     /**
      * LIMIT CONSTANTS
@@ -200,11 +205,13 @@ final class Doctrine
      * constant for row limiting
      */
     const LIMIT_ROWS       = 1;
+    const QUERY_LIMIT_ROWS = 1;
 
     /**
      * constant for record limiting
      */
-    const LIMIT_RECORDS    = 2;
+    const LIMIT_RECORDS       = 2;
+    const QUERY_LIMIT_RECORDS = 2;
 
     /**
      * FETCHMODE CONSTANTS
@@ -425,24 +432,37 @@ final class Doctrine
     const IDENTIFIER_COMPOSITE      = 4;
 
     /**
-     * Path
+     * MODEL_LOADING_AGGRESSIVE
+     *
+     * Constant for agressive model loading
+     * Will require_once() all found model files
+     */
+    const MODEL_LOADING_AGGRESSIVE   = 1;
+
+    /**
+     * MODEL_LOADING_CONSERVATIVE
+     *
+     * Constant for conservative model loading
+     * Will not require_once() found model files inititally instead it will build an array
+     * and reference it in autoload() when a class is needed it will require_once() it
+     */
+    const MODEL_LOADING_CONSERVATIVE= 2;
+
+    /**
+     * Path to Doctrine root
      *
      * @var string $path            doctrine root directory
      */
     private static $_path;
 
     /**
-     * Debug
-     *
-     * Bool true/false
+     * Debug bool true/false option
      *
      * @var boolean $_debug
      */
     private static $_debug = false;
 
     /**
-     * _loadedModelFiles
-     *
      * Array of all the loaded models and the path to each one for autoloading
      *
      * @var array
@@ -450,9 +470,8 @@ final class Doctrine
     private static $_loadedModelFiles = array();
 
     /**
-     * _validators
-     *
      * Array of all the loaded validators
+     *
      * @var array
      */
     private static $_validators = array();
@@ -469,7 +488,17 @@ final class Doctrine
     }
 
     /**
-     * debug
+     * Returns an array of all the loaded models and the path where each of them exists
+     *
+     * @return array
+     */
+    public static function getLoadedModelFiles()
+    {
+        return self::$_loadedModelFiles;
+    }
+
+    /**
+     * Turn on/off the debugging setting
      *
      * @param string $bool
      * @return void
@@ -484,8 +513,7 @@ final class Doctrine
     }
 
     /**
-     * getPath
-     * returns the doctrine root
+     * Get the root path to Doctrine
      *
      * @return string
      */
@@ -499,52 +527,61 @@ final class Doctrine
     }
 
     /**
-     * loadModels
+     * Load an individual model name and path in to the model loading registry
      *
+     * @return null
+     */
+    public static function loadModel($className, $path = null)
+    {
+        self::$_loadedModelFiles[$className] = $path;
+    }
+
+    /**
      * Recursively load all models from a directory or array of directories
      *
-     * @param string $directory    Path to directory of models or array of directory paths
-     * @return array $loadedModels
+     * @param  string   $directory      Path to directory of models or array of directory paths
+     * @param  integer  $modelLoading   Pass value of Doctrine::ATTR_MODEL_LOADING to force a certain style of model loading
+     *                                  Allowed Doctrine::MODEL_LOADING_AGGRESSIVE(default) or Doctrine::MODEL_LOADING_CONSERVATIVE
      */
-    public static function loadModels($directory)
+    public static function loadModels($directory, $modelLoading = null)
     {
-        if ($directory !== null) {
-            $manager = Doctrine_Manager::getInstance();
+        $manager = Doctrine_Manager::getInstance();
 
+        $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING):$modelLoading;
+
+        $loadedModels = array();
+
+        if ($directory !== null) {
             foreach ((array) $directory as $dir) {
+                if ( ! is_dir($dir)) {
+                    throw new Doctrine_Exception('You must pass a valid path to a directory containing Doctrine models');
+                }
+
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
                 foreach ($it as $file) {
                     $e = explode('.', $file->getFileName());
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
-                        self::$_loadedModelFiles[$e[0]] = $file->getPathName();
-                    }
-                }
-            }
+                        $className = $e[0];
 
-            $loadedModels = array();
+                        if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
+                            self::loadModel($className, $file->getPathName());
 
-            $modelFiles = array_keys(self::$_loadedModelFiles);
+                            $loadedModels[$className] = $className;
+                        } else {
+                            $declaredBefore = get_declared_classes();
+                            require_once($file->getPathName());
 
-            foreach ($modelFiles as $name) {
-                $declaredBefore = get_declared_classes();
-                if (class_exists($name)) {
-                    if (self::isValidModelClass($name) && !in_array($name, $loadedModels)) {
-                        $loadedModels[] = $name;
-                    }
-                } else {
-                    // Determine class names by the actual inclusion of the model file
-                    // The possibility exists that the class name(s) contained in the model
-                    // file is not the same as the actual model file name itself
-                    if (isset(self::$_loadedModelFiles[$name])) {
-                        require_once self::$_loadedModelFiles[$name];
-                        $declaredAfter = get_declared_classes();
-                        // Using array_slice since array_diff is broken is some versions
-                        $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
-                        if ($foundClasses) {
-                            foreach ($foundClasses as $name) {
-                                if (self::isValidModelClass($name) && !in_array($name, $loadedModels)) {
-                                    $loadedModels[] = $name;
+                            $declaredAfter = get_declared_classes();
+                            // Using array_slice because array_diff is broken is some PHP versions
+                            $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
+                            if ($foundClasses) {
+                                foreach ($foundClasses as $className) {
+                                    if (self::isValidModelClass($className)) {
+                                        $loadedModels[$className] = $className;
+
+                                        self::loadModel($className, $file->getPathName());
+                                    }
                                 }
                             }
                         }
@@ -553,12 +590,10 @@ final class Doctrine
             }
         }
 
-        return self::filterInvalidModels($loadedModels);
+        return $loadedModels;
     }
 
     /**
-     * getLoadedModels
-     *
      * Get all the loaded models, you can provide an array of classes or it will use get_declared_classes()
      *
      * Will filter through an array of classes and return the Doctrine_Records out of them.
@@ -578,9 +613,40 @@ final class Doctrine
     }
 
     /**
-     * filterInvalidModels
+     * Initialize all models so everything is present and loaded in to memory
+     * This will also inheritently initialize any model behaviors and add
+     * the models generated by Doctrine generators and add them to the $models
+     * array
      *
-     * Filter through an array of classes and return all the classes that are valid models
+     * @param string $models
+     * @return array $models
+     */
+    public static function initializeModels($models)
+    {
+        $models = self::filterInvalidModels($models);
+
+        foreach ($models as $model) {
+            $declaredBefore = get_declared_classes();
+            Doctrine::getTable($model);
+
+            $declaredAfter = get_declared_classes();
+            // Using array_slice because array_diff is broken is some PHP versions
+            $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
+            foreach ($foundClasses as $class) {
+                if (self::isValidModelClass($class)) {
+                    $models[] = $class;
+                }
+            }
+        }
+
+        $models = self::filterInvalidModels($models);
+
+        return $models;
+    }
+
+    /**
+     * Filter through an array of classes and return all the classes that are valid models.
+     * This will inflect the class, causing it to be loaded in to memory.
      *
      * @param classes  Array of classes to filter through, otherwise uses get_declared_classes()
      * @return array   $loadedModels
@@ -590,7 +656,7 @@ final class Doctrine
         $validModels = array();
 
         foreach ((array) $classes as $name) {
-            if (self::isValidModelClass($name) && !in_array($name, $validModels)) {
+            if (self::isValidModelClass($name) && ! in_array($name, $validModels)) {
                 $validModels[] = $name;
             }
         }
@@ -599,9 +665,8 @@ final class Doctrine
     }
 
     /**
-     * isValidModelClass
-     *
      * Checks if what is passed is a valid Doctrine_Record
+     * Will load class in to memory in order to inflect it and find out information about the class
      *
      * @param   mixed   $class Can be a string named after the class, an instance of the class, or an instance of the class reflected
      * @return  boolean
@@ -620,10 +685,7 @@ final class Doctrine
             // Skip the following classes
             // - abstract classes
             // - not a subclass of Doctrine_Record
-            // - don't have a setTableDefinition method
-            if (!$class->isAbstract() &&
-                $class->isSubClassOf('Doctrine_Record') &&
-                $class->hasMethod('setTableDefinition')) {
+            if ( ! $class->isAbstract() && $class->isSubClassOf('Doctrine_Record')) {
 
                 return true;
             }
@@ -633,20 +695,18 @@ final class Doctrine
     }
 
     /**
-     * getConnectionByTableName
-     *
      * Get the connection object for a table by the actual table name
+     * FIXME: I think this method is flawed because a individual connections could have the same table name
      *
      * @param string $tableName
-     * @return object Doctrine_Connection
+     * @return Doctrine_Connection
      */
     public static function getConnectionByTableName($tableName)
     {
         $loadedModels = self::getLoadedModels();
 
         foreach ($loadedModels as $name) {
-            $model = new $name();
-            $table = $model->getTable();
+            $table = Doctrine::getTable($name);
 
             if ($table->getTableName() == $tableName) {
                return $table->getConnection();
@@ -657,47 +717,48 @@ final class Doctrine
     }
 
     /**
-     * generateModelsFromDb
-     *
-     * method for importing existing schema to Doctrine_Record classes
+     * Method for importing existing schema to Doctrine_Record classes
      *
      * @param string $directory Directory to write your models to
      * @param array $databases Array of databases to generate models for
+     * @param array $options Array of options
      * @return boolean
      * @throws Exception
      */
-    public static function generateModelsFromDb($directory, array $databases = array())
+    public static function generateModelsFromDb($directory, array $databases = array(), array $options = array())
     {
-        return Doctrine_Manager::connection()->import->importSchema($directory, $databases);
+        return Doctrine_Manager::connection()->import->importSchema($directory, $databases, $options);
     }
 
     /**
-     * generateYamlFromDb
-     *
      * Generates models from database to temporary location then uses those models to generate a yaml schema file.
      * This should probably be fixed. We should write something to generate a yaml schema file directly from the database.
      *
      * @param string $yamlPath Path to write oyur yaml schema file to
+     * @param array  $options Array of options
      * @return void
      */
-    public static function generateYamlFromDb($yamlPath)
+    public static function generateYamlFromDb($yamlPath, array $databases = array(), array $options = array())
     {
-        $directory = '/tmp/tmp_doctrine_models';
+        $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tmp_doctrine_models';
 
-        Doctrine::generateModelsFromDb($directory);
+        $options['generateBaseClasses'] = isset($options['generateBaseClasses']) ? $options['generateBaseClasses']:false;
+        $result = Doctrine::generateModelsFromDb($directory, $databases, $options);
+
+        if ( empty($result) && ! is_dir($directory)) {
+            throw new Doctrine_Exception('No models generated from your databases');
+        }
 
         $export = new Doctrine_Export_Schema();
 
         $result = $export->exportSchema($yamlPath, 'yml', $directory);
 
-        exec('rm -rf ' . $directory);
+        Doctrine_Lib::removeDirectories($directory);
 
         return $result;
     }
 
     /**
-     * generateModelsFromYaml
-     *
      * Generate a yaml schema file from an existing directory of models
      *
      * @param string $yamlPath Path to your yaml schema files
@@ -714,8 +775,6 @@ final class Doctrine
     }
 
     /**
-     * createTablesFromModels
-     *
      * Creates database tables for the models in the specified directory
      *
      * @param string $directory Directory containing your models
@@ -727,8 +786,6 @@ final class Doctrine
     }
 
     /**
-     * createTablesFromArray
-     *
      * Creates database tables for the models in the supplied array
      *
      * @param array $array An array of models to be exported
@@ -740,9 +797,21 @@ final class Doctrine
     }
 
     /**
-     * generateSqlFromModels
+     * Generate a array of sql for the passed array of models
      *
-     * @param string $directory
+     * @param  array $array
+     * @return array $sql
+     */
+    public static function generateSqlFromArray($array)
+    {
+        return Doctrine_Manager::connection()->export->exportClassesSql($array);
+    }
+
+    /**
+     * Generate a sql string to create the tables from all loaded models
+     * or the models found in the passed directory.
+     *
+     * @param  string $directory
      * @return string $build  String of sql queries. One query per line
      */
     public static function generateSqlFromModels($directory = null)
@@ -758,8 +827,6 @@ final class Doctrine
     }
 
     /**
-     * generateYamlFromModels
-     *
      * Generate yaml schema file for the models in the specified directory
      *
      * @param string $yamlPath Path to your yaml schema files
@@ -774,8 +841,6 @@ final class Doctrine
     }
 
     /**
-     * createDatabases
-     *
      * Creates databases for connections
      *
      * @param string $specifiedConnections Array of connections you wish to create the database for
@@ -783,52 +848,10 @@ final class Doctrine
      */
     public static function createDatabases($specifiedConnections = array())
     {
-        if ( ! is_array($specifiedConnections)) {
-            $specifiedConnections = (array) $specifiedConnections;
-        }
-
-        $manager = Doctrine_Manager::getInstance();
-        $connections = $manager->getConnections();
-
-        $results = array();
-
-        foreach ($connections as $name => $connection) {
-            if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
-                continue;
-            }
-
-            $info = $manager->parsePdoDsn($connection->getOption('dsn'));
-            $username = $connection->getOption('username');
-            $password = $connection->getOption('password');
-
-            // Make connection without database specified so we can create it
-            $connect = $manager->openConnection(new PDO($info['scheme'] . ':host=' . $info['host'], $username, $password), 'tmp_connection', false);
-
-            try {
-                // Create database
-                $connect->export->createDatabase($name);
-
-                // Close the tmp connection with no database
-                $manager->closeConnection($connect);
-
-                // Close original connection
-                $manager->closeConnection($connection);
-
-                // Reopen original connection with newly created database
-                $manager->openConnection(new PDO($info['dsn'], $username, $password), $name, true);
-
-                $results[$name] = true;
-            } catch (Exception $e) {
-                $results[$name] = false;
-            }
-        }
-
-        return $results;
+        return Doctrine_Manager::getInstance()->createDatabases($specifiedConnections);
     }
 
     /**
-     * dropDatabases
-     *
      * Drops databases for connections
      *
      * @param string $specifiedConnections Array of connections you wish to drop the database for
@@ -836,36 +859,10 @@ final class Doctrine
      */
     public static function dropDatabases($specifiedConnections = array())
     {
-        if ( ! is_array($specifiedConnections)) {
-            $specifiedConnections = (array) $specifiedConnections;
-        }
-
-        $manager = Doctrine_Manager::getInstance();
-
-        $connections = $manager->getConnections();
-
-        $results = array();
-
-        foreach ($connections as $name => $connection) {
-            if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
-                continue;
-            }
-
-            try {
-                $connection->export->dropDatabase($name);
-
-                $results[$name] = true;
-            } catch (Exception $e) {
-                $results[$name] = false;
-            }
-        }
-
-        return $results;
+        return Doctrine_Manager::getInstance()->dropDatabases($specifiedConnections);
     }
 
     /**
-     * dumpData
-     *
      * Dump data to a yaml fixtures file
      *
      * @param string $yamlPath Path to write the yaml data fixtures to
@@ -880,8 +877,6 @@ final class Doctrine
     }
 
     /**
-     * loadData
-     *
      * Load data from a yaml fixtures file.
      * The output of dumpData can be fed to loadData
      *
@@ -901,8 +896,6 @@ final class Doctrine
     }
 
     /**
-     * migrate
-     *
      * Migrate database to specified $to version. Migrates from current to latest if you do not specify.
      *
      * @param string $migrationsPath Path to migrations directory which contains your migration classes
@@ -918,8 +911,6 @@ final class Doctrine
     }
 
     /**
-     * generateMigrationClass
-     *
      * Generate new migration class skeleton
      *
      * @param string $className Name of the Migration class to generate
@@ -933,7 +924,7 @@ final class Doctrine
     }
 
     /**
-     * generateMigrationsFromDb
+     * Generate a set of migration classes from an existing database
      *
      * @param string $migrationsPath
      * @return void
@@ -947,45 +938,33 @@ final class Doctrine
     }
 
     /**
-     * generateMigrationsFromModels
+     * Generate a set of migration classes from an existing set of models
      *
-     * @param string $migrationsPath
-     * @param string $modelsPath
+     * @param string  $migrationsPath Path to your Doctrine migration classes
+     * @param string  $modelsPath     Path to your Doctrine model classes
+     * @param integer $modelLoading   Style of model loading to use for loading the models in order to generate migrations
      * @return void
      */
-    public static function generateMigrationsFromModels($migrationsPath, $modelsPath = null)
+    public static function generateMigrationsFromModels($migrationsPath, $modelsPath = null, $modelLoading = null)
     {
         $builder = new Doctrine_Migration_Builder($migrationsPath);
 
-        return $builder->generateMigrationsFromModels($modelsPath);
+        return $builder->generateMigrationsFromModels($modelsPath, $modelLoading);
     }
 
     /**
-     * getTable
+     * Get the Doctrine_Table object for the passed model
      *
-     * @param string $tableName
-     * @return void
+     * @param string $componentName
+     * @return Doctrine_Table
      */
-    public static function getTable($tableName)
+    public static function getTable($componentName)
     {
-        return Doctrine_Manager::table($tableName);
+        return Doctrine_Manager::getInstance()->getConnectionForComponent($componentName)->getTable($componentName);
     }
 
     /**
-     * fileFinder
-     *
-     * @param string $type
-     * @return void
-     */
-    public static function fileFinder($type)
-    {
-        return Doctrine_FileFinder::type($type);
-    }
-
-    /**
-     * compile
-     *
-     * method for making a single file of most used doctrine runtime components
+     * Method for making a single file of most used doctrine runtime components
      * including the compiled file instead of multiple files (in worst
      * cases dozens of files) can improve performance by an order of magnitude
      *
@@ -1000,8 +979,6 @@ final class Doctrine
     }
 
     /**
-     * autoload
-     *
      * simple autoload function
      * returns true if the class was loaded, otherwise false
      *
@@ -1010,18 +987,14 @@ final class Doctrine
      */
     public static function autoload($className)
     {
-        if (class_exists($className, false)) {
+        if (class_exists($className, false) || interface_exists($className, false)) {
             return false;
         }
 
-        if ( ! self::$_path) {
-            self::$_path = dirname(__FILE__);
-        }
-
-        $class = self::$_path . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+        $class = self::getPath() . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
         if (file_exists($class)) {
-            require_once($class);
+            require $class;
 
             return true;
         }
@@ -1029,7 +1002,7 @@ final class Doctrine
         $loadedModels = self::$_loadedModelFiles;
 
         if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
-            require_once($loadedModels[$className]);
+            require $loadedModels[$className];
 
             return true;
         }
@@ -1038,8 +1011,6 @@ final class Doctrine
     }
 
     /**
-     * dump
-     *
      * dumps a given variable
      *
      * @param mixed $var        a variable of any type
@@ -1073,44 +1044,5 @@ final class Doctrine
         }
 
         return implode("\n", $ret);
-    }
-
-    /**
-     * tableize
-     *
-     * returns table name from class name
-     *
-     * @param string $classname
-     * @return string
-     */
-    public static function tableize($className)
-    {
-         return Doctrine_Inflector::tableize($className);
-    }
-
-    /**
-     * classify
-     *
-     * returns class name from table name
-     *
-     * @param string $tablename
-     * @return string
-     */
-    public static function classify($tableName)
-    {
-        return Doctrine_Inflector::classify($tableName);
-    }
-
-    /**
-     * isValidClassName
-     *
-     * checks for valid class name (uses camel case and underscores)
-     *
-     * @param string $classname
-     * @return boolean
-     */
-    public static function isValidClassname($className)
-    {
-        return Doctrine_Lib::isValidClassName($className);
     }
 }

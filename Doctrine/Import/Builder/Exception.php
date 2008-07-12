@@ -16,23 +16,15 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
- */
-Doctrine::autoload('Doctrine_Import_Exception');
-/**
- * @package     Doctrine
- * @subpackage  Import
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * class Doctrine_Import_Builder_Exception
+ * Doctrine_Import_Builder_Exception
+ *
  * @package     Doctrine
  * @subpackage  Import
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
  * @version     $Revision$

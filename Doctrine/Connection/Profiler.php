@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Overloadable');
+
 /**
  * Doctrine_Connection_Profiler
  *
@@ -26,7 +26,7 @@ Doctrine::autoload('Doctrine_Overloadable');
  * @subpackage  Connection
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -42,8 +42,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
                                 'connect',
                                 'begintransaction',
                                 'exec',
-                                'execute',
-                                );
+                                'execute');
 
     /**
      * @param array $events         an array containing all listened events

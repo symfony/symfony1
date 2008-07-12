@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Relation_Association');
+
 /**
  * Doctrine_Relation_Association_Self
  *
  * @package     Doctrine
  * @subpackage  Relation
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -42,6 +42,8 @@ class Doctrine_Relation_Association_Self extends Doctrine_Relation_Association
     {
         switch ($context) {
             case 'record':
+                $identifierColumnNames = $this->definition['table']->getIdentifierColumnNames();
+                $identifier = array_pop($identifierColumnNames);
                 $sub    = 'SELECT '.$this->definition['foreign'] 
                         . ' FROM '.$this->definition['refTable']->getTableName()
                         . ' WHERE '.$this->definition['local']
@@ -55,10 +57,10 @@ class Doctrine_Relation_Association_Self extends Doctrine_Relation_Association
                 $dql  = 'FROM ' . $this->definition['table']->getComponentName()
                       . '.' . $this->definition['refTable']->getComponentName()
                       . ' WHERE ' . $this->definition['table']->getComponentName()
-                      . '.' . $this->definition['table']->getIdentifier() 
+                      . '.' . $identifier 
                       . ' IN (' . $sub . ')'
                       . ' || ' . $this->definition['table']->getComponentName() 
-                      . '.' . $this->definition['table']->getIdentifier() 
+                      . '.' . $identifier
                       . ' IN (' . $sub2 . ')';
                 break;
             case 'collection':
@@ -80,7 +82,8 @@ class Doctrine_Relation_Association_Self extends Doctrine_Relation_Association
 
         $assocTable = $this->getAssociationFactory()->getTableName();
         $tableName  = $record->getTable()->getTableName();
-        $identifier = $record->getTable()->getIdentifier();
+        $identifierColumnNames = $record->getTable()->getIdentifierColumnNames();
+        $identifier = array_pop($identifierColumnNames);
 
         $sub     = 'SELECT '.$this->getForeign().
                    ' FROM '.$assocTable.

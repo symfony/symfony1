@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  $Id$
  *
@@ -17,10 +16,8 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
- 
-Doctrine::autoload('Doctrine_Pager_Range');
 
 /**
  * Doctrine_Pager_Range_Jumping
@@ -30,28 +27,28 @@ Doctrine::autoload('Doctrine_Pager_Range');
  * @subpackage  Pager
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
- * @since       1.0
+ * @link        www.phpdoctrine.org
+ * @since       0.9
  */
 class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
 {
     /**
-     * @var int $chunkLength     Chunk length to be returned
+     * @var int $_chunkLength     Chunk length to be returned
      */
-    private $chunkLength;
+    private $_chunkLength;
 
 
     /**
-     * initialize
+     * _initialize
      *
      * Initialize Doctrine_Pager_Range_Jumping and does custom assignments
      *
      * @return void
      */
-    protected function initialize()
+    protected function _initialize()
     {
-        if (isset($this->options['chunk'])) {
-            $this->setChunkLength($this->options['chunk']);
+        if (isset($this->_options['chunk'])) {
+            $this->_setChunkLength($this->_options['chunk']);
         } else {
             throw new Doctrine_Pager_Exception('Missing parameter \'chunk\' that must be define in options.');
         }
@@ -67,21 +64,21 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
      */
     public function getChunkLength()
     {
-        return $this->chunkLength;
+        return $this->_chunkLength;
     }
 
 
     /**
-     * setChunkLength
+     * _setChunkLength
      *
      * Defines the size of the chunk
      *
      * @param $chunkLength       Chunk length
      * @return void
      */
-    protected function setChunkLength($chunkLength)
+    protected function _setChunkLength($chunkLength)
     {
-        $this->chunkLength = $chunkLength;
+        $this->_chunkLength = $chunkLength;
     }
 
 
@@ -95,19 +92,26 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
     public function rangeAroundPage()
     {
         $pager = $this->getPager();
-        $page = $pager->getPage();
 
-        // Define initial assignments for StartPage and EndPage
-        $startPage = $page - ($page - 1) % $this->getChunkLength();
-        $endPage = ($startPage + $this->getChunkLength()) - 1;
+        if ($pager->getExecuted()) {
+            $page = $pager->getPage();
 
-        // Check for EndPage out-range
-        if ($endPage > $pager->getLastPage()) {
-            $endPage = $pager->getLastPage();
+            // Define initial assignments for StartPage and EndPage
+            $startPage = $page - ($page - 1) % $this->getChunkLength();
+            $endPage = ($startPage + $this->getChunkLength()) - 1;
+
+            // Check for EndPage out-range
+            if ($endPage > $pager->getLastPage()) {
+                $endPage = $pager->getLastPage();
+            }
+
+            // No need to check for out-range in start, it will never happens
+
+            return range($startPage, $endPage);
         }
 
-        // No need to check for out-range in start, it will never happens
-
-        return range($startPage, $endPage);
+        throw new Doctrine_Pager_Exception(
+            'Cannot retrieve the range around the page of a not yet executed Pager query'
+        );
     }
 }

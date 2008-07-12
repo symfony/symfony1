@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Common');
+
 /**
  * Doctrine_Connection_Mysql
  *
@@ -28,7 +28,7 @@ Doctrine::autoload('Doctrine_Connection_Common');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
@@ -46,9 +46,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
-
         $this->supported = array(
                           'sequences'            => 'emulated',
                           'indexes'              => true,
@@ -88,6 +86,33 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
         $this->properties['varchar_max_length'] = 255;
 
         parent::__construct($manager, $adapter);
+    }
+
+    /**
+     * Overrides connect Method, to add specific attributes
+     * PDO emulate prepares is required to avoid bugs on mysql < 5.1
+     * when trying to prepare DROP DATABASE or CREATE DATABASE statements
+     *
+     * @see Doctrine_Connection :: connect();
+     * @return boolean connected
+     */
+     public function connect()
+     {
+         $connected = parent::connect();
+         $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+         return $connected;
+     }
+    
+    
+    /**
+     * returns the name of the connected database
+     *
+     * @return string
+     */
+    public function getDatabaseName()
+    {
+        return $this->fetchOne('SELECT DATABASE()');
     }
 
     /**
@@ -168,42 +193,21 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function replace(Doctrine_Table $table, array $fields, array $keys)
     {
-        $count = count($fields);
-        $query = $values = '';
-        $keys = $colnum = 0;
-
-        for (reset($fields); $colnum < $count; next($fields), $colnum++) {
-            $name = key($fields);
-
-            if ($colnum > 0) {
-                $query .= ',';
-                $values.= ',';
-            }
-
-            $query .= $table->getColumnName($name);
-
-            if (isset($fields[$name]['null']) && $fields[$name]['null']) {
-                $value = 'NULL';
-            } else {
-                $type = isset($fields[$name]['type']) ? $fields[$name]['type'] : null;
-                $value = $this->quote($fields[$name]['value'], $type);
-            }
-
-            $values .= $value;
-
-            if (isset($fields[$name]['key']) && $fields[$name]['key']) {
-                if ($value === 'NULL') {
-                    throw new Doctrine_Connection_Mysql_Exception('key value '.$name.' may not be NULL');
-                }
-                $keys++;
-            }
+        if (empty($keys)) {
+            throw new Doctrine_Connection_Exception('Not specified which fields are keys');
         }
 
-        if ($keys == 0) {
-            throw new Doctrine_Connection_Mysql_Exception('not specified which fields are keys');
+        $columns = array();
+        $values = array();
+        $params = array();
+        foreach ($fields as $fieldName => $value) {
+            $columns[] = $table->getColumnName($fieldName);
+            $values[] = '?';
+            $params[] = $value;
         }
-        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . $query . ') VALUES (' . $values . ')';
 
-        return $this->exec($query);
+        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+
+        return $this->exec($query, $params);
     }
 }

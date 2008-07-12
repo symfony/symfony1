@@ -16,18 +16,19 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
  * Doctrine_Template_Timestampable
  *
- * Easily add created and updated at timestamps to your doctrine records
+ * Easily add created and updated at timestamps to your doctrine records that are automatically set
+ * when records are saved
  *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -35,34 +36,37 @@
 class Doctrine_Template_Timestampable extends Doctrine_Template
 {
     /**
-     * Array of timestampable options
+     * Array of Timestampable options
      *
      * @var string
      */
-    protected $_options = array('created' =>  array('name'    =>  'created_at',
-                                                    'type'    =>  'timestamp',
-                                                    'format'  =>  'Y-m-d H:i:s',
-                                                    'disabled' => false,
-                                                    'options' =>  array()),
-                                'updated' =>  array('name'    =>  'updated_at',
-                                                    'type'    =>  'timestamp',
-                                                    'format'  =>  'Y-m-d H:i:s',
-                                                    'disabled' => false,
-                                                    'options' =>  array()));
-    
+    protected $_options = array('created' =>  array('name'          =>  'created_at',
+                                                    'type'          =>  'timestamp',
+                                                    'format'        =>  'Y-m-d H:i:s',
+                                                    'disabled'      => false,
+                                                    'expression'    => false,
+                                                    'options'       =>  array()),
+                                'updated' =>  array('name'          =>  'updated_at',
+                                                    'type'          =>  'timestamp',
+                                                    'format'        =>  'Y-m-d H:i:s',
+                                                    'disabled'      => false,
+                                                    'expression'    => false,
+                                                    'onInsert'      => true,
+                                                    'options'       =>  array()));
+
     /**
      * __construct
      *
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
-    
+
     /**
-     * setTableDefinition
+     * Set table definition for Timestampable behavior
      *
      * @return void
      */

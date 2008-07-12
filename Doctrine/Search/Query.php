@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_Search_Query
@@ -54,7 +54,7 @@ class Doctrine_Search_Query
     public function __construct($table)
     {
         if (is_string($table)) {
-           $table = Doctrine_Manager::table($table);
+           $table = Doctrine::getTable($table);
         } else {
             if ( ! $table instanceof Doctrine_Table) {
                 throw new Doctrine_Search_Exception('Invalid argument type. Expected instance of Doctrine_Table.');

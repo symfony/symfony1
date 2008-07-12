@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_DataDict');
+
 /**
  * @package     Doctrine
  * @subpackage  DataDict
@@ -26,7 +26,7 @@ Doctrine::autoload('Doctrine_DataDict');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_DataDict_Mysql extends Doctrine_DataDict
@@ -36,7 +36,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                           'ANALYZE', 'AND', 'AS',
                           'ASC', 'ASENSITIVE', 'BEFORE',
                           'BETWEEN', 'BIGINT', 'BINARY',
-                          'BLOB', 'BOTH', 'BY',
+                          'BLOB', 'BOTH', 'BY', 'BIT',
                           'CALL', 'CASCADE', 'CASE',
                           'CHANGE', 'CHAR', 'CHARACTER',
                           'CHECK', 'COLLATE', 'COLUMN',
@@ -225,6 +225,8 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
                 return 'DECIMAL('.$length.','.$scale.')';
+            case 'bit':
+                return 'BIT';
         }
         throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
     }
@@ -316,23 +318,25 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             break;
             case 'enum':
                 $type[] = 'enum';
-                preg_match_all('/\'.+\'/U', $field['type'], $matches);
+                preg_match_all('/\'((?:\'\'|[^\'])*)\'/', $field['type'], $matches);
                 $length = 0;
                 $fixed = false;
                 if (is_array($matches)) {
-                    foreach ($matches[0] as $value) {
-                        $length = max($length, strlen($value)-2);
+                    foreach ($matches[1] as &$value) {
+                        $value = str_replace('\'\'', '\'', $value);
+                        $length = max($length, strlen($value));
                     }
-                    if ($length == '1' && count($matches[0]) == 2) {
+                    if ($length == '1' && count($matches[1]) == 2) {
                         $type[] = 'boolean';
                         if (preg_match('/^(is|has)/', $field['name'])) {
                             $type = array_reverse($type);
                         }
-                    } else {
-                        $values = $matches[0];
                     }
+
+                    $values = $matches[1];
                 }
                 $type[] = 'integer';
+                break;
             case 'set':
                 $fixed = false;
                 $type[] = 'text';
@@ -374,6 +378,9 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'integer';
                 $type[] = 'date';
                 $length = null;
+            break;
+            case 'bit':
+                $type[] = 'bit';
             break;
             default:
                 throw new Doctrine_DataDict_Exception('unknown database attribute type: ' . $dbType);

@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Export');
+
 /**
  * Doctrine_Export_Mysql
  *
@@ -27,17 +27,17 @@ Doctrine::autoload('Doctrine_Export');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 class Doctrine_Export_Mysql extends Doctrine_Export
 {
-   /**
-     * create a new database
+    /**
+     * createDatabaseSql
      *
-     * @param string $name name of the database that should be created
-     * @return string
+     * @param string $name 
+     * @return void
      */
     public function createDatabaseSql($name)
     {
@@ -98,7 +98,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             throw new Doctrine_Export_Exception('no fields specified for table "'.$name.'"');
         }
         $queryFields = $this->getFieldDeclarationList($fields);
-        
+
         // build indexes for all foreign key fields (needed in MySQL!!)
         if (isset($options['foreignKeys'])) {
             foreach ($options['foreignKeys'] as $fk) {
@@ -122,7 +122,13 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                 }
                 
                 if ( ! $found) {
-                    $options['indexes'][$local] = array('fields' => array($local => array()));
+                    if (is_array($local)) {
+                      foreach($local as $localidx) {
+                        $options['indexes'][$localidx] = array('fields' => array($localidx => array()));
+                      }
+                    } else {
+                      $options['indexes'][$local] = array('fields' => array($local => array()));                      
+                    }
                 }
             }
         }
@@ -146,13 +152,13 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         $optionStrings = array();
 
         if (isset($options['comment'])) {
-            $optionStrings['comment'] = 'COMMENT = ' . $this->dbh->quote($options['comment'], 'text');
+            $optionStrings['comment'] = 'COMMENT = ' . $this->conn->quote($options['comment'], 'text');
         }
         if (isset($options['charset'])) {
             $optionStrings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
-            if (isset($options['collate'])) {
-                $optionStrings['charset'] .= ' COLLATE ' . $options['collate'];
-            }
+        }
+        if (isset($options['collate'])) {
+            $optionStrings['collate'] = 'COLLATE ' . $options['collate'];
         }
 
         $type = false;
@@ -180,8 +186,72 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     $sql[] = $this->createForeignKeySql($name, $definition);
                 }
             }
-        }   
+        }
         return $sql;
+    }
+
+    /**
+     * Obtain DBMS specific SQL code portion needed to declare a generic type
+     * field to be used in statements like CREATE TABLE.
+     *
+     * @param string $name   name the field to be declared.
+     * @param array  $field  associative array with the name of the properties
+     *      of the field being declared as array indexes. Currently, the types
+     *      of supported field properties are as follows:
+     *
+     *      length
+     *          Integer value that determines the maximum length of the text
+     *          field. If this argument is missing the field should be
+     *          declared to have the longest length allowed by the DBMS.
+     *
+     *      default
+     *          Text value to be used as default for this field.
+     *
+     *      notnull
+     *          Boolean flag that indicates whether this field is constrained
+     *          to not be set to null.
+     *      charset
+     *          Text value with the default CHARACTER SET for this field.
+     *      collation
+     *          Text value with the default COLLATION for this field.
+     *      unique
+     *          unique constraint
+     *      check
+     *          column check constraint
+     *
+     * @return string  DBMS specific SQL code portion that should be used to
+     *      declare the specified field.
+     */
+    public function getDeclaration($name, array $field)
+    {
+
+        $default   = $this->getDefaultFieldDeclaration($field);
+
+        $charset   = (isset($field['charset']) && $field['charset']) ?
+                    ' ' . $this->getCharsetFieldDeclaration($field['charset']) : '';
+
+        $collation = (isset($field['collation']) && $field['collation']) ?
+                    ' ' . $this->getCollationFieldDeclaration($field['collation']) : '';
+
+        $notnull   = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+
+        $unique    = (isset($field['unique']) && $field['unique']) ?
+                    ' ' . $this->getUniqueFieldDeclaration() : '';
+
+        $check     = (isset($field['check']) && $field['check']) ?
+                    ' ' . $field['check'] : '';
+
+        $comment   = (isset($field['comment']) && $field['comment']) ?
+                    " COMMENT '" . $field['comment'] . "'" : '';
+
+        $method = 'get' . $field['type'] . 'Declaration';
+
+        if (method_exists($this->conn->dataDict, $method)) {
+            return $this->conn->dataDict->$method($name, $field);
+        } else {
+            $dec = $this->conn->dataDict->getNativeDeclaration($field);
+        }
+        return $this->conn->quoteIdentifier($name, true) . ' ' . $dec . $charset . $default . $notnull . $comment . $unique . $check . $collation;
     }
 
     /**
@@ -380,7 +450,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
      */
     public function createSequence($sequenceName, $start = 1, array $options = array())
     {
-        $sequenceName   = $this->conn->quoteIdentifier($this->conn->getSequenceName($sequenceName), true);
+        $sequenceName   = $this->conn->quoteIdentifier($sequenceName, true);
         $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
 
         $optionsStrings = array();
@@ -393,7 +463,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             $optionsStrings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
 
             if (isset($options['collate'])) {
-                $optionsStrings['collate'] .= ' COLLATE ' . $options['collate'];
+                $optionsStrings['charset'] .= ' COLLATE ' . $options['collate'];
             }
         }
 
@@ -402,7 +472,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->default_table_type;
+            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
         }
         if ($type) {
             $optionsStrings[] = 'ENGINE = ' . $type;
@@ -411,23 +481,24 @@ class Doctrine_Export_Mysql extends Doctrine_Export
 
         try {
             $query  = 'CREATE TABLE ' . $sequenceName
-                    . ' (' . $seqcolName . ' INT NOT NULL AUTO_INCREMENT, PRIMARY KEY ('
-                    . $seqcolName . '))'
-                    . strlen($this->conn->default_table_type) ? ' TYPE = '
-                    . $this->conn->default_table_type : '';
+                    . ' (' . $seqcolName . ' BIGINT NOT NULL AUTO_INCREMENT, PRIMARY KEY ('
+                    . $seqcolName . ')) ' . implode($optionsStrings, ' ');
 
             $res    = $this->conn->exec($query);
         } catch(Doctrine_Connection_Exception $e) {
             throw new Doctrine_Export_Exception('could not create sequence table');
         }
 
-        if ($start == 1)
+        if ($start == 1 && $res == 1)
             return true;
 
         $query  = 'INSERT INTO ' . $sequenceName
                 . ' (' . $seqcolName . ') VALUES (' . ($start - 1) . ')';
 
         $res    = $this->conn->exec($query);
+
+        if ($res == 1)
+            return true;
 
         // Handle error
         try {
@@ -655,11 +726,19 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         $table  = $this->conn->quoteIdentifier($table, true);
         return 'DROP TABLE ' . $table;
     }
-    
+
+    /**
+     * drop existing foreign key
+     *
+     * @param string    $table        name of table that should be used in method
+     * @param string    $name         name of the foreign key to be dropped
+     * @return void
+     */
     public function dropForeignKey($table, $name)
     {
         $table = $this->conn->quoteIdentifier($table);
         $name  = $this->conn->quoteIdentifier($name);
+
         return $this->conn->exec('ALTER TABLE ' . $table . ' DROP FOREIGN KEY ' . $name);
     }
 }

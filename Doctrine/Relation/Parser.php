@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision: 1397 $
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @todo Composite key support?
  */
@@ -81,7 +81,34 @@ class Doctrine_Relation_Parser
         
         return $this->_pending[$name];
     }
-    
+
+    /**
+     * getPendingRelations
+     *
+     * @return array            an array containing all the pending relations
+     */
+    public function getPendingRelations() 
+    {
+        return $this->_pending;
+    }
+
+    /**
+     * unsetPendingRelations
+     * Removes a relation. Warning: this only affects pending relations
+     *
+     * @param string            relation to remove
+     */
+    public function unsetPendingRelations($name) 
+    {
+       unset($this->_pending[$name]);
+    }
+
+    /**
+     * Check if a relation alias exists
+     *
+     * @param string $name 
+     * @return boolean $bool
+     */
     public function hasRelation($name)
     {
         if ( ! isset($this->_pending[$name]) && ! isset($this->_relations[$name])) {
@@ -100,17 +127,6 @@ class Doctrine_Relation_Parser
      */
     public function bind($name, $options = array())
     {
-        if (isset($this->relations[$name])) {
-            unset($this->relations[$name]);
-        }
-
-        /* looks like old code?
-        $lower = strtolower($name);
-        if ($this->_table->hasColumn($lower)) {
-            throw new Doctrine_Relation_Exception("Couldn't bind relation. Column with name " . $lower . ' already exists!');
-        }
-        */
-
         $e    = explode(' as ', $name);
         $name = $e[0];
         $alias = isset($e[1]) ? $e[1] : $name;
@@ -119,18 +135,13 @@ class Doctrine_Relation_Parser
             throw new Doctrine_Relation_Exception('Relation type not set.');
         }
 
+        if ($this->hasRelation($alias)) {
+            unset($this->relations[$alias]);
+            unset($this->_pending[$alias]);
+        }
+
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
-        /**
-        $m = Doctrine_Manager::getInstance();
-
-        if (isset($options['onDelete'])) {
-            $m->addDeleteAction($name, $this->_table->getComponentName(), $options['onDelete']);
-        }
-        if (isset($options['onUpdate'])) {
-            $m->addUpdateAction($name, $this->_table->getComponentName(), $options['onUpdate']);
-        }
-        */
-
+        
         return $this->_pending[$alias];
     }
 
@@ -186,6 +197,14 @@ class Doctrine_Relation_Parser
 
                 if (isset($def['localKey'])) {
                     $rel = new Doctrine_Relation_LocalKey($def);
+
+                    // Automatically index foreign keys which are not primary
+                    $foreign = (array) $def['foreign'];
+                    foreach ($foreign as $fk) {
+                        if ( ! $rel->getTable()->isIdentifier($fk)) {
+                            $rel->getTable()->addIndex($fk, array('fields' => array($fk)));
+                        }
+                    }
                 } else {
                     $rel = new Doctrine_Relation_ForeignKey($def);
                 }
@@ -257,6 +276,7 @@ class Doctrine_Relation_Parser
     {
         $conn = $this->_table->getConnection();
         $def['table'] = $this->getImpl($def['class']);
+        $def['localTable'] = $this->_table;
         $def['class'] = $def['table']->getComponentName();
         $def['refTable'] = $this->getImpl($def['refClass']);
 
@@ -371,12 +391,14 @@ class Doctrine_Relation_Parser
     {
         $conn = $this->_table->getConnection();
         $def['table'] = $this->getImpl($def['class']);
+        $def['localTable'] = $this->_table;
         $def['class'] = $def['table']->getComponentName();
 
         $foreignClasses = array_merge($def['table']->getOption('parents'), array($def['class']));
         $localClasses   = array_merge($this->_table->getOption('parents'), array($this->_table->getComponentName()));
 
         $localIdentifierColumnNames = $this->_table->getIdentifierColumnNames();
+        $localIdentifierCount = count($localIdentifierColumnNames);
         $localIdColumnName = array_pop($localIdentifierColumnNames);
         $foreignIdentifierColumnNames = $def['table']->getIdentifierColumnNames();
         $foreignIdColumnName = array_pop($foreignIdentifierColumnNames);
@@ -395,8 +417,16 @@ class Doctrine_Relation_Parser
                     $def['localKey'] = true;
                 }
             } else {
-                if ($def['local'] !== $localIdColumnName && 
-                    $def['type'] == Doctrine_Relation::ONE) {
+                if ($localIdentifierCount == 1) {
+                    if ($def['local'] == $localIdColumnName && isset($def['owningSide'])
+                            && $def['owningSide'] === true) {
+                        $def['localKey'] = true;
+                    } else if (($def['local'] !== $localIdColumnName && $def['type'] == Doctrine_Relation::ONE)) {
+                        $def['localKey'] = true;
+                    }
+                } else if ($localIdentifierCount > 1) {
+                    // It's a composite key and since 'foreign' can not point to a composite
+                    // key currently, we know that 'local' must be the foreign key.
                     $def['localKey'] = true;
                 }
             }

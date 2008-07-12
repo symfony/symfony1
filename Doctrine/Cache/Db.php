@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Cache_Db
+ * Database cache driver
  *
  * @package     Doctrine
  * @subpackage  Cache
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -33,7 +33,8 @@
 class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
 {
     /**
-     * constructor
+     * Configure Database cache driver. Specify instance of Doctrine_Connection
+     * and tableName to store cache in
      *
      * @param array $_options      an array of options
      */
@@ -56,10 +57,9 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * getConnection
-     * returns the connection object associated with this cache driver
+     * Get the connection object associated with this cache driver
      *
-     * @return Doctrine_Connection      connection object
+     * @return Doctrine_Connection $connection
      */
     public function getConnection() 
     {
@@ -67,9 +67,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * Test if a cache is available for the given id and (if yes) return it (false else)
-     *
-     * Note : return value is always "string" (unserialization is done by the core not by the backend)
+     * Test if a cache is available for the given id and (if yes) return it (false else).
      *
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
@@ -112,12 +110,12 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      *
      * Note : $data is always saved as a string
      *
-     * @param string $data      data to cache
      * @param string $id        cache id
+     * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function save($data, $id, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false)
     {
         $sql = 'INSERT INTO ' . $this->_options['tableName']
              . ' (id, data, expire) VALUES (?, ?, ?)';
@@ -172,7 +170,9 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * Creates the cache table.
+     * Create the cache table
+     *
+     * @return void
      */
     public function createTable()
     {

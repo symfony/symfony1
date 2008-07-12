@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Interface.php 3155 2007-11-14 13:13:23Z jwage $
+ *  $Id: Firebird.php 3884 2008-02-22 18:26:35Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,26 +16,22 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
+ * Doctrine_Export_Informix
+ *
  * @package     Doctrine
- * @subpackage  Log
+ * @subpackage  Export
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
+ * @author      Lorenzo Alberton <l.alberton@quipo.it> (PEAR MDB2 Interbase driver)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3155 $
+ * @version     $Revision: 3884 $
  */
-interface Doctrine_Log_Filter_Interface
+class Doctrine_Export_Informix extends Doctrine_Export
 {
-    /**
-     * Returns TRUE to accept the message, FALSE to block it.
-     *
-     * @param  array    $event    event data
-     * @return boolean            accepted?
-     */
-    public function accept($event);
 }

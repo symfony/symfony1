@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Hydrate
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 3192 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -72,6 +72,16 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
+     * Get the fetchmode
+     *
+     * @return integer $fetchMode One of the Doctrine::HYDRATE_* constants
+     */
+    public function getHydrationMode()
+    {
+        return $this->_hydrationMode;
+    }
+
+    /**
      * setAliasMap
      * sets the whole component alias map
      *
@@ -110,6 +120,5 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
      * @param mixed $stmt
      * @return array
      */
-    abstract public function hydrateResultSet($stmt, $tableAliases, $hydrationMode = null);
-    
+    abstract public function hydrateResultSet($stmt, $tableAliases);
 }

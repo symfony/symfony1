@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,8 +39,8 @@ class Doctrine_Task_Compile extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::compile($this->getArgument('compiled_path'), $this->getArgument('drivers', array()));
+        $compiledPath = Doctrine::compile($this->getArgument('compiled_path'), $this->getArgument('drivers', array()));
         
-        $this->notify('Compiled Doctrine successfully to: ' . $this->getArgument('compiled_path'));
+        $this->notify('Compiled Doctrine successfully to: ' . $compiledPath);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Suppress.php 3155 2007-11-14 13:13:23Z jwage $
+ *  $Id: Builder.php 4593 2008-06-29 03:24:50Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,48 +16,41 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
+ * Base class for any code builders/generators for Doctrine
+ *
  * @package     Doctrine
- * @subpackage  Log
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @subpackage  Builder
+ * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
  * @since       1.0
- * @version     $Revision: 3155 $
+ * @version     $Revision: 4593 $
+ * @author      Jonathan H. Wage <jwage@mac.com>
  */
-class Doctrine_Log_Filter_Suppress implements Doctrine_Log_Filter_Interface
+class Doctrine_Builder
 {
     /**
-     * @var boolean
-     */
-    protected $_accept = true;
-
-    /**
-     * This is a simple boolean filter.
+     * Special function for var_export()
+     * The normal code which is returned is malformed and does not follow Doctrine standards
+     * So we do some string replacing to clean it up
      *
-     * Call suppress(true) to suppress all log events.
-     * Call suppress(false) to accept all log events.
-     *
-     * @param  boolean  $suppress  Should all log events be suppressed?
-     * @return  void
+     * @param string $var
+     * @return void
      */
-    public function suppress($suppress)
+    public function varExport($var)
     {
-        $this->_accept = (! $suppress);
-    }
+        $export = var_export($var, true);
+        $export = str_replace("\n", '', $export);
+        $export = str_replace('  ', ' ', $export);
+        $export = str_replace('array ( ', 'array(', $export);
+        $export = str_replace('array( ', 'array(', $export);
+        $export = str_replace(',)', ')', $export);
+        $export = str_replace(', )', ')', $export);
+        $export = str_replace('  ', ' ', $export);
 
-    /**
-     * Returns TRUE to accept the message, FALSE to block it.
-     *
-     * @param  array    $event    event data
-     * @return boolean            accepted?
-     */
-    public function accept($event)
-    {
-        return $this->_accept;
+        return $export;
     }
 }

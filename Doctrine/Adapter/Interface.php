@@ -16,22 +16,22 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Adapter_Interface
  * This adapter interface should be implemented by all custom adapters
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Adapter
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
-interface Doctrine_Adapter_Interface {
+interface Doctrine_Adapter_Interface
+{
     public function prepare($prepareString);
     public function query($queryString);
     public function quote($input);

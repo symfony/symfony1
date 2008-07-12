@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Relation');
+
 /**
  * Doctrine_Relation_ForeignKey
  * This class represents a foreign key relation
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_Relation');
  * @subpackage  Relation
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -44,8 +44,9 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
     public function fetchRelatedFor(Doctrine_Record $record)
     {
         $id = array();
+        $localTable = $record->getTable();
         foreach ((array) $this->definition['local'] as $local) {
-           $value = $record->get($local);
+           $value = $record->get($localTable->getFieldName($local));
            if (isset($value)) {
                $id[] = $value;
            }
@@ -63,8 +64,8 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
                 $related = $coll[0];
             }
 
-            $related->set($this->definition['foreign'], $record, false);
-
+            $related->set($related->getTable()->getFieldName($this->definition['foreign']),
+                    $record, false);
         } else {
 
             if ( ! $record->exists() || empty($id) || 

@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload("Doctrine_Query_Part");
+
 /**
  * Doctrine_Query_From
  *
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -37,12 +37,15 @@ class Doctrine_Query_From extends Doctrine_Query_Part
      * parses the FROM part of the query string
      *
      * @param string $str
+     * @param boolean $return if to return the parsed FROM and skip load()
      * @return void
      */
-    public function parse($str)
-    {        
+    public function parse($str, $return = false)
+    {
         $str = trim($str);
         $parts = $this->_tokenizer->bracketExplode($str, 'JOIN');
+
+        $from = $return ? array() : null;
 
         $operator = false;
 
@@ -78,12 +81,16 @@ class Doctrine_Query_From extends Doctrine_Query_Part
                 if ($operator) {
                     $e[0] = array_shift($e2) . $operator . implode('.', $e2);
                 }
-                
-                $table = $this->query->load(implode(' ', $e));
+
+                if ($return) {
+                    $from[] = $e;
+                } else {
+                    $table = $this->query->load(implode(' ', $e));
+                }
             }
 
             $operator = ($last == 'INNER') ? ':' : '.';
         }
-        return null;
+        return $from;
     }
 }

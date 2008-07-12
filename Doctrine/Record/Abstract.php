@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Access');
+
 /**
  * Doctrine_Record_Abstract
  *
@@ -26,7 +26,7 @@ Doctrine::autoload('Doctrine_Access');
  * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -132,11 +132,6 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
             return;
         }
         $this->_table->setOption('subclasses', array_keys($map));
-        $conn = $this->_table->getConnection(); 
-        foreach ($map as $key => $value) {
-            $table = $conn->getTable($key);
-            $table->setOption('inheritanceMap', $value);
-        }
     }
 
     /**
@@ -185,6 +180,41 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         } else {
             $this->_table->setOption($name, $value);
         }
+    }
+
+    /**
+     * DEPRECATED ALSO? - REMOVE SOON
+     *
+     * ownsOne
+     * binds One-to-One composite relation
+     *
+     * @param string $componentName     the name of the related component
+     * @param string $options           relation options
+     * @see Doctrine_Relation::_$definition
+     * @return Doctrine_Record          this object
+     */
+    public function ownsOne()
+    {
+        $this->_table->bind(func_get_args(), Doctrine_Relation::ONE_COMPOSITE);
+        
+        return $this;
+    }
+
+    /**
+     * DEPRECATED - REMOVE SOON
+     *
+     * ownsMany
+     * binds One-to-Many / Many-to-Many composite relation
+     *
+     * @param string $componentName     the name of the related component
+     * @param string $options           relation options
+     * @see Doctrine_Relation::_$definition
+     * @return Doctrine_Record          this object
+     */
+    public function ownsMany()
+    {
+        $this->_table->bind(func_get_args(), Doctrine_Relation::MANY_COMPOSITE);
+        return $this;
     }
 
     /**
@@ -263,11 +293,11 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         return $this;
     }
 
-    public function loadPlugin(Doctrine_Plugin $plugin)
+    public function loadGenerator(Doctrine_Record_Generator $generator)
     {
-    	$plugin->initialize($this->_table);
+    	$generator->initialize($this->_table);
 
-        $this->_table->addPlugin($plugin, get_class($plugin));
+        $this->_table->addGenerator($generator, get_class($generator));
     }
 
 
@@ -281,22 +311,19 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     public function actAs($tpl, array $options = array())
     {
         if ( ! is_object($tpl)) {
-            if (class_exists($tpl, true)) {
+            $className = 'Doctrine_Template_' . $tpl;
+
+            if (class_exists($className, true)) {
+                $tpl = new $className($options);
+            } else if (class_exists($tpl, true)) {
                 $tpl = new $tpl($options);
             } else {
-                $className = 'Doctrine_Template_' . $tpl;
-
-                if ( ! class_exists($className, true)) {
-                    throw new Doctrine_Record_Exception("Couldn't load plugin.");
-                }
-
-
-                $tpl = new $className($options);
+                throw new Doctrine_Record_Exception('Could not load behavior named: "' . $tpl . '"');
             }
         }
 
         if ( ! ($tpl instanceof Doctrine_Template)) {
-            throw new Doctrine_Record_Exception('Loaded plugin class is not an istance of Doctrine_Template.');
+            throw new Doctrine_Record_Exception('Loaded behavior class is not an istance of Doctrine_Template.');
         }
 
         $className = get_class($tpl);

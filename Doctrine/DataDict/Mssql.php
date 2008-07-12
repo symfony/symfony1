@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_DataDict');
+
 /**
  * @package     Doctrine
  * @subpackage  DataDict
@@ -28,7 +28,7 @@ Doctrine::autoload('Doctrine_DataDict');
  * @author      Frank M. Kromann <frank@kromann.info> (PEAR MDB2 Mssql driver)
  * @author      David Coallier <davidc@php.net> (PEAR MDB2 Mssql driver)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_DataDict_Mssql extends Doctrine_DataDict
@@ -123,7 +123,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
      */
     public function getPortableDeclaration($field)
     {
-        $db_type = preg_replace('/\d/','', strtolower($field['type']) );
+        $db_type = preg_replace('/[\d\(\)]/','', strtolower($field['type']) );
         $length  = (isset($field['length']) && $field['length'] > 0) ? $field['length'] : null;
 
         $type = array();
@@ -137,6 +137,8 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             case 'bit':
                 $type[0] = 'boolean';
             break;
+            case 'tinyint':
+            case 'smallint':
             case 'int':
                 $type[0] = 'integer';
                 if ($length == 1) {
@@ -144,6 +146,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 }
             break;
             case 'datetime':
+            case 'timestamp':
                 $type[0] = 'timestamp';
             break;
             case 'float':
@@ -157,8 +160,11 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             break;
             case 'text':
             case 'varchar':
+            case 'ntext':
+            case 'nvarchar':
                 $fixed = false;
             case 'char':
+            case 'nchar':
                 $type[0] = 'string';
                 if ($length == '1') {
                     $type[] = 'boolean';

@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Cache_Driver');
+
 /**
- * Doctrine_Cache_Memcache
+ * Memcache cache driver
  *
  * @package     Doctrine
  * @subpackage  Cache
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -73,22 +73,14 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
 
     /**
      * Test if a cache is available for the given id and (if yes) return it (false else)
-     *
-     * Note : return value is always "string" (unserialization is done by the core not by the backend)
      * 
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed The stored variable on success. FALSE on failure.
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        $tmp = $this->_memcache->get($id);
-
-        if (is_array($tmp)) {
-            return $tmp[0];
-        }
-
-        return false;
+        return $this->_memcache->get($id);
     }
 
     /**

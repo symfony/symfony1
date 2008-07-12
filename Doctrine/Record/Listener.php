@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -44,16 +44,25 @@ class Doctrine_Record_Listener implements Doctrine_Record_Listener_Interface
     public function postUnserialize(Doctrine_Event $event)
     { }
 
+    public function preDqlSelect(Doctrine_Event $event)
+    { }
+
     public function preSave(Doctrine_Event $event)
     { }
 
     public function postSave(Doctrine_Event $event)
     { }
 
+    public function preDqlDelete(Doctrine_Event $event)
+    { }
+
     public function preDelete(Doctrine_Event $event)
     { }
 
     public function postDelete(Doctrine_Event $event)
+    { }
+
+    public function preDqlUpdate(Doctrine_Event $event)
     { }
 
     public function preUpdate(Doctrine_Event $event)
@@ -67,10 +76,10 @@ class Doctrine_Record_Listener implements Doctrine_Record_Listener_Interface
 
     public function postInsert(Doctrine_Event $event)
     { }
-    
+
     public function preHydrate(Doctrine_Event $event)
     { }
-    
+
     public function postHydrate(Doctrine_Event $event)
     { }
 }

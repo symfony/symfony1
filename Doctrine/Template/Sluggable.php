@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -35,29 +35,36 @@
 class Doctrine_Template_Sluggable extends Doctrine_Template
 {
     /**
-     * Array of timestampable options
+     * Array of Sluggable options
      *
      * @var string
      */
-    protected $_options = array('name'    =>  'slug',
-                                'type'    =>  'clob',
-                                'length'  =>  null,
-                                'options' =>  array(),
-                                'fields'  =>  array());
-    
+    protected $_options = array('name'          =>  'slug',
+                                'type'          =>  'string',
+                                'length'        =>  255,
+                                'unique'        =>  true,
+                                'options'       =>  array(),
+                                'fields'        =>  array(),
+                                'uniqueBy'      =>  array(),
+                                'uniqueIndex'   =>  true,
+                                'canUpdate'     =>  false,
+                                'builder'       =>  array('Doctrine_Inflector', 'urlize'),
+                                'indexName'     =>  'sluggable'
+    );
+
     /**
      * __construct
      *
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
-    
+
     /**
-     * setTableDefinition
+     * Set table definition for Sluggable behavior
      *
      * @return void
      */
@@ -65,6 +72,13 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
     {
         $this->hasColumn($this->_options['name'], $this->_options['type'], $this->_options['length'], $this->_options['options']);
         
+        if ($this->_options['unique'] == true && $this->_options['uniqueIndex'] == true && ! empty($this->_options['fields'])) {
+            $indexFields = array($this->_options['name']);
+            $indexFields = array_merge($indexFields, $this->_options['uniqueBy']);
+            $this->index($this->_options['indexName'], array('fields' => $indexFields,
+                                                             'type' => 'unique'));
+        }
+
         $this->addListener(new Doctrine_Template_Listener_Sluggable($this->_options));
     }
 }

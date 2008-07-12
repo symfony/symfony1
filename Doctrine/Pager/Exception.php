@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  $Id$
  *
@@ -17,10 +16,8 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-
-Doctrine::autoload('Doctrine_Exception');
 
 /**
  * Doctrine_Pager_Exception
@@ -30,8 +27,8 @@ Doctrine::autoload('Doctrine_Exception');
  * @subpackage  Pager
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
- * @since       1.0
+ * @link        www.phpdoctrine.org
+ * @since       0.9
  */
 class Doctrine_Pager_Exception extends Doctrine_Exception
 { }

@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Export');
+
 /**
  * Doctrine_Export_Pgsql
  *
@@ -27,17 +27,18 @@ Doctrine::autoload('Doctrine_Export');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
-   /**
-     * create a new database
+    public $tmpConnectionDatabase = 'postgres';
+
+    /**
+     * createDatabaseSql
      *
-     * @param string $name name of the database that should be created
-     * @throws PDOException
+     * @param string $name 
      * @return void
      */
     public function createDatabaseSql($name)
@@ -296,8 +297,8 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
     public function createSequenceSql($sequenceName, $start = 1, array $options = array())
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
-        return $this->conn->exec('CREATE SEQUENCE ' . $sequenceName . ' INCREMENT 1' .
-                    ($start < 1 ? ' MINVALUE ' . $start : '') . ' START ' . $start);
+        return 'CREATE SEQUENCE ' . $sequenceName . ' INCREMENT 1' .
+                    ($start < 1 ? ' MINVALUE ' . $start : '') . ' START ' . $start;
     }
 
     /**

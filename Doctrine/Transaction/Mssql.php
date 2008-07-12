@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Transaction');
+
 /**
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -26,7 +26,7 @@ Doctrine::autoload('Doctrine_Transaction');
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Transaction
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -64,5 +64,29 @@ class Doctrine_Transaction_Mssql extends Doctrine_Transaction
         $query = 'SET TRANSACTION ISOLATION LEVEL ' . $isolation;
 
         $this->conn->execute($query);
+    }
+    
+    /**
+     * Performs the rollback.
+     */
+    protected function _doRollback()
+    {
+        $this->conn->getDbh()->exec('ROLLBACK TRANSACTION');
+    }
+    
+    /**
+     * Performs the commit.
+     */
+    protected function _doCommit()
+    {
+        $this->conn->getDbh()->exec('COMMIT TRANSACTION');
+    }
+    
+    /**
+     * Begins a database transaction.
+     */
+    protected function _doBeginTransaction()
+    {
+        $this->conn->getDbh()->exec('BEGIN TRANSACTION');
     }
 }

@@ -16,147 +16,279 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Adapter_Mock
- * This class is used for special testing purposes.
+ * Doctrine mock connection adapter. This class is used for special testing purposes.
  *
  * @package     Doctrine
  * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
 {
-    private $name;
-    
-    private $queries = array();
-    
-    private $exception = array();
-    
-    private $lastInsertIdFail = false;
+    /**
+     * Name of the dbms to mock
+     *
+     * @var string
+     */
+    private $_name;
 
-    public function __construct($name = null) 
+    /**
+     * Array of queries executed through this instance of the mock adapter
+     *
+     * @var array $queries
+     */
+    private $_queries = array();
+
+    /**
+     * Array of exceptions thrown
+     *
+     * @var array $exceptions
+     */
+    private $_exception = array();
+
+    /**
+     * Bool true/false variable for whether or not the last insert failed
+     *
+     * @var boolean $lastInsertIdFail
+     */
+    private $_lastInsertIdFail = false;
+
+    /**
+     * Doctrine mock adapter constructor
+     *
+     * <code>
+     * $conn = new Doctrine_Adapter_Mock('mysql');
+     * </code>
+     *
+     * @param string $name 
+     * @return void
+     */
+    public function __construct($name = null)
     {
-        $this->name = $name;
+        $this->_name = $name;
     }
-    public function getName() 
+
+    /**
+     * Get the name of the dbms used in this instance of the mock adapter
+     *
+     * @return string $name Name of the dbms
+     */
+    public function getName()
     {
-        return $this->name;
+        return $this->_name;
     }
-    public function pop() 
+
+    /**
+     * Pop the last executed query from the array of executed queries and return it
+     *
+     * @return string $sql Last executed sql string
+     */
+    public function pop()
     {
-        return array_pop($this->queries);
+        return array_pop($this->_queries);
     }
-    public function forceException($name, $message = '', $code = 0) 
+
+    /**
+     * Force an exception in to the array of exceptions
+     *
+     * @param string $name     Name of exception
+     * @param string $message  Message for the exception
+     * @param integer $code    Code of the exception
+     * @return void
+     */
+    public function forceException($name, $message = '', $code = 0)
     {
-        $this->exception = array($name, $message, $code);
+        $this->_exception = array($name, $message, $code);
     }
+
+    /**
+     * Prepare a query statement
+     *
+     * @param string $query   Query to prepare
+     * @return Doctrine_Adapter_Statement_Mock $mock Mock prepared statement
+     */
     public function prepare($query)
     {
         $mock = new Doctrine_Adapter_Statement_Mock($this, $query);
         $mock->queryString = $query;
-        
+
         return $mock;
     }
+
+    /**
+     * Add query to the stack of executed queries
+     *
+     * @param string $query 
+     * @return void
+     */
     public function addQuery($query)
     {
-        $this->queries[] = $query;
+        $this->_queries[] = $query;
     }
-    public function query($query) 
-    {
-        $this->queries[] = $query;
 
-        $e    = $this->exception;
+    /**
+     * Fake the execution of query and add it to the stack of executed queries
+     *
+     * @param string $query 
+     * @return Doctrine_Adapter_Statement_Mock $stmt
+     */
+    public function query($query)
+    {
+        $this->_queries[] = $query;
+
+        $e    = $this->_exception;
 
         if ( ! empty($e)) {
             $name = $e[0];
 
-            $this->exception = array();
+            $this->_exception = array();
 
             throw new $name($e[1], $e[2]);
         }
 
         $stmt = new Doctrine_Adapter_Statement_Mock($this, $query);
         $stmt->queryString = $query;
-        
+
         return $stmt;
     }
-    public function getAll() 
+
+    /**
+     * Get all the executed queries
+     *
+     * @return array $queries Array of all executed queries
+     */
+    public function getAll()
     {
-        return $this->queries;
+        return $this->_queries;
     }
-    public function quote($input) 
+
+    /**
+     * Quote a value for the dbms
+     *
+     * @param string $input 
+     * @return string $quoted
+     */
+    public function quote($input)
     {
         return "'" . addslashes($input) . "'";
     }
-    public function exec($statement) 
-    {
-        $this->queries[] = $statement;
 
-        $e    = $this->exception;
+    /**
+     * Execute a raw sql statement
+     *
+     * @param string $statement 
+     * @return void
+     */
+    public function exec($statement)
+    {
+        $this->_queries[] = $statement;
+
+        $e    = $this->_exception;
 
         if ( ! empty($e)) {
             $name = $e[0];
 
-            $this->exception = array();
+            $this->_exception = array();
 
             throw new $name($e[1], $e[2]);
         }
 
         return 0;
     }
-    public function forceLastInsertIdFail($fail = true) 
+
+    /**
+     * Force last insert to be failed
+     *
+     * @param boolean $fail
+     * @return void
+     */
+    public function forceLastInsertIdFail($fail = true)
     {
         if ($fail) {
-            $this->lastInsertIdFail = true;
+            $this->_lastInsertIdFail = true;
         } else {
-            $this->lastInsertIdFail = false;
+            $this->_lastInsertIdFail = false;
         }
     }
+
+    /**
+     * Get the id of the last inserted record
+     *
+     * @return integer $id
+     */
     public function lastInsertId()
     {
-        $this->queries[] = 'LAST_INSERT_ID()';
-        if ($this->lastInsertIdFail) {
+        $this->_queries[] = 'LAST_INSERT_ID()';
+        if ($this->_lastInsertIdFail) {
             return null;
         } else {
             return 1;
         }
     }
-    public function count() 
+
+    /**
+     * Get the number of queries executed
+     *
+     * @return integer $count
+     */
+    public function count()
     {
-        return count($this->queries);    
+        return count($this->_queries);
     }
+
+    /**
+     * Begin a transaction
+     *
+     * @return void
+     */
     public function beginTransaction()
     {
-        $this->queries[] = 'BEGIN TRANSACTION';
+        $this->_queries[] = 'BEGIN TRANSACTION';
     }
+
+    /**
+     * Commit a transaction
+     *
+     * @return void
+     */
     public function commit()
     {
-        $this->queries[] = 'COMMIT';
+        $this->_queries[] = 'COMMIT';
     }
-    public function rollBack() 
+
+    /**
+     * Rollback a transaction
+     *
+     * @return void
+     */
+    public function rollBack()
     {
-        $this->queries[] = 'ROLLBACK';
+        $this->_queries[] = 'ROLLBACK';
     }
-    public function errorCode() 
+
+    public function getAttribute($attribute)
+    {
+        if ($attribute == Doctrine::ATTR_DRIVER_NAME) {
+            return strtolower($this->_name);
+        }
+    }
+
+    public function errorCode()
     { }
+
     public function errorInfo()
     { }
-    public function getAttribute($attribute) 
-    {
-        if ($attribute == Doctrine::ATTR_DRIVER_NAME)
-            return strtolower($this->name);
-    }
-    public function setAttribute($attribute, $value) 
-    {
-                                       
-    }
+
+    public function setAttribute($attribute, $value)
+    { }
+
     public function sqliteCreateFunction()
     { }
 }

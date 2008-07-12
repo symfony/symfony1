@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection');
+
 /**
  * Doctrine_Connection_Mysql
  *
  * @package     Doctrine
  * @subpackage  Connection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -45,8 +45,18 @@ class Doctrine_Connection_Informix extends Doctrine_Connection
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        // initialize all driver options
-
         parent::__construct($manager, $adapter);
+    }
+
+    /**
+     * quoteIdentifier
+     *
+     * @param string $identifier 
+     * @param string $checkOption 
+     * @return void
+     */
+    public function quoteIdentifier($identifier, $checkOption = false)
+    {
+        return $identifier;
     }
 }

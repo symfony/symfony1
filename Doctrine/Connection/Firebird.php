@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection');
+
 /**
  * Doctrine_Connection_Firebird
  *
@@ -29,7 +29,7 @@ Doctrine::autoload('Doctrine_Connection');
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @author      Lorenzo Alberton <l.alberton@quipo.it> (PEAR MDB2 Interbase driver)
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
 class Doctrine_Connection_Firebird extends Doctrine_Connection
@@ -100,8 +100,11 @@ class Doctrine_Connection_Firebird extends Doctrine_Connection
      * @param integer $offset   start reading from given offset
      * @return string modified  query
      */
-    public function modifyLimitQuery($query, $limit, $offset)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
+        if ( ! $offset) {
+            $offset = 0;
+        }
         if ($limit > 0) {
             $query = preg_replace('/^([\s(])*SELECT(?!\s*FIRST\s*\d+)/i',
                 "SELECT FIRST $limit SKIP $offset", $query);

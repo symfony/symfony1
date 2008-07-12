@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Export');
+
 /**
  * Doctrine_Export_Oracle
  *
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_Export');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -120,20 +120,20 @@ class Doctrine_Export_Oracle extends Doctrine_Export
         $name  = $this->conn->quoteIdentifier($name, true);
         $sql[] = 'CREATE TRIGGER ' . $triggerName . '
    BEFORE INSERT
-   ON '.$table.'
+   ON ' . $table . '
    FOR EACH ROW
 DECLARE
    last_Sequence NUMBER;
    last_InsertID NUMBER;
 BEGIN
-   SELECT '.$sequenceName.'.NEXTVAL INTO :NEW.'.$name.' FROM DUAL;
-   IF (:NEW.'.$name.' IS NULL OR :NEW.'.$name.' = 0) THEN
-      SELECT '.$sequenceName.'.NEXTVAL INTO :NEW.'.$name.' FROM DUAL;
+   SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
+   IF (:NEW.' . $name . ' IS NULL OR :NEW.'.$name.' = 0) THEN
+      SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
    ELSE
       SELECT NVL(Last_Number, 0) INTO last_Sequence
         FROM User_Sequences
-       WHERE UPPER(Sequence_Name) = UPPER(\''.$sequenceName.'\');
-      SELECT :NEW.id INTO last_InsertID FROM DUAL;
+       WHERE UPPER(Sequence_Name) = UPPER(\'' . $sequenceName . '\');
+      SELECT :NEW.' . $name . ' INTO last_InsertID FROM DUAL;
       WHILE (last_InsertID > last_Sequence) LOOP
          SELECT ' . $sequenceName . '.NEXTVAL INTO last_Sequence FROM DUAL;
       END LOOP;
@@ -292,6 +292,10 @@ END;
         $sql = parent::createTableSql($name, $fields, $options);
 
         foreach ($fields as $fieldName => $field) {
+            if (isset($field['sequence'])) {
+              $sql[] = $this->createSequenceSql($field['sequence'], 1);
+            }
+
             if (isset($field['autoincrement']) && $field['autoincrement'] ||
                (isset($field['autoinc']) && $fields['autoinc'])) {           
                 $sql = array_merge($sql, $this->_makeAutoincrement($fieldName, $name));

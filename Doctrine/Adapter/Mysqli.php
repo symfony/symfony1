@@ -16,18 +16,17 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Adapter_Mysqli
- * This class is used for special testing purposes.
+ * Custom Doctrine connection adapter for mysqli
  *
  * @package     Doctrine
  * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  */
@@ -37,7 +36,7 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
      * Creates a connection to the database.
      *
      * @return void
-     * @throws Doctrine_Adapter_Mysqli_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _connect()
     {
@@ -53,7 +52,7 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
             $this->_config['dbname']
         );
         if ($this->_connection === false || mysqli_connect_errno()) {
-            throw new Doctrine_Adapter_Mysqli_Exception(mysqli_connect_error());
+            throw new Doctrine_Adapter_Exception(mysqli_connect_error());
         }
     }
 
@@ -83,6 +82,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * lastInsertId
+     *
      * Gets the last ID generated automatically by an IDENTITY/AUTOINCREMENT column.
      *
      * As a convention, on RDBMS brands that support sequences

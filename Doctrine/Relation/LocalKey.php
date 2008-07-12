@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Relation');
+
 /**
  * Doctrine_Relation_LocalKey
  * This class represents a local key relation
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_Relation');
  * @subpackage  Relation
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -43,9 +43,10 @@ class Doctrine_Relation_LocalKey extends Doctrine_Relation
      */
     public function fetchRelatedFor(Doctrine_Record $record)
     {
-        $id = $record->get($this->definition['local']);
+        $localFieldName = $record->getTable()->getFieldName($this->definition['local']);
+        $id = $record->get($localFieldName);
 
-        if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
+        if (is_null($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
             $related = $this->getTable()->create();
         } else {
             $dql  = 'FROM ' . $this->getTable()->getComponentName()
@@ -61,7 +62,7 @@ class Doctrine_Relation_LocalKey extends Doctrine_Relation
             }
         }
 
-        $record->set($this->definition['local'], $related, false);
+        $record->set($localFieldName, $related, false);
 
         return $related;
     }

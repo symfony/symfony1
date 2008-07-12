@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Exception');
+
 /**
  * Doctrine_Exception
  *
  * @package     Doctrine
  * @subpackage  Connection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -114,4 +114,17 @@ class Doctrine_Connection_Exception extends Doctrine_Exception
         return isset(self::$errorMessages[$value]) ?
            self::$errorMessages[$value] : self::$errorMessages[Doctrine::ERR];
     }
+
+    /**
+     * This method checks if native error code/message can be
+     * converted into a portable code and then adds this
+     * portable error code to $portableCode field
+     *
+     * @param array $errorInfo      error info array
+     * @since 1.0
+     * @return boolean              whether or not the error info processing was successfull
+     *                              (the process is successfull if portable error code was found)
+     */
+    public function processErrorInfo(array $errorInfo)
+    { }
 }

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,10 +27,10 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  */
-class Doctrine_Search extends Doctrine_Plugin
+class Doctrine_Search extends Doctrine_Record_Generator
 {
     const INDEX_FILES = 0;
 
@@ -57,8 +57,11 @@ class Doctrine_Search extends Doctrine_Plugin
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
         
         if ( ! isset($this->_options['analyzer'])) {
-            $this->_options['analyzer'] = new Doctrine_Search_Analyzer_Standard();
+            $this->_options['analyzer'] = 'Doctrine_Search_Analyzer_Standard';
         }
+        
+        $this->_options['analyzer'] = new $this->_options['analyzer'];
+
         if ( ! isset($this->_options['connection'])) {
             $this->_options['connection'] = Doctrine_Manager::connection();
         }
@@ -195,6 +198,7 @@ class Doctrine_Search extends Doctrine_Plugin
 
             $rows = $this->readTableData($limit, $offset);
 
+            $ids = array();
             foreach ($rows as $row) {
                 $ids[] = $row[$id];
             }
@@ -239,7 +243,7 @@ class Doctrine_Search extends Doctrine_Plugin
     public function setTableDefinition()
     {
     	if ( ! isset($this->_options['table'])) {
-    	    throw new Doctrine_Plugin_Exception("Unknown option 'table'.");
+    	    throw new Doctrine_Record_Exception("Unknown option 'table'.");
     	}
 
         $componentName = $this->_options['table']->getComponentName();

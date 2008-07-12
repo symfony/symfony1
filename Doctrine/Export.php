@@ -16,9 +16,9 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * Doctrine_Export
  *
@@ -27,7 +27,7 @@ Doctrine::autoload('Doctrine_Connection_Module');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -252,7 +252,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         }
 
         $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
-
+        
         $check = $this->getCheckDeclaration($fields);
 
         if ( ! empty($check)) {
@@ -260,8 +260,6 @@ class Doctrine_Export extends Doctrine_Connection_Module
         }
 
         $query .= ')';
-
-
 
         $sql[] = $query;
 
@@ -743,7 +741,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
             }
 
             if ($field['type'] === 'boolean') {
-                $fields['default'] = $this->conn->convertBooleans($field['default']);
+                $field['default'] = $this->conn->convertBooleans($field['default']);
             }
             $default = ' DEFAULT ' . $this->conn->quote($field['default'], $field['type']);
         }
@@ -1041,77 +1039,120 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function exportSchema($directory = null)
     {
         if ($directory !== null) {
-            $models = Doctrine::loadModels($directory);
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($directory));
         } else {
             $models = Doctrine::getLoadedModels();
         }
-        
+
         $this->exportClasses($models);
+    }
+
+    public function exportSortedClassesSql($classes, $groupByConnection = true)
+    {
+         $connections = array();
+         foreach ($classes as $class) {
+             $connection = Doctrine_Manager::getInstance()->getConnectionForComponent($class);
+             $connectionName = $connection->getName();
+
+             if ( ! isset($connections[$connectionName])) {
+                 $connections[$connectionName] = array(
+                     'create_tables'    => array(),
+                     'create_sequences' => array(),
+                     'create_indexes'   => array(),
+                     'alters'           => array()
+                 );
+             }
+
+             $sql = $connection->export->exportClassesSql(array($class));
+
+             // Build array of all the creates
+             // We need these to happen first
+             foreach ($sql as $key => $query) {
+                 // If create table statement
+                 if (substr($query, 0, strlen('CREATE TABLE')) == 'CREATE TABLE') {
+                     $connections[$connectionName]['create_tables'][] = $query;
+
+                     unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If create sequence statement
+                 if (substr($query, 0, strlen('CREATE SEQUENCE')) == 'CREATE SEQUENCE') {
+                     $connections[$connectionName]['create_sequences'][] = $query;
+
+                     unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If create index statement
+                 if (preg_grep("/CREATE .* INDEX/", array($query))) {
+                     $connections[$connectionName]['create_indexes'][] =  $query;
+
+                     unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If alter table statement
+                 if (substr($query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE') {
+                     $connections[$connectionName]['alters'][] = $query;
+
+                     unset($sql[$key]);
+                     continue;
+                 }
+             }
+         }
+
+         // Loop over all the sql again to merge everything together so it is in the correct order
+         $build = array();
+         foreach ($connections as $connectionName => $sql) {
+             $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']);
+         }
+
+         if ( ! $groupByConnection) {
+             $new = array();
+             foreach($build as $connectionname => $sql) {
+                 $new = array_merge($new, $sql);
+             }
+             $build = $new;
+         }
+         return $build;
     }
 
     /**
      * exportClasses
      * method for exporting Doctrine_Record classes to a schema
      *
+     * FIXME: This function has ugly hacks in it to make sure sql is inserted in the correct order.
+     *
      * @throws Doctrine_Connection_Exception    if some error other than Doctrine::ERR_ALREADY_EXISTS
      *                                          occurred during the create table operation
      * @param array $classes
      * @return void
      */
-    public function exportClasses(array $classes)
-    {
-        $connections = array();
-        foreach ($classes as $class) {
-            $record = new $class();
-            $connection = $record->getTable()->getConnection();
-            $connectionName = Doctrine_Manager::getInstance()->getConnectionName($connection);
-            
-            if ( ! isset($connections[$connectionName])) {
-                $connections[$connectionName] = array();
-                $connections[$connectionName]['creates'] = array();
-                $connections[$connectionName]['alters'] = array();
-            }
-            
-            $sql = $this->exportClassesSql(array($class));
-            // Build array of all the creates
-            // We need these to happen first
-            foreach ($sql as $key => $query) {
-                if (strstr($query, 'CREATE')) {
-                    $connections[$connectionName]['creates'][] = $query;
-                    // Unset the create from sql so we can have an array of everything else but creates
-                    unset($sql[$key]);
-                }
-            }
-            
-            $connections[$connectionName]['alters'] = array_merge($connections[$connectionName]['alters'], $sql);
-        }
+     public function exportClasses(array $classes)
+     {
+         $queries = $this->exportSortedClassesSql($classes);
 
-        // Loop over all the sql again to merge the creates and alters in to the same array, but so that the alters are at the bottom
-        $build = array();
-        foreach ($connections as $connectionName => $sql) {
-            $build[$connectionName] = array_merge($sql['creates'], $sql['alters']);
-        }
+         foreach ($queries as $connectionName => $sql) {
+             $connection = Doctrine_Manager::getInstance()->getConnection($connectionName);
 
-        foreach ($build as $connectionName => $sql) {
-            $connection = Doctrine_Manager::getInstance()->getConnection($connectionName);
-            
-            $connection->beginTransaction();
-            
-            foreach ($sql as $query) {
-                try {
-                    $connection->exec($query);
-                } catch (Doctrine_Connection_Exception $e) {
-                    // we only want to silence table already exists errors
-                    if ($e->getPortableCode() !== Doctrine::ERR_ALREADY_EXISTS) {
-                        $connection->rollback();
-                        throw new Doctrine_Export_Exception($e->getMessage() . '. Failing Query: ' . $query);
-                    }
-                }
-            }
-            
-            $connection->commit();
-        }
-    }
+             $connection->beginTransaction();
+
+             foreach ($sql as $query) {
+                 try {
+                     $connection->exec($query);
+                 } catch (Doctrine_Connection_Exception $e) {
+                     // we only want to silence table already exists errors
+                     if ($e->getPortableCode() !== Doctrine::ERR_ALREADY_EXISTS) {
+                         $connection->rollback();
+                         throw new Doctrine_Export_Exception($e->getMessage() . '. Failing Query: ' . $query);
+                     }
+                 }
+             }
+
+             $connection->commit();
+         }
+     }
 
     /**
      * exportClassesSql
@@ -1153,7 +1194,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
             }
             
             if ($table->getAttribute(Doctrine::ATTR_EXPORT) & Doctrine::EXPORT_PLUGINS) {
-                $sql = array_merge($sql, $this->exportPluginsSql($table));
+                $sql = array_merge($sql, $this->exportGeneratorsSql($table));
             }
         }
         
@@ -1165,45 +1206,45 @@ class Doctrine_Export extends Doctrine_Connection_Module
     }
 
     /**
-     * fetches all plugins recursively for given table
+     * fetches all generators recursively for given table
      *
-     * @param Doctrine_Table $table     table object to retrieve the plugins from
-     * @return array                    an array of Doctrine_Plugin objects
+     * @param Doctrine_Table $table     table object to retrieve the generators from
+     * @return array                    an array of Doctrine_Record_Generator objects
      */
-    public function getAllPlugins(Doctrine_Table $table)
+    public function getAllGenerators(Doctrine_Table $table)
     {
-        $plugins = array();
+        $generators = array();
 
-        foreach ($table->getPlugins() as $name => $plugin) {
-            if ($plugin === null) {
+        foreach ($table->getGenerators() as $name => $generator) {
+            if ($generator === null) {
                 continue;                     	
             }
 
-            $plugins[] = $plugin;
+            $generators[] = $generator;
 
-            $pluginTable = $plugin->getTable();
+            $generatorTable = $generator->getTable();
             
-            if ($pluginTable instanceof Doctrine_Table) {
-                $plugins = array_merge($plugins, $this->getAllPlugins($pluginTable));
+            if ($generatorTable instanceof Doctrine_Table) {
+                $generators = array_merge($generators, $this->getAllGenerators($generatorTable));
             }
         }
 
-        return $plugins;
+        return $generators;
     }
 
     /**
-     * exportPluginsSql
+     * exportGeneratorsSql
      * exports plugin tables for given table
      *
-     * @param Doctrine_Table $table     the table in which the plugins belong to
-     * @return array    an array of sql strings
+     * @param Doctrine_Table $table     the table in which the generators belong to
+     * @return array                    an array of sql strings
      */
-    public function exportPluginsSql(Doctrine_Table $table)
+    public function exportGeneratorsSql(Doctrine_Table $table)
     {
     	$sql = array();
 
-        foreach ($this->getAllPlugins($table) as $name => $plugin) {
-            $table = $plugin->getTable();
+        foreach ($this->getAllGenerators($table) as $name => $generator) {
+            $table = $generator->getTable();
             
             // Make sure plugin has a valid table
             if ($table instanceof Doctrine_Table) {
@@ -1236,12 +1277,12 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function exportSql($directory = null)
     {
         if ($directory !== null) {
-            $models = Doctrine::loadModels($directory);
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($directory));
         } else {
             $models = Doctrine::getLoadedModels();
         }
         
-        return $this->exportClassesSql($models);
+        return $this->exportSortedClassesSql($models, false);
     }
 
     /**
@@ -1255,13 +1296,6 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function exportTable(Doctrine_Table $table)
     {
-        /**
-        TODO: maybe there should be portability option for the following check
-        if ( ! Doctrine::isValidClassname($table->getOption('declaringClass')->getName())) {
-            throw new Doctrine_Export_Exception('Class name not valid.');
-        }
-        */
-
         try {
             $data = $table->getExportableFormat();
 

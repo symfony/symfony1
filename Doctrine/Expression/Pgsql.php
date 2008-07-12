@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Expression_Driver');
+
 /**
  * Doctrine_Expression_Pgsql
  *
  * @package     Doctrine
  * @subpackage  Expression
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -54,11 +54,7 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     {
         $column = $this->getIdentifier($column);
 
-        if ($this->version > 7) {
-            return 'MD5(' . $column . ')';
-        } else {
-            return 'encode(digest(' . $column .', md5), hex)';
-        }
+        return 'MD5(' . $column . ')';
     }
 
     /**

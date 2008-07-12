@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,12 +25,12 @@
  * @package     Doctrine
  * @subpackage  I18n
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_I18n extends Doctrine_Plugin
+class Doctrine_I18n extends Doctrine_Record_Generator
 {
     protected $_options = array(
                             'className'     => '%CLASS%Translation',
@@ -39,6 +39,9 @@ class Doctrine_I18n extends Doctrine_Plugin
                             'table'         => false,
                             'pluginTable'   => false,
                             'children'      => array(),
+                            'type'          => 'string',
+                            'length'        => 2,
+                            'options'       => array()
                             );
 
     /**
@@ -49,7 +52,7 @@ class Doctrine_I18n extends Doctrine_Plugin
      */
     public function __construct($options)
     {
-        $this->_options = array_merge($this->_options, $options);
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
     public function buildRelation()
@@ -83,9 +86,38 @@ class Doctrine_I18n extends Doctrine_Plugin
 
         $this->hasColumns($columns);
 
-        $this->hasColumn('lang', 'string', 2, array('fixed'   => true,
-                                                    'primary' => true));
-                                                    
+        $options = $this->_options['options'];
+        $options['fixed'] = true;
+        $options['primary'] = true;
+
+        $this->hasColumn('lang', $this->_options['type'], $this->_options['length'], $options);
+
         $this->bindQueryParts(array('indexBy' => 'lang'));
+ 
+        // Rewrite any relations to our original table
+        $originalName = $this->_options['table']->getClassnameToReturn();
+        $relations = $this->_options['table']->getRelationParser()->getPendingRelations();
+        foreach($relations as $table => $relation) {
+            if ($table != $this->_table->getTableName() ) {
+                // check that the localColumn is part of the moved col
+                if (isset($relation['local']) && in_array($relation['local'], $this->_options['fields'])) {
+                    // found one, let's rewrite it
+                    $this->_options['table']->getRelationParser()->unsetPendingRelations($table);
+        
+                    // and bind the rewritten one
+                    $this->_table->getRelationParser()->bind($table, $relation);
+        
+                    // now try to get the reverse relation, to rewrite it
+                    $rp = Doctrine::getTable($table)->getRelationParser();
+                    $others = $rp->getPendingRelation($originalName);
+                    if (isset($others)) {
+                        $others['class'] = $this->_table->getClassnameToReturn();
+                        $others['alias'] = $this->_table->getClassnameToReturn();
+                        $rp->unsetPendingRelations($originalName);
+                        $rp->bind($this->_table->getClassnameToReturn() ,$others);
+                    }
+                }
+            }
+        }
     }
 }

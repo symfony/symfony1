@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @package     Doctrine
  * @subpackage  Migration
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -122,7 +122,10 @@ class Doctrine_Migration
      * $param array An array of classes
      * @return void
      */
-    public function loadMigrationClassesFromDirectory($classes){
+    public function loadMigrationClassesFromDirectory()
+    {
+        $classes = get_declared_classes();
+        
         foreach ((array) $this->_migrationClassesDirectory as $dir) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                 RecursiveIteratorIterator::LEAVES_ONLY);
@@ -154,16 +157,9 @@ class Doctrine_Migration
      */
     protected function loadMigrationClasses()
     {
-        if ($this->_migrationClasses) {
-            return $this->_migrationClasses;
-        }
-        
-        $classes = get_declared_classes();
-        
         if ($this->_migrationClassesDirectory !== null) {
-            $this->loadMigrationClassesFromDirectory($classes);
+            $this->loadMigrationClassesFromDirectory();
         }
-
         
         $parent = new ReflectionClass('Doctrine_Migration');
         
@@ -330,19 +326,24 @@ class Doctrine_Migration
      */
     protected function doMigrate($direction)
     {
-        if (! method_exists($this, $direction)) {
-            return;
-        }
-        $this->$direction();
+        $method = 'pre'.$direction;
+        $this->$method();
 
-        foreach ($this->_changes as $type => $changes) {
-            $process = new Doctrine_Migration_Process();
-            $funcName = 'process' . Doctrine::classify($type);
+        if (method_exists($this, $direction)) {
+            $this->$direction();
 
-            if ( ! empty($changes)) {
-                $process->$funcName($changes); 
+            foreach ($this->_changes as $type => $changes) {
+                $process = new Doctrine_Migration_Process();
+                $funcName = 'process' . Doctrine_Inflector::classify($type);
+
+                if ( ! empty($changes)) {
+                    $process->$funcName($changes); 
+                }
             }
         }
+
+        $method = 'post'.$direction;
+        $this->$method();
     }
 
     /**
@@ -584,4 +585,45 @@ class Doctrine_Migration
         
         $this->addChange('removed_indexes', $options);
     }
+
+    /**
+     * preUp
+     *
+     * @return void
+     */
+    public function preUp()
+    {
+        return;
+    }
+
+    /**
+     * postUp
+     *
+     * @return void
+     */
+    public function postUp()
+    {
+        return;
+    }
+
+    /**
+     * preDown
+     *
+     * @return void
+     */
+    public function preDown()
+    {
+        return;
+    }
+
+    /**
+     * postDown
+     *
+     * @return void
+     */
+    public function postDown()
+    {
+        return;
+    }
+    
 }

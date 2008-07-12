@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Null.php 3155 2007-11-14 13:13:23Z jwage $
+ *  $Id: Time.php 3884 2008-02-22 18:26:35Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,28 +16,50 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
+ * Doctrine_Validator_Time
+ *
  * @package     Doctrine
- * @subpackage  Log
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3155 $
+ * @version     $Revision: 3884 $
+ * @author      Mark Pearson <mark.pearson0@googlemail.com>
  */
-class Doctrine_Log_Writer_Null extends Doctrine_Log_Writer_Abstract
+class Doctrine_Validator_Time
 {
     /**
-     * Write a message to the log.
+     * validate
      *
-     * @param  array  $event  event data
-     * @return void
+     * checks if given value is a valid time
+     *
+     * @param mixed $value
+     * @return boolean
      */
-    protected function _write($event)
+    public function validate($value)
     {
+        if ($value === null) {
+            return true;
+        }
+
+        $e = explode(':', $value);
+
+        if (count($e) !== 3) {
+            return false;
+        }
+
+        if ( ! preg_match('/^ *[0-9]{2}:[0-9]{2}:[0-9]{2} *$/', $value)) {
+            return false;
+        }
+
+        $hr = intval($e[0], 10);
+        $min = intval($e[1], 10);
+        $sec = intval($e[2], 10);
+
+        return $hr >= 0 && $hr <= 23 && $min >= 0 && $min <= 59 && $sec >= 0 && $sec <= 59;      
     }
 }

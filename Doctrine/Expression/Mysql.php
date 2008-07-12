@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Expression_Driver');
+
 /**
  * Doctrine_Expression_Mysql
  *
  * @package     Doctrine
  * @subpackage  Expression
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -109,5 +109,41 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
     public function guid()
     {
         return 'UUID()';
+    }
+
+    /**
+     * Returns the year from dbms
+     *
+     * @param string $column 
+     * @return string to get year from dbms
+     */
+    public function year($column)
+    {
+        $column = $this->getIdentifier($column);
+        return 'YEAR(' .  $column . ')';
+    }
+
+    /**
+     * Returns the month from dbms
+     *
+     * @param string $column 
+     * @return string to get month from dbms
+     */
+    public function month($column)
+    {
+        $column = $this->getIdentifier($column);
+        return 'MONTH(' .  $column . ')';
+    }
+
+    /**
+     * Returns day from dbms
+     *
+     * @param string $column 
+     * @return string to get day from dbms
+     */
+    public function day($column)
+    {
+        $column = $this->getIdentifier($column);
+        return 'DAY(' .  $column . ')';
     }
 }

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,13 +26,16 @@
  * @package     Doctrine
  * @subpackage  Adapter
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Adapter
 {
+    /**
+     * Adapter constant
+     */
     const ATTR_AUTOCOMMIT = 0;
     const ATTR_CASE = 8;
     const ATTR_CLIENT_VERSION = 5;

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -84,7 +84,7 @@ class Doctrine_Validator_Driver
     public function getArg($arg)
     {
         if ( ! isset($this->_args[$arg])) {
-            throw new Doctrine_Plugin_Exception('Unknown option ' . $arg);
+            throw new Doctrine_Validator_Exception('Unknown option ' . $arg);
         }
         
         return $this->_args[$arg];

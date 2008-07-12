@@ -1,7 +1,5 @@
 <?php
 /*
- *  $Id$
- *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -16,24 +14,30 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Db
- * 
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * Doctrine_Validator_Readonly
+ *
  * @package     Doctrine
- * @subpackage  Db
- * @link        www.phpdoctrine.com
- * @since       1.0
- * @version     $Revision$
+ * @subpackage  Validator
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.org
+ * @author      Adam Huttler <ahuttler@geminisbs.com>
  */
-class Doctrine_Db
+class Doctrine_Validator_Readonly
 {
-    public function __construct()
+    /**
+     * checks if value has been modified
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public function validate($value)
     {
-        throw new Doctrine_Exception('Doctrine_Db has been deprecated. The functionality has been merged into Doctrine_Connection.');
+        $modified = $this->invoker->getModified();
+        
+        return array_key_exists($this->field, $modified) ? false : true;
     }
 }

@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * Doctrine_Expression
  *
  * @package     Doctrine
  * @subpackage  Expression
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -88,7 +88,8 @@ class Doctrine_Expression
     public function parseExpression($expr)
     {
         $pos  = strpos($expr, '(');
-        if ($pos === false) {
+        $quoted = (substr($expr, 0, 1) === "'" && substr($expr, -1) === "'");
+        if ($pos === false || $quoted) {
             return $expr;
         }
 

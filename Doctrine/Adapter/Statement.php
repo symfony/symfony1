@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,15 +26,21 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Adapter
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  */
 abstract class Doctrine_Adapter_Statement
 {
+    /**
+     * bindValue
+     *
+     * @param string $no 
+     * @param string $value 
+     * @return void
+     */
     public function bindValue($no, $value)
-    {
-    }
+    { }
 
     /**
      * fetch
@@ -64,27 +70,62 @@ abstract class Doctrine_Adapter_Statement
      * @return mixed
      */
     public function fetch()
-    {
-    }
+    { }
+
+    /**
+     * nextRowSet
+     *
+     * @return void
+     */
     public function nextRowset()
-    {
-    }
+    { }
+
+    /**
+     * execute()
+     *
+     * @return void
+     */
     public function execute()
-    {
-    }
+    { }
+
+    /**
+     * errorCode
+     *
+     * @return void
+     */
     public function errorCode()
-    {
-    }
+    { }
+
+    /**
+     * errorInfo
+     *
+     * @return void
+     */
     public function errorInfo()
-    {
-    }
+    { }
+
+    /**
+     * rowCount
+     *
+     * @return void
+     */
     public function rowCount()
-    {
-    }
+    { }
+
+    /**
+     * setFetchMode
+     *
+     * @param string $mode 
+     * @return void
+     */
     public function setFetchMode($mode)
-    {
-    }
+    { }
+
+    /**
+     * columnCount
+     *
+     * @return void
+     */
     public function columnCount()
-    {
-    }
+    { }
 }

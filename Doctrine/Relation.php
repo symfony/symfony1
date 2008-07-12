@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @package     Doctrine
  * @subpackage  Relation
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -60,20 +60,25 @@ abstract class Doctrine_Relation implements ArrayAccess
     const ONE   = 0;
     const MANY  = 2;
     
+    // TRUE => mandatory, everything else is just a default value. this should be refactored
+    // since TRUE can bot be used as a default value this way. All values should be default values.
     protected $definition = array('alias'       => true,
                                   'foreign'     => true,
                                   'local'       => true,
                                   'class'       => true,
                                   'type'        => true,
                                   'table'       => true,
-                                  'name'        => false,
-                                  'refTable'    => false,
-                                  'onDelete'    => false,
-                                  'onUpdate'    => false,
-                                  'deferred'    => false,
-                                  'deferrable'  => false,
-                                  'constraint'  => false,
+                                  'localTable'  => true,
+                                  'name'        => null,
+                                  'refTable'    => null,
+                                  'onDelete'    => null,
+                                  'onUpdate'    => null,
+                                  'deferred'    => null,
+                                  'deferrable'  => null,
+                                  'constraint'  => null,
                                   'equal'       => false,
+                                  'cascade'     => array(), // application-level cascades
+                                  'owningSide'  => false, // whether this is the owning side
                                   );
 
     /**
@@ -87,6 +92,8 @@ abstract class Doctrine_Relation implements ArrayAccess
      *          foreign                 the foreign reference field(s)
      *
      *          table                   the foreign table object
+     *
+     *          localTable              the local table object
      *
      *          refTable                the reference table object (if any)
      *
@@ -131,10 +138,9 @@ abstract class Doctrine_Relation implements ArrayAccess
             if (isset($definition[$key])) {
                 $def[$key] = $definition[$key];
             } else {
-                $def[$key] = null;          
+                $def[$key] = $this->definition[$key];          
             }
         }
-
         $this->definition = $def;
     }
 
@@ -222,6 +228,17 @@ abstract class Doctrine_Relation implements ArrayAccess
     {
         return $this->definition['type'];
     }
+    
+    /**
+     * Checks whether this relation cascades deletions to the related objects
+     * on the application level.
+     *
+     * @return boolean
+     */
+    public function isCascadeDelete()
+    {
+        return in_array('delete', $this->definition['cascade']);
+    }
 
     /**
      * getTable
@@ -237,6 +254,17 @@ abstract class Doctrine_Relation implements ArrayAccess
     }
 
     /**
+     * getClass
+     * returns the name of the related class
+     *
+     * @return object Doctrine_Record
+     */
+    final public function getClass()
+    {
+        return $this->definition['class'];
+    }
+
+    /**
      * getLocal
      * returns the name of the local column
      *
@@ -245,6 +273,15 @@ abstract class Doctrine_Relation implements ArrayAccess
     final public function getLocal()
     {
         return $this->definition['local'];
+    }
+    
+    /**
+     * getLocalFieldName
+     * returns the field name of the local column
+     */
+    final public function getLocalFieldName()
+    {
+        return $this->definition['localTable']->getFieldName($this->definition['local']);
     }
 
     /**
@@ -257,6 +294,15 @@ abstract class Doctrine_Relation implements ArrayAccess
     final public function getForeign()
     {
         return $this->definition['foreign'];
+    }
+    
+    /**
+     * getLocalFieldName
+     * returns the field name of the local column
+     */
+    final public function getForeignFieldName()
+    {
+        return $this->definition['table']->getFieldName($this->definition['foreign']);
     }
 
     /**

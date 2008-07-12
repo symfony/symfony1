@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Query_Part');
+
 /**
  * Doctrine_Query_Condition
  *
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -63,10 +63,16 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 }
                 $r = implode(' OR ', $ret);
             } else {
+                // Fix for #710
                 if (substr($parts[0],0,1) == '(' && substr($parts[0], -1) == ')') {
                     return $this->parse(substr($parts[0], 1, -1));
                 } else {
-                    return $this->load($parts[0]);
+                    // Processing NOT here
+                    if (strtoupper(substr($parts[0], 0, 4)) === 'NOT ') {
+                        $r = 'NOT ('.$this->parse(substr($parts[0], 4)).')';
+                    } else {
+                        return $this->load($parts[0]);
+                    }
                 }
             }
         }

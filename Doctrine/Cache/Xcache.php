@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Cache_Driver');
+
 /**
- * Doctrine_Cache_Xcache
+ * Xcache cache driver
  *
  * @package     Doctrine
  * @subpackage  Cache
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: $
  * @author      Dmitry Bakaleinik (dima@snaiper.net)
@@ -39,7 +39,7 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
      */
     public function __construct($options = array())
     {      
-        if ( !extension_loaded('xcache') ) {
+        if ( ! extension_loaded('xcache') ) {
             throw new Doctrine_Cache_Exception('In order to use Xcache driver, the xcache extension must be loaded.');
         }
         
@@ -47,9 +47,7 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
     }
 
     /**
-     * Test if a cache is available for the given id and (if yes) return it (false else)
-     *
-     * Note : return value is always "string" (unserialization is done by the core not by the backend)
+     * Test if a cache is available for the given id and (if yes) return it (false else).
      * 
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested

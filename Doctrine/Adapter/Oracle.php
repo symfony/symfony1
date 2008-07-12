@@ -16,18 +16,17 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Adapter');
+
 /**
- * Doctrine_Adapter_Oracle
- * [BORROWED FROM ZEND FRAMEWORK]
+ * Custom Doctrine connection adapter for oracle
  *
  * @package     Doctrine
  * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  */
@@ -52,13 +51,13 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     );
 
     /**
+     * Current execute mode
+     *
      * @var integer
      */
-    protected $_execute_mode = OCI_COMMIT_ON_SUCCESS;
+    protected $_executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * Constructor.
-     *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
      *
@@ -76,31 +75,15 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
             throw new Doctrine_Adapter_Exception('config array must have at least a username and a password');
         }
 
-        // @todo Let this protect backward-compatibility for one release, then remove
-        if ( ! isset($config['database']) || ! isset($config['dbname'])) {
-            $config['dbname'] = $config['database'];
-            unset($config['database']);
-            trigger_error("Deprecated config key 'database', use 'dbname' instead.", E_USER_NOTICE);
-        }
-
         // keep the config
         $this->_config = array_merge($this->_config, (array) $config);
-
-        // create a profiler object
-        $enabled = false;
-        if (array_key_exists('profiler', $this->_config)) {
-            $enabled = (bool) $this->_config['profiler'];
-            unset($this->_config['profiler']);
-        }
-
-        $this->_profiler = new Doctrine_Profiler($enabled);
     }
 
     /**
      * Creates a connection resource.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _connect()
     {
@@ -110,7 +93,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
         }
 
         if ( ! extension_loaded('oci8')) {
-            throw new Doctrine_Adapter_Oracle_Exception('The OCI8 extension is required for this adapter but not loaded');
+            throw new Doctrine_Adapter_Exception('The OCI8 extension is required for this adapter but not loaded');
         }
 
         if (isset($this->_config['dbname'])) {
@@ -126,7 +109,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
 
         // check the connection
         if ( ! $this->_connection) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error());
+            throw new Doctrine_Adapter_Exception(oci_error());
         }
     }
 
@@ -196,12 +179,12 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
      * Commit a transaction and return to autocommit mode.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _commit()
     {
         if ( ! oci_commit($this->_connection)) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error($this->_connection));
+            throw new Doctrine_Adapter_Exception(oci_error($this->_connection));
         }
         $this->_setExecuteMode(OCI_COMMIT_ON_SUCCESS);
     }
@@ -210,12 +193,12 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
      * Roll back a transaction and return to autocommit mode.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _rollBack()
     {
         if ( ! oci_rollback($this->_connection)) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error($this->_connection));
+            throw new Doctrine_Adapter_Exception(oci_error($this->_connection));
         }
         $this->_setExecuteMode(OCI_COMMIT_ON_SUCCESS);
     }
@@ -254,7 +237,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
             case OCI_COMMIT_ON_SUCCESS:
             case OCI_DEFAULT:
             case OCI_DESCRIBE_ONLY:
-                $this->_execute_mode = $mode;
+                $this->_executeMode = $mode;
                 break;
             default:
                 throw new Doctrine_Adapter_Exception('wrong execution mode specified');
@@ -263,10 +246,12 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * @return
+     * Get the current execute mode
+     *
+     * @return integer $mode
      */
     public function _getExecuteMode()
     {
-        return $this->_execute_mode;
+        return $this->_executeMode;
     }
 }

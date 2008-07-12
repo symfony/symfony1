@@ -16,32 +16,58 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Template_NestedSet
+ * Doctrine template which implements the custom NestedSet implementation
  *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Template_NestedSet extends Doctrine_Template
 {
+    /**
+     * Array of options for NestedSet implementation
+     *
+     * @var array
+     */
     private $_options;
-    
-    public function __construct(array $options)
+
+    /**
+     * __construct
+     *
+     * @param array $array 
+     * @return void
+     */
+    public function __construct(array $options = array())
     {
-        $this->_options = $options;
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
-    
+
+    /**
+     * Set up NestedSet template
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->_table->setOption('treeOptions', $this->_options);
         $this->_table->setOption('treeImpl', 'NestedSet');
+    }
+
+    /**
+     * Call set table definition for the NestedSet behavior
+     *
+     * @return void
+     */
+    public function setTableDefinition()
+    {
+        $this->_table->getTree()->setTableDefinition();
     }
 }

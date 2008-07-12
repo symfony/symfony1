@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Node
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Joe Simms <joe.simms@websites4.com>
@@ -70,20 +70,29 @@ class Doctrine_Node implements IteratorAggregate
         $this->record = $record;
         $this->options = $options;
         
-        // Make sure that the tree object of the root component is used in the case
-        // of column aggregation inheritance.
+        // Make sure that the tree object of the root class is used in the case
+        // of column aggregation inheritance (single table inheritance).
         $class = $record->getTable()->getComponentName();
-        $table = $record->getTable();
-        if ($table->getOption('inheritanceMap')) {
-            $subclasses = $table->getOption('subclasses');
-            while (in_array($class, $subclasses)) {
+        $thisTable = $record->getTable();
+        $table = $thisTable;
+        if ($thisTable->getOption('inheritanceMap')) {
+            // Move up the hierarchy until we find the "subclasses" option. This option
+            // MUST be set on the root class of the user's hierarchy that uses STI.
+            while ( ! $subclasses = $table->getOption('subclasses')) {
                 $class = get_parent_class($class);
+                if ($class == 'Doctrine_Record') {
+                    throw new Doctrine_Node_Exception("No subclasses specified. You are "
+                            . "using Single Table Inheritance with NestedSet but you have "
+                            . "not specified the subclasses correctly. Make sure you use "
+                            . "setSubclasses() in the root class of your hierarchy.");
+                }
+                $table = $table->getConnection()->getTable($class);
             }
         }
-        if ($class != $table->getComponentName()) {
-            $this->_tree = $table->getConnection()->getTable($class)->getTree();
-        } else {
+        if ($thisTable != $table) {
             $this->_tree = $table->getTree();
+        } else {
+            $this->_tree = $thisTable->getTree();
         }
     }
 

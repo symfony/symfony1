@@ -16,16 +16,16 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection');
+
 /**
  * Doctrine_Connection_Db2
  *
  * @package     Doctrine
  * @subpackage  Connection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -40,7 +40,7 @@ class Doctrine_Connection_Db2 extends Doctrine_Connection
      * @param integer $offset       start reading from given offset
      * @return string               the modified query
      */
-    public function modifyLimitQuery($query, $limit, $offset)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         if ($limit <= 0)
             return $query;
@@ -55,8 +55,8 @@ class Doctrine_Connection_Db2 extends Doctrine_Connection
             $col = explode('select', $select);
 
             $sql = 'WITH OFFSET AS(' . $select . ', ROW_NUMBER() ' .
-               'OVER(ORDER BY ' . $col[1] . ') AS dctrn_rownum FROM ' . $table . ')' .
-               $select . 'FROM OFFSET WHERE dctrn_rownum BETWEEN ' . $offset .
+               'OVER(ORDER BY ' . $col[1] . ') AS doctrine_rownum FROM ' . $table . ')' .
+               $select . 'FROM OFFSET WHERE doctrine_rownum BETWEEN ' . $offset .
                    'AND ' . ($offset + $limit - 1);
             return $sql;
         }

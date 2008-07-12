@@ -16,26 +16,26 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
- * Doctrine_Template_Geographical
- *
- * Easily add created and updated at timestamps to your doctrine records
+ * Easily add longitude and latitude columns to your records and use inherited functionality for 
+ * calculating distances
  *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Template_Geographical extends Doctrine_Template
 {
     /**
-     * Array of timestampable options
+     * Array of geographical options
      *
      * @var string
      */
@@ -54,13 +54,13 @@ class Doctrine_Template_Geographical extends Doctrine_Template
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
     /**
-     * setTableDefinition
+     * Set table definition for Geographical behavior
      *
      * @return void
      */
@@ -70,6 +70,12 @@ class Doctrine_Template_Geographical extends Doctrine_Template
         $this->hasColumn($this->_options['longitude']['name'], $this->_options['longitude']['type'], $this->_options['longitude']['size'], $this->_options['longitude']['options']);
     }
 
+    /**
+     * Initiate and get a distance query with the select parts for the number of kilometers and miles 
+     * between this record and other zipcode records in the database
+     *
+     * @return Doctrine_Query $query
+     */
     public function getDistanceQuery()
     {
         $invoker = $this->getInvoker();
@@ -92,6 +98,13 @@ class Doctrine_Template_Geographical extends Doctrine_Template
         return $query;
     }
 
+    /**
+     * Get distance between this record and another
+     *
+     * @param string $Doctrine_Record 
+     * @param string $kilometers 
+     * @return integer
+     */
     public function getDistance(Doctrine_Record $record, $kilometers = false)
     {
         $query = $this->getDistanceQuery($kilometers);
