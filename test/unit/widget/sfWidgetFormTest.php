@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 class MyWidgetForm extends sfWidgetForm
 {
@@ -60,6 +60,9 @@ $t->is($w->renderTag('input', array('id' => 'foo')), '<input id="foo" />', '->re
 $t->is($w->renderTag('input', array('name' => 'foo')), '<input name="foo" id="foo" />', '->renderTag() adds an id if none is given and a name is given');
 $w->setIdFormat('id_%s');
 $t->is($w->renderTag('input', array('name' => 'foo')), '<input name="foo" id="id_foo" />', '->renderTag() uses the id_format to generate an id');
+sfWidget::setXhtml(false);
+$t->is($w->renderTag('input'), '<input>', '->renderTag() does not close tag if not in XHTML mode');
+sfWidget::setXhtml(true);
 
 // ->renderContentTag()
 $t->diag('->renderContentTag()');

@@ -104,7 +104,14 @@ abstract class sfWidgetForm extends sfWidget
    */
   public function renderTag($tag, $attributes = array())
   {
-    return parent::renderTag($tag, $this->fixFormId($attributes));
+    if (empty($tag))
+    {
+      return '';
+    }
+
+    $attributes = $this->fixFormId($attributes);
+
+    return sprintf('<%s%s%s', $tag, $this->attributesToHtml($attributes), self::$xhtml ? ' />' : (strtolower($tag) == 'input' ? '>' : sprintf('></%s>', $tag)));
   }
 
   /**
