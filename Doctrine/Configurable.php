@@ -180,7 +180,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_RESULT_CACHE_LIFESPAN:
             case Doctrine::ATTR_QUERY_CACHE_LIFESPAN:
             case Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES;
-            case Doctrine::ATTR_SINGULARIZE_IMPORT;
             case Doctrine::ATTR_USE_DQL_CALLBACKS;
 
                 break;

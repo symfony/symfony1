@@ -363,9 +363,6 @@ class Doctrine_Import extends Doctrine_Connection_Module
      */
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
-        $options['singularize'] = ! isset($options['singularize']) ? 
-                $this->conn->getAttribute('singularize_import'):$options['singularize'];
-
         $connections = Doctrine_Manager::getInstance()->getConnections();
 
         foreach ($connections as $name => $connection) {
@@ -385,11 +382,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
               $definition = array();
               $definition['tableName'] = $table;
 
-              if( ! isset($options['singularize']) || $options['singularize'] !== false) {
-                  $classTable = $this->_singularizeTableName($table);
-              } else {
-                  $classTable = Doctrine_Inflector::tableize($table);
-              }
+              $classTable = Doctrine_Inflector::tableize($table);
 
               $definition['className'] = Doctrine_Inflector::classify($classTable);
               $definition['columns'] = $connection->import->listTableColumns($table);
@@ -400,11 +393,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
                   $classes = array();
                   foreach ($relations as $relation) {
                       $table = $relation['table'];
-                      if( ! isset($options['singularize']) || $options['singularize'] !== false) {
-                          $relClassTable = $this->_singularizeTableName($table);
-                      } else {
-                          $relClassTable = Doctrine_Inflector::tableize($table);
-                      }
+                      $relClassTable = Doctrine_Inflector::tableize($table);
                       $class = Doctrine_Inflector::classify($relClassTable);
                       if (in_array($class, $classes)) {
                           $alias = $class . '_' . (count($classes) + 1);
@@ -431,20 +420,5 @@ class Doctrine_Import extends Doctrine_Connection_Module
         }
 
         return $classes;
-    }
-
-    /**
-     * Singularize a table name
-     *
-     * @param string $tableName 
-     * @return $singularTableName
-     */
-    protected function _singularizeTableName($tableName)
-    {
-        $e = explode('_', Doctrine_Inflector::tableize($tableName));
-        foreach ($e as $k => $v) {
-            $e[$k] = Doctrine_Inflector::singularize($v);
-        }
-        return implode('_', $e);
     }
 }
