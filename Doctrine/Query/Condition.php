@@ -42,8 +42,8 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
     public function parse($str)
     {
         $tmp = trim($str);
-
-        $parts = $this->_tokenizer->bracketExplode($str, array(' \&\& ', ' AND '), '(', ')');
+        
+        $parts = $this->_tokenizer->bracketExplode($str, array(' \|\| ', ' OR '), '(', ')');
 
         if (count($parts) > 1) {
             $ret = array();
@@ -51,17 +51,17 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 $part = $this->_tokenizer->bracketTrim($part, '(', ')');
                 $ret[] = $this->parse($part);
             }
-            $r = implode(' AND ', $ret);
+            $r = implode(' OR ', $ret);
         } else {
 
-            $parts = $this->_tokenizer->bracketExplode($str, array(' \|\| ', ' OR '), '(', ')');
+            $parts = $this->_tokenizer->bracketExplode($str, array(' \&\& ', ' AND '), '(', ')');
             if (count($parts) > 1) {
                 $ret = array();
                 foreach ($parts as $part) {
                     $part = $this->_tokenizer->bracketTrim($part, '(', ')');
                     $ret[] = $this->parse($part);
                 }
-                $r = implode(' OR ', $ret);
+                $r = implode(' AND ', $ret);
             } else {
                 // Fix for #710
                 if (substr($parts[0],0,1) == '(' && substr($parts[0], -1) == ')') {
@@ -76,7 +76,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 }
             }
         }
-
+        
         return '(' . $r . ')';
     }
 
