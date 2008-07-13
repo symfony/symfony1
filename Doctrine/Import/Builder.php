@@ -486,11 +486,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
         }
 
-        if (isset($definition['templates']) && is_array($definition['templates']) && !empty($definition['templates'])) {
-            $ret[$i] = $this->buildTemplates($definition['templates']);
-            $i++;
-        }
-
         if (isset($definition['actAs']) && is_array($definition['actAs']) && !empty($definition['actAs'])) {
             $ret[$i] = $this->buildActAs($definition['actAs']);
             $i++;
@@ -619,33 +614,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         return $ret;
-    }
-
-    /**
-     * buildTemplates
-     *
-     * @param string $array
-     * @return void
-     */
-    public function buildTemplates(array $templates)
-    {
-        $build = '';
-        foreach ($templates as $name => $options) {
-
-            if (is_array($options) && !empty($options)) {
-                $optionsPhp = $this->varExport($options);
-
-                $build .= "    \$this->loadTemplate('" . $name . "', " . $optionsPhp . ");" . PHP_EOL;
-            } else {
-                if (isset($templates[0])) {
-                    $build .= "    \$this->loadTemplate('" . $options . "');" . PHP_EOL;
-                } else {
-                    $build .= "    \$this->loadTemplate('" . $name . "');" . PHP_EOL;
-                }
-            }
-        }
-
-        return $build;
     }
 
     /**

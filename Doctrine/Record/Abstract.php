@@ -268,15 +268,6 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         foreach ($definitions as $name => $options) {
             $this->hasColumn($name, $options['type'], $options['length'], $options);
         }
-    } 
-    /**
-     * loadTemplate
-     *
-     * @param string $template
-     */
-    public function loadTemplate($template, array $options = array())
-    {
-        $this->actAs($template, $options);
     }
 
     /**
