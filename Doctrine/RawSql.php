@@ -72,7 +72,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      	    $this->_parseSelectFields($queryPart);
      	    return $this;
      	}
-     	if ( ! isset($this->parts[$queryPartName])) {
+     	if ( ! isset($this->_sqlParts[$queryPartName])) {
      	    $this->_sqlParts[$queryPartName] = array();
      	}
      	
@@ -220,11 +220,13 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
             }
         }
         
+        $q = 'SELECT ';
+        if($this->_sqlParts['distinct'] == true) $q .= 'DISTINCT ';
+
         // first add the fields of the root component
         reset($this->_queryComponents);
         $componentAlias = key($this->_queryComponents);
-
-        $q = 'SELECT ' . implode(', ', $select[$componentAlias]);
+        $q .= implode(', ', $select[$componentAlias]);
         unset($select[$componentAlias]);
 
         foreach ($select as $component => $fields) {
@@ -237,8 +239,6 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         if ( ! empty($string)) {
             $this->_sqlParts['where'][] = $string;
         }
-        $copy = $this->_sqlParts;
-        unset($copy['select']);
 
         $q .= ( ! empty($this->_sqlParts['from']))?    ' FROM '     . implode(' ', $this->_sqlParts['from']) : '';
         $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where']) : '';
@@ -252,6 +252,85 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
             array_pop($this->_sqlParts['where']);
         }
         return $q;
+    }
+
+	/**
+     * getCountQuery
+     * builds the count query.
+     *
+     * @return string       the built sql query
+     */
+	public function getCountQuery($params = array())
+    {
+        //Doing COUNT( DISTINCT rootComponent.id )
+        //This is not correct, if the result is not hydrated by doctrine, but it mimics the behaviour of Doctrine_Query::getCountQuery
+        reset($this->_queryComponents);
+        $componentAlias = key($this->_queryComponents);
+        $tableAlias = $this->getSqlTableAlias($componentAlias);
+        $fields = array();
+
+        foreach ((array) $this->_queryComponents[$componentAlias]['table']->getIdentifierColumnNames() as $key) {
+        	$fields[] = $tableAlias . '.' . $key;
+        }
+
+        $q = 'SELECT COUNT( DISTINCT '.implode(',',$fields).') as num_results';
+
+        $string = $this->getInheritanceCondition($this->getRootAlias());
+        if ( ! empty($string)) {
+            $this->_sqlParts['where'][] = $string;
+        }
+
+        $q .= ( ! empty($this->_sqlParts['from']))?    ' FROM '     . implode(' ', $this->_sqlParts['from']) : '';
+        $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where']) : '';
+        $q .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby']) : '';
+        $q .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
+
+        if ( ! empty($string)) {
+            array_pop($this->_sqlParts['where']);
+        }
+
+        return $q;
+    }
+
+	/**
+     * count
+     * fetches the count of the query
+     *
+     * This method executes the main query without all the
+     * selected fields, ORDER BY part, LIMIT part and OFFSET part.
+     *
+     * This is an exact copy of the Dql Version
+     *
+     * @see Doctrine_Query::count()
+     * @param array $params        an array of prepared statement parameters
+     * @return integer             the count of this query
+     */
+    public function count($params = array())
+    {
+        $q = $this->getCountQuery();
+
+        if ( ! is_array($params)) {
+            $params = array($params);
+        }
+
+        $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
+
+        $params = $this->convertEnums($params);
+
+        $results = $this->getConnection()->fetchAll($q, $params);
+
+        if (count($results) > 1) {
+            $count = count($results);
+        } else {
+            if (isset($results[0])) {
+                $results[0] = array_change_key_case($results[0], CASE_LOWER);
+                $count = $results[0]['num_results'];
+            } else {
+                $count = 0;
+            }
+        }
+
+        return (int) $count;
     }
 
     /**
