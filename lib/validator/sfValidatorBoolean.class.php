@@ -37,6 +37,7 @@ class sfValidatorBoolean extends sfValidatorBase
     $this->addOption('false_values', array('false', 'f', 'no', 'n', 'off', '0'));
 
     $this->setOption('required', false);
+    $this->setOption('empty_value', false);
   }
 
   /**

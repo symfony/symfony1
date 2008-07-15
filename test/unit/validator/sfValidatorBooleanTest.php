@@ -49,6 +49,6 @@ catch (sfValidatorError $e)
 // empty
 $t->diag('empty');
 $v->setOption('required', false);
-$t->ok($v->clean(null) === null, '->clean() returns null if no value is given');
+$t->ok($v->clean(null) === false, '->clean() returns false if no value is given');
 $v->setOption('empty_value', true);
 $t->ok($v->clean(null) === true, '->clean() returns the value of the empty_value option if no value is given');

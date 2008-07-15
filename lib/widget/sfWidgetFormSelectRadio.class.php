@@ -71,7 +71,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
         'id'    => $id = $this->generateId($name.'[]', self::escapeOnce($key)),
       );
 
-      if (strval($key) == strval($value))
+      if (strval($key) == strval($value === false ? 0 : $value))
       {
         $baseAttributes['checked'] = 'checked';
       }
