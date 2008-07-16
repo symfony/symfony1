@@ -27,9 +27,13 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
     {
-      //remove all inline includes: peer class include inline the mapbuilder classes
+      // remove all inline includes: peer class include inline the mapbuilder classes
       $peerCode = preg_replace("/(include|require)_once\s*.*MapBuilder\.php.*\s*/", "", $peerCode);
     }
+
+    // change Propel::import() calls to sfPropel::import()
+    $peerCode = str_replace('Propel::import(', 'sfPropel::import(', $peerCode);
+
     return $peerCode;
   }
 
