@@ -286,6 +286,19 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function createTable($name, array $fields, array $options = array())
     {
+        // Build array of the primary keys if any of the individual field definitions
+        // specify primary => true
+        $count = 0;
+        foreach ($fields as $fieldName => $field) {
+            if (isset($field['primary']) && $field['primary']) {
+                if ($count == 0) {
+                    $options['primary'] = array();
+                }
+                $count++;
+                $options['primary'][] = $fieldName;
+            }
+        }
+
         $sql = (array) $this->createTableSql($name, $fields, $options);
 
         foreach ($sql as $query) {
