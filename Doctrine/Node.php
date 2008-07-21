@@ -80,6 +80,10 @@ class Doctrine_Node implements IteratorAggregate
             // MUST be set on the root class of the user's hierarchy that uses STI.
             while ( ! $subclasses = $table->getOption('subclasses')) {
                 $class = get_parent_class($class);
+                $reflectionClass = new ReflectionClass($class);
+                if ($reflectionClass->isAbstract()) {
+                    continue;
+                }
                 if ($class == 'Doctrine_Record') {
                     throw new Doctrine_Node_Exception("No subclasses specified. You are "
                             . "using Single Table Inheritance with NestedSet but you have "
