@@ -43,6 +43,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
    *  * model:              The model class (required)
    *  * column:             The unique column name in Propel field name format (required)
    *                        If the uniquess is for several columns, you can pass an array of field names
+   *  * field               Field name used by the form, other than the column name
    *  * primary_key:        The primary key column name in Propel field name format (optional, will be introspected if not provided)
    *                        You can also pass an array if the table has several primary keys
    *  * connection:         The Propel connection to use (null by default)
@@ -54,6 +55,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
   {
     $this->addRequiredOption('model');
     $this->addRequiredOption('column');
+    $this->addOption('field', null);
     $this->addOption('primary_key', null);
     $this->addOption('connection', null);
     $this->addOption('throw_global_error', false);
@@ -75,13 +77,19 @@ class sfValidatorPropelUnique extends sfValidatorSchema
     {
       $this->setOption('column', array($this->getOption('column')));
     }
+    
+    if (!is_array($field = $this->getOption('field')))
+    {
+      $this->setOption('field', $field ? array($field) : array());
+    }
+    $fields = $this->getOption('field');
 
     $criteria = new Criteria();
-    foreach ($this->getOption('column') as $column)
+    foreach ($this->getOption('column') as $i => $column)
     {
       $colName = call_user_func(array($this->getOption('model').'Peer', 'translateFieldName'), $column, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
 
-      $criteria->add($colName, $values[$column]);
+      $criteria->add($colName, $values[isset($fields[$i]) ? $fields[$i] : $column]);
     }
 
     $object = call_user_func(array($this->getOption('model').'Peer', 'doSelectOne'), $criteria, $this->getOption('connection'));
