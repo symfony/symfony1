@@ -85,7 +85,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
    *
    * @param  string $id  A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown
+   * @return string      The session data if the session was read or created, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be read
    */
@@ -160,8 +160,39 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     throw new sfDatabaseException(sprintf('%s cannot write session data for id "%s" (%s).', get_class($this), $id, mysql_error()));
   }
 
-  /*!
-   * Execute an SQL Query
+  /**
+   * Updates the session id.
+   *
+   * @param  string   $currentId The current session id
+   * @param  string   $newId     The new current id
+   * 
+   * @return Boolean  True if the session id was successfully regenerated
+   * @throws sfDatabaseException if an error occured while regenrating the session id
+   */
+  protected function updateSessionId($currentId, $newId)
+  {
+    // get table/column
+    $db_table    = $this->options['db_table'];
+    $db_id_col   = $this->options['db_id_col'];
+
+    // cleanup the session ids, just in case
+    $newId     = $this->db_escape($newId);
+    $currentId = $this->db_escape($currentId);
+
+    // update the session id
+    $sql = "UPDATE $db_table SET $db_id_col='$newId' WHERE $db_id_col='$currentId'";
+
+    if ($this->db_query($sql))
+    {
+      return true;
+    }
+
+    // failed to write session data
+    throw new sfDatabaseException(sprintf('%s cannot update session id from "%s" to "%s" (%s).', get_class($this), $currentId, $newId, mysql_error()));
+  }
+
+  /**
+   * Executes an SQL Query
    *
    * @param  string $query  The query to execute
    * @return mixed The result of the query
@@ -171,8 +202,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return @mysql_query($query, $this->db);
   }
 
-  /*!
-   * Escape a string before using it in a query statement
+  /**
+   * Escapes a string before using it in a query statement
    *
    * @param  string $string  The string to escape
    * @return string The escaped string
@@ -182,8 +213,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return mysql_real_escape_string($string, $this->db);
   }
 
-  /*!
-   * Count the rows in a query result
+  /**
+   * Counts the rows in a query result
    *
    * @param  resource $result  Result of a query
    * @return int Number of rows
@@ -193,8 +224,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return mysql_num_rows($result);
   }
 
-  /*!
-   * Extract a row from a query result set
+  /**
+   * Extracts a row from a query result set
    *
    * @param  resource $result  Result of a query
    * @return array Extracted row as an indexed array

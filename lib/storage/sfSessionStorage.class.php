@@ -26,7 +26,8 @@
 class sfSessionStorage extends sfStorage
 {
   static protected
-    $sessionStarted = false;
+    $sessionIdRegenerated = false,
+    $sessionStarted       = false;
 
   /**
    * Available options:
@@ -162,8 +163,15 @@ class sfSessionStorage extends sfStorage
    */
   public function regenerate($destroy = false)
   {
-    // regenerate a new session id
+    if (self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    // regenerate a new session id once per object
     session_regenerate_id($destroy);
+
+    self::$sessionIdRegenerated = true;
   }
 
   /**

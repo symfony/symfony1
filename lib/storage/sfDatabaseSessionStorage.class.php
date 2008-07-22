@@ -102,6 +102,7 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     // get the database resource
     $this->db = $database->getResource();
     $this->con = $database->getConnection();
+    
     if (is_null($this->db) && is_null($this->con))
     {
       throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');
@@ -154,6 +155,41 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    * @throws <b>DatabaseException</b> If the session data cannot be written
    */
   abstract public function sessionWrite($id, $data);
+
+  /**
+   * Regenerates id that represents this storage.
+   *
+   * @param  boolean $destroy Destroy session when regenerating?
+   *
+   * @return boolean True if session regenerated, false if error
+   *
+   */
+  public function regenerate($destroy = false)
+  {
+    if (self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    $currentId = session_id();
+
+    parent::regenerate($destroy);
+
+    $newId = session_id();
+
+    $this->updateSessionId($currentId, $newId);
+  }
+
+  /**
+   * Updates the session id.
+   *
+   * @param  string   $currentId The current session id
+   * @param  string   $newId     The new current id
+   * 
+   * @return Boolean  True if the session id was successfully regenerated
+   * @throws sfDatabaseException if an error occured while regenrating the session id
+   */
+  abstract protected function updateSessionId($currentId, $newId);
 
   /**
    * Executes the shutdown procedure.

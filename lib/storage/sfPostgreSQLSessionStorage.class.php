@@ -83,7 +83,7 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
    *
    * @param  string $id  A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown
+   * @return string      The session data if the session was read or created, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be read
    */
@@ -157,5 +157,36 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
 
     // failed to write session data
     throw new sfDatabaseException(sprintf('sfPostgreSQLSessionStorage cannot write session data for id "%s".', $id));
+  }
+
+  /**
+   * Updates the session id.
+   *
+   * @param  string   $currentId The current session id
+   * @param  string   $newId     The new current id
+   * 
+   * @return Boolean  True if the session id was successfully regenerated
+   * @throws sfDatabaseException if an error occured while regenrating the session id
+   */
+  protected function updateSessionId($currentId, $newId)
+  {
+    // get table/column
+    $db_table    = $this->options['db_table'];
+    $db_id_col   = $this->options['db_id_col'];
+
+    // cleanup the session id and data, just in case
+    $currentId = addslashes($currentId);
+    $newId     = addslashes($newId);
+
+    // update the session id
+    $sql = "UPDATE $db_table SET $db_id_col=? WHERE $db_id_col=?";
+
+    if (@pg_query($this->db, $sql))
+    {
+      return true;
+    }
+
+    // failed to write session data
+    throw new sfDatabaseException(sprintf('% cannot update session id from "%s" to "%s".', get_class($this), $currentId, $newId));
   }
 }
