@@ -160,12 +160,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
 
         $q = $this->returnQueryWithRootId($q, $rootId);
 
-        // FIX: Reported in ticket #1268
-        if ($hydrationMode !== null) {
-            $q = $q->setHydrationMode($hydrationMode);
-        }
-
-        $tree = $q->execute();
+        $tree = $q->execute(array(), $hydrationMode);
 
         if (count($tree) <= 0) {
             return false;
@@ -197,13 +192,8 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         $q->addWhere($this->_baseAlias . ".lft >= ? AND " . $this->_baseAlias . ".rgt <= ?", $params)
                 ->addOrderBy($this->_baseAlias . ".lft asc");
         $q = $this->returnQueryWithRootId($q, $record->getNode()->getRootValue());
-        
-        // FIX: Reported in ticket #1268
-        if ($hydrationMode !== null) {
-            $q = $q->setHydrationMode($hydrationMode);
-        }
 
-        return $q->execute();
+        return $q->execute(array(), $hydrationMode);
     }
 
     /**
