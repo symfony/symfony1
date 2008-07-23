@@ -561,16 +561,15 @@ class Doctrine_Pager
      * Executes the query, populates the collection and then return it
      *
      * @param $params               Optional parameters to Doctrine_Query::execute
-     * @param $hydrationMode        Hydration Mode of Doctrine_Query::execute 
-     *                              returned ResultSet. Doctrine::Default is FETCH_RECORD
+     * @param $hydrationMode        Hydration Mode of Doctrine_Query::execute returned ResultSet.
      * @return Doctrine_Collection  The root collection
      */
-    public function execute($params = array(), $hydrationMode = Doctrine::FETCH_RECORD)
+    public function execute($params = array(), $hydrationMode = null)
     {
         if (!$this->getExecuted()) {
             $this->_initialize($params);
         }
-
+        
         return $this->getQuery()->execute($params, $hydrationMode);
     }
 }

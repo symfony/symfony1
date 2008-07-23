@@ -142,7 +142,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * @param integer $fetchmode  One of the Doctrine::HYDRATE_* constants.
      * @return mixed          The tree or FALSE if the tree could not be found.
      */
-    public function fetchTree($options = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
+    public function fetchTree($options = array(), $hydrationMode = null)
     {
         // fetch tree
         $q = $this->getBaseQuery();
@@ -158,7 +158,13 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
             $q->addOrderBy($this->_baseAlias . ".lft ASC");
         }
 
-        $q = $this->returnQueryWithRootId($q, $rootId)->setHydrationMode($hydrationMode);
+        $q = $this->returnQueryWithRootId($q, $rootId);
+
+        // FIX: Reported in ticket #1268
+        if ($hydrationMode !== null) {
+            $q = $q->setHydrationMode($hydrationMode);
+        }
+
         $tree = $q->execute();
 
         if (count($tree) <= 0) {
@@ -177,7 +183,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * @return mixed                 The branch or FALSE if the branch could not be found.
      * @todo Only fetch the lft and rgt values of the initial record. more is not needed.
      */
-    public function fetchBranch($pk, $options = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
+    public function fetchBranch($pk, $options = array(), $hydrationMode = null)
     {
         $record = $this->table->find($pk);
         if ( ! ($record instanceof Doctrine_Record) || !$record->exists()) {
@@ -190,8 +196,13 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         $params = array($record->get('lft'), $record->get('rgt'));
         $q->addWhere($this->_baseAlias . ".lft >= ? AND " . $this->_baseAlias . ".rgt <= ?", $params)
                 ->addOrderBy($this->_baseAlias . ".lft asc");
-        $q = $this->returnQueryWithRootId($q, $record->getNode()->getRootValue())
-            ->setHydrationMode($hydrationMode);
+        $q = $this->returnQueryWithRootId($q, $record->getNode()->getRootValue());
+        
+        // FIX: Reported in ticket #1268
+        if ($hydrationMode !== null) {
+            $q = $q->setHydrationMode($hydrationMode);
+        }
+
         return $q->execute();
     }
 
