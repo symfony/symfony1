@@ -18,6 +18,9 @@
  */
 class sfFormField
 {
+  protected static
+    $toStringException = null;
+  
   protected
     $widget = null,
     $parent = null,
@@ -50,7 +53,56 @@ class sfFormField
    */
   public function __toString()
   {
-    return $this->render();
+    try
+    {
+      return $this->render();
+    }
+    catch (Exception $e)
+    {
+      self::setToStringException($e);
+
+      // we return a simple Exception message in case the form framework is used out of symfony.
+      return 'Exception: '.$e->getMessage();
+    }
+  }
+  
+  /**
+   * Returns true if a form thrown an exception in the __toString() method
+   *
+   * This is a hack needed because PHP does not allow to throw exceptions in __toString() magic method.
+   *
+   * @return boolean
+   */
+  static public function hasToStringException()
+  {
+    return !is_null(self::$toStringException);
+  }
+
+  /**
+   * Gets the exception if one was thrown in the __toString() method.
+   *
+   * This is a hack needed because PHP does not allow to throw exceptions in __toString() magic method.
+   *
+   * @return Exception
+   */
+  static public function getToStringException()
+  {
+    return self::$toStringException;
+  }
+  
+  /**
+   * Sets an exception thrown by the __toString() method.
+   *
+   * This is a hack needed because PHP does not allow to throw exceptions in __toString() magic method.
+   *
+   * @param Exception $e The exception thrown by __toString()
+   */
+  static public function setToStringException(Exception $e)
+  {
+    if (is_null(self::$toStringException))
+    {
+      self::$toStringException = $e;
+    }
   }
 
   /**

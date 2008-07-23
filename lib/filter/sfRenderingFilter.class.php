@@ -40,10 +40,14 @@ class sfRenderingFilter extends sfFilter
     // get response object
     $response = $this->context->getResponse();
 
-    // hack to rethrow sfForm __toString() exception (see sfForm)
+    // hack to rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
     if (sfForm::hasToStringException())
     {
       throw sfForm::getToStringException();
+    }
+    else if (sfFormField::hasToStringException())
+    {
+      throw sfFormField::getToStringException();
     }
 
     // send headers + content
