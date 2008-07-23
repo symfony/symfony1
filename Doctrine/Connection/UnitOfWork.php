@@ -51,11 +51,11 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $conn = $this->getConnection();
 
         $state = $record->state();
-        if ($state === Doctrine_Record::STATE_LOCKED) {
+        if ($state === Doctrine_Record::STATE_LOCKED || $state === Doctrine_Record::STATE_TLOCKED) {
             return false;
         }
 
-        $record->state(Doctrine_Record::STATE_LOCKED);
+        $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
         $conn->beginInternalTransaction();
         $saveLater = $this->saveRelated($record);
@@ -96,7 +96,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         $state = $record->state();
 
-        $record->state(Doctrine_Record::STATE_LOCKED);
+        $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
         foreach ($saveLater as $fk) {
             $alias = $fk->getAlias();

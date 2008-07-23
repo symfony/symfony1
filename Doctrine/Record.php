@@ -78,6 +78,16 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     const STATE_LOCKED     = 6;
 
+ 	/**
+ 	 * TLOCKED STATE
+ 	 * a Doctrine_Record is temporarily locked (and transient) during deletes and saves
+ 	 *
+ 	 * This state is used internally to ensure that circular deletes
+ 	 * and saves will not cause infinite loops
+ 	 */
+ 	const STATE_TLOCKED     = 7;
+
+
     /**
      * @var Doctrine_Node_<TreeImpl>        node object
      */
@@ -667,7 +677,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         
         $err = false;
         if (is_integer($state)) {
-            if ($state >= 1 && $state <= 6) {
+            if ($state >= 1 && $state <= 7) {
                 $this->_state = $state;
             } else {
                 $err = true;
@@ -1290,12 +1300,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function toArray($deep = true, $prefixKey = false)
     {
-        if ($this->_state == self::STATE_LOCKED) {
+        if ($this->_state == self::STATE_LOCKED || $this->_state == self::STATE_TLOCKED) {
             return false;
         }
         
         $stateBeforeLock = $this->_state;
-        $this->_state = self::STATE_LOCKED;
+        $this->_state = $this->exists() ? self::STATE_LOCKED : self::STATE_TLOCKED;
         
         $a = array();
 
@@ -1464,7 +1474,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function exists()
     {
         return ($this->_state !== Doctrine_Record::STATE_TCLEAN &&
-                $this->_state !== Doctrine_Record::STATE_TDIRTY);
+                $this->_state !== Doctrine_Record::STATE_TDIRTY &&
+                $this->_state !== Doctrine_Record::STATE_TLOCKED);
     }
 
     /**
@@ -1924,8 +1935,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function free($deep = false)
     {
-        if ($this->_state != self::STATE_LOCKED) {
-            $this->_state = self::STATE_LOCKED;
+        if ($this->_state != self::STATE_LOCKED && $this->_state != self::STATE_TLOCKED) {
+            $this->_state = $this->exists() ? self::STATE_LOCKED : self::STATE_TLOCKED;
 
             $this->_table->getRepository()->evict($this->_oid);
             $this->_table->removeRecord($this);
