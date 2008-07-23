@@ -83,6 +83,12 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
     $objects = call_user_func(array($class, 'doSelect'), $criteria, $this->getOption('connection'));
 
     $method = $this->getOption('method');
+    
+    if (!method_exists($this->getOption('model'), $method))
+    {
+      throw new RuntimeException(sprintf('Class "%s" must implement a "%s" method to be rendered in a "%s" widget', $this->getOption('model'), $method, __CLASS__));
+    }
+    
     foreach ($objects as $object)
     {
       $choices[$object->getPrimaryKey()] = $object->$method();
