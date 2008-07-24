@@ -1544,25 +1544,31 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
                     $assocPath = $prevPath . '.' . $asf->getComponentName();
 
-                    $this->_queryComponents[$assocPath] = array('parent' => $prevPath, 'relation' => $relation, 'table' => $asf);
+                    $this->_queryComponents[$assocPath] = array(
+                        'parent' => $prevPath, 
+                        'relation' => $relation,
+                        'table' => $asf
+                    );
 
                     $assocAlias = $this->getTableAlias($assocPath, $asf->getTableName());
 
-                    $queryPart = $join . $assocTableName . ' ' . $assocAlias;
+                    $queryPart = $join . $this->_conn->quoteIdentifier($assocTableName) 
+                               . ' ' . $this->_conn->quoteIdentifier($assocAlias);
 
-                    $queryPart .= ' ON ' . $localAlias
-                                . '.'
-                                . $localTable->getColumnName($localTable->getIdentifier()) // what about composite keys?
+                    $queryPart .= ' ON '
+                                . $this->_conn->quoteIdentifier($localAlias . '.'
+                                // what about composite keys?
+                                . $localTable->getColumnName($localTable->getIdentifier()))
                                 . ' = '
-                                . $assocAlias . '.' . $relation->getLocal();
+                                . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocal());
 
                     if ($relation->isEqual()) {
                         // equal nest relation needs additional condition
-                        $queryPart .= ' OR ' . $localAlias
-                                    . '.'
-                                    . $table->getColumnName($table->getIdentifier())
+                        $queryPart .= ' OR '
+                                    . $this->_conn->quoteIdentifier($localAlias . '.'
+                                    . $table->getColumnName($table->getIdentifier()))
                                     . ' = '
-                                    . $assocAlias . '.' . $relation->getForeign();
+                                    . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeign());
                     }
 
                     $this->_sqlParts['from'][] = $queryPart;

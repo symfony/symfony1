@@ -139,7 +139,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                     }
                 default:
                     $leftExpr = (($hasLeftAggExpression) ? $leftMatches[1] . '(' : '') 
-                              . $alias . '.' . $field
+                              . $conn->quoteIdentifier($alias . '.' . $field)
                               . (($hasLeftAggExpression) ? $leftMatches[3] . ')' : '') ;
 
                     $rightExpr = (($hasRightAggExpression) ? $rightMatches[1] . '(' : '') 
