@@ -115,6 +115,7 @@ class Doctrine_Import_Schema
                                                           'foreignAlias',
                                                           'foreignType',
                                                           'autoComplete',
+                                                          'cascade',
                                                           'onDelete',
                                                           'onUpdate',
                                                           'equal',
