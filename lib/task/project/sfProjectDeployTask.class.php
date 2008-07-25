@@ -30,6 +30,7 @@ class sfProjectDeployTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('go', null, sfCommandOption::PARAMETER_NONE, 'Do the deployment'),
       new sfCommandOption('rsync-dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory where to look for rsync*.txt files', 'config'),
+      new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', 'azC'),
     ));
 
     $this->aliases = array('sync');
@@ -74,6 +75,11 @@ If you need to customize the [rsync*.txt|COMMENT] files based on the server,
 you can pass a [rsync-dir|COMMENT] option:
 
   [./symfony project:deploy --go --rsync-dir=config/production production|INFO]
+
+Last, you can specify the options passed to the rsync executable, using the 
+[rsync-options|INFO] option (defaults are [-azC|INFO]):
+
+  [./symfony project:deploy --go --rsync-options=avz|INFO]
 EOF;
   }
 
@@ -132,7 +138,7 @@ EOF;
     }
     else
     {
-      $parameters = '-azC --force --delete';
+      $parameters = sprintf('-%s --force --delete', $options['rsync-options']);
       if (file_exists($options['rsync-dir'].'/rsync_exclude.txt'))
       {
         $parameters .= sprintf(' --exclude-from=%s/rsync_exclude.txt', $options['rsync-dir']);
