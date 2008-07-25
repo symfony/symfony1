@@ -44,7 +44,7 @@ The [project:deploy|INFO] task deploys a project on a server:
 
 The server must be configured in [config/properties.ini|COMMENT]:
 
-  [production]
+  [[production]
     host=www.example.com
     port=22
     user=fabien
