@@ -221,11 +221,15 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
         
         $q = 'SELECT ';
-        if($this->_sqlParts['distinct'] == true) $q .= 'DISTINCT ';
+
+        if ($this->_sqlParts['distinct'] == true) {
+            $q .= 'DISTINCT ';
+        }
 
         // first add the fields of the root component
         reset($this->_queryComponents);
         $componentAlias = key($this->_queryComponents);
+        
         $q .= implode(', ', $select[$componentAlias]);
         unset($select[$componentAlias]);
 
@@ -236,6 +240,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
 
         $string = $this->getInheritanceCondition($this->getRootAlias());
+
         if ( ! empty($string)) {
             $this->_sqlParts['where'][] = $string;
         }
