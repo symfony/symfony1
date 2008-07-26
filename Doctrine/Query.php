@@ -1175,7 +1175,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                         break;
                     case 'pgsql':
                         // pgsql needs special nested LIMIT subquery
-                        $subquery = 'SELECT doctrine_subquery_alias.' . $idColumnName . ' FROM (' . $subquery . ') AS doctrine_subquery_alias';
+                        $subquery = 'SELECT '
+                            . $this->_conn->quoteIdentifier('doctrine_subquery_alias.' . $idColumnName)
+                            . ' FROM (' . $subquery . ') AS '
+                            . $this->_conn->quoteIdentifier('doctrine_subquery_alias');
                         break;
                 }
 
@@ -1520,7 +1523,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                    $this->_needsSubquery = true;
                 }
 
-                $localAlias   = $this->getTableAlias($parent, $table->getTableName());
+                $localAlias   = $this->getTableAlias($parent, $localTable->getTableName());
                 $foreignAlias = $this->getTableAlias($componentAlias, $relation->getTable()->getTableName());
 
                 $foreignSql   = $this->_conn->quoteIdentifier($relation->getTable()->getTableName())

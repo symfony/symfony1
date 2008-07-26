@@ -149,8 +149,11 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                     $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
             }
 
+            return $condition;
         }
+        
+        $parser = new Doctrine_Query_Where($this->query, $this->_tokenizer);
 
-        return $condition;
+        return $parser->parse($condition);
     }
 }
