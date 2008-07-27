@@ -71,6 +71,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             if ( ! $event->skipOperation) {
                 switch ($state) {
                     case Doctrine_Record::STATE_TDIRTY:
+                    case Doctrine_Record::STATE_TCLEAN:
                         $this->insert($record);
                         break;
                     case Doctrine_Record::STATE_DIRTY:
@@ -78,7 +79,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         $this->update($record);
                         break;
                     case Doctrine_Record::STATE_CLEAN:
-                    case Doctrine_Record::STATE_TCLEAN:
+                        // do nothing
                         break;
                 }
             }
@@ -138,6 +139,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         if ( ! $event->skipOperation) {
             switch ($record->state()) {
                 case Doctrine_Record::STATE_TDIRTY:
+                case Doctrine_Record::STATE_TCLEAN:
                     $this->insert($record);
                     break;
                 case Doctrine_Record::STATE_DIRTY:
@@ -145,7 +147,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     $this->update($record);
                     break;
                 case Doctrine_Record::STATE_CLEAN:
-                case Doctrine_Record::STATE_TCLEAN:
                     // do nothing
                     break;
             }

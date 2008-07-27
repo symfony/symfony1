@@ -2089,7 +2089,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     || $name == 'fixed') {
                 continue;
             }
-            if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])) {
+            if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])
+                    && $this->_columns[$columnName]['autoincrement'] === true) {
                 continue;
             }
             // skip it if it's explicitly set to FALSE (i.e. notnull => false)

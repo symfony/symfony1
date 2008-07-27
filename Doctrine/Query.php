@@ -1162,8 +1162,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $modifyLimit = true;
-        if ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) {
-            if ($needsSubQuery) {
+        if ( ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) && $needsSubQuery) {
                 $subquery = $this->getLimitSubquery();
                 // what about composite keys?
                 $idColumnName = $table->getColumnName($table->getIdentifier());
@@ -1176,9 +1175,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     case 'pgsql':
                         // pgsql needs special nested LIMIT subquery
                         $subquery = 'SELECT '
-                            . $this->_conn->quoteIdentifier('doctrine_subquery_alias.' . $idColumnName)
-                            . ' FROM (' . $subquery . ') AS '
-                            . $this->_conn->quoteIdentifier('doctrine_subquery_alias');
+                                . $this->_conn->quoteIdentifier('doctrine_subquery_alias.' . $idColumnName)
+                                . ' FROM (' . $subquery . ') AS doctrine_subquery_alias';
                         break;
                 }
 
@@ -1190,7 +1188,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 }
 
                 $modifyLimit = false;
-            }
         }
 
         $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where']) : '';
@@ -1236,13 +1233,20 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // what about composite keys?
         $primaryKey = $alias . '.' . $table->getColumnName($table->getIdentifier());
 
-        // initialize the base of the subquery
-        $subquery = 'SELECT DISTINCT ' . $this->_conn->quoteIdentifier($primaryKey);
-
         $driverName = $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME);
 
-        // pgsql needs the order by fields to be preserved in select clause
-        if ($driverName == 'pgsql') {
+        // initialize the base of the subquery
+        if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
+            $subquery = 'SELECT ';
+        } else {
+            $subquery = 'SELECT DISTINCT ';
+        }
+        $subquery .= $this->_conn->quoteIdentifier($primaryKey);
+        //var_dump($this->_isOrderedByJoinedColumn());
+        //echo $this->getDql();
+
+        // pgsql & oracle need the order by fields to be preserved in select clause
+        if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
             foreach ($this->_sqlParts['orderby'] as $part) {
                 $part = trim($part);
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
@@ -1291,8 +1295,19 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $subquery .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where'])  : '';
         $subquery .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])   : '';
         $subquery .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
-
         $subquery .= ( ! empty($this->_sqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])   : '';
+
+        if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
+            // When using "ORDER BY x.foo" where x.foo is a column of a joined table,
+            // we may get duplicate primary keys because all columns in ORDER BY must appear
+            // in the SELECT list when using DISTINCT. Hence we need to filter out the 
+            // primary keys with an additional DISTINCT subquery.
+            // #1038
+            $subquery = 'SELECT doctrine_subquery_alias.' . $table->getColumnName($table->getIdentifier())
+                    . ' FROM (' . $subquery . ') doctrine_subquery_alias'
+                    . ' GROUP BY doctrine_subquery_alias.' . $table->getColumnName($table->getIdentifier())
+                    . ' ORDER BY MIN(ROWNUM)';
+        }
 
         // add driver specific limit clause
         $subquery = $this->_conn->modifyLimitSubquery($table, $subquery, $this->_sqlParts['limit'], $this->_sqlParts['offset']);
@@ -1364,6 +1379,35 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $subquery = implode(' ', $parts);
         return $subquery;
+    }
+    
+    /**
+     * Checks whether the query has an ORDER BY on a column of a joined table.
+     * This information is needed in special scenarios like the limit-offset when its
+     * used with an Oracle database.
+     *
+     * @return boolean  TRUE if the query is ordered by a joined column, FALSE otherwise.
+     */
+    private function _isOrderedByJoinedColumn() {
+        if ( ! $this->_queryComponents) {
+            throw new Doctrine_Query_Exception("The query is in an invalid state for this "
+                    . "operation. It must have been fully parsed first.");
+        }
+        $componentAlias = key($this->_queryComponents);
+        $mainTableAlias = $this->getTableAlias($componentAlias);
+        foreach ($this->_sqlParts['orderby'] as $part) {
+            $part = trim($part);
+            $e = $this->_tokenizer->bracketExplode($part, ' ');
+            $part = trim($e[0]);
+            if (strpos($part, '.') === false) {
+                continue;
+            }
+            list($tableAlias, $columnName) = explode('.', $part);
+            if ($tableAlias != $mainTableAlias) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1514,7 +1558,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $relation = $table->getRelation($name);
                 $localTable = $table;
 
-                $table    = $relation->getTable();
+                $table = $relation->getTable();
                 $this->_queryComponents[$componentAlias] = array('table' => $table,
                                                                  'parent'   => $parent,
                                                                  'relation' => $relation,
@@ -1548,27 +1592,28 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     $assocPath = $prevPath . '.' . $asf->getComponentName();
 
                     $this->_queryComponents[$assocPath] = array(
-                        'parent' => $prevPath, 
+                        'parent' => $prevPath,
                         'relation' => $relation,
-                        'table' => $asf
-                    );
+                        'table' => $asf);
 
                     $assocAlias = $this->getTableAlias($assocPath, $asf->getTableName());
 
-                    $queryPart = $join . $this->_conn->quoteIdentifier($assocTableName) 
-                               . ' ' . $this->_conn->quoteIdentifier($assocAlias);
+                    $queryPart = $join
+                            . $this->_conn->quoteIdentifier($assocTableName)
+                            . ' '
+                            . $this->_conn->quoteIdentifier($assocAlias);
 
-                    $queryPart .= ' ON '
-                                . $this->_conn->quoteIdentifier($localAlias . '.'
-                                // what about composite keys?
-                                . $localTable->getColumnName($localTable->getIdentifier()))
+                    $queryPart .= ' ON ' . $this->_conn->quoteIdentifier($localAlias
+                                . '.'
+                                . $localTable->getColumnName($localTable->getIdentifier())) // what about composite keys?
                                 . ' = '
                                 . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocal());
 
                     if ($relation->isEqual()) {
                         // equal nest relation needs additional condition
                         $queryPart .= ' OR '
-                                    . $this->_conn->quoteIdentifier($localAlias . '.'
+                                    . $this->_conn->quoteIdentifier($localAlias
+                                    . '.'
                                     . $table->getColumnName($table->getIdentifier()))
                                     . ' = '
                                     . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeign());
