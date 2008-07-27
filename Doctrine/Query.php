@@ -1242,8 +1242,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $subquery = 'SELECT DISTINCT ';
         }
         $subquery .= $this->_conn->quoteIdentifier($primaryKey);
-        //var_dump($this->_isOrderedByJoinedColumn());
-        //echo $this->getDql();
 
         // pgsql & oracle need the order by fields to be preserved in select clause
         if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
