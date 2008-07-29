@@ -404,6 +404,10 @@ $b->
 $b->launch();
 
 // test with sfSQLiteCache class
-sfConfig::set('sf_factory_view_cache', 'sfSQLiteCache');
-sfConfig::set('sf_factory_view_cache_parameters', array('database' => sfConfig::get('sf_template_cache_dir').DIRECTORY_SEPARATOR.'cache.db'));
-$b->launch();
+if (extension_loaded('SQLite')) 
+{
+  sfConfig::set('sf_factory_view_cache', 'sfSQLiteCache');
+  sfConfig::set('sf_factory_view_cache_parameters', array('database' => sfConfig::get('sf_template_cache_dir').DIRECTORY_SEPARATOR.'cache.db'));
+  $b->launch();
+}
+
