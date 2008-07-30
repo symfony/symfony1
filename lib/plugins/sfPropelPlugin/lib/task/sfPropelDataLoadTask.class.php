@@ -70,6 +70,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    
     if (count($options['dir']))
     {
       $fixturesDirs = $options['dir'];
@@ -82,8 +84,6 @@ EOF;
       }
       $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
     }
-
-    $databaseManager = new sfDatabaseManager($this->configuration);
 
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);

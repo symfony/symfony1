@@ -72,6 +72,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $this->constants = array(
@@ -81,7 +83,7 @@ EOF;
       'MODEL_CLASS'  => $arguments['model'],
       'AUTHOR_NAME'  => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
     );
-
+    
     $method = $options['generate-in-cache'] ? 'executeInit' : 'executeGenerate';
 
     $this->$method($arguments, $options);
