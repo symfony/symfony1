@@ -62,8 +62,6 @@ EOF;
   {
     $this->logSection('propel', 'generating form classes');
     
-    $databaseManager = new sfDatabaseManager($this->configuration);
-
     $generatorManager = new sfGeneratorManager($this->configuration);
 
     $generatorManager->generate('sfPropelFormGenerator', array(
