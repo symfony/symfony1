@@ -57,67 +57,74 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
-        $conn->beginInternalTransaction();
-        $saveLater = $this->saveRelated($record);
+        try {
+            $conn->beginInternalTransaction();
+            $saveLater = $this->saveRelated($record);
 
-        $record->state($state);
+            $record->state($state);
 
-        if ($record->isValid()) {
-            $event = new Doctrine_Event($record, Doctrine_Event::RECORD_SAVE);
-            $record->preSave($event);
-            $record->getTable()->getRecordListener()->preSave($event);
+            if ($record->isValid()) {
+                $event = new Doctrine_Event($record, Doctrine_Event::RECORD_SAVE);
+                $record->preSave($event);
+                $record->getTable()->getRecordListener()->preSave($event);
+                $state = $record->state();
+
+                if ( ! $event->skipOperation) {
+                    switch ($state) {
+                        case Doctrine_Record::STATE_TDIRTY:
+                        case Doctrine_Record::STATE_TCLEAN:
+                            $this->insert($record);
+                            break;
+                        case Doctrine_Record::STATE_DIRTY:
+                        case Doctrine_Record::STATE_PROXY:
+                            $this->update($record);
+                            break;
+                        case Doctrine_Record::STATE_CLEAN:
+                            // do nothing
+                            break;
+                    }
+                }
+
+                // NOTE: what about referential integrity issues?
+                foreach ($record->getPendingDeletes() as $pendingDelete) {
+                    $pendingDelete->delete();
+                }
+
+                $record->getTable()->getRecordListener()->postSave($event);
+                $record->postSave($event);
+            } else {
+                $conn->transaction->addInvalid($record);
+            }
+
             $state = $record->state();
-            
-            if ( ! $event->skipOperation) {
-                switch ($state) {
-                    case Doctrine_Record::STATE_TDIRTY:
-                    case Doctrine_Record::STATE_TCLEAN:
-                        $this->insert($record);
-                        break;
-                    case Doctrine_Record::STATE_DIRTY:
-                    case Doctrine_Record::STATE_PROXY:
-                        $this->update($record);
-                        break;
-                    case Doctrine_Record::STATE_CLEAN:
-                        // do nothing
-                        break;
+
+            $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
+
+            foreach ($saveLater as $fk) {
+                $alias = $fk->getAlias();
+
+                if ($record->hasReference($alias)) {
+                    $obj = $record->$alias;
+
+                    // check that the related object is not an instance of Doctrine_Null
+                    if ( ! ($obj instanceof Doctrine_Null)) {
+                        $obj->save($conn);
+                    }
                 }
             }
 
-            // NOTE: what about referential integrity issues?
-            foreach ($record->getPendingDeletes() as $pendingDelete) {
-                $pendingDelete->delete();
-            }
+            // save the MANY-TO-MANY associations
+            $this->saveAssociations($record);
 
-            $record->getTable()->getRecordListener()->postSave($event);
-            $record->postSave($event);
-        } else {
-            $conn->transaction->addInvalid($record);
+            $record->state($state);
+
+            $conn->commit();
+        } catch (Exception $e) {
+            // Make sure we roll back our internal transaction
+            //$record->state($state);
+            $conn->rollback();
+            throw $e;
         }
-
-        $state = $record->state();
-
-        $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
-
-        foreach ($saveLater as $fk) {
-            $alias = $fk->getAlias();
-
-            if ($record->hasReference($alias)) {
-                $obj = $record->$alias;
-
-                // check that the related object is not an instance of Doctrine_Null
-                if ( ! ($obj instanceof Doctrine_Null)) {
-                    $obj->save($conn);
-                }
-            }
-        }
-
-        // save the MANY-TO-MANY associations
-        $this->saveAssociations($record);
-
-        $record->state($state);
-
-        $conn->commit();
 
         return true;
     }

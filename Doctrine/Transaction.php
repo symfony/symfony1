@@ -222,7 +222,6 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
     }
 
     /**
-     * commit
      * Commit the database changes done during a transaction that is in
      * progress or release a savepoint. This function may only be called when
      * auto-committing is disabled, otherwise it will fail.
@@ -261,9 +260,6 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
             if ($this->_nestingLevel == 1 || $this->_internalNestingLevel == 1) {
                 if ( ! empty($this->invalid)) {
                     if ($this->_internalNestingLevel == 1) {
-                        // transaction was started by doctrine, so we are responsible
-                        // for a rollback
-                        $this->rollback();
                         $tmp = $this->invalid;
                         $this->invalid = array();
                         throw new Doctrine_Validator_Exception($tmp);
@@ -325,8 +321,11 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
         
         $this->conn->connect();
 
-        if ($this->_internalNestingLevel > 1 || $this->_nestingLevel > 1) {
+        if ($this->_internalNestingLevel >= 1 && $this->_nestingLevel > 1) {
             $this->_internalNestingLevel--;
+            $this->_nestingLevel--;
+            return false;
+        } else if ($this->_nestingLevel > 1) {
             $this->_nestingLevel--;
             return false;
         }

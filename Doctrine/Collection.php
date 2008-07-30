@@ -809,17 +809,22 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             $conn = $this->_table->getConnection();
         }
         
-        $conn->beginInternalTransaction();
+        try {
+            $conn->beginInternalTransaction();
 
-        $conn->transaction->addCollection($this);
+            $conn->transaction->addCollection($this);
 
-        $this->processDiff();
+            $this->processDiff();
 
-        foreach ($this->getData() as $key => $record) {
-            $record->save($conn);
+            foreach ($this->getData() as $key => $record) {
+                $record->save($conn);
+            }
+
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
         }
-
-        $conn->commit();
 
         return $this;
     }
@@ -834,15 +839,20 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         if ($conn == null) {
             $conn = $this->_table->getConnection();
         }
+        
+        try {
+            $conn->beginInternalTransaction();
+            $conn->transaction->addCollection($this);
 
-        $conn->beginInternalTransaction();
-        $conn->transaction->addCollection($this);
+            foreach ($this as $key => $record) {
+                $record->delete($conn);
+            }
 
-        foreach ($this as $key => $record) {
-            $record->delete($conn);
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
         }
-
-        $conn->commit();
         
         if ($clearColl) {
             $this->clear();

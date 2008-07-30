@@ -1209,9 +1209,14 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function flush()
     {
-        $this->beginInternalTransaction();
-        $this->unitOfWork->saveAll();
-        $this->commit();
+        try {
+            $this->beginInternalTransaction();
+            $this->unitOfWork->saveAll();
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
     }
 
     /**
