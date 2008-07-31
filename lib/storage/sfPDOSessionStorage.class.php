@@ -190,8 +190,8 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
     try
     {
       $stmt = $this->db->prepare($sql);
-      $stmt->bindParam(1, $currentId, PDO::PARAM_STR);
-      $stmt->bindParam(2, $newId, PDO::PARAM_STR);
+      $stmt->bindParam(1, $newId, PDO::PARAM_STR);
+      $stmt->bindParam(2, $currentId, PDO::PARAM_STR);
       $stmt->execute();
     }
     catch (PDOException $e)
