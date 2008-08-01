@@ -40,7 +40,7 @@ class sfYamlDumper
     }
     else
     {
-      $isAHash = count(array_diff_key($input, array_fill(0, count($input), true)));
+      $isAHash = array_keys($input) !== range(0, count($input) - 1);
 
       foreach ($input as $key => $value)
       {
