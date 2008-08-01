@@ -558,7 +558,10 @@ class sfPatternRouting extends sfRouting
 
     // replace variables
     $realUrl = $url;
-    foreach ($variables as $variable => $value)
+
+    $tmp = $variables;
+    uasort($tmp, create_function('$a, $b', 'return strlen($a) < strlen($b);'));
+    foreach ($tmp as $variable => $value)
     {
       $realUrl = str_replace($value, urlencode($tparams[$variable]), $realUrl);
     }

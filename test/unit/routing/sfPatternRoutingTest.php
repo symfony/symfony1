@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(135, new lime_output_color());
+$t = new lime_test(136, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -536,3 +536,7 @@ $t->is($r->parse($url), $params, 'parse /:module/:action route');
 $url = '/customer/param1/action';
 $params = array('module' => 'default', 'action' => 'action', 'param1' => 'param1');
 $t->is($r->parse($url), $params, 'parse /customer/:param1/:action/* route');
+
+$r->clearRoutes();
+$r->connect('test', '/customer/:id/:id_name', array('module' => 'default'));
+$t->is($r->generate('', array('id' => 2, 'id_name' => 'fabien')), '/customer/2/fabien', '->generate() first replaces the longest variable names');
