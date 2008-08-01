@@ -66,7 +66,7 @@ EOF;
     {
       $content = file_get_contents($controller);
 
-      if (preg_match('/new (.*?)Configuration\(\'(.*?)\'/', $content, $match))
+      if (preg_match('/ProjectConfiguration::getApplicationConfiguration\(\'(.*?)\', \'(.*?)\'/', $content, $match))
       {
         // Remove file if it has found an application and the environment is not production
         if ($match[2] != 'prod')
