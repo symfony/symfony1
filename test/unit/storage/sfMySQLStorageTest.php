@@ -12,7 +12,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 ob_start();
-$plan = 12;
+$plan = 16;
 $t = new lime_test($plan, new lime_output_color());
 
 if (!extension_loaded('mysql'))
@@ -71,24 +71,33 @@ $t->ok($storage instanceof sfStorage, 'sfMySQLSessionStorage is an instance of s
 $t->ok($storage instanceof sfDatabaseSessionStorage, 'sfMySQLSessionStorage is an instance of sfDatabaseSessionStorage');
 
 // regenerate()
+$oldSessionData = 'foo:bar';
+$storage->sessionWrite($session_id, $oldSessionData);
 $storage->regenerate(false);
-$t->isnt(session_id(), $session_id, 'regenerate() regenerated the session id');
+
+$newSessionData = 'foo:bar:baz';
+$storage->sessionWrite(session_id(), $newSessionData);
+$t->isnt(session_id(), $session_id, 'regenerate() regenerated the session with a different session id');
+
+// checking if the old session record still exists
+$result = mysql_query(sprintf('SELECT sess_data FROM session WHERE sess_id = "%s"', $session_id), $connection);
+$t->is(mysql_num_rows($result), 1, 'regenerate() has kept destroyed old session');
+$rSessionData = list($thisSessData) = mysql_fetch_row($result);
+$t->is($rSessionData[0], $oldSessionData, 'regenerate() has kept destroyed old session data');
+
+// checking if the new session record has been created
+$result = mysql_query(sprintf('SELECT sess_data FROM session WHERE sess_id = "%s"', session_id()), $connection);
+$t->is(mysql_num_rows($result), 1, 'regenerate() has created a new session record');
+$rSessionData = list($thisSessData) = mysql_fetch_row($result);
+$t->is($rSessionData[0], $newSessionData, 'regenerate() has created a new record with correct data');
+
 $session_id = session_id();
-
-// do some session operations
-$_SESSION['foo'] = 'bar';
-$_SESSION['bar'] = 'foo';
-unset($_SESSION['foo']);
-$session_data = session_encode();
-
-// end of session
-session_write_close();
 
 // check session data in the database
 $result = mysql_query(sprintf('SELECT sess_data FROM session WHERE sess_id = "%s"', $session_id), $connection);
 list($thisSessData) = mysql_fetch_row($result);
 $t->is(mysql_num_rows($result), 1, 'session is stored in the database');
-$t->is($thisSessData, $session_data, 'session variables are stored in the database');
+$t->is($thisSessData, $newSessionData, 'session variables are stored in the database');
 
 mysql_free_result($result);
 unset($thisSessData, $result);
@@ -103,14 +112,13 @@ catch (Exception $e)
 {
   $t->fail('sessionRead() does not throw an exception');
 }
-$t->is($retrieved_data, $session_data, 'sessionRead() reads session data');
+$t->is($retrieved_data, $newSessionData, 'sessionRead() reads session data');
 
 // sessionWrite()
-$_SESSION['baz'] = 'woo';
-$session_data = session_encode();
+$otherSessionData = 'foo:foo:foo';
 try
 {
-  $write = $storage->sessionWrite($session_id, $session_data);
+  $write = $storage->sessionWrite($session_id, $otherSessionData);
   $t->pass('sessionWrite() does not throw an exception');
 }
 catch (Exception $e)
@@ -119,7 +127,7 @@ catch (Exception $e)
 }
 
 $t->ok($write, 'sessionWrite() returns true');
-$t->is($storage->sessionRead($session_id), $session_data, 'sessionWrite() wrote session data');
+$t->is($storage->sessionRead($session_id), $otherSessionData, 'sessionWrite() wrote session data');
 
 // sessionDestroy()
 try
@@ -139,13 +147,3 @@ $t->is($count, 0, 'session is removed from the database');
 
 mysql_free_result($result);
 unset($count, $result);
-
-mysql_query('DROP DATABASE sf_mysql_storage_unit_test', $connection);
-
-// shutdown the storage
-$storage->shutdown();
-
-// shutdown the database
-$database->shutdown();
-
-unset($mysql_config);

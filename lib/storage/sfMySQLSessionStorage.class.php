@@ -161,37 +161,6 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   }
 
   /**
-   * Updates the session id.
-   *
-   * @param  string   $currentId The current session id
-   * @param  string   $newId     The new current id
-   * 
-   * @return Boolean  True if the session id was successfully regenerated
-   * @throws sfDatabaseException if an error occured while regenrating the session id
-   */
-  protected function updateSessionId($currentId, $newId)
-  {
-    // get table/column
-    $db_table    = $this->options['db_table'];
-    $db_id_col   = $this->options['db_id_col'];
-
-    // cleanup the session ids, just in case
-    $newId     = $this->db_escape($newId);
-    $currentId = $this->db_escape($currentId);
-
-    // update the session id
-    $sql = "UPDATE $db_table SET $db_id_col='$newId' WHERE $db_id_col='$currentId'";
-
-    if ($this->db_query($sql))
-    {
-      return true;
-    }
-
-    // failed to write session data
-    throw new sfDatabaseException(sprintf('%s cannot update session id from "%s" to "%s" (%s).', get_class($this), $currentId, $newId, mysql_error()));
-  }
-
-  /**
    * Executes an SQL Query
    *
    * @param  string $query  The query to execute

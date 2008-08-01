@@ -176,20 +176,10 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     parent::regenerate($destroy);
 
     $newId = session_id();
+    $this->sessionRead($newId);
 
-    $this->updateSessionId($currentId, $newId);
+    return $this->sessionWrite($newId, $this->sessionRead($currentId));
   }
-
-  /**
-   * Updates the session id.
-   *
-   * @param  string   $currentId The current session id
-   * @param  string   $newId     The new current id
-   * 
-   * @return Boolean  True if the session id was successfully regenerated
-   * @throws sfDatabaseException if an error occured while regenrating the session id
-   */
-  abstract protected function updateSessionId($currentId, $newId);
 
   /**
    * Executes the shutdown procedure.

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 ob_start();
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(15, new lime_output_color());
 
 if (!extension_loaded('SQLite'))
 {
@@ -32,24 +32,27 @@ $t->ok($storage instanceof sfStorage, 'sfPDOSessionStorage is an instance of sfS
 $t->ok($storage instanceof sfDatabaseSessionStorage, 'sfPDOSessionStorage is an instance of sfDatabaseSessionStorage');
 
 // regenerate()
+$oldSessionData = 'foo:bar';
+$storage->sessionWrite($session_id, $oldSessionData);
 $storage->regenerate(false);
-$t->isnt(session_id(), $session_id, 'regenerate() regenerated the session id');
-$session_id = session_id();
 
-// do some session operations
-$_SESSION['foo'] = 'bar';
-$_SESSION['bar'] = 'foo';
-unset($_SESSION['foo']);
-$session_data = session_encode();
+$newSessionData = 'foo:bar:baz';
+$storage->sessionWrite(session_id(), $newSessionData);
+$t->isnt(session_id(), $session_id, 'regenerate() regenerated the session with a different session id');
 
-// end of session
-session_write_close();
-
-// check session data in the database
+// checking if the old session record still exists
 $result = $connection->query(sprintf('SELECT sess_id, sess_data FROM session WHERE sess_id = "%s"', $session_id));
 $data = $result->fetchAll();
-$t->is(count($data), 1, 'session is stored in the database');
-$t->is($data[0]['sess_data'], $session_data, 'session variables are stored in the database');
+$t->is(count($data), 1, 'regenerate() has kept destroyed old session');
+$t->is($data[0]['sess_data'], $oldSessionData, 'regenerate() has kept destroyed old session data');
+
+// checking if the new session record has been created
+$result = $connection->query(sprintf('SELECT sess_id, sess_data FROM session WHERE sess_id = "%s"', session_id()));
+$data = $result->fetchAll();
+$t->is(count($data), 1, 'regenerate() has created a new session record');
+$t->is($data[0]['sess_data'], $newSessionData, 'regenerate() has created a new record with correct data');
+
+$session_id = session_id();
 
 // sessionRead()
 try
@@ -61,14 +64,13 @@ catch (Exception $e)
 {
   $t->fail('sessionRead() does not throw an exception');
 }
-$t->is($retrieved_data, $session_data, 'sessionRead() reads session data');
+$t->is($retrieved_data, $newSessionData, 'sessionRead() reads session data');
 
 // sessionWrite()
-$_SESSION['baz'] = 'woo';
-$session_data = session_encode();
+$otherSessionData = 'foo:foo:foo';
 try
 {
-  $write = $storage->sessionWrite($session_id, $session_data);
+  $write = $storage->sessionWrite($session_id, $otherSessionData);
   $t->pass('sessionWrite() does not throw an exception');
 }
 catch (Exception $e)
@@ -77,7 +79,7 @@ catch (Exception $e)
 }
 
 $t->ok($write, 'sessionWrite() returns true');
-$t->is($storage->sessionRead($session_id), $session_data, 'sessionWrite() wrote session data');
+$t->is($storage->sessionRead($session_id), $otherSessionData, 'sessionWrite() wrote session data');
 
 // sessionGC()
 try
