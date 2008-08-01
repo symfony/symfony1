@@ -224,9 +224,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                         $prev[$parent][$relationAlias] = $element;
                     }
                 }
-                
-                $coll =& $prev[$parent][$relationAlias];
-                $this->_setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
+                if ($prev[$parent][$relationAlias] !== null) {
+                    $coll =& $prev[$parent][$relationAlias];
+                    $this->_setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
+                }
             }
         }
 

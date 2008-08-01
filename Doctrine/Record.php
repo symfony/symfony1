@@ -881,6 +881,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $rel = $this->_table->getRelation($fieldName);
                 $this->_references[$fieldName] = $rel->fetchRelatedFor($this);
             }
+            if ($this->_references[$fieldName] === self::$_null) {
+                return null;
+            }
             return $this->_references[$fieldName];
         } catch (Doctrine_Table_Exception $e) {
             foreach ($this->_table->getFilters() as $filter) {
