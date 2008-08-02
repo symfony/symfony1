@@ -467,7 +467,7 @@ class sfBrowser
 
   /**
    * Test for an uncaught exception.
-   * 
+   *
    * @return  boolean
    */
   public function checkCurrentExceptionIsEmpty()
@@ -640,9 +640,10 @@ class sfBrowser
         }
 
         // if no option is selected and if it is a simple select box, take the first option as the value
-        if (!$found && !$multiple)
+        $option = $xpath->query('descendant::option', $element)->item(0);
+        if (!$found && !$multiple && $option instanceof DOMElement)
         {
-          $value = $xpath->query('descendant::option', $element)->item(0)->getAttribute('value');
+          $value = $option->getAttribute('value');
         }
       }
 
