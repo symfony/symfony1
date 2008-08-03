@@ -7,5 +7,5 @@
 
 <?php endforeach; ?>
 <?php endif; ?>
-[symfony]     v. <?php echo sfConfig::get('sf_version') ?> (symfony-project.com)
+[symfony]     v. <?php echo SYMFONY_VERSION ?> (symfony-project.org)
 [PHP]         v. <?php echo PHP_VERSION ?> 
