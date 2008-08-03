@@ -59,11 +59,10 @@ abstract class sfRequest
   const HEAD = 7;
 
   protected
-    $errors          = array(),
     $dispatcher      = null,
     $method          = null,
+    $options         = array(),
     $parameterHolder = null,
-    $config          = null,
     $attributeHolder = null;
 
   /**
@@ -71,9 +70,9 @@ abstract class sfRequest
    *
    * @see initialize()
    */
-  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
   {
-    $this->initialize($dispatcher, $parameters, $attributes);
+    $this->initialize($dispatcher, $parameters, $attributes, $options);
   }
 
   /**
@@ -87,9 +86,16 @@ abstract class sfRequest
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
   {
     $this->dispatcher = $dispatcher;
+
+    $this->options = $options;
+
+    if (!isset($this->options['logging']))
+    {
+      $this->options['logging'] = false;
+    }
 
     // initialize parameter and attribute holders
     $this->parameterHolder = new sfParameterHolder();
@@ -125,53 +131,6 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieves an error message.
-   *
-   * @param  string $name  An error name
-   *
-   * @return string An error message, if the error exists, otherwise null
-   */
-  public function getError($name)
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return isset($this->errors[$name]) ? $this->errors[$name] : null;
-  }
-
-  /**
-   * Retrieves an array of error names.
-   *
-   * @return array An indexed array of error names
-   */
-  public function getErrorNames()
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return array_keys($this->errors);
-  }
-
-  /**
-   * Retrieves an array of errors.
-   *
-   * @return array An associative array of errors
-   */
-  public function getErrors()
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return $this->errors;
-  }
-
-  /**
    * Retrieves this request's method.
    *
    * @return int One of the following constants:
@@ -181,105 +140,6 @@ abstract class sfRequest
   public function getMethod()
   {
     return $this->method;
-  }
-
-  /**
-   * Indicates whether or not an error exists.
-   *
-   * @param  string $name  An error name
-   *
-   * @return bool true, if the error exists, otherwise false
-   */
-  public function hasError($name)
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return array_key_exists($name, $this->errors);
-  }
-
-  /**
-   * Indicates whether or not any errors exist.
-   *
-   * @return bool true, if any error exist, otherwise false
-   */
-  public function hasErrors()
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return count($this->errors) > 0;
-  }
-
-  /**
-   * Removes an error.
-   *
-   * @param  string $name  An error name
-   *
-   * @return string An error message, if the error was removed, otherwise null
-   */
-  public function removeError($name)
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    $retval = null;
-
-    if (isset($this->errors[$name]))
-    {
-      $retval = $this->errors[$name];
-
-      unset($this->errors[$name]);
-    }
-
-    return $retval;
-  }
-
-  /**
-   * Sets an error.
-   *
-   * @param string $name     An error name
-   * @param string $message  An error message
-   *
-   */
-  public function setError($name, $message)
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Error in form for parameter "%s" (with message "%s")', $name, $message))));
-    }
-
-    $this->errors[$name] = $message;
-  }
-
-  /**
-   * Sets an array of errors
-   *
-   * If an existing error name matches any of the keys in the supplied
-   * array, the associated message will be overridden.
-   *
-   * @param array $erros An associative array of errors and their associated messages
-   *
-   */
-  public function setErrors($errors)
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    $this->errors = array_merge($this->errors, $errors);
   }
 
   /**

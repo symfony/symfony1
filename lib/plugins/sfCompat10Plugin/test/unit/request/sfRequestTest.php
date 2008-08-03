@@ -10,8 +10,6 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-sfConfig::set('sf_compat_10', true);
-
 class myRequest extends sfRequest
 {
   public function getEventDispatcher()
@@ -23,6 +21,8 @@ class myRequest extends sfRequest
 $t = new lime_test(15, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
+$dispatcher->connect('request.method_not_found', array('sfRequestCompat10', 'call'));
+
 $request = new myRequest($dispatcher);
 
 // ->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames()
