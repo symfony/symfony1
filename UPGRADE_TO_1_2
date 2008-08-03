@@ -1,0 +1,47 @@
+Upgrade from 1.1 to 1.2
+=======================
+
+This document describes the changes made in symfony 1.2 and what need
+to be done to upgrade your symfony 1.1 projects.
+
+WARNING: symfony 1.2 is only compatible with PHP 5.2.
+
+How to upgrade?
+---------------
+
+To upgrade a project:
+
+  * If you don't use a SCM tool, please make a backup of your project.
+
+  * Launch the `project:upgrade1.2` task from your project directory
+    to perform an automatic upgrade:
+
+        $ ./symfony project:upgrade1.2
+
+    This task can be launched several times without any side effect. Each time
+    you upgrade to a new symfony 1.2 beta / RC or the final symfony 1.2, you
+    have to launch this task.
+
+The remaining sections explain the main changes made in symfony 1.2.
+
+Configuration
+-------------
+
+Request
+~~~~~~~
+
+The `path_info_array`, `path_info_key`, and `relative_url_root` settings have
+been moved from `settings.yml` to `factories.yml` (in the `param` section of the
+`request` factory configuration).
+
+This change removes the dependency between `sfRequest` and `sfConfig`.
+
+Response
+~~~~~~~~
+
+There is a new setting for the `response` factory: `send_http_headers`.
+This setting is `true` by default, except for the `test` environment where
+the headers must not be sent by PHP (the same goal was achieved by using
+the `sf_test` setting in symfony 1.1).
+
+This change removes the dependency between `sfResponse` and `sfConfig`.

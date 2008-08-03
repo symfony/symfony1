@@ -9,14 +9,14 @@
  */
 
 /**
- * Upgrade a project to the 1.1 release.
+ * Upgrade a project to the 1.2 release (from 1.1).
  *
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfUpgradeTo11Task extends sfBaseTask
+class sfUpgradeTo12Task extends sfBaseTask
 {
   /**
    * @see sfTask
@@ -24,16 +24,16 @@ class sfUpgradeTo11Task extends sfBaseTask
   protected function configure()
   {
     $this->namespace = 'project';
-    $this->name = 'upgrade1.1';
-    $this->briefDescription = 'Upgrade a symfony project to the 1.1 symfony release';
+    $this->name = 'upgrade1.2';
+    $this->briefDescription = 'Upgrade a symfony project to the 1.2 symfony release (from 1.1)';
 
     $this->detailedDescription = <<<EOF
-The [project:upgrade1.1|INFO] task upgrades a symfony project
-based the 1.0 release to the 1.1 symfony release.
+The [project:upgrade1.2|INFO] task upgrades a symfony project
+based on the 1.1 release to the 1.2 symfony release.
 
-  [./symfony project:upgrade1.1|INFO]
+  [./symfony project:upgrade1.2|INFO]
 
-Please read the UPGRADE_TO_1_1 file to have information on what does this task.
+Please read the UPGRADE_TO_1_2 file to have information on what does this task.
 EOF;
   }
 
@@ -52,7 +52,7 @@ EOF;
 
   protected function getUpgradeClasses()
   {
-    $baseDir = dirname(__FILE__).'/upgrade1.1/';
+    $baseDir = dirname(__FILE__).'/upgrade1.2/';
     $classes = array();
 
     foreach (glob($baseDir.'*.class.php') as $file)
@@ -62,6 +62,8 @@ EOF;
       if ('sfUpgrade' != $class)
       {
         $classes[] = $class;
+
+        require_once $baseDir.$class.'.class.php';
       }
     }
 

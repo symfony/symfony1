@@ -11,6 +11,11 @@ cli:
     class: sfConsoleRequest
 
 test:
+  response:
+    class: sfWebResponse
+    param:
+      send_http_headers: false
+
   storage:
     class: sfSessionTestStorage
     param:

@@ -19,6 +19,11 @@ test:
     param:
       session_path: %SF_TEST_CACHE_DIR%/sessions
 
+  response:
+    class: sfWebResponse
+    param:
+      send_http_headers: false
+
 #all:
 #  controller:
 #    class: sfFrontWebController

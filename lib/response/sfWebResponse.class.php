@@ -106,6 +106,11 @@ class sfWebResponse extends sfResponse
       $this->options['charset'] = 'utf-8';
     }
 
+    if (!isset($this->options['send_http_headers']))
+    {
+      $this->options['send_http_headers'] = true;
+    }
+
     $this->options['content_type'] = $this->fixContentType(isset($this->options['content_type']) ? $this->options['content_type'] : 'text/html');
   }
 
@@ -286,7 +291,7 @@ class sfWebResponse extends sfResponse
    */
   public function sendHttpHeaders()
   {
-    if (sfConfig::get('sf_test'))
+    if (!$this->options['send_http_headers'])
     {
       return;
     }

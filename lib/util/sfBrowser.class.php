@@ -65,7 +65,6 @@ class sfBrowser
     $this->hostname = $hostname;
     $this->remote   = $remote;
 
-    sfConfig::set('sf_path_info_array', 'SERVER');
     sfConfig::set('sf_test', true);
 
     // we set a session id (fake cookie / persistence)
