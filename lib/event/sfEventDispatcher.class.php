@@ -149,7 +149,7 @@ class sfEventDispatcher
   {
     if (!isset($this->listeners[$name]))
     {
-      $this->listeners[$name] = array();
+      return array();
     }
 
     return $this->listeners[$name];
