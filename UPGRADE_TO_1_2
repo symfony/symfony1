@@ -36,6 +36,10 @@ been moved from `settings.yml` to `factories.yml` (in the `param` section of the
 
 This change removes the dependency between `sfRequest` and `sfConfig`.
 
+These three request options are now passed to the request constructor as a
+fourth argument. The formats are also passed as an option,
+instead of being passed as an attribute.
+
 Response
 ~~~~~~~~
 
