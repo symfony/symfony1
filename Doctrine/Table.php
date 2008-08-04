@@ -2232,10 +2232,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function __call($method, $arguments)
     {
-        if (substr($method, 0, 6) == 'findBy') {
+        $lcMethod = strtolower($method);
+
+        if (substr($lcMethod, 0, 6) == 'findby') {
             $by = substr($method, 6, strlen($method));
             $method = 'findBy';
-        } else if (substr($method, 0, 9) == 'findOneBy') {
+        } else if (substr($lcMethod, 0, 9) == 'findoneby') {
             $by = substr($method, 9, strlen($method));
             $method = 'findOneBy';
         }
