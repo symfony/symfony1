@@ -557,7 +557,9 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     $type = strtoupper($definition['type']) . ' ';
                 break;
                 default:
-                    throw new Doctrine_Export_Exception('Unknown index type ' . $definition['type']);
+                    throw new Doctrine_Export_Exception(
+                        'Unknown type ' . $definition['type'] . ' for index ' . $name . ' in table ' . $table
+                    );
             }
         }
         $query  = 'CREATE ' . $type . 'INDEX ' . $name . ' ON ' . $table;
@@ -621,12 +623,14 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     $type = strtoupper($definition['type']) . ' ';
                 break;
                 default:
-                    throw new Doctrine_Export_Exception('Unknown index type ' . $definition['type']);
+                    throw new Doctrine_Export_Exception(
+                        'Unknown type ' . $definition['type'] . ' for index ' . $name
+                    );
             }
         }
         
         if ( ! isset($definition['fields'])) {
-            throw new Doctrine_Export_Exception('No index columns given.');
+            throw new Doctrine_Export_Exception('No columns given for index ' . $name);
         }
         if ( ! is_array($definition['fields'])) {
             $definition['fields'] = array($definition['fields']);

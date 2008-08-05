@@ -472,7 +472,9 @@ class Doctrine_Export extends Doctrine_Connection_Module
                     $type = strtoupper($definition['type']) . ' ';
                 break;
                 default:
-                    throw new Doctrine_Export_Exception('Unknown index type ' . $definition['type']);
+                    throw new Doctrine_Export_Exception(
+                        'Unknown type ' . $definition['type'] . ' for index ' . $name . ' in table ' . $table
+                    );
             }
         }
 
@@ -805,12 +807,14 @@ class Doctrine_Export extends Doctrine_Connection_Module
             if (strtolower($definition['type']) == 'unique') {
                 $type = strtoupper($definition['type']) . ' ';
             } else {
-                throw new Doctrine_Export_Exception('Unknown index type ' . $definition['type']);
+                throw new Doctrine_Export_Exception(
+                    'Unknown type ' . $definition['type'] . ' for index ' . $name
+                );
             }
         }
 
         if ( ! isset($definition['fields']) || ! is_array($definition['fields'])) {
-            throw new Doctrine_Export_Exception('No index columns given.');
+            throw new Doctrine_Export_Exception('No columns given for index ' . $name);
         }
 
         $query = $type . 'INDEX ' . $name;
