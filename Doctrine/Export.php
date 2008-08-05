@@ -725,12 +725,19 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         $method = 'get' . $field['type'] . 'Declaration';
 
-        if (method_exists($this->conn->dataDict, $method)) {
-            return $this->conn->dataDict->$method($name, $field);
-        } else {
-            $dec = $this->conn->dataDict->getNativeDeclaration($field);
+        try {
+            if (method_exists($this->conn->dataDict, $method)) {
+                return $this->conn->dataDict->$method($name, $field);
+            } else {
+                $dec = $this->conn->dataDict->getNativeDeclaration($field);
+            }
+
+            return $this->conn->quoteIdentifier($name, true)
+                 . ' ' . $dec . $charset . $default . $notnull . $unique . $check . $collation;
+        } catch (Exception $e) {
+            throw new Doctrine_Exception('Around field ' . $name . ': ' . $e->getMessage());
         }
-        return $this->conn->quoteIdentifier($name, true) . ' ' . $dec . $charset . $default . $notnull . $unique . $check . $collation;
+
     }
 
     /**
