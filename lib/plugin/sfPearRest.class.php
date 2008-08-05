@@ -25,6 +25,6 @@ class sfPearRest extends PEAR_REST
    */
   public function downloadHttp($url, $lastmodified = null, $accept = false)
   {
-    return parent::downloadHttp($url, $lastmodified, $accept);
+    return parent::downloadHttp($url, $lastmodified, array_merge(false !== $accept ? $accept : array(), array("\r\nX-SYMFONY-VERSION: ".SYMFONY_VERSION)));
   }
 }
