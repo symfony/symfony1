@@ -171,7 +171,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 
         $i = 1;
         while (in_array($slug, $similarSlugs)) {
-            $slug = $proposal.'-'.$i;
+            $slug = call_user_func_array($this->_options['builder'], array($proposal.'-'.$i, $record)); 
             $i++;
         }
 
