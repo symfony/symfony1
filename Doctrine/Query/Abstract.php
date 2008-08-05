@@ -511,7 +511,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function getParams($params = array())
     {
-        return array_merge($this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having'], $params);
+        return array_merge($params, $this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having']);
     }
 
     /**
