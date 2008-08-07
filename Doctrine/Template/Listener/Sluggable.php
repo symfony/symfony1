@@ -156,6 +156,10 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             }
         }
 
+        // Disable indexby to ensure we get all records
+        $originalIndexBy = $record->getTable()->getBoundQueryPart('indexBy');
+        $record->getTable()->bindQueryPart('indexBy', null);
+
         $query = Doctrine_Query::create()
         ->select('r.'.$name)
         ->from(get_class($record).' r')
@@ -163,6 +167,9 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
 
         $similarSlugResult = $query->execute();
+
+        // Change indexby back
+        $record->getTable()->bindQueryPart('indexBy', $originalIndexBy);
 
         $similarSlugs = array();
         foreach ($similarSlugResult as $key => $value) {
