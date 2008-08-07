@@ -85,7 +85,7 @@ class Doctrine_Parser_sfYaml
    *
    * @return string
    */
-  public static function dump($array, $inline = 2)
+  public static function dump($array, $inline = 4)
   {
     /* removed since it now use the doctrine autoload feature
      * require_once dirname(__FILE__).'/Doctrine_Parser_sfYaml_Dumper.class.php';
