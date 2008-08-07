@@ -28,7 +28,7 @@
  * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @author      Jonathan H. Wage <jwage@mac.com>, Thomas Courbon <harthie@yahoo.fr>
  */
 class Doctrine_Parser_Yml extends Doctrine_Parser
 {
@@ -37,6 +37,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      *
      * Dump an array of data to a specified path or return
      * 
+     * @throws Doctrine_Parser_Exception dumping error
      * @param  string $array Array of data to dump to yaml
      * @param  string $path  Path to dump the yaml to
      * @return string $yaml
@@ -44,11 +45,18 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      */
     public function dumpData($array, $path = null)
     {
-        $spyc = new Doctrine_Parser_Spyc();
-        
-        $data = $spyc->dump($array, false, false);
-        
-        return $this->doDump($data, $path);
+       
+        try {
+          $data = Doctrine_Parser_sfYaml::dump($array);
+          
+          return $this->doDump($data, $path);
+          
+        } catch(InvalidArgumentException $e) {
+          // rethrow the exceptions
+          $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
+          
+          throw $rethrowed_exception;
+        }
     }
 
     /**
@@ -56,17 +64,28 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      *
      * Load and parse data from a yml file
      * 
+     * @throws Doctrine_Parser_Exception parsing error
      * @param  string  $path  Path to load yaml data from
      * @return array   $array Array of parsed yaml data
      */
     public function loadData($path)
     {
-        $contents = $this->doLoad($path);
+        try {
+          /*
+           * I still use the doLoad method even if sfYaml can load yml from a file
+           * since this way Doctrine can handle file on it own.
+           */ 
+          $contents = $this->doLoad($path);
 
-        $spyc = new Doctrine_Parser_Spyc();
-        
-        $array = $spyc->load($contents);
-        
-        return $array;
-    }
+          $array = Doctrine_Parser_sfYaml::load($contents);
+          
+          return $array;
+          
+        } catch(InvalidArgumentException $e) {
+          // rethrow the exceptions
+          $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
+          
+          throw $rethrowed_exception;
+        }
+    }        
 }
