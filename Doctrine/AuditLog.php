@@ -69,14 +69,21 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
         $name = $this->_options['table']->getComponentName();
         $columns = $this->_options['table']->getColumns();
 
-        // remove all sequence, autoincrement and unique constraint definitions
+        // remove all sequence, autoincrement and unique constraint definitions and add to the behavior model
         foreach ($columns as $column => $definition) {
-            unset($columns[$column]['autoincrement']);
-            unset($columns[$column]['sequence']);
-            unset($columns[$column]['unique']);
-        }
+            unset($definition['autoincrement']);
+            unset($definition['sequence']);
+            unset($definition['unique']);
 
-        $this->hasColumns($columns);
+            $fieldName = $this->_options['table']->getFieldName($column);
+            if ($fieldName != $column) {
+                $name = $column . ' as ' . $fieldName;
+            } else {
+                $name = $fieldName;
+            }
+
+            $this->hasColumn($name, $definition['type'], $definition['length'], $definition);
+        }
 
         // the version column should be part of the primary key definition
         $this->hasColumn($this->_options['versionColumn'], 'integer', 8, array('primary' => true));
