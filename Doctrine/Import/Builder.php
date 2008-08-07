@@ -401,6 +401,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $i++;
         }
 
+        if (isset($definition['checks']) && is_array($definition['checks']) && !empty($definition['checks'])) {
+            $ret[$i] = $this->buildChecks($definition['checks']);
+            $i++;
+        }
+
         if (isset($definition['inheritance']['subclasses']) && ! empty($definition['inheritance']['subclasses'])) {
             $ret[$i] = "    ".'$this->setSubClasses('. $this->varExport($definition['inheritance']['subclasses']).');';
             $i++;
@@ -492,11 +497,8 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         if (isset($definition['listeners']) && is_array($definition['listeners']) && !empty($definition['listeners'])) {
-            foreach($definition['listeners'] as $listener)
-            {
-                $ret[$i] = $this->buildListener($listener);
-                $i++;
-            }
+            $ret[$i] = $this->buildListeners($definition['listeners']);
+            $i++;
         }
 
         $code = implode(PHP_EOL, $ret);
@@ -516,6 +518,21 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if ($code) {
             return '  public function setUp()' . PHP_EOL . '  {' . PHP_EOL . '    ' . $code . PHP_EOL . '  }';
         }
+    }
+
+    /**
+     * Build php code for record checks
+     *
+     * @param array $checks
+     * @return string $build
+     */
+    public function buildChecks($checks)
+    {
+        $build = '';
+        foreach ($checks as $check) {
+            $build .= "    \$this->check('" . $check . "');" . PHP_EOL;
+        }
+        return $build;
     }
 
     /**
@@ -742,17 +759,21 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         return $build;
     }
 
-     /**
-     * buildListener
+    /**
+     * Build php code for adding record listeners
      *
-     * @param string $listener
-     * @return string
+     * @param string $listeners 
+     * @return string $build
      */
-    public function buildListener($listener)
+    public function buildListeners($listeners)
     {
-        return PHP_EOL."    ".'$this->addListener(new '.$listener.'());';
-    }
+        $build = '';
+        foreach($listeners as $listener) {
+            $build .= "    \$this->addListener(new " . $listener . "());" . PHP_EOL;
+        }
 
+        return $build;
+    }
 
     /**
      * buildAttributes
