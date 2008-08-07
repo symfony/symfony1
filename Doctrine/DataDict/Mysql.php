@@ -371,6 +371,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'mediumblob':
             case 'longblob':
             case 'blob':
+            case 'binary':
                 $type[] = 'blob';
                 $length = null;
             break;
