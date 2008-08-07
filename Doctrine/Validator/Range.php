@@ -40,6 +40,9 @@ class Doctrine_Validator_Range
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         if (isset($this->args[0]) && $value < $this->args[0]) {
             return false;
         }
