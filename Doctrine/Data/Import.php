@@ -310,6 +310,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             $record = $this->_importedObjects[$rowKey];
 
             if( ! $parent) {
+                $record->save(); // save, so that createRoot can do: root id = id
                 Doctrine::getTable($model)->getTree()->createRoot($record);
             } else {
                 $parent->getNode()->addChild($record);

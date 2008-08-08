@@ -366,22 +366,32 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $newRoot  = $dest->getNode()->getRootValue();
 		$newLevel = $dest->getNode()->getLevel();
 		
-		// Make space for new node
-        $this->shiftRLValues($dest->getNode()->getRightValue() + 1, 2, $newRoot);
-        
-        // Slide child nodes over one and down one to allow new parent to wrap them
-		$componentName = $this->_tree->getBaseComponent();		
-        $q = new Doctrine_Query();
-        $q->update($componentName);
-        $q->set("$componentName.lft", "$componentName.lft + 1");
-        $q->set("$componentName.rgt", "$componentName.rgt + 1");
-        $q->set("$componentName.level", "$componentName.level + 1");
-        $q->where("$componentName.lft >= ? AND $componentName.rgt <= ?", array($newLeft, $newRight));
-		$q = $this->_tree->returnQueryWithRootId($q, $newRoot);
-		$q->execute();
-        
-        $this->record['level'] = $newLevel;
-		$this->insertNode($newLeft, $newRight, $newRoot);
+		$conn = $this->record->getTable()->getConnection();
+		try {
+		    $conn->beginInternalTransaction();
+		    
+		    // Make space for new node
+            $this->shiftRLValues($dest->getNode()->getRightValue() + 1, 2, $newRoot);
+
+            // Slide child nodes over one and down one to allow new parent to wrap them
+    		$componentName = $this->_tree->getBaseComponent();		
+            $q = new Doctrine_Query();
+            $q->update($componentName);
+            $q->set("$componentName.lft", "$componentName.lft + 1");
+            $q->set("$componentName.rgt", "$componentName.rgt + 1");
+            $q->set("$componentName.level", "$componentName.level + 1");
+            $q->where("$componentName.lft >= ? AND $componentName.rgt <= ?", array($newLeft, $newRight));
+    		$q = $this->_tree->returnQueryWithRootId($q, $newRoot);
+    		$q->execute();
+
+            $this->record['level'] = $newLevel;
+    		$this->insertNode($newLeft, $newRight, $newRoot);
+    		
+    		$conn->commit();
+		} catch (Exception $e) {
+		    $conn->rollback();
+		    throw $e;
+		}
         
         return true;
     }
@@ -412,12 +422,22 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $newRight = $dest->getNode()->getLeftValue() + 1;
         $newRoot = $dest->getNode()->getRootValue();
         
-        $this->shiftRLValues($newLeft, 2, $newRoot);
-        $this->record['level'] = $dest['level'];
-        $this->insertNode($newLeft, $newRight, $newRoot);
-        // update destination left/right values to prevent a refresh
-        // $dest->getNode()->setLeftValue($dest->getNode()->getLeftValue() + 2);
-        // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            $this->shiftRLValues($newLeft, 2, $newRoot);
+            $this->record['level'] = $dest['level'];
+            $this->insertNode($newLeft, $newRight, $newRoot);
+            // update destination left/right values to prevent a refresh
+            // $dest->getNode()->setLeftValue($dest->getNode()->getLeftValue() + 2);
+            // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
                         
         return true;
     }
@@ -448,12 +468,21 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $newRight = $dest->getNode()->getRightValue() + 2;
         $newRoot = $dest->getNode()->getRootValue();
 
-        $this->shiftRLValues($newLeft, 2, $newRoot);
-        $this->record['level'] = $dest['level'];
-        $this->insertNode($newLeft, $newRight, $newRoot);
-
-        // update destination left/right values to prevent a refresh
-        // no need, node not affected
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            $this->shiftRLValues($newLeft, 2, $newRoot);
+            $this->record['level'] = $dest['level'];
+            $this->insertNode($newLeft, $newRight, $newRoot);
+            // update destination left/right values to prevent a refresh
+            // no need, node not affected
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
 
         return true;
     }
@@ -484,12 +513,22 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $newRight = $dest->getNode()->getLeftValue() + 2;
         $newRoot = $dest->getNode()->getRootValue();
 
-        $this->shiftRLValues($newLeft, 2, $newRoot);
-        $this->record['level'] = $dest['level'] + 1;
-        $this->insertNode($newLeft, $newRight, $newRoot);
-        
-        // update destination left/right values to prevent a refresh
-        // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            $this->shiftRLValues($newLeft, 2, $newRoot);
+            $this->record['level'] = $dest['level'] + 1;
+            $this->insertNode($newLeft, $newRight, $newRoot);
+            
+            // update destination left/right values to prevent a refresh
+            // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
 
         return true;
     }
@@ -520,12 +559,22 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $newRight = $dest->getNode()->getRightValue() + 1;
         $newRoot = $dest->getNode()->getRootValue();
 
-        $this->shiftRLValues($newLeft, 2, $newRoot);
-        $this->record['level'] = $dest['level'] + 1;
-        $this->insertNode($newLeft, $newRight, $newRoot);
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            $this->shiftRLValues($newLeft, 2, $newRoot);
+            $this->record['level'] = $dest['level'] + 1;
+            $this->insertNode($newLeft, $newRight, $newRoot);
 
-        // update destination left/right values to prevent a refresh
-        // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+            // update destination left/right values to prevent a refresh
+            // $dest->getNode()->setRightValue($dest->getNode()->getRightValue() + 2);
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
         
         return true;
     }
@@ -544,7 +593,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $conn = $this->record->getTable()->getConnection();
             
         try {
-            $conn->beginTransaction();
+            $conn->beginInternalTransaction();
 
             // Move between trees: Detach from old tree & insert into new tree
             $newRoot = $dest->getNode()->getRootValue();
@@ -750,9 +799,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $oldRoot = $this->getRootValue();
         $oldLevel = $this->record['level'];
         
+        $conn = $this->record->getTable()->getConnection();
         try {
-            $conn = $this->record->getTable()->getConnection();
-            $conn->beginTransaction();
+            $conn->beginInternalTransaction();
             
             // Detach from old tree (close gap in old tree)
             $first = $oldRgt + 1;
@@ -866,11 +915,11 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     public function isValidNode($record = null)
     {
         if ($record === null) {
-          return ($this->getRightValue() > $this->getLeftValue());
+            return ($this->getRightValue() > $this->getLeftValue());
         } else if ( $record instanceof Doctrine_Record ) {
-          return ($record->getNode()->getRightValue() > $record->getNode()->getLeftValue());
+            return ($record->getNode()->getRightValue() > $record->getNode()->getLeftValue());
         } else {
-          return false;
+            return false;
         }
     }
     
@@ -890,24 +939,34 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */
     public function delete()
     {
-        // TODO: add the setting whether or not to delete descendants or relocate children
-        $oldRoot = $this->getRootValue();
-        $q = $this->_tree->getBaseQuery();
-        
-        $baseAlias = $this->_tree->getBaseAlias();
-        $componentName = $this->_tree->getBaseComponent();
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            // TODO: add the setting whether or not to delete descendants or relocate children
+            $oldRoot = $this->getRootValue();
+            $q = $this->_tree->getBaseQuery();
 
-        $q = $q->addWhere("$baseAlias.lft >= ? AND $baseAlias.rgt <= ?", array($this->getLeftValue(), $this->getRightValue()));
+            $baseAlias = $this->_tree->getBaseAlias();
+            $componentName = $this->_tree->getBaseComponent();
 
-        $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
-        
-        $coll = $q->execute();
+            $q = $q->addWhere("$baseAlias.lft >= ? AND $baseAlias.rgt <= ?", array($this->getLeftValue(), $this->getRightValue()));
 
-        $coll->delete();
+            $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
 
-        $first = $this->getRightValue() + 1;
-        $delta = $this->getLeftValue() - $this->getRightValue() - 1;
-        $this->shiftRLValues($first, $delta, $oldRoot);
+            $coll = $q->execute();
+
+            $coll->delete();
+
+            $first = $this->getRightValue() + 1;
+            $delta = $this->getLeftValue() - $this->getRightValue() - 1;
+            $this->shiftRLValues($first, $delta, $oldRoot);
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
         
         return true; 
     }
@@ -941,37 +1000,50 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
 
         $treeSize = $right - $left + 1;
 
-        // Make room in the new branch
-        $this->shiftRLValues($destLeft, $treeSize, $rootId);
+        $conn = $this->record->getTable()->getConnection();
+        try {
+            $conn->beginInternalTransaction();
+            
+            // Make room in the new branch
+            $this->shiftRLValues($destLeft, $treeSize, $rootId);
 
-        if ($left >= $destLeft) { // src was shifted too?
-            $left += $treeSize;
-            $right += $treeSize;
+            if ($left >= $destLeft) { // src was shifted too?
+                $left += $treeSize;
+                $right += $treeSize;
+            }
+
+            // update level for descendants
+            $q = new Doctrine_Query();
+            $q = $q->update($componentName)
+                    ->set($componentName . '.level', 'level + ?')
+                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
+                            array($levelDiff, $left, $right));
+            $q = $this->_tree->returnQueryWithRootId($q, $rootId);
+            $q->execute();
+
+            // now there's enough room next to target to move the subtree
+            $this->shiftRLRange($left, $right, $destLeft - $left, $rootId);
+
+            // correct values after source (close gap in old tree)
+            $this->shiftRLValues($right + 1, -$treeSize, $rootId);
+
+            $this->record->save();
+            $this->record->refresh();
+            
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
         }
-
-        // update level for descendants
-        $q = new Doctrine_Query();
-        $q = $q->update($componentName)
-                ->set($componentName . '.level', 'level + ?')
-                ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                        array($levelDiff, $left, $right));
-        $q = $this->_tree->returnQueryWithRootId($q, $rootId);
-        $q->execute();
-        
-        // now there's enough room next to target to move the subtree
-        $this->shiftRLRange($left, $right, $destLeft - $left, $rootId);
-
-        // correct values after source (close gap in old tree)
-        $this->shiftRLValues($right + 1, -$treeSize, $rootId);
-
-        $this->record->save();
-        $this->record->refresh();
         
         return true;
     }
 
     /**
      * adds '$delta' to all Left and Right values that are >= '$first'. '$delta' can also be negative.
+     *
+     * Note: This method does wrap its database queries in a transaction. This should be done
+     * by the invoking code.
      *
      * @param int $first         First node to be shifted
      * @param int $delta         Value to be shifted by, can be negative
@@ -984,8 +1056,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left columns
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                                ->set($componentName . '.lft', 'lft + ?')
-                                ->where($componentName . '.lft >= ?', array($delta, $first));
+                ->set($componentName . '.lft', 'lft + ?')
+                ->where($componentName . '.lft >= ?', array($delta, $first));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
         
@@ -993,8 +1065,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right columns
         $resultRight = $qRight->update($componentName)
-                                ->set($componentName . '.rgt', 'rgt + ?')
-                                ->where($componentName . '.rgt >= ?', array($delta, $first));
+                ->set($componentName . '.rgt', 'rgt + ?')
+                ->where($componentName . '.rgt >= ?', array($delta, $first));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 
@@ -1004,6 +1076,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * adds '$delta' to all Left and Right values that are >= '$first' and <= '$last'. 
      * '$delta' can also be negative.
+     *
+     * Note: This method does wrap its database queries in a transaction. This should be done
+     * by the invoking code.
      *
      * @param int $first     First node to be shifted (L value)
      * @param int $last     Last node to be shifted (L value)
@@ -1017,8 +1092,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left column values
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                                ->set($componentName . '.lft', 'lft + ?')
-                                ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($delta, $first, $last));
+                ->set($componentName . '.lft', 'lft + ?')
+                ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($delta, $first, $last));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
 
@@ -1026,8 +1101,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right column values
         $qRight = $qRight->update($componentName)
-                                ->set($componentName . '.rgt', 'rgt + ?')
-                                ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($delta, $first, $last));
+                ->set($componentName . '.rgt', 'rgt + ?')
+                ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($delta, $first, $last));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 

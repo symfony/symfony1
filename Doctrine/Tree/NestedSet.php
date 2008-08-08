@@ -29,6 +29,7 @@
  * @since       1.0
  * @version     $Revision$
  * @author      Joe Simms <joe.simms@websites4.com>
+ * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Interface
 {
@@ -69,19 +70,36 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     }
 
     /**
-     * creates root node from given record or from a new record
+     * Creates root node from given record or from a new record.
+     *
+     * Note: When using a tree with multiple root nodes (hasManyRoots), you MUST pass in a
+     * record to use as the root. This can either be a new/transient record that already has
+     * the root id column set to some numeric value OR a persistent record. In the latter case
+     * the records id will be assigned to the root id. You must use numeric columns for the id
+     * and root id columns.
      *
      * @param object $record        instance of Doctrine_Record
      */
     public function createRoot(Doctrine_Record $record = null)
     {
+        if ($this->getAttribute('hasManyRoots')) {
+            if ( ! $record || ( ! $record->exists() && $record->getNode()->getRootValue() <= 0)
+                    || $record->getTable()->isIdentifierComposite()) {
+                throw new Doctrine_Tree_Exception("Node must have a root id set or must "
+                        . " be persistent and have a single-valued numeric primary key in order to"
+                        . " be created as a root node. Automatic assignment of a root id on"
+                        . " transient/new records is no longer supported.");
+            }
+            
+            if ($record->exists() && $record->getNode()->getRootValue() <= 0) {
+                // Default: root_id = id
+                $identifier = $record->getTable()->getIdentifier();
+                $record->getNode()->setRootValue($record->get($identifier));
+            }
+        }
+        
         if ( ! $record) {
             $record = $this->table->create();
-        }
-
-        // if tree is many roots, and no root id has been set, then get next root id
-        if ($root = $this->getAttribute('hasManyRoots') && $record->getNode()->getRootValue() <= 0) {
-            $record->getNode()->setRootValue($this->getNextRootId());
         }
 
         $record->set('lft', '1');
@@ -108,6 +126,8 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * Fetches a/the root node.
      *
      * @param integer $rootId
+     * @todo Better $rootid = null and exception if $rootId == null && hasManyRoots?
+     *       Fetching with id = 1 is too magical and cant work reliably anyway.
      */
     public function fetchRoot($rootId = 1)
     {
@@ -213,6 +233,9 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * calculates the next available root id
      *
      * @return integer
+     * @deprecated THIS METHOD IS DEPRECATED. ROOT IDS ARE NO LONGER AUTOMATICALLY GENERATED.
+     *             ROOT ID MUST BE ASSIGNED MANUALLY OR USING THE DEFAULT BEHAVIOR WHERE
+     *             ROOT_ID = ID. SEE createRoot() FOR DETAILS.
      */
     public function getNextRootId()
     {
@@ -223,11 +246,14 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * calculates the current max root id
      *
      * @return integer
+     * @deprecated THIS METHOD IS DEPRECATED. ROOT IDS ARE NO LONGER AUTOMATICALLY GENERATED.
+     *             ROOT ID MUST BE ASSIGNED MANUALLY OR USING THE DEFAULT BEHAVIOR WHERE
+     *             ROOT_ID = ID. SEE createRoot() FOR DETAILS.
      */
     public function getMaxRootId()
     {
         $component = $this->table->getComponentName();
-        $column    = $this->getAttribute('rootColumnName');
+        $column = $this->getAttribute('rootColumnName');
 
         // cannot get this dql to work, cannot retrieve result using $coll[0]->max
         //$dql = "SELECT MAX(c.$column) FROM $component c";
@@ -325,40 +351,4 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     {
         $this->_baseQuery = $this->_createBaseQuery();
     }
-
-    /**
-     * Enter description here...
-     *
-     * @param unknown_type $graph
-     */
-    /*
-    public function computeLevels($tree)
-    {
-        $right = array();
-        $isArray = is_array($tree);
-        $rootColumnName = $this->getAttribute('rootColumnName');
-
-        for ($i = 0, $count = count($tree); $i < $count; $i++) {
-            if ($rootColumnName && $i > 0 && $tree[$i][$rootColumnName] != $tree[$i-1][$rootColumnName]) {
-                $right = array();
-            }
-
-            if (count($right) > 0) {
-                while (count($right) > 0 && $right[count($right)-1] < $tree[$i]['rgt']) {
-                    //echo count($right);
-                    array_pop($right);
-                }
-            }
-
-            if ($isArray) {
-                $tree[$i]['level'] = count($right);
-            } else {
-                $tree[$i]->getNode()->setLevel(count($right));
-            }
-
-            $right[] = $tree[$i]['rgt'];
-        }
-        return $tree;
-    }
-    */
 }
