@@ -96,8 +96,10 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
         $valid = $leftValue != $rightValue;
         break;
       case self::EQUAL:
-      default:
         $valid = $leftValue == $rightValue;
+        break;
+      default:
+        throw new InvalidArgumentException(sprintf('The operator "%s" does not exist.', $this->getOption('operator')));
     }
 
     if (!$valid)
