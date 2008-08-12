@@ -49,3 +49,15 @@ the headers must not be sent by PHP (the same goal was achieved by using
 the `sf_test` setting in symfony 1.1).
 
 This change removes the dependency between `sfResponse` and `sfConfig`.
+
+Validators
+----------
+
+The `sfValidatorSchemaCompare` constant values have been changed. No change to your code need to be done, but now, you can use nice shortcuts. The following two examples are equivalent:
+
+    [php]
+    // symfony 1.1 and 1.2
+    $v = new sfValidatorSchemaCompare('left', sfValidatorSchemaCompare::EQUAL, 'right');
+
+    // symfony 1.2 only
+    $v = new sfValidatorSchemaCompare('left', '==', 'right');
