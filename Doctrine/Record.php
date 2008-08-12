@@ -727,7 +727,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             foreach (array_keys($this->_references) as $name) {
                 $query->leftJoin(get_class($this) . '.' . $name);
             }
-            $query->where(implode(' = ? AND ', $this->getTable()->getIdentifierColumnNames()) . ' = ?');
+            $query->where(implode(' = ? AND ', (array)$this->getTable()->getIdentifier()) . ' = ?');
             $this->clearRelated();
             $record = $query->fetchOne($id);
         } else {
