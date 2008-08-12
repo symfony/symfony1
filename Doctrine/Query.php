@@ -236,36 +236,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * addEnumParam
-     * sets input parameter as an enumerated parameter
-     *
-     * @param string $key   the key of the input parameter
-     * @return Doctrine_Query
-     */
-    public function addEnumParam($key, $table = null, $column = null)
-    {
-        $array = (isset($table) || isset($column)) ? array($table, $column) : array();
-
-        if ($key === '?') {
-            $this->_enumParams[] = $array;
-        } else {
-            $this->_enumParams[$key] = $array;
-        }
-    }
-
-    /**
-     * getEnumParams
-     * get all enumerated parameters
-     *
-     * @return array    all enumerated parameters
-     */
-    public function getEnumParams()
-    {
-        return $this->_enumParams;
-    }
-
-
-    /**
      * fetchArray
      * Convenience method to execute using array fetching as hydration mode.
      *
@@ -1084,8 +1054,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
         $this->_state = self::STATE_CLEAN;
 
-        $params = $this->convertEnums($params);
-
         // Proceed with the generated SQL
 
         if (empty($this->_sqlParts['from'])) {
@@ -1880,8 +1848,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
 
-        $params = $this->convertEnums($params);
-
         $results = $this->getConnection()->fetchAll($q, $params);
 
         if (count($results) > 1) {
@@ -1954,7 +1920,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->reset();
         $this->_parsers = array();
         $this->_dqlParts = array();
-        $this->_enumParams = array();
     }
 
     /**

@@ -90,10 +90,13 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
     {
         $conn = $this->query->getConnection();
 
+        // If value is contained in paranthesis
         if (substr($value, 0, 1) == '(') {
             // trim brackets
             $trimmed = $this->_tokenizer->bracketTrim($value);
 
+            // If subquery found which begins with FROM and SELECT
+            // FROM User u WHERE u.id IN(SELECT u.id FROM User u WHERE u.id = 1)
             if (substr($trimmed, 0, 4) == 'FROM' ||
                 substr($trimmed, 0, 6) == 'SELECT') {
 
@@ -101,10 +104,13 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 $q     = new Doctrine_Query();
                 $value = '(' . $this->query->createSubquery()->parseQuery($trimmed, false)->getQuery() . ')';
 
+            // If custom sql for custom subquery
+            // You can specify SQL: followed by any valid sql expression
+            // FROM User u WHERE u.id = SQL:(select id from user where id = 1)
             } elseif (substr($trimmed, 0, 4) == 'SQL:') {
                 $value = '(' . substr($trimmed, 4) . ')';
+            // simple in expression found
             } else {
-                // simple in expression found
                 $e = $this->_tokenizer->sqlExplode($trimmed, ',');
 
                 $value = array();
@@ -112,46 +118,13 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 $index = false;
 
                 foreach ($e as $part) {
-                    if (isset($table) && isset($field)) {
-                        $index = $table->enumIndex($field, trim($part, "'"));
-
-                        if (false !== $index && $conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
-                            $index = $conn->quote($index, 'text');
-                        }
-                    }
-
-                    if ($index !== false) {
-                        $value[] = $index;
-                    } else {
-                        $value[] = $this->parseLiteralValue($part);
-                    }
+                    $value[] = $this->parseLiteralValue($part);
                 }
 
                 $value = '(' . implode(', ', $value) . ')';
             }
-        } else if (substr($value, 0, 1) == ':' || $value === '?') {
-            // placeholder found
-            if (isset($table) && isset($field) && $table->getTypeOf($field) == 'enum') {
-                $this->query->addEnumParam($value, $table, $field);
-            } else {
-                $this->query->addEnumParam($value, null, null);
-            }
         } else {
-            $enumIndex = false;
-            if (isset($table) && isset($field)) {
-                // check if value is enumerated value
-                $enumIndex = $table->enumIndex($field, trim($value, "'"));
-
-                if (false !== $enumIndex && $conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
-                    $enumIndex = $conn->quote($enumIndex, 'text');
-                }
-            }
-
-            if ($enumIndex !== false) {
-                $value = $enumIndex;
-            } else {
-                $value = $this->parseLiteralValue($value);
-            }
+            $value = $this->parseLiteralValue($value);
         }
         return $value;
     }

@@ -58,6 +58,8 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'string':
             case 'array':
             case 'object':
@@ -75,7 +77,6 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             case 'blob':
                 return 'BLOB';
             case 'integer':
-            case 'enum':
             case 'int':
                 if ( ! empty($field['length'])) {
                     return 'NUMBER('.$field['length'].')';

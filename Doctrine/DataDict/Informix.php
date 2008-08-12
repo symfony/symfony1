@@ -61,6 +61,8 @@ class Doctrine_DataDict_Informix extends Doctrine_DataDict
         }
         switch ($field['type']) {
             case 'char':
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'varchar':
             case 'array':
             case 'object':

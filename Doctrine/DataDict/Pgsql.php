@@ -363,6 +363,8 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'char':
             case 'string':
             case 'array':
@@ -381,7 +383,6 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 return 'TEXT';
             case 'blob':
                 return 'BYTEA';
-            case 'enum':
             case 'integer':
             case 'int':
                 if ( ! empty($field['autoincrement'])) {

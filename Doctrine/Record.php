@@ -592,9 +592,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     case 'gzip':
                         $vars['_data'][$k] = gzcompress($vars['_data'][$k]);
                         break;
-                    case 'enum':
-                        $vars['_data'][$k] = $this->_table->enumIndex($k, $vars['_data'][$k]);
-                        break;
                 }
             }
         }
@@ -1240,9 +1237,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 case 'boolean':
                     $a[$field] = $this->getTable()->getConnection()->convertBooleans($this->_data[$field]);
                 break;
-                case 'enum':
-                    $a[$field] = $this->_table->enumIndex($field, $this->_data[$field]);
-                    break;
                 default:
                     if ($this->_data[$field] instanceof Doctrine_Record) {
                         $a[$field] = $this->_data[$field]->getIncremented();

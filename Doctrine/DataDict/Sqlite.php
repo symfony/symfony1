@@ -60,6 +60,8 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'text':
             case 'object':
             case 'array':
@@ -97,7 +99,6 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                     }
                 }
                 return 'LONGBLOB';
-            case 'enum':
             case 'integer':
             case 'boolean':
             case 'int':

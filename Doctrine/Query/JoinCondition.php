@@ -71,12 +71,6 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
             $alias     = $this->query->getTableAlias($reference);
             $map       = $this->query->getAliasDeclaration($reference);
             $table     = $map['table'];
-            // check if value is enumerated value
-            $enumIndex = $table->enumIndex($field, trim($value, "'"));
-
-            if (false !== $enumIndex && $conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
-                $enumIndex = $conn->quote($enumIndex, 'text');
-            }
 
             // FIX: Issues with "(" XXX ")"
             if ($hasRightAggExpression) {
@@ -104,17 +98,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
 
                     $value = array();
                     foreach ($e as $part) {
-                        $index = $table->enumIndex($field, trim($part, "'"));
-
-                        if (false !== $index && $conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
-                            $index = $conn->quote($index, 'text');
-                        }
-
-                        if ($index !== false) {
-                            $value[] = $index;
-                        } else {
-                            $value[] = $this->parseLiteralValue($part);
-                        }
+                        $value[] = $this->parseLiteralValue($part);
                     }
 
                     // Change due to bug "(" XXX ")"
@@ -122,11 +106,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                     $value = implode(', ', $value);
                 }
             } else {
-                if ($enumIndex !== false) {
-                    $value = $enumIndex;
-                } else {
-                    $value = $this->parseLiteralValue($value);
-                }
+                $value = $this->parseLiteralValue($value);
             }
 
             switch ($operator) {
@@ -134,9 +114,6 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 case '>':
                 case '=':
                 case '!=':
-                    if ($enumIndex !== false) {
-                        $value  = $enumIndex;
-                    }
                 default:
                     $leftExpr = (($hasLeftAggExpression) ? $leftMatches[1] . '(' : '') 
                               . $conn->quoteIdentifier($alias . '.' . $field)

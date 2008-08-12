@@ -320,8 +320,6 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
 
         $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
 
-        $params = $this->convertEnums($params);
-
         $results = $this->getConnection()->fetchAll($q, $params);
 
         if (count($results) > 1) {

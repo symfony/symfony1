@@ -226,16 +226,9 @@ abstract class Doctrine_Query_Abstract
                             );
 
     /**
-     * @var array $_enumParams              an array containing the keys of the parameters that should be enumerated
-     */
-    protected $_enumParams = array();
-
-    /**
      * @var boolean
      */
     protected $_isLimitSubqueryUsed = false;
-
-    protected $_pendingSetParams = array();
 
     /**
      * @var array components used in the DQL statement
@@ -581,43 +574,6 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * convertEnums
-     * convert enum parameters to their integer equivalents
-     *
-     * @return array    converted parameter array
-     */
-    public function convertEnums($params)
-    {
-        $table = $this->getRoot();
-
-        // $position tracks the position of the parameter, to ensure we're converting
-        // the right parameter value when simple ? placeholders are used.
-        // This only works because SET is only allowed in update statements and it's
-        // the first place where parameters can occur.. see issue #935
-        $position = 0;
-        foreach ($this->_pendingSetParams as $fieldName => $value) {
-            $e = explode('.', $fieldName);
-            $fieldName = isset($e[1]) ? $e[1]:$e[0];
-            if ($table->getTypeOf($fieldName) == 'enum') {
-                $value = $value === '?' ? $position : $value;
-                $this->addEnumParam($value, $table, $fieldName);
-            }
-            ++$position;
-        }
-        $this->_pendingSetParams = array();
-
-        foreach ($this->_enumParams as $key => $values) {
-            if (isset($params[$key])) {
-                if ( ! empty($values)) {
-                    $params[$key] = $values[0]->enumIndex($values[1], $params[$key]);
-                }
-            }
-        }
-
-        return $params;
-    }
-
-    /**
      * Returns the inheritance condition for the passed componentAlias
      * If no component alias is specified it defaults to the root component
      *
@@ -957,7 +913,6 @@ abstract class Doctrine_Query_Abstract
             } else {
                 $query = $this->getSqlQuery($params);
             }
-            $params = $this->convertEnums($params);
         } else {
             $query = $this->_view->getSelectSql();
         }
@@ -1256,8 +1211,9 @@ abstract class Doctrine_Query_Abstract
         $params = (array) $params;
 
         // if there's no params, return (else we'll get a WHERE IN (), invalid SQL)
-        if (!count($params))
-          return $this;
+        if ( ! count($params)) {
+            return $this;
+        }
 
         $a = array();
         foreach ($params as $k => $value) {
@@ -1417,8 +1373,6 @@ abstract class Doctrine_Query_Abstract
                     $this->_params['set'][] = $params;
                 }
             }
-
-            $this->_pendingSetParams[$key] = $value;
 
             return $this->_addDqlQueryPart('set', $key . ' = ' . $value, true);
         }

@@ -608,11 +608,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
 
             switch ($definition['type']) {
-                case 'enum':
-                    if (isset($definition['default'])) {
-                        $definition['default'] = $this->enumIndex($name, $definition['default']);
-                    }
-                    break;
                 case 'boolean':
                     if (isset($definition['default'])) {
                         $definition['default'] = $this->getConnection()->convertBooleans($definition['default']);

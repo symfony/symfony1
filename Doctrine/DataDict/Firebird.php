@@ -60,6 +60,8 @@ class Doctrine_DataDict_Firebird extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'varchar':
             case 'string':
             case 'array':
@@ -78,7 +80,6 @@ class Doctrine_DataDict_Firebird extends Doctrine_DataDict
             case 'blob':
                 return 'BLOB SUB_TYPE 0';
             case 'integer':
-            case 'enum':
             case 'int':
                 return 'INT';
             case 'boolean':

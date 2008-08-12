@@ -62,6 +62,8 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
+            case 'enum':
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
             case 'array':
             case 'object':
             case 'text':
@@ -93,7 +95,6 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 }
                 return 'IMAGE';
             case 'integer':
-            case 'enum':
             case 'int':
                 return 'INT';
             case 'boolean':
