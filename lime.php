@@ -17,6 +17,8 @@
  */
 class lime_test
 {
+  const EPSILON = 0.0000000001;
+
   public $plan = null;
   public $test_nb = 0;
   public $failed = 0;
@@ -93,6 +95,10 @@ class lime_test
     if (is_object($exp1) || is_object($exp2))
     {
       $value = $exp1 === $exp2;
+    }
+    else if (is_float($exp1) && is_float($exp2))
+    {
+      $value = abs($exp1 - $exp2) < self::EPSILON;
     }
     else
     {
