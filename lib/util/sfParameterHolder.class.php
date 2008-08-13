@@ -50,7 +50,7 @@ class sfParameterHolder implements Serializable
    */
   public function & get($name, $default = null)
   {
-    if (isset($this->parameters[$name]))
+    if (array_key_exists($name, $this->parameters))
     {
       $value = & $this->parameters[$name];
     }
@@ -91,7 +91,7 @@ class sfParameterHolder implements Serializable
    */
   public function has($name)
   {
-    if (isset($this->parameters[$name]))
+    if (array_key_exists($name, $this->parameters))
     {
       return true;
     }

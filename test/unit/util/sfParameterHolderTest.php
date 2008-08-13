@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(27, new lime_output_color());
+$t = new lime_test(28, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -29,13 +29,13 @@ $ph->set('foo', 'bar');
 $t->is($ph->get('foo'), 'bar', '->get() returns the parameter value for the given key');
 $t->is($ph->get('bar'), null, '->get() returns null if the key does not exist');
 
-// checks that get returnes reference
+// checks that get returns reference
 $ref = 'foobar';
-$ph->set('ref',$ref);
-$ref2 &= $ph->get('ref'); //obtain the very same reference and modify it
+$ph->set('ref', $ref);
+$ref2 = null;
+$ref2 &= $ph->get('ref'); // obtain the very same reference and modify it
 $ref2 &= 'barfoo';
 $t->is($ref2 , $ref, '->get() returns a reference for the given key');
-
 
 $ph = new sfParameterHolder();
 $t->is('default_value', $ph->get('foo1', 'default_value'), '->get() takes the default value as its second argument');
@@ -61,6 +61,8 @@ $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $t->is($ph->has('foo'), true, '->has() returns true if the key exists');
 $t->is($ph->has('bar'), false, '->has() returns false if the key does not exist');
+$ph->set('bar', null);
+$t->is($ph->has('bar'), true, '->has() returns true if the key exist, even if the value is null');
 
 // ->remove()
 $t->diag('->remove()');

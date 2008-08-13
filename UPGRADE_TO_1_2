@@ -171,3 +171,22 @@ default status code:
     $this->redirectUnless($condition, '@homepage', 301);
 
 The `redirect()` method already have this feature.
+
+sfParameterHolder
+-----------------
+
+The `has()` method of `sfParameterHolder` has been changed to be more
+semantically correct.
+
+It now returns `true` even if the value is `null`:
+
+    [php]
+    $ph = new sfParameterHolder();
+    $ph->set('foo', 'bar');
+    $ph->set('bar', null);
+
+    $ph->has('foo') === true;
+    $ph->has('bar') === true; // returns false under symfony 1.0 or 1.1
+
+The `sfParameterHolder::has()` method is used by the `hasParameter()` and
+`hasAttribute()` methods available for a large number of core classes.
