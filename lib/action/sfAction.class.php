@@ -204,16 +204,17 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $url        Url
+   * @param  string $statusCode Status code (default to 302)
    *
    * @throws sfStopException
    *
    * @see redirect
    */
-  public function redirectIf($condition, $url)
+  public function redirectIf($condition, $url, $statusCode = 302)
   {
     if ($condition)
     {
-      $this->redirect($url);
+      $this->redirect($url, $statusCode);
     }
   }
 
@@ -224,16 +225,17 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $url        Url
+   * @param  string $statusCode Status code (default to 302)
    *
    * @throws sfStopException
    *
    * @see redirect
    */
-  public function redirectUnless($condition, $url)
+  public function redirectUnless($condition, $url, $statusCode = 302)
   {
     if (!$condition)
     {
-      $this->redirect($url);
+      $this->redirect($url, $statusCode);
     }
   }
 

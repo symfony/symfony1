@@ -53,7 +53,9 @@ This change removes the dependency between `sfResponse` and `sfConfig`.
 Validators
 ----------
 
-The `sfValidatorSchemaCompare` constant values have been changed. No change to your code need to be done, but now, you can use nice shortcuts. The following two examples are equivalent:
+The `sfValidatorSchemaCompare` constant values have been changed. No change to
+your code need to be done, but now, you can use nice shortcuts.
+The following two examples are equivalent:
 
     [php]
     // symfony 1.1 and 1.2
@@ -65,9 +67,11 @@ The `sfValidatorSchemaCompare` constant values have been changed. No change to y
 Tests
 -----
 
-Cookies are now extensively supported in the `sfBrowser` and `sfTestBrowser` classes.
+Cookies are now extensively supported in the `sfBrowser` and `sfTestBrowser`
+classes.
 
-You can manage cookies between requests by using the `setCookie()`, `removeCookie()`, and `clearCookies()` methods of the `sfBrowser` class:
+You can manage cookies between requests by using the `setCookie()`,
+`removeCookie()`, and `clearCookies()` methods of the `sfBrowser` class:
 
     [php]
     $b->
@@ -80,7 +84,8 @@ You can manage cookies between requests by using the `setCookie()`, `removeCooki
       get('/')->
       // ...
 
-You can also test cookies with the `hasCookie()` and `isCookie()` methods of the `sfTestBrowser` class:
+You can also test cookies with the `hasCookie()` and `isCookie()` methods of
+the `sfTestBrowser` class:
 
     [php]
     $b->
@@ -91,16 +96,21 @@ You can also test cookies with the `hasCookie()` and `isCookie()` methods of the
       isCookie('foo', '/a/')->
       isCookie('foo', '/!z/')->
 
-The `hasCookie()` method takes a Boolean as its second argument to be able to test the fact that a cookie is not set.
+The `hasCookie()` method takes a Boolean as its second argument to be able to
+test the fact that a cookie is not set.
 
-The second argument of the `isCookie()` method behaves as the second argument of the `checkElementResponse` method. It can be a string, a regular expression, or a negative regular expression.
+The second argument of the `isCookie()` method behaves as the second argument
+of the `checkElementResponse` method. It can be a string, a regular expression,
+or a negative regular expression.
 
-The browser class also automatically expires cookies as per the `expire` value of each cookie.
+The browser class also automatically expires cookies as per the `expire` value
+of each cookie.
 
 YAML
 ----
 
-The YAML parser now supports full merge key (see http://yaml.org/type/merge.html for more examples).
+The YAML parser now supports full merge key (see http://yaml.org/type/merge.html
+for more examples).
 
     [php]
     $yaml = new sfYamlParser();
@@ -145,3 +155,19 @@ The YAML parser now supports full merge key (see http://yaml.org/type/merge.html
             )
 
     )
+
+Actions
+-------
+
+By default, when you use the `redirectIf()` or `redirectUnless()` methods
+in your actions, symfony automatically changes the response HTTP status
+code to 302.
+
+These two methods now have an additional optional argument to change this
+default status code:
+
+    [php]
+    $this->redirectIf($condition, '@homepage', 301);
+    $this->redirectUnless($condition, '@homepage', 301);
+
+The `redirect()` method already have this feature.
