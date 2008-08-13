@@ -106,6 +106,61 @@ class sfBrowser
   }
 
   /**
+   * Sets a cookie.
+   *
+   * @param  string  $name     The cookie name
+   * @param  string  $name     HTTP header name
+   * @param  string  $value    Value for the cookie
+   * @param  string  $expire   Cookie expiration period
+   * @param  string  $path     Path
+   * @param  string  $domain   Domain name
+   * @param  bool    $secure   If secure
+   * @param  bool    $httpOnly If uses only HTTP
+   * 
+   * @return sfBrowser         This sfBrowser instance
+   */
+  public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
+  {
+    $this->cookieJar[$name] = array(
+      'name'     => $name,
+      'value'    => $value,
+      'expire'   => $expire,
+      'path'     => $path,
+      'domain'   => $domain,
+      'secure'   => (Boolean) $secure,
+      'httpOnly' => $httpOnly,
+    );
+
+    return $this;
+  }
+
+  /**
+   * Removes a cookie by name.
+   *
+   * @param string $name The cookie name
+   *
+   * @return sfBrowser    This sfBrowser instance
+   */
+  public function removeCookie($name)
+  {
+    unset($this->cookieJar[$name]);
+
+    return $this;
+  }
+
+  /**
+   * Clears all cookies.
+   *
+   * @return sfBrowser    This sfBrowser instance
+   */
+  public function clearCookies()
+  {
+    $this->cookieJar = array();
+
+    return $this;
+  }
+
+  /**
    * Sets username and password for simulating http authentication.
    *
    * @param string $username  The username
@@ -233,6 +288,16 @@ class sfBrowser
       $_GET = array_merge($qs, $_GET);
     }
 
+    // expire cookies
+    $cookies = $this->cookieJar;
+    foreach ($cookies as $name => $cookie)
+    {
+      if ($cookie['expire'] && $cookie['expire'] < time())
+      {
+        unset($this->cookieJar[$name]);
+      }
+    }
+
     // restore cookies
     $_COOKIE = array();
     foreach ($this->cookieJar as $name => $cookie)
@@ -268,10 +333,9 @@ class sfBrowser
     $this->context->getStorage()->shutdown();
 
     // save cookies
-    $this->cookieJar = array();
     foreach ($response->getCookies() as $name => $cookie)
     {
-      // FIXME: deal with expire, path, secure, ...
+      // FIXME: deal with path, secure, ...
       $this->cookieJar[$name] = $cookie;
     }
 

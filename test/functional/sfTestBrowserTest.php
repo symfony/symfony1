@@ -88,3 +88,74 @@ $b->
   isResponseHeader('foo', 'bar')->
   isResponseHeader('foo', 'foobar')
 ;
+
+// cookies
+$b->
+  setCookie('foo', 'bar')->
+  setCookie('bar', 'foo')->
+  setCookie('foofoo', 'foo', time() - 10)->
+
+  get('/cookie')->
+  hasCookie('foofoo', false)->
+  hasCookie('foo')->
+  isCookie('foo', 'bar')->
+  isCookie('foo', '/a/')->
+  isCookie('foo', '!/z/')->
+  checkResponseElement('p', 'bar.foo-')->
+  get('/cookie')->
+  hasCookie('foo')->
+  isCookie('foo', 'bar')->
+  isCookie('foo', '/a/')->
+  isCookie('foo', '!/z/')->
+  checkResponseElement('p', 'bar.foo-')->
+  removeCookie('foo')->
+  get('/cookie')->
+  hasCookie('foo', false)->
+  hasCookie('bar')->
+  checkResponseElement('p', '.foo-')->
+  clearCookies()->
+  get('/cookie')->
+  hasCookie('foo', false)->
+  hasCookie('bar', false)->
+  checkResponseElement('p', '.-')
+;
+
+$b->
+  setCookie('foo', 'bar')->
+  setCookie('bar', 'foo')->
+
+  get('/cookie/setCookie')->
+
+  get('/cookie')->
+  hasCookie('foo')->
+  isCookie('foo', 'bar')->
+  isCookie('foo', '/a/')->
+  isCookie('foo', '!/z/')->
+  checkResponseElement('p', 'bar.foo-barfoo')->
+  get('/cookie')->
+  hasCookie('foo')->
+  isCookie('foo', 'bar')->
+  isCookie('foo', '/a/')->
+  isCookie('foo', '!/z/')->
+  checkResponseElement('p', 'bar.foo-barfoo')->
+  removeCookie('foo')->
+  get('/cookie')->
+  hasCookie('foo', false)->
+  hasCookie('bar')->
+  checkResponseElement('p', '.foo-barfoo')->
+
+  get('/cookie/removeCookie')->
+
+  get('/cookie')->
+  hasCookie('foo', false)->
+  hasCookie('bar')->
+  checkResponseElement('p', '.foo-')->
+
+  get('/cookie/setCookie')->
+
+  clearCookies()->
+  get('/cookie')->
+  hasCookie('foo', false)->
+  hasCookie('bar', false)->
+  checkResponseElement('p', '.-')
+;

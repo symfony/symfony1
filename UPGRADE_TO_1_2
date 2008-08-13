@@ -61,3 +61,38 @@ The `sfValidatorSchemaCompare` constant values have been changed. No change to y
 
     // symfony 1.2 only
     $v = new sfValidatorSchemaCompare('left', '==', 'right');
+
+Tests
+-----
+
+Cookies are now extensively supported in the `sfBrowser` and `sfTestBrowser` classes.
+
+You can manage cookies between requests by using the `setCookie()`, `removeCookie()`, and `clearCookies()` methods of the `sfBrowser` class:
+
+    [php]
+    $b->
+      setCookie('foo', 'bar')->
+      removeCookie('bar')->
+      get('/')->
+      // ...
+
+      clearCookies()->
+      get('/')->
+      // ...
+
+You can also test cookies with the `hasCookie()` and `isCookie()` methods of the `sfTestBrowser` class:
+
+    [php]
+    $b->
+      get('/')->
+      hasCookie('foo')->
+      hasCookie('foobar', false)->
+      isCookie('foo', 'bar')->
+      isCookie('foo', '/a/')->
+      isCookie('foo', '/!z/')->
+
+The `hasCookie()` method takes a Boolean as its second argument to be able to test the fact that a cookie is not set.
+
+The second argument of the `isCookie()` method behaves as the second argument of the `checkElementResponse` method. It can be a string, a regular expression, or a negative regular expression.
+
+The browser class also automatically expires cookies as per the `expire` value of each cookie.

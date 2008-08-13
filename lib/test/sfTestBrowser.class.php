@@ -380,7 +380,7 @@ class sfTestBrowser extends sfBrowser
       }
       else if (null !== $message)
       {
-        $this->test()->is($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
+        $this->test()->is($e->getMessage(), $message, sprintf('response exception message is "%s"', $message));
       }
     }
 
@@ -390,7 +390,7 @@ class sfTestBrowser extends sfBrowser
   }
   
   /**
-   * Trigger a test failure if an uncaught exception is present.
+   * Triggers a test failure if an uncaught exception is present.
    * 
    * @return  bool
    */
@@ -400,8 +400,80 @@ class sfTestBrowser extends sfBrowser
     {
       $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
     }
-    
+
     return $empty;
+  }
+
+  /**
+   * Checks if a cookie exists.
+   *
+   * @param string  $name   The cookie name
+   * @param Boolean $exists Whether the cookie must exist or not
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function hasCookie($name, $exists = true)
+  {
+    if (!array_key_exists($name, $_COOKIE))
+    {
+      if ($exists)
+      {
+        $this->test()->fail(sprintf('cookie "%s" exist.', $name));
+      }
+      else
+      {
+        $this->test()->pass(sprintf('cookie "%s" does not exist.', $name));
+      }
+
+      return $this;
+    }
+
+    if ($exists)
+    {
+      $this->test()->pass(sprintf('cookie "%s" exists.', $name));
+    }
+    else
+    {
+      $this->test()->fail(sprintf('cookie "%s" does not exist.', $name));
+    }
+
+    return $this;
+  }
+
+  /**
+   * Checks the value of a cookie.
+   *
+   * @param string $name   The cookie name
+   * @param mixed  $value  The expected value
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function isCookie($name, $value)
+  {
+    if (!array_key_exists($name, $_COOKIE))
+    {
+      $this->test()->fail(sprintf('cookie "%s" does not exist.', $name));
+
+      return $this;
+    }
+
+    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
+    {
+      if ($match[1] == '!')
+      {
+        $this->test()->unlike($_COOKIE[$name], substr($value, 1), sprintf('cookie "%s" content does not match regex "%s"', $name, $value));
+      }
+      else
+      {
+        $this->test()->like($_COOKIE[$name], $value, sprintf('cookie "%s" content matches regex "%s"', $name, $value));
+      }
+    }
+    else if (null !== $message)
+    {
+      $this->test()->is($_COOKIE[$name], $value, sprintf('cookie "%s" content is ok', $name));
+    }
+
+    return $this;
   }
 
   /**
