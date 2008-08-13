@@ -940,7 +940,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             
             if ($this->_isValueModified($type, $old, $value)) {
                 if ($value === null) {
-                    $value = self::$_null;
+                    $default = $this->_table->getDefaultValueOf($fieldName);
+                    $value = ($default === null) ? self::$_null : $default;
                 }
 
                 $this->_data[$fieldName] = $value;
@@ -1253,6 +1254,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     */
             }
         }
+
         $map = $this->_table->inheritanceMap;
         foreach ($map as $k => $v) {
             $k = $this->_table->getFieldName($k);
