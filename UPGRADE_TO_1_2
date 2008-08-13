@@ -4,7 +4,7 @@ Upgrade from 1.1 to 1.2
 This document describes the changes made in symfony 1.2 and what need
 to be done to upgrade your symfony 1.1 projects.
 
-WARNING: symfony 1.2 is only compatible with PHP 5.2.
+WARNING: symfony 1.2 is only compatible with PHP 5.2.4.
 
 How to upgrade?
 ---------------

@@ -67,7 +67,7 @@ if (is_cli())
 
 // mandatory
 echo "\n** Mandatory requirements **\n\n";
-check(version_compare(phpversion(), '5.1.3', '>='), 'requires PHP >= 5.1.3', 'Current version is '.phpversion(), true);
+check(version_compare(phpversion(), '5.2.4', '>='), 'requires PHP >= 5.2.4', 'Current version is '.phpversion(), true);
 check(!ini_get('zend.ze1_compatibility_mode'), 'php.ini: requires zend.ze1_compatibility_mode set to off', sprintf('Set it to off in php.ini (%s)', get_ini_path()), true);
 
 // warnings
