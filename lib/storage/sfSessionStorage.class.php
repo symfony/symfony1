@@ -80,14 +80,7 @@ class sfSessionStorage extends sfStorage
     $domain   = $this->options['session_cookie_domain'];
     $secure   = $this->options['session_cookie_secure'];
     $httpOnly = $this->options['session_cookie_httponly'];
-    if (version_compare(phpversion(), '5.2', '>='))
-    {
-      session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
-    }
-    else
-    {
-      session_set_cookie_params($lifetime, $path, $domain, $secure);
-    }
+    session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
 
     if ($this->options['auto_start'] && !self::$sessionStarted)
     {
