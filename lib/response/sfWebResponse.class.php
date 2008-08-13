@@ -165,7 +165,7 @@ class sfWebResponse extends sfResponse
       }
     }
 
-    $this->cookies[] = array(
+    $this->cookies[$name] = array(
       'name'     => $name,
       'value'    => $value,
       'expire'   => $expire,
@@ -684,13 +684,7 @@ class sfWebResponse extends sfResponse
    */
   public function getCookies()
   {
-    $cookies = array();
-    foreach ($this->cookies as $cookie)
-    {
-      $cookies[$cookie['name']] = $cookie;
-    }
-
-    return $cookies;
+    return $this->cookies;
   }
 
   /**
