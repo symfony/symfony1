@@ -7,11 +7,21 @@ brief: >
     details: http://yaml.org/type/merge.html
 yaml: |
     foo: &foo
-        - Steve
-        - Clark
-        - Brian
-    bar:
+        a: Steve
+        b: Clark
+        c: Brian
+    bar: &bar
         <<: *foo
-        - Oren
+        x: Oren
+    foo2: &foo2
+        a: Ballmer
+    ding: &dong [ fi, fei, fo, fam]
+    check:
+        <<:
+            - *foo
+            - *dong
+        isit: tested
+    head:
+        <<: [ *foo , *dong , *foo2 ]
 php: |
-    array('foo' => array('Steve', 'Clark', 'Brian'), 'bar' => array('Steve', 'Clark', 'Brian', 'Oren'))
+    array('foo' => array('a' => 'Steve', 'b' => 'Clark', 'c' => 'Brian'), 'bar' => array('a' => 'Steve', 'b' => 'Clark', 'c' => 'Brian', 'x' => 'Oren'), 'foo2' => array('a' => 'Ballmer'), 'ding' => array('fi', 'fei', 'fo', 'fam'), 'check' => array('a' => 'Steve', 'b' => 'Clark', 'c' => 'Brian', 'fi', 'fei', 'fo', 'fam', 'isit' => 'tested'), 'head' => array('a' => 'Ballmer', 'b' => 'Clark', 'c' => 'Brian', 'fi', 'fei', 'fo', 'fam'))

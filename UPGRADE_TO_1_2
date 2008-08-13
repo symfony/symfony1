@@ -96,3 +96,52 @@ The `hasCookie()` method takes a Boolean as its second argument to be able to te
 The second argument of the `isCookie()` method behaves as the second argument of the `checkElementResponse` method. It can be a string, a regular expression, or a negative regular expression.
 
 The browser class also automatically expires cookies as per the `expire` value of each cookie.
+
+YAML
+----
+
+The YAML parser now supports full merge key (see http://yaml.org/type/merge.html for more examples).
+
+    [php]
+    $yaml = new sfYamlParser();
+
+    print_r($yaml->parse(<<<EOF
+    default_param: &default_param
+      datasource: propel
+      phptype:    mysql
+      hostspec:   localhost
+      database:   db
+      username:   user
+      password:   pass
+
+    param:
+      <<: *default_param
+      username:   myuser
+      password:   mypass
+    EOF
+    ));
+
+    // displays
+    Array
+    (
+        [default_param] => Array
+            (
+                [datasource] => propel
+                [phptype]    => mysql
+                [hostspec]   => localhost
+                [database]   => db
+                [username]   => user
+                [password]   => pass
+            )
+
+        [param] => Array
+            (
+                [datasource] => propel
+                [phptype]    => mysql
+                [hostspec]   => localhost
+                [database]   => db
+                [username]   => myuser
+                [password]   => mypass
+            )
+
+    )
