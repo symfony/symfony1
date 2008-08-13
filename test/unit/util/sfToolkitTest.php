@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(104, new lime_output_color());
+$t = new lime_test(107, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -81,6 +81,9 @@ $t->is(sfToolkit::replaceConstants('my value with a %foo% constant'), 'my value 
 $t->is(sfToolkit::replaceConstants('%Y/%m/%d %H:%M'), '%Y/%m/%d %H:%M', '::replaceConstantsCallback() does not replace unknown constants');
 sfConfig::set('bar', null);
 $t->is(sfToolkit::replaceConstants('my value with a %bar% constant'), 'my value with a  constant', '::replaceConstantsCallback() replaces constants enclosed in % even if value is null');
+$t->is(sfToolkit::replaceConstants('my value with a %foobar% constant'), 'my value with a %foobar% constant', '::replaceConstantsCallback() returns the original string if the constant is not defined');
+$t->is(sfToolkit::replaceConstants('my value with a %foo\'bar% constant'), 'my value with a %foo\'bar% constant', '::replaceConstantsCallback() returns the original string if the constant is not defined');
+$t->is(sfToolkit::replaceConstants('my value with a %foo"bar% constant'), 'my value with a %foo"bar% constant', '::replaceConstantsCallback() returns the original string if the constant is not defined');
 
 // ::isPathAbsolute()
 $t->diag('::isPathAbsolute()');
