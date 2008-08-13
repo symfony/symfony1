@@ -99,7 +99,7 @@ $t->diag('->configure()');
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
 $t->is($v->getOption('allow_extra_fields'), false, '->configure() sets "allow_extra_fields" option to false by default');
 $t->is($v->getOption('filter_extra_fields'), true, '->configure() sets "filter_extra_fields" option to true by default');
-$t->is($v->getMessage('extra_fields'), 'Extra field %field%.', '->configure() has a default error message for the "extra_fields" error');
+$t->is($v->getMessage('extra_fields'), 'Unexpected extra form field named "%field%".', '->configure() has a default error message for the "extra_fields" error');
 
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2), array('allow_extra_fields' => true, 'filter_extra_fields' => false), array('extra_fields' => 'Extra fields'));
 $t->is($v->getOption('allow_extra_fields'), true, '->__construct() can override the default value for the "allow_extra_fields" option');

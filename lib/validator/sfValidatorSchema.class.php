@@ -78,7 +78,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     $this->addOption('allow_extra_fields', false);
     $this->addOption('filter_extra_fields', true);
 
-    $this->addMessage('extra_fields', 'Extra field %field%.');
+    $this->addMessage('extra_fields', 'Unexpected extra form field named "%field%".');
   }
 
   /**
