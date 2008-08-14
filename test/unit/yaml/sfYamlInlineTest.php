@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(100, new lime_output_color());
+$t = new lime_test(102, new lime_output_color());
 
 // ::load()
 $t->diag('::load()');
@@ -28,6 +28,7 @@ $testsForLoad = array(
   '02333' => 02333,
   '.Inf' => -log(0),
   '-.Inf' => log(0),
+  '123456789123456789' => '123456789123456789',
 
   '2007-10-30' => mktime(0, 0, 0, 10, 30, 2007),
   '2007-10-30T02:59:43Z' => gmmktime(2, 59, 43, 10, 30, 2007),

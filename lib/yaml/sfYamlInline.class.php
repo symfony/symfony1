@@ -370,7 +370,9 @@ class sfYamlInline
       case 0 === strpos($scalar, '!!php/object:'):
         return unserialize(substr($scalar, 13));
       case ctype_digit($scalar):
-        return '0' == $scalar[0] ? octdec($scalar) : intval($scalar);
+        $raw = $scalar;
+        $cast = intval($scalar);
+        return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
       case in_array(strtolower($scalar), array('true', 'on', '+', 'yes', 'y')):
         return true;
       case in_array(strtolower($scalar), array('false', 'off', '-', 'no', 'n')):
