@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(38, new lime_output_color());
+$t = new lime_test(42, new lime_output_color());
 
 class ValidatorIdentity extends sfValidatorBase
 {
@@ -18,6 +18,11 @@ class ValidatorIdentity extends sfValidatorBase
   {
     $this->addOption('foo', 'bar');
     $this->addMessage('foo', 'bar');
+  }
+
+  public function testIsEmpty($value)
+  {
+    return $this->isEmpty($value);
   }
 
   protected function doClean($value)
@@ -106,6 +111,13 @@ catch (sfValidatorError $e)
   $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
 }
 $t->is($v->clean('  foo  '), '  foo  ', '->clean() does not trim whitespaces by default');
+
+// ->isEmpty()
+$t->diag('->isEmpty()');
+$t->is($v->testIsEmpty(null), true, 'null value isEmpty()');
+$t->is($v->testIsEmpty(''), true, 'empty string value is isEmpty()');
+$t->is($v->testIsEmpty(array()), true, 'null value is considered isEmpty()');
+$t->is($v->testIsEmpty(false), false, 'false value !isEmpty()');
 
 // ->getEmptyValue()
 $t->diag('->getEmptyValue()');

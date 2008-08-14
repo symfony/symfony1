@@ -326,7 +326,7 @@ abstract class sfValidatorBase
    */
   protected function isEmpty($value)
   {
-    return in_array($value, array(null, ''));
+    return in_array($value, array(null, '', array()), true);
   }
 
   /**
