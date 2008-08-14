@@ -115,9 +115,9 @@ $t->is($v->clean('  foo  '), '  foo  ', '->clean() does not trim whitespaces by 
 // ->isEmpty()
 $t->diag('->isEmpty()');
 $t->is($v->testIsEmpty(null), true, 'null value isEmpty()');
-$t->is($v->testIsEmpty(''), true, 'empty string value is isEmpty()');
-$t->is($v->testIsEmpty(array()), true, 'null value is considered isEmpty()');
-$t->is($v->testIsEmpty(false), false, 'false value !isEmpty()');
+$t->is($v->testIsEmpty(''), true, 'empty string value isEmpty()');
+$t->is($v->testIsEmpty(array()), true, 'empty array value isEmpty()');
+$t->is($v->testIsEmpty(false), false, 'false value not isEmpty()');
 
 // ->getEmptyValue()
 $t->diag('->getEmptyValue()');
