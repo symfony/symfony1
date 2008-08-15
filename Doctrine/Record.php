@@ -514,7 +514,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function hydrate(array $data)
     {
         $this->_values = array_merge($this->_values, $this->cleanData($data));
-        $this->_data   = array_merge($this->_data, $data);
+        $this->_data = array_merge($this->_data, $data);
         $this->prepareIdentifiers(true);
     }
 
@@ -828,16 +828,36 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     /**
      * load
-     * loads all the uninitialized properties from the database
+     * Loads all the uninitialized properties from the database.
+     * Used to move a record from PROXY to CLEAN/DIRTY state.
      *
      * @return boolean
      */
-    public function load()
+    public function load(array $data = array())
     {
         // only load the data from database if the Doctrine_Record is in proxy state
         if ($this->_state == Doctrine_Record::STATE_PROXY) {
-            $this->refresh();
-            $this->_state = Doctrine_Record::STATE_CLEAN;
+            $id = $this->identifier();
+            if ( ! is_array($id)) {
+                $id = array($id);
+            }
+            if (empty($id)) {
+                return false;
+            }
+
+            $data = empty($data) ? $this->getTable()->find($id, Doctrine::HYDRATE_ARRAY) : $data;
+            foreach ($data as $field => $value) {
+               if ( ! isset($this->_data[$field]) || $this->_data[$field] === self::$_null) {
+                   $this->_data[$field] = $value;
+               }
+            }
+            
+            if ($this->isModified()) {
+               $this->_state = Doctrine_Record::STATE_DIRTY;
+            } else if (count($data) >= $this->_table->getColumnCount()) {
+                $this->_state = Doctrine_Record::STATE_CLEAN;
+            }
+            $this->cleanData($this->_data);
             return true;
         }
         return false;
@@ -940,14 +960,15 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             
             if ($this->_isValueModified($type, $old, $value)) {
                 if ($value === null) {
-                    $default = $this->_table->getDefaultValueOf($fieldName);
+                    $default = $this->_table->getDefaultValueOf($fieldName); 
                     $value = ($default === null) ? self::$_null : $default;
                 }
-
                 $this->_data[$fieldName] = $value;
                 $this->_modified[] = $fieldName;
+
                 switch ($this->_state) {
                     case Doctrine_Record::STATE_CLEAN:
+                    case Doctrine_Record::STATE_PROXY:
                         $this->_state = Doctrine_Record::STATE_DIRTY;
                         break;
                     case Doctrine_Record::STATE_TCLEAN:
@@ -1254,7 +1275,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     */
             }
         }
-
         $map = $this->_table->inheritanceMap;
         foreach ($map as $k => $v) {
             $k = $this->_table->getFieldName($k);
@@ -1847,7 +1867,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
             foreach ($ids as $id) {
                 $record = new $modelClassName;
-                $record[$localFieldName]   = $identifier;
+                $record[$localFieldName] = $identifier;
                 $record[$foreignFieldName] = $id;
                 $record->save();
             }

@@ -1430,13 +1430,18 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $this->_data = array();
                 return $record;
             }
-
-
+            
             $id = implode(' ', $id);
 
             if (isset($this->_identityMap[$id])) {
+                //NOTE: This is still flawed as modifications are overridden in hydrate()
                 $record = $this->_identityMap[$id];
                 $record->hydrate($this->_data);
+                if ($record->state() == Doctrine_Record::STATE_PROXY) {
+                    if (count($this->_data) >= $this->getColumnCount()) {
+                        $record->state(Doctrine_Record::STATE_CLEAN);
+                    }
+                }
             } else {
                 $recordName = $this->getComponentName();
                 $record = new $recordName($this);
