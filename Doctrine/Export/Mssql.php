@@ -184,7 +184,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
                 if ($query) {
                     $query .= ', ';
                 }
-                $query .= 'ADD ' . $this->conn->getDeclaration($fieldName, $field);
+                $query .= 'ADD ' . $this->getDeclaration($fieldName, $field);
             }
         }
 
