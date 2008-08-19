@@ -552,7 +552,7 @@ class sfPatternRouting extends sfRouting
 
       if (!$found)
       {
-        throw new sfConfigurationException(sprintf('Unable to find a matching routing rule to generate url for params "%s".', var_export($params, true)));
+        throw new sfConfigurationException(sprintf('Unable to find a matching routing rule to generate url for params "%s".', str_replace("\n", '', var_export($params, true))));
       }
     }
 
@@ -616,7 +616,7 @@ class sfPatternRouting extends sfRouting
 
       if ($this->options['logging'])
       {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] for "%s"', $routeInfo['name'], $routeInfo['route']))));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] for "%s" with parameters %s', $routeInfo['name'], $routeInfo['route'], str_replace("\n", '', var_export($routeInfo['parameters'], true))))));
       }
     }
     else
