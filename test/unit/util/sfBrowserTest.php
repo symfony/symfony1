@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(50, new lime_output_color());
+$t = new lime_test(51, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -206,11 +206,15 @@ list($method, $uri, $parameters) = $b->
   setField('text_default_value', 'myvalue')->
   setField('text', 'myothervalue')->
   setField('article[title]', 'mytitle')->
+  setField('myarray[0]', 'value0')->
+  setField('myarray[1]', 'value1')->
+  setField('myarray[2]', 'value2')->
   click('submit')
 ;
 $t->is($parameters['text_default_value'], 'myvalue', '->setField() overrides default form field values');
 $t->is($parameters['text'], 'myothervalue', '->setField() overrides default form field values');
 $t->is($parameters['article']['title'], 'mytitle', '->setField() overrides default form field values');
+$t->is($parameters['myarray'], array('value0', 'value1', 'value2'), '->setField() overrides default form field values');
 
 list($method, $uri, $parameters) = $b->
   setField('text_default_value', 'myvalue')->
