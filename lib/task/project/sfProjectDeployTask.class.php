@@ -30,7 +30,7 @@ class sfProjectDeployTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('go', null, sfCommandOption::PARAMETER_NONE, 'Do the deployment'),
       new sfCommandOption('rsync-dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory where to look for rsync*.txt files', 'config'),
-      new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', 'azC --force --delete'),
+      new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', '-azC --force --delete'),
     ));
 
     $this->aliases = array('sync');
