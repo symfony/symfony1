@@ -175,7 +175,7 @@ class sfDomCssSelector
           $tagName = $matches[1] ? $matches[1] : '*';
           preg_match_all('/
             \[
-              (\w+)                 # attribute
+              ([\w\-]+)             # attribute
               ([=~\|\^\$\*]?)       # modifier (optional)
               =?                    # equal (optional)
               (
