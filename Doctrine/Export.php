@@ -715,7 +715,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $collation = (isset($field['collation']) && $field['collation']) ?
                     ' ' . $this->getCollationFieldDeclaration($field['collation']) : '';
 
-        $notnull   = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+        $notnull   = $this->getNotNullFieldDeclaration($field);
 
         $unique    = (isset($field['unique']) && $field['unique']) ?
                     ' ' . $this->getUniqueFieldDeclaration() : '';
@@ -773,6 +773,21 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         return $default;
     }
+    
+
+    /**
+     * getDefaultDeclaration
+     * Obtain DBMS specific SQL code portion needed to set a NOT NULL
+     * declaration to be used in statements like CREATE TABLE.
+     *
+     * @param array $field      field definition array
+     * @return string           DBMS specific SQL code portion needed to set a default value
+     */
+    public function getNotNullFieldDeclaration(array $definition)
+    {
+        return (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+    }
+    
 
     /**
      * Obtain DBMS specific SQL code portion needed to set a CHECK constraint

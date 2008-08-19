@@ -253,4 +253,18 @@ class Doctrine_Export_Mssql extends Doctrine_Export
         $sequenceName = $this->conn->quoteIdentifier($this->conn->getSequenceName($seqName), true);
         return 'DROP TABLE ' . $sequenceName;
     }
+    
+    
+    /**
+     * getDefaultDeclaration
+     * Obtain DBMS specific SQL code portion needed to set a NOT NULL
+     * declaration to be used in statements like CREATE TABLE.
+     *
+     * @param array $field      field definition array
+     * @return string           DBMS specific SQL code portion needed to set a default value
+     */
+    public function getNotNullFieldDeclaration(array $definition)
+    {
+        return (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : ' NULL';
+    }
 }
