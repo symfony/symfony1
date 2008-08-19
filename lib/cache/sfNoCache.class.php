@@ -23,7 +23,7 @@ class sfNoCache extends sfCache
    */
   public function get($key, $default = null)
   {
-    return null;
+    return $default;
   }
 
   /**
