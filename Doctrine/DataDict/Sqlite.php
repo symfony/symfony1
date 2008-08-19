@@ -295,7 +295,10 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
-            $default = ' DEFAULT ' . $this->conn->quote($field['default'], $field['type']);
+
+            $default = ' DEFAULT ' . (is_null($field['default'])
+                ? 'NULL'
+                : $this->conn->quote($field['default'], $field['type']));
         }/**
         elseif (empty($field['notnull'])) {
             $default = ' DEFAULT NULL';

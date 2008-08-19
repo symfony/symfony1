@@ -751,7 +751,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function getDefaultFieldDeclaration($field)
     {
         $default = '';
-        if (isset($field['default'])) {
+
+        if (array_key_exists('default', $field)) {
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull'])
                     ? null : $this->valid_default_values[$field['type']];
@@ -765,8 +766,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
             if ($field['type'] === 'boolean') {
                 $field['default'] = $this->conn->convertBooleans($field['default']);
             }
-            $default = ' DEFAULT ' . $this->conn->quote($field['default'], $field['type']);
+            $default = ' DEFAULT ' . (is_null($field['default'])
+                ? 'NULL'
+                : $this->conn->quote($field['default'], $field['type']));
         }
+
         return $default;
     }
 

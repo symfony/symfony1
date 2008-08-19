@@ -1034,32 +1034,37 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 if ( ! ($value instanceof Doctrine_Collection)) {
                     throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
                 }
+
                 if (isset($this->_references[$name])) {
                     $this->_references[$name]->setData($value->getData());
+
                     return $this;
                 }
             } else {
+                $localFieldName = $this->_table->getFieldName($rel->getLocal());
+
                 if ($value !== self::$_null) {
                     $relatedTable = $value->getTable();
                     $foreignFieldName = $relatedTable->getFieldName($rel->getForeign());
-                    $localFieldName = $this->_table->getFieldName($rel->getLocal());
+                }
 
-                    // one-to-one relation found
-                    if ( ! ($value instanceof Doctrine_Record)) {
-                        throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Record or Doctrine_Null when setting one-to-one references.");
-                    }
-                    if ($rel instanceof Doctrine_Relation_LocalKey) {
-                        if ( ! empty($foreignFieldName) && $foreignFieldName != $value->getTable()->getIdentifier()) {
-                            $this->set($localFieldName, $value->rawGet($foreignFieldName), false);
-                        } else {
-                            $this->set($localFieldName, $value, false);
-                        }
+                // one-to-one relation found
+                if ( ! ($value instanceof Doctrine_Record) && ! ($value instanceof Doctrine_Null)) {
+                    throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Record or Doctrine_Null when setting one-to-one references.");
+                }
+
+                if ($rel instanceof Doctrine_Relation_LocalKey) {
+                    if ($value !== self::$_null &&  ! empty($foreignFieldName) && $foreignFieldName != $value->getTable()->getIdentifier()) {
+                        $this->set($localFieldName, $value->rawGet($foreignFieldName), false);
                     } else {
-                        $value->set($foreignFieldName, $this, false);
+                        // FIX: Ticket #1280 fits in this situation
+                        $this->set($localFieldName, $value, false);
                     }
+                } elseif ($value !== self::$_null) {
+                    // We should only be able to reach $foreignFieldName if we have a Doctrine_Record on hands
+                    $value->set($foreignFieldName, $this, false);
                 }
             }
-
         } else if ($rel instanceof Doctrine_Relation_Association) {
             // join table relation found
             if ( ! ($value instanceof Doctrine_Collection)) {
