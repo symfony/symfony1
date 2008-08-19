@@ -38,11 +38,20 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
 
         $e = $this->_tokenizer->sqlExplode($condition);
 
-        if (count($e) > 2) {
+        if (($l = count($e)) > 2) {
             $expr = new Doctrine_Expression($e[0], $this->query->getConnection());
             $e[0] = $expr->getSql();
 
             $operator  = $e[1];
+
+            // FIX: "field NOT IN (XXX)" issue
+            // Related to ticket #1329
+            if ($l > 3) {
+                $operator .= ' ' . $e[2]; // Glue "NOT" and "IN"
+                $e[2] = $e[3]; // Move "(XXX)" to previous index
+
+                unset($e[3]); // Remove unused index
+            }
 
             if (substr(trim($e[2]), 0, 1) != '(') {
                 $expr = new Doctrine_Expression($e[2], $this->query->getConnection());
