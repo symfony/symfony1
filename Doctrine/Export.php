@@ -785,7 +785,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function getNotNullFieldDeclaration(array $definition)
     {
-        return (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+        return (isset($definition['notnull']) && $definition['notnull']) ? ' NOT NULL' : '';
     }
     
 
