@@ -39,7 +39,7 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the embedded validator failed');
-  $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
+  $t->is($e->getCode(), 'first_name [required]', '->clean() throws a sfValidatorError');
 }
 
 try
@@ -51,5 +51,5 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the embedded validator failed');
-  $t->is($e->getCode(), 'min_length', '->clean() throws a sfValidatorError');
+  $t->is($e->getCode(), 'first_name [min_length]', '->clean() throws a sfValidatorError');
 }
