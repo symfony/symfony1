@@ -65,11 +65,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function contains($id) 
     {
-        $tmp = apc_fetch($id);
-        if (is_array($tmp)) {
-            return $tmp[1];
-        }
-        return false;
+        return apc_fetch($id) === false ? false : true;
     }
 
     /**
