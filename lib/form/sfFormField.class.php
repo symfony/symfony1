@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -20,7 +20,7 @@ class sfFormField
 {
   protected static
     $toStringException = null;
-  
+
   protected
     $widget = null,
     $parent = null,
@@ -65,7 +65,7 @@ class sfFormField
       return 'Exception: '.$e->getMessage();
     }
   }
-  
+
   /**
    * Returns true if a form thrown an exception in the __toString() method
    *
@@ -89,7 +89,7 @@ class sfFormField
   {
     return self::$toStringException;
   }
-  
+
   /**
    * Sets an exception thrown by the __toString() method.
    *
@@ -219,6 +219,16 @@ class sfFormField
   public function isHidden()
   {
     return $this->widget->isHidden();
+  }
+
+  /**
+   * Returns the widget name.
+   *
+   * @return mixed The widget name
+   */
+  public function getName()
+  {
+    return $this->name;
   }
 
   /**
