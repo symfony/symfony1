@@ -158,4 +158,4 @@ $t->diag('::setXhtml() ::isXhtml()');
 $w = new MyWidget();
 $t->is(sfWidget::isXhtml(), true, '::isXhtml() return true if the widget must returns XHTML tags');
 sfWidget::setXhtml(false);
-$t->is($w->renderTag('input', array('value' => 'Test')), '<input value="Test"></input>', '::setXhtml() changesthe value of the XHTML tag');
+$t->is($w->renderTag('input', array('value' => 'Test')), '<input value="Test">', '::setXhtml() changes the value of the XHTML tag');
