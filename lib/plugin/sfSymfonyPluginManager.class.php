@@ -64,9 +64,9 @@ class sfSymfonyPluginManager extends sfPluginManager
    *
    * @param string $plugin The plugin name
    */
-  public function installWebContent($plugin)
+  public function installWebContent($plugin, $sourceDirectory)
   {
-    $webDir = $this->environment->getOption('plugin_dir').DIRECTORY_SEPARATOR.$plugin.DIRECTORY_SEPARATOR.'web';
+    $webDir = $sourceDirectory.DIRECTORY_SEPARATOR.$plugin.DIRECTORY_SEPARATOR.'web';
     if (is_dir($webDir))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Installing web data for plugin')));
@@ -109,7 +109,8 @@ class sfSymfonyPluginManager extends sfPluginManager
    */
   public function ListenToPluginPostInstall($event)
   {
-    $this->installWebContent($event['plugin']);
+    $this->installWebContent($event['plugin'], 
+           isset($event['sourceDirectory']) ? $event['sourceDirectory'] : $this->environment->getOption('plugin_dir'));
   }
 
   /**
