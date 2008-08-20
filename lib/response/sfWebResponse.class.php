@@ -316,7 +316,7 @@ class sfWebResponse extends sfResponse
 
       if ($value != '' && $this->options['logging'])
       {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send header "%s": "%s"', $name, $value))));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send header "%s: %s"', $name, $value))));
       }
     }
 

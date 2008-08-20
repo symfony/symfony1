@@ -465,7 +465,7 @@ class sfPatternRouting extends sfRouting
 
     if ($this->options['logging'])
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect "/%s"%s', $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect route "%s" (/%s%s)', $name, $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
     }
 
     return $this->routes;
@@ -616,7 +616,7 @@ class sfPatternRouting extends sfRouting
 
       if ($this->options['logging'])
       {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] for "%s" with parameters %s', $routeInfo['name'], $routeInfo['route'], str_replace("\n", '', var_export($routeInfo['parameters'], true))))));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route "%s" (%s) for %s with parameters %s', $routeInfo['name'], $routeInfo['route'], $url, str_replace("\n", '', var_export($routeInfo['parameters'], true))))));
       }
     }
     else
