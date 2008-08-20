@@ -25,7 +25,7 @@ class sfSessionTestStorage extends sfStorage
   /**
    * Available options:
    *
-   *  * session_path: The path to store the session files (%SF_TEST_CACHE_DIR%/sessions by default)
+   *  * session_path: The path to store the session files
    *  * session_id:   The session identifier
    *
    * @param array $options  An associative array of options
@@ -34,8 +34,12 @@ class sfSessionTestStorage extends sfStorage
    */
   public function initialize($options = null)
   {
+    if (!isset($options['session_path']))
+    {
+      throw new InvalidArgumentException('The "session_path" option is mandatory for the sfSessionTestStorage class.');
+    }
+
     $options = array_merge(array(
-      'session_path' => sfConfig::get('sf_test_cache_dir').'/sessions',
       'session_id'   => null,
     ), $options);
 
