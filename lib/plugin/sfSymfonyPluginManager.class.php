@@ -110,7 +110,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   public function ListenToPluginPostInstall($event)
   {
     $this->installWebContent($event['plugin'], 
-           isset($event['sourceDirectory']) ? $event['sourceDirectory'] : $this->environment->getOption('plugin_dir'));
+           isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
   }
 
   /**

@@ -53,7 +53,7 @@ EOF;
     foreach (sfFinder::type('dir')->relative()->maxdepth(0)->in($corePluginsDir) as $plugin)
     {
       $this->logSection('plugin', 'Configuring core plugin - '.$plugin);
-      $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'sourceDirectory' => $corePluginsDir)));
+      $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'plugin_dir' => $corePluginsDir)));
     }
   }
 }
