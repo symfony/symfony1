@@ -2,5 +2,4 @@ all:
   propel:
     class:      sfPropelDatabase
     param:
-      phptype:  sqlite
-      database: %SF_DATA_DIR%/database.sqlite
+      dsn:      sqlite:%SF_DATA_DIR%/database.sqlite

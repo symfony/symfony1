@@ -6,7 +6,7 @@ require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 
 define('DS', DIRECTORY_SEPARATOR);
 
-class symfony_cmd
+class sf_test_project
 {
   public $php_cli = null;
   public $tmp_dir = null;
@@ -17,7 +17,7 @@ class symfony_cmd
   {
     $this->t = $t;
 
-    $this->tmp_dir = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'symfony_cmd';
+    $this->tmp_dir = sfToolkit::getTmpDir().DS.'sf_test_project';
 
     if (is_dir($this->tmp_dir))
     {
@@ -48,10 +48,11 @@ class symfony_cmd
 
   public function execute_command($cmd, $awaited_return=0)
   {
+    chdir($this->tmp_dir);
     $symfony = file_exists('symfony') ? 'symfony' : dirname(__FILE__).'/../../data/bin/symfony';
 
     ob_start();
-    passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" %s 2>&1', $this->php_cli, $symfony, $cmd), $return);
+    passthru(sprintf('%s "%s" %s 2>&1', $this->php_cli, $symfony, $cmd), $return);
     $content = ob_get_clean();
     $this->t->cmp_ok($return, '==', $awaited_return, sprintf('"symfony %s" returns awaited value (%d)', $cmd, $awaited_return));
 
@@ -64,8 +65,6 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(33, new lime_output_color());
-
 if (!extension_loaded('SQLite'))
 {
   $t->skip('You need SQLite to run these tests', 33);
@@ -73,7 +72,8 @@ if (!extension_loaded('SQLite'))
   return;
 }
 
-$c = new symfony_cmd();
+$t = new lime_test(33, new lime_output_color());
+$c = new sf_test_project();
 $c->initialize($t);
 
 // generate:*
@@ -93,6 +93,9 @@ copy(dirname(__FILE__).'/fixtures/propel/schema.yml', $c->tmp_dir.DS.'config'.DS
 copy(dirname(__FILE__).'/fixtures/propel/databases.yml', $c->tmp_dir.DS.'config'.DS.'databases.yml');
 copy(dirname(__FILE__).'/fixtures/propel/propel.ini', $c->tmp_dir.DS.'config'.DS.'propel.ini');
 
+// update propel configuration paths
+file_put_contents($c->tmp_dir.DS.'config'.DS.'propel.ini', str_replace('%SF_ROOT_DIR%', $c->tmp_dir, str_replace('%SF_DATA_DIR%', $c->tmp_dir.'/data', file_get_contents($c->tmp_dir.DS.'config'.DS.'propel.ini'))));
+
 // propel:*
 $content = $c->execute_command('propel:build-sql');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"propel:build-sql" creates a "schema.sql" file under "data/sql" directory');
@@ -101,12 +104,10 @@ $content = $c->execute_command('propel:build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:build-model" creates model classes under "lib/model" directory');
 
 $content = $c->execute_command('propel:build-form');
-$t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
+$t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'base'.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
 
 $c->execute_command('propel:insert-sql');
-$file = dirname(__FILE__).DS.'..'.DS.'..'.DS.'lib'.DS.'plugins'.DS.'sfPropelPlugin'.DS.'lib'.DS.'vendor'.DS.'propel-generator'.DS.'database.sqlite';
-$t->ok(file_exists($file), '"propel:insert-sql" creates tables in the database');
-rename($file, $c->tmp_dir.'/data/database.sqlite');
+$t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'database.sqlite'), '"propel:insert-sql" creates tables in the database');
 
 $content = $c->execute_command('propel:generate-crud --generate-in-cache frontend articleInitCrud Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:generate-crud" initializes a CRUD module');
