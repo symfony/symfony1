@@ -67,6 +67,9 @@ The following two examples are equivalent:
 Tests
 -----
 
+Cookies
+~~~~~~~
+
 Cookies are now extensively supported in the `sfBrowser` and `sfTestBrowser`
 classes.
 
@@ -105,6 +108,24 @@ or a negative regular expression.
 
 The browser class also automatically expires cookies as per the `expire` value
 of each cookie.
+
+Links
+~~~~~
+
+When you simulate a click on a button or on a link, you give the name to the `click()`
+method. But you don't have the possibility to differentiate two different links or buttons
+with the same name.
+
+As of symfony 1.2, the `click()` method takes a third argument to tell the position of
+the link you want to click on the page:
+
+    [php]
+    $b->
+      click('/', array(), 1)->
+      // ...
+    ;
+
+By default, symfony clicks on the first link it finds in the page.
 
 YAML
 ----

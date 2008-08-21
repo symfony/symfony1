@@ -574,12 +574,13 @@ class sfBrowser
   /**
    * Simulates a click on a link or button.
    *
-   * @param string $name       The link or button text
-   * @param array  $arguments
+   * @param string  $name       The link or button text
+   * @param array   $arguments  The arguments to pass to the link
+   * @param integer $position   The position of the linked to link if several ones have the same name
    *
    * @return sfBrowser
    */
-  public function click($name, $arguments = array())
+  public function click($name, $arguments = array(), $position = 0)
   {
     $dom = $this->getResponseDom();
 
@@ -591,21 +592,21 @@ class sfBrowser
     $xpath = new DomXpath($dom);
 
     // text link
-    if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item(0))
+    if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item($position))
     {
       return $this->get($link->getAttribute('href'));
     }
 
     // image link
-    if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item(0))
+    if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item($position))
     {
       return $this->get($link->getAttribute('href'));
     }
 
     // form
-    if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item(0))
+    if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item($position))
     {
-      if (!$form = $xpath->query(sprintf('//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name))->item(0))
+      if (!$form = $xpath->query(sprintf('//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name))->item($position))
       {
         throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
       }

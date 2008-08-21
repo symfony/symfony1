@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(51, new lime_output_color());
+$t = new lime_test(52, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -109,6 +109,8 @@ $html = <<<EOF
       </span></div>
     </form>
 
+    <a href="/myotherlink">test link</a>
+
   </body>
 </html>
 EOF;
@@ -138,6 +140,9 @@ catch(Exception $e)
 
 list($method, $uri, $parameters) = $b->click('test link');
 $t->is($uri, '/mylink', '->click() clicks on links');
+
+list($method, $uri, $parameters) = $b->click('test link', array(), 1);
+$t->is($uri, '/myotherlink', '->click() can take a third argument to tell the position of the link to click on');
 
 list($method, $uri, $parameters) = $b->click('image link');
 $t->is($uri, '/myimagelink', '->click() clicks on image links');
@@ -252,4 +257,3 @@ $files = $b->getFiles();
 
 $t->is($files['myfile']['error'], UPLOAD_ERR_OK, 'existent file exists (UPLOAD_ERR_OK)');
 $t->is($files['myfile']['name'], basename($existentFilename), 'name key ok');
-
