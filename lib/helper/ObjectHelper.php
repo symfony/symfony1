@@ -78,7 +78,7 @@ function objects_for_select($options, $value_method, $text_method = null, $selec
     }
 
     // value method exists?
-    if (!method_exists(array($option, $value_method)))
+    if (!method_exists($option, $value_method))
     {
       throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $value_method, _get_class_decorated($option)));
     }
