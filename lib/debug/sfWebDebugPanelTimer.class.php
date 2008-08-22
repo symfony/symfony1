@@ -42,6 +42,6 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
   protected function getTotalTime()
   {
-    return sfConfig::get('sf_debug') ? sprintf('%.0f', (microtime(true) - sfConfig::get('sf_timer_start')) * 1000) : 0;;
+    return sprintf('%.0f', (microtime(true) - sfConfig::get('sf_timer_start')) * 1000);
   }
 }
