@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>symfony exception</title>
+  <title><?php echo $name ?>: <?php echo htmlspecialchars($message, ENT_QUOTES, sfConfig::get('sf_charset', 'UTF-8')) ?></title>
   <style>
   body { margin: 0; padding: 20px; margin-top: 20px; background-color: #eee }
   body, td, th { font: 11px Verdana, Arial, sans-serif; color: #333 }
@@ -17,10 +17,10 @@
   table.vars { padding: 0; margin: 0; border: 1px solid #999; background-color: #fff; }
   table.vars th { padding: 2px; background-color: #ddd; font-weight: bold }
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }
-  p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center; -moz-border-radius: 10px; }
+  p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
   p.error a { color: #fff }
-  #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; min-width: 13em; max-width: 52em }
-  #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px }
+  #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; min-width: 13em; max-width: 52em }
+  #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
   </style>
   <script type="text/javascript">
   function toggle(id)
