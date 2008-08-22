@@ -53,6 +53,11 @@ class sfViewCacheManager
     $this->dispatcher = $context->getEventDispatcher();
     $this->controller = $context->getController();
 
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateContentWithDebug'));
+    }
+
     // empty configuration
     $this->cacheConfig = array();
 
@@ -836,5 +841,43 @@ class sfViewCacheManager
     }
 
     return true;
+  }
+
+  /**
+   * Listens to the 'view.cache.filter_content' event to decorate a chunk of HTML with cache information.
+   *
+   * @param sfEvent $event   A sfEvent instance
+   * @param string  $content The HTML content
+   *
+   * @return string The decorated HTML string
+   */
+  public function decorateContentWithDebug(sfEvent $event, $content)
+  {
+    // don't decorate if not html or if content is null
+    if (!$content || false === strpos($event['response']->getContentType(), 'html'))
+    {
+      return $content;
+    }
+
+    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
+
+    $bgColor      = $event['new'] ? '#9ff' : '#ff9';
+    $lastModified = $this->getLastModified($event['uri']);
+    $id           = md5($event['uri']);
+
+    return '
+      <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid #f00">
+      <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bgColor.'; border-right: 1px solid #f00; border-bottom: 1px solid #f00;">
+      <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\'sub_main_info_'.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
+        <div style="padding: 2px; display: none" id="sub_main_info_'.$id.'">
+        [uri]&nbsp;'.htmlspecialchars($event['uri'], ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
+        [life&nbsp;time]&nbsp;'.$this->getLifeTime($event['uri']).'&nbsp;seconds<br />
+        [last&nbsp;modified]&nbsp;'.(time() - $lastModified).'&nbsp;seconds<br />
+        &nbsp;<br />&nbsp;
+        </div>
+      </div><div>
+      '.$content.'
+      </div></div>
+    ';
   }
 }
