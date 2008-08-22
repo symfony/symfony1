@@ -20,7 +20,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    return '<img src="'.$this->webDebug->getOption('image_root_path').'/comment.png" /> logs &amp; msgs';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/comment.png" /> logs';
   }
 
   public function getPanelContent()
@@ -92,7 +92,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 
   public function getTitle()
   {
-    return 'Log and debug messages';
+    return 'Logs';
   }
 
   /**

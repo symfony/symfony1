@@ -20,7 +20,7 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    return '<img src="'.$this->webDebug->getOption('image_root_path').'/config.png" /> vars &amp; config';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/config.png" /> config';
   }
 
   public function getPanelContent()
@@ -58,7 +58,7 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
 
   public function getTitle()
   {
-    return 'Configuration and request variables';
+    return 'Configuration';
   }
 
   /**
