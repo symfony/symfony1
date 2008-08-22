@@ -108,11 +108,11 @@ class sfVarLogger extends sfLogger
   }
 
   /**
-   * Returns the higher priority in the logs.
+   * Returns the highest priority in the logs.
    *
-   * @return integer The higher priority
+   * @return integer The highest priority
    */
-  public function getHigherPriority()
+  public function getHighestPriority()
   {
     $priority = 1000;
     foreach ($this->logs as $log)

@@ -99,7 +99,7 @@ class sfWebDebug
     $maxPriority = '';
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $maxPriority = $this->getPriority($this->logger->getHigherPriority());
+      $maxPriority = $this->getPriority($this->logger->getHighestPriority());
     }
 
     $logs = '';
