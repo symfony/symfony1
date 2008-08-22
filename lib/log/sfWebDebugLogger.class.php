@@ -43,7 +43,7 @@ class sfWebDebugLogger extends sfVarLogger
     $this->dispatcher = $dispatcher;
 
     $class = isset($options['web_debug_class']) ? $options['web_debug_class'] : 'sfWebDebug';
-    $this->webDebug = new $class($dispatcher);
+    $this->webDebug = new $class($dispatcher, $this);
 
     $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
 
@@ -110,18 +110,5 @@ class sfWebDebugLogger extends sfVarLogger
     }
 
     return $content;
-  }
-
-  /**
-   * Logs a message.
-   *
-   * @param string $message   Message
-   * @param string $priority  Message priority
-   */
-  protected function doLog($message, $priority)
-  {
-    parent::doLog($message, $priority);
-
-    $this->webDebug->log($this->logs[count($this->logs) - 1]);
   }
 }

@@ -19,44 +19,15 @@
 class sfWebDebug
 {
   protected
-    $dispatcher  = null,
-    $log         = array(),
-    $maxPriority = 1000,
-    $types       = array();
+    $dispatcher = null,
+    $logger     = null;
 
-  public function __construct(sfEventDispatcher $dispatcher)
+  public function __construct(sfEventDispatcher $dispatcher, sfVarLogger $logger)
   {
     $this->dispatcher = $dispatcher;
+    $this->logger = $logger;
 
     $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateContentWithDebug'));
-  }
-
-  /**
-   * Logs a message to the web debug toolbar.
-   *
-   * @param array $logEntry An array of parameter
-   *
-   * @see sfWebDebugLogger
-   */
-  public function log($logEntry)
-  {
-    // update max priority
-    if ($logEntry['priority'] < $this->maxPriority)
-    {
-      $this->maxPriority = $logEntry['priority'];
-    }
-
-    // update types
-    if (!isset($this->types[$logEntry['type']]))
-    {
-      $this->types[$logEntry['type']] = 1;
-    }
-    else
-    {
-      ++$this->types[$logEntry['type']];
-    }
-
-    $this->log[] = $logEntry;
   }
 
   /**
@@ -128,7 +99,7 @@ class sfWebDebug
     $maxPriority = '';
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $maxPriority = $this->getPriority($this->maxPriority);
+      $maxPriority = $this->getPriority($this->logger->getHigherPriority());
     }
 
     $logs = '';
@@ -142,7 +113,7 @@ class sfWebDebug
           <th>message</th>
         </tr>'."\n";
       $line_nb = 0;
-      foreach ($this->log as $logEntry)
+      foreach ($this->logger->getLogs() as $logEntry)
       {
         $log = $logEntry['message'];
 
@@ -187,9 +158,8 @@ class sfWebDebug
       }
       $logs .= '</table>';
 
-      ksort($this->types);
       $types = array();
-      foreach ($this->types as $type => $nb)
+      foreach ($this->logger->getTypes() as $type)
       {
         $types[] = '<a href="#" onclick="sfWebDebugToggleMessages(\''.$type.'\'); return false;">'.$type.'</a>';
       }

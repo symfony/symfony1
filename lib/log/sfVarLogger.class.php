@@ -66,6 +66,67 @@ class sfVarLogger extends sfLogger
   }
 
   /**
+   * Returns all the types in the logs.
+   *
+   * @return array An array of types
+   */
+  public function getTypes()
+  {
+    $types = array();
+    foreach ($this->logs as $log)
+    {
+      if (!in_array($log['type'], $types))
+      {
+        $types[] = $log['type'];
+      }
+    }
+
+    sort($types);
+
+    return $types;
+  }
+
+  /**
+   * Returns all the priorities in the logs.
+   *
+   * @return array An array of priorities
+   */
+  public function getPriorities()
+  {
+    $priorities = array();
+    foreach ($this->logs as $log)
+    {
+      if (!in_array($log['priority'], $types))
+      {
+        $priorities[] = $log['priority'];
+      }
+    }
+
+    sort($priorities);
+
+    return $priorities;
+  }
+
+  /**
+   * Returns the higher priority in the logs.
+   *
+   * @return integer The higher priority
+   */
+  public function getHigherPriority()
+  {
+    $priority = 1000;
+    foreach ($this->logs as $log)
+    {
+      if ($log['priority'] < $priority)
+      {
+        $priority = $log['priority'];
+      }
+    }
+
+    return $priority;
+  }
+
+  /**
    * Logs a message.
    *
    * @param string $message   Message
