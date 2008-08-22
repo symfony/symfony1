@@ -439,7 +439,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // the query (FROM xyz) or its a "fetch join").
 
         // Check that the parent join (if there is one), is a "fetch join", too.
-        if (isset($this->_queryComponents[$componentAlias]['parent'])) {
+        if ( ! $this->isSubquery() && isset($this->_queryComponents[$componentAlias]['parent'])) {
             $parentAlias = $this->_queryComponents[$componentAlias]['parent'];
             if (is_string($parentAlias) && ! isset($this->_pendingFields[$parentAlias])
                     && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
