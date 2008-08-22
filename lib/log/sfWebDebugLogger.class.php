@@ -76,8 +76,9 @@ class sfWebDebugLogger extends sfVarLogger
     // * if not rendering to the client
     // * if HTTP headers only
     $response = $event->getSubject();
+    $request  = $this->context->getRequest();
     if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
-      $this->context->getRequest()->isXmlHttpRequest() ||
+      $request->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
       $response->getStatusCode() == 304 ||
       $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
@@ -88,7 +89,7 @@ class sfWebDebugLogger extends sfVarLogger
     }
 
     $webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
-      'image_root_path' => $this->context->getRequest()->getRelativeUrlRoot().'/'.sfConfig::get('sf_web_debug_web_dir').'/images')
+      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot().'/' : '').sfConfig::get('sf_web_debug_web_dir').'/images')
     );
 
     return $webDebug->injectToolbar($content);
