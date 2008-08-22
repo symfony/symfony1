@@ -24,6 +24,17 @@ class sfWebDebug
     $options    = array(),
     $panels     = array();
 
+  /**
+   * Constructor.
+   *
+   * Available options:
+   *
+   *  * image_root_path: The image root path
+   *
+   * @param sfEventDispatcher $dispatcher The event dispatcher
+   * @param sfVarLogger       $logger     The logger
+   * @param array             $options    An array of options
+   */
   public function __construct(sfEventDispatcher $dispatcher, sfVarLogger $logger, array $options = array())
   {
     $this->dispatcher = $dispatcher;
@@ -40,6 +51,9 @@ class sfWebDebug
     $this->dispatcher->notify(new sfEvent($this, 'debug.web.load_panels'));
   }
 
+  /**
+   * Configures the web debug toolbar.
+   */
   public function configure()
   {
     $this->setPanel('symfony_version', new sfWebDebugPanelSymfonyVersion($this));
@@ -60,36 +74,76 @@ class sfWebDebug
     }
   }
 
+  /**
+   * Gets the logger.
+   *
+   * @return sfVarLogger The logger instance
+   */
   public function getLogger()
   {
     return $this->logger;
   }
 
+  /**
+   * Gets the event dispatcher.
+   *
+   * @return sfEventDispatcher The event dispatcher
+   */
   public function getEventDispatcher()
   {
     return $this->dispatcher;
   }
 
+  /**
+   * Gets the registered panels.
+   *
+   * @return array The panels
+   */
   public function getPanels()
   {
     return $this->panels;
   }
 
+  /**
+   * Sets a panel by name.
+   *
+   * @param string          $name  The panel name
+   * @param sfWebDebugPanel $panel The panel
+   */
   public function setPanel($name, sfWebDebugPanel $panel)
   {
     $this->panels[$name] = $panel;
   }
 
+  /**
+   * Removes a panel by name.
+   *
+   * @param string          $name  The panel name
+   */
   public function removePanel($name)
   {
     unset($this->panels[$name]);
   }
 
+  /**
+   * Gets an option value by name.
+   *
+   * @param  string $name  The option name
+   *
+   * @return mixed  The option value
+   */
   public function getOption($name, $default = null)
   {
     return isset($this->options[$name]) ? $this->options[$name] : $default;
   }
 
+  /**
+   * Injects the web debug toolbar into a given HTML string.
+   *
+   * @param string  $content The HTML content
+   *
+   * @return string The content with the web debug toolbar injected
+   */
   public function injectToolbar($content)
   {
     $content = str_ireplace('</head>', $this->getAssets().'</head>', $content);
@@ -180,6 +234,11 @@ class sfWebDebug
     }
   }
 
+  /**
+   * Gets the HTML to inject in the head tag.
+   *
+   * @param string The asset HTML code
+   */
   public function getAssets()
   {
     return sprintf('
@@ -190,6 +249,11 @@ class sfWebDebug
     );
   }
 
+  /**
+   * Gets the javascript code to inject in the head tag.
+   *
+   * @param string The javascript code
+   */
   public function getJavascript()
   {
     return <<<EOF
@@ -337,6 +401,11 @@ function sfWebDebugShowOnlyLogLines(type)
 EOF;
   }
 
+  /**
+   * Gets the stylesheet code to inject in the head tag.
+   *
+   * @param string The stylesheet code
+   */
   public function getStylesheet()
   {
     return <<<EOF
