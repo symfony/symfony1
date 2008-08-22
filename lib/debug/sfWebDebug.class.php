@@ -30,6 +30,13 @@ class sfWebDebug
 
     $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateContentWithDebug'));
 
+    $this->configure();
+
+    $this->dispatcher->notify(new sfEvent($this, 'debug.web.load_panels'));
+  }
+
+  public function configure()
+  {
     $this->setPanel('symfony_version', new sfWebDebugPanelSymfonyVersion($this));
     $this->setPanel('cache', new sfWebDebugPanelCache($this));
     $this->setPanel('config', new sfWebDebugPanelConfig($this));
@@ -37,8 +44,6 @@ class sfWebDebug
     $this->setPanel('time', new sfWebDebugPanelTimer($this));
     $this->setPanel('memory', new sfWebDebugPanelMemory($this));
     $this->setPanel('db', new sfWebDebugPanelPropel($this));
-
-    $this->dispatcher->notify(new sfEvent($this, 'debug.web.load_panels'));
   }
 
   public function getLogger()
@@ -81,14 +86,14 @@ class sfWebDebug
     {
       if ($link = $panel->getLinkText())
       {
-        if ($content = $panel->getPanelContent())
+        if ($content = $panel->getPanelContent() || $panel->getLinkUrl())
         {
           $id = sprintf('sfWebDebug%sDetails', $name);
-          $links[]  = sprintf('<li><a title="%s" alt="%s" href="%s" onclick="sfWebDebugShowDetailsFor(\'%s\'); return false;">%s</a></li>',
+          $links[]  = sprintf('<li><a title="%s" alt="%s" href="%s"%s>%s</a></li>',
             $panel->getTitle(),
             $panel->getTitle(),
             $panel->getLinkUrl() ? $panel->getLinkUrl() : '#',
-            $id,
+            $panel->getLinkUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
             $link
           );
           $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display: none"><h1>%s</h1>%s</div>',
