@@ -16,21 +16,26 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfWebDebugLogger extends sfLogger
+class sfWebDebugLogger extends sfVarLogger
 {
   protected
-    $context       = null,
-    $dispatcher    = null,
-    $webDebug      = null,
-    $xdebugLogging = false;
+    $context    = null,
+    $dispatcher = null,
+    $webDebug   = null;
 
   /**
    * Initializes this logger.
    *
+   * Available options:
+   *
+   * - web_debug_class: The web debug class (sfWebDebug by default).
+   *
    * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param  array             $options     An array of options.
    *
-   * @return Boolean      true, if initialization completes successfully, otherwise false.
+   * @return Boolean           true, if initialization completes successfully, otherwise false.
+   *
+   * @see sfVarLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
@@ -41,17 +46,6 @@ class sfWebDebugLogger extends sfLogger
     $this->webDebug = new $class($dispatcher);
 
     $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
-
-    if (isset($options['xdebug_logging']))
-    {
-      $this->xdebugLogging = $options['xdebug_logging'];
-    }
-
-    // disable xdebug when an HTTP debug session exists (crashes Apache, see #2438)
-    if (isset($_GET['XDEBUG_SESSION_START']) || isset($_COOKIE['XDEBUG_SESSION']))
-    {
-      $this->xdebugLogging = false;
-    }
 
     return parent::initialize($dispatcher, $options);
   }
@@ -126,43 +120,8 @@ class sfWebDebugLogger extends sfLogger
    */
   protected function doLog($message, $priority)
   {
-    // if we have xdebug and dev has not disabled the feature, add some stack information
-    $debugStack = array();
-    if ($this->xdebugLogging && function_exists('xdebug_get_function_stack'))
-    {
-      foreach (xdebug_get_function_stack() as $i => $stack)
-      {
-        if (
-          (isset($stack['function']) && !in_array($stack['function'], array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug', 'log')))
-          || !isset($stack['function'])
-        )
-        {
-          $tmp = '';
-          if (isset($stack['function']))
-          {
-            $tmp .= sprintf('in "%s" ', $stack['function']);
-          }
-          $tmp .= sprintf('from "%s" line %s', $stack['file'], $stack['line']);
-          $debugStack[] = $tmp;
-        }
-      }
-    }
+    parent::doLog($message, $priority);
 
-    // get log type in {}
-    $type = 'sfOther';
-    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/', $message, $matches))
-    {
-      $type    = $matches[1];
-      $message = $matches[2];
-    }
-
-    // send the log object containing the complete log information
-    $this->webDebug->log(array(
-      'priority'   => $priority,
-      'time'       => time(),
-      'message'    => $message,
-      'type'       => $type,
-      'debugStack' => $debugStack,
-    ));
+    $this->webDebug->log($this->logs[count($this->logs) - 1]);
   }
 }

@@ -164,10 +164,10 @@ class sfWebDebug
 
         // xdebug information
         $debug_info = '';
-        if ($logEntry['debugStack'])
+        if (count($logEntry['debug_stack']))
         {
           $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/toggle.gif').'</a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
-          foreach ($logEntry['debugStack'] as $i => $logLine)
+          foreach ($logEntry['debug_stack'] as $i => $logLine)
           {
             $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($logLine).'<br/>';
           }

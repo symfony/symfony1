@@ -211,3 +211,37 @@ It now returns `true` even if the value is `null`:
 
 The `sfParameterHolder::has()` method is used by the `hasParameter()` and
 `hasAttribute()` methods available for a large number of core classes.
+
+Loggers
+-------
+
+symfony 1.2 comes with a new built-in logger: `sfVarLogger`. This logger class
+logs all the messages as an array for later use. It's up to you to get the logs
+and do something with them:
+
+    [php]
+    $log = new sfVarLogger();
+    $log->log('foo');
+
+    print_r($log->getLogs());
+
+    // outputs
+    Array(
+      [0] => Array(
+        [priority]      => 6
+        [priority_name] => info
+        [time]          => 1219385295
+        [message]       => foo
+        [type]          => sfOther
+        [debug_stack]   => Array()
+      )
+    )
+
+Each log is an associative array with the following keys: `priority`, `priority_name`,
+`time`, `message`, `type`, and `debug_stack`.
+
+The `debug_stack` attribute is only set if you turns the `xdebug_logging` option to `true`.
+It then contains the stack trace returned by xdebug as an array.
+
+The `sfVarLogger` is also the base class for the `sfWebDebugLogger` class. So, the
+`xdebugLogging` option of `sfWebDebugLogger` has been renamed to `xdebug_logging`.
