@@ -1252,10 +1252,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
 
         $id = is_array($id) ? array_values($id) : array($id);
-        
-        $q = $this->createQuery();
-        $q->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?', $id)
-                ->limit(1);
+
+        $q = $this->createQuery('dctrn_find')
+            ->where(
+                'dctrn_find.' . implode(
+                    ' = ? AND dctrn_find.', (array) $this->getIdentifier()
+                ) . ' = ?', $id
+            )
+            ->limit(1);
         $res = $q->fetchOne(array(), $hydrationMode);
         $q->free();
         
@@ -1271,7 +1275,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function findAll($hydrationMode = null)
     {
-        return $this->createQuery()->execute(array(), $hydrationMode);
+        return $this->createQuery('dctrn_find')
+            ->execute(array(), $hydrationMode);
     }
 
     /**
@@ -1289,7 +1294,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function findBySql($dql, $params = array(), $hydrationMode = null)
     {
-        return $this->createQuery()->where($dql)->execute($params, $hydrationMode);
+        return $this->createQuery('dctrn_find')
+            ->where($dql)->execute($params, $hydrationMode);
     }
 
     /**
@@ -1306,9 +1312,48 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     {
         $parser = new Doctrine_Query($this->_conn);
         $component = $this->getComponentName();
-        $query = 'FROM ' . $component . ' WHERE ' . $dql;
+        $query = 'FROM ' . $component . ' dctrn_find WHERE ' . $dql;
 
         return $parser->query($query, $params, $hydrationMode);
+    }
+    
+    /**
+     * findBy
+     *
+     * @param string $column
+     * @param string $value
+     * @param string $hydrationMode
+     * @return void
+     */
+    protected function findBy($fieldName, $value, $hydrationMode = null)
+    {
+        return $this->createQuery('dctrn_find')
+            ->where('dctrn_find.' . $fieldName . ' = ?', array($value))
+            ->execute(array(), $hydrationMode);
+    }
+
+    /**
+     * findOneBy
+     *
+     * @param string $column
+     * @param string $value
+     * @param string $hydrationMode
+     * @return void
+     */
+    protected function findOneBy($fieldName, $value, $hydrationMode = null)
+    {
+        $results = $this->createQuery('dctrn_find')
+                        ->where('dctrn_find.' . $fieldName . ' = ?',array($value))
+                        ->limit(1)
+                        ->execute(array(), $hydrationMode);
+
+        if (is_array($results) && isset($results[0])) {
+            return $results[0];
+        } else if ($results instanceof Doctrine_Collection && $results->count() > 0) {
+            return $results->getFirst();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -2161,43 +2206,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function __toString()
     {
         return Doctrine_Lib::getTableAsString($this);
-    }
-
-    /**
-     * findBy
-     *
-     * @param string $column
-     * @param string $value
-     * @param string $hydrationMode
-     * @return void
-     */
-    protected function findBy($fieldName, $value, $hydrationMode = null)
-    {
-        return $this->createQuery()->where($fieldName . ' = ?', array($value))->execute(array(), $hydrationMode);
-    }
-
-    /**
-     * findOneBy
-     *
-     * @param string $column
-     * @param string $value
-     * @param string $hydrationMode
-     * @return void
-     */
-    protected function findOneBy($fieldName, $value, $hydrationMode = null)
-    {
-        $results = $this->createQuery()
-                        ->where($fieldName . ' = ?',array($value))
-                        ->limit(1)
-                        ->execute(array(), $hydrationMode);
-
-        if (is_array($results) && isset($results[0])) {
-            return $results[0];
-        } else if ($results instanceof Doctrine_Collection && $results->count() > 0) {
-            return $results->getFirst();
-        } else {
-            return false;
-        }
     }
 
     /**
