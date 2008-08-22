@@ -470,9 +470,12 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
 
         $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
         $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        $comment  = (isset($field['comment']) && $field['comment']) 
+            ? " COMMENT '" . $field['comment'] . "'" : '';
 
         $name = $this->conn->quoteIdentifier($name, true);
 
-        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned . $default . $notnull . $autoinc;
+        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned 
+            . $default . $notnull . $autoinc . $comment;
     }
 }
