@@ -20,10 +20,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    if (sfConfig::get('sf_debug'))
-    {
-      return '<img src="'.$this->webDebug->getOption('image_root_path').'/time.png" /> '.$this->getTotalTime().' ms';
-    }
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/time.png" /> '.$this->getTotalTime().' ms';
   }
 
   public function getPanelContent()

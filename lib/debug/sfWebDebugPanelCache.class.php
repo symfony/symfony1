@@ -21,10 +21,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
-    {
-      return '<img src="'.$this->webDebug->getOption('image_root_path').'/reload.png'.'" />';
-    }
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/reload.png'.'" />';
   }
 
   public function getLinkUrl()

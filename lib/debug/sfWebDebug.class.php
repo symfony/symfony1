@@ -43,12 +43,21 @@ class sfWebDebug
   public function configure()
   {
     $this->setPanel('symfony_version', new sfWebDebugPanelSymfonyVersion($this));
-    $this->setPanel('cache', new sfWebDebugPanelCache($this));
-    $this->setPanel('config', new sfWebDebugPanelConfig($this));
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
+    {
+      $this->setPanel('cache', new sfWebDebugPanelCache($this));
+    }
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->setPanel('config', new sfWebDebugPanelConfig($this));
+    }
     $this->setPanel('logs', new sfWebDebugPanelLogs($this));
-    $this->setPanel('time', new sfWebDebugPanelTimer($this));
-    $this->setPanel('memory', new sfWebDebugPanelMemory($this));
     $this->setPanel('db', new sfWebDebugPanelPropel($this));
+    $this->setPanel('memory', new sfWebDebugPanelMemory($this));
+    if (sfConfig::get('sf_debug'))
+    {
+      $this->setPanel('time', new sfWebDebugPanelTimer($this));
+    }
   }
 
   public function getLogger()

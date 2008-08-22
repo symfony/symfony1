@@ -20,7 +20,7 @@ class sfWebDebugPanelMemory extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    if (sfConfig::get('sf_debug') && function_exists('memory_get_usage'))
+    if (function_exists('memory_get_usage'))
     {
       $totalMemory = sprintf('%.1f', (memory_get_usage() / 1024));
 
