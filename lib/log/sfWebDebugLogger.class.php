@@ -101,7 +101,7 @@ class sfWebDebugLogger extends sfVarLogger
     $content = str_ireplace('</head>', $assets.'</head>', $content);
 
     // add web debug information to response content
-    $webDebugContent = $this->webDebug->getResults();
+    $webDebugContent = $this->webDebug->asHtml();
     $count = 0;
     $content = str_ireplace('</body>', $webDebugContent.'</body>', $content, $count);
     if (!$count)

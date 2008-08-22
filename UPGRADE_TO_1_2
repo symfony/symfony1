@@ -245,3 +245,23 @@ It then contains the stack trace returned by xdebug as an array.
 
 The `sfVarLogger` is also the base class for the `sfWebDebugLogger` class. So, the
 `xdebugLogging` option of `sfWebDebugLogger` has been renamed to `xdebug_logging`.
+
+Web Debug Toolbar
+-----------------
+
+The web debug toolbar is now customizable. The toolbar is composed of panels. A panel is
+an object that extends `sfWebDebugPanel` and provides all the needed information to display
+if on the toolbar.
+
+By default, the following panels are automatically registered:
+
+  * symfony_version (`sfWebDebugPanelSymfonyVersion`)
+  * cache           (`sfWebDebugPanelCache`)
+  * config          (`sfWebDebugPanelConfig`)
+  * logs            (`sfWebDebugPanelLogs`)
+  * time            (`sfWebDebugPanelTimer`)
+  * memory          (`sfWebDebugPanelMemory`)
+  * db              (`sfWebDebugPanelPropel`)
+
+You can customize the web debug toolbar by listening to the `debug.web.load_panels` event.
+The listener can then add new panels, remove existing ones, or even replace some.

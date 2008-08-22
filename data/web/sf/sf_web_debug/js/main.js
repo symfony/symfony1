@@ -37,13 +37,14 @@ function sfWebDebugToggleMenu()
 
   var cacheElements = sfWebDebugGetElementsByClassName('sfWebDebugCache');
   var mainCacheElements = sfWebDebugGetElementsByClassName('sfWebDebugActionCache');
+  var panelElements = sfWebDebugGetElementsByClassName('sfWebDebugTop');
 
   if (element.style.display != 'none')
   {
-    document.getElementById('sfWebDebugLog').style.display = 'none';
-    document.getElementById('sfWebDebugConfig').style.display = 'none';
-    document.getElementById('sfWebDebugDatabaseDetails').style.display = 'none';
-    document.getElementById('sfWebDebugTimeDetails').style.display = 'none';
+    for (var i = 0; i < panelElements.length; ++i)
+    {
+      panelElements[i].style.display = 'none';
+    }
 
     // hide all cache information
     for (var i = 0; i < cacheElements.length; ++i)
@@ -74,10 +75,17 @@ function sfWebDebugToggleMenu()
 
 function sfWebDebugShowDetailsFor(element)
 {
-  if (element != 'sfWebDebugLog') document.getElementById('sfWebDebugLog').style.display='none';
-  if (element != 'sfWebDebugConfig') document.getElementById('sfWebDebugConfig').style.display='none';
-  if (element != 'sfWebDebugDatabaseDetails') document.getElementById('sfWebDebugDatabaseDetails').style.display='none';
-  if (element != 'sfWebDebugTimeDetails') document.getElementById('sfWebDebugTimeDetails').style.display='none';
+  if (typeof element == 'string')
+    element = document.getElementById(element);
+
+  var panelElements = sfWebDebugGetElementsByClassName('sfWebDebugTop');
+  for (var i = 0; i < panelElements.length; ++i)
+  {
+    if (panelElements[i] != element)
+    {
+      panelElements[i].style.display = 'none';
+    }
+  }
 
   sfWebDebugToggle(element);
 }
