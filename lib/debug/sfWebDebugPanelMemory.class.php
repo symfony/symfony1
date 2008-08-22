@@ -24,7 +24,7 @@ class sfWebDebugPanelMemory extends sfWebDebugPanel
     {
       $totalMemory = sprintf('%.1f', (memory_get_usage() / 1024));
 
-      return image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/memory.png').' '.$totalMemory.' KB';
+      return '<img src="'.$this->webDebug->getOption('image_root_path').'/memory.png" /> '.$totalMemory.' KB';
     }
   }
 

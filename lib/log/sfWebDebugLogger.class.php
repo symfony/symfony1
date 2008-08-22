@@ -19,9 +19,9 @@
 class sfWebDebugLogger extends sfVarLogger
 {
   protected
-    $context    = null,
-    $dispatcher = null,
-    $webDebug   = null;
+    $context       = null,
+    $dispatcher    = null,
+    $webDebugClass = null;
 
   /**
    * Initializes this logger.
@@ -42,10 +42,12 @@ class sfWebDebugLogger extends sfVarLogger
     $this->context    = sfContext::getInstance();
     $this->dispatcher = $dispatcher;
 
-    $class = isset($options['web_debug_class']) ? $options['web_debug_class'] : 'sfWebDebug';
-    $this->webDebug = new $class($dispatcher, $this);
+    $this->webDebugClass = isset($options['web_debug_class']) ? $options['web_debug_class'] : 'sfWebDebug';
 
-    $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
+    }
 
     return parent::initialize($dispatcher, $options);
   }
@@ -60,11 +62,6 @@ class sfWebDebugLogger extends sfVarLogger
    */
   public function filterResponseContent(sfEvent $event, $content)
   {
-    if (!sfConfig::get('sf_web_debug'))
-    {
-      return $content;
-    }
-
     // log timers information
     $messages = array();
     foreach (sfTimerManager::getTimers() as $name => $timer)
@@ -90,25 +87,10 @@ class sfWebDebugLogger extends sfVarLogger
       return $content;
     }
 
-    // add needed assets for the web debug toolbar
-    $root = $this->context->getRequest()->getRelativeUrlRoot();
-    $assets = sprintf('
-      <script type="text/javascript" src="%s"></script>
-      <link rel="stylesheet" type="text/css" media="screen" href="%s" />',
-      $root.sfConfig::get('sf_web_debug_web_dir').'/js/main.js',
-      $root.sfConfig::get('sf_web_debug_web_dir').'/css/main.css'
+    $webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
+      'image_root_path' => $this->context->getRequest()->getRelativeUrlRoot().'/'.sfConfig::get('sf_web_debug_web_dir').'/images')
     );
-    $content = str_ireplace('</head>', $assets.'</head>', $content);
 
-    // add web debug information to response content
-    $webDebugContent = $this->webDebug->asHtml();
-    $count = 0;
-    $content = str_ireplace('</body>', $webDebugContent.'</body>', $content, $count);
-    if (!$count)
-    {
-      $content .= $webDebugContent;
-    }
-
-    return $content;
+    return $webDebug->injectToolbar($content);
   }
 }

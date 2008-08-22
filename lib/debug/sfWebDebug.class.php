@@ -21,12 +21,19 @@ class sfWebDebug
   protected
     $dispatcher = null,
     $logger     = null,
+    $options    = array(),
     $panels     = array();
 
-  public function __construct(sfEventDispatcher $dispatcher, sfVarLogger $logger)
+  public function __construct(sfEventDispatcher $dispatcher, sfVarLogger $logger, array $options = array())
   {
     $this->dispatcher = $dispatcher;
-    $this->logger = $logger;
+    $this->logger     = $logger;
+    $this->options    = $options;
+
+    if (!isset($this->options['image_root_path']))
+    {
+      $this->options['image_root_path'] = '';
+    }
 
     $this->configure();
 
@@ -69,6 +76,26 @@ class sfWebDebug
     unset($this->panels[$name]);
   }
 
+  public function getOption($name, $default = null)
+  {
+    return isset($this->options[$name]) ? $this->options[$name] : $default;
+  }
+
+  public function injectToolbar($content)
+  {
+    $content = str_ireplace('</head>', $this->getAssets().'</head>', $content);
+
+    $debug = $this->asHtml();
+    $count = 0;
+    $content = str_ireplace('</body>', $debug.'</body>', $content, $count);
+    if (!$count)
+    {
+      $content .= $debug;
+    }
+
+    return $content;
+  }
+
   /**
    * Returns the web debug toolbar as HTML.
    *
@@ -76,8 +103,6 @@ class sfWebDebug
    */
   public function asHtml()
   {
-    $this->loadHelpers();
-
     $links  = array();
     $panels = array();
     foreach ($this->panels as $name => $panel)
@@ -110,25 +135,17 @@ class sfWebDebug
     return '
       <div id="sfWebDebug">
         <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($this->getPriority($this->logger->getHighestPriority())).'">
-          <a href="#" onclick="sfWebDebugToggleMenu(); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/sf.png').'</a>
+          <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->options['image_root_path'].'/sf.png" /></a>
 
           <ul id="sfWebDebugDetails" class="menu">
             '.implode("\n", $links).'
           </ul>
-          <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>
+          <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" /></a>
         </div>
 
         '.implode("\n", $panels).'
       </div>
     ';
-  }
-
-  /**
-   * Loads helpers needed for the web debug toolbar.
-   */
-  protected function loadHelpers()
-  {
-    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
   }
 
   /**
@@ -152,5 +169,441 @@ class sfWebDebug
     {
       return 'error';
     }
+  }
+
+  public function getAssets()
+  {
+    return sprintf('
+      <script type="text/javascript">%s</script>
+      <style>%s</style>',
+      $this->getJavascript(),
+      str_replace("\n", ' ', $this->getStylesheet())
+    );
+  }
+
+  public function getJavascript()
+  {
+    return <<<EOF
+function sfWebDebugGetElementsByClassName(strClass, strTag, objContElm)
+{
+  // http://muffinresearch.co.uk/archives/2006/04/29/getelementsbyclassname-deluxe-edition/
+  strTag = strTag || "*";
+  objContElm = objContElm || document;
+  var objColl = (strTag == '*' && document.all) ? document.all : objContElm.getElementsByTagName(strTag);
+  var arr = new Array();
+  var delim = strClass.indexOf('|') != -1  ? '|' : ' ';
+  var arrClass = strClass.split(delim);
+  var j = objColl.length;
+  for (var i = 0; i < j; i++) {
+    if(objColl[i].className == undefined) continue;
+    var arrObjClass = objColl[i].className.split(' ');
+    if (delim == ' ' && arrClass.length > arrObjClass.length) continue;
+    var c = 0;
+    comparisonLoop:
+    {
+      var l = arrObjClass.length;
+      for (var k = 0; k < l; k++) {
+        var n = arrClass.length;
+        for (var m = 0; m < n; m++) {
+          if (arrClass[m] == arrObjClass[k]) c++;
+          if (( delim == '|' && c == 1) || (delim == ' ' && c == arrClass.length)) {
+            arr.push(objColl[i]);
+            break comparisonLoop;
+          }
+        }
+      }
+    }
+  }
+  return arr;
+}
+
+function sfWebDebugToggleMenu()
+{
+  var element = document.getElementById('sfWebDebugDetails');
+
+  var cacheElements = sfWebDebugGetElementsByClassName('sfWebDebugCache');
+  var mainCacheElements = sfWebDebugGetElementsByClassName('sfWebDebugActionCache');
+  var panelElements = sfWebDebugGetElementsByClassName('sfWebDebugTop');
+
+  if (element.style.display != 'none')
+  {
+    for (var i = 0; i < panelElements.length; ++i)
+    {
+      panelElements[i].style.display = 'none';
+    }
+
+    // hide all cache information
+    for (var i = 0; i < cacheElements.length; ++i)
+    {
+      cacheElements[i].style.display = 'none';
+    }
+    for (var i = 0; i < mainCacheElements.length; ++i)
+    {
+      mainCacheElements[i].style.border = 'none';
+    }
+  }
+  else
+  {
+    for (var i = 0; i < cacheElements.length; ++i)
+    {
+      cacheElements[i].style.display = '';
+    }
+    for (var i = 0; i < mainCacheElements.length; ++i)
+    {
+      mainCacheElements[i].style.border = '1px solid #f00';
+    }
+  }
+
+  sfWebDebugToggle('sfWebDebugDetails');
+  sfWebDebugToggle('sfWebDebugShowMenu');
+  sfWebDebugToggle('sfWebDebugHideMenu');
+}
+
+function sfWebDebugShowDetailsFor(element)
+{
+  if (typeof element == 'string')
+    element = document.getElementById(element);
+
+  var panelElements = sfWebDebugGetElementsByClassName('sfWebDebugTop');
+  for (var i = 0; i < panelElements.length; ++i)
+  {
+    if (panelElements[i] != element)
+    {
+      panelElements[i].style.display = 'none';
+    }
+  }
+
+  sfWebDebugToggle(element);
+}
+
+function sfWebDebugToggle(element)
+{
+  if (typeof element == 'string')
+    element = document.getElementById(element);
+
+  if (element)
+    element.style.display = element.style.display == 'none' ? '' : 'none';
+}
+
+function sfWebDebugToggleMessages(klass)
+{
+  var elements = sfWebDebugGetElementsByClassName(klass);
+
+  var x = elements.length;
+  for (var i = 0; i < x; ++i)
+  {
+    sfWebDebugToggle(elements[i]);
+  }
+}
+
+function sfWebDebugToggleAllLogLines(show, klass)
+{
+  var elements = sfWebDebugGetElementsByClassName(klass);
+  var x = elements.length;
+  for (var i = 0; i < x; ++i)
+  {
+    elements[i].style.display = show ? '' : 'none';
+  }
+}
+
+function sfWebDebugShowOnlyLogLines(type)
+{
+  var types = new Array();
+  types[0] = 'info';
+  types[1] = 'warning';
+  types[2] = 'error';
+  for (klass in types)
+  {
+    var elements = sfWebDebugGetElementsByClassName('sfWebDebug' + types[klass].substring(0, 1).toUpperCase() + types[klass].substring(1, types[klass].length));
+    var x = elements.length;
+    for (var i = 0; i < x; ++i)
+    {
+      if ('tr' == elements[i].tagName.toLowerCase())
+      {
+        elements[i].style.display = (type == types[klass]) ? '' : 'none';
+      }
+    }
+  }
+}
+EOF;
+  }
+
+  public function getStylesheet()
+  {
+    return <<<EOF
+#sfWebDebug
+{
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #333;
+  text-align: left;
+  line-height: 12px;
+}
+
+#sfWebDebug a, #sfWebDebug a:hover
+{
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  color: #000;
+}
+
+#sfWebDebug img
+{
+  border: 0;
+}
+
+#sfWebDebugBar
+{
+  position: absolute;
+  margin: 0;
+  padding: 1px 0;
+  right: 0px;
+  top: 0px;
+  opacity: 0.80;
+  filter: alpha(opacity:80);
+  z-index: 10000;
+  white-space: nowrap;
+}
+
+#sfWebDebugBar[id]
+{
+  position: fixed;
+}
+
+#sfWebDebugBar img
+{
+  vertical-align: middle;
+}
+
+#sfWebDebugBar .menu
+{
+  padding: 5px;
+  display: inline;
+}
+
+#sfWebDebugBar .menu li
+{
+  display: inline;
+  list-style: none;
+  margin: 0;
+  padding: 0 5px;
+  border-right: 1px solid #aaa;
+}
+
+#sfWebDebugBar .menu li.last
+{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#sfWebDebugDatabaseDetails li
+{
+  margin: 0;
+  margin-left: 30px;
+  padding: 5px 0;
+}
+
+#sfWebDebugShortMessages li
+{
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #ddd;
+}
+
+#sfWebDebugShortMessages li
+{
+  list-style: none;
+}
+
+#sfWebDebugDetails
+{
+  margin-right: 7px;
+}
+
+#sfWebDebug pre
+{
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+#sfWebDebug h1
+{
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 0;
+  border: 0px;
+  background-color: #eee;
+}
+
+#sfWebDebug h2
+{
+  font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 0;
+  border: 0px;
+  background: none;
+}
+
+#sfWebDebug .sfWebDebugTop
+{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  z-index: 9999;
+  background-color: #efefef;
+  border-bottom: 1px solid #aaa;
+}
+
+#sfWebDebugLog
+{
+  margin: 0;
+  padding: 3px;
+  font-size: 11px;
+}
+
+#sfWebDebugLogMenu li
+{
+  display: inline;
+  list-style: none;
+  margin: 0;
+  padding: 0 5px;
+  border-right: 1px solid #aaa;
+}
+
+#sfWebDebugConfigSummary
+{
+  display: inline;
+  padding: 5px;
+  background-color: #ddd;
+  border: 1px solid #aaa;
+  margin: 20px 0;
+}
+
+#sfWebDebugConfigSummary li
+{
+  list-style: none;
+  display: inline;
+  margin: 0;
+  padding: 0 5px;
+  border-right: 1px solid #aaa;
+}
+
+#sfWebDebugConfigSummary li.last
+{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sfWebDebugInfo, .sfWebDebugInfo td
+{
+  background-color: #ddd;
+}
+
+.sfWebDebugWarning, .sfWebDebugWarning td
+{
+  background-color: orange;
+}
+
+.sfWebDebugError, .sfWebDebugError td
+{
+  background-color: #f99;
+}
+
+.sfWebDebugLogNumber
+{
+  width: 1%;
+}
+
+.sfWebDebugLogType
+{
+  width: 1%;
+  white-space: nowrap;
+  color: darkgreen;
+}
+
+.sfWebDebugLogInfo
+{
+  color: blue;
+}
+
+.ison
+{
+  color: #3f3;
+  margin-right: 5px;
+}
+
+.isoff
+{
+  color: #f33;
+  margin-right: 5px;
+  text-decoration: line-through;
+}
+
+.sfWebDebugLogs
+{
+  padding: 0;
+  margin: 0;
+  border: 1px solid #999;
+  font-family: Arial;
+  font-size: 11px;
+}
+
+.sfWebDebugLogs tr
+{
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.sfWebDebugLogs td
+{
+  margin: 0;
+  border: 0;
+  padding: 1px 3px;
+  vertical-align: top;
+}
+
+.sfWebDebugLogs th
+{
+  margin: 0;
+  border: 0;
+  padding: 3px 5px;
+  vertical-align: top;
+  background-color: #999;
+  color: #eee;
+  white-space: nowrap;
+}
+
+.sfWebDebugDebugInfo
+{
+  margin-left: 10px;
+  padding-left: 5px;
+  border-left: 1px solid #aaa;
+}
+
+.sfWebDebugCache
+{
+  padding: 0;
+  margin: 0;
+  font-family: Arial;
+  position: absolute;
+  overflow: hidden;
+  z-index: 995;
+  font-size: 9px;
+  padding: 2px;
+  filter:alpha(opacity=85);
+  -moz-opacity:0.85;
+  opacity: 0.85;
+}
+EOF;
   }
 }

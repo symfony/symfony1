@@ -23,7 +23,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel
   {
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
     {
-      return image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/reload.png');
+      return '<img src="'.$this->webDebug->getOption('image_root_path').'/reload.png'.'" />';
     }
   }
 

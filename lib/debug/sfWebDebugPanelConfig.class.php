@@ -20,7 +20,7 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
 {
   public function getLinkText()
   {
-    return image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/config.png').' vars &amp; config';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/config.png" /> vars &amp; config';
   }
 
   public function getPanelContent()
@@ -74,7 +74,7 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
     $id = ucfirst(strtolower($id));
 
     return '
-    <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/toggle.gif').'</a></h2>
+    <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" /></a></h2>
     <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlspecialchars(sfYaml::dump(self::removeObjects($values)), ENT_QUOTES, sfConfig::get('sf_charset')).'</pre></div>
     ';
   }
