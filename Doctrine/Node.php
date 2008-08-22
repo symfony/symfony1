@@ -93,7 +93,7 @@ class Doctrine_Node implements IteratorAggregate
                 $table = $table->getConnection()->getTable($class);
             }
         }
-        if ($thisTable != $table) {
+        if ($thisTable !== $table) {
             $this->_tree = $table->getTree();
         } else {
             $this->_tree = $thisTable->getTree();
