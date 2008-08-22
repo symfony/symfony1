@@ -22,8 +22,7 @@ class sfWebDebug
     $dispatcher  = null,
     $log         = array(),
     $maxPriority = 1000,
-    $types       = array(),
-    $lastTimeLog = -1;
+    $types       = array();
 
   public function __construct(sfEventDispatcher $dispatcher)
   {
@@ -41,14 +40,6 @@ class sfWebDebug
    */
   public function log($logEntry)
   {
-    // elapsed time
-    if ($this->lastTimeLog == -1)
-    {
-      $this->lastTimeLog = sfConfig::get('sf_timer_start');
-    }
-
-    $this->lastTimeLog = microtime(true);
-
     // update max priority
     if ($logEntry['priority'] < $this->maxPriority)
     {
