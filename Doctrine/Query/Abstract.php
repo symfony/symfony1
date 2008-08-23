@@ -897,7 +897,7 @@ abstract class Doctrine_Query_Abstract
         $params = $this->_conn->convertBooleans($params);
 
         if ( ! $this->_view) {
-            if ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE)) {
+            if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
                 $queryCacheDriver = $this->getQueryCacheDriver();
                 // calculate hash for dql query
                 $dql = $this->getDql();
@@ -1650,9 +1650,14 @@ abstract class Doctrine_Query_Abstract
      * @param integer $timeToLive                        how long the cache entry is valid
      * @return Doctrine_Hydrate         this object
      */
-    public function useQueryCache(Doctrine_Cache_Interface $driver, $timeToLive = null)
+    public function useQueryCache($driver = true, $timeToLive = null)
     {
+        if ($driver !== null && $driver !== true && $driver !== false && ! ($driver instanceOf Doctrine_Cache_Interface)) {
+            $msg = 'First argument should be instance of Doctrine_Cache_Interface or null.';
+            throw new Doctrine_Query_Exception($msg);
+        }
         $this->_queryCache = $driver;
+        
         return $this->setQueryCacheLifeSpan($timeToLive);
     }
 

@@ -175,7 +175,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     protected $_sql;
 
-
     /**
      * create
      * returns a new Doctrine_Query object
@@ -423,7 +422,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function processPendingFields($componentAlias)
     {
         $tableAlias = $this->getTableAlias($componentAlias);
-        $table      = $this->_queryComponents[$componentAlias]['table'];
+        $table = $this->_queryComponents[$componentAlias]['table'];
 
         if ( ! isset($this->_pendingFields[$componentAlias])) {
             if ($this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
@@ -1068,8 +1067,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         if ( ! empty($this->_sqlParts['limit']) && $this->_needsSubquery &&
                 $table->getAttribute(Doctrine::ATTR_QUERY_LIMIT) == Doctrine::LIMIT_RECORDS) {
-            $this->_isLimitSubqueryUsed = true;
-            $needsSubQuery = true;
+            // We do not need a limit-subquery if only fields from the root component are
+            // selected and DISTINCT is used (i.e. DQL: SELECT DISTINCT u.id FROM User u LEFT JOIN u.phonenumbers LIMIT 5).
+            if (count($this->_pendingFields) > 1 || ! isset($this->_pendingFields[$this->getRootAlias()])
+                    || ! $this->_sqlParts['distinct']) {
+                $this->_isLimitSubqueryUsed = true;
+                $needsSubQuery = true;
+            }
         }
 
         $sql = array();
