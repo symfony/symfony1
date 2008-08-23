@@ -692,12 +692,16 @@ class Doctrine_Export extends Doctrine_Connection_Module
      *      notnull
      *          Boolean flag that indicates whether this field is constrained
      *          to not be set to null.
+     *
      *      charset
      *          Text value with the default CHARACTER SET for this field.
+     *
      *      collation
      *          Text value with the default COLLATION for this field.
+     *
      *      unique
      *          unique constraint
+     *
      *      check
      *          column check constraint
      *
@@ -776,7 +780,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     
 
     /**
-     * getDefaultDeclaration
+     * getNotNullFieldDeclaration
      * Obtain DBMS specific SQL code portion needed to set a NOT NULL
      * declaration to be used in statements like CREATE TABLE.
      *

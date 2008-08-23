@@ -256,7 +256,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
     
     
     /**
-     * getDefaultDeclaration
+     * getNotNullFieldDeclaration
      * Obtain DBMS specific SQL code portion needed to set a NOT NULL
      * declaration to be used in statements like CREATE TABLE.
      *

@@ -1824,6 +1824,11 @@ abstract class Doctrine_Query_Abstract
      */
     protected function _addDqlQueryPart($queryPartName, $queryPart, $append = false)
     {
+        // We should prevent nullable query parts
+        if ($queryPart === null) {
+            throw new Doctrine_Query_Exception('Cannot define NULL as part of query when defining \'' . $queryPartName . '\'.');
+        }
+
         if ($append) {
             $this->_dqlParts[$queryPartName][] = $queryPart;
         } else {
