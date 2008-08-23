@@ -276,6 +276,16 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * Gets the current charset as defined by the content type.
+   *
+   * @return string The current charset
+   */
+  public function getCharset()
+  {
+    return $this->options['charset'];
+  }
+
+  /**
    * Gets response content type.
    *
    * @return array
@@ -781,6 +791,12 @@ class sfWebResponse extends sfResponse
     if (false === stripos($contentType, 'charset') && (0 === stripos($contentType, 'text/') || strlen($contentType) - 3 === strripos($contentType, 'xml')))
     {
       $contentType .= '; charset='.$this->options['charset'];
+    }
+
+    // change the charset for the response
+    if (preg_match('/charset\s*=\s*(.+)\s*$/', $contentType, $match))
+    {
+      $this->options['charset'] = $match[1];
     }
 
     return $contentType;

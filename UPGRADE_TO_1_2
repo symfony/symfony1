@@ -50,6 +50,10 @@ the `sf_test` setting in symfony 1.1).
 
 This change removes the dependency between `sfResponse` and `sfConfig`.
 
+The response has a new method, `getCharset()`, which returns the current
+charset for the response. This charset is automatically updated if
+you change it by setting the content type.
+
 Validators
 ----------
 

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(73, new lime_output_color());
+$t = new lime_test(77, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -102,25 +102,29 @@ foreach (array(
 }
 
 // ->getContentType() ->setContentType()
-$t->diag('->getContentType() ->setContentType()');
+$t->diag('->getContentType() ->setContentType() ->getCharset()');
 
 $response = new myWebResponse($dispatcher);
 $t->is($response->getContentType(), 'text/html; charset=utf-8', '->getContentType() returns a sensible default value');
+$t->is($response->getCharset(), 'utf-8', '->getCharset() returns the current charset of the response');
 
 $response->setContentType('text/xml');
 $t->is($response->getContentType(), 'text/xml; charset=utf-8', '->setContentType() adds a charset if none is given');
 
 $response->setContentType('application/vnd.mozilla.xul+xml');
 $t->is($response->getContentType(), 'application/vnd.mozilla.xul+xml; charset=utf-8', '->setContentType() adds a charset if none is given');
+$t->is($response->getCharset(), 'utf-8', '->getCharset() returns the current charset of the response');
 
 $response->setContentType('image/jpg');
 $t->is($response->getContentType(), 'image/jpg', '->setContentType() does not add a charset if the content-type is not text/*');
 
 $response->setContentType('text/xml; charset=ISO-8859-1');
 $t->is($response->getContentType(), 'text/xml; charset=ISO-8859-1', '->setContentType() does nothing if a charset is given');
+$t->is($response->getCharset(), 'ISO-8859-1', '->getCharset() returns the current charset of the response');
 
 $response->setContentType('text/xml;charset = ISO-8859-1');
 $t->is($response->getContentType(), 'text/xml;charset = ISO-8859-1', '->setContentType() does nothing if a charset is given');
+$t->is($response->getCharset(), 'ISO-8859-1', '->getCharset() returns the current charset of the response');
 
 $t->is($response->getContentType(), $response->getHttpHeader('content-type'), '->getContentType() is an alias for ->getHttpHeader(\'content-type\')');
 
