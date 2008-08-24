@@ -272,8 +272,8 @@ The listener can then add new panels, remove existing ones, or even replace some
 
 The `sfWebDebugPanelLogs` panel filters the logs to be displayed by notifying the
 `debug.web.filter_logs` event.
-For example, the `sfWebDebugPanelPropel` connects to this event to remove all Propel
-related logs from the logs panel.
+For example, the `sfWebDebugPanelPropel` and `sfWebDebugPanelTimer` connect to this event
+to remove all Propel related logs and timer logs from the logs panel.
 
 The total time displayed on the web debug toolbar is now computed with `$_SERVER['REQUEST_TIME']`
 (we used to compute it with `sfConfig::get('sf_time_start')`, which does not exist anymore).
