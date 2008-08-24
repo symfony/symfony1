@@ -25,51 +25,49 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 
   public function getPanelContent()
   {
-    $logs = '<table class="sfWebDebugLogs">
+    $event = $this->webDebug->getEventDispatcher()->filter(new sfEvent($this, 'debug.web.filter_logs'), $this->webDebug->getLogger()->getLogs());
+    $logs = $event->getReturnValue();
+
+    $html = '<table class="sfWebDebugLogs">
       <tr>
         <th>#</th>
         <th>type</th>
         <th>message</th>
       </tr>'."\n";
     $line_nb = 0;
-    foreach ($this->webDebug->getLogger()->getLogs() as $logEntry)
+    foreach ($logs as $log)
     {
-      $log = $logEntry['message'];
+      $priority = $this->webDebug->getPriority($log['priority']);
 
-      $priority = $this->webDebug->getPriority($logEntry['priority']);
-
-      if (strpos($type = $logEntry['type'], 'sf') === 0)
+      if (strpos($type = $log['type'], 'sf') === 0)
       {
         $type = substr($type, 2);
       }
 
       // xdebug information
       $debug_info = '';
-      if (count($logEntry['debug_stack']))
+      if (count($log['debug_stack']))
       {
         $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" /></a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
-        foreach ($logEntry['debug_stack'] as $i => $logLine)
+        foreach ($log['debug_stack'] as $i => $logLine)
         {
           $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($logLine).'<br/>';
         }
         $debug_info .= "</div>\n";
       }
 
-      // format log
-      $log = $this->formatLogLine($log);
-
       ++$line_nb;
-      $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s%s</td></tr>\n",
+      $html .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s%s</td></tr>\n",
         ucfirst($priority),
-        $logEntry['type'],
+        $log['type'],
         $line_nb,
         '<img src="'.$this->webDebug->getOption('image_root_path').'/'.$priority.'.png" />',
         $type,
-        $log,
+        $this->formatLogLine($log['message']),
         $debug_info
       );
     }
-    $logs .= '</table>';
+    $html .= '</table>';
 
     $types = array();
     foreach ($this->webDebug->getLogger()->getTypes() as $type)
@@ -86,7 +84,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
         <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/error.png" /></a></li>
         <li>'.implode("</li>\n<li>", $types).'</li>
       </ul>
-      <div id="sfWebDebugLogLines">'.$logs.'</div>
+      <div id="sfWebDebugLogLines">'.$html.'</div>
     ';
   }
 

@@ -270,6 +270,11 @@ By default, the following panels are automatically registered:
 You can customize the web debug toolbar by listening to the `debug.web.load_panels` event.
 The listener can then add new panels, remove existing ones, or even replace some.
 
+The `sfWebDebugPanelLogs` panel filters the logs to be displayed by notifying the
+`debug.web.filter_logs` event.
+For example, the `sfWebDebugPanelPropel` connects to this event to remove all Propel
+related logs from the logs panel.
+
 The total time displayed on the web debug toolbar is now computed with `$_SERVER['REQUEST_TIME']`
 (we used to compute it with `sfConfig::get('sf_time_start')`, which does not exist anymore).
 This means that the time displayed will be much larger than in symfony 1.0 and 1.1.
