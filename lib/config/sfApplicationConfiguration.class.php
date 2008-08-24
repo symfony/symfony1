@@ -93,12 +93,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function initConfiguration()
   {
-    // in debug mode, start global timer
-    if ($this->isDebug() && !sfConfig::get('sf_timer_start'))
-    {
-      sfConfig::set('sf_timer_start', microtime(true));
-    }
-
     $configCache = $this->getConfigCache();
 
     // required core classes for the framework

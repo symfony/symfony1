@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,14 +25,18 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
   public function getPanelContent()
   {
-    $panel = '<table class="sfWebDebugLogs" style="width: 300px"><tr><th>type</th><th>calls</th><th>time (ms)</th><th>time (%)</th></tr>';
-    foreach (sfTimerManager::getTimers() as $name => $timer)
+    if (sfTimerManager::getTimers())
     {
-      $panel .= sprintf('<tr><td class="sfWebDebugLogType">%s</td><td class="sfWebDebugLogNumber" style="text-align: right">%d</td><td style="text-align: right">%.2f</td><td style="text-align: right">%d</td></tr>', $name, $timer->getCalls(), $timer->getElapsedTime() * 1000, $timer->getElapsedTime() * 1000 * 100 / $this->getTotalTime());
-    }
-    $panel .= '</table>';
+      $totalTime = $this->getTotalTime();
+      $panel = '<table class="sfWebDebugLogs" style="width: 300px"><tr><th>type</th><th>calls</th><th>time (ms)</th><th>time (%)</th></tr>';
+      foreach (sfTimerManager::getTimers() as $name => $timer)
+      {
+        $panel .= sprintf('<tr><td class="sfWebDebugLogType">%s</td><td class="sfWebDebugLogNumber" style="text-align: right">%d</td><td style="text-align: right">%.2f</td><td style="text-align: right">%d</td></tr>', $name, $timer->getCalls(), $timer->getElapsedTime() * 1000, $totalTime ? ($timer->getElapsedTime() * 1000 * 100 / $totalTime) : 'N/A');
+      }
+      $panel .= '</table>';
 
-    return $panel;
+      return $panel;
+    }
   }
 
   public function getTitle()
@@ -42,6 +46,6 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
   protected function getTotalTime()
   {
-    return sprintf('%.0f', (microtime(true) - sfConfig::get('sf_timer_start')) * 1000);
+    return isset($_SERVER['REQUEST_TIME']) ? sprintf('%.0f', (microtime(true) - $_SERVER['REQUEST_TIME']) * 1000) : 0;
   }
 }
