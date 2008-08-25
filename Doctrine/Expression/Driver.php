@@ -740,11 +740,22 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      *
      * @param string $value 
      * @return void
-     * @author Jonathan H. Wage
      */
     public function cos($value)
     {
         return 'COS(' . $value . ')';
+    }
+
+    /**
+     * coalesce
+     *
+     * @return string
+     */
+    public function coalesce()
+    {
+        $args = func_get_args();
+
+	    return 'COALESCE(' . join(', ', (array) $args) . ')';
     }
 
     /**
