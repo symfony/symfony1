@@ -54,7 +54,7 @@ The response has a new method, `getCharset()`, which returns the current
 charset for the response. This charset is automatically updated if
 you change it by setting the content type.
 
-The `getStylesheets()` and `getJavascripts()` methods now return all the
+The `getStylesheets()` and `getJavascripts()` methods can now return all the
 stylesheets and javascripts ordered by position if you pass `sfWebResponse::ALL`
 as their first argument:
 
@@ -71,7 +71,9 @@ as their first argument:
       'foo.css' => array(),
     )
 
-The old behavior is still available by passing the `sfWebResponse::RAW` position:
+In symfony 1.1, you was able to get all the files by passing the `'ALL'` string
+as the position, and this behavior is still available by passing
+`sfWebResponse::RAW`:
 
     [php]
     var_export($response->getStylesheets(sfWebResponse::RAW));
