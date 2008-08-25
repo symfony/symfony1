@@ -54,6 +54,48 @@ The response has a new method, `getCharset()`, which returns the current
 charset for the response. This charset is automatically updated if
 you change it by setting the content type.
 
+The `getStylesheets()` and `getJavascripts()` methods now return all the
+stylesheets and javascripts ordered by position if you pass `sfWebResponse::ALL`
+as their first argument:
+
+    [php]
+    $response = new sfWebResponse(new sfEventDispatcher());
+    $response->addStylesheet('foo.css');
+    $response->addStylesheet('bar.css', 'first');
+
+    var_export($response->getStylesheets(sfWebResponse::ALL));
+
+    // outputs
+    array(
+      'bar.css' => array(),
+      'foo.css' => array(),
+    )
+
+The old behavior is still available by passing the `sfWebResponse::RAW` position:
+
+    [php]
+    var_export($response->getStylesheets(sfWebResponse::RAW));
+
+    // outputs
+    array(
+      'first' =>
+        array(
+          'bar.css' => array (),
+        ),
+      '' =>
+        array(
+        'foo.css' => array(),
+        ),
+      'last' => array(),
+    )
+
+All the positions (first, '', and last) are now also available as constants:
+
+    [php]
+    sfWebResponse::FIRST  === 'first'
+    sfWebResponse::MIDDLE === ''
+    sfWebResponse::LAST   === 'last'
+
 Validators
 ----------
 
@@ -140,7 +182,7 @@ for more examples).
     [php]
     $yaml = new sfYamlParser();
 
-    print_r($yaml->parse(<<<EOF
+    var_export($yaml->parse(<<<EOF
     default_param: &default_param
       datasource: propel
       phptype:    mysql
@@ -156,29 +198,25 @@ for more examples).
     EOF
     ));
 
-    // displays
-    Array
-    (
-        [default_param] => Array
-            (
-                [datasource] => propel
-                [phptype]    => mysql
-                [hostspec]   => localhost
-                [database]   => db
-                [username]   => user
-                [password]   => pass
-            )
+    // outputs
+    array(
+      'default_param' => array(
+        'datasource' => 'propel',
+        'phptype'    => 'mysql',
+        'hostspec'   => 'localhost',
+        'database'   => 'db',
+        'username'   => 'user',
+        'password'   => 'pass',
+      )
 
-        [param] => Array
-            (
-                [datasource] => propel
-                [phptype]    => mysql
-                [hostspec]   => localhost
-                [database]   => db
-                [username]   => myuser
-                [password]   => mypass
-            )
-
+      'param' => array(
+        'datasource' => 'propel',
+        'phptype'    => 'mysql',
+        'hostspec'   => 'localhost',
+        'database'   => 'db',
+        'username'   => 'myuser',
+        'password'   => 'mypass',
+      )
     )
 
 Actions
@@ -227,17 +265,17 @@ and do something with them:
     $log = new sfVarLogger();
     $log->log('foo');
 
-    print_r($log->getLogs());
+    var_export($log->getLogs());
 
     // outputs
-    Array(
-      [0] => Array(
-        [priority]      => 6
-        [priority_name] => info
-        [time]          => 1219385295
-        [message]       => foo
-        [type]          => sfOther
-        [debug_stack]   => Array()
+    array(
+      0 => array(
+        'priority'      => 6,
+        'priority_name' => 'info',
+        'time'          => 1219385295,
+        'message'       => 'foo',
+        'type'          => 'sfOther',
+        'debug_stack'   => array()
       )
     )
 

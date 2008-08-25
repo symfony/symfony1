@@ -460,26 +460,10 @@ function get_javascripts()
   $response = sfContext::getInstance()->getResponse();
   sfConfig::set('symfony.asset.javascripts_included', true);
 
-  $already_seen = array();
   $html = '';
-
-  foreach ($response->getPositions() as $position)
+  foreach ($response->getJavascripts(sfWebResponse::ALL) as $file => $options)
   {
-    foreach ($response->getJavascripts($position) as $files => $options)
-    {
-      if (!is_array($files))
-      {
-        $files = array($files);
-      }
-
-      foreach ($files as $file)
-      {
-        if (isset($already_seen[$file])) continue;
-
-        $already_seen[$file] = 1;
-        $html .= javascript_include_tag($file, $options);
-      }
-    }
+    $html .= javascript_include_tag($file, $options);
   }
 
   return $html;
@@ -509,26 +493,10 @@ function get_stylesheets()
   $response = sfContext::getInstance()->getResponse();
   sfConfig::set('symfony.asset.stylesheets_included', true);
 
-  $already_seen = array();
   $html = '';
-
-  foreach ($response->getPositions() as $position)
+  foreach ($response->getStylesheets(sfWebResponse::ALL) as $file => $options)
   {
-    foreach ($response->getStylesheets($position) as $files => $options)
-    {
-      if (!is_array($files))
-      {
-        $files = array($files);
-      }
-
-      foreach ($files as $file)
-      {
-        if (isset($already_seen[$file])) continue;
-
-        $already_seen[$file] = 1;
-        $html .= stylesheet_tag($file, $options);
-      }
-    }
+    $html .= stylesheet_tag($file, $options);
   }
 
   return $html;

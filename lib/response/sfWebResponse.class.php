@@ -20,6 +20,13 @@
  */
 class sfWebResponse extends sfResponse
 {
+  const
+    FIRST  = 'first',
+    MIDDLE = '',
+    LAST   = 'last',
+    ALL    = 'ALL',
+    RAW    = 'RAW';
+
   protected
     $cookies     = array(),
     $statusCode  = 200,
@@ -577,93 +584,125 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves stylesheets for the current web response.
    *
-   * @param  string  $position
+   * If you pass sfWebResponse::ALL as the position,
+   * the methods returns all stylesheets ordered by position.
    *
-   * @return string Stylesheets
+   * @param  string  $position The position
+   *
+   * @return array   An associative array of javascript files as keys and options as values
    */
   public function getStylesheets($position = '')
   {
-    if ($position == 'ALL')
+    if (sfWebResponse::ALL === $position)
+    {
+      $stylesheets = array();
+      foreach ($this->getPositions() as $position)
+      {
+        foreach ($this->stylesheets[$position] as $file => $options)
+        {
+          $stylesheets[$file] = $options;
+        }
+      }
+
+      return $stylesheets;
+    }
+    else if (sfWebResponse::RAW === $position)
     {
       return $this->stylesheets;
     }
 
     $this->validatePosition($position);
 
-    return isset($this->stylesheets[$position]) ? $this->stylesheets[$position] : array();
+    return $this->stylesheets[$position];
   }
 
   /**
    * Adds a stylesheet to the current web response.
    *
-   * @param string $css       Stylesheet
+   * @param string $file      The stylesheet file
    * @param string $position  Position
    * @param string $options   Stylesheet options
    */
-  public function addStylesheet($css, $position = '', $options = array())
+  public function addStylesheet($file, $position = '', $options = array())
   {
     $this->validatePosition($position);
 
-    $this->stylesheets[$position][$css] = $options;
+    $this->stylesheets[$position][$file] = $options;
   }
 
   /**
    * Removes a stylesheet from the current web response.
    *
-   * @param string $css       Stylesheet
+   * @param string $css       The stylesheet file
    * @param string $position  Position
    */
-  public function removeStylesheet($css, $position = '')
+  public function removeStylesheet($file, $position = '')
   {
     $this->validatePosition($position);
 
-    unset($this->stylesheets[$position][$css]);
+    unset($this->stylesheets[$position][$file]);
   }
 
   /**
-   * Retrieves javascript code from the current web response.
+   * Retrieves javascript files from the current web response.
    *
-   * @param  string $position  Position
+   * If you pass sfWebResponse::ALL as the position,
+   * the methods returns all javascripts ordered by position.
    *
-   * @return string Javascript code
+   * @param  string $position  The position
+   *
+   * @return array An associative array of javascript files as keys and options as values
    */
   public function getJavascripts($position = '')
   {
-    if ($position == 'ALL')
+    if (sfWebResponse::ALL === $position)
+    {
+      $javascripts = array();
+      foreach ($this->getPositions() as $position)
+      {
+        foreach ($this->javascripts[$position] as $file => $options)
+        {
+          $javascripts[$file] = $options;
+        }
+      }
+
+      return $javascripts;
+    }
+    else if (sfWebResponse::RAW === $position)
     {
       return $this->javascripts;
     }
 
     $this->validatePosition($position);
 
-    return isset($this->javascripts[$position]) ? $this->javascripts[$position] : array();
+    return $this->javascripts[$position];
   }
 
   /**
    * Adds javascript code to the current web response.
    *
-   * @param string $js        Javascript code
+   * @param string $gile      The JavaScript file
    * @param string $position  Position
    * @param string $options   Javascript options
    */
-  public function addJavascript($js, $position = '', $options = array())
+  public function addJavascript($file, $position = '', $options = array())
   {
     $this->validatePosition($position);
 
-    $this->javascripts[$position][$js] = $options;
+    $this->javascripts[$position][$file] = $options;
   }
 
   /**
-   * Removes javascript code from the current web response.
+   * Removes a JavaScript file from the current web response.
    *
-   * @param string $js        Javascript code
+   * @param string $file      The Javascript file
    * @param string $position  Position
    */
-  public function removeJavascript($js, $position = '')
+  public function removeJavascript($file, $position = '')
   {
     $this->validatePosition($position);
 
-    unset($this->javascripts[$position][$js]);
+    unset($this->javascripts[$position][$file]);
   }
 
   /**
@@ -726,8 +765,8 @@ class sfWebResponse extends sfResponse
     $this->headers     = $response->getHttpHeaders();
     $this->metas       = $response->getMetas();
     $this->httpMetas   = $response->getHttpMetas();
-    $this->stylesheets = $response->getStylesheets('ALL');
-    $this->javascripts = $response->getJavascripts('ALL');
+    $this->stylesheets = $response->getStylesheets(sfWebResponse::RAW);
+    $this->javascripts = $response->getJavascripts(sfWebResponse::RAW);
     $this->slots       = $response->getSlots();
   }
 
