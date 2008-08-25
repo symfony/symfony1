@@ -98,6 +98,10 @@ All the positions (first, '', and last) are now also available as constants:
     sfWebResponse::MIDDLE === ''
     sfWebResponse::LAST   === 'last'
 
+The `removeStylesheet()` and `removeJavascript()` methods now only take one argument,
+the file to remove from the response. It will remove the file in all the available
+positions. In symfony 1.1, they take the position as a second argument.
+
 Validators
 ----------
 

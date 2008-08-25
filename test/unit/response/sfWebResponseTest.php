@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(77, new lime_output_color());
+$t = new lime_test(79, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -223,7 +223,10 @@ $t->is($response->getStylesheets('last'), array('last' => array()), '->getStyles
 
 $t->diag('->removeStylesheet()');
 $response->removeStylesheet('foo');
-$t->is($response->getStylesheets(), array('test' => array(), 'bar' => array('media' => 'print')), '->getStylesheets() does no longer contain removed stylesheets');
+$t->is(array_keys($response->getStylesheets(sfWebResponse::ALL)), array('first', 'test', 'bar', 'last'), '->getStylesheets() removes a stylesheet from the response');
+
+$response->removeStylesheet('first');
+$t->is(array_keys($response->getStylesheets(sfWebResponse::ALL)), array('test', 'bar', 'last'), '->getStylesheets() removes a stylesheet from the response');
 
 // ->addJavascript()
 $t->diag('->addJavascript()');
@@ -255,7 +258,10 @@ $t->is($response->getJavascripts('last'), array('last_js' => array()), '->getJav
 
 $t->diag('->removeJavascript()');
 $response->removeJavascript('test');
-$t->is($response->getJavascripts(), array('foo' => array('raw_name' => true)), '->getJavascripts() does no longer contain removed javascripts');
+$t->is(array_keys($response->getJavascripts(sfWebResponse::ALL)), array('first_js', 'foo', 'last_js'), '->removeJavascripts() removes a javascript file');
+
+$response->removeJavascript('first_js');
+$t->is(array_keys($response->getJavascripts(sfWebResponse::ALL)), array('foo', 'last_js'), '->removeJavascripts() removes a javascript file');
 
 // ->setCookie() ->getCookies()
 $t->diag('->setCookie() ->getCookies()');

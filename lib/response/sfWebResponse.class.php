@@ -633,14 +633,14 @@ class sfWebResponse extends sfResponse
   /**
    * Removes a stylesheet from the current web response.
    *
-   * @param string $css       The stylesheet file
-   * @param string $position  Position
+   * @param string $css The stylesheet file to remove
    */
-  public function removeStylesheet($file, $position = '')
+  public function removeStylesheet($file)
   {
-    $this->validatePosition($position);
-
-    unset($this->stylesheets[$position][$file]);
+    foreach ($this->getPositions() as $position)
+    {
+      unset($this->stylesheets[$position][$file]);
+    }
   }
 
   /**
@@ -695,14 +695,14 @@ class sfWebResponse extends sfResponse
   /**
    * Removes a JavaScript file from the current web response.
    *
-   * @param string $file      The Javascript file
-   * @param string $position  Position
+   * @param string $file The Javascript file to remove
    */
-  public function removeJavascript($file, $position = '')
+  public function removeJavascript($file)
   {
-    $this->validatePosition($position);
-
-    unset($this->javascripts[$position][$file]);
+    foreach ($this->getPositions() as $position)
+    {
+      unset($this->javascripts[$position][$file]);
+    }
   }
 
   /**
