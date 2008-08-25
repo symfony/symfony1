@@ -146,11 +146,11 @@ class sfWebDebug
    */
   public function injectToolbar($content)
   {
-    $content = str_ireplace('</head>', $this->getAssets().'</head>', $content);
+    $content = str_ireplace('</head>', '<style>'.str_replace("\n", ' ', $this->getStylesheet()).'</style></head>', $content);
 
     $debug = $this->asHtml();
     $count = 0;
-    $content = str_ireplace('</body>', $debug.'</body>', $content, $count);
+    $content = str_ireplace('</body>', '<script type="text/javascript">'.$this->getJavascript().'</script>'.$debug.'</body>', $content, $count);
     if (!$count)
     {
       $content .= $debug;
@@ -232,21 +232,6 @@ class sfWebDebug
     {
       return 'error';
     }
-  }
-
-  /**
-   * Gets the HTML to inject in the head tag.
-   *
-   * @param string The asset HTML code
-   */
-  public function getAssets()
-  {
-    return sprintf('
-      <script type="text/javascript">%s</script>
-      <style>%s</style>',
-      $this->getJavascript(),
-      str_replace("\n", ' ', $this->getStylesheet())
-    );
   }
 
   /**
