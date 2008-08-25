@@ -159,10 +159,6 @@ class Doctrine_Data_Export extends Doctrine_Data
                 $recordData = $record->toArray(false);
 
                 foreach ($recordData as $key => $value) {
-                    if ( ! $value) {
-                        continue;
-                    }
-
                     // skip single primary keys, we need to maintain composite primary keys
                     $keys = $record->getTable()->getIdentifier();
 
