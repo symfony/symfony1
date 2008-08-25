@@ -1152,13 +1152,13 @@ class Doctrine_Export extends Doctrine_Connection_Module
          // Loop over all the sql again to merge everything together so it is in the correct order
          $build = array();
          foreach ($connections as $connectionName => $sql) {
-             $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']);
+             $build[$connectionName] = array_unique(array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']));
          }
 
          if ( ! $groupByConnection) {
              $new = array();
              foreach($build as $connectionname => $sql) {
-                 $new = array_merge($new, $sql);
+                 $new = array_unique(array_merge($new, $sql));
              }
              $build = $new;
          }
