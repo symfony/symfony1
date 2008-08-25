@@ -880,7 +880,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function getComponentAlias($sqlTableAlias)
     {
-        $sqlTableAlias = trim($sqlTableAlias, '`"');
+        $sqlTableAlias = trim($sqlTableAlias, '[]`"');
         if ( ! isset($this->_tableAliasMap[$sqlTableAlias])) {
             throw new Doctrine_Query_Exception('Unknown table alias ' . $sqlTableAlias);
         }

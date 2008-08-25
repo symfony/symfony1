@@ -1004,8 +1004,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     unset($this->_pendingJoinConditions[$k]);
                 }
 
-                $tableAlias = trim($e[3], '`"');
-                $componentAlias = $this->getComponentAlias($tableAlias);
+                $componentAlias = $this->getComponentAlias($e[3]);
 
                 $string = $this->getInheritanceCondition($componentAlias);
 
