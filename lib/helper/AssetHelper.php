@@ -461,7 +461,7 @@ function get_javascripts()
   sfConfig::set('symfony.asset.javascripts_included', true);
 
   $html = '';
-  foreach ($response->getJavascripts(sfWebResponse::ALL) as $file => $options)
+  foreach ($response->getJavascripts() as $file => $options)
   {
     $html .= javascript_include_tag($file, $options);
   }
@@ -494,7 +494,7 @@ function get_stylesheets()
   sfConfig::set('symfony.asset.stylesheets_included', true);
 
   $html = '';
-  foreach ($response->getStylesheets(sfWebResponse::ALL) as $file => $options)
+  foreach ($response->getStylesheets() as $file => $options)
   {
     $html .= stylesheet_tag($file, $options);
   }

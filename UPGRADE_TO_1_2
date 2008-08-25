@@ -63,13 +63,17 @@ as their first argument:
     $response->addStylesheet('foo.css');
     $response->addStylesheet('bar.css', 'first');
 
-    var_export($response->getStylesheets(sfWebResponse::ALL));
+    var_export($response->getStylesheets());
 
     // outputs
     array(
       'bar.css' => array(),
       'foo.css' => array(),
     )
+
+The `sfWebResponse::ALL` is also now the default value for the position argument.
+In symfony 1.1, as the default value is the empty string, the methods only return
+the files registered for the default position by default, which is not very intuitive.
 
 In symfony 1.1, you was able to get all the files by passing the `'ALL'` string
 as the position, and this behavior is still available by passing

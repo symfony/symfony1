@@ -584,16 +584,16 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves stylesheets for the current web response.
    *
-   * If you pass sfWebResponse::ALL as the position,
-   * the methods returns all stylesheets ordered by position.
+   * By default, the position is sfWebResponse::ALL,
+   * and the method returns all stylesheets ordered by position.
    *
    * @param  string  $position The position
    *
-   * @return array   An associative array of javascript files as keys and options as values
+   * @return array   An associative array of stylesheet files as keys and options as values
    */
-  public function getStylesheets($position = '')
+  public function getStylesheets($position = self::ALL)
   {
-    if (sfWebResponse::ALL === $position)
+    if (self::ALL === $position)
     {
       $stylesheets = array();
       foreach ($this->getPositions() as $position)
@@ -606,7 +606,7 @@ class sfWebResponse extends sfResponse
 
       return $stylesheets;
     }
-    else if (sfWebResponse::RAW === $position)
+    else if (self::RAW === $position)
     {
       return $this->stylesheets;
     }
@@ -646,16 +646,16 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves javascript files from the current web response.
    *
-   * If you pass sfWebResponse::ALL as the position,
-   * the methods returns all javascripts ordered by position.
+   * By default, the position is sfWebResponse::ALL,
+   * and the method returns all javascripts ordered by position.
    *
    * @param  string $position  The position
    *
    * @return array An associative array of javascript files as keys and options as values
    */
-  public function getJavascripts($position = '')
+  public function getJavascripts($position = self::ALL)
   {
-    if (sfWebResponse::ALL === $position)
+    if (self::ALL === $position)
     {
       $javascripts = array();
       foreach ($this->getPositions() as $position)
@@ -668,7 +668,7 @@ class sfWebResponse extends sfResponse
 
       return $javascripts;
     }
-    else if (sfWebResponse::RAW === $position)
+    else if (self::RAW === $position)
     {
       return $this->javascripts;
     }
@@ -765,8 +765,8 @@ class sfWebResponse extends sfResponse
     $this->headers     = $response->getHttpHeaders();
     $this->metas       = $response->getMetas();
     $this->httpMetas   = $response->getHttpMetas();
-    $this->stylesheets = $response->getStylesheets(sfWebResponse::RAW);
-    $this->javascripts = $response->getJavascripts(sfWebResponse::RAW);
+    $this->stylesheets = $response->getStylesheets(self::RAW);
+    $this->javascripts = $response->getJavascripts(self::RAW);
     $this->slots       = $response->getSlots();
   }
 
