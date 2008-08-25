@@ -326,3 +326,36 @@ to remove all Propel related logs and timer logs from the logs panel.
 The total time displayed on the web debug toolbar is now computed with `$_SERVER['REQUEST_TIME']`
 (we used to compute it with `sfConfig::get('sf_time_start')`, which does not exist anymore).
 This means that the time displayed will be much larger than in symfony 1.0 and 1.1.
+
+Browser
+-------
+
+The `sfBrowser` and `sfTestBrowser` classes have been refactored in four classes:
+
+  * `sfBrowserBase`:        The base browser class. It knows nothing about symfony,
+                            except classes from the symfony platform.
+
+  * `sfBrowser`:            It inherits from `sfBrowserBase` and implements the
+                            methods specific to symfony.
+
+  * `sfTestFunctionalBase`: The base functional test class. It implements test
+                            methods that are independant from symfony.
+
+  * `sfTestFunctional`:     It inherits from `sfTestFunctionalBase` and implements
+                            the test methods specific to symfony.
+
+  * `sfTestBrowser`:        A BC class which is the same as the `sfTestFunctional`
+                            class with a constructor signature compatible with symfony 1.1
+
+The idea behind the refactor is that the `sfTestFunctional` class is a test class,
+not a browser. So, it takes a browser and a test object as its arguments:
+
+    [php]
+    $testBrowser = new sfTestBrowser('localhost');
+
+    $tester = new sfTestFunctional(new sfBrowser('localhost'), new lime_test());
+
+The `sfTestFunctional` class acts as a proxy for the browser class which means
+that all methods from the browser are accessible directly from the tester object.
+
+This refactor must not introduce backward incompatibility with symfony 1.1.

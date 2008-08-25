@@ -75,7 +75,7 @@ try
   $b->checkResponseElement('h1', 'text');
   $b->test()->fail('The DOM is not accessible if the response content type is not HTML');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $b->test()->pass('The DOM is not accessible if the response content type is not HTML');
 }
