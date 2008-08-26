@@ -303,13 +303,15 @@ if on the toolbar.
 
 By default, the following panels are automatically registered:
 
-  * symfony_version (`sfWebDebugPanelSymfonyVersion`)
-  * cache           (`sfWebDebugPanelCache`)
-  * config          (`sfWebDebugPanelConfig`)
-  * logs            (`sfWebDebugPanelLogs`)
-  * time            (`sfWebDebugPanelTimer`)
-  * memory          (`sfWebDebugPanelMemory`)
-  * db              (`sfWebDebugPanelPropel`)
+ *name*          | *class name*
+ --------------- | -------------------------------
+ symfony_version | `sfWebDebugPanelSymfonyVersion`
+ cache           | `sfWebDebugPanelCache`
+ config          | `sfWebDebugPanelConfig`
+ logs            | `sfWebDebugPanelLogs`
+ time            | `sfWebDebugPanelTimer`
+ memory          | `sfWebDebugPanelMemory`
+ db              | `sfWebDebugPanelPropel`
 
 You can customize the web debug toolbar by listening to the `debug.web.load_panels` event.
 The listener can then add new panels, remove existing ones, or even replace some.
