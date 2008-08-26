@@ -171,8 +171,7 @@ available from `sfContext`:
     sfContext::getInstance()->getRouting()
     sfContext::getInstance()->getLogger()
 
-Routing
-~~~~~~~
+### Routing
 
 Here is the default configuration for the routing in `factories.yml`:
 
@@ -184,8 +183,7 @@ Here is the default configuration for the routing in `factories.yml`:
 
 The `project:upgrade1.1` task makes all the changes for you.
 
-Logging
-~~~~~~~
+### Logging
 
 Here is the default configuration for logging in `factories.yml`:
 
@@ -231,8 +229,7 @@ This can be used to prevent logging in the production environment altogether:
 
 The `project:upgrade1.1` task makes all those changes for you.
 
-i18n
-~~~~
+### i18n
 
 Here is the default configuration for i18n in `factories.yml`:
 
@@ -612,46 +609,46 @@ Tasks
 
 The symfony command line task names have changed. They now use a namespace syntax. The old task names still work--they are just aliases for the new task names. Here is a table showing the name changes:
 
-    Old task name             |  New task name
-    --------------------------|-----------------
-    clear-cache               | cache:clear
-    clear-controllers         | project:clear-controllers
-    disable                   | project:disable
-    downgrade                 | [Not implemented]
-    enable                    | project:enable
-    fix-perms                 | project:permissions
-    freeze                    | project:freeze
-    init-app                  | generate:app
-    init-batch                | [Not implemented]
-    init-controller           | [Not implemented]
-    init-module               | generate:module
-    init-project              | generate:project
-    log-purge                 | log:clear
-    log-rotate                | log:rotate
-    plugin-install            | plugin:install
-    plugin-list               | plugin:list
-    plugin-uninstall          | plugin:uninstall
-    plugin-upgrade            | plugin:upgrade
-    propel-build-all          | propel:build-all
-    propel-build-all-load     | propel:build-all-load
-    propel-build-db           | propel:build-db
-    propel-build-model        | propel:build-model
-    propel-build-schema       | propel:build-schema
-    propel-build-sql          | propel:build-sql
-    propel-convert-xml-schema | propel:schema-to-yml
-    propel-convert-yml-schema | propel:schema-to-xml
-    propel-dump-data          | propel:data-dump
-    propel-generate-crud      | propel:generate-crud
-    propel-init-admin         | propel:init-admin
-    propel-init-crud          | [Not implemented]
-    propel-insert-sql         | propel:insert-sql
-    propel-load-data          | propel:data-load
-    sync                      | project:deploy
-    test-all                  | test:all
-    test-functional           | test:functional
-    test-unit                 | test:unit
-    unfreeze                  | project:unfreeze
-    upgrade                   | project:freeze
+ Old task name             |  New task name
+ ------------------------- | ----------------
+ clear-cache               | cache:clear
+ clear-controllers         | project:clear-controllers
+ disable                   | project:disable
+ downgrade                 | [Not implemented]
+ enable                    | project:enable
+ fix-perms                 | project:permissions
+ freeze                    | project:freeze
+ init-app                  | generate:app
+ init-batch                | [Not implemented]
+ init-controller           | [Not implemented]
+ init-module               | generate:module
+ init-project              | generate:project
+ log-purge                 | log:clear
+ log-rotate                | log:rotate
+ plugin-install            | plugin:install
+ plugin-list               | plugin:list
+ plugin-uninstall          | plugin:uninstall
+ plugin-upgrade            | plugin:upgrade
+ propel-build-all          | propel:build-all
+ propel-build-all-load     | propel:build-all-load
+ propel-build-db           | propel:build-db
+ propel-build-model        | propel:build-model
+ propel-build-schema       | propel:build-schema
+ propel-build-sql          | propel:build-sql
+ propel-convert-xml-schema | propel:schema-to-yml
+ propel-convert-yml-schema | propel:schema-to-xml
+ propel-dump-data          | propel:data-dump
+ propel-generate-crud      | propel:generate-crud
+ propel-init-admin         | propel:init-admin
+ propel-init-crud          | [Not implemented]
+ propel-insert-sql         | propel:insert-sql
+ propel-load-data          | propel:data-load
+ sync                      | project:deploy
+ test-all                  | test:all
+ test-functional           | test:functional
+ test-unit                 | test:unit
+ unfreeze                  | project:unfreeze
+ upgrade                   | project:freeze
 
 As before, if you want to list the available tasks, just call the `symfony` command with no argument:
 
@@ -680,13 +677,12 @@ Here is how:
 
   * Change your front controllers so they look like this:
 
-      {{{
+        [php]
         <?php
 
         require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
 
         $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'dev', true);
         sfContext::createInstance($configuration)->dispatch();
-      }}}
 
 You can now launch the `project:upgrade1.1` script to finish the upgrade.

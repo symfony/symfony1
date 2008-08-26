@@ -27,8 +27,7 @@ The remaining sections explain the main changes made in symfony 1.2.
 Configuration
 -------------
 
-Request
-~~~~~~~
+### Request
 
 The `path_info_array`, `path_info_key`, and `relative_url_root` settings have
 been moved from `settings.yml` to `factories.yml` (in the `param` section of the
@@ -40,8 +39,7 @@ These three request options are now passed to the request constructor as a
 fourth argument. The formats are also passed as an option,
 instead of being passed as an attribute.
 
-Response
-~~~~~~~~
+### Response
 
 There is a new setting for the `response` factory: `send_http_headers`.
 This setting is `true` by default, except for the `test` environment where
@@ -123,8 +121,7 @@ The following two examples are equivalent:
 Tests
 -----
 
-Cookies
-~~~~~~~
+### Cookies
 
 Cookies are now extensively supported in the `sfBrowser` and `sfTestBrowser`
 classes.
@@ -165,8 +162,7 @@ or a negative regular expression.
 The browser class also automatically expires cookies as per the `expire` value
 of each cookie.
 
-Links
-~~~~~
+### Links
 
 When you simulate a click on a button or on a link, you give the name to the `click()`
 method. But you don't have the possibility to differentiate two different links or buttons
