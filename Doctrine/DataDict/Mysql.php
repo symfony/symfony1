@@ -384,6 +384,17 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'bit':
                 $type[] = 'bit';
             break;
+            case 'geometry':
+            case 'geometrycollection':
+            case 'point':
+            case 'multipoint':
+            case 'linestring':
+            case 'multilinestring':
+            case 'polygon':
+            case 'multipolygon':
+                $type[] = 'blob';
+                $length = null;
+            break;		
             default:
                 throw new Doctrine_DataDict_Exception('unknown database attribute type: ' . $dbType);
         }
