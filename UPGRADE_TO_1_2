@@ -108,13 +108,13 @@ positions. In symfony 1.1, they take the position as a second argument.
 
 ### Prototype and Scriptaculous
 
-symfony continues to decouple its bundles software. In 1.2 the bundled Prototype and 
-Scriptaculous libraries and helper (`JavascriptHelper`) have ben moved to a core-plugin.
+symfony continues to decouple its bundled software. In 1.2 the bundled Prototype and 
+Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a core-plugin.
 Core plugins behave like real plugins but are shipped by symfony platform. This will make
 the javscript and css files of the new `sfProtoculousPlugin` (the more or less inofficial 
-name of the often featured duo) behave like real plugin asstes. They will be now in 
-`web/sfProtoculousPlugin` rathan in `web/sf`as it has been in 1.0 and 1.1. The `prototype_web_dir`
-setting will also now point tot the new directory.
+name of the often featured duo) behave like real plugin assets. They will be now in 
+`web/sfProtoculousPlugin` rather than in `web/sf` (as it has been in 1.0 and 1.1). The 
+`prototype_web_dir` setting will also now point tot the new directory.
 
 >**CAUTION**
 >**Work in progress:** As plugins are normally installed via a task and this invokes the 
