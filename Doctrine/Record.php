@@ -889,7 +889,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             return $value;
         }
 
-        if (isset($this->_values[$fieldName])) {
+        if (array_key_exists($fieldName, $this->_values)) {
             return $this->_values[$fieldName];
         }
         
