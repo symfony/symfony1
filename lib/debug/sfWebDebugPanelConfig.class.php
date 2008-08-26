@@ -18,9 +18,14 @@
  */
 class sfWebDebugPanelConfig extends sfWebDebugPanel
 {
-  public function getLinkText()
+  public function getTitle()
   {
     return '<img src="'.$this->webDebug->getOption('image_root_path').'/config.png" /> config';
+  }
+
+  public function getPanelTitle()
+  {
+    return 'Configuration';
   }
 
   public function getPanelContent()
@@ -54,11 +59,6 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
     $html .= $this->formatArrayAsHtml('symfony',  sfDebug::symfonyInfoAsArray());
 
     return $html;
-  }
-
-  public function getTitle()
-  {
-    return 'Configuration';
   }
 
   /**

@@ -166,31 +166,31 @@ class sfWebDebug
    */
   public function asHtml()
   {
-    $links  = array();
+    $titles = array();
     $panels = array();
     foreach ($this->panels as $name => $panel)
     {
-      if ($link = $panel->getLinkText())
+      if ($title = $panel->getTitle())
       {
-        if ($content = $panel->getPanelContent() || $panel->getLinkUrl())
+        if ($content = $panel->getPanelContent() || $panel->getTitleUrl())
         {
           $id = sprintf('sfWebDebug%sDetails', $name);
-          $links[]  = sprintf('<li><a title="%s" alt="%s" href="%s"%s>%s</a></li>',
-            $panel->getTitle(),
-            $panel->getTitle(),
-            $panel->getLinkUrl() ? $panel->getLinkUrl() : '#',
-            $panel->getLinkUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
-            $link
+          $titles[]  = sprintf('<li><a title="%s" alt="%s" href="%s"%s>%s</a></li>',
+            $panel->getPanelTitle(),
+            $panel->getPanelTitle(),
+            $panel->getTitleUrl() ? $panel->getTitleUrl() : '#',
+            $panel->getTitleUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
+            $title
           );
           $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display: none"><h1>%s</h1>%s</div>',
             $id,
-            $panel->getTitle(),
+            $panel->getPanelTitle(),
             $panel->getPanelContent()
           );
         }
         else
         {
-          $links[] = sprintf('<li>%s</li>', $link);
+          $titles[] = sprintf('<li>%s</li>', $title);
         }
       }
     }
@@ -201,7 +201,7 @@ class sfWebDebug
           <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->options['image_root_path'].'/sf.png" /></a>
 
           <ul id="sfWebDebugDetails" class="menu">
-            '.implode("\n", $links).'
+            '.implode("\n", $titles).'
           </ul>
           <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" /></a>
         </div>

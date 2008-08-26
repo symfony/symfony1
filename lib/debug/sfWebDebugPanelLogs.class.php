@@ -18,9 +18,14 @@
  */
 class sfWebDebugPanelLogs extends sfWebDebugPanel
 {
-  public function getLinkText()
+  public function getTitle()
   {
     return '<img src="'.$this->webDebug->getOption('image_root_path').'/comment.png" /> logs';
+  }
+
+  public function getPanelTitle()
+  {
+    return 'Logs';
   }
 
   public function getPanelContent()
@@ -86,11 +91,6 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
       </ul>
       <div id="sfWebDebugLogLines">'.$html.'</div>
     ';
-  }
-
-  public function getTitle()
-  {
-    return 'Logs';
   }
 
   /**

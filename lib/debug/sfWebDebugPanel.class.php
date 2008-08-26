@@ -36,7 +36,7 @@ abstract class sfWebDebugPanel
    *
    * @return string The URL link
    */
-  public function getLinkUrl()
+  public function getTitleUrl()
   {
   }
 
@@ -45,7 +45,14 @@ abstract class sfWebDebugPanel
    *
    * @return string The link text
    */
-  abstract public function getLinkText();
+  abstract public function getTitle();
+
+  /**
+   * Gets the title of the panel.
+   *
+   * @return string The panel title
+   */
+  abstract public function getPanelTitle();
 
   /**
    * Gets the panel HTML content.
@@ -53,11 +60,4 @@ abstract class sfWebDebugPanel
    * @return string The panel HTML content
    */
   abstract public function getPanelContent();
-
-  /**
-   * Gets the title of the panel.
-   *
-   * @return string The panel title
-   */
-  abstract public function getTitle();
 }

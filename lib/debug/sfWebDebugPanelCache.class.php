@@ -19,22 +19,22 @@
  */
 class sfWebDebugPanelCache extends sfWebDebugPanel
 {
-  public function getLinkText()
+  public function getTitle()
   {
     return '<img src="'.$this->webDebug->getOption('image_root_path').'/reload.png'.'" />';
   }
 
-  public function getLinkUrl()
+  public function getTitleUrl()
   {
     return $_SERVER['PHP_SELF'].((strpos($_SERVER['PHP_SELF'], '_sf_ignore_cache') === false) ? '?_sf_ignore_cache=1' : '');
   }
 
-  public function getPanelContent()
-  {
-  }
-
-  public function getTitle()
+  public function getPanelTitle()
   {
     return 'reload and ignore cache';
+  }
+
+  public function getPanelContent()
+  {
   }
 }

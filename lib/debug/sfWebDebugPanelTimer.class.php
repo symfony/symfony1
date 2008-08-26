@@ -30,9 +30,14 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
     $this->webDebug->getEventDispatcher()->connect('debug.web.filter_logs', array($this, 'filterLogs'));
   }
 
-  public function getLinkText()
+  public function getTitle()
   {
     return '<img src="'.$this->webDebug->getOption('image_root_path').'/time.png" /> '.$this->getTotalTime().' ms';
+  }
+
+  public function getPanelTitle()
+  {
+    return 'Timers';
   }
 
   public function getPanelContent()
@@ -49,11 +54,6 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
       return $panel;
     }
-  }
-
-  public function getTitle()
-  {
-    return 'Timers';
   }
 
   public function filterLogs(sfEvent $event, $logs)

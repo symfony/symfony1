@@ -30,12 +30,17 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     $this->webDebug->getEventDispatcher()->connect('debug.web.filter_logs', array($this, 'filterLogs'));
   }
 
-  public function getLinkText()
+  public function getTitle()
   {
     if ($sqlLogs = $this->getSqlLogs())
     {
       return '<img src="'.$this->webDebug->getOption('image_root_path').'/database.png" /> '.count($sqlLogs);
     }
+  }
+
+  public function getPanelTitle()
+  {
+    return 'SQL queries';
   }
 
   public function getPanelContent()
@@ -45,11 +50,6 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
       <ol><li>'.implode("</li>\n<li>", $this->getSqlLogs()).'</li></ol>
       </div>
     ';
-  }
-
-  public function getTitle()
-  {
-    return 'SQL queries';
   }
 
   public function filterLogs(sfEvent $event, $logs)

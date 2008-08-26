@@ -18,7 +18,7 @@
  */
 class sfWebDebugPanelMemory extends sfWebDebugPanel
 {
-  public function getLinkText()
+  public function getTitle()
   {
     if (function_exists('memory_get_usage'))
     {
@@ -28,11 +28,11 @@ class sfWebDebugPanelMemory extends sfWebDebugPanel
     }
   }
 
-  public function getPanelContent()
+  public function getPanelTitle()
   {
   }
 
-  public function getTitle()
+  public function getPanelContent()
   {
   }
 }
