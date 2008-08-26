@@ -373,7 +373,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
       if ($widget instanceof sfWidgetForm && $widget->isHidden())
       {
-        $hiddenRows[] = $widget->render($this->generateName($name), $value, $widgetAttributes);
+        $hiddenRows[] = $this->renderField($name, $value, $widgetAttributes);
       }
       else
       {

@@ -312,7 +312,7 @@ $expected = <<<EOF
 </tr>
 <tr>
   <th><label style="padding: 5px" for="id_article_last_name">Last name</label></th>
-  <td><input type="text" name="article[last_name]" value="Potencier" class="bar" id="id_article_last_name" /><input type="hidden" name="article[id]" id="article_id" /></td>
+  <td><input type="text" name="article[last_name]" value="Potencier" class="bar" id="id_article_last_name" /><input type="hidden" name="article[id]" id="id_article_id" /></td>
 </tr>
 
 EOF;
