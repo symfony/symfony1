@@ -70,7 +70,7 @@ class Doctrine_Search_Query
     }
 
 
-    public function query($text)
+    public function query($text, $includeRelevance = true)
     {
         $text = trim($text);
 
@@ -78,23 +78,33 @@ class Doctrine_Search_Query
 
         $weighted = false;
         if (strpos($text, '^') === false) {
-            $select = 'SELECT COUNT(keyword) AS relevance, ' . $foreignId;
-            $from = 'FROM ' . $this->_table->getTableName();
+            if ($includeRelevance) {
+                $select = 'SELECT COUNT(keyword) AS relevance, ' . $foreignId;
+            } else {
+                $select = 'SELECT ' . $foreignId;
+            }
         } else {
-            // organize terms according weights
-            $weighted = true;
-
-            $select = 'SELECT SUM(sub_relevance) AS relevance, ' . $foreignId;
-            $from = 'FROM ' ;
+            if ($includeRelevance) {
+                $select = 'SELECT SUM(sub_relevance) AS relevance, ' . $foreignId;
+            } else {
+                $select = 'SELECT ' . $foreignId;
+            }
         }
         
+        $from = 'FROM ' . $this->_table->getTableName();
         $where = 'WHERE ';
         $where .= $this->parseClause($text);
 
         $groupby = 'GROUP BY ' . $foreignId;
-        $orderby = 'ORDER BY relevance DESC';
-
-        $this->_sql = $select . ' ' . $from . ' ' . $where . ' ' . $groupby . ' ' . $orderby;
+        if ($includeRelevance) {
+            $orderBy = 'ORDER BY relevance DESC';
+        } else {
+            $orderBy = null;
+        }
+        $this->_sql = $select . ' ' . $from . ' ' . $where . ' ' . $groupby;
+        if (isset($orderBy) && $orderBy !== null) {
+            $this->_sql .= ' ' . $orderBy;
+        }
     }
 
     public function parseClause($originalClause, $recursive = false)

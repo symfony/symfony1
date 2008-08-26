@@ -67,20 +67,29 @@ class Doctrine_Search extends Doctrine_Record_Generator
         }
     }
 
-
     /**
-     * search 
+     * Searchable keyword search
      * 
-     * @param string $query
-     * @return Doctrine_Collection The collection of search results
+     * @param string $string Keyword string to search for
+     * @param Doctrine_Query $query Query object to alter. Adds where condition to limit the results using the search index
+     * @return mixed The Doctrine_Collection or array of ids and relevancy
      */
-    public function search($query)
+    public function search($string, $query = null)
     {
         $q = new Doctrine_Search_Query($this->_table);
-        
-        $q->query($query);
-        
-        return $this->_options['connection']->fetchAll($q->getSql(), $q->getParams());;
+
+        if ($query instanceof Doctrine_Query) {
+            $q->query($string, false);
+
+            $newQuery = $query->copy();
+            $query->getSql();
+            $newQuery->addWhere($query->getRootAlias() . '.id IN(' . $q->getSql() . ')', $q->getParams());
+
+            return $newQuery;
+        } else {
+            $q->query($string);
+            return $this->_options['connection']->fetchAll($q->getSql(), $q->getParams());
+        }
     }
     
     /**
