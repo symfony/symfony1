@@ -101,7 +101,7 @@ abstract class sfMessageSource implements sfIMessageSource
   /**
    * Factory method to instantiate a new sfMessageSource depending on the
    * source type. The built-in source types are 'XLIFF', 'SQLite',
-   * 'MySQL', 'gettext', 'Creole' and 'Aggregate'.
+   * 'MySQL', 'gettext', and 'Aggregate'.
    * The source parameter is dependent on the source type.
    * For 'gettext' and 'XLIFF', it should point to the directory
    * where the messages are stored. For database types, e.g. 'SQLite' and

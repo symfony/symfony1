@@ -327,15 +327,15 @@ abstract class sfCrudGenerator extends sfGenerator
    */
   public function getColumnListTag($column, $params = array())
   {
-    $type = $column->getCreoleType();
+    $type = $column->getType();
     
     $columnGetter = $this->getColumnGetter($column, true);
 
-    if ($type == CreoleTypes::TIMESTAMP)
+    if ($type == PropelColumnTypes::TIMESTAMP)
     {
       return "format_date($columnGetter, 'f')";
     }
-    elseif ($type == CreoleTypes::DATE)
+    elseif ($type == PropelColumnTypes::DATE)
     {
       return "format_date($columnGetter, 'D')";
     }
@@ -355,7 +355,7 @@ abstract class sfCrudGenerator extends sfGenerator
    */
   public function getCrudColumnEditTag($column, $params = array())
   {
-    $type = $column->getCreoleType();
+    $type = $column->getType();
 
     if ($column->isForeignKey())
     {
@@ -366,34 +366,34 @@ abstract class sfCrudGenerator extends sfGenerator
 
       return $this->getPHPObjectHelper('select_tag', $column, $params, array('related_class' => $this->getRelatedClassName($column)));
     }
-    else if ($type == CreoleTypes::DATE)
+    else if ($type == PropelColumnTypes::DATE)
     {
       // rich=false not yet implemented
       return $this->getPHPObjectHelper('input_date_tag', $column, $params, array('rich' => true));
     }
-    else if ($type == CreoleTypes::TIMESTAMP)
+    else if ($type == PropelColumnTypes::TIMESTAMP)
     {
       // rich=false not yet implemented
       return $this->getPHPObjectHelper('input_date_tag', $column, $params, array('rich' => true, 'withtime' => true));
     }
-    else if ($type == CreoleTypes::BOOLEAN)
+    else if ($type == PropelColumnTypes::BOOLEAN)
     {
       return $this->getPHPObjectHelper('checkbox_tag', $column, $params);
     }
-    else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
+    else if ($type == PropelColumnTypes::CHAR || $type == PropelColumnTypes::VARCHAR)
     {
       $size = ($column->getSize() > 20 ? ($column->getSize() < 80 ? $column->getSize() : 80) : 20);
       return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => $size));
     }
-    else if ($type == CreoleTypes::INTEGER || $type == CreoleTypes::TINYINT || $type == CreoleTypes::SMALLINT || $type == CreoleTypes::BIGINT)
+    else if ($type == PropelColumnTypes::INTEGER || $type == PropelColumnTypes::TINYINT || $type == PropelColumnTypes::SMALLINT || $type == PropelColumnTypes::BIGINT)
     {
       return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => 7));
     }
-    else if ($type == CreoleTypes::FLOAT || $type == CreoleTypes::DOUBLE || $type == CreoleTypes::DECIMAL || $type == CreoleTypes::NUMERIC || $type == CreoleTypes::REAL)
+    else if ($type == PropelColumnTypes::FLOAT || $type == PropelColumnTypes::DOUBLE || $type == PropelColumnTypes::DECIMAL || $type == PropelColumnTypes::NUMERIC || $type == PropelColumnTypes::REAL)
     {
       return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => 7));
     }
-    else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
+    else if ($type == PropelColumnTypes::LONGVARCHAR)
     {
       return $this->getPHPObjectHelper('textarea_tag', $column, $params, array('size' => '30x3'));
     }
