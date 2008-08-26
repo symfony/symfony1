@@ -644,7 +644,7 @@ class sfWebRequest extends sfRequest
         $acceptableContentTypes = $this->getAcceptableContentTypes();
 
         // skip if no acceptable content types or browsers
-        if (isset($acceptableContentTypes[0]) && 'text/xml' != $acceptableContentTypes[0])
+        if (isset($acceptableContentTypes[0]) && ('text/xml' != $acceptableContentTypes[0] && 'application/xml' != $acceptableContentTypes[0]))
         {
           $this->setRequestFormat($this->getFormat($acceptableContentTypes[0]));
         }
