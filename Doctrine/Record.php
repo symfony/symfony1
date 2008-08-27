@@ -450,6 +450,24 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
+     * Assign the inheritance column values
+     *
+     * @return void
+     */
+    public function assignInheritanceValues()
+    {
+        $map = $this->_table->inheritanceMap;
+        foreach ($map as $k => $v) {
+            $k = $this->_table->getFieldName($k);
+            $old = $this->get($k, false);
+
+            if ((string) $old !== (string) $v || $old === null) {
+                $this->set($k, $v);
+            }
+        }
+    }
+
+    /**
      * setDefaultValues
      * sets the default values for records internal data
      *
@@ -1287,16 +1305,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                         throw new Doctrine_Record_Exception('Unexpected null value.');
                     }
                     */
-            }
-        }
-        $map = $this->_table->inheritanceMap;
-        foreach ($map as $k => $v) {
-            $k = $this->_table->getFieldName($k);
-            $old = $this->get($k, false);
-
-            if ((string) $old !== (string) $v || $old === null) {
-                $a[$k] = $v;
-                $this->_data[$k] = $v;
             }
         }
 

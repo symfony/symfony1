@@ -48,6 +48,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function saveGraph(Doctrine_Record $record)
     {
+        $record->assignInheritanceValues();
+
         $conn = $this->getConnection();
 
         $state = $record->state();
