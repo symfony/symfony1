@@ -177,14 +177,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
                . ' WHERE ' . $conn->quoteIdentifier($id)
                . ' IN (SELECT ' . $conn->quoteIdentifier($id)
                . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName())
-               . ' WHERE keyword IS NULL)';
+               . ' WHERE keyword IS NULL) OR ' . $conn->quoteIdentifier($id)
+               . ' NOT IN (SELECT ' . $conn->quoteIdentifier($id)
+               . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName()) . ')';
 
         $query = $conn->modifyLimitQuery($query, $limit, $offset);
 
         return $conn->fetchAll($query);
     }
-    
-
 
     /**
      * batchUpdateIndex 
