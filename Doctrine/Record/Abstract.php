@@ -193,7 +193,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      */
     public function hasOne()
     {
-        $this->_table->bind(func_get_args(), Doctrine_Relation::ONE_AGGREGATE);
+        $this->_table->bind(func_get_args(), Doctrine_Relation::ONE);
 
         return $this;
     }
@@ -209,7 +209,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      */
     public function hasMany()
     {
-        $this->_table->bind(func_get_args(), Doctrine_Relation::MANY_AGGREGATE);
+        $this->_table->bind(func_get_args(), Doctrine_Relation::MANY);
 
         return $this;
     }

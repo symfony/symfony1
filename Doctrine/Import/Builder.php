@@ -439,8 +439,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     $relation['type'] = Doctrine_Relation::ONE;
                 }
 
-                if ($relation['type'] === Doctrine_Relation::ONE ||
-                    $relation['type'] === Doctrine_Relation::ONE_COMPOSITE) {
+                if ($relation['type'] === Doctrine_Relation::ONE) {
                     $ret[$i] = "    ".'$this->hasOne(\'' . $class . $alias . '\'';
                 } else {
                     $ret[$i] = "    ".'$this->hasMany(\'' . $class . $alias . '\'';

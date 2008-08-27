@@ -38,27 +38,14 @@ abstract class Doctrine_Relation implements ArrayAccess
      */
 
     /**
-     * constant for ONE_TO_ONE and MANY_TO_ONE aggregate relationships
+     * constant for ONE_TO_ONE and MANY_TO_ONE relationships
      */
-    const ONE_AGGREGATE         = 0;
-
-    /**
-     * constant for ONE_TO_ONE and MANY_TO_ONE composite relationships
-     */
-    const ONE_COMPOSITE         = 1;
-
-    /**
-     * constant for MANY_TO_MANY and ONE_TO_MANY aggregate relationships
-     */
-    const MANY_AGGREGATE        = 2;
-
-    /**
-     * constant for MANY_TO_MANY and ONE_TO_MANY composite relationships
-     */
-    const MANY_COMPOSITE        = 3;
-
     const ONE   = 0;
-    const MANY  = 2;
+    
+    /**
+     * constant for MANY_TO_MANY and ONE_TO_MANY relationships
+     */
+    const MANY  = 1;
     
     // TRUE => mandatory, everything else is just a default value. this should be refactored
     // since TRUE can bot be used as a default value this way. All values should be default values.
@@ -306,18 +293,6 @@ abstract class Doctrine_Relation implements ArrayAccess
     }
 
     /**
-     * isComposite
-     * returns whether or not this relation is a composite relation
-     *
-     * @return boolean
-     */
-    final public function isComposite()
-    {
-        return ($this->definition['type'] == Doctrine_Relation::ONE_COMPOSITE ||
-                $this->definition['type'] == Doctrine_Relation::MANY_COMPOSITE);
-    }
-
-    /**
      * isOneToOne
      * returns whether or not this relation is a one-to-one relation
      *
@@ -325,8 +300,7 @@ abstract class Doctrine_Relation implements ArrayAccess
      */
     final public function isOneToOne()
     {
-        return ($this->definition['type'] == Doctrine_Relation::ONE_AGGREGATE ||
-                $this->definition['type'] == Doctrine_Relation::ONE_COMPOSITE);
+        return ($this->definition['type'] == Doctrine_Relation::ONE);
     }
 
     /**
