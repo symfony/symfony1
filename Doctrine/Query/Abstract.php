@@ -1194,6 +1194,13 @@ abstract class Doctrine_Query_Abstract
     }
     
     
+    /**
+     * Adds conditions to the WHERE part of the query
+     *
+     * @param string $where Query WHERE part
+     * @param mixed $params An array of parameters or a simple scalar
+     * @return Doctrine_Query
+     */
     public function andWhere($where, $params = array())
     {
         if (is_array($params)) {
@@ -1210,6 +1217,13 @@ abstract class Doctrine_Query_Abstract
     }
     
     
+    /**
+     * Adds conditions to the WHERE part of the query
+     *
+     * @param string $where Query WHERE part
+     * @param mixed $params An array of parameters or a simple scalar
+     * @return Doctrine_Query
+     */
     public function orWhere($where, $params = array())
     {
         if (is_array($params)) {
@@ -1246,7 +1260,7 @@ abstract class Doctrine_Query_Abstract
      *
      * @param string $expr The operand of the IN
      * @param mixed $params An array of parameters or a simple scalar
-     * @param boolean $not Whether or not to use NOT in front of IN 
+     * @param boolean $not Whether or not to use NOT in front of IN
      * @return Doctrine_Query
      */
     public function andWhereIn($expr, $params = array(), $not = false)
