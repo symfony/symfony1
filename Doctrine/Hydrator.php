@@ -168,6 +168,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $table = $map['table'];
                 $componentName = $table->getComponentName();
                 $event->set('data', $data);
+                $event->setInvoker($table);
                 $listeners[$componentName]->preHydrate($event);
 
                 $parent = $map['parent'];
