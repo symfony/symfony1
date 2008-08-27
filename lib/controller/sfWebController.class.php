@@ -31,12 +31,12 @@ abstract class sfWebController extends sfController
   public function genUrl($parameters = array(), $absolute = false)
   {
     // absolute URL or symfony URL?
-    if (!is_array($parameters) && preg_match('#^[a-z][a-z0-9\+.\-]*\://#i', $parameters))
+    if (is_string($parameters) && preg_match('#^[a-z][a-z0-9\+.\-]*\://#i', $parameters))
     {
       return $parameters;
     }
 
-    if (!is_array($parameters) && $parameters == '#')
+    if (is_string($parameters) && $parameters == '#')
     {
       return $parameters;
     }
@@ -52,7 +52,7 @@ abstract class sfWebController extends sfController
     $route_name = '';
     $fragment = '';
 
-    if (!is_array($parameters))
+    if (is_string($parameters))
     {
       // strip fragment
       if (false !== ($pos = strpos($parameters, '#')))
@@ -62,6 +62,14 @@ abstract class sfWebController extends sfController
       }
 
       list($route_name, $parameters) = $this->convertUrlStringToParameters($parameters);
+    }
+    else if (is_array($parameters))
+    {
+      if (isset($parameters['sf_route']))
+      {
+        $route_name = $parameters['sf_route'];
+        unset($parameters['sf_route']);
+      }
     }
 
     if (sfConfig::get('sf_url_format') == 'PATH')

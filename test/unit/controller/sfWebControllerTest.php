@@ -169,8 +169,6 @@ $t->like($context->getResponse()->getHttpHeader('Location'), '~http\://localhost
 
 // ->genUrl()
 $t->diag('->genUrl()');
-
-$r = $context->getRouting();
 $t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('action' => 'action', 'module' => 'module', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');
 
 sfConfig::set('sf_relative_url_root', null);
@@ -202,4 +200,3 @@ $t->is($controller->genUrl('@test'), $relativeUrlRoot.$referenceRootUrl, '->genU
 sfConfig::set('sf_no_script_name', false);
 $t->is($controller->genUrl('module/action'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceUrl, '->genUrl() with a relative_url_root set and no_script_name==false');
 $t->is($controller->genUrl('@test'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceRootUrl, '->genUrl() with a relative_url_root set and no_script_name==false (root url)');
-
