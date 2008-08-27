@@ -48,6 +48,40 @@ class Doctrine_Import_Mssql extends Doctrine_Import
     }
 
     /**
+     * lists table relations
+     *
+     * Expects an array of this format to be returned with all the relationships in it where the key is 
+     * the name of the foreign table, and the value is an array containing the local and foreign column
+     * name
+     *
+     * Array
+     * (
+     *   [groups] => Array
+     *     (
+     *        [local] => group_id
+     *        [foreign] => id
+     *     )
+     * )
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableRelations($tableName)
+    {
+        $relations = array();
+        $sql = 'SELECT o1.name as table_name, c1.name as column_name, o2.name as referenced_table_name, c2.name as referenced_column_name, s.name as constraint_name FROM sysforeignkeys fk	inner join sysobjects o1 on fk.fkeyid = o1.id inner join sysobjects o2 on fk.rkeyid = o2.id inner join syscolumns c1 on c1.id = o1.id and c1.colid = fk.fkey inner join syscolumns c2 on c2.id = o2.id and c2.colid = fk.rkey inner join sysobjects s on fk.constid = s.id AND o1.name = \'' . $tableName . '\'';
+        $results = $this->conn->fetchAssoc($sql);
+        foreach ($results as $result)
+        {
+            $result = array_change_key_case($result, CASE_LOWER);
+            $relations[] = array('table'   => $result['referenced_table_name'],
+                                 'local'   => $result['column_name'],
+                                 'foreign' => $result['referenced_column_name']);
+        }
+        return $relations;
+    }
+
+    /**
      * lists table constraints
      *
      * @param string $table     database table name
