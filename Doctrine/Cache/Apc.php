@@ -54,7 +54,9 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        return apc_fetch($id);
+        $results = apc_fetch($id);
+        $results = (array) $results;
+        return $results[0];
     }
 
     /**
