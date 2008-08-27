@@ -1233,34 +1233,72 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 	 */
 	public function createNamedQuery($queryKey)
     {
-        return Doctrine_Manager::getInstance()->getQueryRegistry()
-                   ->get($queryKey, $this->getComponentName());
+        $queryRegistry = Doctrine_Manager::getInstance()->getQueryRegistry();
+
+        if (strpos($queryKey, '/') !== false) {
+            $e = explode('/', $queryKey);
+            
+            return $queryRegistry->get($e[0], $e[1]);
+        }
+
+        return $queryRegistry->get($queryKey, $this->getComponentName());
     }
 
 
     /**
      * finds a record by its identifier
      *
-     * @param $id                       database row id
-     * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @return mixed                    Array or Doctrine_Record or false if no result
+     * @param mixed $name         Database Row ID or Query Name defined previously as a NamedQuery
+     * @param mixed $params       This argument is the hydration mode (Doctrine::HYDRATE_ARRAY or 
+     *                            Doctrine::HYDRATE_RECORD) if first param is a Database Row ID. 
+     *                            Otherwise this argument expect an array of query params.
+     * @param int $hydrationMode  Optional Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD if 
+     *                            first argument is a NamedQuery
+     * @return mixed              Doctrine_Collection, array, Doctrine_Record or false if no result
      */
-    public function find($id, $hydrationMode = null)
+    public function find()
     {
-        if (is_null($id)) {
+        $num_args = func_num_args();
+
+        // Named Query or IDs
+        $name = func_get_arg(0);
+        
+        if (is_null($name)) { 
             return false;
         }
 
-        $id = is_array($id) ? array_values($id) : array($id);
+        // Define query to be used
+        if (
+            ! is_array($name) &&
+            Doctrine_Manager::getInstance()->getQueryRegistry()->has($name, $this->getComponentName())
+        ) {
+            // We're dealing with a named query
+            $q = $this->createNamedQuery($name);
 
-        $q = $this->createQuery('dctrn_find')
-            ->where(
-                'dctrn_find.' . implode(
-                    ' = ? AND dctrn_find.', (array) $this->getIdentifier()
-                ) . ' = ?', $id
-            )
-            ->limit(1);
-        $res = $q->fetchOne(array(), $hydrationMode);
+            // Parameters construction
+            $params = ($num_args >= 2) ? func_get_arg(1) : array();
+
+            // Hydration mode
+            $hydrationMode = ($num_args == 3) ? func_get_arg(2) : null;
+
+            // Executing query
+            $res = $q->execute($params, $hydrationMode);
+        } else {
+            // We're passing a single ID or an array of IDs
+            $q = $this->createQuery('dctrn_find')
+                ->where('dctrn_find.' . implode(' = ? AND dctrn_find.', (array) $this->getIdentifier()) . ' = ?')
+                ->limit(1);
+                
+            // Parameters construction
+            $params = is_array($name) ? array_values($name) : array($name);
+
+            // Hydration mode
+            $hydrationMode = ($num_args == 2) ? func_get_arg(1) : null;
+            
+            // Executing query
+            $res = $q->fetchOne($params, $hydrationMode);
+        }
+
         $q->free();
         
         return $res;

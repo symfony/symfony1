@@ -67,4 +67,12 @@ class Doctrine_Query_Registry
         
         return $query;
     }
+    
+    
+    public function has($key, $namespace = null)
+    {
+        return isset($namespace) 
+            ? isset($this->_queries[$namespace][$key])
+            : isset($this->_queries[$key]);
+    }
 }
