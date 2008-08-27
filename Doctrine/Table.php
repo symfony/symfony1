@@ -638,7 +638,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
                 if ($relation->getTable() === $this && in_array($relation->getLocal(), $primary)) {
                     if ($relation->hasConstraint()) {
-                        throw new Doctrine_Table_Exception("Badly constructed integrity constraints.");
+                        throw new Doctrine_Table_Exception("Badly constructed integrity constraints. Cannot define constraint of different fields in the same table.");
                     }
                     continue;
                 }

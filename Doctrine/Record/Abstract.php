@@ -183,41 +183,6 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * DEPRECATED ALSO? - REMOVE SOON
-     *
-     * ownsOne
-     * binds One-to-One composite relation
-     *
-     * @param string $componentName     the name of the related component
-     * @param string $options           relation options
-     * @see Doctrine_Relation::_$definition
-     * @return Doctrine_Record          this object
-     */
-    public function ownsOne()
-    {
-        $this->_table->bind(func_get_args(), Doctrine_Relation::ONE_COMPOSITE);
-        
-        return $this;
-    }
-
-    /**
-     * DEPRECATED - REMOVE SOON
-     *
-     * ownsMany
-     * binds One-to-Many / Many-to-Many composite relation
-     *
-     * @param string $componentName     the name of the related component
-     * @param string $options           relation options
-     * @see Doctrine_Relation::_$definition
-     * @return Doctrine_Record          this object
-     */
-    public function ownsMany()
-    {
-        $this->_table->bind(func_get_args(), Doctrine_Relation::MANY_COMPOSITE);
-        return $this;
-    }
-
-    /**
      * hasOne
      * binds One-to-One aggregate relation
      *
