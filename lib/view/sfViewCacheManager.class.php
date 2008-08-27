@@ -143,7 +143,7 @@ class sfViewCacheManager
         $cacheKey = $contextualPrefix;
       }
       list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
-      $cacheKey .= sprintf('/%s/%s/%s', $params['module'], $params['action'], $params['sf_cache_key']);
+      $cacheKey .= sprintf('/%s/%s/%s', $params['module'], $params['action'], isset($params['sf_cache_key']) ? $params['sf_cache_key'] : '');
     }
     else
     {
