@@ -1147,6 +1147,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $q = $this->_conn->modifyLimitQuery($q, $this->_sqlParts['limit'], $this->_sqlParts['offset']);
         }
 
+        $q .= $this->_sqlParts['forUpdate'] === true ? ' FOR UPDATE ' : '';
+
         // return to the previous state
         if ( ! empty($string)) {
             array_pop($this->_sqlParts['where']);
