@@ -1102,6 +1102,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // apply inheritance to WHERE part
         if ( ! empty($string)) {
+            if (count($this->_sqlParts['where']) > 0) {
+                $this->_sqlParts['where'][] = 'AND';
+            }
+
             if (substr($string, 0, 1) === '(' && substr($string, -1) === ')') {
                 $this->_sqlParts['where'][] = $string;
             } else {
@@ -1132,13 +1136,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
                 // only append the subquery if it actually contains something
                 if ($subquery !== '') {
+                    if (count($this->_sqlParts['where']) > 0) {
+                        array_unshift($this->_sqlParts['where'], 'AND');
+                    }
+
                     array_unshift($this->_sqlParts['where'], $this->_conn->quoteIdentifier($field) . ' IN (' . $subquery . ')');
                 }
 
                 $modifyLimit = false;
         }
 
-        $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where']) : '';
+        $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where']) : '';
         $q .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])  : '';
         $q .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']): '';
         $q .= ( ! empty($this->_sqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
@@ -1151,11 +1159,23 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // return to the previous state
         if ( ! empty($string)) {
+            // We need to double pop if > 2
+            if (count($this->_sqlParts['where']) > 2) {
+                array_pop($this->_sqlParts['where']);
+            }
+
             array_pop($this->_sqlParts['where']);
         }
+
         if ($needsSubQuery) {
+            // We need to double shift if > 2
+            if (count($this->_sqlParts['where']) > 2) {
+                array_shift($this->_sqlParts['where']);
+            }
+
             array_shift($this->_sqlParts['where']);
         }
+
         $this->_sql = $q;
 
         return $q;
@@ -1240,7 +1260,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         // all conditions must be preserved in subquery
-        $subquery .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where'])  : '';
+        $subquery .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where'])  : '';
         $subquery .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])   : '';
         $subquery .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
         $subquery .= ( ! empty($this->_sqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])   : '';
@@ -1797,11 +1817,15 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $string = $this->getInheritanceCondition($this->getRootAlias());
 
         if ( ! empty($string)) {
+            if (count($where) > 0) {
+                $where[] = 'AND';
+            }
+            
             $where[] = $string;
         }
 
         // append conditions
-        $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' AND ', $where) : '';
+        $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' ', $where) : '';
 
         if ( ! empty($groupby)) {
             // Maintain existing groupby

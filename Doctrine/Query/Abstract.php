@@ -338,7 +338,7 @@ abstract class Doctrine_Query_Abstract
         $q = '';
         $q .= ( ! empty($this->_dqlParts['select']))?  'SELECT '    . implode(', ', $this->_dqlParts['select']) : '';
         $q .= ( ! empty($this->_dqlParts['from']))?    ' FROM '     . implode(' ', $this->_dqlParts['from']) : '';
-        $q .= ( ! empty($this->_dqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_dqlParts['where']) : '';
+        $q .= ( ! empty($this->_dqlParts['where']))?   ' WHERE '    . implode(' ', $this->_dqlParts['where']) : '';
         $q .= ( ! empty($this->_dqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_dqlParts['groupby']) : '';
         $q .= ( ! empty($this->_dqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_dqlParts['having']) : '';
         $q .= ( ! empty($this->_dqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_dqlParts['orderby']) : '';
@@ -1190,13 +1190,41 @@ abstract class Doctrine_Query_Abstract
      */
     public function addWhere($where, $params = array())
     {
+        return $this->andWhere($where, $params);
+    }
+    
+    
+    public function andWhere($where, $params = array())
+    {
         if (is_array($params)) {
             $this->_params['where'] = array_merge($this->_params['where'], $params);
         } else {
             $this->_params['where'][] = $params;
         }
+        
+        if ($this->_hasDqlQueryPart('where')) {
+            $this->_addDqlQueryPart('where', 'AND', true);
+        }
+
         return $this->_addDqlQueryPart('where', $where, true);
     }
+    
+    
+    public function orWhere($where, $params = array())
+    {
+        if (is_array($params)) {
+            $this->_params['where'] = array_merge($this->_params['where'], $params);
+        } else {
+            $this->_params['where'][] = $params;
+        }
+        
+        if ($this->_hasDqlQueryPart('where')) {
+            $this->_addDqlQueryPart('where', 'OR', true);
+        }
+
+        return $this->_addDqlQueryPart('where', $where, true);
+    }
+
 
     /**
      * whereIn
@@ -1208,6 +1236,51 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Query
      */
     public function whereIn($expr, $params = array(), $not = false)
+    {
+        return $this->andWhereIn($expr, $params, $not);
+    }
+
+
+    /**
+     * Adds IN condition to the query WHERE part
+     *
+     * @param string $expr The operand of the IN
+     * @param mixed $params An array of parameters or a simple scalar
+     * @param boolean $not Whether or not to use NOT in front of IN 
+     * @return Doctrine_Query
+     */
+    public function andWhereIn($expr, $params = array(), $not = false)
+    {
+        if ($this->_hasDqlQueryPart('where')) {
+            $this->_addDqlQueryPart('where', 'AND', true);
+        }
+
+        return $this->_addDqlQueryPart('where', $this->_processWhereIn($expr, $params, $not), true);
+    }
+
+
+    /**
+     * Adds IN condition to the query WHERE part
+     *
+     * @param string $expr The operand of the IN
+     * @param mixed $params An array of parameters or a simple scalar
+     * @param boolean $not Whether or not to use NOT in front of IN
+     * @return Doctrine_Query
+     */
+    public function orWhereIn($expr, $params = array(), $not = false)
+    {
+        if ($this->_hasDqlQueryPart('where')) {
+            $this->_addDqlQueryPart('where', 'OR', true);
+        }
+
+        return $this->_addDqlQueryPart('where', $this->_processWhereIn($expr, $params, $not), true);
+    }
+    
+
+    /**
+     * @nodoc
+     */
+    protected function _processWhereIn($expr, $params = array(), $not = false)
     {
         $params = (array) $params;
 
@@ -1229,10 +1302,9 @@ abstract class Doctrine_Query_Abstract
 
         $this->_params['where'] = array_merge($this->_params['where'], $params);
 
-        $where = $expr . ($not === true ? ' NOT ':'') . ' IN (' . implode(', ', $a) . ')';
-
-        return $this->_addDqlQueryPart('where', $where, true);
+        return $expr . ($not === true ? ' NOT ':'') . ' IN (' . implode(', ', $a) . ')';
     }
+
 
     /**
      * whereNotIn
@@ -1245,6 +1317,32 @@ abstract class Doctrine_Query_Abstract
     public function whereNotIn($expr, $params = array())
     {
         return $this->whereIn($expr, $params, true);
+    }
+    
+
+    /**
+     * Adds NOT IN condition to the query WHERE part
+     *
+     * @param string $expr The operand of the NOT IN
+     * @param mixed $params An array of parameters or a simple scalar
+     * @return Doctrine_Query
+     */
+    public function andWhereNotIn($expr, $params = array())
+    {
+        return $this->andWhereIn($expr, $params, true);
+    }
+    
+
+    /**
+     * Adds NOT IN condition to the query WHERE part
+     *
+     * @param string $expr The operand of the NOT IN
+     * @param mixed $params An array of parameters or a simple scalar
+     * @return Doctrine_Query
+     */
+    public function orWhereNotIn($expr, $params = array())
+    {
+        return $this->orWhereIn($expr, $params, true);
     }
 
     /**
@@ -1450,6 +1548,7 @@ abstract class Doctrine_Query_Abstract
     public function where($where, $params = array())
     {
         $this->_params['where'] = array();
+
         if (is_array($params)) {
             $this->_params['where'] = $params;
         } else {
@@ -1813,6 +1912,18 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_conn;
     }
+    
+    /**
+     * Checks if there's at least one DQL part defined to the internal parts collection.
+     *
+     * @param string $queryPartName  The name of the query part.
+     * @return boolean
+     */
+    protected function _hasDqlQueryPart($queryPartName)
+    {
+        return count($this->_dqlParts[$queryPartName]) > 0;
+    }
+
 
     /**
      * Adds a DQL part to the internal parts collection.
