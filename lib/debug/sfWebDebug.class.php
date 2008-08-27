@@ -66,7 +66,6 @@ class sfWebDebug
       $this->setPanel('config', new sfWebDebugPanelConfig($this));
     }
     $this->setPanel('logs', new sfWebDebugPanelLogs($this));
-    $this->setPanel('db', new sfWebDebugPanelPropel($this));
     $this->setPanel('memory', new sfWebDebugPanelMemory($this));
     if (sfConfig::get('sf_debug'))
     {
