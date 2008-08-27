@@ -633,7 +633,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         $sql  = 'UPDATE ' . $this->quoteIdentifier($table->getTableName())
               . ' SET ' . implode(', ', $set)
-              . ' WHERE ' . implode(' = ? AND ', $table->getIdentifierColumnNames())
+              . ' WHERE ' . implode(' = ? AND ', $this->quoteMultipleIdentifier($table->getIdentifierColumnNames()))
               . ' = ?';
           
         return $this->exec($sql, $params);
