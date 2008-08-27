@@ -216,54 +216,6 @@ final class Doctrine
      * FETCHMODE CONSTANTS
      */
 
-    /**
-     * IMMEDIATE FETCHING
-     * mode for immediate fetching
-     */
-    const FETCH_IMMEDIATE       = 0;
-
-    /**
-     * BATCH FETCHING
-     * mode for batch fetching
-     */
-    const FETCH_BATCH           = 1;
-
-    /**
-     * LAZY FETCHING
-     * mode for offset fetching
-     */
-    const FETCH_OFFSET          = 3;
-
-    /**
-     * LAZY OFFSET FETCHING
-     * mode for lazy offset fetching
-     */
-    const FETCH_LAZY_OFFSET     = 4;
-
-    /**
-     * FETCH CONSTANTS
-     */
-
-
-    /**
-     * FETCH VALUEHOLDER
-     */
-    const FETCH_VHOLDER         = 1;
-
-    /**
-     * FETCH RECORD
-     *
-     * Specifies that the fetch method shall return Doctrine_Record
-     * objects as the elements of the result set.
-     *
-     * This is the default fetchmode.
-     */
-    const FETCH_RECORD          = 2;
-
-    /**
-     * FETCH ARRAY
-     */
-    const FETCH_ARRAY           = 3;
 
     /**
      * PORTABILITY CONSTANTS

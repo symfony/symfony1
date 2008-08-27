@@ -222,7 +222,7 @@ abstract class Doctrine_Query_Abstract
      * @var array $_options                 an array of options
      */
     protected $_options    = array(
-                            'fetchMode'      => Doctrine::FETCH_RECORD
+                            'hydrationMode'      => Doctrine::HYDRATE_RECORD
                             );
 
     /**
