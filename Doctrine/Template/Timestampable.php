@@ -41,17 +41,19 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
      * @var string
      */
     protected $_options = array('created' =>  array('name'          =>  'created_at',
+                                                    'alias'         =>  null,
                                                     'type'          =>  'timestamp',
                                                     'format'        =>  'Y-m-d H:i:s',
-                                                    'disabled'      => false,
-                                                    'expression'    => false,
+                                                    'disabled'      =>  false,
+                                                    'expression'    =>  false,
                                                     'options'       =>  array()),
                                 'updated' =>  array('name'          =>  'updated_at',
+                                                    'alias'         =>  null,
                                                     'type'          =>  'timestamp',
                                                     'format'        =>  'Y-m-d H:i:s',
-                                                    'disabled'      => false,
-                                                    'expression'    => false,
-                                                    'onInsert'      => true,
+                                                    'disabled'      =>  false,
+                                                    'expression'    =>  false,
+                                                    'onInsert'      =>  true,
                                                     'options'       =>  array()));
 
     /**
@@ -73,11 +75,19 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
     public function setTableDefinition()
     {
         if( ! $this->_options['created']['disabled']) {
-            $this->hasColumn($this->_options['created']['name'], $this->_options['created']['type'], null, $this->_options['created']['options']);
+            $name = $this->_options['created']['name'];
+            if ($this->_options['created']['alias']) {
+                $name .= ' as ' . $this->_options['created']['alias'];
+            }
+            $this->hasColumn($name, $this->_options['created']['type'], null, $this->_options['created']['options']);
         }
 
         if( ! $this->_options['updated']['disabled']) {
-            $this->hasColumn($this->_options['updated']['name'], $this->_options['updated']['type'], null, $this->_options['updated']['options']);
+            $name = $this->_options['updated']['name'];
+            if ($this->_options['updated']['alias']) {
+                $name .= ' as ' . $this->_options['updated']['alias'];
+            }
+            $this->hasColumn($name, $this->_options['updated']['type'], null, $this->_options['updated']['options']);
         }
 
         $this->addListener(new Doctrine_Template_Listener_Timestampable($this->_options));
