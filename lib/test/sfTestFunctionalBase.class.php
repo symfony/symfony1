@@ -51,6 +51,34 @@ abstract class sfTestFunctionalBase
   }
 
   /**
+   * Gets a uri.
+   *
+   * @param string $uri         The URI to fetch
+   * @param array  $parameters  The Request parameters
+   * @param bool   $changeStack  Change the browser history stack?
+   *
+   * @return sfBrowser
+   */
+  public function get($uri, $parameters = array(), $changeStack = true)
+  {
+    return $this->call($uri, 'get', $parameters);
+  }
+
+  /**
+   * Posts a uri.
+   *
+   * @param string $uri         The URI to fetch
+   * @param array  $parameters  The Request parameters
+   * @param bool   $changeStack  Change the browser history stack?
+   *
+   * @return sfBrowser
+   */
+  public function post($uri, $parameters = array(), $changeStack = true)
+  {
+    return $this->call($uri, 'post', $parameters);
+  }
+
+  /**
    * Calls a request.
    *
    * @param  string $uri          URI to be invoked
@@ -62,11 +90,13 @@ abstract class sfTestFunctionalBase
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
-    $uri = $this->fixUri($uri);
+    $uri = $this->browser->fixUri($uri);
 
     $this->test()->comment(sprintf('%s %s', strtolower($method), $uri));
 
-    return parent::call($uri, $method, $parameters, $changeStack);
+    $this->browser->call($uri, $method, $parameters, $changeStack);
+
+    return $this;
   }
 
   /**
@@ -78,7 +108,7 @@ abstract class sfTestFunctionalBase
   {
     $this->test()->comment('back');
 
-    return parent::back();
+    return $this->browser->back();
   }
 
   /**
@@ -90,7 +120,7 @@ abstract class sfTestFunctionalBase
   {
     $this->test()->comment('forward');
 
-    return parent::forward();
+    return $this->browser->forward();
   }
 
   /**
@@ -343,7 +373,7 @@ abstract class sfTestFunctionalBase
    */
   public function checkCurrentExceptionIsEmpty()
   {
-    if (false === ($empty = parent::checkCurrentExceptionIsEmpty()))
+    if (false === ($empty = $this->browser->checkCurrentExceptionIsEmpty()))
     {
       $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
     }

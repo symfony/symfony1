@@ -759,7 +759,7 @@ abstract class sfBrowserBase
    * @param  string $uri  The URI to fix
    * @return string The fixed uri
    */
-  protected function fixUri($uri)
+  public function fixUri($uri)
   {
     // remove absolute information if needed (to be able to do follow redirects, click on links, ...)
     if (0 === strpos($uri, 'http'))
