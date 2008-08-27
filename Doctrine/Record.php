@@ -138,6 +138,20 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected $_pendingDeletes = array();
 
     /**
+     * Array of custom accessors for cache
+     *
+     * @var array
+     */
+    protected static $_customAccessors = array();
+
+    /**
+     * Array of custom mutators for cache
+     *
+     * @var array
+     */
+    protected static $_customMutators = array();
+
+    /**
      * @var integer $index                  this index is used for creating object identifiers
      */
     private static $_index = 1;
@@ -892,6 +906,19 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function get($fieldName, $load = true)
     {
+        if ($this->_table->getAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE)) {
+            $componentName = $this->_table->getComponentName();
+            $accessor = isset(self::$_customAccessors[$componentName][$fieldName]) ? self::$_customAccessors[$componentName][$fieldName]:'get' . Doctrine_Inflector::classify($fieldName);
+            if (isset(self::$_customAccessors[$componentName][$fieldName]) || method_exists($this, $accessor)) {
+                self::$_customAccessors[$componentName][$fieldName] = $accessor;
+                return $this->$accessor($load);
+            }
+        }
+        return $this->_get($fieldName, $load);
+    }
+
+    protected function _get($fieldName, $load = true)
+    {
         $value = self::$_null;
 
         if (isset($this->_data[$fieldName])) {
@@ -959,6 +986,19 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @return Doctrine_Record
      */
     public function set($fieldName, $value, $load = true)
+    {
+        if ($this->_table->getAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE)) {
+            $componentName = $this->_table->getComponentName();
+            $mutator = isset(self::$_customMutators[$componentName][$fieldName]) ? self::$_customMutators[$componentName][$fieldName]:'set' . Doctrine_Inflector::classify($fieldName);
+            if (isset(self::$_customMutators[$componentName][$fieldName]) || method_exists($this, $mutator)) {
+                self::$_customMutators[$componentName][$fieldName] = $mutator;
+                return $this->$mutator($value, $load);
+            }
+        }
+        return $this->_set($fieldName, $value, $load);
+    }
+
+    protected function _set($fieldName, $value, $load = true)
     {
         if (isset($this->_data[$fieldName])) {
             $type = $this->_table->getTypeOf($fieldName);
