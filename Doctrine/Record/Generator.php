@@ -37,12 +37,13 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      *
      * @var array $_options     an array of plugin specific options
      */
-    protected $_options = array('generateFiles' => false,
-                                'generatePath'  => false,
-                                'identifier'    => false,
-                                'table'         => false,
-                                'pluginTable'   => false,
-                                'children'      => array());
+    protected $_options = array('generateFiles'  => false,
+                                'generatePath'   => false,
+                                'builderOptions' => array(),
+                                'identifier'     => false,
+                                'table'          => false,
+                                'pluginTable'    => false,
+                                'children'       => array());
 
     /**
      * _initialized
@@ -354,7 +355,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         if ($this->_options['generateFiles']) {
             if (isset($this->_options['generatePath']) && $this->_options['generatePath']) {
                 $builder->setTargetPath($this->_options['generatePath']);
-
+                $builder->setOptions($this->_options['builderOptions']);
                 $builder->buildRecord($definition);
             } else {
                 throw new Doctrine_Record_Exception('If you wish to generate files then you must specify the path to generate the files in.');
