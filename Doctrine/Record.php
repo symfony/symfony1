@@ -1252,17 +1252,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ($this->exists()) {
             return $this->save();
         } else {
-            $identifier = (array) $this->getTable()->getIdentifier();
-            $data = array();
-            foreach ($this as $column => $value) {
-                if ($value === self::$_null || is_object($value)) {
-                    $value = null;
-                }
-
-                $data[$column] = $value;
+            if ($this->isValid()) {
+                $identifier = (array) $this->getTable()->getIdentifier();
+                $data = $this->getPrepared();
+                return $conn->replace($this->_table, $data, $identifier);
+            } else {
+                return false;
             }
-
-            return $conn->replace($this->_table, $data, $identifier);
         }
     }
 
