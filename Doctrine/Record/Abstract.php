@@ -231,7 +231,8 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     public function hasColumns(array $definitions)
     {
         foreach ($definitions as $name => $options) {
-            $this->hasColumn($name, $options['type'], $options['length'], $options);
+            $length = isset($options['length']) ? $options['length']:null;
+            $this->hasColumn($name, $options['type'], $length, $options);
         }
     }
 
