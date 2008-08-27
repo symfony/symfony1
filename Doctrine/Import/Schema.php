@@ -472,9 +472,9 @@ class Doctrine_Import_Schema
         $moves = array('columns' => array());
         
         foreach ($array as $className => $definition) {
-            $parent = $this->_findBaseSuperClass($array, $definition['className']);
             // Move any definitions on the schema to the parent
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
+                $parent = $this->_findBaseSuperClass($array, $definition['className']);
                 foreach ($moves as $move => $resetValue) {
                     $array[$parent][$move] = Doctrine_Lib::arrayDeepMerge($array[$parent][$move], $definition[$move]);
                     $array[$definition['className']][$move] = $resetValue;
@@ -499,7 +499,7 @@ class Doctrine_Import_Schema
      */
     protected function _findBaseSuperClass($array, $class)
     {
-        if (isset($array[$class]['inheritance']['extends'])) {
+        if (isset($array[$class]['inheritance']['extends']) && isset($array[$class]['inheritance']['type']) && ($array[$class]['inheritance']['type'] == 'simple' || $array[$class]['inheritance']['type'] == 'column_aggregation')) {
             return $this->_findBaseSuperClass($array, $array[$class]['inheritance']['extends']);
         } else {
             return $class;
