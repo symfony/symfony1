@@ -40,6 +40,7 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
      * @var string
      */
     protected $_options = array('name'          =>  'slug',
+                                'alias'         =>  null,
                                 'type'          =>  'string',
                                 'length'        =>  255,
                                 'unique'        =>  true,
@@ -70,7 +71,11 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
      */
     public function setTableDefinition()
     {
-        $this->hasColumn($this->_options['name'], $this->_options['type'], $this->_options['length'], $this->_options['options']);
+        $name = $this->_options['name'];
+        if ($this->_options['alias']) {
+            $name .= ' as ' . $this->_options['alias'];
+        }
+        $this->hasColumn($name, $this->_options['type'], $this->_options['length'], $this->_options['options']);
         
         if ($this->_options['unique'] == true && $this->_options['uniqueIndex'] == true && ! empty($this->_options['fields'])) {
             $indexFields = array($this->_options['name']);

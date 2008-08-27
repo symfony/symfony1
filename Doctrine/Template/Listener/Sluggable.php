@@ -58,9 +58,8 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
      */
     public function preInsert(Doctrine_Event $event)
     {
-        $name = $this->_options['name'];
-
         $record = $event->getInvoker();
+        $name = $record->getTable()->getFieldName($this->_options['name']);
 
         if ( ! $record->$name) {
             $record->$name = $this->buildSlug($record);
@@ -77,9 +76,8 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     public function preUpdate(Doctrine_Event $event)
     {
         if (false !== $this->_options['unique']) {
-            $name = $this->_options['name'];
-    
             $record = $event->getInvoker();
+            $name = $record->getTable()->getFieldName($this->_options['name']);
 
             if ( ! $record->$name ||
             (false !== $this->_options['canUpdate'] &&
@@ -128,7 +126,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
      */
     public function getUniqueSlug($record)
     {
-        $name = $this->_options['name'];
+        $name = $record->getTable()->getFieldName($this->_options['name']);
         $slugFromFields = '';
         foreach ($this->_options['fields'] as $field) {
             $slugFromFields .= $record->$field . ' ';
