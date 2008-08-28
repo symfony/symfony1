@@ -113,13 +113,9 @@ class sfWebRequest extends sfRequest
   public function getUri()
   {
     $pathArray = $this->getPathInfoArray();
+    $uri = isset($pathArray['REQUEST_URI']) ? $pathArray['REQUEST_URI'] : '';
 
-    if ($this->isAbsUri())
-    {
-      return $pathArray['REQUEST_URI'];
-    }
-
-    return $this->getUriPrefix().$pathArray['REQUEST_URI'];
+    return $this->isAbsUri() ? $uri : $this->getUriPrefix().$uri;
   }
 
   /**
@@ -131,7 +127,7 @@ class sfWebRequest extends sfRequest
   {
     $pathArray = $this->getPathInfoArray();
 
-    return preg_match('/^http/', $pathArray['REQUEST_URI']);
+    return isset($pathArray['REQUEST_URI']) ? preg_match('/^http/', $pathArray['REQUEST_URI']) : false;
   }
 
   /**
@@ -153,10 +149,10 @@ class sfWebRequest extends sfRequest
       $protocol = 'http';
     }
 
-    $host = explode(":", $pathArray['HTTP_HOST']);
+    $host = explode(":", $this->getHost());
     if (count($host) == 1)
     {
-      $host[] = $pathArray['SERVER_PORT'];
+      $host[] = isset($pathArray['SERVER_PORT']) ? $pathArray['SERVER_PORT'] : '';
     }
 
     if ($host[1] == $standardPort || empty($host[1]))
@@ -229,6 +225,12 @@ class sfWebRequest extends sfRequest
   public function getRequestParameters()
   {
     return $this->requestParameters;
+  }
+
+  public function addRequestParameters($parameters)
+  {
+    $this->requestParameters = array_merge($this->requestParameters, $parameters);
+    $this->getParameterHolder()->add($parameters);
   }
 
   /**
@@ -779,13 +781,13 @@ class sfWebRequest extends sfRequest
     $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
     $this->parameterHolder->add($this->getParameters);
 
-    // additional parameters
-    $this->requestParameters = $this->parseRequestParameters();
-    $this->parameterHolder->add($this->requestParameters);
-
     // POST parameters
     $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
     $this->parameterHolder->add($this->postParameters);
+
+    // additional parameters
+    $this->requestParameters = $this->parseRequestParameters();
+    $this->parameterHolder->add($this->requestParameters);
 
     // move symfony parameters to attributes (parameters prefixed with _sf_)
     foreach ($this->parameterHolder->getAll() as $key => $value)
