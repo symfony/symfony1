@@ -940,14 +940,14 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
+        if (empty($this->_dqlParts['from']) && empty($this->_sqlParts['from'])) {
+            throw new Doctrine_Query_Exception('You must have at least one component specified in your from.');
+        }
+
         $this->_preQuery();
 
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
-        }
-
-        if (empty($this->_dqlParts['from']) && empty($this->_sqlParts['from'])) {
-            throw new Doctrine_Query_Exception('You must have at least one component specified in your from.');
         }
 
         $params = $this->getParams($params);
