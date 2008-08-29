@@ -796,43 +796,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function bind($args, $type)
     {
-        $options = array();
+        $options = ( ! isset($args[1])) ? array() : $args[1];
         $options['type'] = $type;
-
-        if ( ! isset($args[1])) {
-            $args[1] = array();
-        }
-
-        // the following is needed for backwards compatibility
-        if (is_string($args[1])) {
-            if ( ! isset($args[2])) {
-                $args[2] = array();
-            } elseif (is_string($args[2])) {
-                $args[2] = (array) $args[2];
-            }
-
-            $classes = array_merge($this->_options['parents'], array($this->getComponentName()));
-
-            $e = explode('.', $args[1]);
-            if (in_array($e[0], $classes)) {
-                if ($options['type'] >= Doctrine_Relation::MANY) {
-                    $options['foreign'] = $e[1];
-                } else {
-                    $options['local'] = $e[1];
-                }
-            } else {
-                $e2 = explode(' as ', $args[0]);
-                if ($e[0] !== $e2[0] && ( ! isset($e2[1]) || $e[0] !== $e2[1])) {
-                    $options['refClass'] = $e[0];
-                }
-
-                $options['foreign'] = $e[1];
-            }
-
-            $options = array_merge($args[2], $options);
-        } else {
-            $options = array_merge($args[1], $options);
-        }
 
         $this->_parser->bind($args[0], $options);
     }
