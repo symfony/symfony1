@@ -285,14 +285,24 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $this->getErrorStack()->clear();
 
         // Run validation process
-        $validator = new Doctrine_Validator();
-        $validator->validateRecord($this);
-        $this->validate();
-        if ($this->_state == self::STATE_TDIRTY || $this->_state == self::STATE_TCLEAN) {
-            $this->validateOnInsert();
-        } else {
-            $this->validateOnUpdate();
+        $event = new Doctrine_Event($this, Doctrine_Event::RECORD_VALIDATE);
+        $this->preValidate($event);
+        $this->getTable()->getRecordListener()->preValidate($event);
+        
+        if ( ! $event->skipOperation) {
+        
+            $validator = new Doctrine_Validator();
+            $validator->validateRecord($this);
+            $this->validate();
+            if ($this->_state == self::STATE_TDIRTY || $this->_state == self::STATE_TCLEAN) {
+                $this->validateOnInsert();
+            } else {
+                $this->validateOnUpdate();
+            }
         }
+
+        $this->getTable()->getRecordListener()->postValidate($event);
+        $this->postValidate($event);
 
         return $this->getErrorStack()->count() == 0 ? true : false;
     }
@@ -407,6 +417,20 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * inserted into the data store the first time.
      */
     public function postInsert($event)
+    { }
+
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the validation procedure. Useful for cleaning up data before 
+     * validating it.
+     */
+    public function preValidate($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the validation procedure.
+     */
+    public function postValidate($event)
     { }
 
     /**

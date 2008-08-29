@@ -64,9 +64,10 @@ class Doctrine_Event
     const RECORD_INSERT      = 24;
     const RECORD_SERIALIZE   = 25;
     const RECORD_UNSERIALIZE = 26;
-    const RECORD_DQL_SELECT  = 28;
     const RECORD_DQL_DELETE  = 27;
+    const RECORD_DQL_SELECT  = 28;
     const RECORD_DQL_UPDATE  = 29;
+    const RECORD_VALIDATE    = 30;
 
     /**
      * @var mixed $_invoker             the handler which invoked this event
@@ -191,6 +192,8 @@ class Doctrine_Event
                 return 'delete records';
             case self::RECORD_DQL_UPDATE:
                 return 'update records';
+            case self::RECORD_VALIDATE:
+                return 'validate record';
         }
     }
 

@@ -206,4 +206,18 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
             $listener->postHydrate($event);
         }
     }
+    
+    public function preValidate(Doctrine_Event $event)
+    { 
+        foreach ($this->_listeners as $listener) {
+            $listener->preValidate($event);
+        }
+    }
+    
+    public function postValidate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->postValidate($event);
+        }
+    }
 }

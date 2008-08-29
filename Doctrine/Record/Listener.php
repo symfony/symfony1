@@ -82,4 +82,10 @@ class Doctrine_Record_Listener implements Doctrine_Record_Listener_Interface
 
     public function postHydrate(Doctrine_Event $event)
     { }
+
+    public function preValidate(Doctrine_Event $event)
+    { }
+    
+    public function postValidate(Doctrine_Event $event)
+    { }
 }
