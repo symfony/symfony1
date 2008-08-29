@@ -385,6 +385,9 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'bit';
             break;
             case 'geometry':
+                $type[] = 'geometry';
+                $length = null;
+            break;
             case 'geometrycollection':
             case 'point':
             case 'multipoint':
@@ -394,7 +397,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'multipolygon':
                 $type[] = 'blob';
                 $length = null;
-            break;		
+            break;
             default:
                 throw new Doctrine_DataDict_Exception('unknown database attribute type: ' . $dbType);
         }
