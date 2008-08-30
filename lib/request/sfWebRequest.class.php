@@ -69,6 +69,7 @@ class sfWebRequest extends sfRequest
 
         case 'POST':
           $this->setMethod(strtoupper($this->getParameter('sf_method', 'POST')));
+          $this->parameterHolder->remove('sf_method');
           break;
 
         case 'PUT':
