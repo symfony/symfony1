@@ -49,6 +49,16 @@ class sfWebRequest extends sfRequest
   {
     parent::initialize($dispatcher, $parameters, $attributes, $options);
 
+    // GET parameters
+    $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
+    $this->parameterHolder->add($this->getParameters);
+
+    // POST parameters
+    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
+    $this->parameterHolder->add($this->postParameters);
+
+    $this->fixParameters();
+
     if (isset($_SERVER['REQUEST_METHOD']))
     {
       switch ($_SERVER['REQUEST_METHOD'])
@@ -58,7 +68,7 @@ class sfWebRequest extends sfRequest
           break;
 
         case 'POST':
-          $this->setMethod(self::POST);
+          $this->setMethod(strtoupper($this->getParameter('sf_method', 'POST')));
           break;
 
         case 'PUT':
@@ -101,8 +111,14 @@ class sfWebRequest extends sfRequest
       $this->options['path_info_array'] = 'SERVER';
     }
 
-    // load parameters from GET/PATH_INFO/POST
-    $this->loadParameters();
+    // additional parameters
+    $this->requestParameters = $this->parseRequestParameters();
+    $this->parameterHolder->add($this->requestParameters);
+
+    if ($this->options['logging'])
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))))));
+    }
   }
 
   /**
@@ -278,9 +294,7 @@ class sfWebRequest extends sfRequest
    */
   public function isMethod($method)
   {
-    $pathArray = $this->getPathInfoArray();
-
-    return strtolower($method) == strtolower($this->getMethodName());
+    return strtoupper($method) == $this->getMethod();
   }
 
   /**
@@ -290,9 +304,12 @@ class sfWebRequest extends sfRequest
    */
   public function getMethodName()
   {
-    $pathArray = $this->getPathInfoArray();
+    if ($this->options['logging'])
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('The "sfWebRequest::getMethodName()" method is deprecated, please use "getMethod()" instead.')));
+    }
 
-    return isset($pathArray['REQUEST_METHOD']) ? $pathArray['REQUEST_METHOD'] : 'GET';
+    return $this->getMethod();
   }
 
   /**
@@ -771,24 +788,8 @@ class sfWebRequest extends sfRequest
     return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), array())->getReturnValue();
   }
 
-  /**
-   * Loads GET, PATH_INFO and POST data into the parameter list.
-   *
-   */
-  protected function loadParameters()
+  protected function fixParameters()
   {
-    // GET parameters
-    $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
-    $this->parameterHolder->add($this->getParameters);
-
-    // POST parameters
-    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
-    $this->parameterHolder->add($this->postParameters);
-
-    // additional parameters
-    $this->requestParameters = $this->parseRequestParameters();
-    $this->parameterHolder->add($this->requestParameters);
-
     // move symfony parameters to attributes (parameters prefixed with _sf_)
     foreach ($this->parameterHolder->getAll() as $key => $value)
     {
@@ -797,11 +798,6 @@ class sfWebRequest extends sfRequest
         $this->parameterHolder->remove($key);
         $this->setAttribute($key, $value);
       }
-    }
-
-    if ($this->options['logging'])
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))))));
     }
   }
 }

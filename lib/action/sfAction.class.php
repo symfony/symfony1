@@ -359,35 +359,6 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Retrieves the request methods on which this action will process validation and execution.
-   *
-   * @return int One of the following values:
-   *
-   * - sfRequest::GET
-   * - sfRequest::POST
-   * - sfRequest::PUT
-   * - sfRequest::DELETE
-   * - sfRequest::HEAD
-   * - sfRequest::NONE
-   *
-   * @see sfRequest
-   */
-  public function getRequestMethods()
-  {
-    if (!sfConfig::get('sf_compat_10'))
-    {
-      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
-    }
-
-    return sfRequest::GET
-           | sfRequest::POST
-           | sfRequest::PUT
-           | sfRequest::DELETE
-           | sfRequest::HEAD
-           | sfRequest::NONE;
-  }
-
-  /**
    * Executes any post-validation error application logic.
    *
    * @return string A string containing the view name associated with this action

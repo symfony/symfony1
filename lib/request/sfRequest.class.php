@@ -22,41 +22,11 @@
  */
 abstract class sfRequest
 {
-  /**
-   * Process validation and execution for only GET requests.
-   *
-   */
-  const GET = 2;
-
-  /**
-   * Skip validation and execution for any request method.
-   *
-   */
-  const NONE = 1;
-
-  /**
-   * Process validation and execution for only POST requests.
-   *
-   */
-  const POST = 4;
-
-  /**
-   * Process validation and execution for only PUT requests.
-   *
-   */
-  const PUT = 5;
-
-  /**
-   * Process validation and execution for only DELETE requests.
-   *
-   */
-  const DELETE = 6;
-
-  /**
-   * Process validation and execution for only HEAD requests.
-   *
-   */
-  const HEAD = 7;
+  const GET    = 'GET';
+  const POST   = 'POST';
+  const PUT    = 'PUT';
+  const DELETE = 'DELETE';
+  const HEAD   = 'HEAD';
 
   protected
     $dispatcher      = null,
@@ -131,11 +101,9 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieves this request's method.
+   * Gets the request method.
    *
-   * @return int One of the following constants:
-   *             - sfRequest::GET
-   *             - sfRequest::POST
+   * @return string The request method
    */
   public function getMethod()
   {
@@ -145,28 +113,18 @@ abstract class sfRequest
   /**
    * Sets the request method.
    *
-   * @param int $methodCode  One of the following constants:
-   *
-   * - sfRequest::GET
-   * - sfRequest::POST
-   * - sfRequest::PUT
-   * - sfRequest::DELETE
-   * - sfRequest::HEAD
+   * @param string $method  The request method
    *
    * @throws <b>sfException</b> - If the specified request method is invalid
    */
-  public function setMethod($methodCode)
+  public function setMethod($method)
   {
-    $available_methods = array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD, self::NONE);
-    if (in_array($methodCode, $available_methods))
+    if (!in_array(strtoupper($method), array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD)))
     {
-      $this->method = $methodCode;
-
-      return;
+      throw new sfException(sprintf('Invalid request method: %s.', $method));
     }
 
-    // invalid method type
-    throw new sfException(sprintf('Invalid request method: %s.', $methodCode));
+    $this->method = strtoupper($method);
   }
 
   /**

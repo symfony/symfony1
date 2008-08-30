@@ -82,15 +82,6 @@ class sfValidationExecutionFilter extends sfFilter
       return sfView::SUCCESS;
     }
 
-    // get the request method
-    $method = $this->context->getRequest()->getMethod();
-    if (($actionInstance->getRequestMethods() & $method) != $method)
-    {
-      // this action will skip validation/execution for this method
-      // get the default view
-      return $actionInstance->getDefaultView();
-    }
-
     return $this->validateAction($filterChain, $actionInstance) ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
   }
 

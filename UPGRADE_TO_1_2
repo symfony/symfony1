@@ -26,10 +26,8 @@ To upgrade a project:
 
 The remaining sections explain the main changes made in symfony 1.2.
 
-Configuration
--------------
-
-### Request
+Request
+-------
 
 The `path_info_array`, `path_info_key`, and `relative_url_root` settings have
 been moved from `settings.yml` to `factories.yml` (in the `param` section of the
@@ -41,7 +39,37 @@ These three request options are now passed to the request constructor as a
 fourth argument. The formats are also passed as an option,
 instead of being passed as an attribute.
 
-### Response
+The request method constants from `sfRequest` values have changed from integers
+to strings and the `sfRequest::NONE` method has been removed:
+
+ **Constant** | **Old value** | **New value**
+ ------------ | ------------- | -------------
+ GET          | 2             | GET
+ POST         | 4             | POST
+ PUT          | 5             | PUT
+ DELETE       | 6             | DELETE
+ HEAD         | 7             | HEAD
+ NONE         | 1             | -
+
+The `getMethod()` and `getMethodName()` methods now returns the same value,
+so `getMethodName()` is deprecated.
+
+The `sfAction::getMethodNames()` and the corresponding code in
+`sfValidationExecutionFilter` from `sfCompat10Plugin` have been removed.
+This method was deprecated in 1.1 and was not really useable in 1.0.
+
+You can now simulate `PUT` and `DELETE` requests from a browser by using the
+`POST` method and adding a special `sf_method` parameter:
+
+    [php]
+    <form action="#" method="POST">
+      <input type="hidden" name="sf_method" value="PUT" />
+
+      <!-- // ... -->
+    </form>
+
+Response
+--------
 
 There is a new setting for the `response` factory: `send_http_headers`.
 This setting is `true` by default, except for the `test` environment where
@@ -106,7 +134,8 @@ The `removeStylesheet()` and `removeJavascript()` methods now only take one argu
 the file to remove from the response. It will remove the file in all the available
 positions. In symfony 1.1, they take the position as a second argument.
 
-### Prototype and Scriptaculous
+Prototype and Scriptaculous
+---------------------------
 
 symfony continues to decouple its bundled software. In 1.2 the bundled Prototype and 
 Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a core-plugin.

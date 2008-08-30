@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(34, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -142,3 +142,20 @@ $t->diag('->getForwardedRemoteAddress()');
 $t->is($request->getForwardedRemoteAddress(), null, '->getForwardedRemoteAddress() returns null if the request was not forwarded.');
 $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1';
 $t->is($request->getForwardedRemoteAddress(), '10.0.0.1', '->getForwardedRemoteAddress() returns the value from HTTP_X_FORWARDED_FOR');
+
+// methods
+$t->diag('methods');
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST['sf_method'] = 'PUT';
+$request = new myRequest($dispatcher);
+$t->is($request->getMethod(), 'PUT', '->getMethod() returns the "sf_method" parameter value if it exists and if the method is POST');
+
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_POST['sf_method'] = 'PUT';
+$request = new myRequest($dispatcher);
+$t->is($request->getMethod(), 'GET', '->getMethod() returns the "sf_method" parameter value if it exists and if the method is POST');
+
+$_SERVER['REQUEST_METHOD'] = 'POST';
+unset($_POST['sf_method']);
+$request = new myRequest($dispatcher);
+$t->is($request->getMethod(), 'POST', '->getMethod() returns the "sf_method" parameter value if it exists and if the method is POST');
