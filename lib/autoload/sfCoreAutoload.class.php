@@ -201,7 +201,6 @@ class sfCoreAutoload
   'sfWebDebugPanelConfig' => 'debug',
   'sfWebDebugPanelLogs' => 'debug',
   'sfWebDebugPanelMemory' => 'debug',
-  'sfWebDebugPanelPropel' => 'debug',
   'sfWebDebugPanelSymfonyVersion' => 'debug',
   'sfWebDebugPanelTimer' => 'debug',
   'sfEvent' => 'event',
