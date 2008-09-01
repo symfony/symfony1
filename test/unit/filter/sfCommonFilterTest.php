@@ -24,7 +24,7 @@ class myRequest
     return '';
   }
 
-  public function getMethodName()
+  public function getMethod()
   {
     return 'GET';
   }

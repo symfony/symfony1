@@ -307,7 +307,7 @@ class sfWebRequest extends sfRequest
   {
     if ($this->options['logging'])
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('The "sfWebRequest::getMethodName()" method is deprecated, please use "getMethod()" instead.')));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('The "sfWebRequest::getMethodName()" method is deprecated, please use "getMethod()" instead.', 'priority' => sfLogger::WARNING)));
     }
 
     return $this->getMethod();
