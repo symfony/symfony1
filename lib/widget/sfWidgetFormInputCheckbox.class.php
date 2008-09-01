@@ -19,6 +19,25 @@
 class sfWidgetFormInputCheckbox extends sfWidgetFormInput
 {
   /**
+   * Constructor.
+   *
+   * Available options:
+   *
+   *  - valueAttributeValue: The "value" attribute value to set for the checkbox
+   *
+   * @param array  $options     An array of options
+   * @param array  $attributes  An array of default HTML attributes
+   *
+   * @see sfWidgetFormInput
+   */
+  public function __construct($options = array(), $attributes = array())
+  {
+    $this->addOption('valueAttributeValue');
+
+    parent::__construct($options, $attributes);
+  }
+
+  /**
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
    *
@@ -29,6 +48,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
     parent::configure($options, $attributes);
 
     $this->setOption('type', 'checkbox');
+
+    if (isset($attributes['value']))
+    {
+      $this->setOption('valueAttributeValue', $attributes['value']);
+    }
   }
 
   /**
@@ -46,6 +70,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
     if (!is_null($value) && $value !== false)
     {
       $attributes['checked'] = 'checked';
+    }
+
+    if (!isset($attributes['value']) && !is_null($this->getOption('valueAttributeValue')))
+    {
+      $attributes['value'] = $this->getOption('valueAttributeValue');
     }
 
     return parent::render($name, null, $attributes, $errors);
