@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(136, new lime_output_color());
+$t = new lime_test(138, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -227,6 +227,13 @@ $params = array('module' => 'default', 'action' => 'index');
 $url = '/default/index/test';
 $t->is($r->parse($url), $params, '->parse()    finds route for URL   with no additional parameters when route ends with unnamed wildcard *');
 $t->is($r->generate('', $params), $url, '->generate() creates URL for route with no additional parameters when route ends with unnamed wildcard *');
+// #4173
+$url = '/default/index/test/';
+$t->is($r->parse($url), $params, '->parse()    finds route for URL   with no additional parameters and trailing slash when route ends with unnamed wildcard *');
+$params = array('module' => 'default', 'action' => 'index', 'titi' => 'toto');
+$url = '/default/index/test/titi/toto/';
+$t->is($r->parse($url), $params, '->parse()    finds route for URL   with additional parameters and trailing slash when route ends with unnamed wildcard *');
+
 $params = array('module' => 'default', 'action' => 'index', 'page' => '4.html', 'toto' => true, 'titi' => 'toto', 'OK' => true);
 $url = '/default/index/test/page/4.html/toto/1/titi/toto/OK/1';
 $t->is($r->parse($url), $params, '->parse()    finds route for URL   with additional parameters when route ends with unnamed wildcard *');
