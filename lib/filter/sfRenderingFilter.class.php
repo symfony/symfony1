@@ -32,11 +32,6 @@ class sfRenderingFilter extends sfFilter
     // execute next filter
     $filterChain->execute();
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Render to the client')));
-    }
-
     // get response object
     $response = $this->context->getResponse();
 

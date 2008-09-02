@@ -47,11 +47,6 @@ abstract class sfController
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
-    }
-
     // set max forwards
     $this->maxForwards = sfConfig::get('sf_max_forwards');
   }

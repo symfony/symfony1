@@ -31,11 +31,6 @@ class sfFrontWebController extends sfWebController
   {
     try
     {
-      if (sfConfig::get('sf_logging_enabled'))
-      {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Dispatch request')));
-      }
-
       // reinitialize filters (needed for unit and functional tests)
       sfFilter::$filterCalled = array();
 

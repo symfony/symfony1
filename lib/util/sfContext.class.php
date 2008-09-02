@@ -84,11 +84,6 @@ class sfContext
       sfException::createFromException($e)->printStackTrace();
     }
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
-    }
-
     $this->dispatcher->connect('template.filter_parameters', array($this, 'filterTemplateParameters'));
 
     // register our shutdown function

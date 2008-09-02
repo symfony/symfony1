@@ -112,11 +112,6 @@ abstract class sfView
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Initialize view for "%s/%s"', $moduleName, $actionName))));
-    }
-
     sfOutputEscaper::markClassAsSafe('sfForm');
 
     $this->attributeHolder = $this->initializeAttributeHolder();
