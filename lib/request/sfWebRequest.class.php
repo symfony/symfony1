@@ -115,11 +115,6 @@ class sfWebRequest extends sfRequest
     // additional parameters
     $this->requestParameters = $this->parseRequestParameters();
     $this->parameterHolder->add($this->requestParameters);
-
-    if ($this->options['logging'])
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))))));
-    }
   }
 
   /**
