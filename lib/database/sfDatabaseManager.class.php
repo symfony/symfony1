@@ -31,7 +31,7 @@ class sfDatabaseManager
    *
    * @see initialize()
    */
-  public function __construct(sfApplicationConfiguration $configuration, $options = array())
+  public function __construct(sfProjectConfiguration $configuration, $options = array())
   {
     $this->initialize($configuration);
 
@@ -44,13 +44,13 @@ class sfDatabaseManager
   /**
    * Initializes this sfDatabaseManager object
    *
-   * @param  sfApplicationConfiguration $configuration A sfApplicationConfiguration instance
+   * @param  sfProjectConfiguration $configuration A sfProjectConfiguration instance
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
    */
-  public function initialize(sfApplicationConfiguration $configuration)
+  public function initialize(sfProjectConfiguration $configuration)
   {
     $this->configuration = $configuration;
 
@@ -62,7 +62,20 @@ class sfDatabaseManager
    */
   public function loadConfiguration()
   {
-    require($this->configuration->getConfigCache()->checkConfig('config/databases.yml'));
+    if ($this->configuration instanceof sfApplicationConfiguration)
+    {
+      $databases = include($this->configuration->getConfigCache()->checkConfig('config/databases.yml'));
+    }
+    else
+    {
+      $configHandler = new sfDatabaseConfigHandler();
+      $databases = $configHandler->evaluate(array($this->configuration->getRootDir().'/config/databases.yml'));
+    }
+
+    foreach ($databases as $name => $database)
+    {
+      $this->setDatabase($name, $database);
+    }
   }
 
   /**

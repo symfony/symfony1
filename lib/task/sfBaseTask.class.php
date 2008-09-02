@@ -30,8 +30,18 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $this->checkProjectExists();
 
-    $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : null;
-    $env         = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
+    $application = null;
+    if ($commandManager->getArgumentSet()->hasArgument('application'))
+    {
+      $application = $commandManager->getArgumentValue('application');
+    }
+    else if ($commandManager->getOptionSet()->hasOption('application'))
+    {
+      $application = $commandManager->getOptionValue('application');
+    }
+
+    $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
+
     if (!is_null($application))
     {
       $this->checkAppExists($application);
@@ -51,6 +61,11 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       else
       {
         $this->configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
+      }
+
+      if (!is_null($env))
+      {
+        sfConfig::set('sf_environment', $env);
       }
     }
 

@@ -408,3 +408,27 @@ The `sfTestFunctional` class acts as a proxy for the browser class which means
 that all methods from the browser are accessible directly from the tester object.
 
 This refactor must not introduce backward incompatibility with symfony 1.1.
+
+Tasks
+-----
+
+Some CLI tasks takes an application name as an argument because they need to connect
+to the database. We need an application because the configuration can be customized
+on an application basis and all the symfony configuration system is based on the
+application level.
+
+For these tasks, this argument has been removed in favor of an optional "application"
+option. If you don't provide the "application" option, symfony will take the database
+configuration from the project `databases.yml` file.
+
+The following task signatures have been changed accordingly:
+
+ * `propel:build-all-load`
+ * `propel:data-dump`
+ * `propel:data-load`
+
+>**Note**
+>This is possible because `sfDatabaseManager` now takes a project configuration or an
+application configuration. For the curious one, this works because
+`sfDatabaseConfigHandler` now returns a static or a dynamic configuration based
+on an array of configuration files (see the `execute()` and `evaluate()` methods).
