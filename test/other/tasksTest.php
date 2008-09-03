@@ -106,7 +106,7 @@ $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:b
 $content = $c->execute_command('propel:build-form');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'base'.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
 
-$c->execute_command('propel:insert-sql');
+$c->execute_command('propel:insert-sql --no-confirmation');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'database.sqlite'), '"propel:insert-sql" creates tables in the database');
 
 $content = $c->execute_command('propel:generate-crud --generate-in-cache frontend articleInitCrud Article');
