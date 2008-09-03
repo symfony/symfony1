@@ -48,9 +48,14 @@ abstract class sfRequest
   /**
    * Initializes this sfRequest.
    *
+   * Available options:
+   *
+   *  * logging: Whether to enable logging or not (false by default)
+   *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param  array             $parameters  An associative array of initialization parameters
    * @param  array             $attributes  An associative array of initialization attributes
+   * @param  array             $options     An associative array of options
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *

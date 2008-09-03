@@ -90,6 +90,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'request':
+          $parameters['no_script_name'] = sfConfig::get('sf_no_script_name');
           $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_request', '%s');\n   \$this->factories['request'] = new \$class(\$this->dispatcher, array(), array(), sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $class, var_export($parameters, true));
           break;
 

@@ -28,7 +28,6 @@ default:
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
     # Routing settings
-    relative_url_root:      ~         # Default URL prefix. Use this when your symfony project is installed in a sub directory of the apache document root.
     no_script_name:         off       # Enable the front controller name in generated URLs
 
     # Validation settings, used for error generation by the Validation helper
@@ -63,7 +62,6 @@ default:
     # Miscellaneous
     strip_comments:         on         # Remove comments in core framework classes as defined in the core_compile.yml
     max_forwards:           5
-    url_format:             PATH
 
     # ORM
     orm:                    propel

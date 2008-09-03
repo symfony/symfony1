@@ -25,14 +25,15 @@ class sfConsoleRequest extends sfRequest
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param  array             $parameters  An associative array of initialization parameters
    * @param  array             $attributes  An associative array of initialization attributes
+   * @param  array             $options     An associative array of options
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
   {
-    parent::initialize($dispatcher, $parameters, $attributes);
+    parent::initialize($dispatcher, $parameters, $attributes, $options);
 
     $this->getParameterHolder()->add($_SERVER['argv']);
   }

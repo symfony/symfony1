@@ -31,6 +31,10 @@ test:
 #  request:
 #    class: sfWebRequest
 #    param:
+#      logging:           %SF_LOGGING_ENABLED%
+#      path_info_array:   SERVER
+#      path_info_key:     PATH_INFO
+#      relative_url_root: ~
 #      formats:
 #        txt:  text/plain
 #        js:   [application/javascript, application/x-javascript, text/javascript]
@@ -43,8 +47,9 @@ test:
 #  response:
 #    class: sfWebResponse
 #    param:
-#      logging: %SF_LOGGING_ENABLED%
-#      charset: %SF_CHARSET%
+#      logging:           %SF_LOGGING_ENABLED%
+#      charset:           %SF_CHARSET%
+#      send_http_headers: true
 #
 #  user:
 #    class: myUser
@@ -65,7 +70,7 @@ test:
 #      automatic_cleaning_factor: 0
 #      cache_dir:                 %SF_TEMPLATE_CACHE_DIR%
 #      lifetime:                  86400
-#      prefix:                    %SF_APP_DIR%
+#      prefix:                    %SF_APP_DIR%/template
 #
 #  i18n:
 #    class: sfI18N
@@ -79,28 +84,27 @@ test:
 #        param:
 #          automatic_cleaning_factor: 0
 #          cache_dir:                 %SF_I18N_CACHE_DIR%
-#          lifetime:                  86400
-#          prefix:                    %SF_APP_DIR%
+#          lifetime:                  31556926
+#          prefix:                    %SF_APP_DIR%/i18n
 #
 #  routing:
 #    class: sfPatternRouting
 #    param:
-#      load_configuration: true
-#      suffix:             .
-#      default_module:     default
-#      default_action:     index
-#      variable_prefixes:  [':']
-#      segment_separators: ['/', '.']
-#      variable_regex:     '[\w\d_]+'
-#      debug:              %SF_DEBUG%
-#      logging:            %SF_LOGGING_ENABLED%
+#      load_configuration:               true
+#      suffix:                           ''
+#      default_module:                   default
+#      default_action:                   index
+#      debug:                            %SF_DEBUG%
+#      logging:                          %SF_LOGGING_ENABLED%
+#      generate_shortest_url:            false
+#      extra_parameters_as_query_string: false
 #      cache:
 #        class: sfFileCache
 #        param:
 #          automatic_cleaning_factor: 0
 #          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
 #          lifetime:                  31556926
-#          prefix:                    %SF_APP_DIR%
+#          prefix:                    %SF_APP_DIR%/routing
 #
 #  logger:
 #    class: sfAggregateLogger
@@ -111,8 +115,9 @@ test:
 #          class: sfWebDebugLogger
 #          param:
 #            level: debug
-#            condition:      %SF_WEB_DEBUG%
-#            xdebug_logging: true
+#            condition:       %SF_WEB_DEBUG%
+#            xdebug_logging:  true
+#            web_debug_class: sfWebDebug
 #        sf_file_debug:
 #          class: sfFileLogger
 #          param:

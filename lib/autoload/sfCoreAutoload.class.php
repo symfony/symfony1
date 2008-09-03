@@ -297,6 +297,8 @@ class sfCoreAutoload
   'sfNoRouting' => 'routing',
   'sfPathInfoRouting' => 'routing',
   'sfPatternRouting' => 'routing',
+  'sfRequestRoute' => 'routing',
+  'sfRoute' => 'routing',
   'sfRouting' => 'routing',
   'sfDatabaseSessionStorage' => 'storage',
   'sfMySQLSessionStorage' => 'storage',

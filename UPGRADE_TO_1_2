@@ -450,3 +450,116 @@ The `sfTask` base class now provides three new methods to use in your tasks:
   * `ask()`:             Asks a question to the user and returns the given answer
   * `askConfirmation()`: Asks a confirmation to the user and return true if the user
                          confirmed, false otherwise
+
+Routing
+-------
+
+The `sfPatternRouting` class now stores its routes as an array of `sfRoute`
+objects instead of a flat associative array.
+
+By default, symfony uses the built-in `sfRoute` object, but you can change
+it by specifying a `class` entry in your `routing.yml` configuration file:
+
+    [yml]
+    foo_bar:
+      url:   /foo/:bar
+      class: myRoute
+      param: { module: foo, action: bar }
+
+All the routing logic is contained in the `sfRoute` class, which means you
+can override the parsing and the generation logic with your own.
+
+>**TIP**
+>The `sfRoute` class is much more modular than the old `sfPatternRouting` class
+>to allow easier customization of the default behavior. The "compilation" phase
+>has been refactored into smaller methods, the code has been simplified,
+>and it is based on a "real" tokenizer.
+
+If you connect your routes with PHP code, you must now pass a `sfRoute` instance
+as the second argument for the `connect()`, `preprendRoute()`, `appendRoute()`,
+and `insertRouteBefore()` methods:
+
+    [php]
+    $route = new myRoute('/foo/:bar', array('module' => 'foo', 'action' => 'bar'));
+    $routing->connect('foo_bar', $route);
+
+The `sfRoute` constructor takes an array of options as its last argument to
+allow the customization of each route. In the `routing.yml` configuration file,
+use to `options` key:
+
+    [yml]
+    article:
+      url:     /article/:id-:slug
+      options: { segment_separators: [/, ., -] }
+
+Symfony has another built-in route, `sfRequestRoute`, which can enforce the
+HTTP method for your routes:
+
+    [yml]
+    article:
+      url:          /article/:id
+      requirements: { sf_method: get }
+      class:        sfRequestRoute
+
+This is made possible because the `parse()` method of `sfRouting` now takes a
+context as a second argument. When the request calls the routing, it passes
+the following context:
+
+  * `method_name`: The HTTP method name
+  * `format`:      The request format
+  * `host`:        The hostname
+  * `is_secure`:   Whether the request was called with HTTPS or not
+  * `request_uri`: The full request URI
+  * `prefix`:      The prefix to add to each generated route
+
+With the previous routing configuration, the `article` route will only match
+requests with a `get` HTTP method. If you define several routes with the same
+`url` but different method requirements, you can pass `sf_method` as a parameter
+when you generate a route:
+
+    [php]
+    <?php echo link_to('Great article', '@article?id=1&sf_method=get')) ?>
+
+The routing takes two new options:
+
+  * `generate_shortest_url`:            Whether to generate the shortest URL
+                                        possible
+  * `extra_parameters_as_query_string`: Whether to generate extra parameters
+                                        as a query string
+
+By default, they are set to `false` in the default `factories.yml` configuration
+file to keep backward compatibility with symfony 1.0 and 1.1.
+
+You can also enable or disable these options on a route basis:
+
+    [yml]
+    articles:
+      url:     /articles/:page
+      param:   { module: article, action: list, page: 1 }
+      options: { generate_shortest_url: true }
+
+This route will generate the shortest URL possible. So, if you pass a `page`
+of `1`, the generated URL will be `/articles`:
+
+    [php]
+    echo url_for('@articles?page=1');
+    // /articles
+    // would have been /articles/1 in symfony 1.1
+
+    echo url_for('@articles?page=2');
+    // /articles/2
+
+    [yml]
+    articles:
+      url:     /articles
+      options: { extra_parameters_as_query_string: true }
+
+This route will accept extra parameters and add them as a query string:
+
+    [php]
+    echo url_for('@articles?page=1');
+    // /articles?page=1
+    // would not have matched the route in symfony 1.1
+
+    echo url_for('@articles?page=2');
+    // /articles?page=2

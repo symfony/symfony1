@@ -39,15 +39,25 @@ class sfPathInfoRouting extends sfRouting
  /**
   * @see sfRouting
   */
-  public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/')
+  public function generate($name, $params = array(), $absolute = false)
   {
+    $parameters = $this->mergeArrays($this->defaultParameters, $params);
+    if ($this->getDefaultParameter('module') == $parameters['module'])
+    {
+      unset($parameters['module']);
+    }
+    if ($this->getDefaultParameter('action') == $parameters['action'])
+    {
+      unset($parameters['action']);
+    }
+
     $url = '';
-    foreach ($this->mergeArrays($this->defaultParameters, $params) as $key => $value)
+    foreach ($parameters as $key => $value)
     {
       $url .= '/'.$key.'/'.$value;
     }
 
-    return $url ? $url : '/';
+    return $this->fixGeneratedUrl($url ? $url : '/', $absolute);
   }
 
  /**
@@ -67,8 +77,6 @@ class sfPathInfoRouting extends sfRouting
         $this->currentRouteParameters[$array[$i]] = $array[++$i];
       }
     }
-
-    $this->currentRouteParameters = $this->fixDefaults($this->currentRouteParameters);
 
     return $this->currentRouteParameters;
   }

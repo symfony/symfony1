@@ -11,16 +11,26 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
+
+class myWebResponse extends sfWebResponse
+{
+  public function sendHttpHeaders()
+  {
+  }
+
+  public function send()
+  {
+  }
+}
 
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SCRIPT_NAME'] = '/index.php';
-sfConfig::set('sf_url_format', 'PATH');
 sfConfig::set('sf_max_forwards', 10);
 $context = sfContext::getInstance(array(
   'routing'  => 'sfNoRouting',
   'request'  => 'sfWebRequest',
-  'response' => 'sfWebResponse',
+  'response' => 'myWebResponse',
 ));
 
 $controller = new sfFrontWebController($context, null);
@@ -159,44 +169,11 @@ catch (sfParseException $e)
 
 // ->redirect()
 $t->diag('->redirect()');
-sfConfig::set('sf_test', true);
-sfConfig::set('sf_charset', 'utf-8');
-ob_start();
 $controller->redirect('module/action?id=1#photos');
-$content = ob_get_clean();
-$t->like($content, '~http\://localhost/index.php/\?action=action&amp;module=module&amp;id=1#photos~', '->redirect() adds a refresh meta in the content');
-$t->like($context->getResponse()->getHttpHeader('Location'), '~http\://localhost/index.php/\?action=action&module=module&id=1#photos~', '->redirect() adds a Location HTTP header');
+$response = $context->getResponse();
+$t->like($response->getContent(), '~http\://localhost/index.php/\?module=module&amp;action=action&amp;id=1#photos~', '->redirect() adds a refresh meta in the content');
+$t->like($response->getHttpHeader('Location'), '~http\://localhost/index.php/\?module=module&action=action&id=1#photos~', '->redirect() adds a Location HTTP header');
 
 // ->genUrl()
 $t->diag('->genUrl()');
 $t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('action' => 'action', 'module' => 'module', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');
-
-sfConfig::set('sf_relative_url_root', null);
-sfConfig::set('sf_no_script_name', true);
-$referenceUrl = $controller->genUrl('module/action');
-$referenceRootUrl = $controller->genUrl('@test');
-
-
-// ->genUrl() with no sf_relative_url_root
-sfConfig::set('sf_relative_url_root', null);
-
-sfConfig::set('sf_no_script_name', true);
-$t->is($controller->genUrl('module/action'), $referenceUrl, '->genUrl() with no relative_url_root and no_script_name==true');
-$t->is($controller->genUrl('@test'), $referenceRootUrl, '->genUrl() with no relative_url_root and no_script_name==true (root url)');
-
-sfConfig::set('sf_no_script_name', false);
-$t->is($controller->genUrl('module/action'), $_SERVER['SCRIPT_NAME'].$referenceUrl, '->genUrl() with no relative_url_root and no_script_name==false');
-$t->is($controller->genUrl('@test'), $_SERVER['SCRIPT_NAME'].$referenceRootUrl, '->genUrl() with no relative_url_root and no_script_name==false (root url)');
-
-
-// ->genUrl() with sf_relative_url_root to something
-sfConfig::set('sf_relative_url_root', $relativeUrlRoot='/webroot');
-$context->getRequest()->setRelativeUrlRoot($relativeUrlRoot);
-
-sfConfig::set('sf_no_script_name', true);
-$t->is($controller->genUrl('module/action'), $relativeUrlRoot.$referenceUrl, '->genUrl() with a relative_url_root set and no_script_name==true');
-$t->is($controller->genUrl('@test'), $relativeUrlRoot.$referenceRootUrl, '->genUrl() with a relative_url_root set and no_script_name==true (root url)');
-
-sfConfig::set('sf_no_script_name', false);
-$t->is($controller->genUrl('module/action'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceUrl, '->genUrl() with a relative_url_root set and no_script_name==false');
-$t->is($controller->genUrl('@test'), $relativeUrlRoot.$_SERVER['SCRIPT_NAME'].$referenceRootUrl, '->genUrl() with a relative_url_root set and no_script_name==false (root url)');

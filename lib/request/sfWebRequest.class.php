@@ -37,13 +37,23 @@ class sfWebRequest extends sfRequest
   /**
    * Initializes this sfRequest.
    *
+   * Available options:
+   *
+   *  * formats:           The list of supported format and their associated mime-types
+   *  * path_info_key:     The path info key (default to SERVER)
+   *  * path_info_array:   The path info key (default to PATH_INFO)
+   *  * relative_url_root: The relative URL root
+   *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param  array             $parameters  An associative array of initialization parameters
    * @param  array             $attributes  An associative array of initialization attributes
+   * @param  array             $options     An associative array of options
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
+   *
+   * @see sfRequest
    */
   public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
   {
@@ -222,6 +232,19 @@ class sfWebRequest extends sfRequest
     }
 
     return $pathInfo;
+  }
+
+  public function getPathInfoPrefix()
+  {
+    $prefix = $this->getRelativeUrlRoot();
+
+    if (!isset($this->options['no_script_name']) || !$this->options['no_script_name'])
+    {
+      $scriptName = $this->getScriptName();
+      $prefix = is_null($prefix) ? $scriptName : $prefix.'/'.basename($scriptName);
+    }
+
+    return $prefix;
   }
 
   public function getGetParameters()
@@ -781,7 +804,15 @@ class sfWebRequest extends sfRequest
    */
   protected function parseRequestParameters()
   {
-    return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), array())->getReturnValue();
+    return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array(
+      'path_info'   => $this->getPathInfo(),
+      'prefix'      => $this->getPathInfoPrefix(),
+      'method_name' => $this->getMethod(),
+      'format'      => $this->getRequestFormat(),
+      'host'        => $this->getHost(),
+      'is_secure'   => $this->isSecure(),
+      'request_uri' => $this->getUri(),
+    )), array())->getReturnValue();
   }
 
   protected function fixParameters()

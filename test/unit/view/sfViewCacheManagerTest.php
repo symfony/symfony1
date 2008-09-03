@@ -102,7 +102,7 @@ class myRouting extends sfPatternRouting
 $context = sfContext::getInstance(array('controller' => 'myController', 'routing' => 'myRouting', 'request' => 'myRequest'));
 
 $r = $context->routing;
-$r->connect('default', '/:module/:action/*');
+$r->connect('default', new sfRoute('/:module/:action/*'));
 
 // ->initialize()
 $t->diag('->initialize()');

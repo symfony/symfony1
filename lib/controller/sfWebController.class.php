@@ -41,15 +41,7 @@ abstract class sfWebController extends sfController
       return $parameters;
     }
 
-    $url = $this->context->getRequest()->getRelativeUrlRoot();
-
-    if (!sfConfig::get('sf_no_script_name'))
-    {
-      $scriptName = $this->context->getRequest()->getScriptName();
-      $url = is_null($url) ? $scriptName : $url.'/'.basename($scriptName);
-    }
-
-    $route_name = '';
+    $route = '';
     $fragment = '';
 
     if (is_string($parameters))
@@ -61,40 +53,19 @@ abstract class sfWebController extends sfController
         $parameters = substr($parameters, 0, $pos);
       }
 
-      list($route_name, $parameters) = $this->convertUrlStringToParameters($parameters);
+      list($route, $parameters) = $this->convertUrlStringToParameters($parameters);
     }
     else if (is_array($parameters))
     {
       if (isset($parameters['sf_route']))
       {
-        $route_name = $parameters['sf_route'];
+        $route = $parameters['sf_route'];
         unset($parameters['sf_route']);
       }
     }
 
-    if (sfConfig::get('sf_url_format') == 'PATH')
-    {
-      // use PATH format
-      $divider = '/';
-      $equals  = '/';
-      $querydiv = '/';
-    }
-    else
-    {
-      // use GET format
-      $divider = ini_get('arg_separator.output');
-      $equals  = '=';
-      $querydiv = '?';
-    }
-
     // routing to generate path
-    $url .= $this->context->getRouting()->generate($route_name, $parameters, $querydiv, $divider, $equals);
-
-    if ($absolute)
-    {
-      $request = $this->context->getRequest();
-      $url = 'http'.($request->isSecure() ? 's' : '').'://'.$request->getHost().$url;
-    }
+    $url = $this->context->getRouting()->generate($route, $parameters, $absolute);
 
     if ($fragment)
     {
@@ -117,7 +88,7 @@ abstract class sfWebController extends sfController
 
     $params       = array();
     $query_string = '';
-    $route_name   = '';
+    $route   = '';
 
     // empty url?
     if (!$url)
@@ -133,7 +104,7 @@ abstract class sfWebController extends sfController
     }
 
     // 2 url forms
-    // @route_name?key1=value1&key2=value2...
+    // @routeName?key1=value1&key2=value2...
     // module/action?key1=value1&key2=value2...
 
     // first slash optional
@@ -143,10 +114,10 @@ abstract class sfWebController extends sfController
     }
 
 
-    // route_name?
+    // routeName?
     if ($url[0] == '@')
     {
-      $route_name = substr($url, 1);
+      $route = substr($url, 1);
     }
     else if (false !== strpos($url, '/'))
     {
@@ -180,7 +151,7 @@ abstract class sfWebController extends sfController
       }
     }
 
-    return array($route_name, $params);
+    return array($route, $params);
   }
 
   /**
