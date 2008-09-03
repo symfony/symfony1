@@ -20,9 +20,10 @@ class sfAnsiColorFormatter extends sfFormatter
 {
   protected
     $styles = array(
-      'ERROR'   => array('bg' => 'red', 'fg' => 'white', 'bold' => true),
-      'INFO'    => array('fg' => 'green', 'bold' => true),
-      'COMMENT' => array('fg' => 'yellow'),
+      'ERROR'    => array('bg' => 'red', 'fg' => 'white', 'bold' => true),
+      'INFO'     => array('fg' => 'green', 'bold' => true),
+      'COMMENT'  => array('fg' => 'yellow'),
+      'QUESTION' => array('bg' => 'cyan', 'fg' => 'black', 'bold' => false),
     ),
     $options    = array('bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8),
     $foreground = array('black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37),

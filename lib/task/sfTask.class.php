@@ -327,10 +327,100 @@ abstract class sfTask
   }
 
   /**
+   * Logs a message as a block of text.
+   *
+   * @param string|array $message The message to display in the block
+   * @param string       $style   The style to use
+   */
+  public function logBlock($messages, $style)
+  {
+    if (!is_array($messages))
+    {
+      $messages = array($messages);
+    }
+
+    $len = 0;
+    $lines = array();
+    foreach ($messages as $message)
+    {
+      $lines[] = sprintf('  %s  ', $message);
+      $len = max($this->strlen($message) + 4, $len);
+    }
+
+    $messages = array(str_repeat(' ', $len));
+    foreach ($lines as $line)
+    {
+      $messages[] = $line.str_repeat(' ', $len - $this->strlen($line));
+    }
+    $messages[] = str_repeat(' ', $len);
+
+    foreach ($messages as $message)
+    {
+      $this->log($this->formatter->format($message, $style));
+    }
+  }
+
+  /**
+   * Asks a question to the user.
+   *
+   * @param string|array $question The question to ask
+   * @param string       $style    The style to use (QUESTION by default)
+   *
+   * @param string       The user answer
+   */
+  public function ask($question, $style = 'QUESTION')
+  {
+    if (false === $style)
+    {
+      $this->log($question);
+    }
+    else
+    {
+      $this->logBlock($question, is_null($style) ? 'QUESTION' : $style);
+    }
+
+    return trim(fgets(STDIN));
+  }
+
+  /**
+   * Asks a confirmation to the user.
+   *
+   * The question will be asked until the user answer by nothing, yes, or no.
+   *
+   * @param string|array $question The question to ask
+   * @param string       $style    The style to use (QUESTION by default)
+   * @param Boolean      $default  The default answer if the user enters nothing
+   *
+   * @param Boolean      true if the user has confirmed, false otherwise
+   */
+  public function askConfirmation($question, $style = 'QUESTION', $default = true)
+  {
+    $answer = 'z';
+    while ($answer && !in_array(strtolower($answer[0]), array('y', 'n')))
+    {
+      $answer = $this->ask($question, $style);
+    }
+
+    if (false === $default)
+    {
+      return $answer && 'y' == strtolower($answer[0]);
+    }
+    else
+    {
+      return !$answer || 'y' == strtolower($answer[0]);
+    }
+  }
+
+  /**
    * Executes the current task.
    *
    * @param array $arguments  An array of arguments
    * @param array $options    An array of options
    */
    abstract protected function execute($arguments = array(), $options = array());
+
+   protected function strlen($string)
+   {
+     return function_exists('mb_strlen') ? mb_strlen($string) : strlen($string);
+   }
 }

@@ -432,3 +432,21 @@ The following task signatures have been changed accordingly:
 application configuration. For the curious one, this works because
 `sfDatabaseConfigHandler` now returns a static or a dynamic configuration based
 on an array of configuration files (see the `execute()` and `evaluate()` methods).
+
+The `propel:insert-sql` task removes all the data from the database.
+As it destroys information, it now asks the user to confirm the execution of
+the task. The same goes for the `propel:build-all` and `propel:build-all-load` tasks,
+as they call the `propel:insert-sql` task.
+
+If you want to use these tasks in a batch and want to avoid the confirmation question,
+pass the `no-confirmation` option:
+
+   $ php symfony propel:insert-sql --no-confirmation
+
+The `sfTask` base class now provides three new methods to use in your tasks:
+
+  * `logBlock()`:        Logs a message in a styled block
+                         (default styles are: INFO, COMMENT, QUESTION, and ERROR)
+  * `ask()`:             Asks a question to the user and returns the given answer
+  * `askConfirmation()`: Asks a confirmation to the user and return true if the user
+                         confirmed, false otherwise
