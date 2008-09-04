@@ -505,7 +505,7 @@ This is made possible because the `parse()` method of `sfRouting` now takes a
 context as a second argument. When the request calls the routing, it passes
 the following context:
 
-  * `method_name`: The HTTP method name
+  * `method`:      The HTTP method name
   * `format`:      The request format
   * `host`:        The hostname
   * `is_secure`:   Whether the request was called with HTTPS or not

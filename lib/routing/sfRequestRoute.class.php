@@ -44,7 +44,7 @@ class sfRequestRoute extends sfRoute
     $methods = is_array($this->requirements['sf_method']) ? $this->requirements['sf_method'] : array($this->requirements['sf_method']);
     foreach ($methods as $method)
     {
-      if (0 == strcasecmp($method, $context['method_name']))
+      if (0 == strcasecmp($method, $context['method']))
       {
         return $parameters;
       }

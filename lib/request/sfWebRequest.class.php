@@ -807,7 +807,7 @@ class sfWebRequest extends sfRequest
     return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array(
       'path_info'   => $this->getPathInfo(),
       'prefix'      => $this->getPathInfoPrefix(),
-      'method_name' => $this->getMethod(),
+      'method'      => $this->getMethod(),
       'format'      => $this->getRequestFormat(),
       'host'        => $this->getHost(),
       'is_secure'   => $this->isSecure(),
