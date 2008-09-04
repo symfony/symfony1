@@ -206,7 +206,6 @@ class sfValidatorFile extends sfValidatorBase
     }
 
     $type = $finfo->file($file);
-    $finfo->close();
 
     return $type;
   }
