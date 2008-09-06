@@ -372,7 +372,14 @@ class sfPatternRouting extends sfRouting
 
     $this->currentInternalUri = array($internalUri[0].$params, $internalUri[1].$params);
 
-    return array_merge($info['parameters'], array('_arguments' => $info['extra_parameters']));
+    if ($info['extra_parameters'])
+    {
+      return array_merge($info['parameters'], array('_arguments' => $info['extra_parameters']));
+    }
+    else
+    {
+      return $info['parameters'];
+    }
   }
 
   /**
