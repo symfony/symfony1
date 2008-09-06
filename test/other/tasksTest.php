@@ -109,8 +109,8 @@ $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'base'.DS.'BaseFormPropel.c
 $c->execute_command('propel:insert-sql --no-confirmation');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'database.sqlite'), '"propel:insert-sql" creates tables in the database');
 
-$content = $c->execute_command('propel:generate-crud --generate-in-cache frontend articleInitCrud Article');
-$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:generate-crud" initializes a CRUD module');
+$content = $c->execute_command('propel:generate-module --generate-in-cache frontend articleInitCrud Article');
+$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:generate-module" initializes a CRUD module');
 
 $content = $c->execute_command('propel:init-admin frontend articleInitAdmin Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitAdmin'.DS.'config'.DS.'generator.yml'), '"propel:init-admin" initializes an admin generator module');

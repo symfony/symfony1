@@ -451,6 +451,9 @@ The `sfTask` base class now provides three new methods to use in your tasks:
   * `askConfirmation()`: Asks a confirmation to the user and return true if the user
                          confirmed, false otherwise
 
+The `propel:generate-crud` has been renamed to `propel:generate-module`. The old
+task name is still available as an alias.
+
 Routing
 -------
 
