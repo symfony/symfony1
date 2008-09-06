@@ -67,8 +67,6 @@ class sfWebRequest extends sfRequest
     $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
     $this->parameterHolder->add($this->postParameters);
 
-    $this->fixParameters();
-
     if (isset($_SERVER['REQUEST_METHOD']))
     {
       switch ($_SERVER['REQUEST_METHOD'])
@@ -125,6 +123,8 @@ class sfWebRequest extends sfRequest
     // additional parameters
     $this->requestParameters = $this->parseRequestParameters();
     $this->parameterHolder->add($this->requestParameters);
+
+    $this->fixParameters();
   }
 
   /**
@@ -817,6 +817,13 @@ class sfWebRequest extends sfRequest
 
   protected function fixParameters()
   {
+    // arguments that come from the routing
+    if ($this->getParameter('_arguments'))
+    {
+      $this->getAttributeHolder()->add($this->getParameter('_arguments'));
+      $this->getParameterHolder()->remove('_arguments');
+    }
+
     // move symfony parameters to attributes (parameters prefixed with _sf_)
     foreach ($this->parameterHolder->getAll() as $key => $value)
     {
