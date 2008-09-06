@@ -26,6 +26,7 @@
 abstract class sfAdminGenerator extends sfCrudGenerator
 {
   protected
+    $formObject = null,
     $fields = array();
 
   /**
@@ -717,9 +718,29 @@ EOF;
    */
   public function getFormObject()
   {
-    $class = $this->getClassName().'Form';
+    if (is_null($this->formObject))
+    {
+      $class = $this->getFormClassName();
 
-    return new $class();
+      $this->formObject = new $class();
+    }
+
+    return $this->formObject;
+  }
+
+  /**
+   * Gets the form class name
+   *
+   * @return string The form class name associated with this generator
+   */
+  public function getFormClassName()
+  {
+    return isset($this->params['form_class']) ? $this->params['form_class'] : $this->getClassName().'Form';
+  }
+
+  public function getFormParameterName()
+  {
+    return str_replace('[%s]', '', $this->getFormObject()->getWidgetSchema()->getNameFormat());
   }
 
   /**
@@ -776,6 +797,23 @@ EOF;
     }
 
     return $last;
+  }
+
+  /**
+   * Gets the HTML to add to the form tag if the form is multipart.
+   *
+   * @return string
+   */
+  public function getFormMultipartHtml()
+  {
+    if (isset($this->params['non_verbose_templates']) && $this->params['non_verbose_templates'])
+    {
+      return '[?php $form->isMultipart() and print \' enctype="multipart/form-data"\' ?]';
+    }
+    else
+    {
+      return $this->getFormObject()->isMultipart() ? ' enctype="multipart/form-data"' : '';
+    }
   }
 
   /**
