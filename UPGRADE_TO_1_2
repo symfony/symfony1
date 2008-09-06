@@ -566,3 +566,22 @@ This route will accept extra parameters and add them as a query string:
 
     echo url_for('@articles?page=2');
     // /articles?page=2
+
+URL helpers
+-----------
+
+If you want to create a link to a resource that must be submitted with the
+`POST`, `PUT`, or `DELETE` HTTP method, the `link_to()` helper can convert
+a link to a form if you pass the `method` option:
+
+    [php]
+    <?php echo link_to('@article_delete?id=1', array('method' => 'delete')) ?>
+
+The old `post` option is still valid but deprecated:
+
+    [php]
+    // is deprecated
+    <?php echo link_to('@some_route', array('post' => true)) ?>
+
+    // and equivalent to
+    <?php echo link_to('@some_route', array('method' => 'post')) ?>

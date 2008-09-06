@@ -60,8 +60,9 @@ function url_for($internal_uri, $absolute = false)
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
  * - 'popup' - if set to true, the link opens a new browser window 
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
+ * - 'method' - if set to post, delete, or put, the link submits a request with the given HTTP method instead of GET (caution: do not use inside a form)
  *
- * <b>Note:</b> The 'popup' and 'post' options are not compatible with each other.
+ * <b>Note:</b> The 'popup', 'post', and 'method' options are not compatible with each other.
  *
  * <b>Examples:</b>
  * <code>
@@ -392,23 +393,23 @@ function _convert_options_to_javascript($html_options, $url = 'this.href')
   $popup = isset($html_options['popup']) ? $html_options['popup'] : '';
   unset($html_options['popup']);
 
-  // post
-  $post = isset($html_options['post']) ? $html_options['post'] : '';
-  unset($html_options['post']);
+  // method
+  $method = isset($html_options['method']) ? $html_options['method'] : (isset($html_options['post']) && $html_options['post'] ? 'post' : false);
+  unset($html_options['post'], $html_options['method']);
 
   $onclick = isset($html_options['onclick']) ? $html_options['onclick'] : '';
 
-  if ($popup && $post)
+  if ($popup && $method)
   {
-    throw new sfConfigurationException('You can\'t use "popup" and "post" in the same link.');
+    throw new sfConfigurationException('You can\'t use "popup", "method" and "post" in the same link.');
   }
   else if ($confirm && $popup)
   {
     $html_options['onclick'] = $onclick.'if ('._confirm_javascript_function($confirm).') { '._popup_javascript_function($popup, $url).' };return false;';
   }
-  else if ($confirm && $post)
+  else if ($confirm && $method)
   {
-    $html_options['onclick'] = $onclick.'if ('._confirm_javascript_function($confirm).') { '._post_javascript_function().' };return false;';
+    $html_options['onclick'] = $onclick.'if ('._confirm_javascript_function($confirm).') { '._method_javascript_function($method).' };return false;';
   }
   else if ($confirm)
   {
@@ -421,9 +422,9 @@ function _convert_options_to_javascript($html_options, $url = 'this.href')
       $html_options['onclick'] = 'return '._confirm_javascript_function($confirm).';';
     }
   }
-  else if ($post)
+  else if ($method)
   {
-    $html_options['onclick'] = $onclick._post_javascript_function().'return false;';
+    $html_options['onclick'] = $onclick._method_javascript_function($method).'return false;';
   }
   else if ($popup)
   {
@@ -459,7 +460,22 @@ function _popup_javascript_function($popup, $url = '')
 
 function _post_javascript_function()
 {
-  return "f = document.createElement('form'); document.body.appendChild(f); f.method = 'POST'; f.action = this.href; f.submit();";
+  return _method_javascript_function('POST');
+}
+
+function _method_javascript_function($method)
+{
+  $function = "var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;";
+
+  if ('post' != strtolower($method))
+  {
+    $function .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";
+    $function .= sprintf("m.setAttribute('name', 'sf_method'); m.setAttribute('value', '%s'); f.appendChild(m);", strtoupper($method));
+  }
+
+  $function .= "f.submit();";
+
+  return $function;
 }
 
 function _encodeText($text)
