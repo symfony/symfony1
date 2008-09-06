@@ -21,12 +21,11 @@
 class sfPatternRouting extends sfRouting
 {
   protected
-    $currentRouteName       = null,
-    $currentInternalUri     = array(),
-    $currentRouteParameters = null,
-    $routes                 = array(),
-    $cacheData              = array(),
-    $cacheChanged           = false;
+    $currentRouteName   = null,
+    $currentInternalUri = array(),
+    $routes             = array(),
+    $cacheData          = array(),
+    $cacheChanged       = false;
 
   /**
    * Initializes this Routing.
@@ -98,14 +97,7 @@ class sfPatternRouting extends sfRouting
    */
   public function getCurrentInternalUri($withRouteName = false)
   {
-    if (is_null($this->currentRouteName))
-    {
-      return null;
-    }
-    else
-    {
-      return $this->currentInternalUri[$withRouteName ? 0 : 1];
-    }
+    return is_null($this->currentRouteName) ? null : $this->currentInternalUri[$withRouteName ? 0 : 1];
   }
 
   /**
@@ -354,9 +346,8 @@ class sfPatternRouting extends sfRouting
     }
 
     // store the route name
-    $this->currentRouteName       = $info['name'];
-    $this->currentRouteParameters = $info['parameters'];
-    $this->currentInternalUri     = array();
+    $this->currentRouteName   = $info['name'];
+    $this->currentInternalUri = array();
 
     if ($this->options['logging'])
     {
@@ -381,7 +372,7 @@ class sfPatternRouting extends sfRouting
 
     $this->currentInternalUri = array($internalUri[0].$params, $internalUri[1].$params);
 
-    return array_merge($this->currentRouteParameters, $info['extra_parameters']);
+    return array_merge($info['parameters'], $info['extra_parameters']);
   }
 
   /**
