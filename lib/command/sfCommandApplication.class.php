@@ -473,17 +473,18 @@ abstract class sfCommandApplication
     }
 
     $abbrev = $this->getAbbreviations($aliases);
-    if (!isset($abbrev[$name]))
+    $fullName = $namespace ? $namespace.':'.$name : $name;
+    if (!isset($abbrev[$fullName]))
     {
-      throw new sfCommandException(sprintf('Task "%s" is not defined.', $name));
+      throw new sfCommandException(sprintf('Task "%s" is not defined.', $fullName));
     }
-    else if (count($abbrev[$name]) > 1)
+    else if (count($abbrev[$fullName]) > 1)
     {
-      throw new sfCommandException(sprintf('Task "%s" is ambiguous (%s).', $name, implode(', ', $abbrev[$name])));
+      throw new sfCommandException(sprintf('Task "%s" is ambiguous (%s).', $fullName, implode(', ', $abbrev[$fullName])));
     }
     else
     {
-      return $this->getTask($abbrev[$name][0]);
+      return $this->getTask($abbrev[$fullName][0]);
     }
   }
 
