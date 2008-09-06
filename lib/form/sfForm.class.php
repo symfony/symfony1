@@ -684,6 +684,40 @@ class sfForm implements ArrayAccess
     return $this->widgetSchema->needsMultipartForm();
   }
 
+  /**
+   * Renders the form tag.
+   *
+   * This methods only renders the opening form tag.
+   * You need to close it after the form rendering.
+   *
+   * This method takes into account the multipart widgets
+   * and converts PUT and DELETE methods to a hidden field
+   * for later processing.
+   *
+   * @param  string $url         The URL for the action
+   * @param  array  $attributes  An array of HTML attributes
+   *
+   * @return string An HTML representation of the opening form tag
+   */
+  public function renderFormTag($url, array $attributes = array())
+  {
+    $attributes['action'] = $url;
+    $attributes['method'] = isset($attributes['method']) ? $attributes['method'] : 'POST';
+    if ($this->isMultipart())
+    {
+      $attributes['enctype'] = 'multipart/form-data';
+    }
+
+    $html = '';
+    if (!in_array($attributes['method'], array('GET', 'POST')))
+    {
+      $html = $this->getWidgetSchema()->renderTag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $attributes['method'], 'id' => false));
+      $attributes['method'] = 'POST';
+    }
+
+    return sprintf('<form%s>', $this->getWidgetSchema()->attributesToHtml($attributes)).$html;
+  }
+
   public function resetFormFields()
   {
     $this->formFields = array();

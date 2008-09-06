@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(99, new lime_output_color());
+$t = new lime_test(102, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -530,6 +530,14 @@ $expected = array(
 );
 $t->is_deeply(sfForm::convertFileInformation($input), $expected, '::convertFileInformation() converts $_FILES to be coherent with $_GET and $_POST naming convention');
 $t->is_deeply(sfForm::convertFileInformation($expected), $expected, '::convertFileInformation() converts $_FILES to be coherent with $_GET and $_POST naming convention');
+
+// ->renderFormTag()
+$t->diag('->renderFormTag()');
+$f = new FormTest();
+$t->is($f->renderFormTag('/url'), '<form action="/url" method="POST">', '->renderFormTag() renders the form tag');
+$t->is($f->renderFormTag('/url', array('method' => 'PUT')), '<form method="POST" action="/url"><input type="hidden" name="sf_method" value="PUT" />', '->renderFormTag() adds a hidden input tag if the method is not GET or POST');
+$f->setWidgetSchema(new sfWidgetFormSchema(array('image' => new sfWidgetFormInputFile())));
+$t->is($f->renderFormTag('/url'), '<form action="/url" method="POST" enctype="multipart/form-data">', '->renderFormTag() adds the enctype attribute if the form is multipart');
 
 // __clone()
 $t->diag('__clone()');
