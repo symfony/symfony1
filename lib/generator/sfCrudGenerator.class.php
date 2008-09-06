@@ -23,7 +23,6 @@ abstract class sfCrudGenerator extends sfGenerator
   protected
     $singularName  = '',
     $pluralName    = '',
-    $peerClassName = '',
     $map           = null,
     $tableMap      = null,
     $primaryKey    = array(),
@@ -200,10 +199,9 @@ abstract class sfCrudGenerator extends sfGenerator
    */
   protected function setScaffoldingClassName($className)
   {
-    $this->singularName  = sfInflector::underscore($className);
-    $this->pluralName    = $this->singularName.'s';
-    $this->className     = $className;
-    $this->peerClassName = $className.'Peer';
+    $this->singularName = sfInflector::underscore($className);
+    $this->pluralName   = $this->singularName.'s';
+    $this->className    = $className;
   }
 
   /**
@@ -234,16 +232,6 @@ abstract class sfCrudGenerator extends sfGenerator
   public function getClassName()
   {
     return $this->className;
-  }
-
-  /**
-   * Gets the Peer class name.
-   *
-   * @return string
-   */
-  public function getPeerClassName()
-  {
-    return $this->peerClassName;
   }
 
   /**
