@@ -124,10 +124,8 @@ function form_tag($url_for_options = '', $options = array())
   $options = _parse_attributes($options);
 
   $html_options = $options;
-  if (!isset($html_options['method']))
-  {
-    $html_options['method'] = 'post';
-  }
+
+  $html_options['method'] = isset($html_options['method']) ? strtoupper($html_options['method']) : 'POST';
 
   if (_get_option($html_options, 'multipart'))
   {
@@ -136,7 +134,14 @@ function form_tag($url_for_options = '', $options = array())
 
   $html_options['action'] = url_for($url_for_options);
 
-  return tag('form', $html_options, true);
+  $html = '';
+  if (!in_array($html_options['method'], array('GET', 'POST')))
+  {
+    $html = tag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $html_options['method']));
+    $html_options['method'] = 'POST';
+  }
+
+  return tag('form', $html_options, true).$html;
 }
 
 /**
