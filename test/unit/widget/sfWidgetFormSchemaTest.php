@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(63, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -348,6 +348,9 @@ $t->is(str_replace("\n", '', preg_replace('/^ +/m', '', $w->render(null))), str_
 // __clone()
 $t->diag('__clone()');
 $w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$format1 = new sfWidgetFormSchemaFormatterList($w);
+$format1->setTranslationCatalogue('english');
+$w->addFormFormatter('testFormatter', $format1);
 $w1 = clone $w;
 $f1 = $w1->getFields();
 $f = $w->getFields();
@@ -357,6 +360,10 @@ foreach ($f1 as $name => $widget)
   $t->ok($widget !== $f[$name], '__clone() clones embedded widgets');
   $t->ok($widget == $f[$name], '__clone() clones embedded widgets');
 }
+$format1->setTranslationCatalogue('french');
+$formatters = $w1->getFormFormatters();
+$t->is(count($formatters), 1 , '__clone() returns a sfWidgetFormSchema that has the Formatters attached');
+$t->is($formatters['testFormatter']->getTranslationCatalogue(), 'english', '__clone() clones formatters, so that changes to the original one have no effect to the cloned formatter.');
 
 // setDefaultFormFormatterName()
 $t->diag('setDefaultFormFormatterName()');

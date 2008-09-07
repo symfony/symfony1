@@ -39,7 +39,7 @@ abstract class sfWidgetFormSchemaFormatter
    */
   public function __construct(sfWidgetFormSchema $widgetSchema)
   {
-    $this->widgetSchema = $widgetSchema;
+    $this->setWidgetSchema($widgetSchema);
   }
     
   public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null)
@@ -324,5 +324,10 @@ abstract class sfWidgetFormSchemaFormatter
   public function getHelpFormat()
   {
     return $this->helpFormat;
+  }
+
+  public function setWidgetSchema($widgetSchema)
+  {
+    $this->widgetSchema = $widgetSchema;
   }
 }
