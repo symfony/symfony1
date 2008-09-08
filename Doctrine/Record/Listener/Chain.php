@@ -98,7 +98,7 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     public function postSerialize(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
-            $listener->preSerialize($event);
+            $listener->postSerialize($event);
         }
     }
 
