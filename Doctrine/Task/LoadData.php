@@ -42,6 +42,6 @@ class Doctrine_Task_LoadData extends Doctrine_Task
         Doctrine::loadModels($this->getArgument('models_path'));
         Doctrine::loadData($this->getArgument('data_fixtures_path'));
         
-        $this->dispatcher->notify('Data was successfully loaded');
+        $this->notify('Data was successfully loaded');
     }
 }

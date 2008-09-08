@@ -49,6 +49,6 @@ class Doctrine_Task_DumpData extends Doctrine_Task
         
         Doctrine::dumpData($path);
         
-        $this->dispatcher->notify(sprintf('Dumped data successfully to: %s', $path));
+        $this->notify(sprintf('Dumped data successfully to: %s', $path));
     }
 }

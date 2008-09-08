@@ -42,6 +42,6 @@ class Doctrine_Task_LoadDummyData extends Doctrine_Task
         Doctrine::loadModels($this->getArgument('models_path'));
         Doctrine::loadDummyData($this->getArgument('append') ? true:false, $this->getArgument('num') ? $this->getArgument('num'):5);
     
-        $this->dispatcher->notify('Dummy data was successfully loaded');
+        $this->notify('Dummy data was successfully loaded');
     }
 }
