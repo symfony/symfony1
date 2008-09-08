@@ -97,7 +97,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     }
 
     /**
-     * Implement preDqlDelete() hook and add the deleted flag to all queries for which this model 
+     * Implement preDqlSelect() hook and add the deleted flag to all queries for which this model 
      * is being used in.
      *
      * @param Doctrine_Event $event 
