@@ -85,7 +85,7 @@ abstract class Doctrine_Parser
     {
         $parser = self::getParser($type);
 
-        return $parser->loadData($path);
+        return (array) $parser->loadData($path);
     }
 
     /**
