@@ -444,6 +444,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     $assocRecord->set($assocTable->getFieldName($rel->getLocal()), $record);
                     $this->saveGraph($assocRecord);
                 }
+                // take snapshot of collection state, so that we know when its modified again
+                $v->takeSnapshot();
             }
         }
     }

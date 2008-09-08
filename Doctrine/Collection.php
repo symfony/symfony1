@@ -263,8 +263,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         $this->relation  = $relation;
 
         if ($relation instanceof Doctrine_Relation_ForeignKey || 
-            $relation instanceof Doctrine_Relation_LocalKey) {
-
+                $relation instanceof Doctrine_Relation_LocalKey) {
             $this->referenceField = $relation->getForeignFieldName();
 
             $value = $record->get($relation->getLocalFieldName());
@@ -441,7 +440,6 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     {
         if (isset($this->referenceField)) {
             $value = $this->reference->get($this->relation->getLocalFieldName());
-
             if ($value !== null) {
                 $record->set($this->referenceField, $value, false);
             } else {

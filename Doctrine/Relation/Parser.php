@@ -155,22 +155,24 @@ class Doctrine_Relation_Parser
         if (isset($this->_relations[$alias])) {
             return $this->_relations[$alias];
         }
-
+       
         if (isset($this->_pending[$alias])) {
             $def = $this->_pending[$alias];
             $identifierColumnNames = $this->_table->getIdentifierColumnNames();
             $idColumnName = array_pop($identifierColumnNames);
-        
+            
             // check if reference class name exists
             // if it does we are dealing with association relation
             if (isset($def['refClass'])) {
                 $def = $this->completeAssocDefinition($def);
                 $localClasses = array_merge($this->_table->getOption('parents'), array($this->_table->getComponentName()));
-
-                if ( ! isset($this->_pending[$def['refClass']]) && 
-                     ! isset($this->_relations[$def['refClass']])) {
+                
+                $backRefRelationName = isset($def['refClassRelation']) ?
+                        $def['refClassRelation'] : $def['refClass'];
+                if ( ! isset($this->_pending[$backRefRelationName]) && ! isset($this->_relations[$backRefRelationName])) {
 
                     $parser = $def['refTable']->getRelationParser();
+                    
                     if ( ! $parser->hasRelation($this->_table->getComponentName())) {
                         $parser->bind($this->_table->getComponentName(),
                                       array('type'    => Doctrine_Relation::ONE,
@@ -180,10 +182,18 @@ class Doctrine_Relation_Parser
                                             ));
                     }
 
-                    if ( ! $this->hasRelation($def['refClass'])) {
-                        $this->bind($def['refClass'], array('type' => Doctrine_Relation::MANY,
-                                                            'foreign' => $def['local'],
-                                                            'local'   => $idColumnName));
+                    if ( ! $this->hasRelation($backRefRelationName)) {
+                        if (in_array($def['class'], $localClasses)) {
+                            $this->bind($def['refClass'] . " as " . $backRefRelationName, array(
+                                    'type' => Doctrine_Relation::MANY,
+                                    'foreign' => $def['foreign'],
+                                    'local'   => $idColumnName));
+                        } else {
+                            $this->bind($def['refClass'] . " as " . $backRefRelationName, array(
+                                    'type' => Doctrine_Relation::MANY,
+                                    'foreign' => $def['local'],
+                                    'local'   => $idColumnName));
+                        }
                     }
                 }
                 if (in_array($def['class'], $localClasses)) {
@@ -212,7 +222,6 @@ class Doctrine_Relation_Parser
             if (isset($rel)) {
                 // unset pending relation
                 unset($this->_pending[$alias]);
-
                 $this->_relations[$alias] = $rel;
                 return $rel;
             }
@@ -292,7 +301,6 @@ class Doctrine_Relation_Parser
             if ( ! isset($def['local'])) {
                 // foreign key not set
                 // try to guess the foreign key
-
                 $def['local'] = ($def['foreign'] === $id[0]) ? $id[1] : $id[0];
             }
         } else {

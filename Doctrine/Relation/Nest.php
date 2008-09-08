@@ -38,7 +38,7 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
      * @param integer $count
      * @return string
      */
-    public function getRelationDql($count, $context = 'record')
+    /*public function getRelationDql($count, $context = 'record')
     {
         switch ($context) {
             case 'record':
@@ -72,38 +72,11 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
         };
 
         return $dql;
-    }
-
-    /**
-    public function fetchRelatedFor(Doctrine_Record $record)
-    {
-        $id = $record->getIncremented();
-
-        if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
-            return new Doctrine_Collection($this->getTable());
-        } else {
-            $q = new Doctrine_Query();
-            
-            $c  = $this->getTable()->getComponentName();
-            $a  = substr($c, 0, 1);
-            $c2 = $this->getAssociationTable()->getComponentName();
-            $a2 = substr($c2, 0, 1);
-
-            $q->from($c)
-              ->innerJoin($c . '.' . $c2)
-
-            $sub = 'SELECT ' . $this->getForeign() 
-                 . ' FROM '  . $c2
-                 . ' WHERE ' . $this->getLocal() 
-                 . ' = ?';
-        }
-    }
-    */
+    }*/
 
     public function fetchRelatedFor(Doctrine_Record $record)
     {
         $id = $record->getIncremented();
-
 
         if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
             return new Doctrine_Collection($this->getTable());
@@ -136,11 +109,17 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
               ->where(implode(' OR ', $condition));
             $q->addComponent($tableName,  $record->getTable()->getComponentName());
-            $q->addComponent($assocTable, $record->getTable()->getComponentName(). '.' . $this->getAssociationFactory()->getComponentName());
+            
+            $path = $record->getTable()->getComponentName(). '.' . $this->getAssociationFactory()->getComponentName();
+            if ($this->definition['refClassRelation']) {
+                $path = $record->getTable()->getComponentName(). '.' . $this->definition['refClassRelation'];
+            }
+            $q->addComponent($assocTable, $path);
 
             $params = ($this->definition['equal']) ? array($id, $id) : array($id);
+            $res = $q->execute($params);
 
-            return $q->execute($params);
+            return $res;
         }
     }
 }
