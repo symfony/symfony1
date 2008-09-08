@@ -111,8 +111,8 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             $q->addComponent($tableName,  $record->getTable()->getComponentName());
             
             $path = $record->getTable()->getComponentName(). '.' . $this->getAssociationFactory()->getComponentName();
-            if ($this->definition['refClassRelation']) {
-                $path = $record->getTable()->getComponentName(). '.' . $this->definition['refClassRelation'];
+            if ($this->definition['refClassRelationAlias']) {
+                $path = $record->getTable()->getComponentName(). '.' . $this->definition['refClassRelationAlias'];
             }
             $q->addComponent($assocTable, $path);
 

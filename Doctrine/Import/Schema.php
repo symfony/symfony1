@@ -120,7 +120,8 @@ class Doctrine_Import_Schema
                                                           'onDelete',
                                                           'onUpdate',
                                                           'equal',
-                                                          'owningSide'),
+                                                          'owningSide',
+                                                          'refClassRelationAlias'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',

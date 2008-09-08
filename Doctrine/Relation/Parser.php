@@ -167,8 +167,8 @@ class Doctrine_Relation_Parser
                 $def = $this->completeAssocDefinition($def);
                 $localClasses = array_merge($this->_table->getOption('parents'), array($this->_table->getComponentName()));
                 
-                $backRefRelationName = isset($def['refClassRelation']) ?
-                        $def['refClassRelation'] : $def['refClass'];
+                $backRefRelationName = isset($def['refClassRelationAlias']) ?
+                        $def['refClassRelationAlias'] : $def['refClass'];
                 if ( ! isset($this->_pending[$backRefRelationName]) && ! isset($this->_relations[$backRefRelationName])) {
 
                     $parser = $def['refTable']->getRelationParser();

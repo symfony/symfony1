@@ -66,7 +66,7 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'equal'       => false,
                                   'cascade'     => array(), // application-level cascades
                                   'owningSide'  => false, // whether this is the owning side
-                                  'refClassRelation' => null,
+                                  'refClassRelationAlias' => null,
                                   );
 
     /**
