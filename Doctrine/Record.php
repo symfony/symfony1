@@ -622,6 +622,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $event = new Doctrine_Event($this, Doctrine_Event::RECORD_SERIALIZE);
 
         $this->preSerialize($event);
+        $this->getTable()->getRecordListener()->preSerialize($event);
 
         $vars = get_object_vars($this);
 
@@ -655,6 +656,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $str = serialize($vars);
 
         $this->postSerialize($event);
+        $this->getTable()->getRecordListener()->postSerialize($event);
 
         return $str;
     }
@@ -670,9 +672,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function unserialize($serialized)
     {
         $event = new Doctrine_Event($this, Doctrine_Event::RECORD_UNSERIALIZE);
-
-        $this->preUnserialize($event);
-
+        
         $manager    = Doctrine_Manager::getInstance();
         $connection = $manager->getConnectionForComponent(get_class($this));
 
@@ -680,6 +680,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         self::$_index++;
 
         $this->_table = $connection->getTable(get_class($this));
+        
+        $this->preUnserialize($event);
+        $this->getTable()->getRecordListener()->preUnserialize($event);
 
         $array = unserialize($serialized);
 
@@ -710,6 +713,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $this->prepareIdentifiers($this->exists());
 
         $this->postUnserialize($event);
+        $this->getTable()->getRecordListener()->postUnserialize($event);
     }
 
     /**
