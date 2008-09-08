@@ -33,7 +33,7 @@
 class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 {
     /**
-     * Array of timestampable options
+     * Array of sluggable options
      *
      * @var string
      */
