@@ -71,9 +71,9 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
                     $field = end($a);
                     $func  = $this->query->getAggregateAlias($field);
                 }
-                return $func;
+                return $this->query->getConnection()->quoteIdentifier($func);
             } else {
-                return $func;
+                return $this->query->getConnection()->quoteIdentifier($func);
             }
         }
     }
