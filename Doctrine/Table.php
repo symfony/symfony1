@@ -314,7 +314,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
             $ref = new ReflectionClass($parent);
 
-            if ($ref->isAbstract()) {
+            if ($ref->isAbstract() || ! $class->isSubClassOf($parent)) {
                 continue;
             }
             $parentTable = $this->_conn->getTable($parent);
