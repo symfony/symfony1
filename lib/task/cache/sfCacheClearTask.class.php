@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -85,8 +85,6 @@ EOF;
     {
       $this->checkAppExists($app);
 
-      $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, 'cli', true);
-
       if (!is_dir(sfConfig::get('sf_cache_dir').'/'.$app))
       {
         continue;
@@ -105,6 +103,7 @@ EOF;
 
         $this->lock($app, $env);
 
+        $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, $env, true);
         $event = $appConfiguration->getEventDispatcher()->notifyUntil(new sfEvent($this, 'task.cache.clear', array('app' => $appConfiguration, 'env' => $env, 'type' => $options['type'])));
         if (!$event->isProcessed())
         {
