@@ -390,13 +390,15 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 if ($obj instanceof Doctrine_Record && $obj->isModified()) {
                     $obj->save($this->conn);
 
-                    /** Can this be removed?
                     $id = array_values($obj->identifier());
 
-                    foreach ((array) $rel->getLocal() as $k => $field) {
-                        $record->set($field, $id[$k]);
+                    if ( ! empty($id)) {
+                        foreach ((array) $rel->getLocal() as $k => $field) {
+                            if (isset($id[$k]) && $id[$k]) {
+                                $record->set($field, $id[$k]);
+                            }
+                        }
                     }
-                    */
                 }
             }
         }
