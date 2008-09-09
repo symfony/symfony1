@@ -26,6 +26,192 @@ To upgrade a project:
 
 The remaining sections explain the main changes made in symfony 1.2.
 
+
+Propel
+------
+
+Propel has been upgraded to version 1.3, which replaces support for Creole
+with PDO, and includes many new features including: object instance pooling,
+master-slave connections, native nested-set support, and better date handling.
+
+Due to the removal of Creole, the following classes are removed:
+
+ *class name*             | *equivalent*
+ ------------------------ | -------------------------------
+ `sfCreoleDatabase`       | `sfPropelDatabase`
+ `sfDebugConnection`      | `DebugPDO`
+ `sfMessageSource_Creole` | `sfMessageSource_PDO`
+ `sfCreoleSessionStorage` | `sfPDOSessionStorage`
+ 
+The `propel:build-db` task has been removed as this functionality is provided by
+`propel:insert-sql`.
+
+The first step to upgrading is changing from Creole to PDO syntax in the
+database configuration from the project `databases.yml` file.
+
+Locate the following:
+
+    [yml]
+    all:
+      propel:
+        class:      sfPropelDatabase
+        param:
+          dsn:      mysql://username:password@localhost/example
+
+Replace with the following:
+
+    [yml]
+    dev:
+      propel:
+        param: 
+          classname: DebugPDO
+     
+    all:
+      propel:
+        class: sfPropelDatabase
+        param:
+          dsn:        mysql:dbname=example;host=localhost 
+          username:   username
+          password:   password
+          encoding:   utf8
+          persistent: true
+          pooling:    true
+          classname:  PropelPDO
+
+
+Next, you must also upgrade the `propel.ini` with the pdo format dsn and updated
+configuration options.
+
+Locate the following:
+
+    [php]
+    propel.database            = mysql
+    propel.database.createUrl  = mysql://username:password@localhost/
+    propel.database.url        = mysql://username:password@localhost/example
+
+
+Replace with the following:
+
+    [php]
+    propel.database            = mysql
+    propel.database.driver     = mysql
+    propel.database.url        = mysql:dbname=example;host=localhost
+    propel.database.user       = username
+    propel.database.password   = password
+    propel.database.encoding   = utf8
+    
+    
+Since the underlying api has changed quite a bit, you need to rebuild the
+object model:
+
+   $ php symfony propel:build-model
+
+
+In most cases, this will be all that is required. If you have customized
+object model classes, you may need to manually upgrade for the changes in
+API from Creole to PDO. The upgrade task will attempt to change method
+signatures to match the `Persistent` interface, by adding type hinting for
+PropelPDO in `->save($con = null)` and `->delete($con = null)`.
+
+Change instances of:
+
+    [php]
+    public function save($con = null)
+    public function delete($con = null)
+
+To add PropelPDO type hint:
+
+    [php]
+    public function save(PropelPDO $con = null)
+    public function delete(PropelPDO $con = null)
+
+
+The transaction api has change slightly: `->begin` has been renamed `->beginTransaction()`
+and `->rollback()` has been renamed `->rollBack()`. Here are the differences:
+ 
+`Creole`:
+
+    [php]
+    $con->begin();
+    try {
+      /* db logic */
+      $con->commit();
+    } catch (SQLException $sqle) {
+      $con->rollback();
+      throw $sqle;
+    }
+    
+`PDO`:
+
+    [php]
+    $con->beginTransaction();
+    try {
+      /* db logic */
+      $con->commit();
+    } catch (PDOException $sqle) {
+      $con->rollBack();
+      throw $sqle;
+    }
+
+The `::doSelectRS` method has been renamed to `::doSelectStmt`. Here are the differences:
+
+`Creole`:
+
+    [php]
+    // example of how to manually hydrate objects
+    $rs = AuthorPeer::doSelectRS(new Criteria());
+    while($rs->next()) {
+      $a = new Author();
+      $a->hydrate($rs);
+    }
+
+    // example of how to create array of single column
+    $rs = AuthorPeer::doSelectRS(new Criteria());
+    $names = array();
+    while($rs->next()) {
+      $names[] = $rs->getString(2);
+    }
+    
+    $con = Propel::getConnection(SomeTablePeer::DATABASE_NAME);
+    $stmt = $con->prepareStatement("SELECT * FROM some_table WHERE name = ?");
+    $stmt->setString(1, $name);
+    $rs = $stmt->executeQuery();
+    while($rs->next()) {
+       print "Name: " . $rs->getString("name") . "\n";
+    }
+
+
+`PDO`:
+
+    [php]
+    // example of how to manually hydrate objects
+    $stmt = AuthorPeer::doSelectStmt(new Criteria());
+    while($row = $stmt->fetch(PDO::FETCH_NUM)) {
+      $a = new Author();
+      $a->hydrate($row);
+    }
+    
+    // example of how to create array of single column
+    $stmt = AuthorPeer::doSelectStmt(new Criteria());
+    $names = array();
+    while($res = $stmt->fetchColumn(1)) {
+      $names[] = $res;
+    }
+    
+    $con = Propel::getConnection(SomeTablePeer::DATABASE_NAME);
+    $stmt = $con->prepare("SELECT * FROM some_table WHERE name = ?");
+    $stmt->bindValue(1, $name);
+    $stmt->execute();
+    while($row = $stmt->fetch()) { 
+       print "Name: " . $row['name'] . "\n";
+    }
+
+
+See http://propel.phpdb.org/trac/wiki/Users/Documentation/1.3/Upgrading for more details
+on upgrading and http://propel.phpdb.org/trac/wiki/Users/Documentation/1.3 for the full
+complete documentation.
+
+
 Request
 -------
 
