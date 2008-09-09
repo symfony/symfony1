@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -25,6 +25,8 @@ class sfConfigureDatabaseTask extends sfBaseTask
   {
     $this->addArguments(array(
       new sfCommandArgument('dsn', sfCommandArgument::REQUIRED, 'The database dsn'),
+      new sfCommandArgument('username', sfCommandArgument::OPTIONAL, 'The database username', 'root'),
+      new sfCommandArgument('password', sfCommandArgument::OPTIONAL, 'The database password'),
     ));
 
     $this->addOptions(array(
@@ -43,20 +45,20 @@ class sfConfigureDatabaseTask extends sfBaseTask
 The [configure:database|INFO] task configures the database DSN
 for a project:
 
-  [./symfony configure:database mysql://root:mYsEcret@localhost/dbname|INFO]
+  [./symfony configure:database mysql:host=localhost;dbname=example root mYsEcret|INFO]
 
 By default, the task change the configuration for all environment. If you want
 to change the dsn for a specific environment, use the [env|COMMENT] option:
 
-  [./symfony configure:database --env=dev mysql://root@localhost/dbname_test|INFO]
+  [./symfony configure:database --env=dev mysql:host=localhost;dbname=example_dev root mYsEcret|INFO]
 
 To change the configuration for a specific application, use the [app|COMMENT] option:
 
-  [./symfony configure:database --app=frontend mysql://root@localhost/dbname|INFO]
+  [./symfony configure:database --app=frontend mysql:host=localhost;dbname=example root mYsEcret|INFO]
 
 You can also specify the connection name and the database class name:
 
-  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql://root@localhost/dbname|INFO]
+  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql:host=localhost;dbname=example root|INFO]
 
 WARNING: The [propel.ini|COMMENT] file is also updated when you use a [Propel|COMMENT] database
 and configure for [all|COMMENT] environments with no [app|COMMENT].
@@ -82,7 +84,7 @@ EOF;
 
     $config[$options['env']][$options['name']] = array(
       'class' => $options['class'],
-      'param' => array_merge(isset($config[$options['env']][$options['name']]['param']) ? $config[$options['env']][$options['name']]['param'] : array(), array('dsn' => $arguments['dsn'])),
+      'param' => array_merge(isset($config[$options['env']][$options['name']]['param']) ? $config[$options['env']][$options['name']]['param'] : array(), array('dsn' => $arguments['dsn'], 'username' => $arguments['username'], 'password' => $arguments['password'])),
     );
 
     file_put_contents($file, sfYaml::dump($config, 4));
@@ -98,11 +100,15 @@ EOF;
       if (file_exists($propelini))
       {
         $content = file_get_contents($propelini);
+
         if (preg_match('/^(.+?):\/\//', $arguments['dsn'], $match))
         {
           $content = preg_replace('/^propel\.database(\s*)=(\s*)(.+?)$/m', 'propel.database$1=$2'.$match[1], $content);
           $content = preg_replace('/^propel\.database\.createUrl(\s*)=(\s*)(.+?)$/m', 'propel.database.createUrl$1=$2'.$arguments['dsn'], $content);
           $content = preg_replace('/^propel\.database\.url(\s*)=(\s*)(.+?)$/m', 'propel.database.url$1=$2'.$arguments['dsn'], $content);
+
+          $content = preg_replace('/^propel\.database\.url(\s*)=(\s*)(.+?)$/m', 'propel.database.user$1=$2'.$arguments['username'], $content);
+          $content = preg_replace('/^propel\.database\.url(\s*)=(\s*)(.+?)$/m', 'propel.database.password$1=$2'.$arguments['password'], $content);
 
           file_put_contents($propelini, $content);
         }
