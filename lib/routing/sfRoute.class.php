@@ -60,7 +60,7 @@ class sfRoute implements Serializable
    * @param  string  $url     The URL
    * @param  array   $context The context
    *
-   * @return Boolean true if the URL matches this route, false otherwise.
+   * @return array   An array composed of an array of parameters and an array of extra parameters
    */
   public function matchesUrl($url, $context = array())
   {
