@@ -421,6 +421,17 @@ or a negative regular expression.
 The browser class also automatically expires cookies as per the `expire` value
 of each cookie.
 
+### Request
+
+You can now test the HTTP method used by the request in your functional tests 
+using the `isRequestMethod()` method of the `sfTestBrowser` class:
+
+    [php]
+    $b->
+      setField('login', 'johndoe')->
+      click('Submit')->
+      isRequestMethod('post');
+
 ### Links
 
 When you simulate a click on a button or on a link, you give the name to the `click()`

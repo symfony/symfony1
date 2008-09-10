@@ -208,6 +208,20 @@ abstract class sfTestFunctionalBase
   }
 
   /**
+   * Tests if the current HTTP method matches the given one
+   *
+   * @param  string  $method  The HTTP method name
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function isRequestMethod($method)
+  {
+    $this->test()->ok($this->getRequest()->isMethod($method), sprintf('request method is "%s"', strtoupper($method)));
+
+    return $this;
+  }
+
+  /**
    * Tests for a response header.
    *
    * @param  string $key
@@ -365,10 +379,10 @@ abstract class sfTestFunctionalBase
 
     return $this;
   }
-  
+
   /**
    * Triggers a test failure if an uncaught exception is present.
-   * 
+   *
    * @return  bool
    */
   public function checkCurrentExceptionIsEmpty()
