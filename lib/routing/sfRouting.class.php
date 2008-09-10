@@ -257,7 +257,14 @@ abstract class sfRouting
   {
     if (isset($this->options['context']['prefix']))
     {
-      $url = $this->options['context']['prefix'].$url;
+      if (0 === strpos($url, 'http'))
+      {
+        $url = preg_replace('#https?\://[^/]+#', '$0'.$this->options['context']['prefix'], $url);
+      }
+      else
+      {
+        $url = $this->options['context']['prefix'].$url;
+      }
     }
 
     if ($absolute && isset($this->options['context']['host']))
