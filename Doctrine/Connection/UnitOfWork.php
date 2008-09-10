@@ -394,7 +394,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                     if ( ! empty($id)) {
                         foreach ((array) $rel->getLocal() as $k => $field) {
-                            if (isset($id[$k]) && $id[$k]) {
+                            if (isset($id[$k]) && $id[$k] && $record->getTable()->hasField($k)) {
                                 $record->set($field, $id[$k]);
                             }
                         }
