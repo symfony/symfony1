@@ -119,7 +119,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             // do the same for the row information
             $this->_rows[$className][$rowKey] = $row;
 
-            foreach ($row as $key => $value) {
+            foreach ((array) $row as $key => $value) {
                 if (Doctrine::getTable($className)->hasRelation($key) && is_array($value)) {
                     $keys = array_keys($value);
 
@@ -190,7 +190,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     {
         $obj = $this->_importedObjects[$rowKey];
 
-        foreach ($row as $key => $value) {
+        foreach ((array) $row as $key => $value) {
             if (method_exists($obj, 'set' . Doctrine_Inflector::classify($key))) {
                 $func = 'set' . Doctrine_Inflector::classify($key);
                 $obj->$func($value);
