@@ -8,12 +8,6 @@
  * file that was distributed with this source code.
  */
 
-// only in PHP 5.2
-if (!defined('UPLOAD_ERR_EXTENSION'))
-{
-  define('UPLOAD_ERR_EXTENSION', 8);
-}
-
 /**
  * sfValidatorFile validates an uploaded file.
  *
