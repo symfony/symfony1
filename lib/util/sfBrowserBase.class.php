@@ -535,14 +535,22 @@ abstract class sfBrowserBase
   /**
    * Simulates a click on a link or button.
    *
+   * Available options:
+   *
+   *  * position: The position of the linked to link if several ones have the same name
+   *  * method:   The method to used instead of the form ones
+   *              (useful when you need to click on a link that is converted to a form with JavaScript code)
+   *
    * @param string  $name       The link or button text
    * @param array   $arguments  The arguments to pass to the link
-   * @param integer $position   The position of the linked to link if several ones have the same name
+   * @param array   $options    An array of options
    *
    * @return sfBrowser
    */
-  public function click($name, $arguments = array(), $position = 0)
+  public function click($name, $arguments = array(), $options = array())
   {
+    $position = isset($options['position']) ? $options['position'] : 0;
+
     $dom = $this->getResponseDom();
 
     if (!$dom)
@@ -552,16 +560,32 @@ abstract class sfBrowserBase
 
     $xpath = new DomXpath($dom);
 
+    $method = strtolower(isset($options['method']) ? $options['method'] : 'get');
+
     // text link
     if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item($position))
     {
-      return $this->get($link->getAttribute('href'));
+      if (in_array($method, array('post', 'put', 'delete')))
+      {
+        return $this->call($link->getAttribute('href'), $method, $arguments);
+      }
+      else
+      {
+        return $this->get($link->getAttribute('href'));
+      }
     }
 
     // image link
     if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item($position))
     {
-      return $this->get($link->getAttribute('href'));
+      if (in_array($method, array('post', 'put', 'delete')))
+      {
+        return $this->call($link->getAttribute('href'), $method, $arguments);
+      }
+      else
+      {
+        return $this->get($link->getAttribute('href'));
+      }
     }
 
     // form
@@ -575,7 +599,7 @@ abstract class sfBrowserBase
 
     // form attributes
     $url = $form->getAttribute('action');
-    $method = $form->getAttribute('method') ? strtolower($form->getAttribute('method')) : 'get';
+    $method = strtolower(isset($options['method']) ? $options['method'] : ($form->getAttribute('method') ? $form->getAttribute('method') : 'get'));
 
     // merge form default values and arguments
     $defaults = array();
@@ -676,9 +700,9 @@ abstract class sfBrowserBase
 
     // create request parameters
     $arguments = sfToolkit::arrayDeepMerge($defaults, $arguments);
-    if ('post' == $method)
+    if (in_array($method, array('post', 'put', 'delete')))
     {
-      return $this->post($url, $arguments);
+      return $this->call($url, $method, $arguments);
     }
     else
     {

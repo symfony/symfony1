@@ -537,16 +537,29 @@ When you simulate a click on a button or on a link, you give the name to the `cl
 method. But you don't have the possibility to differentiate two different links or buttons
 with the same name.
 
-As of symfony 1.2, the `click()` method takes a third argument to tell the position of
-the link you want to click on the page:
+As of symfony 1.2, the `click()` method takes a third argument to pass some options.
+
+You can pass a `position` option to change the link you want to click on:
 
     [php]
     $b->
-      click('/', array(), 1)->
+      click('/', array(), array('position' => 1))->
       // ...
     ;
 
 By default, symfony clicks on the first link it finds in the page.
+
+You can also pass a `method` option to change the method of the link or the form
+you are clicking on:
+
+    [php]
+    $b->
+      click('/delete', array(), array('method' => 'delete'))->
+      // ...
+    ;
+
+This is very useful when a link is converted to a dynamic form generated
+with JavaScript.
 
 YAML
 ----
