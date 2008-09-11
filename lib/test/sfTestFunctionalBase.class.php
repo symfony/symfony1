@@ -38,6 +38,19 @@ abstract class sfTestFunctionalBase
     {
       self::$test = !is_null($lime) ? $lime : new lime_test(null, new lime_output_color());
     }
+
+    // register our shutdown function
+    register_shutdown_function(array($this, 'shutdown'));
+  }
+
+  /**
+   * Shutdown function.
+   *
+   * @return void
+   */
+  public function shutdown()
+  {
+    $this->checkCurrentExceptionIsEmpty();
   }
 
   /**
@@ -90,6 +103,8 @@ abstract class sfTestFunctionalBase
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
+    $this->checkCurrentExceptionIsEmpty();
+
     $uri = $this->browser->fixUri($uri);
 
     $this->test()->comment(sprintf('%s %s', strtolower($method), $uri));
@@ -345,7 +360,7 @@ abstract class sfTestFunctionalBase
    */
   public function throwsException($class = null, $message = null)
   {
-    $e = $this->getCurrentException();
+    $e = $this->browser->getCurrentException();
 
     if (null === $e)
     {
@@ -389,7 +404,7 @@ abstract class sfTestFunctionalBase
   {
     if (false === ($empty = $this->browser->checkCurrentExceptionIsEmpty()))
     {
-      $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
+      $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->browser->getCurrentException()), $this->browser->getCurrentException()->getMessage()));
     }
 
     return $empty;
