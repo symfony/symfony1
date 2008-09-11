@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(40, new lime_output_color());
 
 $w = new sfWidgetFormDate();
 
@@ -34,6 +34,17 @@ foreach (array(
   $t->is($css->matchSingle('#foo_month option[value="'.$values['month'].'"][selected="selected"]')->getValue(), $values['month'], '->render() renders a select tag for the month');
   $t->is($css->matchSingle('#foo_day option[value="'.$values['day'].'"][selected="selected"]')->getValue(), $values['day'], '->render() renders a select tag for the day');
 }
+
+// pre-epoch date
+$t->diag('pre-epoch date');
+$years = range(1901, 1920);
+$w1 = new sfWidgetFormDate(array('years' => array_combine($years, $years)));
+$dom->loadHTML($w1->render('foo', '1910-01-15'));
+$css = new sfDomCssSelector($dom);
+
+$t->is($css->matchSingle('#foo_year option[value="1910"][selected="selected"]')->getValue(), 1910, '->render() renders a select tag for the year');
+$t->is($css->matchSingle('#foo_month option[value="01"][selected="selected"]')->getValue(), 01, '->render() renders a select tag for the month');
+$t->is($css->matchSingle('#foo_day option[value="15"][selected="selected"]')->getValue(), 15, '->render() renders a select tag for the day');
 
 // date as an array
 $t->diag('date as an array');
