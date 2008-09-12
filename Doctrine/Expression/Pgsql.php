@@ -219,4 +219,15 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
         $match.= $this->patternEscapeString();
         return $match;
     }
+
+    /**
+     * return syntax for pgsql TRANSLATE() dbms function
+     *
+     * @return string $sql
+     */
+    public function translate($string, $from, $to)
+    {
+    	$translate = 'TRANSLATE(' . $string . ', ' . $from . ', ' . $to . ')';
+    	return $translate;
+    }
 }
