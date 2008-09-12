@@ -1,5 +1,7 @@
 <?php
 
+use_helper('JavascriptBase');
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -22,8 +24,8 @@
  */
 
 /*
- * Provides a set of helpers for calling JavaScript functions and, most importantly,
- * to call remote methods using what has been labelled AJAX[http://www.adaptivepath.com/publications/essays/archives/000385.php].
+ * Provides a set of helpers to call remote methods using what has been labelled 
+ * AJAX[http://www.adaptivepath.com/publications/essays/archives/000385.php].
  * This means that you can call actions in your controllers without reloading the page,
  * but still update certain parts of it using injections into the DOM.
  * The common use case is having a form that adds a new element to a list without reloading the page.
@@ -75,50 +77,6 @@
     return $ajax_options;
   }
 
-  /**
-   * Returns a link that'll trigger a javascript function using the
-   * onclick handler and return false after the fact.
-   *
-   * Examples:
-   *   <?php echo link_to_function('Greeting', "alert('Hello world!')") ?>
-   *   <?php echo link_to_function(image_tag('delete'), "do_delete()", array('confirm' => 'Really?')) ?>
-   */
-  function link_to_function($name, $function, $html_options = array())
-  {
-    $html_options = _parse_attributes($html_options);
-
-    $html_options['href'] = isset($html_options['href']) ? $html_options['href'] : '#';
-    if ( isset($html_options['confirm']) )
-    {
-      $confirm = escape_javascript($html_options['confirm']);
-      $html_options['onclick'] = "if(confirm('$confirm')){ $function;}; return false;";
-    }
-    else
-    {
-      $html_options['onclick'] = $function.'; return false;';
-    }
-
-    return content_tag('a', $name, $html_options);
-  }
-
-  /**
-   * Returns a button that'll trigger a javascript function using the
-   * onclick handler and return false after the fact.
-   *
-   * Examples:
-   *   <?php echo button_to_function('Greeting', "alert('Hello world!')") ?>
-   */
-  function button_to_function($name, $function, $html_options = array())
-  {
-    $html_options = _parse_attributes($html_options);
-
-    $html_options['onclick'] = $function.'; return false;';
-    $html_options['type']    = 'button';
-    $html_options['value']   = $name;
-
-    return tag('input', $html_options);
-  }
-  
   /**
    * Returns an html button to a remote action defined by 'url' (using the
    * 'url_for()' format) that's called in the background using XMLHttpRequest.
@@ -737,22 +695,6 @@
   }
 
   /**
-   * Returns a JavaScript tag with the '$content' inside.
-   * Example:
-   *   <?php echo javascript_tag("alert('All is good')") ?>
-   *   => <script type="text/javascript">alert('All is good')</script>
-   */
-  function javascript_tag($content)
-  {
-    return content_tag('script', javascript_cdata_section($content), array('type' => 'text/javascript'));
-  }
-
-  function javascript_cdata_section($content)
-  {
-    return "\n//".cdata_section("\n$content\n//")."\n";
-  }
-
-  /**
    * wrapper for script.aculo.us/prototype Ajax.Autocompleter.
    * @param string name value of input field
    * @param string default value for input field
@@ -805,26 +747,6 @@
 
     $editor_options = _convert_options($editor_options);
     return _in_place_editor($name, $url, $editor_options);
-  }
-
-  /**
-   * Mark the start of a block that should only be shown in the browser if JavaScript
-   * is switched on.
-   */
-  function if_javascript()
-  {
-    ob_start();
-  }
-
-  /**
-   * Mark the end of a block that should only be shown in the browser if JavaScript
-   * is switched on.
-   */
-  function end_if_javascript()
-  {
-    $content = ob_get_clean();
-
-    echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
   }
 
   /*
@@ -983,54 +905,6 @@
     return javascript_tag($javascript);
   }
 
-  function _options_for_javascript($options)
-  {
-    $opts = array();
-    foreach ($options as $key => $value)
-    {
-      $opts[] = $key.":"._boolean_for_javascript($value);
-    }
-    sort($opts);
-
-    return '{'.join(', ', $opts).'}';
-  }
-
-  /** 
-   * converts the given PHP array or string to the corresponding javascript array or string. 
-   * javascript strings need to be single quoted.
-   *
-   * @param option (typically from option array)
-   * @return string javascript string or array equivalent 
-   */ 
-  function _array_or_string_for_javascript($option)
-  {
-    if (is_array($option))
-    {
-      return "['".join('\',\'', $option)."']";
-    }
-    else if (is_string($option) && $option[0] != "'")
-    {
-      return "'$option'";
-    }
-    return $option;
-  }
-
-  /** 
-   * converts the given PHP boolean to the corresponding javascript boolean. 
-   * booleans need to be true or false (php will print 1 or nothing).
-   *
-   * @param bool (typically from option array)
-   * @return string javascript boolean equivalent 
-   */ 
-  function _boolean_for_javascript($bool)
-  {
-    if (is_bool($bool)) 
-    { 
-      return ($bool===true ? 'true' : 'false'); 
-    }
-    return $bool;
-  }
-
   function _options_for_ajax($options)
   {
     $js_options = _build_callbacks($options);
@@ -1074,20 +948,4 @@
     $javascript .= $callback.'});';
 
     return javascript_tag($javascript);
-  }
-
-  function _build_callbacks($options)
-  {
-    $callbacks = array();
-    foreach (get_callbacks() as $callback)
-    {
-      if (isset($options[$callback]))
-      {
-        $name = 'on'.ucfirst($callback);
-        $code = $options[$callback];
-        $callbacks[$name] = 'function(request, json){'.$code.'}';
-      }
-    }
-
-    return $callbacks;
   }
