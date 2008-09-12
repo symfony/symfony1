@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(13, new lime_output_color());
 
 $v = new sfValidatorNumber();
 
@@ -18,6 +18,9 @@ $v = new sfValidatorNumber();
 $t->diag('->clean()');
 $t->is($v->clean(12.3), 12.3, '->clean() returns the numbers unmodified');
 $t->is($v->clean('12.3'), 12.3, '->clean() converts strings to numbers');
+
+$t->is($v->clean(12.12345678901234), 12.12345678901234, '->clean() returns the numbers unmodified');
+$t->is($v->clean('12.12345678901234'), 12.12345678901234, '->clean() converts strings to numbers');
 
 try
 {
