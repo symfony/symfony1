@@ -63,7 +63,10 @@ class sfException extends Exception
       error_log($exception->getMessage());
 
       // clean current output buffer
-      while (@ob_end_clean());
+      while (ob_get_level())
+      {
+        ob_end_clean();
+      }
 
       ob_start();
 
