@@ -45,8 +45,11 @@ class sfBrowser extends sfBrowserBase
     $this->context->getResponse()->setContent($retval);
 
     // manually shutdown user to save current session data
-    $this->context->getUser()->shutdown();
-    $this->context->getStorage()->shutdown();
+    if ($this->context->getUser())
+    {
+      $this->context->getUser()->shutdown();
+      $this->context->getStorage()->shutdown();
+    }
   }
 
   /**

@@ -266,6 +266,8 @@ class sfWebRequest extends sfRequest
   {
     $this->requestParameters = array_merge($this->requestParameters, $parameters);
     $this->getParameterHolder()->add($parameters);
+
+    $this->fixParameters();
   }
 
   /**
@@ -804,7 +806,17 @@ class sfWebRequest extends sfRequest
    */
   protected function parseRequestParameters()
   {
-    return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array(
+    return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', $this->getRequestContext()), array())->getReturnValue();
+  }
+
+  /**
+   * Returns the request context used.
+   *
+   * @param array An array of values representing the current request
+   */
+  public function getRequestContext()
+  {
+    return array(
       'path_info'   => $this->getPathInfo(),
       'prefix'      => $this->getPathInfoPrefix(),
       'method'      => $this->getMethod(),
@@ -812,7 +824,7 @@ class sfWebRequest extends sfRequest
       'host'        => $this->getHost(),
       'is_secure'   => $this->isSecure(),
       'request_uri' => $this->getUri(),
-    )), array())->getReturnValue();
+    );
   }
 
   protected function fixParameters()

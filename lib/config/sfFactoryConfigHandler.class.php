@@ -41,7 +41,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('logger', 'i18n', 'routing', 'controller', 'request', 'response', 'storage', 'user', 'view_cache');
+    $factories = array('logger', 'i18n', 'controller', 'request', 'response', 'routing', 'storage', 'user', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -161,7 +161,12 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
             $cache = "    \$cache = null;\n";
           }
 
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  %s\n\$this->factories['routing'] = new \$class(\$this->dispatcher, \$cache, array_merge(array('auto_shutdown' => false), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, $cache, var_export($parameters, true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n".
+                           "  %s\n".
+                           "\$this->factories['routing'] = new \$class(\$this->dispatcher, \$cache, array_merge(array('auto_shutdown' => false, 'context' => \$this->factories['request']->getRequestContext()), sfConfig::get('sf_factory_routing_parameters', %s)));\n".
+                           "\$this->factories['request']->addRequestParameters(\$this->factories['routing']->parse(\$this->factories['request']->getPathInfo()));\n",
+                           $class, $cache, var_export($parameters, true)
+                         );
           break;
 
         case 'logger':

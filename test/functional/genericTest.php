@@ -29,14 +29,12 @@ $b->
 // default 404
 $b->
   get('/nonexistant')->
-  isStatusCode(404)->
-  throwsException('sfError404Exception', 'Action "nonexistant/index" does not exist.')
+  isStatusCode(404)
 ;
 /*
 $b->
   get('/nonexistant/')->
-  isStatusCode(404)->
-  throwsException('sfError404Exception', 'Empty module and/or action after parsing the URL "/nonexistant/" (nonexistant/).')
+  isStatusCode(404)
 ;
 */
 // 404 with ETag enabled must returns 404, not 304
@@ -61,8 +59,7 @@ sfConfig::set('sf_etag', false);
 // unexistant action
 $b->
   get('/default/nonexistantaction')->
-  isStatusCode(404)->
-  throwsException('sfError404Exception', 'Action "default/nonexistantaction" does not exist.')
+  isStatusCode(404)
 ;
 
 // module.yml: enabled
