@@ -26,7 +26,6 @@ To upgrade a project:
 
 The remaining sections explain the main changes made in symfony 1.2.
 
-
 Propel
 ------
 
@@ -785,6 +784,31 @@ The `sfTask` base class now provides three new methods to use in your tasks:
 The `propel:generate-crud` has been renamed to `propel:generate-module`. The old
 task name is still available as an alias.
 
+The `non-atomic-actions` option of `propel:generate-module` has been removed
+and some new options have been added:
+
+  * singular:          The singular name for the actions and templates
+  * plural:            The plural name for the actions and templates
+  * route-prefix:      The route prefix to use
+  * with-propel-route: Whether the related routes are Propel aware
+
+The new `propel:generate-module-for-route` generates a module based on a route
+definition:
+
+    [php]
+    php symfony propel:generate-module-for-route frontend articles
+
+As symfony now can auto-generate routes (see below), the `app:routes` task
+displays the list of current routes for an application:
+
+    [php]
+    php symfony app:routes frontend
+
+If you want to get some details about a route, just add the route name:
+
+    [php]
+    php symfony app:routes frontend articles_update
+
 Routing
 -------
 
@@ -898,6 +922,121 @@ This route will accept extra parameters and add them as a query string:
     echo url_for('@articles?page=2');
     // /articles?page=2
 
+symfony 1.2 comes with another route class that extends `sfRequestRoute`,
+`sfObjectRoute`.
+
+`sfObjectRoute` binds a route to a PHP object. A `sfObjectRoute` will
+call some methods on your PHP class to get the object, or a collection of
+objects, related to the route.
+
+The object or the collection of objects will be available in your actions
+via a request attribute:
+
+   [yml]
+   article:
+     url:     /article/:id
+     class:   sfObjectRoute
+     options: { model: Article, object: article, method: getById }
+
+When an incoming URL matches the route, the `sfObjectRoute` will get the
+related object by calling the `Article::getById()` method and will inject
+the result into the request attributes (under the `article` key).
+
+The same goes for a collection of objects:
+
+    [yml]
+    articles:
+      url:     /articles/newest
+      class:   sfObjectRoute
+      options: { model: Article, list: articles, method: getNewest }
+
+`sfPropelRoute` extends `sfObjectRoute` to bind a route to a Propel model.
+
+Here is an example for an `Article` Propel object:
+
+    [yml]
+    article:
+      url:     /article/:id
+      param:   { module: article, action: show }
+      class:   sfPropelRoute
+      options: { model: Article, object: article }
+
+    articles:
+      url:     /articles
+      param:   { module: article, action: list }
+      class:   sfPropelRoute
+      options: { model: Article, list: articles, method: getPublishedArticleCriteria }
+
+If you don't define a method, `sfPropelRoute` will retrieve the object
+by building a Criteria object based on the available route variables.
+
+The `sfPropelRoute` has two main advantages over `sfRoute`:
+
+  * When a request comes in and the route matches the URL, `sfPropelRoute`
+    will automatically inject the related `Article` object with a name of `article`.
+    Moreover, if the object does not exist in the database, it will automatically
+    redirect the user to a 404 error page. This means less boiler-plate code in
+    your actions.
+
+  * When you generate a link for this route, you can use the new `url_for()`
+    signature and pass the article object directly for the parameters argument:
+
+        [php]
+        <?php echo url_for('article', $article) ?>
+
+    If you have to pass extra parameters (to enforce a HTTP method for example),
+    you can use an array like this:
+
+        [php]
+        <?php echo url_for('article', array('sf_subject' => $article, 'sf_method' => 'get')) ?>
+
+    And of course, you can still use the full parameters:
+
+        [php]
+        <?php echo url_for('article', array('id' => $article->getId(), 'slug' => $article->getSlug())) ?>
+
+    Or use the internal URI:
+
+        <?php echo url_for('@article?id='.$article->getId().'&slug='.$article->getSlug()) ?>
+
+    The `sfPropelRoute` converts the article object to an array of parameters automatically.
+
+`sfPropelRoute` does not only work with the primary key. It can also work with
+any column. In the following example, let's add the `slug` column to the route
+pattern:
+
+    [yml]
+    article:
+      url:     /article/:id/:slug
+      param:   { module: article, action: show }
+      class:   sfPropelRoute
+      options: { model: Article, object: article }
+
+But sometimes, you want to put in the pattern some information that does not
+exist in the database. In this case, you can pass a `method` option:
+
+    [yml]
+    post:
+      url:     /post/:id/:year/:month/:day/:slug
+      param:   { module: article, action: show }
+      class:   sfPropelRoute
+      options: { model: Article, object: article, method: getObjectForRoute }
+
+The `getObjectForRoute()` receives an array of parameters as its first
+argument and must return an `Article` object:
+
+    [php]
+    class ArticlePeer extends BaseArticlePeer
+    {
+      static public function getObjectForRoute($parameters)
+      {
+        $criteria = new Criteria();
+        $criteria->add(self::ID, $parameters['id']);
+
+        return self::doSelectOne($criteria);
+      }
+    }
+
 URL helpers
 -----------
 
@@ -916,3 +1055,13 @@ The old `post` option is still valid but deprecated:
 
     // and equivalent to
     <?php echo link_to('@some_route', array('method' => 'post')) ?>
+
+The `url_for()` and `link_to()` helpers support new signatures.
+Instead of an internal URI, they can now also take the route name and
+an array of parameters:
+
+    [php]
+    echo url_for('@article', array('id' => 1));
+    echo link_to('Link to article', '@article', array('id' => 1));
+
+The old behavior still works without changing anything to your code.

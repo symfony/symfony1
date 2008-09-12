@@ -47,36 +47,37 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 
 // url_for()
 $t->diag('url_for()');
-$t->is(url_for('test'), 'module/action', 'url_for() converts an internal URI to a web URI');
-$t->is(url_for('test', true), '/module/action', 'url_for() can take an absolute boolean as its second argument');
-$t->is(url_for('test', false), 'module/action', 'url_for() can take an absolute boolean as its second argument');
+$t->is(url_for('@test'), 'module/action', 'url_for() converts an internal URI to a web URI');
+$t->is(url_for('@test', true), '/module/action', 'url_for() can take an absolute boolean as its second argument');
+$t->is(url_for('@test', false), 'module/action', 'url_for() can take an absolute boolean as its second argument');
 
 // link_to()
 $t->diag('link_to()');
-$t->is(link_to('test'), '<a href="module/action">test</a>', 'link_to() returns an HTML "a" tag');
-$t->is(link_to('test', '', array('absolute' => true)), '<a href="/module/action">test</a>', 'link_to() can take an "absolute" option');
-$t->is(link_to('test', '', array('absolute' => false)), '<a href="module/action">test</a>', 'link_to() can take an "absolute" option');
-$t->is(link_to('test', '', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take a "query_string" option');
-$t->is(link_to('test', '', array('anchor' => 'bar')), '<a href="module/action#bar">test</a>', 'link_to() can take an "anchor" option');
-$t->is(link_to(''), '<a href="module/action">module/action</a>', 'link_to() takes the url as the link name if the first argument is empty');
+$t->is(link_to('test', '@homepage'), '<a href="module/action">test</a>', 'link_to() returns an HTML "a" tag');
+$t->is(link_to('test', '@homepage', array('absolute' => true)), '<a href="/module/action">test</a>', 'link_to() can take an "absolute" option');
+$t->is(link_to('test', '@homepage', array('absolute' => false)), '<a href="module/action">test</a>', 'link_to() can take an "absolute" option');
+$t->is(link_to('test', '@homepage', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take a "query_string" option');
+$t->is(link_to('test', '@homepage', array('anchor' => 'bar')), '<a href="module/action#bar">test</a>', 'link_to() can take an "anchor" option');
+$t->is(link_to('', '@homepage'), '<a href="module/action">module/action</a>', 'link_to() takes the url as the link name if the first argument is empty');
 
-//button_to()
+// button_to()
 $t->diag('button_to()');
-$t->is(button_to('test'), '<input value="test" type="button" onclick="document.location.href=\'module/action\';" />', 'button_to() returns an HTML "input" tag');
-$t->is(button_to('test','', array('query_string' => 'foo=bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action?foo=bar\';" />', 'button_to() returns an HTML "input" tag');
-$t->is(button_to('test','', array('anchor' => 'bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action#bar\';" />', 'button_to() returns an HTML "input" tag');
-$t->is(button_to('test','', array('popup' => 'true', 'query_string' => 'foo=bar')), '<input value="test" type="button" onclick="var w=window.open(\'module/action?foo=bar\');w.focus();return false;" />', 'button_to() returns an HTML "input" tag');
-$t->is(button_to('test','', 'popup=true'), '<input value="test" type="button" onclick="var w=window.open(\'module/action\');w.focus();return false;" />', 'button_to() accepts options as string');
-$t->is(button_to('test','', 'confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { return document.location.href=\'module/action\';} else return false;" />', 'button_to() works with confirm option');
-$t->is(button_to('test','', 'popup=true confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { var w=window.open(\'module/action\');w.focus(); };return false;" />', 'button_to() works with confirm and popup option');
+$t->is(button_to('test', '@homepage'), '<input value="test" type="button" onclick="document.location.href=\'module/action\';" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test', '@homepage', array('query_string' => 'foo=bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action?foo=bar\';" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test', '@homepage', array('anchor' => 'bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action#bar\';" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test', '@homepage', array('popup' => 'true', 'query_string' => 'foo=bar')), '<input value="test" type="button" onclick="var w=window.open(\'module/action?foo=bar\');w.focus();return false;" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test', '@homepage', 'popup=true'), '<input value="test" type="button" onclick="var w=window.open(\'module/action\');w.focus();return false;" />', 'button_to() accepts options as string');
+$t->is(button_to('test', '@homepage', 'confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { return document.location.href=\'module/action\';} else return false;" />', 'button_to() works with confirm option');
+$t->is(button_to('test', '@homepage', 'popup=true confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { var w=window.open(\'module/action\');w.focus(); };return false;" />', 'button_to() works with confirm and popup option');
 
 class testObject
 {
 }
+
 try
 {
   $o1 = new testObject();
-  link_to($o1);
+  link_to($o1, '@homepage');
   $t->fail('link_to() can take an object as its first argument if __toString() method is defined');
 }
 catch (sfException $e)
@@ -92,21 +93,21 @@ class testObjectWithToString
   }
 }
 $o2 = new testObjectWithToString();
-$t->is(link_to($o2), '<a href="module/action">test</a>', 'link_to() can take an object as its first argument');
+$t->is(link_to($o2, '@homepage'), '<a href="module/action">test</a>', 'link_to() can take an object as its first argument');
 
 // link_to_if()
 $t->diag('link_to_if()');
-$t->is(link_to_if(true, 'test', ''), '<a href="module/action">test</a>', 'link_to_if() returns an HTML "a" tag if the condition is true');
-$t->is(link_to_if(false, 'test', ''), '<span>test</span>', 'link_to_if() returns an HTML "span" tag by default if the condition is false');
-$t->is(link_to_if(false, 'test', '', array('tag' => 'div')), '<div>test</div>', 'link_to_if() takes a "tag" option');
-$t->is(link_to_if(true, 'test', '', 'tag=div'), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as string) in true case');
-$t->is(link_to_if(true, 'test', '', array('tag' => 'div')), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as array) in true case');
-$t->is(link_to_if(false, 'test', '', array('query_string' => 'foo=bar', 'absolute' => true, 'absolute_url' => 'http://www.google.com/')), '<span>test</span>', 'link_to_if() returns an HTML "span" tag by default if the condition is false');
+$t->is(link_to_if(true, 'test', '@homepage'), '<a href="module/action">test</a>', 'link_to_if() returns an HTML "a" tag if the condition is true');
+$t->is(link_to_if(false, 'test', '@homepage'), '<span>test</span>', 'link_to_if() returns an HTML "span" tag by default if the condition is false');
+$t->is(link_to_if(false, 'test', '@homepage', array('tag' => 'div')), '<div>test</div>', 'link_to_if() takes a "tag" option');
+$t->is(link_to_if(true, 'test', '@homepage', 'tag=div'), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as string) in true case');
+$t->is(link_to_if(true, 'test', '@homepage', array('tag' => 'div')), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as array) in true case');
+$t->is(link_to_if(false, 'test', '@homepage', array('query_string' => 'foo=bar', 'absolute' => true, 'absolute_url' => 'http://www.google.com/')), '<span>test</span>', 'link_to_if() returns an HTML "span" tag by default if the condition is false');
 
 // link_to_unless()
 $t->diag('link_to_unless()');
-$t->is(link_to_unless(false, 'test', ''), '<a href="module/action">test</a>', 'link_to_unless() returns an HTML "a" tag if the condition is false');
-$t->is(link_to_unless(true, 'test', ''), '<span>test</span>', 'link_to_unless() returns an HTML "span" tag by default if the condition is true');
+$t->is(link_to_unless(false, 'test', '@homepage'), '<a href="module/action">test</a>', 'link_to_unless() returns an HTML "a" tag if the condition is false');
+$t->is(link_to_unless(true, 'test', '@homepage'), '<span>test</span>', 'link_to_unless() returns an HTML "span" tag by default if the condition is true');
 
 // public_path()
 $t->diag('public_path()');

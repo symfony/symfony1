@@ -86,9 +86,9 @@ abstract class sfWebController extends sfController
   {
     $givenUrl = $url;
 
-    $params       = array();
-    $query_string = '';
-    $route   = '';
+    $params = array();
+    $queryString = '';
+    $route = '';
 
     // empty url?
     if (!$url)
@@ -99,7 +99,7 @@ abstract class sfWebController extends sfController
     // we get the query string out of the url
     if ($pos = strpos($url, '?'))
     {
-      $query_string = substr($url, $pos + 1);
+      $queryString = substr($url, $pos + 1);
       $url = substr($url, 0, $pos);
     }
 
@@ -123,13 +123,17 @@ abstract class sfWebController extends sfController
     {
       list($params['module'], $params['action']) = explode('/', $url);
     }
+    else if (!$queryString)
+    {
+      $route = $givenUrl;
+    }
     else
     {
       throw new InvalidArgumentException(sprintf('An internal URI must contain a module and an action (module/action) ("%s" given).', $givenUrl));
     }
 
     // split the query string
-    if ($query_string)
+    if ($queryString)
     {
       $matched = preg_match_all('/
         ([^&=]+)            # key
@@ -138,7 +142,7 @@ abstract class sfWebController extends sfController
         (?:
           (?=&[^&=]+=) | $  # followed by another key= or the end of the string
         )
-      /x', $query_string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+      /x', $queryString, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
       foreach ($matches as $match)
       {
         $params[urldecode($match[1][0])] = urldecode($match[2][0]);
@@ -147,7 +151,7 @@ abstract class sfWebController extends sfController
       // check that all string is matched
       if (!$matched)
       {
-        throw new sfParseException(sprintf('Unable to parse query string "%s".', $query_string));
+        throw new sfParseException(sprintf('Unable to parse query string "%s".', $queryString));
       }
     }
 

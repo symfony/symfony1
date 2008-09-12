@@ -243,12 +243,16 @@ class sfPatternRouting extends sfRouting
       throw new sfConfigurationException(sprintf('This named route already exists ("%s").', $name));
     }
 
-    $this->routes[$name] = $route;
-    $this->configureRoute($route);
-
-    if ($this->options['logging'])
+    $routes = $route instanceof sfRouteCollection ? $route : array($name => $route);
+    foreach (self::flattenRoutes($routes) as $name => $route)
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect %s "%s" (%s)', get_class($route), $name, $route->getPattern()))));
+      $this->routes[$name] = $route;
+      $this->configureRoute($route);
+
+      if ($this->options['logging'])
+      {
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect %s "%s" (%s)', get_class($route), $name, $route->getPattern()))));
+      }
     }
 
     return $this->routes;
@@ -419,6 +423,24 @@ class sfPatternRouting extends sfRouting
     }
 
     return $info;
+  }
+
+  static public function flattenRoutes($routes)
+  {
+    $flattenRoutes = array();
+    foreach ($routes as $name => $route)
+    {
+      if ($route instanceof sfRouteCollection)
+      {
+        $flattenRoutes = array_merge($flattenRoutes, self::flattenRoutes($route));
+      }
+      else
+      {
+        $flattenRoutes[$name] = $route;
+      }
+    }
+
+    return $flattenRoutes;
   }
 
   protected function getRouteThatMatchesUrl($url)

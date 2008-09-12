@@ -259,14 +259,21 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * @return string PHP code
    */
-  public function getPrimaryKeyUrlParams($prefix = '')
+  public function getPrimaryKeyUrlParams($prefix = '', $full = false)
   {
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
       $phpName   = $pk->getPhpName();
       $fieldName = sfInflector::underscore($phpName);
-      $params[]  = "$fieldName='.".$this->getColumnGetter($pk, true, $prefix);
+      if ($full)
+      {
+        $params[]  = "$fieldName='.".$prefix.'->'.$this->getColumnGetter($pk, false).'()';
+      }
+      else
+      {
+        $params[]  = "$fieldName='.".$this->getColumnGetter($pk, true, $prefix);
+      }
     }
 
     return implode(".'&", $params);

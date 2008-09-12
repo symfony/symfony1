@@ -241,7 +241,6 @@ abstract class sfRouting
   public function filterParametersEvent(sfEvent $event, $parameters)
   {
     $context = $event->getParameters();
-    unset($context['path_info']);
 
     $this->options['context'] = $context;
 

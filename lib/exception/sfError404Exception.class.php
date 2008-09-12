@@ -25,7 +25,7 @@ class sfError404Exception extends sfException
   {
     $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
 
-    if (sfConfig::get('sf_debug'))
+    if (sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
     {
       $response = sfContext::getInstance()->getResponse();
       if (is_null($response))
