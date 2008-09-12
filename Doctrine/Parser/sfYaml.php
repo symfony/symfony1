@@ -96,16 +96,3 @@ class Doctrine_Parser_sfYaml
     return $yaml->dump($array, $inline);
   }
 }
-
-/**
- * Wraps echo to automatically provide a newline.
- *
- * @param string The string to echo with new line
- */
-//I add a is_callable test to avoid redeclaration.
-if (!is_callable('echoln')){
-  function echoln($string)
-  {
-    echo $string."\n";
-  }
-}
