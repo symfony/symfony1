@@ -64,6 +64,7 @@ class sfBrowser extends sfBrowserBase
       {
         $currentConfiguration = $this->context->getConfiguration();
         $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+        $configuration->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
         $this->context = sfContext::createInstance($configuration);
         unset($currentConfiguration);
       }
@@ -71,9 +72,8 @@ class sfBrowser extends sfBrowserBase
       {
         $this->context = sfContext::getInstance();
         $this->context->initialize($this->context->getConfiguration());
+        $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
       }
-
-      $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
     }
 
     return $this->context;
