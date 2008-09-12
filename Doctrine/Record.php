@@ -791,7 +791,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->clearRelated();
             $record = $query->fetchOne($id);
         } else {
-            // Use FETCH_ARRAY to avoid clearing object relations
+            // Use HYDRATE_ARRAY to avoid clearing object relations
             $record = $this->getTable()->find($id, Doctrine::HYDRATE_ARRAY);
             if ($record) {
                 $this->hydrate($record);

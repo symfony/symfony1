@@ -1899,7 +1899,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      *
      * @param string $query      DQL query
      * @param array $params      prepared statement parameters
-     * @param int $hydrationMode Doctrine::FETCH_ARRAY or Doctrine::FETCH_RECORD
+     * @param int $hydrationMode Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @see Doctrine::FETCH_* constants
      * @return mixed
      */

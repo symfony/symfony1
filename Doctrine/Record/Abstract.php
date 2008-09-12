@@ -280,7 +280,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         }
 
         if ( ! ($tpl instanceof Doctrine_Template)) {
-            throw new Doctrine_Record_Exception('Loaded behavior class is not an istance of Doctrine_Template.');
+            throw new Doctrine_Record_Exception('Loaded behavior class is not an instance of Doctrine_Template.');
         }
 
         $className = get_class($tpl);

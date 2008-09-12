@@ -1273,7 +1273,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * findAll
      * returns a collection of records
      *
-     * @param int $hydrationMode        Doctrine::FETCH_ARRAY or Doctrine::FETCH_RECORD
+     * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @return Doctrine_Collection
      */
     public function findAll($hydrationMode = null)
@@ -1289,7 +1289,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      *
      * @param string $dql               DQL after WHERE clause
      * @param array $params             query parameters
-     * @param int $hydrationMode        Doctrine::FETCH_ARRAY or Doctrine::FETCH_RECORD
+     * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @return Doctrine_Collection
      *
      * @todo This actually takes DQL, not SQL, but it requires column names
@@ -1308,7 +1308,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      *
      * @param string $dql               DQL after WHERE clause
      * @param array $params             query parameters
-     * @param int $hydrationMode        Doctrine::FETCH_ARRAY or Doctrine::FETCH_RECORD
+     * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @return Doctrine_Collection
      */
     public function findByDql($dql, $params = array(), $hydrationMode = null)

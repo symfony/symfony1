@@ -665,7 +665,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     }
 
     /**
-     * Mimics the result of a $query->execute(array(), Doctrine::FETCH_ARRAY);
+     * Mimics the result of a $query->execute(array(), Doctrine::HYDRATE_ARRAY);
      *
      * @param boolean $deep
      */
