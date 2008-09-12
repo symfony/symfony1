@@ -210,7 +210,8 @@ function get_partial($templateName, $vars = array())
   }
   $actionName = '_'.$templateName;
 
-  $view = new sfPartialView($context, $moduleName, $actionName, '');
+  $class = sfConfig::get('mod_'.$moduleName.'_partial_view_class', 'sf').'PartialView';
+  $view = new $class($context, $moduleName, $actionName, '');
   $view->setPartialVars($vars);
 
   return $view->render();
