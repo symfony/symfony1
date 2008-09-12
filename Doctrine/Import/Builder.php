@@ -450,7 +450,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 if (isset($relation['refClass'])) {
                     $a[] = '\'refClass\' => ' . $this->varExport($relation['refClass']);
                 }
-
+                
+                if (isset($relation['refClassRelationAlias'])) {
+                    $a[] = '\'refClassRelationAlias\' => ' . $this->varExport($relation['refClassRelationAlias']);
+                }
+                
                 if (isset($relation['deferred']) && $relation['deferred']) {
                     $a[] = '\'default\' => ' . $this->varExport($relation['deferred']);
                 }
