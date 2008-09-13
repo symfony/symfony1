@@ -45,6 +45,9 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $this->commandApplication->help();
+    $this->log('');
+
     $tasks = array();
     foreach ($this->commandApplication->getTasks() as $name => $task)
     {
