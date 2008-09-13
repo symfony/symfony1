@@ -542,11 +542,11 @@ use_helper('JavascriptBase');
 
     if (in_array($name, array('toggle_appear', 'toggle_blind', 'toggle_slide')))
     {
-      return "new Effect.toggle($element, '".substr($name, 7)."', "._options_for_javascript($js_options).");";
+      return "new Effect.toggle($element, '".substr($name, 7)."', ".options_for_javascript($js_options).");";
     }
     else
     {
-      return "new Effect.".sfInflector::camelize($name)."($element, "._options_for_javascript($js_options).");";
+      return "new Effect.".sfInflector::camelize($name)."($element, ".options_for_javascript($js_options).");";
     }
   }
 
@@ -601,7 +601,7 @@ use_helper('JavascriptBase');
 
     if (isset($options['containment']))
     {
-      $options['containment'] = _array_or_string_for_javascript($options['containment']);
+      $options['containment'] = array_or_string_for_javascript($options['containment']);
     }
 
     if (isset($options['hoverclass']))
@@ -611,17 +611,17 @@ use_helper('JavascriptBase');
 
     if (isset($options['only']))
     {
-      $options['only'] = _array_or_string_for_javascript($options['only']);
+      $options['only'] = array_or_string_for_javascript($options['only']);
     }
 
     $scrollPosition = "";
     if (isset($options['scroll']))
     {
-      $options['scroll'] = _array_or_string_for_javascript($options['scroll']);
+      $options['scroll'] = array_or_string_for_javascript($options['scroll']);
       $scrollPosition = "Position.includeScrollOffsets = true;";
     }
 
-    return javascript_tag($scrollPosition."Sortable.create('$element_id', "._options_for_javascript($options).")");
+    return javascript_tag($scrollPosition."Sortable.create('$element_id', ".options_for_javascript($options).")");
   }
 
   /**
@@ -643,7 +643,7 @@ use_helper('JavascriptBase');
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/effects');
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/dragdrop');
 
-    return javascript_tag("new Draggable('$element_id', "._options_for_javascript($options).")");
+    return javascript_tag("new Draggable('$element_id', ".options_for_javascript($options).")");
   }
 
   /**
@@ -683,7 +683,7 @@ use_helper('JavascriptBase');
 
     if (isset($options['accept']))
     {
-      $options['accept'] = _array_or_string_for_javascript($options['accept']);
+      $options['accept'] = array_or_string_for_javascript($options['accept']);
     }
 
     if (isset($options['hoverclass']))
@@ -691,7 +691,7 @@ use_helper('JavascriptBase');
       $options['hoverclass'] = "'{$options['hoverclass']}'";
     }
 
-    return javascript_tag("Droppables.add('$element_id', "._options_for_javascript($options).")");
+    return javascript_tag("Droppables.add('$element_id', ".options_for_javascript($options).")");
   }
 
   /**
@@ -786,22 +786,22 @@ use_helper('JavascriptBase');
       $javascript = "new Ajax.InPlaceEditor(";
 
       $javascript .= "'$field_id', ";
-      $javascript .= _array_or_string_for_javascript(url_for($url));
+      $javascript .= array_or_string_for_javascript(url_for($url));
 
       // translate symfony option names to InPlaceEditor options
       if (isset($options['cancel_text']))
       {
-        $options['cancelText'] = _array_or_string_for_javascript($options['cancel_text']);
+        $options['cancelText'] = array_or_string_for_javascript($options['cancel_text']);
         unset($options['cancel_text']);
       }
       if (isset($options['save_text']))
       {
-        $options['okText'] = _array_or_string_for_javascript($options['save_text']);
+        $options['okText'] = array_or_string_for_javascript($options['save_text']);
         unset($options['save_text']);
       }
       if (isset($options['external_control']))
       {
-        $options['externalControl'] = _array_or_string_for_javascript($options['external_control']);
+        $options['externalControl'] = array_or_string_for_javascript($options['external_control']);
         unset($options['external_control']);
       }
       if (isset($options['options']))
@@ -816,20 +816,20 @@ use_helper('JavascriptBase');
       }
       if (isset($options['highlightcolor']))
       {
-        $options['highlightColor'] = _array_or_string_for_javascript($options['highlightcolor']);
+        $options['highlightColor'] = array_or_string_for_javascript($options['highlightcolor']);
         unset($options['highlightcolor']);
       }
       if (isset($options['highlightendcolor']))
       {
-        $options['highlightEndColor'] = _array_or_string_for_javascript($options['highlightendcolor']);
+        $options['highlightEndColor'] = array_or_string_for_javascript($options['highlightendcolor']);
         unset($options['highlightendcolor']);
       }
       if (isset($options['loadTextURL']))
       {
-        $options['loadTextURL'] =  _array_or_string_for_javascript($options['loadTextURL']);
+        $options['loadTextURL'] =  array_or_string_for_javascript($options['loadTextURL']);
       }
 
-      $javascript .= ', '._options_for_javascript($options);
+      $javascript .= ', '.options_for_javascript($options);
       $javascript .= ');';
 
       return javascript_tag($javascript);
@@ -856,12 +856,12 @@ use_helper('JavascriptBase');
       $javascript .= "'".get_id_from_name($field_id)."_auto_complete', ";
     }
 
-    $javascript .= _array_or_string_for_javascript(url_for($url));
+    $javascript .= array_or_string_for_javascript(url_for($url));
 
     $js_options = array();
     if (isset($options['tokens']))
     {
-      $js_options['tokens'] = _array_or_string_for_javascript($options['tokens']);
+      $js_options['tokens'] = array_or_string_for_javascript($options['tokens']);
     }
     if (isset ($options['with']))
     {
@@ -869,7 +869,7 @@ use_helper('JavascriptBase');
     }
     if (isset($options['indicator']))
     {
-      $js_options['indicator']  = _array_or_string_for_javascript($options['indicator']);
+      $js_options['indicator']  = array_or_string_for_javascript($options['indicator']);
     }
     if (isset($options['on_show']))
     {
@@ -900,7 +900,7 @@ use_helper('JavascriptBase');
       $js_options['paramName'] = "'".$options['param_name']."'";
     }
 
-    $javascript .= ', '._options_for_javascript($js_options).');';
+    $javascript .= ', '.options_for_javascript($js_options).');';
 
     return javascript_tag($javascript);
   }
@@ -910,7 +910,7 @@ use_helper('JavascriptBase');
     $js_options = _build_callbacks($options);
 
     $js_options['asynchronous'] = (isset($options['type']) && ($options['type'] == 'synchronous')) ? false : true;
-    if (isset($options['method'])) $js_options['method'] = _array_or_string_for_javascript($options['method']);
+    if (isset($options['method'])) $js_options['method'] = array_or_string_for_javascript($options['method']);
     if (isset($options['position'])) $js_options['insertion'] = "Insertion.".sfInflector::camelize($options['position']);
     $js_options['evalScripts'] = (!isset($options['script']) || $options['script'] == '0' || $options['script'] == false) ? false : true;
 
@@ -927,7 +927,7 @@ use_helper('JavascriptBase');
       $js_options['parameters'] = $options['with'];
     }
 
-    return _options_for_javascript($js_options);
+    return options_for_javascript($js_options);
   }
 
   function _build_observer($klass, $name, $options = array())
@@ -948,4 +948,20 @@ use_helper('JavascriptBase');
     $javascript .= $callback.'});';
 
     return javascript_tag($javascript);
+  }
+
+  function _build_callbacks($options)
+  {
+    $callbacks = array();
+    foreach (get_callbacks() as $callback)
+    {
+      if (isset($options[$callback]))
+      {
+        $name = 'on'.ucfirst($callback);
+        $code = $options[$callback];
+        $callbacks[$name] = 'function(request, json){'.$code.'}';
+      }
+    }
+
+    return $callbacks;
   }
