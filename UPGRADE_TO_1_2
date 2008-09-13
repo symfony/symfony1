@@ -1094,3 +1094,9 @@ The `sfViewCacheManager` class is now configurable in `factories.yml`:
     view_cache_manager:
       class: sfViewCacheManager
 
+View
+----
+
+You can override `sfViewCacheManager::generateCacheKey()` by defining a
+`sf_cache_namespace_callable` setting. As of symfony 1.2, the callable
+is now called with an additional argument, the view cache manager instance.

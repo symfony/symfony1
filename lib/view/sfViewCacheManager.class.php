@@ -120,7 +120,7 @@ class sfViewCacheManager
         throw new sfException(sprintf('"%s" cannot be called as a function.', var_export($callable, true)));
       }
 
-      return call_user_func($callable, $internalUri, $hostName, $vary, $contextualPrefix);
+      return call_user_func($callable, $internalUri, $hostName, $vary, $contextualPrefix, $this);
     }
 
     if (strpos($internalUri, '@') === 0 && strpos($internalUri, '@sf_cache_partial') === false)
