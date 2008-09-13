@@ -1039,7 +1039,7 @@ abstract class Doctrine_Query_Abstract
      */
     protected function _preQuery()
     {
-        if ( ! $this->_preQueried && Doctrine_Manager::getInstance()->getAttribute('use_dql_callbacks')) {
+        if ( ! $this->_preQueried && $this->getConnection()->getAttribute('use_dql_callbacks')) {
             $this->_preQueried = true;
 
             $callback = $this->_getDqlCallback();
