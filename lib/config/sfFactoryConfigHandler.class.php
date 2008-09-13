@@ -41,7 +41,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('logger', 'i18n', 'controller', 'request', 'response', 'routing', 'storage', 'user', 'view_cache');
+    $factories = array('view_cache_manager', 'logger', 'i18n', 'controller', 'request', 'response', 'routing', 'storage', 'user', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -120,13 +120,13 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
                              "    \$class = sfConfig::get('sf_factory_view_cache', '%s');\n".
                              "    \$cache = new \$class(sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
-                             "    \$this->factories['viewCacheManager'] = new sfViewCacheManager(\$this, \$cache);\n".
+                             "    \$this->factories['viewCacheManager'] = new %s(\$this, \$cache);\n".
                              "  }\n".
                              "  else\n".
                              "  {\n".
                              "    \$this->factories['viewCacheManager'] = null;\n".
                              "  }\n",
-                             $class, var_export($parameters, true));
+                             $class, var_export($parameters, true), $config['view_cache_manager']['class']);
           break;
 
         case 'i18n':

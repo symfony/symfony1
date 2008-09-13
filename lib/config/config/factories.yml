@@ -38,6 +38,9 @@ default:
     param:
       session_name: symfony
 
+  view_cache_manager:
+    class: sfViewCacheManager
+
   view_cache:
     class: sfFileCache
     param:

@@ -1065,3 +1065,12 @@ an array of parameters:
     echo link_to('Link to article', '@article', array('id' => 1));
 
 The old behavior still works without changing anything to your code.
+
+Factories
+---------
+
+The `sfViewCacheManager` class is now configurable in `factories.yml`:
+
+    [yml]
+    view_cache_manager:
+      class: sfViewCacheManager
