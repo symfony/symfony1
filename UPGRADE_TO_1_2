@@ -443,13 +443,17 @@ positions. In symfony 1.1, they take the position as a second argument.
 Prototype and Scriptaculous
 ---------------------------
 
-symfony continues to decouple its bundled software. In 1.2 the bundled Prototype and 
-Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a core-plugin.
-Core plugins behave like real plugins but are shipped by symfony platform. This will make
-the javscript and css files of the new `sfProtoculousPlugin` (the more or less inofficial 
-name of the often featured duo) behave like real plugin assets. They will be now in 
-`web/sfProtoculousPlugin` rather than in `web/sf` (as it has been in 1.0 and 1.1). The 
-`prototype_web_dir` setting will also now point tot the new directory.
+symfony continues to decouple its bundled software. In 1.2 the bundled Prototype 
+and Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a 
+core-plugin. Core plugins behave like real plugins but are shipped by symfony platform.
+This will make the javscript and css files of the new `sfProtoculousPlugin` 
+(the more or less inofficial name of the often featured duo) behave like real plugin
+assets. They will be now in `web/sfProtoculousPlugin` rather than in `web/sf` 
+(as it has been in 1.0 and 1.1). The `prototype_web_dir` setting will also now point 
+to the new directory.
+
+In addition some very basic javascript helpers that are reusable by any JS framework, have
+been extracted to a `JavascriptBaseHelper` which stays in core.
 
 >**CAUTION**
 >**Work in progress:** As plugins are normally installed via a task and this invokes the 
@@ -1066,6 +1070,21 @@ an array of parameters:
 
 The old behavior still works without changing anything to your code.
 
+View Configuration
+------------------
+
+Up to symfony 1.2 it was only possible to exchange the `view_class` used by
+symfony to render the view templates. symfony 1.2 adds a `partial_view_class`
+that allows to change the renderer for partials. It has to extend from 
+`sfPartialView`. Similar to view_class, which appends `View` to the setting,
+partial_view_class appends `PartialView` to the setting. So to use 
+`myPartialView` as a partial_view_class, simply put into
+`module.yml`:
+
+    [yml]
+    all:
+      partial_view_class:  my
+
 Factories
 ---------
 
@@ -1074,3 +1093,4 @@ The `sfViewCacheManager` class is now configurable in `factories.yml`:
     [yml]
     view_cache_manager:
       class: sfViewCacheManager
+
