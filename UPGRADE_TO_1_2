@@ -744,6 +744,9 @@ This refactor must not introduce backward incompatibility with symfony 1.1.
 Tasks
 -----
 
+The Propel tasks relying on Phing now output a clear error message if the embed
+Phing task fails.
+
 Some CLI tasks takes an application name as an argument because they need to connect
 to the database. We need an application because the configuration can be customized
 on an application basis and all the symfony configuration system is based on the
@@ -793,6 +796,10 @@ and some new options have been added:
   * plural:            The plural name for the actions and templates
   * route-prefix:      The route prefix to use
   * with-propel-route: Whether the related routes are Propel aware
+
+To ease the debugging, the `propel:build-model`, `propel:build-all`, and
+`propel:build-all-load` tasks do not remove the generated XML schemas anymore
+if you pass the `--trace` option.
 
 The new `propel:generate-module-for-route` generates a module based on a route
 definition:
@@ -1071,17 +1078,16 @@ The old behavior still works without changing anything to your code.
 View Configuration
 ------------------
 
-Up to symfony 1.2 it was only possible to exchange the `view_class` used by
-symfony to render the view templates. symfony 1.2 adds a `partial_view_class`
-that allows to change the renderer for partials. It has to extend from 
-`sfPartialView`. Similar to view_class, which appends `View` to the setting,
-partial_view_class appends `PartialView` to the setting. So to use 
-`myPartialView` as a partial_view_class, simply put into
-`module.yml`:
+As of symfony 1.2, it is now possible to change the View class used by
+symfony to render the partials by setting the `partial_view_class` in
+`module.yml`. The class must extend `sfPartialView`. Similar to the
+`view_class` setting, symfony will automatically appends `PartialView`
+to the `partial_view_class` value:
 
     [yml]
+    # module.yml
     all:
-      partial_view_class:  my
+      partial_view_class: my
 
 Factories
 ---------
