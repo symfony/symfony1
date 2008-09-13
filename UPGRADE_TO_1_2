@@ -83,28 +83,25 @@ configuration options.
 
 Locate the following:
 
-    [php]
+    [ini]
     propel.database            = mysql
     propel.database.createUrl  = mysql://username:password@localhost/
     propel.database.url        = mysql://username:password@localhost/example
 
-
 Replace with the following:
 
-    [php]
+    [ini]
     propel.database            = mysql
     propel.database.driver     = mysql
     propel.database.url        = mysql:dbname=example;host=localhost
     propel.database.user       = username
     propel.database.password   = password
     propel.database.encoding   = utf8
-    
-    
+
 Since the underlying api has changed quite a bit, you need to rebuild the
 object model:
 
    $ php symfony propel:build-model
-
 
 In most cases, this will be all that is required. If you have customized
 object model classes, you may need to manually upgrade for the changes in
@@ -123,7 +120,6 @@ To add PropelPDO type hint:
     [php]
     public function save(PropelPDO $con = null)
     public function delete(PropelPDO $con = null)
-
 
 The transaction api has change slightly: `->begin` has been renamed `->beginTransaction()`
 and `->rollback()` has been renamed `->rollBack()`. Here are the differences:
@@ -210,6 +206,8 @@ See http://propel.phpdb.org/trac/wiki/Users/Documentation/1.3/Upgrading for more
 on upgrading and http://propel.phpdb.org/trac/wiki/Users/Documentation/1.3 for the full
 complete documentation.
 
+All the Propel library have been moved from `lib/propel` to `lib`. The upgrade task
+upgrades the `propel.ini` file to reflect these changes.
 
 Request
 -------
