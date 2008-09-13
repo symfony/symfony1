@@ -538,6 +538,7 @@ abstract class sfBrowserBase
    * Available options:
    *
    *  * position: The position of the linked to link if several ones have the same name
+   *              (the first one is 1, not 0)
    *  * method:   The method to used instead of the form ones
    *              (useful when you need to click on a link that is converted to a form with JavaScript code)
    *
@@ -549,7 +550,7 @@ abstract class sfBrowserBase
    */
   public function click($name, $arguments = array(), $options = array())
   {
-    $position = isset($options['position']) ? $options['position'] : 0;
+    $position = isset($options['position']) ? $options['position'] - 1 : 0;
 
     $dom = $this->getResponseDom();
 

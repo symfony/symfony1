@@ -143,7 +143,7 @@ catch(Exception $e)
 list($method, $uri, $parameters) = $b->click('test link');
 $t->is($uri, '/mylink', '->click() clicks on links');
 
-list($method, $uri, $parameters) = $b->click('test link', array(), array('position' => 1));
+list($method, $uri, $parameters) = $b->click('test link', array(), array('position' => 2));
 $t->is($uri, '/myotherlink', '->click() can take a third argument to tell the position of the link to click on');
 
 list($method, $uri, $parameters) = $b->click('image link');
