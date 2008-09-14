@@ -530,7 +530,7 @@ function _method_javascript_function($method)
   if ('post' != strtolower($method))
   {
     $function .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";
-    $function .= sprintf("m.setAttribute('name', 'sf_method'); m.setAttribute('value', '%s'); f.appendChild(m);", strtoupper($method));
+    $function .= sprintf("m.setAttribute('name', 'sf_method'); m.setAttribute('value', '%s'); f.appendChild(m);", strtolower($method));
   }
 
   $function .= "f.submit();";

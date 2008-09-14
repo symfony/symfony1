@@ -702,17 +702,17 @@ class sfForm implements ArrayAccess
   public function renderFormTag($url, array $attributes = array())
   {
     $attributes['action'] = $url;
-    $attributes['method'] = isset($attributes['method']) ? $attributes['method'] : 'POST';
+    $attributes['method'] = isset($attributes['method']) ? strtolower($attributes['method']) : 'post';
     if ($this->isMultipart())
     {
       $attributes['enctype'] = 'multipart/form-data';
     }
 
     $html = '';
-    if (!in_array($attributes['method'], array('GET', 'POST')))
+    if (!in_array($attributes['method'], array('get', 'post')))
     {
       $html = $this->getWidgetSchema()->renderTag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $attributes['method'], 'id' => false));
-      $attributes['method'] = 'POST';
+      $attributes['method'] = 'post';
     }
 
     return sprintf('<form%s>', $this->getWidgetSchema()->attributesToHtml($attributes)).$html;
