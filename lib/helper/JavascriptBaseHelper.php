@@ -76,7 +76,10 @@
    */
   function if_javascript()
   {
-    ob_start();
+    if (!sfContext::getInstance()->getRequest()->isXmlHttpRequest())
+    {
+      ob_start();
+    }
   }
 
   /**
@@ -85,9 +88,11 @@
    */
   function end_if_javascript()
   {
-    $content = ob_get_clean();
-
-    echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
+    if (!sfContext::getInstance()->getRequest()->isXmlHttpRequest())
+    {
+      $content = ob_get_clean();
+      echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
+    }
   }
 
   /** 
