@@ -114,4 +114,17 @@ class sfWidgetFormSelect extends sfWidgetForm
   {
     return false === $v || is_null($v) || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
   }
+
+  public function __clone()
+  {
+    if ($this->getOption('choices') instanceof sfCallable)
+    {
+      $callable = $this->getOption('choices')->getCallable();
+      if (is_array($callable))
+      {
+        $callable[0] = $this;
+        $this->setOption('choices', new sfCallable($callable));
+      }
+    }
+  }
 }
