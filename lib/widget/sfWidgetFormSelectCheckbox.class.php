@@ -100,4 +100,17 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
 
     return $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => 'checkbox_list'));
   }
+
+  public function __clone()
+  {
+    if ($this->getOption('choices') instanceof sfCallable)
+    {
+      $callable = $this->getOption('choices')->getCallable();
+      if (is_array($callable))
+      {
+        $callable[0] = $this;
+        $this->setOption('choices', new sfCallable($callable));
+      }
+    }
+  }
 }
