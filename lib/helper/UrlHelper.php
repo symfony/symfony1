@@ -187,9 +187,9 @@ function url_for_form(sfForm $form, $routePrefix)
   return url_for($uri, $form->getObject());
 }
 
-function form_tag_for(sfForm $form, $routePrefix)
+function form_tag_for(sfForm $form, $routePrefix, $attributes = array())
 {
-  return $form->renderFormTag(url_for_form($form, $routePrefix));
+  return $form->renderFormTag(url_for_form($form, $routePrefix), $attributes);
 }
 
 /**
