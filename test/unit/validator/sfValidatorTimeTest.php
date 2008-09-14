@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
 
 $v = new sfValidatorTime();
 
@@ -46,6 +46,20 @@ $t->diag('validate date array');
 $t->is($v->clean(array('hour' => 20, 'minute' => 10, 'second' => 15)), '20:10:15', '->clean() accepts an array as an input');
 $t->is($v->clean(array('hour' => '20', 'minute' => '10', 'second' => '15')), '20:10:15', '->clean() accepts an array as an input');
 $t->is($v->clean(array('hour' => '', 'minute' => '', 'second' => '')), null, '->clean() accepts an array as an input');
+$t->is($v->clean(array('hour' => 0, 'minute' => 0, 'second' => 0)), '00:00:00', '->clean() accepts an array as an input'); 
+$t->is($v->clean(array('hour' => '0', 'minute' => '0', 'second' => '0')), '00:00:00', '->clean() accepts an array as an input'); 
+
+try
+{
+  $v->clean(array('hour' => '', 'minute' => 0, 'second' => 0));
+  $t->fail('->clean() throws a sfValidatorError if time date is not valid');
+  $t->skip('', 1);
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws a sfValidatorError if the time is not valid');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
+}
 
 try
 {
