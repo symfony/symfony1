@@ -79,7 +79,7 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
       return $input;
     }
 
-    if (!$this->getOption('file_src'))
+    if (is_null($this->getOption('file_src')))
     {
       throw new RuntimeException('sfWidgetFormInputFileEditable requires the following options: \'file_src\'.');
     }
@@ -106,7 +106,7 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   {
     if ($this->getOption('is_image'))
     {
-      return $this->renderTag('image', array_merge(array('src' => $this->getOption('file_src'))), $attributes);
+      return false !== $this->getOption('file_src') ? $this->renderTag('image', array_merge(array('src' => $this->getOption('file_src'))), $attributes) : '';
     }
     else
     {
