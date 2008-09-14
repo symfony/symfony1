@@ -112,6 +112,6 @@ class sfWidgetFormSelect extends sfWidgetForm
    */
   protected function attributesToHtmlCallback($k, $v)
   {
-    return is_null($v) || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
+    return false === $v || is_null($v) || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
   }
 }
