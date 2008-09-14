@@ -99,7 +99,7 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   {
     if ($this->getOption('is_image'))
     {
-      return false !== $this->getOption('file_src') ? $this->renderTag('image', array_merge(array('src' => $this->getOption('file_src'))), $attributes) : '';
+      return false !== $this->getOption('file_src') ? $this->renderTag('img', array_merge(array('src' => $this->getOption('file_src'))), $attributes) : '';
     }
     else
     {
