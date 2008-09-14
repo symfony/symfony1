@@ -18,11 +18,17 @@ To upgrade a project:
   * Launch the `project:upgrade1.2` task from your project directory
     to perform an automatic upgrade:
 
-        $ ./symfony project:upgrade1.2
+        $ php symfony project:upgrade1.2
 
     This task can be launched several times without any side effect. Each time
     you upgrade to a new symfony 1.2 beta / RC or the final symfony 1.2, you
     have to launch this task.
+
+  * You need to rebuild your models and forms due to some changes described
+    below:
+
+        $ php symfony propel:build-model
+        $ php symfony propel:build-forms
 
 The remaining sections explain the main changes made in symfony 1.2.
 
@@ -371,6 +377,47 @@ where XXX is the PHP name of the column. The method is given the
 
 You can of course also create a `updateXXXColumn()` as we have seen before to
 override this behavior and manage the file uploading process by yourself.
+
+There is a new `sfWidgetFormSelectCheckbox` widget which is similar to
+`sfWidgetFormSelectRadio`.
+
+There are also a new `choice` widget family:
+
+  * `sfWidgetFormChoice`
+  * `sfWidgetFormChoiceMany`
+  * `sfWidgetFormPropelChoice`
+  * `sfWidgetFormPropelChoiceMany`
+
+By default, these widgets behave like their `Select` counterpart. But they are
+a wrapper on top of the `sfWidgetFormSelect`, `sfWidgetFormSelectRadio`, and
+`sfWidgetFormSelectCheckbox` widgets. They use one of these three widgets for the
+rendering. To change the default widget, you have some options:
+
+  * `expanded`:
+    *  if false, then the widget will be a `select` tag
+    *  if true and `multiple` is false, then the widget will be a list of `radio` tags
+    *  if true and `multiple` is true, then the widget will be a list of `checkbox` tags
+  * `renderer_options`: When creating the widget (`select`, `radio`, `checkbox`),
+                        this is the options you want to pass to the renderer widget
+  * `renderer`: You can also pass a widget object directly (this overrides
+                the previous options).
+
+    [php]
+    $widget = new sfWidgetFormPropelSelect(array('model' => 'Article'));
+
+    // is equivalent to
+    $widget = new sfWidgetFormPropelChoice(array('model' => 'Article'));
+
+    // change the rendering to use a radio list
+    $widget->setOption('expanded', true);
+
+    // create a multiple select
+    $widget = new sfWidgetFormPropelChoiceMany(array('model' => 'Article'));
+
+    // change the rendering to use a checkbox list
+    $widget->setOption('expanded', true);
+
+These new widgets are now used by default for the Propel generated forms.
 
 Response
 --------
