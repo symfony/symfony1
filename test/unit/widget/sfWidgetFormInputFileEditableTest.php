@@ -15,10 +15,9 @@ $t = new lime_test(6, new lime_output_color());
 // ->render()
 $t->diag('->render()');
 
-$w = new sfWidgetFormInputFileEditable();
 try
 {
-  $w->render('foo');
+  new sfWidgetFormInputFileEditable();
   $t->fail('->render() throws an exception if you don\' pass a "file_src" option.');
 }
 catch (RuntimeException $e)

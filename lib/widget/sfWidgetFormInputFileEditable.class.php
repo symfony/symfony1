@@ -24,8 +24,8 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
    *
    * Available options:
    *
+   *  * file_src:     The current image web source path (required)
    *  * edit_mode:    A Boolean: true to enabled edit mode, false otherwise
-   *  * file_src:     The current image web source path
    *  * is_image:     Whether the file is a displayable image
    *  * with_delete:  Whether to add a delete checkbox or not
    *  * delete_label: The delete label used by the template
@@ -52,7 +52,7 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
     $this->setOption('type', 'file');
     $this->setOption('needs_multipart', true);
 
-    $this->addOption('file_src');
+    $this->addRequiredOption('file_src');
     $this->addOption('is_image', false);
     $this->addOption('edit_mode', true);
     $this->addOption('with_delete', true);
@@ -79,11 +79,6 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
       return $input;
     }
 
-    if (is_null($this->getOption('file_src')))
-    {
-      throw new RuntimeException('sfWidgetFormInputFileEditable requires the following options: \'file_src\'.');
-    }
-
     if ($this->getOption('with_delete'))
     {
       $deleteName = ']' == substr($name, -1) ? substr($name, 0, -1).'_delete]' : $name.'_delete';
@@ -96,8 +91,6 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
       $delete = '';
       $deleteLabel = '';
     }
-
-    $file  = $this->renderTag('image', array_merge(array('src' => $this->getOption('file_src'))), $attributes);
 
     return strtr($this->getOption('template'), array('%input%' => $input, '%delete%' => $delete, '%delete_label%' => $deleteLabel, '%file%' => $this->getFileAsTag($attributes)));
   }
