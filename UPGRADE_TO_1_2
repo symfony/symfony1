@@ -399,6 +399,7 @@ rendering. To change the default widget, you have some options:
     *  if true and `multiple` is true, then the widget will be a list of `checkbox` tags
   * `renderer_options`: When creating the widget (`select`, `radio`, `checkbox`),
                         this is the options you want to pass to the renderer widget
+  * `renderer_class`:   The class to use instead of the default one
   * `renderer`: You can also pass a widget object directly (this overrides
                 the previous options).
 

@@ -29,6 +29,7 @@ class sfWidgetFormChoice extends sfWidgetForm
    *                        if expanded is false, then the widget will be a select
    *                        if expanded is true and multiple is false, then the widget will be a list of radio
    *                        if expanded is true and multiple is true, then the widget will be a list of checkbox
+   *  * renderer_class:   The class to use instead of the default ones
    *  * renderer_options: The options to pass to the renderer constructor
    *  * renderer:         A renderer widget (overrides the expanded and renderer_options options)
    *                      The choices option must be: new sfCallable($thisWidgetInstance, 'getChoices')
@@ -43,6 +44,7 @@ class sfWidgetFormChoice extends sfWidgetForm
 
     $this->addOption('multiple', false);
     $this->addOption('expanded', false);
+    $this->addOption('renderer_class', false);
     $this->addOption('renderer_options', array());
     $this->addOption('renderer', false);
   }
@@ -75,8 +77,11 @@ class sfWidgetFormChoice extends sfWidgetForm
     }
     else
     {
-      $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
-      $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
+      if (!$class = $this->getOption('renderer_class'))
+      {
+        $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
+        $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
+      }
 
       $renderer = new $class(array_merge(array('choices' => new sfCallable(array($this, 'getChoices'))), $this->options['renderer_options']), $this->getAttributes());
     }
