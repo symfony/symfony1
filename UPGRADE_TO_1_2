@@ -1123,6 +1123,16 @@ an array of parameters:
 
 The old behavior still works without changing anything to your code.
 
+Image helper
+------------
+
+In symfony 1.0 and 1.1 the `image_tag` helper would generate the `alt`
+attribute of the img-tag from the filename. This now only happens if
+`sf_compat_10` is on. The new behaviour eases finding of unset alt attributes
+using a (x)html validator. As a bonus, there is now a `alt_title` option that
+will set alt and title attribute to the same value, which is useful for cross
+browser tooltips.
+
 View Configuration
 ------------------
 

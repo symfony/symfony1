@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(54, new lime_output_color());
+$t = new lime_test(57, new lime_output_color());
 
 class myRequest
 {
@@ -58,18 +58,26 @@ $context->request->relativeUrlRoot = '';
 $t->is(_compute_public_path('foo.css?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
 $t->is(_compute_public_path('foo?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
 
+$compatMode = sfConfig::get('sf_compat_10');
+sfConfig::set('sf_compat_10', false);
 // image_tag()
 $t->diag('image_tag()');
 $t->is(image_tag(''), '', 'image_tag() returns nothing when called without arguments');
-$t->is(image_tag('test'), '<img src="/images/test.png" alt="Test" />', 'image_tag() takes an image name as its first argument');
-$t->is(image_tag('test.png'), '<img src="/images/test.png" alt="Test" />', 'image_tag() can take an image name with an extension');
-$t->is(image_tag('/images/test.png'), '<img src="/images/test.png" alt="Test" />', 'image_tag() can take an absolute image path');
-$t->is(image_tag('/images/test'), '<img src="/images/test.png" alt="Test" />', 'image_tag() can take an absolute image path without extension');
-$t->is(image_tag('test.jpg'), '<img src="/images/test.jpg" alt="Test" />', 'image_tag() can take an image name with an extension');
+$t->is(image_tag('test'), '<img src="/images/test.png" />', 'image_tag() takes an image name as its first argument');
+$t->is(image_tag('test.png'), '<img src="/images/test.png" />', 'image_tag() can take an image name with an extension');
+$t->is(image_tag('/images/test.png'), '<img src="/images/test.png" />', 'image_tag() can take an absolute image path');
+$t->is(image_tag('/images/test'), '<img src="/images/test.png" />', 'image_tag() can take an absolute image path without extension');
+$t->is(image_tag('test.jpg'), '<img src="/images/test.jpg" />', 'image_tag() can take an image name with an extension');
 $t->is(image_tag('test', array('alt' => 'Foo')), '<img alt="Foo" src="/images/test.png" />', 'image_tag() takes an array of options as its second argument to override alt');
-$t->is(image_tag('test', array('size' => '10x10')), '<img src="/images/test.png" alt="Test" height="10" width="10" />', 'image_tag() takes a size option');
-$t->is(image_tag('test', array('absolute' => true)), '<img src="http://localhost/images/test.png" alt="Test" />', 'image_tag() can take an absolute parameter');
-$t->is(image_tag('test', array('class' => 'bar')), '<img class="bar" src="/images/test.png" alt="Test" />', 'image_tag() takes whatever option you want');
+$t->is(image_tag('test', array('size' => '10x10')), '<img src="/images/test.png" height="10" width="10" />', 'image_tag() takes a size option');
+$t->is(image_tag('test', array('absolute' => true)), '<img src="http://localhost/images/test.png" />', 'image_tag() can take an absolute parameter');
+$t->is(image_tag('test', array('class' => 'bar')), '<img class="bar" src="/images/test.png" />', 'image_tag() takes whatever option you want');
+$t->is(image_tag('test', array('alt_title' => 'Foo')), '<img src="/images/test.png" alt="Foo" title="Foo" />', 'image_tag() takes an array of options as its second argument to create alt and title');
+$t->is(image_tag('test', array('alt_title' => 'Foo', 'title' => 'Bar')), '<img title="Bar" src="/images/test.png" alt="Foo" />', 'image_tag() takes an array of options as its second argument to create alt and title');
+sfConfig::set('sf_compat_10', true);
+$t->is(image_tag('test'), '<img src="/images/test.png" alt="Test" />', 'image_tag() creates alt attribute from filename if sf_compat_10 is on');
+
+sfConfig::set('sf_compat_10', $compatMode);
 
 // stylesheet_tag()
 $t->diag('stylesheet_tag()');

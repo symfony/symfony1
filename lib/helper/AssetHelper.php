@@ -320,7 +320,15 @@ function image_tag($source, $options = array())
     unset($options['raw_name']);
   }
 
-  if (!isset($options['alt']))
+  if (isset($options['alt_title']))
+  {
+    //set as alt and title but do not overwrite explicitly set
+    if(!isset($options['alt'])) $options['alt'] = $options['alt_title'];
+    if(!isset($options['title'])) $options['title'] = $options['alt_title'];
+    unset($options['alt_title']);
+  }
+
+  if (!isset($options['alt']) && sfConfig::get('sf_compat_10'))
   {
     $path_pos = strrpos($source, '/');
     $dot_pos = strrpos($source, '.');
