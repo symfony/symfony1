@@ -916,6 +916,9 @@ HTTP method for your routes:
       requirements: { sf_method: get }
       class:        sfRequestRoute
 
+If you don't pass a `sf_method` requirement, symfony will enforces a `get`, or
+a `head` request.
+
 This is made possible because the `parse()` method of `sfRouting` now takes a
 context as a second argument. When the request calls the routing, it passes
 the following context:
