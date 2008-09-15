@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title><?php echo $name ?>: <?php echo htmlspecialchars($message, ENT_QUOTES, sfConfig::get('sf_charset', 'UTF-8')) ?></title>
-  <style>
+  <style type="text/css">
   body { margin: 0; padding: 20px; margin-top: 20px; background-color: #eee }
   body, td, th { font: 11px Verdana, Arial, sans-serif; color: #333 }
   a { color: #333 }
