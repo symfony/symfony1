@@ -72,13 +72,13 @@ $t->is(options_for_select(array('item1'), '', array('include_blank' => true)), "
 
 // form_tag()
 $t->diag('form_tag()');
-$t->is(form_tag(), '<form method="POST" action="module/action">', 'form_tag() creates a form tag');
+$t->is(form_tag(), '<form method="post" action="module/action">', 'form_tag() creates a form tag');
 
 // options
-$t->is(form_tag('', array('class' => 'foo')), '<form class="foo" method="POST" action="module/action">', 'form_tag() takes an array of attribute options');
-$t->is(form_tag('', array('method' => 'get')), '<form method="GET" action="module/action">', 'form_tag() takes a "method" as an option');
-$t->is(form_tag('', array('multipart' => true)), '<form method="POST" enctype="multipart/form-data" action="module/action">', 'form_tag() takes a "multipart" boolean option');
-$t->is(form_tag('', array('method' => 'put')), '<form method="POST" action="module/action"><input type="hidden" name="sf_method" value="PUT" />', 'form_tag() creates a hidden field for methods different from GET or POST');
+$t->is(form_tag('', array('class' => 'foo')), '<form class="foo" method="post" action="module/action">', 'form_tag() takes an array of attribute options');
+$t->is(form_tag('', array('method' => 'get')), '<form method="get" action="module/action">', 'form_tag() takes a "method" as an option');
+$t->is(form_tag('', array('multipart' => true)), '<form method="post" enctype="multipart/form-data" action="module/action">', 'form_tag() takes a "multipart" boolean option');
+$t->is(form_tag('', array('method' => 'put')), '<form method="post" action="module/action"><input type="hidden" name="sf_method" value="put" />', 'form_tag() creates a hidden field for methods different from GET or POST');
 
 // select_tag()
 $t->diag('select_tag()');
