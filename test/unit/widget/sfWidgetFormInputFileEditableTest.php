@@ -50,7 +50,7 @@ $w = new sfWidgetFormInputFileEditable(array(
   'file_src' => '-foo-',
   'is_image' => true,
 ));
-$t->is($w->render('foo'), '<image src="-foo-" /><br /><input type="file" name="foo" id="foo" /><br /><input type="checkbox" name="foo_delete" id="foo_delete" /> <label for="foo_delete">remove the current file</label>', '->render() renders the widget as HTML');
+$t->is($w->render('foo'), '<img src="-foo-" /><br /><input type="file" name="foo" id="foo" /><br /><input type="checkbox" name="foo_delete" id="foo_delete" /> <label for="foo_delete">remove the current file</label>', '->render() renders the widget as HTML');
 
 $t->diag('template option');
 $w = new sfWidgetFormInputFileEditable(array(
