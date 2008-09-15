@@ -432,6 +432,7 @@ class sfCoreAutoload
   'sfWidget' => 'widget',
   'sfWidgetForm' => 'widget',
   'sfWidgetFormChoice' => 'widget',
+  'sfWidgetFormChoiceMany' => 'widget',
   'sfWidgetFormDate' => 'widget',
   'sfWidgetFormDateTime' => 'widget',
   'sfWidgetFormInput' => 'widget',

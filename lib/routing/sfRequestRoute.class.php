@@ -37,7 +37,7 @@ class sfRequestRoute extends sfRoute
 
     if (!isset($this->requirements['sf_method']))
     {
-      return $parameters;
+      $this->requirements['sf_method'] = 'get';
     }
 
     // enforce the sf_method requirement
@@ -65,6 +65,11 @@ class sfRequestRoute extends sfRoute
   {
     if (isset($params['sf_method']))
     {
+      if (!isset($this->requirements['sf_method']))
+      {
+        $this->requirements['sf_method'] = 'get';
+      }
+
       // enforce the sf_method requirement
       if ($this->requirements['sf_method'] != $params['sf_method'])
       {
