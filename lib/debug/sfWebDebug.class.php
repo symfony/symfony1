@@ -145,7 +145,7 @@ class sfWebDebug
    */
   public function injectToolbar($content)
   {
-    $content = str_ireplace('</head>', '<style>'.str_replace("\n", ' ', $this->getStylesheet()).'</style></head>', $content);
+    $content = str_ireplace('</head>', '<style type="text/css">'.str_replace("\n", ' ', $this->getStylesheet()).'</style></head>', $content);
 
     $debug = $this->asHtml();
     $count = 0;
@@ -174,8 +174,7 @@ class sfWebDebug
         if ($content = $panel->getPanelContent() || $panel->getTitleUrl())
         {
           $id = sprintf('sfWebDebug%sDetails', $name);
-          $titles[]  = sprintf('<li><a title="%s" alt="%s" href="%s"%s>%s</a></li>',
-            $panel->getPanelTitle(),
+          $titles[]  = sprintf('<li><a title="%s" href="%s"%s>%s</a></li>',
             $panel->getPanelTitle(),
             $panel->getTitleUrl() ? $panel->getTitleUrl() : '#',
             $panel->getTitleUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
