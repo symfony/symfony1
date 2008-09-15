@@ -99,7 +99,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
         if (defined($const)) {
             return constant($const);
         } else {
-            throw new Doctrine_Exception('Unknown attribute value: "' . $value . '"');
+            throw new Doctrine_Exception('Unknown attribute value: "' . $const . '"');
         }
     }
 
