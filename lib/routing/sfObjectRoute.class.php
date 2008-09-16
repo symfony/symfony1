@@ -63,7 +63,7 @@ class sfObjectRoute extends sfRequestRoute
     if (isset($this->options['object']))
     {
       // check the related object
-      if (is_null($object = $this->getObjectForParameters($parameters[0])))
+      if (is_null($object = $this->getObjectForParameters($parameters[0])) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
       {
         throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($parameters[0]), true))));
       }
