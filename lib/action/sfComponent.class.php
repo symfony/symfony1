@@ -224,6 +224,24 @@ abstract class sfComponent
   }
 
   /**
+   * Generates a URL for the given route and arguments.
+   *
+   * This is a proxy method equivalent to:
+   *
+   * <code>$this->getContext()->getRouting()->generate(...)</code>
+   *
+   * @param  string  The route name
+   * @param  array   An array of parameters for the route
+   * @param  Boolean Whether to generate an absolute URL or not
+   *
+   * @return string  The URL
+   */
+  public function generateUrl($route, $params = array(), $absolute = false)
+  {
+    return $this->context->getRouting()->generate($route, $params, $absolute);
+  }
+
+  /**
    * Retrieves the current sfUser object.
    *
    * This is a proxy method equivalent to:

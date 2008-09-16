@@ -215,6 +215,21 @@ complete documentation.
 All the Propel library have been moved from `lib/propel` to `lib`. The upgrade task
 upgrades the `propel.ini` file to reflect these changes.
 
+Action
+------
+
+In an action, you can now generate a URL by using the routing object directly
+by calling `generateUrl()`:
+
+    [php]
+    public function executeIndex()
+    {
+      $this->redirect($this->generateUrl('homepage'));
+    }
+
+The `generateUrl()` method takes a route name, an array of parameters, and
+whether to generate an absolute URL as its constructor arguments.
+
 Request
 -------
 
