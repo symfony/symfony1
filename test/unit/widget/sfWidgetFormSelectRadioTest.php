@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -24,7 +24,7 @@ $output = '<ul class="radio_list">'.
 '</ul>';
 $t->is($w->render('foo', 'foobar'), $output, '->render() renders a radio tag with the value checked');
 
-//regression for ticket #3528
+// regression for ticket #3528
 $onChange = '<ul class="radio_list">'.
 '<li><input name="foo" type="radio" value="foo" id="foo_foo" onChange="alert(42)" />'.
 '&nbsp;<label for="foo_foo">bar</label></li>'.
@@ -46,6 +46,24 @@ $output = '<ul class="radio_list">'.
 '<li><input name="myname" type="radio" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li>'.
 '</ul>';
 $t->is($w->render('myname', true), $output, '->render() considers true to be an integer 1');
+
+// group support
+$t->diag('group support');
+$w = new sfWidgetFormSelectRadio(array('choices' => array('foo' => array('foo' => 'bar', 'bar' => 'foo'), 'bar' => array('foobar' => 'barfoo'))));
+$output = 'foo <ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" checked="checked" />&nbsp;<label for="foo_foo">bar</label></li>
+<li><input name="foo" type="radio" value="bar" id="foo_bar" />&nbsp;<label for="foo_bar">foo</label></li></ul>
+bar <ul class="radio_list"><li><input name="foo" type="radio" value="foobar" id="foo_foobar" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>';
+$t->is($w->render('foo', 'foo'), $output, '->render() has support for groups');
+
+try
+{
+  $w = new sfWidgetFormSelectRadio();
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a choices option');
+}
+catch (RuntimeException $e)
+{
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a choices option');
+}
 
 // choices as a callable
 $t->diag('choices as a callable');

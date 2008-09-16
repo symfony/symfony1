@@ -26,8 +26,10 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
    *  * choices:         An array of possible choices (required)
    *  * label_separator: The separator to use between the input radio and the label
    *  * separator:       The separator to use between each input radio
+   *  * class:           The class to use for the main <ul> tag
    *  * formatter:       A callable to call to format the radio choices
    *                     The formatter callable receives the widget and the array of inputs as arguments
+   *  * template:        The template to use when grouping option in groups (%group% %options%)
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -38,9 +40,11 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
   {
     $this->addRequiredOption('choices');
 
+    $this->addOption('class', 'radio_list');
     $this->addOption('label_separator', '&nbsp;');
     $this->addOption('separator', "\n");
     $this->addOption('formatter', array($this, 'formatter'));
+    $this->addOption('template', '%group% %options%');
   }
 
   /**
@@ -66,6 +70,25 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
       $choices = $choices->call();
     }
 
+    // with groups?
+    if (count($choices) && is_array(next($choices)))
+    {
+      $parts = array();
+      foreach ($choices as $key => $option)
+      {
+        $parts[] = strtr($this->getOption('template'), array('%group%' => $key, '%options%' => $this->formatChoices($name, $value, $option, $attributes)));
+      }
+
+      return implode("\n", $parts);
+    }
+    else
+    {
+      return $this->formatChoices($name, $value, $choices, $attributes);;
+    }
+  }
+
+  protected function formatChoices($name, $value, $choices, $attributes)
+  {
     $inputs = array();
     foreach ($choices as $key => $option)
     {
@@ -98,7 +121,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
       $rows[] = $this->renderContentTag('li', $input['input'].$this->getOption('label_separator').$input['label']);
     }
 
-    return $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => 'radio_list'));
+    return $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => $this->getOption('class')));
   }
 
   public function __clone()
