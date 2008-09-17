@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -268,7 +268,7 @@ class sfForm implements ArrayAccess
     {
       throw new LogicException('A bound form cannot be embedded');
     }
-    
+
     $form = clone $form;
     unset($form[self::$CSRFFieldName]);
 
@@ -332,10 +332,11 @@ class sfForm implements ArrayAccess
   }
 
   /**
-   * Merges current form widget and validator schemas with the ones from the 
-   * sfForm object passed as parameter
+   * Merges current form widget and validator schemas with the ones from the
+   * sfForm object passed as parameter. Please note it also merge defaults.
    *
    * @param  sfForm   $form      The sfForm instance to merge with current form
+   *
    * @throws LogicException      If one of the form has already been bound
    */
   public function mergeForm(sfForm $form)
@@ -359,6 +360,9 @@ class sfForm implements ArrayAccess
     {
       $this->validatorSchema[$field] = $validator;
     }
+
+    $this->getWidgetSchema()->setLabels(array_merge($this->getWidgetSchema()->getLabels(),
+                                                    $form->getWidgetSchema()->getLabels()));
 
     $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
     $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());

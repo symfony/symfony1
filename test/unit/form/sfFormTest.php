@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(102, new lime_output_color());
+$t = new lime_test(103, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -575,6 +575,11 @@ class TestForm1 extends FormTest
       'b' => new sfValidatorString(array('max_length' => 3)),
       'c' => new sfValidatorString(array('max_length' => 1000)),
     ));
+    $this->getWidgetSchema()->setLabels(array(
+      'a' => '1_a',
+      'b' => '1_b',
+      'c' => '1_c',
+    ));
   }
 }
 
@@ -591,6 +596,10 @@ class TestForm2 extends FormTest
       'c' => new sfValidatorPass(),
       'd' => new sfValidatorString(array('max_length' => 5)),
     ));
+    $this->getWidgetSchema()->setLabels(array(
+      'c' => '2_c',
+      'd' => '2_d',
+    ));
     $this->validatorSchema->setPreValidator(new sfValidatorPass());
     $this->validatorSchema->setPostValidator(new sfValidatorPass());
   }
@@ -606,6 +615,7 @@ $t->is(count($widgetSchema->getFields()), 4, 'mergeForm() merges a widget form s
 $t->is(count($validatorSchema->getFields()), 4, 'mergeForm() merges a validator schema');
 $t->is(array_keys($widgetSchema->getFields()), array('a', 'b', 'c', 'd'), 'mergeForms() merges the correct widgets');
 $t->is(array_keys($validatorSchema->getFields()), array('a', 'b', 'c', 'd'), 'mergeForms() merges the correct validators');
+$t->is($widgetSchema->getLabels(), array('a' => '1_a', 'b' => '1_b', 'c' => '2_c', 'd' => '2_d'), 'mergeForm() merges labels correctly');
 $t->isa_ok($widgetSchema['c'], 'sfWidgetFormTextarea', 'mergeForm() overrides original form widget');
 $t->isa_ok($validatorSchema['c'], 'sfValidatorPass', 'mergeForm() overrides original form validator');
 $t->isa_ok($validatorSchema->getPreValidator(), 'sfValidatorPass', 'mergeForm() merges pre validator');
