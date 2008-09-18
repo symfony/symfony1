@@ -153,7 +153,7 @@ class sfProjectConfiguration
     {
       if (is_dir($dir = $path.'/lib/model'))
       {
-        $dirs[] = $file;                            // plugins
+        $dirs[] = $dir;                             // plugins
       }
     }
 
