@@ -1185,3 +1185,46 @@ View
 You can override `sfViewCacheManager::generateCacheKey()` by defining a
 `sf_cache_namespace_callable` setting. As of symfony 1.2, the callable
 is now called with an additional argument, the view cache manager instance.
+
+Configuration
+-------------
+
+Before symfony 1.2, all the plugins installed under the `plugins` directory,
+and all built-in plugins were automatically loaded.
+
+As of symfony 1.2, you need to enable the plugins you want to use in your projects.
+You can do this in your `ProjectConfiguration` class. Here is how to enable the
+Doctrine plugin and disable the Propel one:
+
+    [php]
+    public function setup()
+    {
+      $this->enablePlugin('sfDoctrinePlugin');
+      $this->disablePlugin('sfPropelPlugin');
+    }
+
+You can also change the order in which plugins are loaded by using the `setPlugins`
+method:
+
+  [php]
+  public function setup()
+  {
+    $this->setPlugins('sfDoctrinePlugin', 'sfCompat10Plugin');
+  }
+
+The `orm` setting is deprecated in `settings.yml` as it is now automatically
+set when the ORM plugin is loaded.
+
+The `compat_10` setting is also deprecated in `settings.yml` as it is now
+automatically set when the `sfCompat10Plugin` is loaded.
+
+So, to enable the 1.0 compatibility plugin, you need to enable it in your
+configuration:
+
+    [php]
+    public function setup()
+    {
+      $this->enablePlugin('sfCompat10Plugin');
+    }
+
+By default, symfony only enables the Propel plugin.

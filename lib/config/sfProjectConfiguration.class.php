@@ -20,7 +20,9 @@ class sfProjectConfiguration
 {
   protected
     $rootDir       = null,
-    $symfonyLibDir = null;
+    $symfonyLibDir = null,
+    $plugins       = array('sfPropelPlugin'),
+    $pluginPaths   = null;
 
   static protected
     $active = null;
@@ -147,12 +149,15 @@ class sfProjectConfiguration
   {
     $dirs = array();
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/model'))                                   // plugins
+    foreach ($this->getPluginPaths() as $path)
     {
-      $dirs = array_merge($dirs, $pluginDirs);
+      if (is_dir($dir = $path.'/lib/model'))
+      {
+        $dirs[] = $file;                            // plugins
+      }
     }
 
-    $dirs[] = sfConfig::get('sf_lib_dir').'/model';                                                           // project
+    $dirs[] = sfConfig::get('sf_lib_dir').'/model'; // project
 
     return $dirs;
   }
@@ -167,16 +172,14 @@ class sfProjectConfiguration
    */
   public function getGeneratorTemplateDirs($class, $theme)
   {
-    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template');                  // project
+    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template');    // project
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/template'))
+    foreach ($this->getPluginPaths() as $path)
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
-    }
-
-    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/template'))
-    {
-      $dirs = array_merge($dirs, $bundledPluginDirs);                                                         // bundled plugin
+      if (is_dir($dir = $path.'/data/generator/'.$class.'/'.$theme.'/template'))
+      {
+        $dirs[] = $dir;                                                                         // plugins
+      }
     }
 
     return $dirs;
@@ -192,16 +195,14 @@ class sfProjectConfiguration
    */
   public function getGeneratorSkeletonDirs($class, $theme)
   {
-    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton');                  // project
+    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton');  // project
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
+    foreach ($this->getPluginPaths() as $path)
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
-    }
-
-    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
-    {
-      $dirs = array_merge($dirs, $bundledPluginDirs);                                                         // bundled plugin
+      if (is_dir($dir = $path.'/data/generator/'.$class.'/'.$theme.'/skeleton'))
+      {
+        $dirs[] = $dir;                                                                       // plugins
+      }
     }
 
     return $dirs;
@@ -233,14 +234,61 @@ class sfProjectConfiguration
   }
 
   /**
+   * Sets the enabled plugins.
+   *
+   * @param array An array of plugin names
+   */
+  public function setPlugins($plugins)
+  {
+    $this->plugins = $plugins;
+  }
+
+  /**
+   * Enables a plugin.
+   *
+   * @param string A plugin name
+   */
+  public function enablePlugin($plugin)
+  {
+    $this->plugins[] = $plugin;
+  }
+
+  /**
+   * Disables a plugin.
+   *
+   * @param string A plugin name
+   */
+  public function disablePlugin($plugin)
+  {
+    if (false !== $pos = array_search($plugin, $this->plugins))
+    {
+      unset($this->plugins[$pos]);
+    }
+  }
+
+  /**
+   * Gets the list of enabled plugins.
+   *
+   * @param array An array of enabled plugins
+   */
+  public function getPlugins()
+  {
+    return $this->plugins;
+  }
+
+  /**
    * Gets the paths to plugins root directories, minding overloaded plugins.
    *
    * @return array The plugin root paths.
    */
   public function getPluginPaths()
   {
-    $pluginPaths = array();
+    if (!is_null($this->pluginPaths))
+    {
+      return $this->pluginPaths;
+    }
 
+    $pluginPaths = array();
     $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative();
 
     $bundledPlugins = $finder->discard('.*')->prune('.*')->in(sfConfig::get('sf_symfony_lib_dir').'/plugins');
@@ -267,7 +315,19 @@ class sfProjectConfiguration
       $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
     }
 
-    return $pluginPaths;
+    // order the plugins
+    $basePaths = array_map(create_function('$v', 'return basename($v);'), $pluginPaths);
+    $this->pluginPaths = array();
+
+    foreach ($this->getPlugins() as $plugin)
+    {
+      if (false !== $pos = array_search($plugin, $basePaths))
+      {
+        $this->pluginPaths[] = $pluginPaths[$pos];
+      }
+    }
+
+    return $this->pluginPaths;
   }
 
   /**

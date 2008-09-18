@@ -86,7 +86,6 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     if ('sfPropelAdminGenerator' == $class || $r->isSubclassOf(new ReflectionClass('sfPropelAdminGenerator')))
     {
       $data .= <<<EOF
-sfConfig::set('sf_compat_10', true);
 require sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/config/config.php';
 
 EOF;
