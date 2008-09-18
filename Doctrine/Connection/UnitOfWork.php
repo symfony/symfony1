@@ -590,8 +590,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
             $table->getIdentifierType() != Doctrine::IDENTIFIER_NATURAL) {
-            if (strtolower($this->conn->getDriverName()) == 'pgsql') {
+            if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
                 $seq = $table->getTableName() . '_' . $identifier[0];
+            } elseif ($driver == 'oracle') {
+                $seq = $table->getTableName();
             }
 
             $id = $this->conn->sequence->lastInsertId($seq);

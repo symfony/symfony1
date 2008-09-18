@@ -74,7 +74,7 @@ class Doctrine_Sequence_Oracle extends Doctrine_Sequence
         $seqName = $table . (empty($field) ? '' : '_'.$field);
         $sequenceName =  $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
 
-        return $this->conn->fetchOne('SELECT ' . $sequenceName . '.currval');
+        return $this->conn->fetchOne('SELECT ' . $sequenceName . '.currval FROM DUAL');
     }
 
     /**
