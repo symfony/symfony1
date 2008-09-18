@@ -1076,6 +1076,7 @@ The `sfPropelRoute` has two main advantages over `sfRoute`:
 
     Or use the internal URI:
 
+        [php]
         <?php echo url_for('@article?id='.$article->getId().'&slug='.$article->getSlug()) ?>
 
     The `sfPropelRoute` converts the article object to an array of parameters automatically.
