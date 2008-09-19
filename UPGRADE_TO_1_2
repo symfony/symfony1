@@ -1199,8 +1199,16 @@ Doctrine plugin and disable the Propel one:
     [php]
     public function setup()
     {
-      $this->enablePlugin('sfDoctrinePlugin');
-      $this->disablePlugin('sfPropelPlugin');
+      $this->enablePlugins('sfDoctrinePlugin');
+      $this->disablePlugins('sfPropelPlugin');
+    }
+
+You can add several plugins in one call by passing an array of plugin names:
+
+    [php]
+    public function setup()
+    {
+      $this->enablePlugins(array('sfDoctrinePlugin', 'sfGuardPlugin'));
     }
 
 You can also change the order in which plugins are loaded by using the `setPlugins`
@@ -1224,7 +1232,19 @@ configuration:
     [php]
     public function setup()
     {
-      $this->enablePlugin('sfCompat10Plugin');
+      $this->enablePlugins('sfCompat10Plugin');
     }
 
 By default, symfony only enables the Propel plugin.
+
+You can also enable all installed plugins:
+
+    [php]
+    public function setup()
+    {
+      $this->enableAllPluginsExcept('sfDoctrinePlugin');
+    }
+
+The previous example allows you to enable all plugins except the Doctrine one.
+If you upgrade from 1.0 or 1.1, this line will make symfony behave like in
+symfony 1.0 and 1.1.

@@ -4,7 +4,7 @@ class frontendConfiguration extends sfApplicationConfiguration
 {
   public function configure()
   {
-    $this->enablePlugin('sfAutoloadPlugin');
+    $this->enablePlugins('sfAutoloadPlugin');
 
     $this->dispatcher->connect('view.configure_format', array($this, 'configure_format_foo'));
     $this->dispatcher->connect('request.filter_parameters', array($this, 'filter_parameters'));

@@ -238,32 +238,61 @@ class sfProjectConfiguration
    *
    * @param array An array of plugin names
    */
-  public function setPlugins($plugins)
+  public function setPlugins(array $plugins)
   {
     $this->plugins = $plugins;
   }
 
   /**
-   * Enables a plugin.
+   * Enables a plugin or a list of plugins.
    *
-   * @param string A plugin name
+   * @param array|string A plugin name or a plugin list
    */
-  public function enablePlugin($plugin)
+  public function enablePlugins($plugins)
   {
-    $this->plugins[] = $plugin;
+    if (!is_array($plugins))
+    {
+      $plugins = array($plugins);
+    }
+
+    $this->plugins = array_merge($this->plugins, $plugins);
   }
 
   /**
    * Disables a plugin.
    *
-   * @param string A plugin name
+   * @param array|string A plugin name or a plugin list
    */
-  public function disablePlugin($plugin)
+  public function disablePlugins($plugins)
   {
-    if (false !== $pos = array_search($plugin, $this->plugins))
+    if (!is_array($plugins))
     {
-      unset($this->plugins[$pos]);
+      $plugins = array($plugins);
     }
+
+    foreach ($plugins as $plugin)
+    {
+      if (false !== $pos = array_search($plugin, $this->plugins))
+      {
+        unset($this->plugins[$pos]);
+      }
+    }
+  }
+
+  /**
+   * Enabled all installed plugins except the one given as argument.
+   *
+   * @param array|string A plugin name or a plugin list
+   */
+  public function enableAllPluginsExcept($plugins = array())
+  {
+    $this->plugins = array();
+    foreach ($this->getAllPluginPaths() as $plugin)
+    {
+      $this->plugins[] = basename($plugin);
+    }
+
+    $this->disablePlugins($plugins);
   }
 
   /**
@@ -288,6 +317,25 @@ class sfProjectConfiguration
       return $this->pluginPaths;
     }
 
+    $pluginPaths = $this->getAllPluginPaths();
+
+    // order the plugins
+    $basePaths = array_map(create_function('$v', 'return basename($v);'), $pluginPaths);
+    $this->pluginPaths = array();
+
+    foreach ($this->getPlugins() as $plugin)
+    {
+      if (false !== $pos = array_search($plugin, $basePaths))
+      {
+        $this->pluginPaths[] = $pluginPaths[$pos];
+      }
+    }
+
+    return $this->pluginPaths;
+  }
+
+  protected function getAllPluginPaths()
+  {
     $pluginPaths = array();
     $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative();
 
@@ -315,19 +363,7 @@ class sfProjectConfiguration
       $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
     }
 
-    // order the plugins
-    $basePaths = array_map(create_function('$v', 'return basename($v);'), $pluginPaths);
-    $this->pluginPaths = array();
-
-    foreach ($this->getPlugins() as $plugin)
-    {
-      if (false !== $pos = array_search($plugin, $basePaths))
-      {
-        $this->pluginPaths[] = $pluginPaths[$pos];
-      }
-    }
-
-    return $this->pluginPaths;
+    return $pluginPaths;
   }
 
   /**

@@ -7,6 +7,6 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup()
   {
-    $this->enablePlugin('sfCompat10Plugin');
+    $this->enablePlugins('sfCompat10Plugin');
   }
 }
