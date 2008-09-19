@@ -545,6 +545,9 @@ The following two examples are equivalent:
 `sfValidatorChoice` has now a `multiple` option to make it behave like a
 `sfValidatorChoiceMany`.
 
+`sfValidatorPropelChoice` has now a `multiple` option to make it behave like a
+`sfValidatorPropelChoiceMany`.
+
 Tests
 -----
 
