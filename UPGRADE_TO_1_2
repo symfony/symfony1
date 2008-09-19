@@ -548,6 +548,11 @@ The following two examples are equivalent:
 `sfValidatorPropelChoice` has now a `multiple` option to make it behave like a
 `sfValidatorPropelChoiceMany`.
 
+symfony 1.2 comes with some more validators and widgets:
+
+  * sfValidatorDateRange
+  * sfWidgetFormDateRange
+
 Tests
 -----
 
