@@ -1261,3 +1261,41 @@ You can also enable all installed plugins:
 The previous example allows you to enable all plugins except the Doctrine one.
 If you upgrade from 1.0 or 1.1, this line will make symfony behave like in
 symfony 1.0 and 1.1.
+
+Filters
+-------
+
+symfony is now able to generate filters based on your model thanks to the
+`propel:build-filters` task:
+
+    $ php symfony propel:build-filters
+
+This task generates filter form classes in `lib/filter/` by default.
+
+To filter an `Article` model, here is the code you need in your actions:
+
+    [php]
+    $this->filters = new ArticleFormFilter();
+    if ($request->isMethod('post'))
+    {
+      $this->filters->bind($request->getParameter('article_filters'));
+      if ($this->filters->isValid())
+      {
+        $this->articles = ArticlePeer::doSelect($this->filters->getCriteria());
+      }
+    }
+
+And here is the related template code:
+
+    [php]
+    <form action="<?php echo url_for('@articles_filter') ?>" method="post">
+      <table>
+        <?php echo $filters ?>
+        <tr>
+          <td colspan="2">
+            &nbsp;<a href="<?php echo url_for('@articles') ?>">Reset</a>
+            <input type="submit" value="Filter" />
+          </td>
+        </tr>
+      </table>
+    </form>

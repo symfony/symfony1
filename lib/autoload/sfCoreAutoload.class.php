@@ -232,6 +232,7 @@ class sfCoreAutoload
   'sfForm' => 'form',
   'sfFormField' => 'form',
   'sfFormFieldSchema' => 'form',
+  'sfFormFilter' => 'form',
   'sfAdminGenerator' => 'generator',
   'sfCrudGenerator' => 'generator',
   'sfGenerator' => 'generator',
