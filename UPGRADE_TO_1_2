@@ -552,6 +552,8 @@ symfony 1.2 comes with some more validators and widgets:
 
   * sfValidatorDateRange
   * sfWidgetFormDateRange
+  * sfWidgetFormFilterInput
+  * sfWidgetFormFilterDate
 
 Tests
 -----
