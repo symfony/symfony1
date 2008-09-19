@@ -542,6 +542,9 @@ The following two examples are equivalent:
     // symfony 1.2 only
     $v = new sfValidatorSchemaCompare('left', '==', 'right');
 
+`sfValidatorChoice` has now a `multiple` option to make it behave like a
+`sfValidatorChoiceMany`.
+
 Tests
 -----
 

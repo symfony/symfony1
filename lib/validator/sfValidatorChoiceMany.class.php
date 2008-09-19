@@ -19,29 +19,14 @@
 class sfValidatorChoiceMany extends sfValidatorChoice
 {
   /**
-   * @see sfValidatorBase
+   * Configures the current validator.
+   *
+   * @see sfValidatorChoice
    */
-  protected function doClean($values)
+  protected function configure($options = array(), $messages = array())
   {
-    if (!is_array($values))
-    {
-      $values = array($values);
-    }
+    parent::configure($options, $messages);
 
-    $choices = $this->getOption('choices');
-    if ($choices instanceof sfCallable)
-    {
-      $choices = $choices->call();
-    }
-
-    foreach ($values as $value)
-    {
-      if (!parent::inChoices($value, $choices))
-      {
-        throw new sfValidatorError($this, 'invalid', array('value' => $value));
-      }
-    }
-
-    return $values;
+    $this->setOption('multiple', true);
   }
 }
