@@ -105,16 +105,6 @@ class sfWidgetFormSelect extends sfWidgetForm
     return $options;
   }
 
-  /**
-   * @see sfWidget
-   *
-   * We always generate an attribute for the value.
-   */
-  protected function attributesToHtmlCallback($k, $v)
-  {
-    return false === $v || is_null($v) || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
-  }
-
   public function __clone()
   {
     if ($this->getOption('choices') instanceof sfCallable)
