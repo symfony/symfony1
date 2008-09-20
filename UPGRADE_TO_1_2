@@ -326,6 +326,33 @@ the array of cleaned up values:
       }
     }
 
+Validators
+----------
+
+The `sfValidatorSchemaCompare` constant values have been changed. No change to
+your code need to be done, but now, you can use nice shortcuts.
+The following two examples are equivalent:
+
+    [php]
+    // symfony 1.1 and 1.2
+    $v = new sfValidatorSchemaCompare('left', sfValidatorSchemaCompare::EQUAL, 'right');
+
+    // symfony 1.2 only
+    $v = new sfValidatorSchemaCompare('left', '==', 'right');
+
+`sfValidatorChoice` has now a `multiple` option to make it behave like a
+`sfValidatorChoiceMany`.
+
+`sfValidatorPropelChoice` has now a `multiple` option to make it behave like a
+`sfValidatorPropelChoiceMany`.
+
+symfony 1.2 comes with some more validators and widgets:
+
+  * sfValidatorDateRange
+  * sfWidgetFormDateRange
+  * sfWidgetFormFilterInput
+  * sfWidgetFormFilterDate
+
 The `sfValidatedFile` class has been made a bit more flexible when it saves
 the file.
 
@@ -392,6 +419,14 @@ where XXX is the PHP name of the column. The method is given the
 
 You can of course also create a `updateXXXColumn()` as we have seen before to
 override this behavior and manage the file uploading process by yourself.
+
+The `sfValidatorI18nChoiceCountry` and `sfValidatorI18nChoiceLanguage` validators
+had a required `culture` option in symfony 1.1. As the culture is not used in those
+validators, the `culture` option is now deprecated. It is still there to maintain
+backward compatibility but you don't need to provide it anymore.
+
+Widgets
+-------
 
 There is a new `sfWidgetFormSelectCheckbox` widget which is similar to
 `sfWidgetFormSelectRadio`.
@@ -526,34 +561,6 @@ been extracted to a `JavascriptBaseHelper` which stays in core.
 > ``symfony plugin:configure-core``
 >
 > The target is that the project creation and upgrade task do this for you
-
-
-Validators
-----------
-
-The `sfValidatorSchemaCompare` constant values have been changed. No change to
-your code need to be done, but now, you can use nice shortcuts.
-The following two examples are equivalent:
-
-    [php]
-    // symfony 1.1 and 1.2
-    $v = new sfValidatorSchemaCompare('left', sfValidatorSchemaCompare::EQUAL, 'right');
-
-    // symfony 1.2 only
-    $v = new sfValidatorSchemaCompare('left', '==', 'right');
-
-`sfValidatorChoice` has now a `multiple` option to make it behave like a
-`sfValidatorChoiceMany`.
-
-`sfValidatorPropelChoice` has now a `multiple` option to make it behave like a
-`sfValidatorPropelChoiceMany`.
-
-symfony 1.2 comes with some more validators and widgets:
-
-  * sfValidatorDateRange
-  * sfWidgetFormDateRange
-  * sfWidgetFormFilterInput
-  * sfWidgetFormFilterDate
 
 Tests
 -----
@@ -1300,7 +1307,7 @@ And here is the related template code:
       </table>
     </form>
 
-If you want to persist the filters between request, here is a small working
+If you want to persist the filters between requests, here is a small working
 example:
 
     [php]
