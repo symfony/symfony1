@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -37,3 +37,15 @@ $dom->loadHTML($w->render('language', 'en'));
 $css = new sfDomCssSelector($dom);
 $t->is($css->matchSingle('#language option[value="en"]')->getValue(), 'anglais', '->render() renders all languages as option tags');
 $t->is(count($css->matchAll('#language option[value="en"][selected="selected"]')->getNodes()), 1, '->render() renders all languages as option tags');
+
+// add_empty
+$t->diag('add_empty');
+$w = new sfWidgetFormI18nSelectLanguage(array('culture' => 'fr', 'add_empty' => true));
+$dom->loadHTML($w->render('country', 'FR'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#country option[value=""]')->getValue(), '', '->render() renders an empty option if add_empty is true');
+
+$w = new sfWidgetFormI18nSelectLanguage(array('culture' => 'fr', 'add_empty' => 'foo'));
+$dom->loadHTML($w->render('country', 'FR'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#country option[value=""]')->getValue(), 'foo', '->render() renders an empty option if add_empty is true');

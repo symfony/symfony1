@@ -23,8 +23,10 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
    *
    * Available options:
    *
-   *  * culture:   The culture to use for internationalized strings (required)
-   *  * countries: An array of country codes to use (ISO 3166)
+   *  * culture:    The culture to use for internationalized strings (required)
+   *  * countries:  An array of country codes to use (ISO 3166)
+   *  * add_empty:  Whether to add a first empty value or not (false by default)
+   *                If the option is not a Boolean, the value will be used as the text value
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -37,6 +39,7 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
 
     $this->addRequiredOption('culture');
     $this->addOption('countries');
+    $this->addOption('add_empty', false);
 
     // populate choices with all countries
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
@@ -56,6 +59,11 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
     }
 
     asort($countries);
+    $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
+    if (false !== $addEmpty)
+    {
+      $countries = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $countries);
+    }
 
     $this->setOption('choices', $countries);
   }
