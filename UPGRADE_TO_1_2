@@ -1299,3 +1299,23 @@ And here is the related template code:
         </tr>
       </table>
     </form>
+
+If you want to persist the filters between request, here is a small working
+example:
+
+    [php]
+    public function executeList($request)
+    {
+      $this->filters = new ArticleFormFilter($this->getUser()->getAttribute('article_filters'));
+      if ($request->isMethod('post'))
+      {
+        $this->filters->bind($request->getParameter('article_filters'));
+        if ($this->filters->isValid())
+        {
+          $this->getUser()->setAttribute('article_filters', $this->filters->getValues());
+        }
+      }
+
+      $criteria = $this->filters->buildCriteria($this->getUser()->getAttribute('article_filters'));
+      $this->articles = ArticlePeer::doSelect($criteria);
+    }
