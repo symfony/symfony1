@@ -397,7 +397,7 @@ class sfValidatedFile
    */
   public function generateFilename()
   {
-    return sha1($this->getOriginalName()).$this->getExtension($this->getOriginalExtension());
+    return sha1($this->getOriginalName().rand(11111, 99999)).$this->getExtension($this->getOriginalExtension());
   }
 
   /**
