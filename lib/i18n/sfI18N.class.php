@@ -236,7 +236,7 @@ class sfI18N
    */
   public function getCountry($iso, $culture = null)
   {
-    $c = new sfCultureInfo(is_null($culture) ? $this->culture : $culture);
+    $c = sfCultureInfo::getInstance(is_null($culture) ? $this->culture : $culture);
     $countries = $c->getCountries();
 
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
@@ -251,9 +251,7 @@ class sfI18N
    */
   public function getNativeName($culture)
   {
-    $cult = new sfCultureInfo($culture);
-
-    return $cult->getNativeName();
+    return sfCultureInfo::getInstance($culture)->getNativeName();
   }
 
   /**

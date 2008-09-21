@@ -197,7 +197,7 @@ class sfNumberFormatInfo
     }
     else if (is_string($culture))
     {
-      $sfCultureInfo = new sfCultureInfo($culture);
+      $sfCultureInfo = sfCultureInfo::getInstance($culture);
       $formatInfo = $sfCultureInfo->getNumberFormat();
       $formatInfo->setPattern($type);
 
@@ -205,7 +205,7 @@ class sfNumberFormatInfo
     }
     else
     {
-      $sfCultureInfo = new sfCultureInfo();
+      $sfCultureInfo = sfCultureInfo::getInstance();
       $formatInfo = $sfCultureInfo->getNumberFormat();
       $formatInfo->setPattern($type);
 

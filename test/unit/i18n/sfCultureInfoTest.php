@@ -12,23 +12,23 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(56, new lime_output_color());
 
-// __construct()
-$t->diag('__construct()');
-$c = new sfCultureInfo();
+// ->getInstance()
+$t->diag('->getInstance()');
+$c = sfCultureInfo::getInstance();
 $t->is($c->getName(), 'en', '->__construct() returns an object with "en" as the default culture');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getName(), 'fr', '->__construct() takes a culture as its first argument');
-$c = new sfCultureInfo('');
+$c = sfCultureInfo::getInstance('');
 $t->is($c->getName(), 'en', '->__construct() returns an object with "en" as the default culture');
 
 // __toString()
 $t->diag('__toString()');
-$c = new sfCultureInfo();
+$c = sfCultureInfo::getInstance();
 $t->is($c->__toString(), 'en', '->__toString() returns the name of the culture');
 
 try
 {
-  $c = new sfCultureInfo('xxx');
+  $c = sfCultureInfo::getInstance('xxx');
   $t->fail('->__construct() throws an exception if the culture is not valid');
 }
 catch (sfException $e)
@@ -36,8 +36,8 @@ catch (sfException $e)
   $t->pass('->__construct() throws an exception if the culture is not valid');
 }
 
-$c_en = new sfCultureInfo();
-$c_fr = new sfCultureInfo('fr');
+$c_en = sfCultureInfo::getInstance();
+$c_fr = sfCultureInfo::getInstance('fr');
 
 // ->getLanguages()
 $t->diag('->getLanguages()');
@@ -104,38 +104,38 @@ $t->is(in_array('fr_FR', $cultures), true, '::getCultures() returns an array of 
 
 // ->getParent()
 $t->diag('->getParent()');
-$c = new sfCultureInfo('fr_FR');
+$c = sfCultureInfo::getInstance('fr_FR');
 $t->isa_ok($c->getParent(), 'sfCultureInfo', '->getParent() returns a sfCultureInfo instance');
 $t->is($c->getParent()->getName(), 'fr', '->getParent() returns the parent culture');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getParent()->getName(), 'en', '->getParent() returns the invariant culture if the culture is neutral');
 
 // ->getIsNeutralCulture()
 $t->diag('->getIsNeutralCulture()');
-$c = new sfCultureInfo('fr_FR');
+$c = sfCultureInfo::getInstance('fr_FR');
 $t->is($c->getIsNeutralCulture(), false, '->getIsNeutralCulture() returns false if the culture is specific');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getIsNeutralCulture(), true, '->getIsNeutralCulture() returns true if the culture is neutral');
 
 // ->getEnglishName()
 $t->diag('->getEnglishName()');
-$c = new sfCultureInfo('fr_FR');
+$c = sfCultureInfo::getInstance('fr_FR');
 $t->is($c->getEnglishName(), 'French (France)', '->getEnglishName() returns the english name of the current culture');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getEnglishName(), 'French', '->getEnglishName() returns the english name of the current culture');
 $t->is($c->getEnglishName(), $c->EnglishName, '->getEnglishName() is equivalent to ->EnglishName');
 
 // ->getNativeName()
 $t->diag('->getNativeName()');
-$c = new sfCultureInfo('fr_FR');
+$c = sfCultureInfo::getInstance('fr_FR');
 $t->is($c->getNativeName(), 'français (France)', '->getNativeName() returns the native name of the current culture');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getNativeName(), 'français', '->getNativeName() returns the native name of the current culture');
 $t->is($c->getNativeName(), $c->NativeName, '->getNativeName() is equivalent to ->NativeName');
 
 // ->getCalendar()
 $t->diag('->getCalendar()');
-$c = new sfCultureInfo('fr');
+$c = sfCultureInfo::getInstance('fr');
 $t->is($c->getCalendar(), 'gregorian', '->getCalendar() returns the default calendar');
 $t->is($c->getCalendar(), $c->Calendar, '->getCalendar() is equivalent to ->Calendar');
 
@@ -165,7 +165,7 @@ catch (sfException $e)
 
 // ->getDateTimeFormat()
 $t->diag('->getDateTimeFormat()');
-$c = new sfCultureInfo();
+$c = sfCultureInfo::getInstance();
 $t->isa_ok($c->getDateTimeFormat(), 'sfDateTimeFormatInfo', '->getDateTimeFormat() returns a sfDateTimeFormatInfo instance');
 
 // ->setDateTimeFormat()
@@ -178,7 +178,7 @@ $t->is($c->getDateTimeFormat(), 'mm', '->setDateTimeFormat() is equivalent to ->
 
 // ->getNumberFormat()
 $t->diag('->getNumberFormat()');
-$c = new sfCultureInfo();
+$c = sfCultureInfo::getInstance();
 $t->isa_ok($c->getNumberFormat(), 'sfNumberFormatInfo', '->getNumberFormat() returns a sfNumberFormatInfo instance');
 
 // ->setNumberFormat()
@@ -194,6 +194,11 @@ $t->diag('->simplify()');
 
 class myCultureInfo extends sfCultureInfo
 {
+  public function __construct($culture = 'en')
+  {
+    parent::__construct($culture);
+  }
+
   static public function simplify($array)
   {
     return parent::simplify($array);

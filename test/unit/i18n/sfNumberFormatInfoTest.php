@@ -27,7 +27,7 @@ catch (sfException $e)
 // ::getInstance()
 $t->diag('::getInstance()');
 $t->isa_ok(sfNumberFormatInfo::getInstance(), 'sfNumberFormatInfo', '::getInstance() returns an sfNumberFormatInfo instance');
-$c = new sfCultureInfo();
+$c = sfCultureInfo::getInstance();
 $t->is(sfNumberFormatInfo::getInstance($c), $c->getNumberFormat(), '::getInstance() can take a sfCultureInfo instance as its first argument');
 $t->isa_ok(sfNumberFormatInfo::getInstance('fr'), 'sfNumberFormatInfo', '::getInstance() can take a culture as its first argument');
 $n = sfNumberFormatInfo::getInstance();
@@ -39,8 +39,10 @@ $t->diag('->getPattern() ->setPattern()');
 $n = sfNumberFormatInfo::getInstance();
 $n1 = sfNumberFormatInfo::getInstance();
 $n->setPattern(sfNumberFormatInfo::CURRENCY);
+$pattern = $n->getPattern();
 $n1->setPattern(sfNumberFormatInfo::PERCENTAGE);
-$t->isnt($n->getPattern(), $n1->getPattern(), '->getPattern() ->setPattern() changes the current pattern');
+$pattern1 = $n1->getPattern();
+$t->isnt($pattern, $pattern1, '->getPattern() ->setPattern() changes the current pattern');
 
 $n = sfNumberFormatInfo::getInstance();
 $n1 = sfNumberFormatInfo::getInstance();
@@ -60,37 +62,6 @@ $t->is(sfNumberFormatInfo::getPercentageInstance()->getPattern(), sfNumberFormat
 // ::getScientificInstance()
 $t->diag('::getScientificInstance()');
 $t->is(sfNumberFormatInfo::getScientificInstance()->getPattern(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::SCIENTIFIC)->getPattern(), '::getScientificInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::SCIENTIFIC');
-
-// setters/getters
-foreach (array(
-  'DecimalDigits', 'DecimalSeparator', 'GroupSeparator', 
-  'CurrencySymbol', 'NegativeInfinitySymbol', 'PositiveInfinitySymbol',
-  'NegativeSign', 'PositiveSign', 'NaNSymbol', 'PercentSymbol', 'PerMilleSymbol',
-) as $method)
-{
-  $t->diag(sprintf('->get%s() ->set%s()', $method, $method));
-  $n = sfNumberFormatInfo::getInstance();
-  $setter = 'set'.$method;
-  $getter = 'get'.$method;
-  $n->$setter('foo');
-  $t->is($n->$getter(), 'foo', sprintf('->%s() sets the current decimal digits', $setter));
-  $t->is($n->$method, $n->$getter(), sprintf('->%s() is equivalent to ->%s', $getter, $method));
-  $n->$method = 'bar';
-  $t->is($n->$getter(), 'bar', sprintf('->%s() is equivalent to ->%s = ', $setter, $method));
-}
-
-foreach (array('GroupSizes', 'NegativePattern', 'PositivePattern') as $method)
-{
-  $t->diag(sprintf('->get%s() ->set%s()', $method, $method));
-  $n = sfNumberFormatInfo::getInstance();
-  $setter = 'set'.$method;
-  $getter = 'get'.$method;
-  $n->$setter(array('foo', 'foo'));
-  $t->is($n->$getter(), array('foo', 'foo'), sprintf('->%s() sets the current decimal digits', $setter));
-  $t->is($n->$method, $n->$getter(), sprintf('->%s() is equivalent to ->%s', $getter, $method));
-  $n->$method = array('bar', 'bar');
-  $t->is($n->$getter(), array('bar', 'bar'), sprintf('->%s() is equivalent to ->%s = ', $setter, $method));
-}
 
 $tests = array(
   'fr' => array(
@@ -130,4 +101,35 @@ foreach ($tests as $culture => $fixtures)
     $getter = 'get'.$method;
     $t->is($n->$getter(), $result, sprintf('->%s() returns "%s" for culture "%s"', $getter, $result, $culture));
   }
+}
+
+// setters/getters
+foreach (array(
+  'DecimalDigits', 'DecimalSeparator', 'GroupSeparator', 
+  'CurrencySymbol', 'NegativeInfinitySymbol', 'PositiveInfinitySymbol',
+  'NegativeSign', 'PositiveSign', 'NaNSymbol', 'PercentSymbol', 'PerMilleSymbol',
+) as $method)
+{
+  $t->diag(sprintf('->get%s() ->set%s()', $method, $method));
+  $n = sfNumberFormatInfo::getInstance();
+  $setter = 'set'.$method;
+  $getter = 'get'.$method;
+  $n->$setter('foo');
+  $t->is($n->$getter(), 'foo', sprintf('->%s() sets the current decimal digits', $setter));
+  $t->is($n->$method, $n->$getter(), sprintf('->%s() is equivalent to ->%s', $getter, $method));
+  $n->$method = 'bar';
+  $t->is($n->$getter(), 'bar', sprintf('->%s() is equivalent to ->%s = ', $setter, $method));
+}
+
+foreach (array('GroupSizes', 'NegativePattern', 'PositivePattern') as $method)
+{
+  $t->diag(sprintf('->get%s() ->set%s()', $method, $method));
+  $n = sfNumberFormatInfo::getInstance();
+  $setter = 'set'.$method;
+  $getter = 'get'.$method;
+  $n->$setter(array('foo', 'foo'));
+  $t->is($n->$getter(), array('foo', 'foo'), sprintf('->%s() sets the current decimal digits', $setter));
+  $t->is($n->$method, $n->$getter(), sprintf('->%s() is equivalent to ->%s', $getter, $method));
+  $n->$method = array('bar', 'bar');
+  $t->is($n->$getter(), array('bar', 'bar'), sprintf('->%s() is equivalent to ->%s = ', $setter, $method));
 }

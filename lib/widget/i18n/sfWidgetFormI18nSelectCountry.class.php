@@ -44,8 +44,7 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
     // populate choices with all countries
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
-    $cultureInfo = new sfCultureInfo($culture);
-    $countries = $cultureInfo->getCountries();
+    $countries = sfCultureInfo::getInstance($culture)->getCountries();
 
     // restrict countries to a sub-set
     if (isset($options['countries']))

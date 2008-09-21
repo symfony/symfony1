@@ -1336,3 +1336,13 @@ symfony 1.2 comes with new events:
      The event takes the `authenticated` flag as an argument after the change occurred.
   * `debug.web.load_panels` (cf. web debug toolbar paragraph)
   * `debug.web.filter_logs` (cf. web debug toolbar paragraph)
+
+I18N
+----
+
+Internally, the `sfCultureInfo` class is now only used as a singleton.
+Even if it is still possible to bypass the `getInstance()` method and instantiate
+a new object directly, it is deprecated. By using the singleton, the performance
+are better as we only instantiate one culture info object per request and it
+also means that you can now override some culture information globally in your
+configuration classes.

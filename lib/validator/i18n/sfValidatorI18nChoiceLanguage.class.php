@@ -39,8 +39,7 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
     $this->addOption('languages');
 
     // populate choices with all languages
-    $cultureInfo = new sfCultureInfo('en');
-    $languages = array_keys($cultureInfo->getLanguages());
+    $languages = array_keys(sfCultureInfo::getInstance()->getLanguages());
 
     // restrict languages to a sub-set
     if (isset($options['languages']))

@@ -832,7 +832,7 @@ function select_timezone_tag($name, $selected = null, $options = array())
 {
   if (!isset($options['display'])) $options['display'] = 'identifier';
   
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $timezone_groups = $c->getTimeZones();
   
   $display_key = 0;

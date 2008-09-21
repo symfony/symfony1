@@ -39,8 +39,7 @@ class sfValidatorI18nChoiceCountry extends sfValidatorChoice
     $this->addOption('countries');
 
     // populate choices with all countries
-    $cultureInfo = new sfCultureInfo('en');
-    $countries = array_keys($cultureInfo->getCountries());
+    $countries = array_keys(sfCultureInfo::getInstance()->getCountries());
 
     // restrict countries to a sub-set
     if (isset($options['countries']))

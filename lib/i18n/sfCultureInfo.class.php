@@ -127,7 +127,7 @@ class sfCultureInfo
    * @param string  $culture The culture for this instance
    * @return sfCultureInfo Invariant culture info is "en"
    */
-  public static function getInstance($culture)
+  public static function getInstance($culture = 'en')
   {
     static $instances = array();
 

@@ -44,8 +44,7 @@ class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
     // populate choices with all languages
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
-    $cultureInfo = new sfCultureInfo($culture);
-    $languages = $cultureInfo->getLanguages();
+    $languages = sfCultureInfo::getInstance($culture)->getLanguages();
 
     // restrict languages to a sub-set
     if (isset($options['languages']))
