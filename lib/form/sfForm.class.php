@@ -234,7 +234,7 @@ class sfForm implements ArrayAccess
       return false;
     }
 
-    return count($this->errorSchema);
+    return count($this->errorSchema) > 0;
   }
 
   /**
