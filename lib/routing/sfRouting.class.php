@@ -40,6 +40,16 @@ abstract class sfRouting
   }
 
   /**
+   * Returns the routing cache object.
+   *
+   * @return sfCache A sfCache instance or null
+   */
+  public function getCache()
+  {
+    return $this->cache;
+  }
+
+  /**
    * Initializes this sfRouting instance.
    *
    * Available options:
