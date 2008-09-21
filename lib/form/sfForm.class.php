@@ -554,7 +554,7 @@ class sfForm implements ArrayAccess
    */
   public function setDefaults($defaults)
   {
-    $this->defaults = $defaults;
+    $this->defaults = is_null($defaults) ? array() : $defaults;
 
     if (self::$CSRFProtection)
     {
