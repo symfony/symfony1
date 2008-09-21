@@ -221,6 +221,23 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Returns true if the form has some errors.
+   *
+   * It returns false if the form is not bound.
+   *
+   * @return Boolean true if the form has no errors, false otherwise
+   */
+  public function hasErrors()
+  {
+    if (!$this->isBound)
+    {
+      return false;
+    }
+
+    return count($this->errorSchema);
+  }
+
+  /**
    * Returns the array of cleaned values.
    *
    * If the form is not bound, it returns an empty array.

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(103, new lime_output_color());
+$t = new lime_test(106, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -173,7 +173,7 @@ catch (LogicException $e)
   $t->pass('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
 
-// ->bind() ->isValid() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
+// ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');
 $f = new FormTest();
 $f->setValidatorSchema(new sfValidatorSchema(array(
@@ -183,17 +183,20 @@ $f->setValidatorSchema(new sfValidatorSchema(array(
 $t->ok(!$f->isBound(), '->isBound() returns false if the form is not bound');
 $t->is($f->getValues(), array(), '->getValues() returns an empty array if the form is not bound');
 $t->ok(!$f->isValid(), '->isValid() returns false if the form is not bound');
+$t->ok(!$f->hasErrors(), '->hasErrors() returns false if the form is not bound');
 
 $t->is($f->getValue('first_name'), null, '->getValue() returns null if the form is not bound');
 $f->bind(array('first_name' => 'Fabien', 'last_name' => 'Potencier'));
 $t->ok($f->isBound(), '->isBound() returns true if the form is bound');
 $t->is($f->getValues(), array('first_name' => 'Fabien', 'last_name' => 'Potencier'), '->getValues() returns an array of cleaned values if the form is bound');
 $t->ok($f->isValid(), '->isValid() returns true if the form passes the validation');
+$t->ok(!$f->hasErrors(), '->hasErrors() returns false if the form passes the validation');
 $t->is($f->getValue('first_name'), 'Fabien', '->getValue() returns the cleaned value for a field name if the form is bound');
 $t->is($f->getValue('nonsense'), null, '->getValue() returns null when non-existant param is requested');
 
 $f->bind(array());
 $t->ok(!$f->isValid(), '->isValid() returns false if the form does not pass the validation');
+$t->ok($f->hasErrors(), '->isValid() returns true if the form does not pass the validation');
 $t->is($f->getValues(), array(), '->getValues() returns an empty array if the form does not pass the validation');
 $t->is($f->getErrorSchema()->getMessage(), 'first_name [Required.] last_name [Required.]', '->getErrorSchema() returns an error schema object with all errors');
 
