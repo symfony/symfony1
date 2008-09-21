@@ -1326,3 +1326,13 @@ example:
       $criteria = $this->filters->buildCriteria($this->getUser()->getAttribute('article_filters'));
       $this->articles = ArticlePeer::doSelect($criteria);
     }
+
+Events
+------
+
+symfony 1.2 comes with new events:
+
+  * `user.change_authentication`: notified when a user authentication status changes.
+     The event takes the `authenticated` flag as an argument after the change occurred.
+  * `debug.web.load_panels` (cf. web debug toolbar paragraph)
+  * `debug.web.filter_logs` (cf. web debug toolbar paragraph)

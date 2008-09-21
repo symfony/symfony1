@@ -197,6 +197,8 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         $this->clearCredentials();
       }
 
+      $this->dispatcher->notify(new sfEvent($this, 'user.change_authentication', array('authenticated' => $this->authenticated)));
+
       $this->storage->regenerate(false);
     }
   }
