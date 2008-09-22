@@ -329,6 +329,10 @@ class sfProjectConfiguration
       {
         $this->pluginPaths[] = $pluginPaths[$pos];
       }
+      else
+      {
+        throw new InvalidArgumentException(sprintf('The plugin "%s" does not exist.', $plugin));
+      }
     }
 
     return $this->pluginPaths;
