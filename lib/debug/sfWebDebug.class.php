@@ -200,8 +200,10 @@ class sfWebDebug
 
           <ul id="sfWebDebugDetails" class="menu">
             '.implode("\n", $titles).'
+            <li class="last">
+              <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" /></a>
+            </li>
           </ul>
-          <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" /></a>
         </div>
 
         '.implode("\n", $panels).'
@@ -442,7 +444,9 @@ EOF;
 #sfWebDebugBar .menu
 {
   padding: 5px;
+  padding-left: 0;
   display: inline;
+  margin-right: 0;
 }
 
 #sfWebDebugBar .menu li
@@ -450,8 +454,7 @@ EOF;
   display: inline;
   list-style: none;
   margin: 0;
-  padding: 0 5px;
-  border-right: 1px solid #aaa;
+  padding: 0 6px;
 }
 
 #sfWebDebugBar .menu li.last
@@ -554,7 +557,6 @@ EOF;
   display: inline;
   margin: 0;
   padding: 0 5px;
-  border-right: 1px solid #aaa;
 }
 
 #sfWebDebugConfigSummary li.last
@@ -662,6 +664,14 @@ EOF;
   filter:alpha(opacity=85);
   -moz-opacity:0.85;
   opacity: 0.85;
+}
+
+#sfWebDebugSymfonyVersion
+{
+  margin-left: 0;
+  padding: 1px 4px;
+  background-color: #666;
+  color: #fff;
 }
 EOF;
   }

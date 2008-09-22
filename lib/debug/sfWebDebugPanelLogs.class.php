@@ -20,7 +20,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 {
   public function getTitle()
   {
-    return '<img src="'.$this->webDebug->getOption('image_root_path').'/comment.png" /> logs';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/log.png" /> logs';
   }
 
   public function getPanelTitle()

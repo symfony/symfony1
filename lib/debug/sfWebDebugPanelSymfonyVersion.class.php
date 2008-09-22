@@ -20,7 +20,7 @@ class sfWebDebugPanelSymfonyVersion extends sfWebDebugPanel
 {
   public function getTitle()
   {
-    return SYMFONY_VERSION;
+    return '<span id="sfWebDebugSymfonyVersion">'.SYMFONY_VERSION.'</span>';
   }
 
   public function getPanelTitle()
