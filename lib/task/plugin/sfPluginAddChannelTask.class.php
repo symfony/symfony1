@@ -35,7 +35,7 @@ class sfPluginAddChannelTask extends sfPluginBaseTask
     $this->briefDescription = 'Add a new PEAR channel';
 
     $this->detailedDescription = <<<EOF
-The [plugin:add-channel|INFO] task add a new PEAR channel:
+The [plugin:add-channel|INFO] task adds a new PEAR channel:
 
   [./symfony plugin:add-channel symfony.plugins.pear.example.com|INFO]
 EOF;
