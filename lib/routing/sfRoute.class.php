@@ -576,7 +576,7 @@ class sfRoute implements Serializable
       {
         foreach ($value as $v)
         {
-          $tmp[] = $key.$equals.urlencode($v);
+          $tmp[] = $key.'='.urlencode($v);
         }
       }
       else
