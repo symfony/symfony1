@@ -166,13 +166,11 @@ abstract class sfRouting
  /**
   * Parses a URL to find a matching route and sets internal state.
   *
-  * Throws a sfError404Exception if no route match the URL.
+  * Returns false if no route match the URL.
   *
-  * @param  string $url     URL to be parsed
+  * @param  string $url  URL to be parsed
   *
-  * @return array  An array of parameters
-  *
-  * @throws sfError404Exception if the url is not parseable by the sfRouting object
+  * @return array|false  An array of parameters or false if the route does not match
   */
   abstract public function parse($url);
 

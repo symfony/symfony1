@@ -389,6 +389,8 @@ class sfPatternRouting extends sfRouting
   /**
    * Finds a matching route for given URL.
    *
+   * Returns false if no route matches.
+   *
    * Returned array contains:
    *
    *  - name:       name or alias of the route that matched
@@ -397,7 +399,7 @@ class sfPatternRouting extends sfRouting
    *
    * @param  string $url     URL to be parsed
    *
-   * @return array  An array with routing information or false if no route matched
+   * @return array|false  An array with routing information or false if no route matched
    */
   public function findRoute($url)
   {
