@@ -1,6 +1,6 @@
 <?php
 
-use_helper('Form', 'Javascript', 'Helper', 'I18N');
+use_helper('Form', 'JavascriptBase', 'Helper', 'I18N');
 
 /*
  * This file is part of the symfony package.
