@@ -455,8 +455,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $fields = $table->getFieldNames();
         } else {
             // only auto-add the primary key fields if this query object is not
-            // a subquery of another query object
-            if ( ! $this->_isSubquery || $this->_hydrator->getHydrationMode() === Doctrine::HYDRATE_NONE) {
+            // a subquery of another query object and we're not using HYDRATE_NONE
+            if ( ! $this->_isSubquery && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
                 $fields = array_unique(array_merge((array) $table->getIdentifier(), $fields));
             }
         }
