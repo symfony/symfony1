@@ -246,6 +246,6 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
      */
     public function listTableViews($table)
     {
-        return $this->conn->fetchColumn($query);
+        return $this->conn->fetchColumn($table);
     }
 }
