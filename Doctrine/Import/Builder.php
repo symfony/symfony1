@@ -475,6 +475,10 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     $a[] = '\'onUpdate\' => ' . $this->varExport($relation['onUpdate']);
                 }
 
+                if (isset($relation['cascade']) && $relation['cascade']) {
+                    $a[] = '\'cascade\' => ' . $this->varExport($relation['cascade']);
+                }
+
                 if (isset($relation['equal']) && $relation['equal']) {
                     $a[] = '\'equal\' => ' . $this->varExport($relation['equal']);
                 }
