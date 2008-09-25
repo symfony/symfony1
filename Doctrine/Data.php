@@ -223,23 +223,6 @@ class Doctrine_Data
     }
 
     /**
-     * importDummyData
-     *
-     * Interface for importing dummy data to models
-     * 
-     * @param string $num 
-     * @param string $models 
-     * @return void
-     */
-    public function importDummyData($num = 3, $models = array())
-    {
-        $import = new Doctrine_Data_Import();
-        $import->setModels($models);
-        
-        return $import->doImportDummyData($num);
-    }
-
-    /**
      * isRelation
      *
      * Check if a fieldName on a Doctrine_Record is a relation, if it is we return that relationData
