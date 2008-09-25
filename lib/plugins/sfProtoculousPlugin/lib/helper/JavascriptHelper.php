@@ -1,6 +1,6 @@
 <?php
 
-use_helper('JavascriptBase');
+require_once dirname(__FILE__).'/JavascriptBaseHelper.php';
 
 /*
  * This file is part of the symfony package.

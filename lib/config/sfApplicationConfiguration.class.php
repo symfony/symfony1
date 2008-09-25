@@ -19,7 +19,8 @@
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
   static protected
-    $coreLoaded = false;
+    $coreLoaded    = false,
+    $loadedHelpers = array();
 
   protected
     $configCache = null,
@@ -314,20 +315,41 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $dirs[] = $key.'/'.$moduleName.'/templates';
     }
 
-    $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';                 // application
-
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/modules/'.$moduleName.'/templates'))
-      {
-        $dirs[] = $dir;                                                                        // plugins
-      }
-    }
-
-    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/controller/'.$moduleName.'/templates';     // core modules
-    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName.'/templates');  // generated templates in cache
+    $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';                  // application
+    $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/templates')); // plugins
+    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/controller/'.$moduleName.'/templates';      // core modules
+    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName.'/templates');   // generated templates in cache
 
     return $dirs;
+  }
+
+  /**
+   * Gets the helper directories for a given module name.
+   *
+   * @param  string $moduleName The module name
+   *
+   * @return array  An array of directories
+   */
+  public function getHelperDirs($moduleName = '')
+  {
+    $dirs = array();
+
+    if ($moduleName)
+    {
+      $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/lib/helper'; // module
+
+      $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/lib/helper'));
+    }
+
+    return array_merge(
+      $dirs,
+      array(
+        sfConfig::get('sf_app_lib_dir').'/helper',         // application
+        sfConfig::get('sf_lib_dir').'/helper',             // project
+      ),
+      $this->getPluginSubPaths('/lib/helper'),             // plugins
+      array(sfConfig::get('sf_symfony_lib_dir').'/helper') // symfony
+    );
   }
 
   /**
@@ -410,15 +432,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // plugins
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/i18n'))
-      {
-        $dirs[] = $dir;
-      }
-    }
-
-    return $dirs;
+    return array_merge($dirs, $this->getPluginPaths('/i18n'));
   }
 
   /**
@@ -444,25 +458,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $dirs[] = $dir;
     }
 
-    // module in plugins
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/modules/'.$moduleName.'/i18n'))
-      {
-        $dirs[] = $dir;
-      }
-    }
-
-    // plugins
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/i18n'))
-      {
-        $dirs[] = $dir;
-      }
-    }
-
-    return $dirs;
+    return array_merge(
+      $dirs,
+      $this->getPluginSubPaths('/modules/'.$moduleName.'/i18n'), // module in plugins
+      $this->getPluginSubPaths('/i18n')                          // plugins
+    );
   }
 
   /**
@@ -515,6 +515,55 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     return $configs;
+  }
+
+  /**
+   * Loads helpers.
+   *
+   * @param array  $helpers     An array of helpers to load
+   * @param string $moduleName  A module name (optional)
+   */
+  public function loadHelpers($helpers, $moduleName = '')
+  {
+    $dirs = $this->getHelperDirs($moduleName);
+    foreach ((array) $helpers as $helperName)
+    {
+      if (isset(self::$loadedHelpers[$helperName]))
+      {
+        continue;
+      }
+
+      $fileName = $helperName.'Helper.php';
+      foreach ($dirs as $dir)
+      {
+        $included = false;
+        if (is_readable($dir.'/'.$fileName))
+        {
+          include_once($dir.'/'.$fileName);
+          $included = true;
+          break;
+        }
+      }
+
+      if (!$included)
+      {
+        // search in the include path
+        if ((@include_once('helper/'.$fileName)) != 1)
+        {
+          $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
+
+          // remove sf_root_dir from dirs
+          foreach ($dirs as &$dir)
+          {
+            $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
+          }
+
+          throw new InvalidArgumentException(sprintf('Unable to load "%sHelper.php" helper in: %s.', $helperName, implode(', ', $dirs)));
+        }
+      }
+
+      self::$loadedHelpers[$helperName] = true;
+    }
   }
 
   /**

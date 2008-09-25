@@ -22,7 +22,7 @@ class sfProjectConfiguration
     $rootDir       = null,
     $symfonyLibDir = null,
     $plugins       = array('sfPropelPlugin'),
-    $pluginPaths   = null;
+    $pluginPaths   = array();
 
   static protected
     $active = null;
@@ -147,19 +147,10 @@ class sfProjectConfiguration
    */
   public function getModelDirs()
   {
-    $dirs = array();
-
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/lib/model'))
-      {
-        $dirs[] = $dir;                             // plugins
-      }
-    }
-
-    $dirs[] = sfConfig::get('sf_lib_dir').'/model'; // project
-
-    return $dirs;
+    return array_merge(
+      $this->getPluginSubPaths('/lib/model'),     // plugins
+      array(sfConfig::get('sf_lib_dir').'/model') // project
+    );
   }
 
   /**
@@ -172,17 +163,10 @@ class sfProjectConfiguration
    */
   public function getGeneratorTemplateDirs($class, $theme)
   {
-    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template');    // project
-
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/data/generator/'.$class.'/'.$theme.'/template'))
-      {
-        $dirs[] = $dir;                                                                         // plugins
-      }
-    }
-
-    return $dirs;
+    return array_merge(
+      array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template'), // project
+      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/template')       //plugins
+    );
   }
 
   /**
@@ -195,17 +179,10 @@ class sfProjectConfiguration
    */
   public function getGeneratorSkeletonDirs($class, $theme)
   {
-    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton');  // project
-
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_dir($dir = $path.'/data/generator/'.$class.'/'.$theme.'/skeleton'))
-      {
-        $dirs[] = $dir;                                                                       // plugins
-      }
-    }
-
-    return $dirs;
+    return array_merge(
+      array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton'), // project
+      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/skeleton')       // plugins
+    );
   }
 
   /**
@@ -298,11 +275,38 @@ class sfProjectConfiguration
   /**
    * Gets the list of enabled plugins.
    *
-   * @param array An array of enabled plugins
+   * @return array An array of enabled plugins
    */
   public function getPlugins()
   {
     return $this->plugins;
+  }
+
+  /**
+   * Gets the paths plugin sub-directories, minding overloaded plugins.
+   *
+   * @param  string $subPath The subdirectory to look for
+   *
+   * @return array The plugin paths.
+   */
+  public function getPluginSubPaths($subPath = '')
+  {
+    if (array_key_exists($subPath, $this->pluginPaths))
+    {
+      return $this->pluginPaths[$subPath];
+    }
+
+    $this->pluginPaths[$subPath] = array();
+    $pluginPaths = $this->getPluginPaths();
+    foreach ($pluginPaths as $pluginPath)
+    {
+      if (is_dir($pluginPath.$subPath))
+      {
+        $this->pluginPaths[$subPath][] = $pluginPath.$subPath;
+      }
+    }
+
+    return $this->pluginPaths[$subPath];
   }
 
   /**
@@ -312,22 +316,22 @@ class sfProjectConfiguration
    */
   public function getPluginPaths()
   {
-    if (!is_null($this->pluginPaths))
+    if (array_key_exists('', $this->pluginPaths))
     {
-      return $this->pluginPaths;
+      return $this->pluginPaths[''];
     }
 
     $pluginPaths = $this->getAllPluginPaths();
 
     // order the plugins
     $basePaths = array_map(create_function('$v', 'return basename($v);'), $pluginPaths);
-    $this->pluginPaths = array();
+    $this->pluginPaths[''] = array();
 
     foreach ($this->getPlugins() as $plugin)
     {
       if (false !== $pos = array_search($plugin, $basePaths))
       {
-        $this->pluginPaths[] = $pluginPaths[$pos];
+        $this->pluginPaths[''][] = $pluginPaths[$pos];
       }
       else
       {
@@ -335,7 +339,7 @@ class sfProjectConfiguration
       }
     }
 
-    return $this->pluginPaths;
+    return $this->pluginPaths[''];
   }
 
   protected function getAllPluginPaths()

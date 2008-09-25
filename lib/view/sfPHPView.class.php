@@ -49,7 +49,7 @@ class sfPHPView extends sfView
       unset($helpers[$i]);
     }
 
-    sfLoader::loadHelpers($helpers);
+    $this->context->getConfiguration()->loadHelpers($helpers);
   }
 
   /**

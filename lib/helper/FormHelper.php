@@ -714,7 +714,7 @@ function input_date_tag($name, $value = null, $options = array())
   // rich control?
   if (!_get_option($options, 'rich', false))
   {
-    use_helper('DateForm');
+    require_once dirname(__FILE__).'/DateFormHelper.php';
 
     // set culture for month tag
     $options['culture'] = $culture;

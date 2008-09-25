@@ -19,5 +19,7 @@
 
 function use_helper()
 {
-  sfLoader::loadHelpers(func_get_args(), sfContext::getInstance()->getModuleName());
+  $context = sfContext::getInstance();
+
+  $context->getConfiguration()->loadHelpers(func_get_args(), $context->getModuleName());
 }

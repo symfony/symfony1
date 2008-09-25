@@ -1246,7 +1246,7 @@ method:
   [php]
   public function setup()
   {
-    $this->setPlugins('sfDoctrinePlugin', 'sfCompat10Plugin');
+    $this->setPlugins(array('sfDoctrinePlugin', 'sfCompat10Plugin'));
   }
 
 The `orm` setting is deprecated in `settings.yml` as it is now automatically
@@ -1277,6 +1277,11 @@ You can also enable all installed plugins:
 The previous example allows you to enable all plugins except the Doctrine one.
 If you upgrade from 1.0 or 1.1, this line will make symfony behave like in
 symfony 1.0 and 1.1.
+
+The `sfLoader` class is deprecated as the `getHelperDirs()` and `loadHelpers()`
+methods are now part of the `sfApplicationConfiguration` class. The `sfLoader`
+methods now generate a deprecated log message and then call the new methods from
+the current active configuration.
 
 Filters
 -------

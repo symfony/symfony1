@@ -14,12 +14,13 @@ class sfContext
     $instance = null;
 
   public
-    $request    = null,
-    $response   = null,
-    $controller = null,
-    $routing    = null,
-    $user       = null,
-    $storage    = null;
+    $configuration = null,
+    $request       = null,
+    $response      = null,
+    $controller    = null,
+    $routing       = null,
+    $user          = null,
+    $storage       = null;
 
   protected
     $sessionPath = '';
@@ -67,6 +68,11 @@ class sfContext
   public function getActionName()
   {
     return 'action';
+  }
+
+  public function getConfiguration()
+  {
+    return $this->configuration;
   }
 
   public function getRequest()

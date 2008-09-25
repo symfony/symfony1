@@ -1,6 +1,6 @@
 <?php
 
-use_helper('Form');
+require_once dirname(__FILE__).'/FormHelper.php';
 
 /*
  * This file is part of the symfony package.

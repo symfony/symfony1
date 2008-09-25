@@ -1,6 +1,8 @@
 <?php
 
-use_helper('Form', 'JavascriptBase', 'Helper', 'I18N');
+require_once dirname(__FILE__).'/FormHelper.php';
+require_once dirname(__FILE__).'/JavascriptBaseHelper.php';
+require_once dirname(__FILE__).'/I18NHelper.php';
 
 /*
  * This file is part of the symfony package.

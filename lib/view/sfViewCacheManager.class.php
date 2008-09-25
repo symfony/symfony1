@@ -859,7 +859,7 @@ class sfViewCacheManager
       return $content;
     }
 
-    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
+    $this->context->getConfiguration()->loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
 
     $bgColor      = $event['new'] ? '#9ff' : '#ff9';
     $lastModified = $this->getLastModified($event['uri']);

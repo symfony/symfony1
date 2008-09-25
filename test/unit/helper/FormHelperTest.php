@@ -42,6 +42,12 @@ class myResponse
   }
 }
 
+class ProjectConfiguration extends sfProjectConfiguration
+{
+}
+
+$configuration = new ProjectConfiguration(dirname(__FILE__).'/../../lib', new sfEventDispatcher());
+
 $t = new lime_test(95, new lime_output_color());
 
 $context = sfContext::getInstance(array(

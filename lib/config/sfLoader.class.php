@@ -11,6 +11,8 @@
 /**
  * sfLoader is a class which contains the logic to look for files/classes in symfony.
  *
+ * This class is deprecated. The same methods now exist in sfApplicationConfiguration.
+ *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -27,35 +29,11 @@ class sfLoader
    */
   static public function getHelperDirs($moduleName = '')
   {
-    $dirs = array();
+    $configuration = sfProjectConfiguration::getActive();
 
-    if ($moduleName)
-    {
-      $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/lib/helper'; // module
+    $configuration->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array('The sfLoader::getHelperDirs() method is deprecated. Please use the same method from sfApplicationConfiguration.', 'priority' => sfLogger::ERR)));
 
-      if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/lib/helper'))
-      {
-        $dirs = array_merge($dirs, $pluginDirs);                                  // module plugins
-      }
-    }
-
-    $dirs[] = sfConfig::get('sf_app_lib_dir').'/helper';                          // application
-
-    $dirs[] = sfConfig::get('sf_lib_dir').'/helper';                              // project
-
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/helper'))
-    {
-      $dirs = array_merge($dirs, $pluginDirs);                                    // plugins
-    }
-
-    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/helper';                      // symfony
-
-    if ($pluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/helper'))
-    {
-      $dirs = array_merge($dirs, $pluginDirs);                                    // symfony bundled plugins
-    }
-
-    return $dirs;
+    return $configuration->getHelperDirs($moduleName);
   }
 
   /**
@@ -68,46 +46,10 @@ class sfLoader
    */
   static public function loadHelpers($helpers, $moduleName = '')
   {
-    static $loaded = array();
+    $configuration = sfProjectConfiguration::getActive();
 
-    $dirs = self::getHelperDirs($moduleName);
-    foreach ((array) $helpers as $helperName)
-    {
-      if (isset($loaded[$helperName]))
-      {
-        continue;
-      }
+    $configuration->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array('The sfLoader::loadHelpers() method is deprecated. Please use the same method from sfApplicationConfiguration.', 'priority' => sfLogger::ERR)));
 
-      $fileName = $helperName.'Helper.php';
-      foreach ($dirs as $dir)
-      {
-        $included = false;
-        if (is_readable($dir.'/'.$fileName))
-        {
-          include_once($dir.'/'.$fileName);
-          $included = true;
-          break;
-        }
-      }
-
-      if (!$included)
-      {
-        // search in the include path
-        if ((@include_once('helper/'.$fileName)) != 1)
-        {
-          $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
-
-          // remove sf_root_dir from dirs
-          foreach ($dirs as &$dir)
-          {
-            $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
-          }
-
-          throw new sfViewException(sprintf('Unable to load "%sHelper.php" helper in: %s.', $helperName, implode(', ', $dirs)));
-        }
-      }
-
-      $loaded[$helperName] = true;
-    }
+    return $configuration->loadHelpers($helpers, $moduleName);
   }
 }
