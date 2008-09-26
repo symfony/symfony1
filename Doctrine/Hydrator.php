@@ -33,6 +33,7 @@
  */
 class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
 {
+    protected $_rootAlias = null;
     /**
      * hydrateResultSet
      * parses the data returned by statement object
@@ -76,6 +77,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         // Used variables during hydration
         reset($this->_queryComponents);
         $rootAlias = key($this->_queryComponents);
+        $this->_rootAlias = $rootAlias;
         $rootComponentName = $this->_queryComponents[$rootAlias]['table']->getComponentName();
         // if only one component is involved we can make our lives easier
         $isSimpleQuery = count($this->_queryComponents) <= 1;
@@ -316,8 +318,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $table = $map['table'];
             $dqlAlias = $cache[$key]['dqlAlias'];
             $fieldName = $cache[$key]['fieldName'];
+            $agg = false;
             if (isset($this->_queryComponents[$dqlAlias]['agg'][$fieldName])) {
                 $fieldName = $this->_queryComponents[$dqlAlias]['agg'][$fieldName];
+                $agg = true;
             }
 
             if ($cache[$key]['isIdentifier']) {
@@ -329,6 +333,13 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             } else {
                 $rowData[$dqlAlias][$fieldName] = $table->prepareValue(
                         $fieldName, $value, $cache[$key]['type']);
+            }
+
+            // Ticket #1380
+            // Hydrate aggregates in to the root component as well.
+            // So we know that all aggregate values will always be available in the root component
+            if ($agg) {
+                $rowData[$this->_rootAlias][$fieldName] = $rowData[$dqlAlias][$fieldName];
             }
 
             if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {
