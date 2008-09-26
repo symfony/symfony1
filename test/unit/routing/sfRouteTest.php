@@ -15,44 +15,44 @@ $t = new lime_test(41, new lime_output_color());
 // ->matchesUrl()
 $t->diag('->matchesUrl()');
 $route = new sfRoute('/');
-$t->is($route->matchesUrl('/'), array(array(), array()), '->matchesUrl() takes a URL as its first argument');
+$t->is($route->matchesUrl('/'), array(), '->matchesUrl() takes a URL as its first argument');
 $t->is($route->matchesUrl('/foo'), false, '->matchesUrl() returns false if the route does not match');
 
 $route = new sfRoute('/', array('foo' => 'bar'));
-$t->is($route->matchesUrl('/'), array(array('foo' => 'bar'), array()), '->matchesUrl() returns default values for parameters not in the route');
+$t->is($route->matchesUrl('/'), array('foo' => 'bar'), '->matchesUrl() returns default values for parameters not in the route');
 
 $route = new sfRoute('/:bar', array('foo' => 'bar'));
-$t->is($route->matchesUrl('/foobar'), array(array('foo' => 'bar', 'bar' => 'foobar'), array()), '->matchesUrl() returns variables from the pattern');
+$t->is($route->matchesUrl('/foobar'), array('foo' => 'bar', 'bar' => 'foobar'), '->matchesUrl() returns variables from the pattern');
 
 $route = new sfRoute('/:foo', array('foo' => 'bar'));
-$t->is($route->matchesUrl('/foobar'), array(array('foo' => 'foobar'), array()), '->matchesUrl() overrides default value with pattern value');
+$t->is($route->matchesUrl('/foobar'), array('foo' => 'foobar'), '->matchesUrl() overrides default value with pattern value');
 
 $route = new sfRoute('/:foo', array('foo' => 'bar'));
-$t->is($route->matchesUrl('/'), array(array('foo' => 'bar'), array()), '->matchesUrl() matches routes with an optional parameter at the end');
+$t->is($route->matchesUrl('/'), array('foo' => 'bar'), '->matchesUrl() matches routes with an optional parameter at the end');
 
 $route = new sfRoute('/foo/:foo/bar/:bar', array('foo' => 'bar', 'bar' => 'foo'));
-$t->is($route->matchesUrl('/foo/bar/bar'), array(array('foo' => 'bar', 'bar' => 'foo'), array()), '->matchesUrl() matches routes with an optional parameter at the end');
+$t->is($route->matchesUrl('/foo/bar/bar'), array('foo' => 'bar', 'bar' => 'foo'), '->matchesUrl() matches routes with an optional parameter at the end');
 
 $route = new sfRoute('/:foo/:bar', array('foo' => 'bar', 'bar' => 'foo'));
-$t->is($route->matchesUrl('/'), array(array('foo' => 'bar', 'bar' => 'foo'), array()), '->matchesUrl() matches routes with multiple optionals parameters at the end');
+$t->is($route->matchesUrl('/'), array('foo' => 'bar', 'bar' => 'foo'), '->matchesUrl() matches routes with multiple optionals parameters at the end');
 
 $route = new sfRoute('/', array());
 $route->setDefaultParameters(array('foo' => 'bar'));
-$t->is($route->matchesUrl('/'), array(array('foo' => 'bar'), array()), '->matchesUrl() gets default parameters from the routing object if it exists');
+$t->is($route->matchesUrl('/'), array('foo' => 'bar'), '->matchesUrl() gets default parameters from the routing object if it exists');
 
 $route = new sfRoute('/', array('foo' => 'foobar'));
 $route->setDefaultParameters(array('foo' => 'bar'));
-$t->is($route->matchesUrl('/'), array(array('foo' => 'foobar'), array()), '->matchesUrl() overrides routing default parameters with route default parameters');
+$t->is($route->matchesUrl('/'), array('foo' => 'foobar'), '->matchesUrl() overrides routing default parameters with route default parameters');
 
 $route = new sfRoute('/:foo', array('foo' => 'foobar'));
 $route->setDefaultParameters(array('foo' => 'bar'));
-$t->is($route->matchesUrl('/barfoo'), array(array('foo' => 'barfoo'), array()), '->matchesUrl() overrides routing default parameters with pattern parameters');
+$t->is($route->matchesUrl('/barfoo'), array('foo' => 'barfoo'), '->matchesUrl() overrides routing default parameters with pattern parameters');
 
 $route = new sfRoute('/:foo', array(), array('foo' => '\d+'));
 $t->is($route->matchesUrl('/bar'), false, '->matchesUrl() enforces requirements');
 
 $route = new sfRoute('/:foo', array(), array('foo' => '\w+'));
-$t->is($route->matchesUrl('/bar'), array(array('foo' => 'bar'), array()), '->matchesUrl() enforces requirements');
+$t->is($route->matchesUrl('/bar'), array('foo' => 'bar'), '->matchesUrl() enforces requirements');
 
 // ->matchesParameters()
 $t->diag('->matchesParameters()');
@@ -129,19 +129,19 @@ $t->is($route->generate(array('foo' => 'bar')), '/bar/foo', '->generate() genera
 // ->parseStarParameter()
 $t->diag('->parseStarParameter()');
 $route = new sfRoute('/foo/*');
-$t->is($route->matchesUrl('/foo/foo/bar/bar/foo'), array(array('foo' => 'bar', 'bar' => 'foo'), array()), '->parseStarParameter() parses * as key/value pairs');
-$t->is($route->matchesUrl('/foo/foo/foo.bar'), array(array('foo' => 'foo.bar'), array()), '->parseStarParameter() uses / as the key/value separator');
-$t->is($route->matchesUrl('/foo'), array(array(), array()), '->parseStarParameter() returns no additional parameters if the * value is empty');
+$t->is($route->matchesUrl('/foo/foo/bar/bar/foo'), array('foo' => 'bar', 'bar' => 'foo'), '->parseStarParameter() parses * as key/value pairs');
+$t->is($route->matchesUrl('/foo/foo/foo.bar'), array('foo' => 'foo.bar'), '->parseStarParameter() uses / as the key/value separator');
+$t->is($route->matchesUrl('/foo'), array(), '->parseStarParameter() returns no additional parameters if the * value is empty');
 
 $route = new sfRoute('/foo/*', array('module' => 'foo'));
-$t->is($route->matchesUrl('/foo/foo/bar/module/barbar'), array(array('foo' => 'bar', 'module' => 'foo'), array()), '->parseStarParameter() cannot override a default value');
+$t->is($route->matchesUrl('/foo/foo/bar/module/barbar'), array('foo' => 'bar', 'module' => 'foo'), '->parseStarParameter() cannot override a default value');
 
 $route = new sfRoute('/:foo/*');
-$t->is($route->matchesUrl('/bar/foo/barbar'), array(array('foo' => 'bar'), array()), '->parseStarParameter() cannot override pattern variables');
+$t->is($route->matchesUrl('/bar/foo/barbar'), array('foo' => 'bar'), '->parseStarParameter() cannot override pattern variables');
 
 $route = new sfRoute('/foo/*/bar');
-$t->is($route->matchesUrl('/foo/foo/bar/bar'), array(array('foo' => 'bar'), array()), '->parseStarParameter() is able to parse a star in the middle of a rule');
-$t->is($route->matchesUrl('/foo/bar'), array(array(), array()), '->parseStarParameter() is able to parse a star if it is empty');
+$t->is($route->matchesUrl('/foo/foo/bar/bar'), array('foo' => 'bar'), '->parseStarParameter() is able to parse a star in the middle of a rule');
+$t->is($route->matchesUrl('/foo/bar'), array(), '->parseStarParameter() is able to parse a star if it is empty');
 
 // ->generateStarParameter()
 $t->diag('->generateStarParameter()');

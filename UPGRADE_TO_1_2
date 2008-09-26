@@ -944,6 +944,15 @@ and `insertRouteBefore()` methods:
     $route = new myRoute('/foo/:bar', array('module' => 'foo', 'action' => 'bar'));
     $routing->connect('foo_bar', $route);
 
+When a request comes in, the matching route object is stored as an attribute of the
+request and you can get it from an action via the `getRoute()` method:
+
+    [php]
+    public function executeIndex()
+    {
+      $route = $this->getRoute();
+    }
+
 The `sfRoute` constructor takes an array of options as its last argument to
 allow the customization of each route. In the `routing.yml` configuration file,
 use to `options` key:
@@ -1037,18 +1046,15 @@ symfony 1.2 comes with another route class that extends `sfRequestRoute`,
 call some methods on your PHP class to get the object, or a collection of
 objects, related to the route.
 
-The object or the collection of objects will be available in your actions
-via a request attribute:
-
     [yml]
     article:
       url:     /article/:id
       class:   sfObjectRoute
-      options: { model: Article, object: article, method: getById }
+      options: { model: Article, type: object, method: getById }
 
-When an incoming URL matches the route, the `sfObjectRoute` will get the
-related object by calling the `Article::getById()` method and will inject
-the result into the request attributes (under the `article` key).
+When an incoming URL matches the route, the `sfObjectRoute::getObject()`
+method will get the related object by calling the `Article::getById()`
+method.
 
 The same goes for a collection of objects:
 
@@ -1056,9 +1062,24 @@ The same goes for a collection of objects:
     articles:
       url:     /articles/newest
       class:   sfObjectRoute
-      options: { model: Article, list: articles, method: getNewest }
+      options: { model: Article, type: list, method: getNewest }
 
 `sfPropelRoute` extends `sfObjectRoute` to bind a route to a Propel model.
+
+In your actions, you can retrieve the related object or collection of objects
+by using the `sfObjectRoute::getObject()` and `sfObjectRoute::getObjects()`
+methods:
+
+    [php]
+    public function executeList($request)
+    {
+      $this->articles = $this->getRoute()->getObjects();
+    }
+
+    public function executeShow($request)
+    {
+      $this->article = $this->getRoute()->getObject();
+    }
 
 Here is an example for an `Article` Propel object:
 
@@ -1067,21 +1088,22 @@ Here is an example for an `Article` Propel object:
       url:     /article/:id
       param:   { module: article, action: show }
       class:   sfPropelRoute
-      options: { model: Article, object: article }
+      options: { model: Article, type: object }
 
     articles:
       url:     /articles
       param:   { module: article, action: list }
       class:   sfPropelRoute
-      options: { model: Article, list: articles, method: getPublishedArticleCriteria }
+      options: { model: Article, type: list, method: getPublishedArticleCriteria }
 
 If you don't define a method, `sfPropelRoute` will retrieve the object
-by building a Criteria object based on the available route variables.
+by building a `Criteria` object based on the available route variables.
 
 The `sfPropelRoute` has two main advantages over `sfRoute`:
 
-  * When a request comes in and the route matches the URL, `sfPropelRoute`
-    will automatically inject the related `Article` object with a name of `article`.
+  * When a request comes in and the route matches the URL, the matching `sfPropelRoute`
+    object will be available in your actions, and the related `Article` object
+    will be available by calling the `getObject()` method.
     Moreover, if the object does not exist in the database, it will automatically
     redirect the user to a 404 error page. This means less boiler-plate code in
     your actions.
@@ -1119,7 +1141,7 @@ pattern:
       url:     /article/:id/:slug
       param:   { module: article, action: show }
       class:   sfPropelRoute
-      options: { model: Article, object: article }
+      options: { model: Article, type: object }
 
 But sometimes, you want to put in the pattern some information that does not
 exist in the database. In this case, you can pass a `method` option:
@@ -1129,7 +1151,7 @@ exist in the database. In this case, you can pass a `method` option:
       url:     /post/:id/:year/:month/:day/:slug
       param:   { module: article, action: show }
       class:   sfPropelRoute
-      options: { model: Article, object: article, method: getObjectForRoute }
+      options: { model: Article, type: object, method: getObjectForRoute }
 
 The `getObjectForRoute()` receives an array of parameters as its first
 argument and must return an `Article` object:

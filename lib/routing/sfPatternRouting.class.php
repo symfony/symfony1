@@ -349,17 +349,26 @@ class sfPatternRouting extends sfRouting
       return false;
     }
 
-    // store the route name
-    $this->currentRouteName   = $info['name'];
-    $this->currentInternalUri = array();
-
     if ($this->options['logging'])
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route "%s" (%s) for %s with parameters %s', $info['name'], $info['pattern'], $url, str_replace("\n", '', var_export($info['parameters'], true))))));
     }
 
     // store the current internal URI
-    $parameters = $info['parameters'];
+    $this->updateCurrentInternalUri($info['name'], $info['parameters']);
+
+    $route = $this->routes[$info['name']];
+    $route->bind($this->options['context'], $info['parameters']);
+    $info['parameters']['_sf_route'] = $route;
+
+    return $info['parameters'];
+  }
+
+  protected function updateCurrentInternalUri($name, array $parameters)
+  {
+    // store the route name
+    $this->currentRouteName = $name;
+
     $internalUri = array('@'.$this->currentRouteName, $parameters['module'].'/'.$parameters['action']);
     unset($parameters['module'], $parameters['action']);
 
@@ -375,15 +384,6 @@ class sfPatternRouting extends sfRouting
     $params = $params ? '?'.implode('&', $params) : '';
 
     $this->currentInternalUri = array($internalUri[0].$params, $internalUri[1].$params);
-
-    if ($info['extra_parameters'])
-    {
-      return array_merge($info['parameters'], array('_arguments' => $info['extra_parameters']));
-    }
-    else
-    {
-      return $info['parameters'];
-    }
   }
 
   /**
@@ -417,8 +417,8 @@ class sfPatternRouting extends sfRouting
 
     $info = $this->getRouteThatMatchesUrl($url);
 
-    // store in cache only if there is no extra parameters
-    if (!is_null($this->cache) && !count($info['extra_parameters']))
+    // store in cache
+    if (!is_null($this->cache))
     {
       $this->cacheChanged = true;
       $this->cacheData[$cacheKey] = $info;
@@ -454,7 +454,7 @@ class sfPatternRouting extends sfRouting
         continue;
       }
 
-      return array('name' => $name, 'pattern' => $route->getPattern(), 'parameters' => $parameters[0], 'extra_parameters' => $parameters[1]);
+      return array('name' => $name, 'pattern' => $route->getPattern(), 'parameters' => $parameters);
     }
 
     return false;

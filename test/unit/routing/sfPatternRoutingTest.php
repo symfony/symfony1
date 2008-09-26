@@ -14,6 +14,14 @@ $t = new lime_test(122, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
+  public function parse($url)
+  {
+    $parameters = parent::parse($url);
+    unset($parameters['_sf_route']);
+
+    return $parameters;
+  }
+
   public function getCurrentRouteName()
   {
     return $this->current_route_name;
@@ -471,7 +479,7 @@ $t->is($rCached->getCurrentInternalUri(), 'default/index', '->getCurrentInternal
 // findRoute was added to be the side effectless version to check an uri
 $parameters = $rCached->findRoute('/test');
 $t->is($parameters,
-       array('name' => 'test', 'pattern' => '/:module', 'parameters' => array('action' => 'index', 'module' => 'test'), 'extra_parameters' => array()),
+       array('name' => 'test', 'pattern' => '/:module', 'parameters' => array('action' => 'index', 'module' => 'test')),
        '->findRoute() returns information about matching route');
 $t->is($rCached->getCurrentInternalUri(), 'default/index', '->findRoute() does not change the internal URI of sfPatternRouting');
 $t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');

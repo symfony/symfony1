@@ -34,67 +34,33 @@ class sfObjectRoute extends sfRequestRoute
   {
     if (!isset($options['model']))
     {
-      throw new InvalidArgumentException('You must pass a "model" option for a sfObjectRoute object.');
+      throw new InvalidArgumentException(sprintf('You must pass a "model" option for a sfObjectRoute object (%s).', $pattern));
     }
 
-    if (!isset($options['object']) && !isset($options['list']))
+    if (!isset($options['type']))
     {
-      throw new InvalidArgumentException('You must pass an "object" or a "list" option for a sfObjectRoute object.');
+      throw new InvalidArgumentException(sprintf('You must pass a "type" option for a sfObjectRoute object (%s).', $pattern));
     }
+
+    if (!in_array($options['type'], array('object', 'list')))
+    {
+      throw new InvalidArgumentException(sprintf('The "type" option can only be "object" or "list", "%s" given (%s).', $options['type'], $pattern));
+      }
 
     parent::__construct($pattern, $defaults, $requirements, $options);
   }
 
   /**
-   * Returns true if the URL matches this route, false otherwise.
-   *
-   * @param  string  $url     The URL
-   * @param  array   $context The context
-   *
-   * @return array   An array composed of an array of parameters and an array of extra parameters
-   */
-  public function matchesUrl($url, $context = array())
-  {
-    if (false === $parameters = parent::matchesUrl($url, $context))
-    {
-      return false;
-    }
-
-    if (isset($this->options['object']))
-    {
-      // check the related object
-      if (is_null($object = $this->getObjectForParameters($parameters[0])) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
-      {
-        throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($parameters[0]), true))));
-      }
-
-      return array($parameters[0], array_merge($parameters[1], array($this->options['object'] => false === $object ? null : $object)));
-    }
-    else
-    {
-      // object list
-      $objects = $this->getObjectsForParameters($parameters[0]);
-
-      if (is_array($objects) && !count($objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
-      {
-        throw new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($parameters[0]), true))));
-      }
-
-      return array($parameters[0], array_merge($parameters[1], array($this->options['list'] => false === $objects ? array() : $objects)));
-    }
-  }
-
-  /**
    * Returns true if the parameters matches this route, false otherwise.
    *
-   * @param  mixed  $params The parameters
+   * @param  mixed  $params  The parameters
    * @param  array  $context The context
    *
    * @return Boolean         true if the parameters matches this route, false otherwise.
    */
   public function matchesParameters($params, $context = array())
   {
-    return parent::matchesParameters(isset($this->options['object']) ? $this->convertObjectToArray($params) : $params);
+    return parent::matchesParameters('object' == $this->options['type'] ? $this->convertObjectToArray($params) : $params);
   }
 
   /**
@@ -108,7 +74,64 @@ class sfObjectRoute extends sfRequestRoute
    */
   public function generate($params, $context = array(), $absolute = false)
   {
-    return parent::generate(isset($this->options['object']) ? $this->convertObjectToArray($params) : $params, $absolute);
+    return parent::generate('object' == $this->options['type'] ? $this->convertObjectToArray($params) : $params, $absolute);
+  }
+
+  /**
+   * Gets the object related to the current route and parameters.
+   *
+   * This method is only accessible if the route is bound and of type "object".
+   *
+   * @return Object The related object
+   */
+  public function getObject()
+  {
+    if (!$this->isBound())
+    {
+      throw new LogicException('The route is not bound.');
+    }
+
+    if ('object' != $this->options['type'])
+    {
+      throw new LogicException('The route type must be "object".');
+    }
+
+    // check the related object
+    if (is_null($object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
+    {
+      throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+    }
+
+    return $object;
+  }
+
+  /**
+   * Gets the list of objects related to the current route and parameters.
+   *
+   * This method is only accessible if the route is bound and of type "list".
+   *
+   * @return array And array of related objects
+   */
+  public function getObjects()
+  {
+    if (!$this->isBound())
+    {
+      throw new LogicException('The route is not bound.');
+    }
+
+    if ('list' != $this->options['type'])
+    {
+      throw new LogicException('The route type must be "list".');
+    }
+
+    $objects = $this->getObjectsForParameters($this->parameters);
+
+    if (is_array($objects) && !count($objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
+    {
+      throw new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
+    }
+
+    return $objects;
   }
 
   protected function getObjectForParameters($parameters)

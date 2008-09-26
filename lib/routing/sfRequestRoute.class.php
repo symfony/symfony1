@@ -26,7 +26,7 @@ class sfRequestRoute extends sfRoute
    * @param  string  $url     The URL
    * @param  array   $context The context
    *
-   * @return array   An array composed of an array of parameters and an array of extra parameters
+   * @return array   An array of parameters
    */
   public function matchesUrl($url, $context = array())
   {

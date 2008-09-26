@@ -535,6 +535,11 @@ abstract class sfAction extends sfComponent
     sfConfig::set('mod_'.strtolower($this->getModuleName()).'_view_class', $class);
   }
 
+  public function getRoute()
+  {
+    return $this->getRequest()->getAttribute('sf_route');
+  }
+
   /**
    * Returns a formatted message for a 404 error.
    *

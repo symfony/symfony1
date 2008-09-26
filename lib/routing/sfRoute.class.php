@@ -19,6 +19,9 @@
 class sfRoute implements Serializable
 {
   protected
+    $isBound           = false,
+    $context           = null,
+    $parameters        = null,
     $defaultParameters = array(),
     $defaultOptions    = array(),
     $compiled          = false,
@@ -55,12 +58,35 @@ class sfRoute implements Serializable
   }
 
   /**
+   * Binds the current route for a given context and parameters.
+   *
+   * @param array $context    The context
+   * @param array $parameters The parameters
+   */
+  public function bind($context, $parameters)
+  {
+    $this->isBound    = true;
+    $this->context    = $context;
+    $this->parameters = $parameters;
+  }
+
+  /**
+   * Returns true if the form is bound to input values.
+   *
+   * @return Boolean true if the form is bound to input values, false otherwise
+   */
+  public function isBound()
+  {
+    return $this->isBound;
+  }
+
+  /**
    * Returns true if the URL matches this route, false otherwise.
    *
    * @param  string  $url     The URL
    * @param  array   $context The context
    *
-   * @return array   An array composed of an array of parameters and an array of extra parameters
+   * @return array   An array of parameters
    */
   public function matchesUrl($url, $context = array())
   {
@@ -96,7 +122,7 @@ class sfRoute implements Serializable
       }
     }
 
-    return array($parameters, array());
+    return $parameters;
   }
 
   /**

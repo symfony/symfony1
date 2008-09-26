@@ -242,9 +242,9 @@ abstract class sfRouting
   /**
    * Listens to the request.filter_parameters event.
    *
-   * @param sfEvent $event       An sfEvent instance
-   * @param array   $parameters  An array of parameters for the event
+   * @param  sfEvent $event       An sfEvent instance
    *
+   * @return array   $parameters  An array of parameters for the event
    */
   public function filterParametersEvent(sfEvent $event, $parameters)
   {
