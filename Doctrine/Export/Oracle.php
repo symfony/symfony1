@@ -102,9 +102,16 @@ class Doctrine_Export_Oracle extends Doctrine_Export
             'primary' => true,
             'fields' => array($name => true),
         );
-
-        $sql[] = $this->createConstraintSql($table, $indexName, $definition);
-
+		
+        $sql[] = 'DECLARE
+  constraints_Count NUMBER;
+BEGIN
+  SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count FROM USER_CONSTRAINTS WHERE TABLE_NAME = \''.$table.'\' AND CONSTRAINT_TYPE = \'P\';
+  IF constraints_Count = 0 THEN
+    EXECUTE IMMEDIATE \''.$this->createConstraintSql($table, $indexName, $definition).'\';
+  END IF;
+END;';   
+		
         if (is_null($start)) {
             $query = 'SELECT MAX(' . $this->conn->quoteIdentifier($name, true) . ') FROM ' . $this->conn->quoteIdentifier($table, true);
             $start = $this->conn->fetchOne($query);
@@ -138,8 +145,7 @@ BEGIN
          SELECT ' . $sequenceName . '.NEXTVAL INTO last_Sequence FROM DUAL;
       END LOOP;
    END IF;
-END;
-';
+END;';
         return $sql;
     }
 

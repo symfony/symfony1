@@ -1106,7 +1106,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
                      'create_tables'    => array(),
                      'create_sequences' => array(),
                      'create_indexes'   => array(),
-                     'alters'           => array()
+                     'alters'           => array(),
+                     'create_triggers'  => array(),
                  );
              }
 
@@ -1139,12 +1140,21 @@ class Doctrine_Export extends Doctrine_Connection_Module
                      continue;
                  }
 
-                 // If alter table statement
-                 if (substr($query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE') {
+                 // If alter table statement or oracle anonymous block enclosing alter
+                 if (substr($query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE'
+                       || substr($query, 0, strlen('DECLARE')) == 'DECLARE') {
                      $connections[$connectionName]['alters'][] = $query;
 
                      unset($sql[$key]);
                      continue;
+                 }
+                 
+                 // If create trgger statement
+                 if (substr($query, 0, strlen('CREATE TRIGGER')) == 'CREATE TRIGGER') {
+                 	$connections[$connectionName]['create_triggers'][] = $query;
+                 	
+                 	unset($sql[$key]);
+                 	continue;
                  }
              }
          }
@@ -1152,7 +1162,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
          // Loop over all the sql again to merge everything together so it is in the correct order
          $build = array();
          foreach ($connections as $connectionName => $sql) {
-             $build[$connectionName] = array_unique(array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']));
+             $build[$connectionName] = array_unique(array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters'], $sql['create_triggers']));
          }
 
          if ( ! $groupByConnection) {
