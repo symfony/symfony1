@@ -304,7 +304,7 @@ class sfPatternRouting extends sfRouting
       $cacheKey = 'generate_'.$name.'_'.md5(serialize(array_merge($this->defaultParameters, $params))).'_'.md5(serialize($this->options['context']));
       if (isset($this->cacheData[$cacheKey]))
       {
-        return $this->fixGeneratedUrl($this->cacheData[$cacheKey]);
+        return $this->fixGeneratedUrl($this->cacheData[$cacheKey], $absolute);
       }
     }
 
