@@ -917,7 +917,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             } else if (count($data) >= $this->_table->getColumnCount()) {
                 $this->_state = Doctrine_Record::STATE_CLEAN;
             }
-            $this->cleanData($this->_data);
             return true;
         }
         return false;
