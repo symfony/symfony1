@@ -25,37 +25,37 @@ $b->
   responseContains('foo')->
 
   get('/exception/throwsException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsException')->
   throwsException('Exception')->
 
   get('/exception/throwsException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsException')->
   throwsException('Exception', '/Exception message/')->
 
   get('/exception/throwsException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsException')->
   throwsException('Exception', '/message/')->
 
   get('/exception/throwsException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsException')->
   throwsException(null, '!/sfException/')->
 
   get('/exception/throwsSfException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsSfException')->
   throwsException('sfException')->
 
   get('/exception/throwsSfException')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsSfException')->
   throwsException('sfException', 'sfException message')

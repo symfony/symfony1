@@ -32,4 +32,15 @@ class formatActions extends sfActions
   {
     $this->setTemplate('index');
   }
+
+  public function executeThrowsException()
+  {
+    throw new Exception('Descriptive message');
+  }
+
+  public function executeThrowsNonDebugException()
+  {
+    sfConfig::set('sf_debug', false);
+    throw new Exception('Descriptive message');
+  }
 }

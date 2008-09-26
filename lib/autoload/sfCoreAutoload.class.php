@@ -359,6 +359,7 @@ class sfCoreAutoload
   'sfUpgrade' => 'task/project/upgrade1.1',
   'sfViewCacheManagerUpgrade' => 'task/project/upgrade1.1',
   'sfWebDebugUpgrade' => 'task/project/upgrade1.1',
+  'sfExceptionTemplatesUpgrade' => 'task/project/upgrade1.2',
   'sfFactories12Upgrade' => 'task/project/upgrade1.2',
   'sfPropel13Upgrade' => 'task/project/upgrade1.2',
   'sfPropelIniUpgrade' => 'task/project/upgrade1.2',

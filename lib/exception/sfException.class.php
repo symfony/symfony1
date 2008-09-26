@@ -90,7 +90,7 @@ class sfException extends Exception
   /**
    * Gets the stack trace for this exception.
    */
-  static protected function outputStackTrace($exception)
+  static protected function outputStackTrace(Exception $exception)
   {
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
@@ -106,25 +106,70 @@ class sfException extends Exception
       {
         return;
       }
+
+      $request  = sfContext::getInstance()->getRequest();
+      $response = sfContext::getInstance()->getResponse();
+
+      if ($response->getStatusCode() < 300)
+      {
+        // status code has already been sent, but is included here for the purpose of testing
+        $response->setStatusCode(500);
+      }
+
+      if ($mimeType = $request->getMimeType($format = $request->getRequestFormat()))
+      {
+        $response->setContentType($mimeType);
+      }
+      else
+      {
+        $format = 'html';
+        $response->setContentType('text/html');
+      }
+
+      if (!sfConfig::get('sf_test'))
+      {
+        foreach ($response->getHttpHeaders() as $name => $value)
+        {
+          header($name.': '.$value);
+        }
+      }
     }
+    else
+    {
+      // a backward compatible default
+      $format = 'html';
+
+      if (!sfConfig::get('sf_test'))
+      {
+        header('Content-Type: text/html; charset='.sfConfig::get('sf_charset', 'utf-8'));
+      }
+    }
+
+    $templatePaths = array(
+      sfConfig::get('sf_app_config_dir').'/error',
+      sfConfig::get('sf_config_dir').'/error',
+      dirname(__FILE__).'/data',
+    );
 
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
     {
-      $files = array();
-
-      // first check for app/project specific error page, can only do this if we have a context
-      if (sfConfig::get('sf_app_config_dir'))
+      $template = sprintf('error500.%s.php', $format);
+      foreach ($templatePaths as $path)
       {
-        $files[] = sfConfig::get('sf_app_config_dir').'/error_500.php';
-      }
-      $files[] = sfConfig::get('sf_config_dir').'/error_500.php';
-      $files[] = sfConfig::get('sf_web_dir').'/errors/error500.php';
-      $files[] = dirname(__FILE__).'/data/error500.php';
+        if (is_null($path))
+        {
+          continue;
+        }
 
-      foreach ($files as $file)
-      {
-        if (is_readable($file))
+        if (is_readable($file = $path.'/'.$template))
+        {
+          include $file;
+          return;
+        }
+
+        // for backward compatibility with symfony 1.1
+        if ('html' == $format && is_readable($file = $path.'/../error500.php'))
         {
           include $file;
           return;
@@ -132,10 +177,9 @@ class sfException extends Exception
       }
     }
 
-    $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
+    $message = is_null($exception->getMessage()) ? 'n/a' : $exception->getMessage();
     $name    = get_class($exception);
-    $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
-    $traces  = self::getTraces($exception, $format);
+    $traces  = self::getTraces($exception, 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html');
 
     // dump main objects values
     $sf_settings = '';
@@ -150,7 +194,15 @@ class sfException extends Exception
       $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
-    include dirname(__FILE__).'/data/exception.'.($format == 'html' ? 'php' : 'txt');
+    $template = sprintf('exception.%s.php', $format);
+    foreach ($templatePaths as $path)
+    {
+      if (!is_null($path) && is_readable($file = $path.'/'.$template))
+      {
+        include $file;
+        return;
+      }
+    }
   }
 
   /**
@@ -161,7 +213,7 @@ class sfException extends Exception
    *
    * @return array An array of traces
    */
-  static public function getTraces($exception, $format = 'plain')
+  static protected function getTraces($exception, $format = 'plain')
   {
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(

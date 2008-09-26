@@ -1382,3 +1382,18 @@ a new object directly, it is deprecated. By using the singleton, the performance
 are better as we only instantiate one culture info object per request and it
 also means that you can now override some culture information globally in your
 configuration classes.
+
+Exception Templates
+-------------------
+
+symfony now respects the current request format when rendering any uncaught
+exceptions. You can customize each format's output by adding a template to
+your project or application `config/error` directory.
+
+For example, an uncaught exception during an XML request could render
+`config/error/exception.xml.php` when your application is in debug mode, or
+`config/error/error500.xml.php` when your application is not in debug mode.
+
+Your symfony 1.1 project's `config/error500.php` file will also render, but
+your symfony 1.0 project's `web/errors/error500.php` file must be moved. This
+is done for you by the upgrade task.

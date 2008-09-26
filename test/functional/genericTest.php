@@ -109,7 +109,7 @@ $b->
 // settings.yml: max_forwards
 $b->
   get('/configSettingsMaxForwards/selfForward')->
-  isStatusCode(200)->
+  isStatusCode(500)->
   throwsException(null, '/Too many forwards have been detected for this request/i')
 ;
 
