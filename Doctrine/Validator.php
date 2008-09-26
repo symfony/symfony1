@@ -93,12 +93,29 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
         } else if ($type == 'array' || $type == 'object') {
             $length = strlen(serialize($value));
         } else {
-            $length = strlen($value);
+            $length = self::getStringLength($value);
         }
         if ($length > $maximumLength) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get length of passed string. Will use multibyte character functions if they exist
+     *
+     * @param string $string 
+     * @return integer $length
+     */
+    public static function getStringLength($string)
+    {
+        if (function_exists('iconv_strlen')) {
+            return iconv_strlen($string);
+        } else if (function_exists('mb_strlen')) {
+            return mb_strlen($string);
+        } else {
+            return strlen($string);
+        }
     }
 
     /**
