@@ -151,6 +151,7 @@ class Doctrine_Import_Mysql extends Doctrine_Import
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
             $values = isset($decl['values']) ? $decl['values'] : array();
+            $val['default'] = $val['default'] == 'CURRENT_TIMESTAMP' ? null : $val['default'];
 
             $description = array(
                           'name'          => $val['field'],
@@ -168,7 +169,6 @@ class Doctrine_Import_Mysql extends Doctrine_Import
                           );
             $columns[$val['field']] = $description;
         }
-
 
         return $columns;
     }
