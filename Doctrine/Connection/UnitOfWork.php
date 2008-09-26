@@ -275,11 +275,12 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
 
-            $this->conn->commit();
             // trigger postDelete for records skipped during the deletion (veto!)
             foreach ($deletions as $skippedRecord) {
                 $this->_postDelete($skippedRecord);
             }
+
+            $this->conn->commit();
 
             return true;
         } catch (Exception $e) {
