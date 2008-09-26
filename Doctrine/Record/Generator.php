@@ -158,7 +158,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                                                    $this->_options['className']);
 
         // check that class doesn't exist (otherwise we cannot create it)
-        if ($this->_options['generateFiles'] === false && class_exists($this->_options['className'])) {
+        if ($this->_options['generateFiles'] === false && class_exists($this->_options['className'], false)) {
             return false;
         }
 
