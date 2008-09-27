@@ -119,6 +119,34 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Renders the widget schema using a specific form formatter
+   *
+   * @param  string  $formatterName  The form formatter name
+   * @param  array   $attributes     An array of HTML attributes
+   *
+   * @return string The rendered widget schema
+   */
+  public function renderUsing($formatterName, $attributes = array())
+  {
+    $currentFormatterName = $this->widgetSchema->getFormFormatterName();
+
+    $formatterClass = sprintf('sfWidgetFormSchemaFormatter%s', ucfirst($formatterName));
+
+    if (!class_exists($formatterClass))
+    {
+      throw new InvalidArgumentException(sprintf('Formatter "%s" (class "%s") does not exist', $formatterName, $formatterClass));
+    }
+
+    $this->widgetSchema->setFormFormatterName($formatterName);
+
+    $output = $this->render($attributes);
+
+    $this->widgetSchema->setFormFormatterName($currentFormatterName);
+
+    return $output;
+  }
+
+  /**
    * Renders global errors associated with this form.
    *
    * @return string The rendered global errors

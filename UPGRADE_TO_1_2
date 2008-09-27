@@ -335,6 +335,14 @@ form is not bound. This method is quite useful in a template:
       The form has some errors you need to fix.
     <?php endif; ?>
 
+A new `renderUsing` method has been added to the `sfForm` class, allowing to 
+render the form using a particular widget schema formatter. This allows to
+use a formatter directly within a template:
+
+    [php]
+    // in a template, the form will be rendered using the "list" form formatter 
+    echo $form->renderUsing('list');
+
 Validators
 ----------
 

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(106, new lime_output_color());
+$t = new lime_test(108, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -319,6 +319,20 @@ $output = <<<EOF
 
 EOF;
 $t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
+
+// renderUsing()
+$t->diag('->renderUsing()');
+$f = new sfForm();
+$f->setWidgets(array('name' => new sfWidgetFormInput()));
+$output = <<<EOF
+<li>
+  <label for="name">Name</label>
+  <input type="text" name="name" id="name" />
+</li>
+
+EOF;
+$t->is($f->renderUsing('list'), $output, 'renderUsing() renders the widget schema using the given form formatter');
+$t->is($f->getWidgetSchema()->getFormFormatterName(), 'table', 'renderUsing() does not persist form formatter name for the current form instance');
 
 // ->embedForm()
 $t->diag('->embedForm()');
