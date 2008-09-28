@@ -243,7 +243,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     	    $namespace = $this->getAttribute(Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE);
     	}
     	
-        if ( ! isset($this->_params[$name])) {
+        if ( ! isset($this->_params[$namespace][$name])) {
             if (isset($this->parent)) {
                 return $this->parent->getParam($name, $namespace);
             }
