@@ -173,6 +173,14 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $event->setInvoker($table);
                 $listeners[$componentName]->preHydrate($event);
 
+                // It would be nice if this could be moved to the query parser but I could not find a good place to implement it
+                if ( ! isset($map['parent']) || ! isset($map['relation'])) {
+                    throw new Doctrine_Hydrator_Exception(
+                        '"' . $componentName . '" with an alias of "' . $dqlAlias . '"' .
+                        ' in your query does not reference the parent component it is related to.'
+                    );
+                }
+
                 $parent = $map['parent'];
                 $relation = $map['relation'];
                 $relationAlias = $map['relation']->getAlias();
