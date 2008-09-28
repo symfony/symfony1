@@ -218,7 +218,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // this prevents the 'id' being selected, re ticket #307
         $obj->isSubquery(true);
-
+        
         return $obj;
     }
 
@@ -815,7 +815,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // check for possible subqueries
         if (substr($trimmed, 0, 4) == 'FROM' || substr($trimmed, 0, 6) == 'SELECT') {
             // parse subquery
-            $trimmed = $this->createSubquery()->parseDqlQuery($trimmed)->getQuery();
+            $q = $this->createSubquery()->parseDqlQuery($trimmed);
+            $trimmed = $q->getSql();
+            $this->mergeSubqueryBack($q);
         } else {
             // parse normal clause
             $trimmed = $this->parseClause($trimmed);

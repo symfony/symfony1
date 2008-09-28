@@ -546,8 +546,21 @@ abstract class Doctrine_Query_Abstract
      *
      * @param array $params
      */
-    public function setParams(array $params = array()) {
+    public function setParams(array $params = array())
+    {
         $this->_params = $params;
+    }
+
+    /**
+     * Merge the necessary elements of the subquery back to the main query.
+     *
+     * @param Doctrine_Query_Abstract $subquery
+     * @return void
+     */
+    public function mergeSubqueryBack(Doctrine_Query_Abstract $subquery)
+    {
+        $this->_params = array_merge_recursive($this->_params, $subquery->_params);
+        $this->_tableAliasMap = array_merge($this->_tableAliasMap, $subquery->_tableAliasMap);
     }
 
     /**
@@ -785,7 +798,7 @@ abstract class Doctrine_Query_Abstract
     public function copyAliases(Doctrine_Query_Abstract $query)
     {
         $this->_tableAliasMap = $query->_tableAliasMap;
-        $this->_queryComponents     = $query->_queryComponents;
+        $this->_queryComponents = $query->_queryComponents;
         $this->_tableAliasSeeds = $query->_tableAliasSeeds;
         return $this;
     }

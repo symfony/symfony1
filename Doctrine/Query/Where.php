@@ -101,8 +101,10 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 substr($trimmed, 0, 6) == 'SELECT') {
 
                 // subquery found
-                $q     = new Doctrine_Query();
-                $value = '(' . $this->query->createSubquery()->parseQuery($trimmed, false)->getQuery() . ')';
+                $q     = $this->query->createSubquery()->parseQuery($trimmed, false);
+                $sql   = $q->getSql();
+                $this->query->mergeSubqueryBack($q);
+                $value = '(' . $sql . ')';
 
             // If custom sql for custom subquery
             // You can specify SQL: followed by any valid sql expression
