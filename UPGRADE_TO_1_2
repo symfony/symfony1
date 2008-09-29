@@ -570,6 +570,14 @@ to the new directory.
 In addition some very basic javascript helpers that are reusable by any JS framework, have
 been extracted to a `JavascriptBaseHelper` which stays in core.
 
+As a new addition, `javascript_tag()` now can behave as `slot()`. This allows such usage
+
+    [php]
+    <?php javascript_tag() ?>
+    alert('All is good')
+    <?php end_javascript_tag() ?>
+
+
 >**CAUTION**
 >**Work in progress:** As plugins are normally installed via a task and this invokes the 
 >creation of the symlink in the web directory this is required for core plugins as well.

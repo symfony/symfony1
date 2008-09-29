@@ -55,14 +55,28 @@
   }
 
   /**
-   * Returns a JavaScript tag with the '$content' inside.
+   * Returns a JavaScript tag with the '$content' inside. If no content is passed, it works as the slot() method and will output everythin between
+   * javascript_tag() and end_javascript_tag(),
    * Example:
    *   <?php echo javascript_tag("alert('All is good')") ?>
    *   => <script type="text/javascript">alert('All is good')</script>
+   *   <?php javascript_tag() ?>alert('All is good')<?php end_javascript_tag() ?>
    */
-  function javascript_tag($content)
+  function javascript_tag($content = null)
   {
-    return content_tag('script', javascript_cdata_section($content), array('type' => 'text/javascript'));
+    if (!is_null($content))
+    {
+      return content_tag('script', javascript_cdata_section($content), array('type' => 'text/javascript'));
+    }
+    else
+    {
+      ob_start();
+    }
+  }
+
+  function end_javascript_tag()
+  {
+    echo javascript_tag(ob_get_clean());
   }
 
   function javascript_cdata_section($content)
@@ -95,13 +109,13 @@
     }
   }
 
-  /** 
-   * converts the given PHP array or string to the corresponding javascript array or string. 
+  /**
+   * converts the given PHP array or string to the corresponding javascript array or string.
    * javascript strings need to be single quoted.
    *
    * @param option (typically from option array)
-   * @return string javascript string or array equivalent 
-   */ 
+   * @return string javascript string or array equivalent
+   */
   function array_or_string_for_javascript($option)
   {
     if (is_array($option))
@@ -119,7 +133,7 @@
   * converts the the PHP options array into a javscript array
    *
    * @param array
-   * @return string javascript arry equivalent 
+   * @return string javascript arry equivalent
   */
   function options_for_javascript($options)
   {
@@ -137,18 +151,18 @@
     return '{'.join(', ', $opts).'}';
   }
 
-  /** 
-   * converts the given PHP boolean to the corresponding javascript boolean. 
+  /**
+   * converts the given PHP boolean to the corresponding javascript boolean.
    * booleans need to be true or false (php would print 1 or nothing).
    *
    * @param bool (typically from option array)
-   * @return string javascript boolean equivalent 
-   */ 
+   * @return string javascript boolean equivalent
+   */
   function boolean_for_javascript($bool)
   {
-    if (is_bool($bool)) 
-    { 
-      return ($bool===true ? 'true' : 'false'); 
+    if (is_bool($bool))
+    {
+      return ($bool===true ? 'true' : 'false');
     }
     return $bool;
   }
