@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/JavascriptBaseHelper.php';
+require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
 
 /*
  * This file is part of the symfony package.
