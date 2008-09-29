@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(56, new lime_output_color());
+$t = new lime_test(62, new lime_output_color());
 
 // ->getInstance()
 $t->diag('->getInstance()');
@@ -47,6 +47,19 @@ $t->is($languages_en['fr'], 'French', '->getLanguages() returns a list of langua
 $t->is($languages_fr['fr'], 'français', '->getLanguages() returns a list of languages in the language of the localized version');
 $t->is($languages_en, $c_en->Languages, '->getLanguages() is equivalent to ->Languages');
 
+$languages = $c_en->getLanguages(array('fr', 'es'));
+$t->is(array_keys($languages), array('fr', 'es'), '->getLanguages() takes an array of languages as its first argument');
+
+try
+{
+  $c_en->getLanguages(array('fr', 'gb'));
+  $t->fail('->getLanguages() throws an Exception if the list of given languages contains some invalid ones.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getLanguages() throws an Exception if the list of given languages contains some invalid ones.');
+}
+
 // ->getCurrencies()
 $t->diag('->getCurrencies()');
 $currencies_en = $c_en->getCurrencies();
@@ -55,6 +68,19 @@ $t->is($currencies_en['EUR'][1], 'Euro', '->getCurrencies() returns a list of cu
 $t->is($currencies_fr['EUR'][1], 'euro', '->getCurrencies() returns a list of currencies in the language of the localized version');
 $t->is($currencies_en, $c_en->Currencies, '->getCurrencies() is equivalent to ->Currencies');
 
+$currencies = $c_en->getCurrencies(array('USD', 'EUR'));
+$t->is(array_keys($currencies), array('USD', 'EUR'), '->getCurrencies() takes an array of currencies as its first argument');
+
+try
+{
+  $c_en->getCurrencies(array('USD', 'FRANCS'));
+  $t->fail('->getCurrencies() throws an Exception if the list of given currencies contains some invalid ones.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getCurrencies() throws an Exception if the list of given currencies contains some invalid ones.');
+}
+
 // ->getCountries()
 $t->diag('->getCountries()');
 $countries_en = $c_en->getCountries();
@@ -62,6 +88,19 @@ $countries_fr = $c_fr->getCountries();
 $t->is($countries_en['ES'], 'Spain', '->getCountries() returns a list of countries in the language of the localized version');
 $t->is($countries_fr['ES'], 'Espagne', '->getCountries() returns a list of countries in the language of the localized version');
 $t->is($countries_en, $c_en->Countries, '->getCountries() is equivalent to ->Countries');
+
+$countries = $c_en->getCountries(array('FR', 'ES'));
+$t->is(array_keys($countries), array('FR', 'ES'), '->getCountries() takes an array of countries as its first argument');
+
+try
+{
+  $c_en->getCountries(array('FR', 'EN'));
+  $t->fail('->getCountries() throws an Exception if the list of given countries contains some invalid ones.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getCountries() throws an Exception if the list of given countries contains some invalid ones.');
+}
 
 // ->getScripts()
 $t->diag('->getScripts()');

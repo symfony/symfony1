@@ -1399,6 +1399,14 @@ are better as we only instantiate one culture info object per request and it
 also means that you can now override some culture information globally in your
 configuration classes.
 
+The `sfCulture::getCountries()`, `sfCulture::getCurrencies()`, and
+`sfCulture::getLanguages()` methods now take an optional argument which allows
+to restrict the return value:
+
+    [php]
+    // will only return the FR and ES countries in english
+    $countries = sfCultureInfo::getInstance('en')->getCountries(array('FR', 'ES'));
+
 Exception Templates
 -------------------
 
