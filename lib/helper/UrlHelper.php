@@ -169,6 +169,10 @@ function link_to()
   }
   else
   {
+    if (!array_key_exists(2, $arguments))
+    {
+      $arguments[2] = array();
+    }
     return call_user_func_array('link_to2', $arguments);
   }
 }
