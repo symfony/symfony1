@@ -1463,7 +1463,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         // parse custom join conditions
-        $e = explode(' ON ', $path);
+        $e = explode(' ON ', str_ireplace(' on ', ' ON ', $path));
 
         $joinCondition = '';
 
@@ -1472,7 +1472,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $overrideJoin = true;
             $path = $e[0];
         } else {
-            $e = explode(' WITH ', $path);
+            $e = explode(' WITH ', str_ireplace(' with ', ' WITH ', $path));
 
             if (count($e) > 1) {
                 $joinCondition = $e[1];
