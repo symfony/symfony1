@@ -41,11 +41,11 @@ $t->is(count($css->matchAll('#language option[value="en"][selected="selected"]')
 // add_empty
 $t->diag('add_empty');
 $w = new sfWidgetFormI18nSelectLanguage(array('culture' => 'fr', 'add_empty' => true));
-$dom->loadHTML($w->render('country', 'FR'));
+$dom->loadHTML($w->render('language', 'FR'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#country option[value=""]')->getValue(), '', '->render() renders an empty option if add_empty is true');
+$t->is($css->matchSingle('#language option[value=""]')->getValue(), '', '->render() renders an empty option if add_empty is true');
 
 $w = new sfWidgetFormI18nSelectLanguage(array('culture' => 'fr', 'add_empty' => 'foo'));
-$dom->loadHTML($w->render('country', 'FR'));
+$dom->loadHTML($w->render('language', 'FR'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#country option[value=""]')->getValue(), 'foo', '->render() renders an empty option if add_empty is true');
+$t->is($css->matchSingle('#language option[value=""]')->getValue(), 'foo', '->render() renders an empty option if add_empty is true');

@@ -548,7 +548,7 @@ class sfCultureInfo
     {
       $elements = $this->findInfo('NumberElements');
       $patterns = $this->findInfo('NumberPatterns');
-      $currencies = $this->getCurrencies();
+      $currencies = $this->getCurrencies(null, true);
       $data = array('NumberElements' => $elements, 'NumberPatterns' => $patterns, 'Currencies' => $currencies);
 
       $this->setNumberFormat(new sfNumberFormatInfo($data));
@@ -657,6 +657,63 @@ class sfCultureInfo
   }
 
   /**
+   * Get the country name in the current culture for the given code.
+   *
+   * @param  string A valid country code
+   *
+   * @return string The country name in the current culture
+   */
+  public function getCountry($code)
+  {
+    $countries = $this->simplify($this->findInfo('Countries', true));
+
+    if (!isset($countries[$code]))
+    {
+      throw new InvalidArgumentException(sprintf('The country %s does not exist.', $code));
+    }
+
+    return $countries[$code];
+  }
+
+  /**
+   * Get the currency name in the current culture for the given code.
+   *
+   * @param  string A valid currency code
+   *
+   * @return string The currency name in the current culture
+   */
+  public function getCurrency($code)
+  {
+    $currencies = $this->simplify($this->findInfo('Currencies', true));
+
+    if (!isset($currencies[$code]))
+    {
+      throw new InvalidArgumentException(sprintf('The currency %s does not exist.', $code));
+    }
+
+    return $currencies[$code][1];
+  }
+
+  /**
+   * Get the language name in the current culture for the given code.
+   *
+   * @param  string A valid language code
+   *
+   * @return string The language name in the current culture
+   */
+  public function getLanguage($code)
+  {
+    $languages = $this->simplify($this->findInfo('Languages', true));
+
+    if (!isset($languages[$code]))
+    {
+      throw new InvalidArgumentException(sprintf('The language %s does not exist.', $code));
+    }
+
+    return $languages[$code];
+  }
+
+  /**
    * Gets a list of countries in the language of the localized version.
    *
    * @param  array An array of countries used to restrict the returned array (null by default, which means all countries)
@@ -686,11 +743,12 @@ class sfCultureInfo
   /**
    * Gets a list of currencies in the language of the localized version.
    *
-   * @param  array An array of currencies used to restrict the returned array (null by default, which means all currencies)
+   * @param  array   An array of currencies used to restrict the returned array (null by default, which means all currencies)
+   * @param  Boolean Whether to return the symbol and the name or not (false by default)
    *
    * @return array a list of localized currencies.
    */
-  public function getCurrencies($currencies = null)
+  public function getCurrencies($currencies = null, $full = false)
   {
     $allCurrencies = $this->findInfo('Currencies', true);
 
@@ -706,6 +764,13 @@ class sfCultureInfo
     }
 
     asort($allCurrencies);
+    if (!$full)
+    {
+      foreach ($allCurrencies as $key => $value)
+      {
+        $allCurrencies[$key] = $value[1];
+      }
+    }
 
     return $allCurrencies;
   }

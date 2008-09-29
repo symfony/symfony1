@@ -328,7 +328,7 @@ function select_language_tag($name, $selected = null, $options = array())
 function select_currency_tag($name, $selected = null, $options = array())
 {
   $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
-  $currencies = $c->getCurrencies();
+  $currencies = $c->getCurrencies(null, true);
 
   $currency_option = _get_option($options, 'currencies');
   $display_option = _get_option($options, 'display');

@@ -430,6 +430,7 @@ class sfCoreAutoload
   'sfWidgetFormI18nDate' => 'widget/i18n',
   'sfWidgetFormI18nDateTime' => 'widget/i18n',
   'sfWidgetFormI18nSelectCountry' => 'widget/i18n',
+  'sfWidgetFormI18nSelectCurrency' => 'widget/i18n',
   'sfWidgetFormI18nSelectLanguage' => 'widget/i18n',
   'sfWidgetFormI18nTime' => 'widget/i18n',
   'sfWidget' => 'widget',

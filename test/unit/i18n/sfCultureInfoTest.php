@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(62, new lime_output_color());
+$t = new lime_test(71, new lime_output_color());
 
 // ->getInstance()
 $t->diag('->getInstance()');
@@ -39,6 +39,57 @@ catch (sfException $e)
 $c_en = sfCultureInfo::getInstance();
 $c_fr = sfCultureInfo::getInstance('fr');
 
+// ->getLanguage()
+$t->diag('->getLanguage()');
+$language_en = $c_en->getLanguage('fr');
+$language_fr = $c_fr->getLanguage('fr');
+$t->is($language_en, 'French', '->getLanguage() returns the language name for the current culture');
+$t->is($language_fr, 'français', '->getLanguage() returns the language name for the current culture');
+
+try
+{
+  $c_en->getLanguage('gb');
+  $t->fail('->getLanguage() throws an Exception if the given language is invalid.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getLanguage() throws an Exception if the given language is invalid.');
+}
+
+// ->getCurrency()
+$t->diag('->getCurrency()');
+$currency_en = $c_en->getCurrency('EUR');
+$currency_fr = $c_fr->getCurrency('EUR');
+$t->is($currency_en, 'Euro', '->getCurrency() returns the currency name for the current culture');
+$t->is($currency_fr, 'euro', '->getCurrency() returns the currency name for the current culture');
+
+try
+{
+  $c_en->getCurrency('FRANCS');
+  $t->fail('->getCurrency() throws an Exception if the given currency is invalid.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getCurrency() throws an Exception if the given currency is invalid.');
+}
+
+// ->getCountry()
+$t->diag('->getCountry()');
+$country_en = $c_en->getCountry('FR');
+$country_fr = $c_fr->getCountry('FR');
+$t->is($country_en, 'France', '->getCountry() returns the country name for the current culture');
+$t->is($country_fr, 'France', '->getCountry() returns the country name for the current culture');
+
+try
+{
+  $c_en->getCountry('en');
+  $t->fail('->getCountry() throws an Exception if the given country is invalid.');
+}
+catch (Exception $e)
+{
+  $t->pass('->getCountry() throws an Exception if the given country is invalid.');
+}
+
 // ->getLanguages()
 $t->diag('->getLanguages()');
 $languages_en = $c_en->getLanguages();
@@ -64,8 +115,8 @@ catch (Exception $e)
 $t->diag('->getCurrencies()');
 $currencies_en = $c_en->getCurrencies();
 $currencies_fr = $c_fr->getCurrencies();
-$t->is($currencies_en['EUR'][1], 'Euro', '->getCurrencies() returns a list of currencies in the language of the localized version');
-$t->is($currencies_fr['EUR'][1], 'euro', '->getCurrencies() returns a list of currencies in the language of the localized version');
+$t->is($currencies_en['EUR'], 'Euro', '->getCurrencies() returns a list of currencies in the language of the localized version');
+$t->is($currencies_fr['EUR'], 'euro', '->getCurrencies() returns a list of currencies in the language of the localized version');
 $t->is($currencies_en, $c_en->Currencies, '->getCurrencies() is equivalent to ->Currencies');
 
 $currencies = $c_en->getCurrencies(array('USD', 'EUR'));
