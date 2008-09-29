@@ -174,7 +174,7 @@ abstract class sfMessageSource implements sfIMessageSource
       if ($this->cache)
       {
         $lastModified = $this->getLastModified($source);
-        if ($this->getLastModified($source) >= 0 && $this->getLastModified($source) < $this->cache->getLastModified($variant.':'.$this->culture))
+        if ($lastModified >= 0 && $lastModified < $this->cache->getLastModified($variant.':'.$this->culture))
         {
           $data = unserialize($this->cache->get($variant.':'.$this->culture));
 
