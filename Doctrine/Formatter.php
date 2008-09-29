@@ -167,7 +167,6 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
         }
         switch ($type) {
         case 'integer':
-        case 'boolean':
         case 'double':
         case 'float':
         case 'bool':
@@ -188,6 +187,7 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
         case 'blob':
         case 'clob':
         case 'enum':
+        case 'boolean':
             $this->conn->connect();
 
             return $this->conn->getDbh()->quote($input);
