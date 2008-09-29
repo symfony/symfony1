@@ -1468,16 +1468,18 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $joinCondition = '';
 
         if (count($e) > 1) {
-            $joinCondition = $e[1];
+            $joinCondition = substr($path, strlen($e[0]) + 4, strlen($e[1]));
+            $path = substr($path, 0, strlen($e[0]));
+            
             $overrideJoin = true;
-            $path = $e[0];
         } else {
             $e = explode(' WITH ', str_ireplace(' with ', ' WITH ', $path));
 
             if (count($e) > 1) {
-                $joinCondition = $e[1];
-                $path = $e[0];
+                $joinCondition = substr($path, strlen($e[0]) + 6, strlen($e[1]));
+                $path = substr($path, 0, strlen($e[0]));
             }
+
             $overrideJoin = false;
         }
 
