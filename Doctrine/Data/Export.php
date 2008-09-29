@@ -152,9 +152,11 @@ class Doctrine_Data_Export extends Doctrine_Data
         $preparedData = array();
 
         foreach ($data AS $className => $classData) {
+            $preparedData[$className] = array();
             foreach ($classData as $record) {
                 $className = get_class($record);
                 $recordKey = $className . '_' . implode('_', $record->identifier());
+                $preparedData[$className][$recordKey] = array();
 
                 $recordData = $record->toArray(false);
 
