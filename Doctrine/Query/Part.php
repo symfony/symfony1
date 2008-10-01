@@ -45,6 +45,7 @@ abstract class Doctrine_Query_Part
     public function __construct($query, Doctrine_Query_Tokenizer $tokenizer = null)
     {
         $this->query = $query;
+
         if ( ! $tokenizer) {
             $tokenizer = new Doctrine_Query_Tokenizer();
         }

@@ -100,12 +100,18 @@ abstract class Doctrine_Query_Abstract
     protected $_state = Doctrine_Query::STATE_CLEAN;
 
     /**
-     * @var array $params  The parameters of this query.
+     * @var array $_params  The parameters of this query.
      */
-    protected $_params = array('join' => array(),
+    protected $_params = array('exec' => array(),
+                               'join' => array(),
                                'where' => array(),
                                'set' => array(),
                                'having' => array());
+
+    /**
+     * @var array $_execParams The parameters passed to connection statement
+     */
+    protected $_execParams = array();
 
     /* Caching properties */
     /**
@@ -538,7 +544,21 @@ abstract class Doctrine_Query_Abstract
      */
     public function getParams($params = array())
     {
-        return array_merge($params, $this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having']);
+        return array_merge(
+            $params, $this->_params['exec'], 
+            $this->_params['join'], $this->_params['set'],
+            $this->_params['where'], $this->_params['having']
+        );
+    }
+
+    /**
+     * getInternalParams
+     *
+     * @return array
+     */
+    public function getInternalParams($params = array())
+    {
+        return array_merge($params, $this->_execParams);
     }
 
     /**
@@ -549,6 +569,45 @@ abstract class Doctrine_Query_Abstract
     public function setParams(array $params = array())
     {
         $this->_params = $params;
+    }
+    
+    /**
+     * getCountQueryParams
+     * Retrieves the parameters for count query
+     *
+     * @return array Parameters array
+     */
+    public function getCountQueryParams($params = array())
+    {
+        if ( ! is_array($params)) {
+            $params = array($params);
+        }
+
+        $this->_params['exec'] = $params;
+
+        $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $this->_params['exec']);
+
+        $this->fixArrayParameterValues($params);
+
+        return $this->_execParams;
+    }
+
+    /**
+     * @nodoc
+     */
+    public function fixArrayParameterValues($params = array())
+    {
+        for ($i = 0; $i < count($params); $i++) {
+            if (is_array($params[$i])) {
+                $c = count($params[$i]);
+
+                array_splice($params, $i, 1, $params[$i]);
+                
+                $i += $c;
+            }
+        }
+        
+        $this->_execParams = $params;
     }
 
     /**
@@ -919,20 +978,46 @@ abstract class Doctrine_Query_Abstract
      */
     protected function _execute($params)
     {
+        // Apply boolean conversion in DQL params
         $params = $this->_conn->convertBooleans($params);
 
+        foreach ($this->_params as $k => $v) {
+            $this->_params[$k] = $this->_conn->convertBooleans($v);
+        }
+
+        $dqlParams = $this->getParams($params);
+
+        // Check if we're not using a Doctrine_View
         if ( ! $this->_view) {
             if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
                 $queryCacheDriver = $this->getQueryCacheDriver();
-                // calculate hash for dql query
+                
+                // Calculate hash for dql query
                 $dql = $this->getDql();
                 $hash = md5($dql . 'DOCTRINE_QUERY_CACHE_SALT');
                 $cached = $queryCacheDriver->fetch($hash);
+
+                // If we have a cached query...
                 if ($cached) {
+                    // Rebuild query from cache
                     $query = $this->_constructQueryFromCache($cached);
+                    
+                    // Assign building/execution specific params
+                    $this->_params['exec'] = $params;
+            
+                    // Initialize prepared parameters array
+                    $this->_execParams = $this->getParams();
+                    
+                    // Fix possible array parameter values in SQL params
+                    $this->fixArrayParameterValues($this->getInternalParams());
                 } else {
+                    // Generate SQL or pick already processed one
                     $query = $this->getSqlQuery($params);
+                    
+                    // Convert query into a serialized form
                     $serializedQuery = $this->getCachedForm($query);
+                    
+                    // Save cached query
                     $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
                 }
             } else {
@@ -941,6 +1026,9 @@ abstract class Doctrine_Query_Abstract
         } else {
             $query = $this->_view->getSelectSql();
         }
+        
+        // Get prepared SQL params for execution
+        $params = $this->getInternalParams();
 
         if ($this->isLimitSubqueryUsed() &&
                 $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
@@ -952,6 +1040,7 @@ abstract class Doctrine_Query_Abstract
         }
 
         $stmt = $this->_conn->execute($query, $params);
+
         return $stmt;
     }
 
@@ -964,6 +1053,9 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
+        // Clean any possible processed params
+        $this->_execParams = array();
+
         if (empty($this->_dqlParts['from']) && empty($this->_sqlParts['from'])) {
             throw new Doctrine_Query_Exception('You must have at least one component specified in your from.');
         }
@@ -974,14 +1066,15 @@ abstract class Doctrine_Query_Abstract
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
 
-        $params = $this->getParams($params);
+        // Retrieve DQL params
+        $dqlParams = $this->getParams($params);
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
 
             $dql = $this->getDql();
             // calculate hash for dql query
-            $hash = md5($dql . var_export($params, true));
+            $hash = md5($dql . var_export($dqlParams, true));
 
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
 
@@ -1344,7 +1437,7 @@ abstract class Doctrine_Query_Abstract
 
         $this->_params['where'] = array_merge($this->_params['where'], $params);
 
-        return $expr . ($not === true ? ' NOT ':'') . ' IN (' . implode(', ', $a) . ')';
+        return $expr . ($not === true ? ' NOT' : '') . ' IN (' . implode(', ', $a) . ')';
     }
 
 
@@ -2079,5 +2172,18 @@ abstract class Doctrine_Query_Abstract
     public function getQuery($params = array())
     {
         return $this->getSqlQuery($params);
+    }
+    
+    
+    /**
+     * toString magic call
+     * this method is automatically called when Doctrine_Query object is trying to be used as a string
+     * So, it it converted into its DQL correspondant
+     *
+     * @return string DQL string
+     */
+    public function __toString()
+    {
+        return $this->getDql();
     }
 }

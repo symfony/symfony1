@@ -154,7 +154,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
                     if ( ! isset($parts[$type][0])) {
                         $parts[$type][0] = $part;
                     } else {
-                        // why does this add to index 0 and not append to the 
+                        // why does this add to index 0 and not append to the
                         // array. If it had done that one could have used 
                         // parseQueryPart.
                         $parts[$type][0] .= ' '.$part;
@@ -176,6 +176,15 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     public function getSqlQuery($params = array())
     {        
+        // Assign building/execution specific params
+        $this->_params['exec'] = $params;
+
+        // Initialize prepared parameters array
+        $this->_execParams = $this->getParams();
+
+        // Initialize prepared parameters array
+        $this->fixArrayParameterValues($this->_execParams);
+
         $select = array();
 
         foreach ($this->fields as $field) {
@@ -313,13 +322,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
     public function count($params = array())
     {
         $q = $this->getCountQuery();
-
-        if ( ! is_array($params)) {
-            $params = array($params);
-        }
-
-        $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
-
+        $params = $this->getCountQueryParams($params);
         $results = $this->getConnection()->fetchAll($q, $params);
 
         if (count($results) > 1) {

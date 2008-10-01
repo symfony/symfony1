@@ -174,6 +174,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * @var string $_sql            cached SQL query
      */
     protected $_sql;
+    
+    
+    /**
+     * @var int $_processedParamIdx          Current index of processed param.
+     */
+    protected $_processedParamIdx = 0;
+
 
     /**
      * create
@@ -200,6 +207,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_subqueryAliases = array();
         $this->_needsSubquery = false;
         $this->_isLimitSubqueryUsed = false;
+        $this->_processedParamIdx = 0;
     }
 
     /**
@@ -326,6 +334,38 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         } else {
             throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
         }
+    }
+    
+    
+    /**
+     * Adjust the processed param index for "foo.bar IN ?" support
+     *
+     */
+    public function adjustProcessedParam($index)
+    {
+        // Retrieve all params
+        $params = $this->getInternalParams();
+
+        // Update processed param index
+        $this->_processedParamIdx = $index + count($params[$index]);
+
+        // Retrieve already processed values
+        $first = array_slice($params, 0, $index);
+        $last = array_slice($params, $index, count($params) - $index);
+
+        // Include array as values splicing the params array
+        array_splice($last, 0, 1, $last[0]);
+
+        // Put all param values into a single index
+        $this->_execParams = array_merge($first, $last);
+    }
+
+    /**
+     * @nodoc
+     */
+    public function getProcessedParamIndex()
+    {
+        return $this->_processedParamIdx;
     }
 
     /**
@@ -667,6 +707,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
             if ($pos !== false) {
                 $name = substr($term[0], 0, $pos);
+
                 $term[0] = $this->parseFunctionExpression($term[0]);
             } else {
                 if (substr($term[0], 0, 1) !== "'" && substr($term[0], -1) !== "'") {
@@ -783,7 +824,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function parseFunctionExpression($expr)
     {
         $pos = strpos($expr, '(');
-
         $name = substr($expr, 0, $pos);
 
         if ($name === '') {
@@ -791,7 +831,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $argStr = substr($expr, ($pos + 1), -1);
-
         $args   = array();
         // parse args
 
@@ -808,6 +847,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         return $expr;
     }
+
+
     public function parseSubquery($subquery)
     {
         $trimmed = trim($this->_tokenizer->bracketTrim($subquery));
@@ -825,6 +866,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         return '(' . $trimmed . ')';
     }
+    
+
     /**
      * processPendingSubqueries
      * processes pending subqueries
@@ -1032,8 +1075,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     public function getSqlQuery($params = array())
     {
+        // Assign building/execution specific params
+        $this->_params['exec'] = $params;
+
+        // Initialize prepared parameters array
+        $this->_execParams = $this->getParams();
+
         if ($this->_state !== self::STATE_DIRTY) {
-           return $this->_sql;
+            $this->fixArrayParameterValues($this->getInternalParams());
+
+            // Return compiled SQL
+            return $this->_sql;
         }
 
         // reset the state
@@ -1790,7 +1842,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function getCountQuery()
     {
         // triggers dql parsing/processing
-        $this->getQuery(); // this is ugly
+        $this->getSqlQuery(); // this is ugly
 
         // initialize temporary variables
         $where  = $this->_sqlParts['where'];
@@ -1874,13 +1926,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function count($params = array())
     {
         $q = $this->getCountQuery();
-
-        if ( ! is_array($params)) {
-            $params = array($params);
-        }
-
-        $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
-
+        $params = $this->getCountQueryParams($params);
         $results = $this->getConnection()->fetchAll($q, $params);
 
         if (count($results) > 1) {
