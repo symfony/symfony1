@@ -136,6 +136,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @var string
      */
     protected $_pendingDeletes = array();
+    
+    /**
+     * Array of pending un links in format alias => keys to be executed after save
+     *
+     * @var array $_pendingUnlinks
+     */
+    protected $_pendingUnlinks = array();
 
     /**
      * Array of custom accessors for cache
@@ -1217,6 +1224,26 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
+     * Get pending un links array
+     *
+     * @return array $pendingUnlinks
+     */
+    public function getPendingUnlinks()
+    {
+        return $this->_pendingUnlinks;
+    }
+
+    /**
+     * Reset pending un links array
+     *
+     * @return void
+     */
+    public function resetPendingUnlinks()
+    {
+        $this->_pendingUnlinks = array();
+    }
+
+    /**
      * applies the changes made to this object into database
      * this method is smart enough to know if any changes are made
      * and whether to use INSERT or UPDATE statement
@@ -1480,7 +1507,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         foreach ($array as $key => $value) {
             if ($key == '_identifier') {
                 $refresh = true;
-                $this->assignIdentifier((array) $value);
+                $this->assignIdentifier($value);
                 continue;
             }
 
@@ -1512,19 +1539,29 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         foreach ($array as $key => $value) {
             if ($key == '_identifier') {
                 $refresh = true;
-                $this->assignIdentifier((array) $value);
+                $this->assignIdentifier($value);
                 continue;
             }
 
             if ($deep && $this->getTable()->hasRelation($key)) {
-                $this->get($key)->synchronizeWithArray($value);
+                if (isset($value['_identifiers']) && is_array($value['_identifiers'])) {
+                    $this->unlink($key, array(), false);
+                    foreach ($value['_identifiers'] as $id => $exists) {
+                        if ($exists) {
+                            $this->link($key, $id, false);
+                        }
+                    }
+                } else {
+                    $this->$key->synchronizeWithArray($value);
+                }
             } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
             }
         }
 
         // eliminate relationships missing in the $array
-        foreach ($this->_references as $name => $obj) {
+        foreach ($this->_references as $name => $relation) {
+            
             if ( ! isset($array[$name])) {
                 unset($this->$name);
             }
@@ -1871,14 +1908,38 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param string $alias     related component alias
      * @param array $ids        the identifiers of the related records
+     * @param boolean $now      wether or not to execute now or set pending
      * @return Doctrine_Record  this object
      */
-    public function unlink($alias, $ids = array())
+    public function unlink($alias, $ids = array(), $now = false)
     {
         $ids = (array) $ids;
 
-        $q = new Doctrine_Query();
+        if (isset($this->_references[$alias])) {
+            foreach ($this->_references[$alias] as $k => $record) {
+                if (in_array(current($record->identifier()), $ids) || empty($ids)) {
+                    $this->_references[$alias]->remove($k);
+                }
+            }
+            $this->_references[$alias]->takeSnapshot();
+        }
+        if (!$this->exists() || $now === false) {
+            if (count($ids)) {
+                foreach ($ids as $id) {
+                    $this->_pendingUnlinks[$alias][$id] = true;
+                }
+            } else {
+                $this->_pendingUnlinks[$alias] = false;
+            }
+            return $this;
+        } else {
+            return $this->unlinkInDb($alias, $ids);
+        }
+    }
 
+    public function unlinkInDb($alias, $ids = array())
+    {
+        $q = new Doctrine_Query();
         $rel = $this->getTable()->getRelation($alias);
 
         if ($rel instanceof Doctrine_Relation_Association) {
@@ -1903,14 +1964,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             $q->execute();
         }
-        if (isset($this->_references[$alias])) {
-            foreach ($this->_references[$alias] as $k => $record) {
-                if (in_array(current($record->identifier()), $ids)) {
-                    $this->_references[$alias]->remove($k);
-                }
-            }
-            $this->_references[$alias]->takeSnapshot();
-        }
         return $this;
     }
 
@@ -1920,16 +1973,37 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param string $alias     related component alias
      * @param array $ids        the identifiers of the related records
+     * @param boolean $now      wether or not to execute now or set pending
      * @return Doctrine_Record  this object
      */
-    public function link($alias, $ids)
+    public function link($alias, $ids, $now = false)
     {
         $ids = (array) $ids;
 
         if ( ! count($ids)) {
             return $this;
         }
+        if (!$this->exists() || $now === false) {
+            $relTable = $this->getTable()->getRelation($alias)->getTable();
+            $records = $relTable->createQuery()
+                ->whereIn($relTable->getIdentifier(), $ids)
+                ->execute();
+            foreach ($records as $record) {
+                $this->$alias->add($record);
+            }
+            foreach ($ids as $id) {
+                if (isset($this->_pendingUnlinks[$alias][$id])) {
+                    unset($this->_pendingUnlinks[$alias][$id]);
+                }
+            }
+            return $this;
+        } else {
+            return $this->linkInDb($alias, $ids);
+        }
+    }
 
+    public function linkInDb($alias, $ids)
+    {
         $identifier = array_values($this->identifier());
         $identifier = array_shift($identifier);
 
@@ -1982,12 +2056,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
 
             $q->execute();
-
         }
 
         return $this;
     }
-
 
     /**
      * __call
