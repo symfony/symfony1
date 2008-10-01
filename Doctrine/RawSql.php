@@ -216,19 +216,20 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
 
         // force-add all primary key fields
+        if ($this->_sqlParts['distinct'] != true) {
+            foreach ($this->getTableAliasMap() as $tableAlias => $componentAlias) {
+                $map = $this->_queryComponents[$componentAlias];
 
-        foreach ($this->getTableAliasMap() as $tableAlias => $componentAlias) {
-            $map = $this->_queryComponents[$componentAlias];
+                foreach ((array) $map['table']->getIdentifierColumnNames() as $key) {
+                    $field = $tableAlias . '.' . $key;
 
-            foreach ((array) $map['table']->getIdentifierColumnNames() as $key) {
-                $field = $tableAlias . '.' . $key;
-
-                if ( ! isset($this->_sqlParts['select'][$field])) {
-                    $select[$componentAlias][$field] = $field . ' AS ' . $tableAlias . '__' . $key;
+                    if ( ! isset($this->_sqlParts['select'][$field])) {
+                        $select[$componentAlias][$field] = $field . ' AS ' . $tableAlias . '__' . $key;
+                    }
                 }
             }
         }
-        
+
         $q = 'SELECT ';
 
         if ($this->_sqlParts['distinct'] == true) {
