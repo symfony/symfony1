@@ -104,6 +104,33 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     }
     
     /**
+     * sets the last element of given data array / collection
+     * as previous element
+     *
+     * @param boolean|integer $index
+     * @return void
+     * @todo Detailed documentation
+     */
+    public function setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
+    {
+        if ($coll === self::$_null) {
+            unset($prev[$dqlAlias]); // Ticket #1228
+            return;
+        }
+
+        if ($index !== false) {
+            // Link element at $index to previous element for the component
+            // identified by the DQL alias $alias
+            $prev[$dqlAlias] = $coll[$index];
+            return;
+        }
+        
+        if (count($coll) > 0) {
+            $prev[$dqlAlias] = $coll->getLast();
+        }
+    }
+    
+    /**
      * Get the classname to return. Most often this is just the options['name']
      *
      * Check the subclasses option and the inheritanceMap for each subclass to see

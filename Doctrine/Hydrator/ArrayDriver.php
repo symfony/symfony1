@@ -67,6 +67,38 @@ class Doctrine_Hydrator_ArrayDriver
         end($data);
         return key($data);
     }
+    
+    /**
+     * sets the last element of given data array / collection
+     * as previous element
+     *
+     * @param boolean|integer $index
+     * @return void
+     * @todo Detailed documentation
+     */
+    public function setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
+    {
+        if ($coll === null) {
+            unset($prev[$dqlAlias]); // Ticket #1228
+            return;
+        }
+
+        if ($index !== false) {
+            // Link element at $index to previous element for the component
+            // identified by the DQL alias $alias
+            $prev[$dqlAlias] =& $coll[$index];
+            return;
+        }
+        
+        if ($coll) {
+            if ($oneToOne) {
+                $prev[$dqlAlias] =& $coll;
+            } else {
+                end($coll);
+                $prev[$dqlAlias] =& $coll[key($coll)];
+            }
+        }
+    }
 
     public function flush()
     {

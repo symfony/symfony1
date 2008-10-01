@@ -155,7 +155,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $index = $identifierMap[$rootAlias][$id[$rootAlias]];
             }
 
-            $this->_setLastElement($prev, $result, $index, $rootAlias, false);
+            $driver->setLastElement($prev, $result, $index, $rootAlias, false);
             unset($rowData[$rootAlias]);
 
             // end hydrate data of the root component for the current row
@@ -237,7 +237,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 }
                 if ($prev[$parent][$relationAlias] !== null) {
                     $coll =& $prev[$parent][$relationAlias];
-                    $this->_setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
+                    $driver->setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
                 }
             }
         }
@@ -248,40 +248,6 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         //echo 'Hydration took: ' . ($e - $s) . ' for '.count($result).' records<br />';
 
         return $result;
-    }
-
-    /**
-     * sets the last element of given data array / collection
-     * as previous element
-     *
-     * @param boolean|integer $index
-     * @return void
-     * @todo Detailed documentation
-     */
-    protected function _setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
-    {
-        if ($coll === self::$_null || $coll === null) {
-            unset($prev[$dqlAlias]); // Ticket #1228
-            return;
-        }
-
-        if ($index !== false) {
-            // Link element at $index to previous element for the component
-            // identified by the DQL alias $alias
-            $prev[$dqlAlias] =& $coll[$index];
-            return;
-        }
-
-        if (is_array($coll) && $coll) {
-            if ($oneToOne) {
-                $prev[$dqlAlias] =& $coll;
-            } else {
-                end($coll);
-                $prev[$dqlAlias] =& $coll[key($coll)];
-            }
-        } else if (count($coll) > 0) {
-            $prev[$dqlAlias] = $coll->getLast();
-        }
     }
 
     /**
