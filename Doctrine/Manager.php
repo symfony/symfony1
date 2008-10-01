@@ -103,6 +103,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES   => false,
                         Doctrine::ATTR_USE_DQL_CALLBACKS        => false,
                         Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE   => false,
+                        Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS  => false,
                         ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);

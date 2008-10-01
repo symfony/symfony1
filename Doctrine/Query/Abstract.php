@@ -1099,8 +1099,17 @@ abstract class Doctrine_Query_Abstract
                 $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
             }
         }
-
+        if ($this->getConnection()->getAttribute(Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS)) {
+            $this->free();
+        }
         return $result;
+    }
+
+    /**
+     * Blank template method free(). Override to be used to free query object memory
+     */
+    public function free()
+    { 
     }
 
     /**
