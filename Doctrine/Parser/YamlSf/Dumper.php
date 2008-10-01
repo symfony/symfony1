@@ -13,14 +13,14 @@
  */
 
 /**
- * sfYamlDumper class.
+ * YamlSfDumper class.
  *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlDumper.class.php 8488 2008-04-16 22:20:29Z fabien $
+ * @version    SVN: $Id: YamlSfDumper.class.php 8488 2008-04-16 22:20:29Z fabien $
  */
-class Doctrine_Parser_sfYaml_Dumper
+class Doctrine_Parser_YamlSf_Dumper
 {
   /**
    * Dumps a PHP value to YAML.
@@ -38,7 +38,7 @@ class Doctrine_Parser_sfYaml_Dumper
 
     if ($inline <= 0 || !is_array($input) || empty($input))
     {
-      $output .= $prefix.Doctrine_Parser_sfYaml_Inline::dump($input);
+      $output .= $prefix.Doctrine_Parser_YamlSf_Inline::dump($input);
     }
     else
     {
@@ -50,7 +50,7 @@ class Doctrine_Parser_sfYaml_Dumper
 
         $output .= sprintf('%s%s%s%s',
           $prefix,
-          $isAHash ? Doctrine_Parser_sfYaml_Inline::dump($key).':' : '-',
+          $isAHash ? Doctrine_Parser_YamlSf_Inline::dump($key).':' : '-',
           $willBeInlined ? ' ' : "\n",
           $this->dump($value, $inline - 1, $willBeInlined ? 0 : $indent + 2)
         ).($willBeInlined ? "\n" : '');

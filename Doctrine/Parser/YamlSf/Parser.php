@@ -13,14 +13,14 @@
  */
 
 /**
- * sfYamlParser class.
+ * YamlSfParser class.
  *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlParser.class.php 8869 2008-05-09 00:22:57Z dwhittle $
+ * @version    SVN: $Id: YamlSfParser.class.php 8869 2008-05-09 00:22:57Z dwhittle $
  */
-class Doctrine_Parser_sfYaml_Parser
+class Doctrine_Parser_YamlSf_Parser
 {
   protected
     $value         = '',
@@ -81,7 +81,7 @@ class Doctrine_Parser_sfYaml_Parser
         if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           $c = $this->getRealCurrentLineNb() + 1;
-          $parser = new Doctrine_Parser_sfYaml_Parser($c);
+          $parser = new Doctrine_Parser_YamlSf_Parser($c);
           $parser->refs =& $this->refs;
           $data[] = $parser->parse($this->getNextEmbedBlock());
         }
@@ -89,7 +89,7 @@ class Doctrine_Parser_sfYaml_Parser
         {
           if (preg_match('/^([^ ]+)\: +({.*?)$/', $values['value'], $matches))
           {
-            $data[] = array($matches[1] => Doctrine_Parser_sfYaml_Inline::load($matches[2]));
+            $data[] = array($matches[1] => Doctrine_Parser_YamlSf_Inline::load($matches[2]));
           }
           else
           {
@@ -99,7 +99,7 @@ class Doctrine_Parser_sfYaml_Parser
       }
       else if (preg_match('#^(?P<key>[^ ].*?) *\:(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
-        $key = Doctrine_Parser_sfYaml_Inline::parseScalar($values['key']);
+        $key = Doctrine_Parser_YamlSf_Inline::parseScalar($values['key']);
 
         if ('<<' === $key)
         {
@@ -133,7 +133,7 @@ class Doctrine_Parser_sfYaml_Parser
           else
           {
             $c = $this->getRealCurrentLineNb() + 1;
-            $parser = new Doctrine_Parser_sfYaml_Parser($c);
+            $parser = new Doctrine_Parser_YamlSf_Parser($c);
             $parser->refs =& $this->refs;
             $data[$key] = $parser->parse($this->getNextEmbedBlock());
           }
@@ -155,7 +155,7 @@ class Doctrine_Parser_sfYaml_Parser
         // one liner?
         if (1 == count(explode("\n", rtrim($this->value, "\n"))))
         {
-          return Doctrine_Parser_sfYaml_Inline::load($this->lines[0]);
+          return Doctrine_Parser_YamlSf_Inline::load($this->lines[0]);
         }
 
         throw new InvalidArgumentException(sprintf('Unable to parse line %d (%s).', $this->getRealCurrentLineNb(), $this->currentLine));
@@ -304,7 +304,7 @@ class Doctrine_Parser_sfYaml_Parser
     }
     else
     {
-      return Doctrine_Parser_sfYaml_Inline::load($value);
+      return Doctrine_Parser_YamlSf_Inline::load($value);
     }
   }
 

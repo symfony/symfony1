@@ -47,7 +47,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
     {
        
         try {
-          $data = Doctrine_Parser_sfYaml::dump($array);
+          $data = Doctrine_Parser_YamlSf::dump($array);
           
           return $this->doDump($data, $path);
           
@@ -77,7 +77,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
            */ 
           $contents = $this->doLoad($path);
 
-          $array = Doctrine_Parser_sfYaml::load($contents);
+          $array = Doctrine_Parser_YamlSf::load($contents);
           
           return $array;
           

@@ -9,14 +9,14 @@
  */
 
 /**
- * sfYaml class.
+ * YamlSf class.
  *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 8988 2008-05-15 20:24:26Z fabien $
+ * @version    SVN: $Id: YamlSf.class.php 8988 2008-05-15 20:24:26Z fabien $
  */
-class Doctrine_Parser_sfYaml
+class Doctrine_Parser_YamlSf
 {
   /**
    * Load YAML into a PHP array statically
@@ -58,10 +58,10 @@ class Doctrine_Parser_sfYaml
     }
 
     /* removed since it now use the doctrine autoload feature
-     * require_once dirname(__FILE__).'/Doctrine_Parser_sfYaml_Parser.class.php';
+     * require_once dirname(__FILE__).'/Doctrine_Parser_YamlSf_Parser.class.php';
      */
 
-    $yaml = new Doctrine_Parser_sfYaml_Parser();
+    $yaml = new Doctrine_Parser_YamlSf_Parser();
 
     try
     {
@@ -88,10 +88,10 @@ class Doctrine_Parser_sfYaml
   public static function dump($array, $inline = 4)
   {
     /* removed since it now use the doctrine autoload feature
-     * require_once dirname(__FILE__).'/Doctrine_Parser_sfYaml_Dumper.class.php';
+     * require_once dirname(__FILE__).'/Doctrine_Parser_YamlSf_Dumper.class.php';
      */
 
-    $yaml = new Doctrine_Parser_sfYaml_Dumper();
+    $yaml = new Doctrine_Parser_YamlSf_Dumper();
 
     return $yaml->dump($array, $inline);
   }
