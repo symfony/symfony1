@@ -106,7 +106,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                     // a component found
                     $field     = array_pop($a);
                 	  $reference = implode('.', $a);
-                    $value = $this->query->getTableAlias($reference). '.' . $field;
+                    $value = $this->query->getConnection()->quoteIdentifier($this->query->getTableAlias($reference). '.' . $field);
                 }
             }
         } else {
