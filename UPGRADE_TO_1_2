@@ -641,6 +641,22 @@ your tests:
       // ... some more tests
     ;
 
+### Debugging tests
+
+When a problem occurs in a functional test, the HTML transfered to the browser
+help to diagnose the cause. As of symfony 1.2, this is quite easy to display
+the generated HTML without having to interrupt the fluent interface style:
+
+    [php]
+    $browser->
+      get('/a_uri_with_an_error')->
+      with('response')->debug()->
+      // some tests that won't be executed
+    ;
+
+The `debug()` method will output the response headers and content and will
+interrupt the flow of the browser.
+
 ### Testers
 
 The `sfTestFunctionalBase` class now delegates the actual tests to `sfTester`

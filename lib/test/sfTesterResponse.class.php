@@ -187,4 +187,19 @@ class sfTesterResponse extends sfTester
 
     return $this->getObjectToReturn();
   }
+
+  public function debug()
+  {
+    printf("HTTP/1.X %s\n", $this->response->getStatusCode());
+
+    foreach ($this->response->getHttpHeaders() as $name => $value)
+    {
+      printf("%s: %s\n", $name, $value);
+    }
+
+    echo "\n";
+    echo $this->response->getContent();
+
+    exit(1);
+  }
 }
