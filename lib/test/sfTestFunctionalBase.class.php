@@ -52,6 +52,10 @@ abstract class sfTestFunctionalBase
 
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
+
+    // register our error/exception handlers
+    set_error_handler(array($this, 'handlePhpError'));
+    set_exception_handler(array($this, 'handleException'));
   }
 
   /**
@@ -504,44 +508,73 @@ abstract class sfTestFunctionalBase
     // fix the fluent interface
     return $retval === $this->browser ? $this : $retval;
   }
-}
 
-if (!defined('E_RECOVERABLE_ERROR'))
-{
-  define('E_RECOVERABLE_ERROR', 4096);
-}
-
-/**
- * Error handler for the current test browser instance.
- *
- * @param mixed  $errno    Error number
- * @param string $errstr   Error message
- * @param string $errfile  Error file
- * @param mixed  $errline  Error line
- */
-function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
-{
-  if (($errno & error_reporting()) == 0)
+  /**
+   * Error handler for the current test browser instance.
+   *
+   * @param mixed  $errno    Error number
+   * @param string $errstr   Error message
+   * @param string $errfile  Error file
+   * @param mixed  $errline  Error line
+   */
+  static public function handlePhpError($errno, $errstr, $errfile, $errline)
   {
-    return;
+    if (($errno & error_reporting()) == 0)
+    {
+      return;
+    }
+
+    $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
+    switch ($errno)
+    {
+      case E_WARNING:
+        throw new Exception(sprintf($msg, 'warning'));
+        break;
+      case E_NOTICE:
+        throw new Exception(sprintf($msg, 'notice'));
+        break;
+      case E_STRICT:
+        throw new Exception(sprintf($msg, 'strict'));
+        break;
+      case E_RECOVERABLE_ERROR:
+        throw new Exception(sprintf($msg, 'catchable'));
+        break;
+    }
   }
 
-  $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
-  switch ($errno)
+  /**
+   * Exception handler for the current test browser instance.
+   *
+   * @param Exception $exception The exception
+   */
+  function handleException(Exception $exception)
   {
-    case E_WARNING:
-      throw new Exception(sprintf($msg, 'warning'));
-      break;
-    case E_NOTICE:
-      throw new Exception(sprintf($msg, 'notice'));
-      break;
-    case E_STRICT:
-      throw new Exception(sprintf($msg, 'strict'));
-      break;
-    case E_RECOVERABLE_ERROR:
-      throw new Exception(sprintf($msg, 'catchable'));
-      break;
+    $this->test()->error(sprintf('%s: %s', get_class($exception), $exception->getMessage()));
+
+    $traceData = $exception->getTrace();
+    array_unshift($traceData, array(
+      'function' => '',
+      'file'     => $exception->getFile() != null ? $exception->getFile() : 'n/a',
+      'line'     => $exception->getLine() != null ? $exception->getLine() : 'n/a',
+      'args'     => array(),
+    ));
+
+    $traces = array();
+    $lineFormat = '  at %s%s%s() in %s line %s';
+    for ($i = 0, $count = count($traceData); $i < $count; $i++)
+    {
+      $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
+      $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : 'n/a';
+      $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
+      $this->test()->error(sprintf($lineFormat,
+        (isset($traceData[$i]['class']) ? $traceData[$i]['class'] : ''),
+        (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
+        $traceData[$i]['function'],
+        $file,
+        $line
+      ));
+    }
+
+    $this->test()->fail('An uncaught exception has been thrown.');
   }
 }
-
-set_error_handler('sfTestBrowserErrorHandler');

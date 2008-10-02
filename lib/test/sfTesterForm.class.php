@@ -58,7 +58,7 @@ class sfTesterForm extends sfTester
    */
   public function hasErrors($value = true)
   {
-    if (!isset($this->form))
+    if (is_null($this->form))
     {
       throw new LogicException('no form has been submitted.');
     }
@@ -98,7 +98,7 @@ class sfTesterForm extends sfTester
    */
   public function isError($field, $value = true)
   {
-    if (!isset($this->form))
+    if (is_null($this->form))
     {
       throw new LogicException('no form has been submitted.');
     }
@@ -162,7 +162,7 @@ class sfTesterForm extends sfTester
    */
   public function debug()
   {
-    if (!isset($this->form))
+    if (is_null($this->form))
     {
       throw new LogicException('no form has been submitted.');
     }
