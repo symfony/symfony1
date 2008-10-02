@@ -1558,9 +1558,14 @@ abstract class Doctrine_Query_Abstract
      * @param string $select        Query SELECT part
      * @return Doctrine_Query
      */
-    public function select($select)
+    public function select($select = null)
     {
-        return $this->_addDqlQueryPart('select', $select);
+        $this->_type = self::SELECT;
+        if ($select) {
+            return $this->_addDqlQueryPart('select', $select);
+        } else {
+            return $this;
+        }
     }
 
     /**
