@@ -618,8 +618,28 @@ abstract class Doctrine_Query_Abstract
      */
     public function mergeSubqueryBack(Doctrine_Query_Abstract $subquery)
     {
-        $this->_params = array_merge_recursive($this->_params, $subquery->_params);
+        $this->_params = $this->mergeParams($this->_params, $subquery->_params);
         $this->_tableAliasMap = array_merge($this->_tableAliasMap, $subquery->_tableAliasMap);
+    }
+    
+    /**
+     * Merge recursive function needed to workaround the PHP 5.2.5- bug
+     * See: http://bugs.php.net/bug.php?id=42177
+     *
+     * @params Arg0,Arg1,..., ArgN Arrays to be merged
+     * @return array Merged array
+     */
+    protected function mergeParams($params1, $params2)
+    {
+        $params = array();
+
+        foreach ($params1 as $k => $v)
+        {
+            // [TODO] What if we are in an array parameter (since 1.1)?
+            $params[$k] = array_merge($params1[$k], $params2[$k]);
+        }
+
+        return $params;
     }
 
     /**
