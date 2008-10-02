@@ -93,7 +93,7 @@ class sfObjectRoute extends sfRequestRoute
 
     if ('object' != $this->options['type'])
     {
-      throw new LogicException('The route type must be "object".');
+      throw new LogicException(sprintf('The route "%s" is not of type "object".', $this->pattern));
     }
 
     // check the related object
@@ -121,7 +121,7 @@ class sfObjectRoute extends sfRequestRoute
 
     if ('list' != $this->options['type'])
     {
-      throw new LogicException('The route type must be "list".');
+      throw new LogicException(sprintf('The route "%s" is not of type "list".', $this->pattern));
     }
 
     $objects = $this->getObjectsForParameters($this->parameters);
