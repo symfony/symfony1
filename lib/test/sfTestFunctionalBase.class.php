@@ -283,6 +283,20 @@ abstract class sfTestFunctionalBase
   }
 
   /**
+   * Outputs an information message.
+   *
+   * @param string $message A message
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function info($message)
+  {
+    $this->test()->info($message);
+
+    return $this;
+  }
+
+  /**
    * Tests if the current request has been redirected.
    *
    * @deprecated since 1.2

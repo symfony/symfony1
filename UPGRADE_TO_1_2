@@ -628,6 +628,19 @@ The browser classes now add the `HTTP_REFERER` header for each request.
 Tests
 -----
 
+When you write a lot of functional tests for a given module, it is sometimes
+useful to have some visual information about what it is being done.
+As of symfony 1.2, the `info()` method outputs some text to help categorize
+your tests:
+
+    [php]
+    $browser->
+      info('First scenario')->
+      // ... some tests
+      info('Second scenario')->
+      // ... some more tests
+    ;
+
 ### Testers
 
 The `sfTestFunctionalBase` class now delegates the actual tests to `sfTester`
