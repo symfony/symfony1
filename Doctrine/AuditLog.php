@@ -38,14 +38,17 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      * @var string
      */
     protected $_options = array(
-                            'className'     => '%CLASS%Version',
-                            'versionColumn' => 'version',
-                            'tableName'     => false,
-                            'generateFiles' => false,
-                            'table'         => false,
-                            'pluginTable'   => false,
-                            'children'      => array(),
-                            'auditLog'      => true,
+                            'className'           => '%CLASS%Version',
+                            'versionColumn'       => 'version',
+                            'versionColumnType'   => 'integer',
+                            'versionColumnOptions'=> array('primary' => true),
+                            'versionColumnLength' => 8,
+                            'tableName'           => false,
+                            'generateFiles'       => false,
+                            'table'               => false,
+                            'pluginTable'         => false,
+                            'children'            => array(),
+                            'auditLog'            => true,
                             );
 
     /**
@@ -86,7 +89,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
         }
 
         // the version column should be part of the primary key definition
-        $this->hasColumn($this->_options['versionColumn'], 'integer', 8, array('primary' => true));
+        $this->hasColumn($this->_options['versionColumn'], $this->_options['versionColumnType'], $this->_options['versionColumnLength'], $this->_options['versionColumnOptions']);
     }
 
     /**
