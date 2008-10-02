@@ -176,7 +176,7 @@ abstract class sfTestFunctionalBase
    */
   public function get($uri, $parameters = array(), $changeStack = true)
   {
-    return $this->call($uri, 'get', $parameters);
+    return $this->call($uri, 'get', $parameters, $changeStack);
   }
 
   /**
@@ -212,7 +212,7 @@ abstract class sfTestFunctionalBase
    */
   public function post($uri, $parameters = array(), $changeStack = true)
   {
-    return $this->call($uri, 'post', $parameters);
+    return $this->call($uri, 'post', $parameters, $changeStack);
   }
 
   /**
