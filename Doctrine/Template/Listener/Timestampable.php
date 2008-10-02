@@ -59,14 +59,14 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
      */
     public function preInsert(Doctrine_Event $event)
     {
-        if( ! $this->_options['created']['disabled']) {
+        if ( ! $this->_options['created']['disabled']) {
             $createdName = $event->getInvoker()->getTable()->getFieldName($this->_options['created']['name']);
             if ( ! $event->getInvoker()->$createdName) {
                 $event->getInvoker()->$createdName = $this->getTimestamp('created');
             }
         }
 
-        if( ! $this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
+        if ( ! $this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             if ( ! $event->getInvoker()->$updatedName) {
                 $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
@@ -82,10 +82,30 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
      */
     public function preUpdate(Doctrine_Event $event)
     {
-        if( ! $this->_options['updated']['disabled']) {
+        if ( ! $this->_options['updated']['disabled']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             if ( ! $event->getInvoker()->$updatedName) {
                 $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
+            }
+        }
+    }
+
+    /**
+     * Set the updated field for dql update queries
+     *
+     * @param Doctrine_Event $evet
+     * @return void
+     */
+    public function preDqlUpdate(Doctrine_Event $event)
+    {
+        if ( ! $this->_options['updated']['disabled']) {
+            $params = $event->getParams();
+            $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
+            $field = $params['alias'] . '.' . $updatedName;
+            $query = $event->getQuery();
+
+            if ( ! $query->contains($field)) {
+                $query->set($field, '?', $this->getTimestamp('updated'));
             }
         }
     }
