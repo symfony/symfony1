@@ -183,6 +183,8 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_USE_DQL_CALLBACKS;
             case Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE;
             case Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS;
+            case Doctrine::ATTR_DEFAULT_TABLE_CHARSET;
+            case Doctrine::ATTR_DEFAULT_TABLE_COLLATE;
 
                 break;
             case Doctrine::ATTR_SEQCOL_NAME:
@@ -458,6 +460,46 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Set the charset
+     *
+     * @param string $charset
+     */
+    public function setCharset($charset)
+    {
+        $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_CHARSET, $charset);
+    }
+
+    /**
+     * Get the charset
+     *
+     * @return mixed
+     */
+    public function getCharset()
+    {
+        return $this->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_CHARSET);
+    }
+
+    /**
+     * Set the collate
+     *
+     * @param string $collate
+     */
+    public function setCollate($collate)
+    {
+        $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_COLLATE, $collate);
+    }
+
+    /**
+     * Get the collate
+     *
+     * @return mixed $collate
+     */
+    public function getCollate()
+    {
+        return $this->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_COLLATE);
     }
 
     /**

@@ -197,6 +197,8 @@ final class Doctrine
     const ATTR_USE_DQL_CALLBACKS        = 164;
     const ATTR_AUTO_ACCESSOR_OVERRIDE   = 165;
     const ATTR_AUTO_FREE_QUERY_OBJECTS  = 166;
+    const ATTR_DEFAULT_TABLE_CHARSET    = 167;
+    const ATTR_DEFAULT_TABLE_COLLATE    = 168;
 
     /**
      * LIMIT CONSTANTS

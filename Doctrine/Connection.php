@@ -674,16 +674,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * Set the charset on the current connection
-     *
-     * @param string    charset
-     */
-    public function setCharset($charset)
-    {
-
-    }
-
-    /**
      * Quote a string so it can be safely used as a table or column name
      *
      * Delimiting style depends on which database driver is being used.
