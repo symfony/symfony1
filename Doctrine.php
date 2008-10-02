@@ -176,29 +176,31 @@ final class Doctrine
     const ATTR_USE_NATIVE_ENUM      = 117;
     const ATTR_DEFAULT_SEQUENCE     = 133;
 
-    const ATTR_FETCHMODE                = 118;
-    const ATTR_NAME_PREFIX              = 121;
-    const ATTR_CREATE_TABLES            = 122;
-    const ATTR_COLL_LIMIT               = 123;
-
-    const ATTR_CACHE                    = 150;
-    const ATTR_RESULT_CACHE             = 150;
-    const ATTR_CACHE_LIFESPAN           = 151;
-    const ATTR_RESULT_CACHE_LIFESPAN    = 151;
-    const ATTR_LOAD_REFERENCES          = 153;
-    const ATTR_RECORD_LISTENER          = 154;
-    const ATTR_THROW_EXCEPTIONS         = 155;
-    const ATTR_DEFAULT_PARAM_NAMESPACE  = 156;
-    const ATTR_QUERY_CACHE              = 157;
-    const ATTR_QUERY_CACHE_LIFESPAN     = 158;
-    const ATTR_AUTOLOAD_TABLE_CLASSES   = 160;
-    const ATTR_MODEL_LOADING            = 161;
-    const ATTR_RECURSIVE_MERGE_FIXTURES = 162;
-    const ATTR_USE_DQL_CALLBACKS        = 164;
-    const ATTR_AUTO_ACCESSOR_OVERRIDE   = 165;
-    const ATTR_AUTO_FREE_QUERY_OBJECTS  = 166;
-    const ATTR_DEFAULT_TABLE_CHARSET    = 167;
-    const ATTR_DEFAULT_TABLE_COLLATE    = 168;
+    const ATTR_FETCHMODE                    = 118;
+    const ATTR_NAME_PREFIX                  = 121;
+    const ATTR_CREATE_TABLES                = 122;
+    const ATTR_COLL_LIMIT                   = 123;
+                                        
+    const ATTR_CACHE                        = 150;
+    const ATTR_RESULT_CACHE                 = 150;
+    const ATTR_CACHE_LIFESPAN               = 151;
+    const ATTR_RESULT_CACHE_LIFESPAN        = 151;
+    const ATTR_LOAD_REFERENCES              = 153;
+    const ATTR_RECORD_LISTENER              = 154;
+    const ATTR_THROW_EXCEPTIONS             = 155;
+    const ATTR_DEFAULT_PARAM_NAMESPACE      = 156;
+    const ATTR_QUERY_CACHE                  = 157;
+    const ATTR_QUERY_CACHE_LIFESPAN         = 158;
+    const ATTR_AUTOLOAD_TABLE_CLASSES       = 160;
+    const ATTR_MODEL_LOADING                = 161;
+    const ATTR_RECURSIVE_MERGE_FIXTURES     = 162;
+    const ATTR_USE_DQL_CALLBACKS            = 164;
+    const ATTR_AUTO_ACCESSOR_OVERRIDE       = 165;
+    const ATTR_AUTO_FREE_QUERY_OBJECTS      = 166;
+    const ATTR_DEFAULT_TABLE_CHARSET        = 167;
+    const ATTR_DEFAULT_TABLE_COLLATE        = 168;
+    const ATTR_DEFAULT_IDENTIFIER_OPTIONS   = 169;
+    const ATTR_DEFAULT_COLUMN_OPTIONS       = 170;
 
     /**
      * LIMIT CONSTANTS

@@ -410,12 +410,24 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                 $definition, true);
                     }
                 } else {
-                    $definition = array('type' => 'integer',
-                                        'length' => 20,
-                                        'autoincrement' => true,
-                                        'primary' => true);
-                    $this->setColumn('id', $definition['type'], $definition['length'], $definition, true);
-                    $this->_identifier = 'id';
+                    $identifierOptions = $this->getAttribute(Doctrine::ATTR_DEFAULT_IDENTIFIER_OPTIONS);
+                    $name = (isset($identifierOptions['name']) && $identifierOptions['name']) ? $identifierOptions['name']:'id';
+                    $name = sprintf($name, $this->getTableName());
+
+                    $definition = array('type' => (isset($identifierOptions['type']) && $identifierOptions['type']) ? $identifierOptions['type']:'integer',
+                                        'length' => (isset($identifierOptions['length']) && $identifierOptions['length']) ? $identifierOptions['length']:20,
+                                        'autoincrement' => isset($identifierOptions['autoincrement']) ? $identifierOptions['autoincrement']:true,
+                                        'primary' => isset($identifierOptions['primary']) ? $identifierOptions['primary']:true);
+
+                    unset($identifierOptions['name'], $identifierOptions['type'], $identifierOptions['length']);
+                    foreach ($identifierOptions as $key => $value) {
+                        if ( ! isset($definition[$key]) || ! $definition[$key]) {
+                            $definition[$key] = $value;
+                        }
+                    }
+
+                    $this->setColumn($name, $definition['type'], $definition['length'], $definition, true);
+                    $this->_identifier = $name;
                     $this->_identifierType = Doctrine::IDENTIFIER_AUTOINC;
                 }
                 $this->columnCount++;
@@ -982,7 +994,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @throws Doctrine_Table_Exception     if trying use wrongly typed parameter
      * @return void
      */
-    public function setColumn($name, $type, $length = null, $options = array(), $prepend = false)
+    public function setColumn($name, $type = null, $length = null, $options = array(), $prepend = false)
     {
         if (is_string($options)) {
             $options = explode('|', $options);
@@ -1029,6 +1041,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $this->_fieldNames[$name] = $fieldName;
         }
 
+        $defaultOptions = $this->getAttribute(Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS);
+
+        if (isset($defaultOptions['length']) && $defaultOptions['length'] && $length == null) {
+            $length = $defaultOptions['length'];
+        }
+
         if ($length == null) {
             switch ($type) {
                 case 'string':
@@ -1053,12 +1071,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 case 'timestamp':
                     // YYYY-MM-DDTHH:MM:SS+00:00 ISO 8601
                     $length = 25;
-                break;
             }
         }
 
         $options['type'] = $type;
         $options['length'] = $length;
+
+        foreach ($defaultOptions as $key => $value) {
+            if ( ! isset($options[$key]) || ! $options[$key]) {
+                $options[$key] = $value;
+            }
+        }
 
         if ($prepend) {
             $this->_columns = array_merge(array($name => $options), $this->_columns);

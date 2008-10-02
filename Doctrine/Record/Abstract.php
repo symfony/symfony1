@@ -224,7 +224,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      * @param mixed $options
      * @return void
      */
-    public function hasColumn($name, $type, $length = 2147483647, $options = "")
+    public function hasColumn($name, $type = null, $length = null, $options = array())
     {
         $this->_table->setColumn($name, $type, $length, $options);
     }
