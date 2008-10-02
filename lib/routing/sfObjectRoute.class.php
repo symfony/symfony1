@@ -45,7 +45,7 @@ class sfObjectRoute extends sfRequestRoute
     if (!in_array($options['type'], array('object', 'list')))
     {
       throw new InvalidArgumentException(sprintf('The "type" option can only be "object" or "list", "%s" given (%s).', $options['type'], $pattern));
-      }
+    }
 
     parent::__construct($pattern, $defaults, $requirements, $options);
   }
