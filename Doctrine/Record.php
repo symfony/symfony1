@@ -121,6 +121,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected $_modified     = array();
 
     /**
+     * @var array $_oldValues               an array of the old values from set properties
+     */
+    protected $_oldValues   = array();
+
+    /**
      * @var Doctrine_Validator_ErrorStack   error stack object
      */
     protected $_errorStack;
@@ -1071,6 +1076,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 }
                 $this->_data[$fieldName] = $value;
                 $this->_modified[] = $fieldName;
+                $this->_oldValues[$fieldName] = $old;
 
                 switch ($this->_state) {
                     case Doctrine_Record::STATE_CLEAN:
@@ -1331,29 +1337,21 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * returns an array of modified fields and associated values
-     * @return array
-     * @todo What about a better name? getModifiedFields?
+     * returns an array of modified fields and associated new values
+     * specify $old = true to retrieve an array with the old values
+     *
+     * @return array $a
      */
-    public function getModified()
+    public function getModified($old = false)
     {
         $a = array();
 
-        foreach ($this->_modified as $k => $v) {
-            $a[$v] = $this->_data[$v];
-        }
-        return $a;
-    }
-
-    /**
-     * REDUNDANT?
-     */
-    public function modifiedFields()
-    {
-        $a = array();
-
-        foreach ($this->_modified as $k => $v) {
-            $a[$v] = $this->_data[$v];
+        foreach ($this->_modified as $fieldName) {
+            if ($old) {
+                $a[$fieldName] = $this->_oldValues[$fieldName];
+            } else {
+                $a[$fieldName] = $this->_data[$fieldName];
+            }
         }
         return $a;
     }
