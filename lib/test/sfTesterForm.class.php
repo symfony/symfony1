@@ -47,6 +47,19 @@ class sfTesterForm extends sfTester
    */
   public function initialize()
   {
+    if (is_null($this->form))
+    {
+      $action = $this->browser->getContext()->getActionStack()->getLastEntry()->getActionInstance();
+
+      foreach ($action->getVarHolder()->getAll() as $name => $value)
+      {
+        if ($value instanceof sfForm && $value->isBound())
+        {
+          $this->form = $value;
+          break;
+        }
+      }
+    }
   }
 
   /**
