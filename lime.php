@@ -367,7 +367,7 @@ class lime_output_color extends lime_output
 
   public function info($message)
   {
-    echo $this->colorizer->colorize(sprintf('%s', $message), 'INFO_BAR')."\n";
+    echo $this->colorizer->colorize(sprintf('> %s', $message), 'INFO_BAR')."\n";
   }
 
   public function echoln($message, $colorizer_parameter = null)
@@ -433,7 +433,7 @@ lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 
 lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
 lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
-lime_colorizer::style('INFO_BAR',  array('fg' => 'cyan', 'bold' => true, 'underscore' => true));
+lime_colorizer::style('INFO_BAR',  array('fg' => 'cyan', 'bold' => true));
 
 class lime_harness extends lime_registration
 {
