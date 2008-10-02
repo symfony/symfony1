@@ -1527,6 +1527,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $this->$key->fromArray($value, $deep);
             } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
+            } else {
+                $method = 'set' . Doctrine_Inflector::classify($key);
+                if (method_exists($this, $method)) {
+                    $this->$method($value);
+                }
             }
         }
 
