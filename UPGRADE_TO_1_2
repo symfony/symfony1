@@ -660,6 +660,7 @@ The tester classes also comes with new test methods:
  ------------------- | -----------------
  `sfTesterRequest`   | `hasCookie`
  `sfTesterRequest`   | `isCookie`
+ `sfTesterRequest`   | `isMethod`
                      |
  `sfTesterUser`      | `isAuthenticated`
  `sfTesterUser`      | `hasCredential`
@@ -668,6 +669,40 @@ The tester classes also comes with new test methods:
 
 Even if the old methods are deprecated, they do not send any warning and will
 not be removed to maintain backward compatibility with symfony 1.0 and 1.1.
+
+Here is how to use the new testers:
+
+    [php]
+    $browser->
+      get('/')->
+      with('request')->isParameter('module', 'foo')->
+      with('request')->isParameter('module', 'bar')
+    ;
+
+The call to the `with()` method returns the tester object on which you can call
+any of its methods.
+
+If you want to call several methods on the same tester object, you can put them
+in a 'block':
+
+    [php]
+    $browser->
+      get('/')->
+
+      with('request')->begin()->
+        isParameter('module', 'foo')->
+        isParameter('module', 'bar')->
+        isMethod('get')->
+        isFormat('html')->
+      end()->
+
+      with('response')->begin()->
+        isStatusCode(200)->
+        checkElement('body', 'foo')->
+        isHeader('Content-Type', 'text/html; charset: UTF-8')->
+        isRedirected(false)->
+      end()
+    ;
 
 You can add your own tester by creating a class that inherits from `sfTester`
 and register it:
@@ -728,7 +763,7 @@ of each cookie.
 ### Request
 
 You can now test the HTTP method used by the request in your functional tests 
-using the `isRequestMethod()` method of the `sfTestBrowser` class:
+using the `isMethod()` method from the request tester:
 
     [php]
     $b->
