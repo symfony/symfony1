@@ -100,8 +100,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test') && !self::$coreLoaded)
     {
       $configCache->import('config/core_compile.yml', false);
-
-      self::$coreLoaded = true;
     }
 
     sfAutoload::getInstance()->register();
@@ -146,7 +144,12 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // compress output
-    ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+    if (!self::$coreLoaded)
+    {
+      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+    }
+
+    self::$coreLoaded = true;
   }
 
   /**
