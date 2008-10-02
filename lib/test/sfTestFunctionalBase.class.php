@@ -233,6 +233,11 @@ abstract class sfTestFunctionalBase
 
     $this->test()->comment(sprintf('%s %s', strtolower($method), $uri));
 
+    foreach ($this->testers as $tester)
+    {
+      $tester->prepare();
+    }
+
     $this->browser->call($uri, $method, $parameters, $changeStack);
 
     return $this;

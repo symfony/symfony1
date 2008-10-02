@@ -24,6 +24,13 @@ class sfTesterResponse extends sfTester
     $domCssSelector = null;
 
   /**
+   * Prepares the tester.
+   */
+  public function prepare()
+  {
+  }
+
+  /**
    * Initializes the tester.
    */
   public function initialize()
@@ -188,8 +195,13 @@ class sfTesterResponse extends sfTester
     return $this->getObjectToReturn();
   }
 
+  /**
+   * Outputs some debug information about the current response.
+   */
   public function debug()
   {
+    print $this->tester->error('Response debug');
+
     printf("HTTP/1.X %s\n", $this->response->getStatusCode());
 
     foreach ($this->response->getHttpHeaders() as $name => $value)

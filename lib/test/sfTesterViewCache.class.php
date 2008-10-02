@@ -24,6 +24,13 @@ class sfTesterViewCache extends sfTester
     $routing          = null;
 
   /**
+   * Prepares the tester.
+   */
+  public function prepare()
+  {
+  }
+
+  /**
    * Initializes the tester.
    */
   public function initialize()

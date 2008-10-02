@@ -21,6 +21,13 @@ class sfTesterRequest extends sfTester
   protected $request;
 
   /**
+   * Prepares the tester.
+   */
+  public function prepare()
+  {
+  }
+
+  /**
    * Initializes the tester.
    */
   public function initialize()

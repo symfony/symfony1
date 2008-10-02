@@ -36,6 +36,11 @@ abstract class sfTester
   }
 
   /**
+   * Prepares the tester.
+   */
+  abstract public function prepare();
+
+  /**
    * Initializes the tester.
    */
   abstract public function initialize();

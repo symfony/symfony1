@@ -232,6 +232,21 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Returns the submitted tainted values.
+   *
+   * @return array An array of tainted values
+   */
+  public function getTaintedValues()
+  {
+    if (!$this->isBound)
+    {
+      return array();
+    }
+
+    return $this->taintedValues;
+  }
+
+  /**
    * Returns true if the form is valid.
    *
    * It returns false if the form is not bound.

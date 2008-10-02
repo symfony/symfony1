@@ -832,6 +832,35 @@ you are clicking on:
 This is very useful when a link is converted to a dynamic form generated
 with JavaScript.
 
+### Forms
+
+If you use the new form framework, you can now test the errors generated
+by the submitted form:
+
+    [php]
+    $browser->
+      click('save', array(...))->
+      with('form')->begin()->
+        hasErrors()->
+        isError('name', 'Required.')->
+        isError('name', '/Required/')->
+        isError('name', '!/Invalid/')->
+        isError('name')->
+        isError('name', 1)->
+      end()
+    ;
+
+You can also debug a form with the `debug()` method:
+
+    [php]
+    $browser->
+      click('save', array(...))->
+      with('form')->debug()->
+      // some tests that won't be executed
+    ;
+
+It will output the submitted values and all the errors if any.
+
 YAML
 ----
 

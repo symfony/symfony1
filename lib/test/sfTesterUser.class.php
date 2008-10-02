@@ -21,6 +21,13 @@ class sfTesterUser extends sfTester
   protected $user;
 
   /**
+   * Prepares the tester.
+   */
+  public function prepare()
+  {
+  }
+
+  /**
    * Initializes the tester.
    */
   public function initialize()

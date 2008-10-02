@@ -374,6 +374,7 @@ class sfCoreAutoload
   'sfTestFunctional' => 'test',
   'sfTestFunctionalBase' => 'test',
   'sfTester' => 'test',
+  'sfTesterForm' => 'test',
   'sfTesterRequest' => 'test',
   'sfTesterResponse' => 'test',
   'sfTesterUser' => 'test',
