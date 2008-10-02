@@ -276,6 +276,11 @@ class lime_test
     $this->output->comment($message);
   }
 
+  public function info($message)
+  {
+    $this->output->info($message);
+  }
+
   public static function get_temp_directory()
   {
     if ('\\' == DIRECTORY_SEPARATOR)
@@ -316,6 +321,11 @@ class lime_output
     echo "# $message\n";
   }
 
+  public function info($message)
+  {
+    echo "> $message\n";
+  }
+
   public function echoln($message)
   {
     echo "$message\n";
@@ -353,6 +363,11 @@ class lime_output_color extends lime_output
   public function comment($message)
   {
     echo $this->colorizer->colorize(sprintf('# %s', $message), 'COMMENT')."\n";
+  }
+
+  public function info($message)
+  {
+    echo $this->colorizer->colorize(sprintf('%s', $message), 'INFO_BAR')."\n";
   }
 
   public function echoln($message, $colorizer_parameter = null)
@@ -418,6 +433,7 @@ lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 
 lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
 lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
+lime_colorizer::style('INFO_BAR',  array('fg' => 'cyan', 'bold' => true, 'underscore' => true));
 
 class lime_harness extends lime_registration
 {
