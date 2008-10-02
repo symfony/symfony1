@@ -83,6 +83,8 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         $isSimpleQuery = count($this->_queryComponents) <= 1;
         // Holds the resulting hydrated data structure
         $result = array();
+        // Holds array of record instances so we can call hooks on it
+        $instances = array();
         // Holds hydration listeners that get called during hydration
         $listeners = array();
         // Lookup map to quickly discover/lookup existing records in the result
@@ -105,6 +107,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         // Initialize
         foreach ($this->_queryComponents as $dqlAlias => $data) {
             $componentName = $data['table']->getComponentName();
+            $instances[$componentName] = $data['table']->getRecordInstance();
             $listeners[$componentName] = $data['table']->getRecordListener();
             $identifierMap[$dqlAlias] = array();
             $prev[$dqlAlias] = null;
@@ -129,6 +132,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $event->setInvoker($table);
             $event->set('data', $rowData[$rootAlias]);
             $listeners[$componentName]->preHydrate($event);
+            $instances[$componentName]->preHydrate($event);
 
             $index = false;
 
@@ -137,6 +141,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $element = $driver->getElement($rowData[$rootAlias], $componentName);
                 $event->set('data', $element);
                 $listeners[$componentName]->postHydrate($event);
+                $instances[$componentName]->postHydrate($event);
 
                 // do we need to index by a custom field?
                 if ($field = $this->_getCustomIndexField($rootAlias)) {
@@ -172,6 +177,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $event->set('data', $data);
                 $event->setInvoker($table);
                 $listeners[$componentName]->preHydrate($event);
+                $instances[$componentName]->preHydrate($event);
 
                 // It would be nice if this could be moved to the query parser but I could not find a good place to implement it
                 if ( ! isset($map['parent'])) {
@@ -204,6 +210,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                             $element = $driver->getElement($data, $componentName);
                             $event->set('data', $element);
                             $listeners[$componentName]->postHydrate($event);
+                            $instances[$componentName]->postHydrate($event);
 
                             if ($field = $this->_getCustomIndexField($dqlAlias)) {
                                 if (isset($prev[$parent][$relationAlias][$element[$field]])) {
@@ -231,6 +238,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
 						// [FIX] Tickets #1205 and #1237
                         $event->set('data', $element);
                         $listeners[$componentName]->postHydrate($event);
+                        $instances[$componentName]->postHydrate($event);
 
                         $prev[$parent][$relationAlias] = $element;
                     }

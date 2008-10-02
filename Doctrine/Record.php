@@ -462,6 +462,20 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     { }
 
     /**
+     * Empty template method to provide Record classes with the ability to alter hydration 
+     * before it runs
+     */
+    public function preHydrate($event)
+    { }
+
+    /**
+     * Empty template method to provide Record classes with the ability to alter hydration 
+     * after it runs
+     */
+    public function postHydrate($event)
+    { }
+
+    /**
      * getErrorStack
      *
      * @return Doctrine_Validator_ErrorStack    returns the errorStack associated with this record
