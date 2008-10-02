@@ -52,18 +52,25 @@ class sfTesterForm extends sfTester
   /**
    * Tests if the submitted form has some error.
    *
-   * @param  Boolean $boolean Whether to check if the form has error or not
+   * @param  Boolean|integer $value Whether to check if the form has error or not, or the number of errors
    *
    * @return sfTestFunctionalBase|sfTester
    */
-  public function hasErrors($boolean = true)
+  public function hasErrors($value = true)
   {
     if (!isset($this->form))
     {
       throw new LogicException('no form has been submitted.');
     }
 
-    $this->tester->is($this->form->hasErrors(), $boolean, 'the submitted form has some errors.');
+    if (is_int($value))
+    {
+      $this->tester->is(count($this->form->hasErrors()), $value, sprintf('the submitted form has "%s" errors.', $value));
+    }
+    else
+    {
+      $this->tester->is($this->form->hasErrors(), $value, 'the submitted form has some errors.');
+    }
 
     return $this->getObjectToReturn();
   }
@@ -71,7 +78,20 @@ class sfTesterForm extends sfTester
   /**
    * Tests if the submitted form has a specific error.
    *
-   * @param  string $field   The field name to check for an error
+   * @param  string $field   The field name to check for an error (null for global errors)
+   * @param  mixed  $message The error message or the number of errors for the field (optional)
+   *
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function hasGlobalError($value = true)
+  {
+    return $this->isError(null, $value);
+  }
+
+  /**
+   * Tests if the submitted form has a specific error.
+   *
+   * @param  string $field   The field name to check for an error (null for global errors)
    * @param  mixed  $message The error message or the number of errors for the field (optional)
    *
    * @return sfTestFunctionalBase|sfTester
@@ -83,7 +103,14 @@ class sfTesterForm extends sfTester
       throw new LogicException('no form has been submitted.');
     }
 
-    $error = $this->form[$field]->getError();
+    if (is_null($field))
+    {
+      $error = new sfValidatorErrorSchema(new sfValidatorPass(), $this->form->getGlobalErrors());
+    }
+    else
+    {
+      $error = $this->form[$field]->getError();
+    }
 
     if (false === $value)
     {
