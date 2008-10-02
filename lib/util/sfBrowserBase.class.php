@@ -541,6 +541,26 @@ abstract class sfBrowserBase
   /**
    * Simulates a click on a link or button.
    *
+   * @param string  $name       The link or button text
+   * @param array   $arguments  The arguments to pass to the link
+   * @param array   $options    An array of options
+   *
+   * @return sfBrowser
+   *
+   * @see    doClick()
+   */
+  public function click($name, $arguments = array(), $options = array())
+  {
+    list($uri, $method, $parameters) = $this->doClick($name, $arguments, $options);
+
+    $this->call($uri, $method, $parameters);
+  }
+
+  /**
+   * Simulates a click on a link or button.
+   *
+   * This method is called internally by the click() method.
+   *
    * Available options:
    *
    *  * position: The position of the linked to link if several ones have the same name
@@ -552,9 +572,9 @@ abstract class sfBrowserBase
    * @param array   $arguments  The arguments to pass to the link
    * @param array   $options    An array of options
    *
-   * @return sfBrowser
+   * @return array An array composed of the URI, the method and the arguments to pass to the call() call
    */
-  public function click($name, $arguments = array(), $options = array())
+  public function doClick($name, $arguments = array(), $options = array())
   {
     $position = isset($options['position']) ? $options['position'] - 1 : 0;
 
@@ -574,11 +594,11 @@ abstract class sfBrowserBase
     {
       if (in_array($method, array('post', 'put', 'delete')))
       {
-        return $this->call($link->getAttribute('href'), $method, $arguments);
+        return array($link->getAttribute('href'), $method, $arguments);
       }
       else
       {
-        return $this->get($link->getAttribute('href'));
+        return array($link->getAttribute('href'), 'get', array());
       }
     }
 
@@ -587,11 +607,11 @@ abstract class sfBrowserBase
     {
       if (in_array($method, array('post', 'put', 'delete')))
       {
-        return $this->call($link->getAttribute('href'), $method, $arguments);
+        return array($link->getAttribute('href'), $method, $arguments);
       }
       else
       {
-        return $this->get($link->getAttribute('href'));
+        return array($link->getAttribute('href'), 'get', $arguments);
       }
     }
 
@@ -709,14 +729,14 @@ abstract class sfBrowserBase
     $arguments = sfToolkit::arrayDeepMerge($defaults, $arguments);
     if (in_array($method, array('post', 'put', 'delete')))
     {
-      return $this->call($url, $method, $arguments);
+      return array($url, $method, $arguments);
     }
     else
     {
       $queryString = http_build_query($arguments, null, '&');
       $sep = false === strpos($url, '?') ? '?' : '&';
 
-      return $this->get($url.($queryString ? $sep.$queryString : ''));
+      return array($url.($queryString ? $sep.$queryString : ''), 'get', array());
     }
   }
 

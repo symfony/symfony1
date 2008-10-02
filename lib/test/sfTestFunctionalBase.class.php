@@ -239,6 +239,22 @@ abstract class sfTestFunctionalBase
   }
 
   /**
+   * Simulates a click on a link or button.
+   *
+   * @param string  $name       The link or button text
+   * @param array   $arguments  The arguments to pass to the link
+   * @param array   $options    An array of options
+   *
+   * @return sfBrowser
+   */
+  public function click($name, $arguments = array(), $options = array())
+  {
+    list($uri, $method, $parameters) = $this->browser->doClick($name, $arguments, $options);
+
+    return $this->call($uri, $method, $parameters);
+  }
+
+  /**
    * Simulates the browser back button.
    *
    * @return sfTestBrowser The current sfTestBrowser instance
@@ -247,7 +263,9 @@ abstract class sfTestFunctionalBase
   {
     $this->test()->comment('back');
 
-    return $this->browser->back();
+    $this->browser->back();
+
+    return $this;
   }
 
   /**
@@ -259,7 +277,9 @@ abstract class sfTestFunctionalBase
   {
     $this->test()->comment('forward');
 
-    return $this->browser->forward();
+    $this->browser->forward();
+
+    return $this;
   }
 
   /**
