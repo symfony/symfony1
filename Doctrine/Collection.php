@@ -683,6 +683,22 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     }
 
     /**
+     * Build an array made up of the values from the 2 specified columns
+     *
+     * @param string $key 
+     * @param string $value 
+     * @return array $result
+     */
+    public function toKeyValueArray($key, $value)
+    {
+        $result = array();
+        foreach ($this as $record) {
+            $result[$record->$key] = $record->$value;
+        }
+        return $result;
+    }
+
+    /**
      * Populate a Doctrine_Collection from an array of data
      *
      * @param string $array 
