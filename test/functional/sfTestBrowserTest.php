@@ -96,27 +96,35 @@ $b->
   setCookie('foofoo', 'foo', time() - 10)->
 
   get('/cookie')->
-  hasCookie('foofoo', false)->
-  hasCookie('foo')->
-  isCookie('foo', 'bar')->
-  isCookie('foo', '/a/')->
-  isCookie('foo', '!/z/')->
+  with('request')->begin()->
+    hasCookie('foofoo', false)->
+    hasCookie('foo')->
+    isCookie('foo', 'bar')->
+    isCookie('foo', '/a/')->
+    isCookie('foo', '!/z/')->
+  end()->
   checkResponseElement('p', 'bar.foo-')->
   get('/cookie')->
-  hasCookie('foo')->
-  isCookie('foo', 'bar')->
-  isCookie('foo', '/a/')->
-  isCookie('foo', '!/z/')->
+  with('request')->begin()->
+    hasCookie('foo')->
+    isCookie('foo', 'bar')->
+    isCookie('foo', '/a/')->
+    isCookie('foo', '!/z/')->
+  end()->
   checkResponseElement('p', 'bar.foo-')->
   removeCookie('foo')->
   get('/cookie')->
-  hasCookie('foo', false)->
-  hasCookie('bar')->
+  with('request')->begin()->
+    hasCookie('foo', false)->
+    hasCookie('bar')->
+  end()->
   checkResponseElement('p', '.foo-')->
   clearCookies()->
   get('/cookie')->
-  hasCookie('foo', false)->
-  hasCookie('bar', false)->
+  with('request')->begin()->
+    hasCookie('foo', false)->
+    hasCookie('bar', false)->
+  end()->
   checkResponseElement('p', '.-')
 ;
 
@@ -127,43 +135,54 @@ $b->
   get('/cookie/setCookie')->
 
   get('/cookie')->
-  hasCookie('foo')->
-  isCookie('foo', 'bar')->
-  isCookie('foo', '/a/')->
-  isCookie('foo', '!/z/')->
+  with('request')->begin()->
+    hasCookie('foo')->
+    isCookie('foo', 'bar')->
+    isCookie('foo', '/a/')->
+    isCookie('foo', '!/z/')->
+  end()->
   checkResponseElement('p', 'bar.foo-barfoo')->
   get('/cookie')->
-  hasCookie('foo')->
-  isCookie('foo', 'bar')->
-  isCookie('foo', '/a/')->
-  isCookie('foo', '!/z/')->
+  with('request')->begin()->
+    hasCookie('foo')->
+    isCookie('foo', 'bar')->
+    isCookie('foo', '/a/')->
+    isCookie('foo', '!/z/')->
+  end()->
   checkResponseElement('p', 'bar.foo-barfoo')->
   removeCookie('foo')->
   get('/cookie')->
-  hasCookie('foo', false)->
-  hasCookie('bar')->
+  with('request')->begin()->
+    hasCookie('foo', false)->
+    hasCookie('bar')->
+  end()->
   checkResponseElement('p', '.foo-barfoo')->
 
   get('/cookie/removeCookie')->
 
   get('/cookie')->
-  hasCookie('foo', false)->
-  hasCookie('bar')->
+  with('request')->begin()->
+    hasCookie('foo', false)->
+    hasCookie('bar')->
+  end()->
   checkResponseElement('p', '.foo-')->
 
   get('/cookie/setCookie')->
 
   clearCookies()->
   get('/cookie')->
-  hasCookie('foo', false)->
-  hasCookie('bar', false)->
+  with('request')->begin()->
+    hasCookie('foo', false)->
+    hasCookie('bar', false)->
+  end()->
   checkResponseElement('p', '.-')
 ;
 
 $b->
   get('/browser')->
-  isRequestMethod('get')->
+  with('request')->isMethod('get')->
   post('/browser')->
-  isRequestMethod('post')->
+  with('request')->isMethod('post')->
   call('/browser', 'put')->
-  isRequestMethod('put');
+  with('request')->isMethod('put')
+;

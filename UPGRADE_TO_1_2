@@ -589,8 +589,97 @@ As a new addition, `javascript_tag()` now can behave as `slot()`. This allows su
 >
 > The target is that the project creation and upgrade task do this for you
 
+Browser
+-------
+
+The `sfBrowser` and `sfTestBrowser` classes have been refactored in four classes:
+
+  * `sfBrowserBase`:        The base browser class. It knows nothing about symfony,
+                            except classes from the symfony platform.
+
+  * `sfBrowser`:            It inherits from `sfBrowserBase` and implements the
+                            methods specific to symfony.
+
+  * `sfTestFunctionalBase`: The base functional test class. It implements test
+                            methods that are independant from symfony.
+
+  * `sfTestFunctional`:     It inherits from `sfTestFunctionalBase` and implements
+                            the test methods specific to symfony.
+
+  * `sfTestBrowser`:        A BC class which is the same as the `sfTestFunctional`
+                            class with a constructor signature compatible with symfony 1.1
+
+The idea behind the refactor is that the `sfTestFunctional` class is a test class,
+not a browser. So, it takes a browser and a test object as its arguments:
+
+    [php]
+    $testBrowser = new sfTestBrowser('localhost');
+
+    $tester = new sfTestFunctional(new sfBrowser('localhost'), new lime_test());
+
+The `sfTestFunctional` class acts as a proxy for the browser class which means
+that all methods from the browser are accessible directly from the functional
+tester object.
+
+This refactor must not introduce backward incompatibility with symfony 1.1.
+
 Tests
 -----
+
+### Testers
+
+The `sfTestFunctionalBase` class now delegates the actual tests to `sfTester`
+classes. symfony 1.2 has several built-in tester classes:
+
+  * `request`:    `sfTesterRequest`
+  * `response`:   `sfTesterResponse`
+  * `user`:       `sfTesterUser`
+  * `view_cache`: `sfTesterViewCache`
+
+All the old methods from the test browser have been moved to one of the tester
+class:
+
+ *method name*          | *tester class*      | *new method name*
+ ---------------------- | ------------------- | -----------------
+ `isRequestParameter`   | `sfTesterRequest`   | `isParameter`
+ `isRequestFormat`      | `sfTesterRequest`   | `isFormat`
+                        |                     |
+ `isStatusCode`         | `sfTesterResponse`  | `isStatusCode`
+ `responseContains`     | `sfTesterResponse`  | `contains`
+ `isResponseHeader`     | `sfTesterResponse`  | `isHeader`
+ `checkResponseElement` | `sfTesterResponse`  | `checkElement`
+                        |                     |
+ `isUserCulture`        | `sfTesterUser`      | `isCulture`
+                        |                     |
+ `isCached`             | `sfTesterViewCache` | `isCached`
+ `isUriCached`          | `sfTesterViewCache` | `isUriCached`
+
+The tester classes also comes with new test methods:
+
+ *tester class*      | *new method name*
+ ------------------- | -----------------
+ `sfTesterRequest`   | `hasCookie`
+ `sfTesterRequest`   | `isCookie`
+                     |
+ `sfTesterUser`      | `isAuthenticated`
+ `sfTesterUser`      | `hasCredential`
+ `sfTesterUser`      | `isAttribute`
+ `sfTesterUser`      | `isFlash`
+
+Even if the old methods are deprecated, they do not send any warning and will
+not be removed to maintain backward compatibility with symfony 1.0 and 1.1.
+
+You can add your own tester by creating a class that inherits from `sfTester`
+and register it:
+
+    [php]
+    $browser->setTester('my_tester', 'myTesterClassName');
+
+You can also extends the existing tester classes by overriding the default
+class names:
+
+    [php]
+    $browser->setTester('request', 'myTesterRequest');
 
 ### Cookies
 
@@ -611,17 +700,20 @@ You can manage cookies between requests by using the `setCookie()`,
       get('/')->
       // ...
 
-You can also test cookies with the `hasCookie()` and `isCookie()` methods of
-the `sfTestBrowser` class:
+You can also test cookies with the `hasCookie()` and `isCookie()` methods from
+the `sfTesterRequest` class:
 
     [php]
     $b->
       get('/')->
-      hasCookie('foo')->
-      hasCookie('foobar', false)->
-      isCookie('foo', 'bar')->
-      isCookie('foo', '/a/')->
-      isCookie('foo', '/!z/')->
+      with('request')->begin()->
+        hasCookie('foo')->
+        hasCookie('foobar', false)->
+        isCookie('foo', 'bar')->
+        isCookie('foo', '/a/')->
+        isCookie('foo', '/!z/')->
+      end()
+    ;
 
 The `hasCookie()` method takes a Boolean as its second argument to be able to
 test the fact that a cookie is not set.
@@ -642,7 +734,7 @@ using the `isRequestMethod()` method of the `sfTestBrowser` class:
     $b->
       setField('login', 'johndoe')->
       click('Submit')->
-      isRequestMethod('post');
+      with('request')->isMethod('post');
 
 ### Links
 
@@ -819,39 +911,6 @@ to remove all Propel related logs and timer logs from the logs panel.
 The total time displayed on the web debug toolbar is now computed with `$_SERVER['REQUEST_TIME']`
 (we used to compute it with `sfConfig::get('sf_time_start')`, which does not exist anymore).
 This means that the time displayed will be much larger than in symfony 1.0 and 1.1.
-
-Browser
--------
-
-The `sfBrowser` and `sfTestBrowser` classes have been refactored in four classes:
-
-  * `sfBrowserBase`:        The base browser class. It knows nothing about symfony,
-                            except classes from the symfony platform.
-
-  * `sfBrowser`:            It inherits from `sfBrowserBase` and implements the
-                            methods specific to symfony.
-
-  * `sfTestFunctionalBase`: The base functional test class. It implements test
-                            methods that are independant from symfony.
-
-  * `sfTestFunctional`:     It inherits from `sfTestFunctionalBase` and implements
-                            the test methods specific to symfony.
-
-  * `sfTestBrowser`:        A BC class which is the same as the `sfTestFunctional`
-                            class with a constructor signature compatible with symfony 1.1
-
-The idea behind the refactor is that the `sfTestFunctional` class is a test class,
-not a browser. So, it takes a browser and a test object as its arguments:
-
-    [php]
-    $testBrowser = new sfTestBrowser('localhost');
-
-    $tester = new sfTestFunctional(new sfBrowser('localhost'), new lime_test());
-
-The `sfTestFunctional` class acts as a proxy for the browser class which means
-that all methods from the browser are accessible directly from the tester object.
-
-This refactor must not introduce backward incompatibility with symfony 1.1.
 
 Tasks
 -----

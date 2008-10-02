@@ -19,23 +19,16 @@
 class sfTestFunctional extends sfTestFunctionalBase
 {
   /**
-   * Retrieves and checks an action.
+   * Initializes the browser tester instance.
    *
-   * @param  string $module  Module name
-   * @param  string $action  Action name
-   * @param  string $url     Url
-   * @param  string $code    The expected return status code
-   *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @param sfBrowserBase $browser A sfBrowserBase instance
+   * @param lime_test     $lime    A lime instance
    */
-  public function getAndCheck($module, $action, $url = null, $code = 200)
+  public function __construct(sfBrowserBase $browser, lime_test $lime = null, $testers = array())
   {
-    return $this->
-      get(null !== $url ? $url : sprintf('/%s/%s', $module, $action))->
-      isStatusCode($code)->
-      isRequestParameter('module', $module)->
-      isRequestParameter('action', $action)
-    ;
+    $testers['view_cache'] = 'sfTesterViewCache';
+
+    parent::__construct($browser, $lime, $testers);
   }
 
   /**
@@ -72,6 +65,8 @@ class sfTestFunctional extends sfTestFunctionalBase
   /**
    * Tests if the given uri is cached.
    *
+   * @deprecated since 1.2
+   *
    * @param  boolean $boolean      Flag for checking the cache
    * @param  boolean $with_layout  If have or not layout
    *
@@ -79,11 +74,13 @@ class sfTestFunctional extends sfTestFunctionalBase
    */
   public function isCached($boolean, $with_layout = false)
   {
-    return $this->isUriCached($this->browser->getContext()->getRouting()->getCurrentInternalUri(), $boolean, $with_layout);
+    return $this->with('view_cache')->isCached($boolean, $with_layout);
   }
 
   /**
    * Tests if the given uri is cached.
+   *
+   * @deprecated since 1.2
    *
    * @param  string  $uri          Uniform resource identifier
    * @param  boolean $boolean      Flag for checking the cache
@@ -93,67 +90,6 @@ class sfTestFunctional extends sfTestFunctionalBase
    */
   public function isUriCached($uri, $boolean, $with_layout = false)
   {
-    $cacheManager = $this->browser->getContext()->getViewCacheManager();
-
-    // check that cache is enabled
-    if (!$cacheManager)
-    {
-      $this->test()->ok(!$boolean, 'cache is disabled');
-
-      return $this;
-    }
-
-    if ($uri == $this->browser->getContext()->getRouting()->getCurrentInternalUri())
-    {
-      $main = true;
-      $type = $with_layout ? 'page' : 'action';
-    }
-    else
-    {
-      $main = false;
-      $type = $uri;
-    }
-
-    // check layout configuration
-    if ($cacheManager->withLayout($uri) && !$with_layout)
-    {
-      $this->test()->fail('cache without layout');
-      $this->test()->skip('cache is not configured properly', 2);
-    }
-    else if (!$cacheManager->withLayout($uri) && $with_layout)
-    {
-      $this->test()->fail('cache with layout');
-      $this->test()->skip('cache is not configured properly', 2);
-    }
-    else
-    {
-      $this->test()->pass('cache is configured properly');
-
-      // check page is cached
-      $ret = $this->test()->is($cacheManager->has($uri), $boolean, sprintf('"%s" %s in cache', $type, $boolean ? 'is' : 'is not'));
-
-      // check that the content is ok in cache
-      if ($boolean)
-      {
-        if (!$ret)
-        {
-          $this->test()->fail('content in cache is ok');
-        }
-        else if ($with_layout)
-        {
-          $response = unserialize($cacheManager->get($uri));
-          $content = $response->getContent();
-          $this->test()->ok($content == $this->getResponse()->getContent(), 'content in cache is ok');
-        }
-        else
-        {
-          $ret = unserialize($cacheManager->get($uri));
-          $content = $ret['content'];
-          $this->test()->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
-        }
-      }
-    }
-
-    return $this;
+    return $this->with('view_cache')->isUriCached($uri, $boolean, $with_layout);
   }
 }

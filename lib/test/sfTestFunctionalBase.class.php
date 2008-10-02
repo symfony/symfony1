@@ -19,7 +19,10 @@
 abstract class sfTestFunctionalBase
 {
   protected
-    $browser = null;
+    $testers       = array(),
+    $blockTester   = null,
+    $currentTester = null,
+    $browser       = null;
 
   protected static
     $test = null;
@@ -30,7 +33,7 @@ abstract class sfTestFunctionalBase
    * @param sfBrowserBase $browser A sfBrowserBase instance
    * @param lime_test     $lime    A lime instance
    */
-  public function __construct(sfBrowserBase $browser, lime_test $lime = null)
+  public function __construct(sfBrowserBase $browser, lime_test $lime = null, $testers = array())
   {
     $this->browser = $browser;
 
@@ -39,8 +42,105 @@ abstract class sfTestFunctionalBase
       self::$test = !is_null($lime) ? $lime : new lime_test(null, new lime_output_color());
     }
 
+    $this->setTesters(array_merge(array(
+      'request'  => 'sfTesterRequest',
+      'response' => 'sfTesterResponse',
+      'user'     => 'sfTesterUser',
+    ), $testers));
+
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
+  }
+
+  /**
+   * Returns the tester associated with the given name.
+   *
+   * @param string   $name The tester name
+   *
+   * @param sfTester A sfTester instance
+   */
+  public function with($name)
+  {
+    if (!isset($this->testers[$name]))
+    {
+      throw new InvalidArgumentException(sprintf('The "%s" tester does not exist.', $name));
+    }
+
+    if ($this->blockTester)
+    {
+      throw new LogicException(sprintf('You cannot nest tester blocks.'));
+    }
+
+    $this->currentTester = $this->testers[$name];
+    $this->currentTester->initialize();
+
+    return $this->currentTester;
+  }
+
+  /**
+   * Begins a block of test for the current tester.
+   *
+   * @param sfTester The current sfTester instance
+   */
+  public function begin()
+  {
+    if (!$this->currentTester)
+    {
+      throw new LogicException(sprintf('You must call with() before beginning a tester block.'));
+    }
+
+    return $this->blockTester = $this->currentTester;
+  }
+
+  /**
+   * End a block of test for the current tester.
+   *
+   * @param sfTestFunctionalBase
+   */
+  public function end()
+  {
+    if (is_null($this->blockTester))
+    {
+      throw new LogicException(sprintf('There is not current tester block to end.'));
+    }
+
+    $this->blockTester = null;
+
+    return $this;
+  }
+
+  /**
+   * Sets the testers.
+   *
+   * @param array $testers An array of named testers
+   */
+  public function setTesters($testers)
+  {
+    foreach ($testers as $name => $tester)
+    {
+      $this->setTester($name, $tester);
+    }
+  }
+
+  /**
+   * Sets a tester.
+   *
+   * @param string          $name   The tester name
+   * @param sfTester|string $tester A sfTester instance or a tester class name
+   */
+  public function setTester($name, $tester)
+  {
+    if (is_string($tester))
+    {
+      $tester = new $tester($this, self::$test);
+    }
+
+    if (!$tester instanceof sfTester)
+    {
+      throw new InvalidArgumentException(sprintf('The tester "%s" is not of class sfTester.', $name));
+    }
+
+    $this->testers[$name] = $tester;
   }
 
   /**
@@ -75,6 +175,28 @@ abstract class sfTestFunctionalBase
   public function get($uri, $parameters = array(), $changeStack = true)
   {
     return $this->call($uri, 'get', $parameters);
+  }
+
+  /**
+   * Retrieves and checks an action.
+   *
+   * @param  string $module  Module name
+   * @param  string $action  Action name
+   * @param  string $url     Url
+   * @param  string $code    The expected return status code
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function getAndCheck($module, $action, $url = null, $code = 200)
+  {
+    return $this->
+      get(null !== $url ? $url : sprintf('/%s/%s', $module, $action))->
+      with('request')->begin()->
+        isParameter('module', $module)->
+        isParameter('action', $action)->
+      end()->
+      with('response')->isStatusCode($code)
+    ;
   }
 
   /**
@@ -141,22 +263,15 @@ abstract class sfTestFunctionalBase
   /**
    * Tests if the current request has been redirected.
    *
+   * @deprecated since 1.2
+   *
    * @param  bool $boolean  Flag for redirection mode
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isRedirected($boolean = true)
   {
-    if ($location = $this->getResponse()->getHttpHeader('location'))
-    {
-      $boolean ? $this->test()->pass(sprintf('page redirected to "%s"', $location)) : $this->test()->fail(sprintf('page redirected to "%s"', $location));
-    }
-    else
-    {
-      $boolean ? $this->test()->fail('page redirected') : $this->test()->pass('page not redirected');
-    }
-
-    return $this;
+    return $this->with('response')->isRedirected($boolean);
   }
 
   /**
@@ -169,11 +284,11 @@ abstract class sfTestFunctionalBase
    */
   public function check($uri, $text = null)
   {
-    $this->get($uri)->isStatusCode();
+    $this->get($uri)->with('response')->isStatusCode();
 
     if ($text !== null)
     {
-      $this->responseContains($text);
+      $this->with('response')->contains($text);
     }
 
     return $this;
@@ -182,19 +297,21 @@ abstract class sfTestFunctionalBase
   /**
    * Test an status code for the current test browser.
    *
+   * @deprecated since 1.2
+   *
    * @param string Status code to check, default 200
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isStatusCode($statusCode = 200)
   {
-    $this->test()->is($this->getResponse()->getStatusCode(), $statusCode, sprintf('status code is "%s"', $statusCode));
-
-    return $this;
+    return $this->with('response')->isStatusCode($statusCode);
   }
 
   /**
    * Tests whether or not a given string is in the response.
+   *
+   * @deprecated since 1.2
    *
    * @param string Text to check
    *
@@ -202,13 +319,13 @@ abstract class sfTestFunctionalBase
    */
   public function responseContains($text)
   {
-    $this->test()->like($this->getResponse()->getContent(), '/'.preg_quote($text, '/').'/', sprintf('response contains "%s"', substr($text, 0, 40)));
-
-    return $this;
+    return $this->with('response')->contains($text);
   }
 
   /**
    * Tests whether or not a given key and value exists in the current request.
+   *
+   * @deprecated since 1.2
    *
    * @param string $key
    * @param string $value
@@ -217,27 +334,13 @@ abstract class sfTestFunctionalBase
    */
   public function isRequestParameter($key, $value)
   {
-    $this->test()->is($this->getRequest()->getParameter($key), $value, sprintf('request parameter "%s" is "%s"', $key, $value));
-
-    return $this;
-  }
-
-  /**
-   * Tests if the current HTTP method matches the given one
-   *
-   * @param  string  $method  The HTTP method name
-   *
-   * @return sfTestBrowser The current sfTestBrowser instance
-   */
-  public function isRequestMethod($method)
-  {
-    $this->test()->ok($this->getRequest()->isMethod($method), sprintf('request method is "%s"', strtoupper($method)));
-
-    return $this;
+    return $this->with('request')->isParameter($key, $value);
   }
 
   /**
    * Tests for a response header.
+   *
+   * @deprecated since 1.2
    *
    * @param  string $key
    * @param  string $value
@@ -246,26 +349,13 @@ abstract class sfTestFunctionalBase
    */
   public function isResponseHeader($key, $value)
   {
-    $headers = explode(', ', $this->getResponse()->getHttpHeader($key));
-
-    $ok = false;
-
-    foreach ($headers as $header)
-    {
-      if ($header == $value)
-      {
-        $ok = true;
-        break;
-      }
-    }
-
-    $this->test()->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->getResponse()->getHttpHeader($key)));
-
-    return $this;
+    return $this->with('response')->isHeader($key, $value);
   }
 
   /**
    * Tests for the user culture.
+   *
+   * @deprecated since 1.2
    *
    * @param  string $culture  The user culture
    *
@@ -273,13 +363,13 @@ abstract class sfTestFunctionalBase
    */
   public function isUserCulture($culture)
   {
-    $this->test()->is($this->getUser()->getCulture(), $culture, sprintf('user culture is "%s"', $culture));
-
-    return $this;
+    return $this->with('user')->isCulture($culture);
   }
 
   /**
    * Tests for the request is in the given format.
+   *
+   * @deprecated since 1.2
    *
    * @param  string $format  The request format
    *
@@ -287,13 +377,13 @@ abstract class sfTestFunctionalBase
    */
   public function isRequestFormat($format)
   {
-    $this->test()->is($this->getRequest()->getRequestFormat(), $format, sprintf('request format is "%s"', $format));
-
-    return $this;
+    return $this->with('request')->isFormat($format);
   }
 
   /**
    * Tests that the current response matches a given CSS selector.
+   *
+   * @deprecated since 1.2
    *
    * @param  string $selector  The response selector or a sfDomCssSelector object
    * @param  mixed  $value     Flag for the selector
@@ -303,51 +393,7 @@ abstract class sfTestFunctionalBase
    */
   public function checkResponseElement($selector, $value = true, $options = array())
   {
-    if (is_object($selector))
-    {
-      $values = $selector->getValues();
-    }
-    else
-    {
-      $values = $this->getResponseDomCssSelector()->matchAll($selector)->getValues();
-    }
-
-    if (false === $value)
-    {
-      $this->test()->is(count($values), 0, sprintf('response selector "%s" does not exist', $selector));
-    }
-    else if (true === $value)
-    {
-      $this->test()->cmp_ok(count($values), '>', 0, sprintf('response selector "%s" exists', $selector));
-    }
-    else if (is_int($value))
-    {
-      $this->test()->is(count($values), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
-    }
-    else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
-      $position = isset($options['position']) ? $options['position'] : 0;
-      if ($match[1] == '!')
-      {
-        $this->test()->unlike(@$values[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
-      }
-      else
-      {
-        $this->test()->like(@$values[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
-      }
-    }
-    else
-    {
-      $position = isset($options['position']) ? $options['position'] : 0;
-      $this->test()->is(@$values[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
-    }
-
-    if (isset($options['count']))
-    {
-      $this->test()->is(count($values), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
-    }
-
-    return $this;
+    return $this->with('response')->checkElement($selector, $value, $options);
   }
 
   /**
@@ -408,78 +454,6 @@ abstract class sfTestFunctionalBase
     }
 
     return $empty;
-  }
-
-  /**
-   * Checks if a cookie exists.
-   *
-   * @param string  $name   The cookie name
-   * @param Boolean $exists Whether the cookie must exist or not
-   *
-   * @return sfTestBrowser The current sfTestBrowser instance
-   */
-  public function hasCookie($name, $exists = true)
-  {
-    if (!array_key_exists($name, $_COOKIE))
-    {
-      if ($exists)
-      {
-        $this->test()->fail(sprintf('cookie "%s" exist.', $name));
-      }
-      else
-      {
-        $this->test()->pass(sprintf('cookie "%s" does not exist.', $name));
-      }
-
-      return $this;
-    }
-
-    if ($exists)
-    {
-      $this->test()->pass(sprintf('cookie "%s" exists.', $name));
-    }
-    else
-    {
-      $this->test()->fail(sprintf('cookie "%s" does not exist.', $name));
-    }
-
-    return $this;
-  }
-
-  /**
-   * Checks the value of a cookie.
-   *
-   * @param string $name   The cookie name
-   * @param mixed  $value  The expected value
-   *
-   * @return sfTestBrowser The current sfTestBrowser instance
-   */
-  public function isCookie($name, $value)
-  {
-    if (!array_key_exists($name, $_COOKIE))
-    {
-      $this->test()->fail(sprintf('cookie "%s" does not exist.', $name));
-
-      return $this;
-    }
-
-    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
-    {
-      if ($match[1] == '!')
-      {
-        $this->test()->unlike($_COOKIE[$name], substr($value, 1), sprintf('cookie "%s" content does not match regex "%s"', $name, $value));
-      }
-      else
-      {
-        $this->test()->like($_COOKIE[$name], $value, sprintf('cookie "%s" content matches regex "%s"', $name, $value));
-      }
-    }
-    else if (null !== $message)
-    {
-      $this->test()->is($_COOKIE[$name], $value, sprintf('cookie "%s" content is ok', $name));
-    }
-
-    return $this;
   }
 
   public function __call($method, $arguments)
