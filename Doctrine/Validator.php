@@ -76,6 +76,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
         foreach ($fields as $fieldName => $value) {
             $table->validateField($fieldName, $value, $record);
         }
+        $table->validateUniques($record);
     }
 
     /**

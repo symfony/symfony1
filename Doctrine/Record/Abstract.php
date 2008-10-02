@@ -112,6 +112,27 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
             return $this->_table->addIndex($name, $definition);
         }
     }
+
+    /**
+     * Specify an array of fields that are unique and will be validated as such
+     *
+     * @return void
+     */
+    public function unique()
+    {
+        $args = func_get_args();
+
+        if (count($args) == 1) {
+            $fields = (array) $args[0];
+        } else if (count($args) > 1) {
+            $fields = $args;
+        } else {
+            throw new Doctrine_Record_Exception('You must specify the fields to make a unique constraint on.');
+        }
+
+        return $this->_table->unique($fields);
+    }
+
     public function setAttribute($attr, $value)
     {
         $this->_table->setAttribute($attr, $value);

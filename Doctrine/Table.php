@@ -83,6 +83,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     protected $_columns          = array();
 
     /**
+     * Array of unique sets of fields. These values are validated on save
+     *
+     * @var array $_uniques
+     */
+    protected $_uniques = array();
+
+    /**
      * @var array $_fieldNames            an array of field names. used to look up field names
      *                                    from column names.
      *                                    keys are column names and values are field names
@@ -806,6 +813,22 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
 
         return false;
+    }
+
+    /**
+     * Add set of fields to be unique. Will automatically create unique
+     * index and validate the values on save
+     *
+     * @param array $fields 
+     * @return void
+     */
+    public function unique($fields)
+    {
+        $name = implode('_', $fields) . '_unqidx';
+        $definition = array('type' => 'unique', 'fields' => $fields);
+        $this->addIndex($name, $definition);
+
+        $this->_uniques[] = $fields;
     }
 
     /**
@@ -1752,6 +1775,32 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
+     * Validate all the unique sets of fields for the given Doctrine_Record instance
+     *
+     * @param Doctrine_Record $record
+     */
+    public function validateUniques(Doctrine_Record $record)
+    {
+        $errorStack = $record->getErrorStack();
+        $validator = Doctrine_Validator::getValidator('unique');
+        $validator->invoker = $record;
+
+        foreach ($this->_uniques as $fields)
+        {
+            $validator->field = $fields;
+            $values = array();
+            foreach ($fields as $field) {
+                $values[] = $record->$field;
+            }
+            if ( ! $validator->validate($values)) {
+                foreach ($fields as $field) {
+                    $errorStack->add($field, $validator);
+                }
+            }
+        }
+    }
+
+    /**
      * getColumnCount
      *
      * @return integer      the number of columns in this table
@@ -1814,6 +1863,16 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function getIdentifierColumnNames()
     {
         return $this->getColumnNames((array) $this->getIdentifier());
+    }
+
+    /**
+     * Get array of sets of unique fields
+     *
+     * @return array $uniques
+     */
+    public function getUniques()
+    {
+        return $this->_uniques;
     }
 
     /**

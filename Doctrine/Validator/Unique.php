@@ -47,10 +47,15 @@ class Doctrine_Validator_Unique
             $pks = join(',', $pks);
         }
 
-        $sql   = 'SELECT ' . $pks . ' FROM ' . $table->getTableName() . ' WHERE ' . $this->field . ' = ?';
-        
-        $values = array();
-        $values[] = $value;
+        $sql   = 'SELECT ' . $pks . ' FROM ' . $table->getTableName();
+        if (is_array($this->field)) {
+            $sql .= ' WHERE ' . implode(' = ? AND ', $this->field) . ' = ?';
+            $values = $value;
+        } else {
+            $sql .= ' WHERE ' . $this->field . ' = ?';
+            $values = array();
+            $values[] = $value;
+        }
         
         // If the record is not new we need to add primary key checks because its ok if the 
         // unique value already exists in the database IF the record in the database is the same
@@ -62,7 +67,7 @@ class Doctrine_Validator_Unique
                 $values[] = $this->invoker->$pk;
             }
         }
-        
+
         $stmt  = $table->getConnection()->getDbh()->prepare($sql);
         $stmt->execute($values);
 
