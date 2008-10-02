@@ -623,6 +623,8 @@ tester object.
 
 This refactor must not introduce backward incompatibility with symfony 1.1.
 
+The browser classes now add the `HTTP_REFERER` header for each request.
+
 Tests
 -----
 

@@ -254,6 +254,12 @@ abstract class sfBrowserBase
     $_SERVER['SCRIPT_NAME']     = '/index.php';
     $_SERVER['SCRIPT_FILENAME'] = '/index.php';
     $_SERVER['QUERY_STRING']    = $queryString;
+
+    if ($this->stackPosition >= 1)
+    {
+      $_SERVER['HTTP_REFERER'] = sprintf('http%s://%s%s', isset($this->defaultServerArray['HTTPS']) ? 's' : '', $this->hostname, $this->stack[$this->stackPosition - 1]['uri']);
+    }
+
     foreach ($this->vars as $key => $value)
     {
       $_SERVER[strtoupper($key)] = $value;
@@ -799,7 +805,7 @@ abstract class sfBrowserBase
         unset($this->defaultServerArray['HTTPS']);
       }
 
-      $uri = substr($uri, strpos($uri, 'index.php') + strlen('index.php'));
+      $uri = preg_replace('#^https?\://[^/]+/#', '/', $uri);
     }
     $uri = str_replace('/index.php', '', $uri);
 
