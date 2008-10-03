@@ -98,7 +98,7 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the date does not match the regex');
-  $t->like($e->getMessage(), '/'.preg_quote($v->getOption('date_format'), '/').'/', '->clean() returns the expected date format in the error message');
+  $t->like($e->getMessage(), '/'.preg_quote(htmlspecialchars($v->getOption('date_format'), ENT_QUOTES, 'UTF-8'), '/').'/', '->clean() returns the expected date format in the error message');
   $t->is($e->getCode(), 'bad_format', '->clean() throws a sfValidatorError');
 }
 

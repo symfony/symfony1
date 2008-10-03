@@ -99,7 +99,7 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the time does not match the regex');
-  $t->like($e->getMessage(), '/'.preg_quote($v->getOption('time_format'), '/').'/', '->clean() returns the expected time format in the error message');
+  $t->like($e->getMessage(), '/'.preg_quote(htmlspecialchars($v->getOption('time_format'), ENT_QUOTES, 'UTF-8'), '/').'/', '->clean() returns the expected time format in the error message');
   $t->is($e->getCode(), 'bad_format', '->clean() throws a sfValidatorError');
 }
 

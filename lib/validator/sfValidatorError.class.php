@@ -91,7 +91,12 @@ class sfValidatorError extends Exception
     $arguments = array();
     foreach ($this->arguments as $key => $value)
     {
-      $arguments["%$key%"] = $value;
+      if (is_array($value))
+      {
+        continue;
+      }
+
+      $arguments["%$key%"] = htmlspecialchars($value, ENT_QUOTES, sfValidatorBase::getCharset());
     }
 
     return $arguments;
