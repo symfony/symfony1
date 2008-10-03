@@ -46,7 +46,7 @@ class Doctrine_Relation_LocalKey extends Doctrine_Relation
         $localFieldName = $record->getTable()->getFieldName($this->definition['local']);
         $id = $record->get($localFieldName);
 
-        if (is_null($id) && ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
+        if (is_null($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
             $related = $this->getTable()->create();
         } else {
             $dql  = 'FROM ' . $this->getTable()->getComponentName()
