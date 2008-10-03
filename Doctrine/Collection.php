@@ -445,6 +445,13 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             } else {
                 $record->set($this->referenceField, $this->reference, false);
             }
+            $relations = $this->relation['table']->getRelations();
+            foreach ($relations as $relation) {
+                if ($this->relation['class'] == $relation['localTable']->getOption('name') && $relation->getLocal() == $this->relation->getForeignFieldName()) {
+                    $record->$relation['alias'] = $this->reference;
+                    break;
+                }
+            }
         }
         /**
          * for some weird reason in_array cannot be used here (php bug ?)
