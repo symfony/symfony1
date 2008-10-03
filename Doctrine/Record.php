@@ -1537,6 +1537,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
 
             if ($deep && $this->getTable()->hasRelation($key)) {
+                if ( ! $this->$key) {
+                    $this->refreshRelated($key);
+                }
+
                 $this->$key->fromArray($value, $deep);
             } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
@@ -1574,6 +1578,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
 
             if ($deep && $this->getTable()->hasRelation($key)) {
+                if ( ! $this->$key) {
+                    $this->refreshRelated($key);
+                }
+
                 if (isset($value['_identifiers']) && is_array($value['_identifiers'])) {
                     $this->unlink($key, array(), false);
                     foreach ($value['_identifiers'] as $id => $exists) {
