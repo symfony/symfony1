@@ -117,6 +117,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     sfWidget::setCharset(sfConfig::get('sf_charset'));
+    sfValidatorBase::setCharset(sfConfig::get('sf_charset'));
 
     // force setting default timezone if not set
     if ($default_timezone = sfConfig::get('sf_default_timezone'))
