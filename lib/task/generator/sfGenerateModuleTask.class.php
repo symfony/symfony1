@@ -70,9 +70,9 @@ EOF;
     $module = $arguments['module'];
 
     // Validate the module name
-    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module))
     {
-      throw new sfCommandException(sprintf('The module name "%s" is invalid.', $app));
+      throw new sfCommandException(sprintf('The module name "%s" is invalid.', $module));
     }
 
     $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$module;
