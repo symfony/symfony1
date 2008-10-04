@@ -103,7 +103,8 @@ class Doctrine_Import_Schema
                                                           'sequence',
                                                           'protected',
                                                           'zerofill',
-                                                          'owner'),
+                                                          'owner',
+                                                          'extra'),
 
                                    'relation'   =>  array('key',
                                                           'class',
