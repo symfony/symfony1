@@ -553,7 +553,7 @@ abstract class sfBrowserBase
   {
     list($uri, $method, $parameters) = $this->doClick($name, $arguments, $options);
 
-    $this->call($uri, $method, $parameters);
+    return $this->call($uri, $method, $parameters);
   }
 
   /**
