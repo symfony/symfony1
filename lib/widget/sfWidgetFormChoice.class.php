@@ -81,6 +81,10 @@ class sfWidgetFormChoice extends sfWidgetForm
       {
         $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
         $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
+        if ($this->getOption('expanded'))
+        {
+          unset($attributes['multiple']);
+        }
       }
 
       $renderer = new $class(array_merge(array('choices' => new sfCallable(array($this, 'getChoices'))), $this->options['renderer_options']), $this->getAttributes());
