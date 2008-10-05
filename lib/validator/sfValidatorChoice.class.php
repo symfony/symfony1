@@ -91,6 +91,7 @@ class sfValidatorChoice extends sfValidatorBase
         return true;
       }
     }
+print "SHFHSDFHDSF";
 
     return false;
   }

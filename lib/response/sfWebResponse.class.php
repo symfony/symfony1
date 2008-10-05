@@ -92,7 +92,7 @@ class sfWebResponse extends sfResponse
    *  * charset:           The charset to use (utf-8 by default)
    *  * content_type:      The content type (text/html by default)
    *  * send_http_headers: Whether to send HTTP headers or not (true by default)
-   *  * http_protocol:     The HTTP protocol to use for the response (HTTP/1.1 by default)
+   *  * http_protocol:     The HTTP protocol to use for the response (HTTP/1.0 by default)
    *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param  array             $options     An array of options
