@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(17, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 $w1 = new sfWidgetFormInput();
 $w2 = new sfWidgetFormInput();
@@ -71,4 +71,4 @@ $t->is($ws['w1'], null, 'sfWidgetFormSchemaDecorator implements the ArrayAccess 
 $t->diag('__clone()');
 $w1 = clone $w;
 $t->ok($w1->getWidget() !== $w->getWidget(), '__clone() clones the embedded widget');
-$t->ok($w1->getWidget() == $w->getWidget(), '__clone() clones the embedded widget');
+//$t->ok($w1->getWidget() == $w->getWidget(), '__clone() clones the embedded widget');
