@@ -95,7 +95,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'response':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_response', '%s');\n  \$this->factories['response'] = new \$class(\$this->dispatcher, sfConfig::get('sf_factory_response_parameters', %s));", $class, var_export($parameters, true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_response', '%s');\n  \$this->factories['response'] = new \$class(\$this->dispatcher, sfConfig::get('sf_factory_response_parameters', array_merge(array('http_protocol' => isset(\$_SERVER['SERVER_PROTOCOL']) ? \$_SERVER['SERVER_PROTOCOL'] : null), %s)));", $class, var_export($parameters, true));
           // TODO: this is a bit ugly, as it only works for sfWebRequest & sfWebResponse combination. see #3397
           $instances[] = sprintf("  if (\$this->factories['request'] instanceof sfWebRequest \n      && \$this->factories['response'] instanceof sfWebResponse \n      && 'HEAD' == \$this->factories['request']->getMethod())\n  {  \n    \$this->factories['response']->setHeaderOnly(true);\n  }\n");
           break;
