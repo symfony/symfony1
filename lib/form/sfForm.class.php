@@ -147,6 +147,25 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Renders hidden form fields.
+   * 
+   * @return string
+   */
+  public function renderHiddenFields()
+  {
+    $output = '';
+    foreach ($this->getFormFieldSchema() as $name => $field)
+    {
+      if ($field->isHidden())
+      {
+        $output .= $field->render();
+      }
+    }
+
+    return $output;
+  }
+
+  /**
    * Renders global errors associated with this form.
    *
    * @return string The rendered global errors

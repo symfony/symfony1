@@ -343,6 +343,19 @@ use a formatter directly within a template:
     // in a template, the form will be rendered using the "list" form formatter 
     echo $form->renderUsing('list');
 
+The new method `renderHiddenFields()` will return HTML for only those widgets
+that are marked as hidden. This can be useful when a form's fields are
+rendered individually in a template:
+
+    [php]
+    <form action="<?php echo url_for('@some_route') ?>">
+      <?php echo $form->renderHiddenFields() ?>
+      <ul>
+        <?php echo $form['name']->renderRow() ?>
+      </ul>
+      <input type="submit" />
+    </form>
+
 Validators
 ----------
 

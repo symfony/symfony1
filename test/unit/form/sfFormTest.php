@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(108, new lime_output_color());
+$t = new lime_test(110, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -333,6 +333,18 @@ $output = <<<EOF
 EOF;
 $t->is($f->renderUsing('list'), $output, 'renderUsing() renders the widget schema using the given form formatter');
 $t->is($f->getWidgetSchema()->getFormFormatterName(), 'table', 'renderUsing() does not persist form formatter name for the current form instance');
+
+// renderHiddenFields()
+$t->diag('->renderHiddenFields()');
+$f = new sfForm();
+$f->setWidgets(array(
+  'id' => new sfWidgetFormInputHidden(),
+  'name' => new sfWidgetFormInput(),
+  'is_admin' => new sfWidgetFormInputHidden(),
+));
+$output = '<input type="hidden" name="id" id="id" /><input type="hidden" name="is_admin" id="is_admin" />';
+$t->is($f->renderHiddenFields(), $output, 'renderHiddenFields() renders all hidden fields, no visible fields');
+$t->is(count($f->getFormFieldSchema()), 3, 'renderHiddenFields() does not modify the form fields');
 
 // ->embedForm()
 $t->diag('->embedForm()');
