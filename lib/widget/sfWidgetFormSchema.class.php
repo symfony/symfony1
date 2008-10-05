@@ -25,7 +25,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     LAST   = 'last',
     BEFORE = 'before',
     AFTER  = 'after';
-  
+
   protected static
     $defaultFormatterName = 'table';
 
@@ -102,12 +102,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     return $this->formFormatters;
   }
-  
+
   /**
-   * Sets the generic default formatter name used by the class. If you want all 
-   * of your forms to be generated with the <code>list</code> format, you can 
+   * Sets the generic default formatter name used by the class. If you want all
+   * of your forms to be generated with the <code>list</code> format, you can
    * do it in a project or application configuration class:
-   * 
+   *
    * <pre>
    * class ProjectConfiguration extends sfProjectConfiguration
    * {
@@ -116,7 +116,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *     sfWidgetFormSchema::setDefaultFormFormatterName('list');
    *   }
    * }
-   * </pre>  
+   * </pre>
    *
    * @param string $name  New default formatter name
    */
@@ -159,15 +159,15 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     if (!isset($this->formFormatters[$name]))
     {
       $class = 'sfWidgetFormSchemaFormatter'.ucfirst($name);
-      
+
       if (!class_exists($class))
       {
         throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
       }
-      
+
       $this->formFormatters[$name] = new $class($this);
     }
-    
+
     return $this->formFormatters[$name];
   }
 
@@ -675,6 +675,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       // offsetSet will clone the field and change the parent
       $this[$name] = $field;
     }
+    foreach ($this->formFormatters as &$formFormatter)
+    {
+      $formFormatter = clone $formFormatter;
+      $formFormatter->setWidgetSchema($this);
+    }
+
     foreach ($this->formFormatters as &$formFormatter)
     {
       $formFormatter = clone $formFormatter;

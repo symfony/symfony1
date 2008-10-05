@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(63, new lime_output_color());
+$t = new lime_test(72, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -364,6 +364,22 @@ $format1->setTranslationCatalogue('french');
 $formatters = $w1->getFormFormatters();
 $t->is(count($formatters), 1 , '__clone() returns a sfWidgetFormSchema that has the Formatters attached');
 $t->is($formatters['testFormatter']->getTranslationCatalogue(), 'english', '__clone() clones formatters, so that changes to the original one have no effect to the cloned formatter.');
+
+$w = new sfWidgetFormSchema();
+$w->addFormFormatter('table', new sfWidgetFormSchemaFormatterTable($w));
+$w->addFormFormatter('list', new sfWidgetFormSchemaFormatterList($w));
+$w1 = clone $w;
+$f1 = $w1->getFormFormatters();
+$f = $w->getFormFormatters();
+$t->is(array_keys($f1), array_keys($f), '__clone() clones form formatters');
+foreach ($f1 as $key => $formFormatter)
+{
+  $t->ok($formFormatter !== $f[$key], '__clone() clones form formatters');
+  $t->is(get_class($formFormatter), get_class($f[$key]), '__clone() clones form formatters');
+
+  $t->ok($formFormatter->getWidgetSchema() !== $f[$key]->getWidgetSchema(), '__clone() clones form formatters');
+  $t->is(get_class($formFormatter->getWidgetSchema()), get_class($f[$key]->getWidgetSchema()), '__clone() clones form formatters');
+}
 
 // setDefaultFormFormatterName()
 $t->diag('setDefaultFormFormatterName()');
