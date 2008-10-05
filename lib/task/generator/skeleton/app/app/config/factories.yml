@@ -24,6 +24,13 @@ test:
     param:
       send_http_headers: false
 
+all:
+  routing:
+    class: sfPatternRouting
+    param:
+      generate_shortest_url:            true
+      extra_parameters_as_query_string: true
+
 #all:
 #  controller:
 #    class: sfFrontWebController
