@@ -171,7 +171,7 @@ class sfNumberFormat
     // if not decimal digits, assume 0 decimal points.
     if (is_int($decimalDigits) && $decimalDigits > 0)
     {
-      $string = (string) round(floatval($string), $decimalDigits);
+      $string = (string) intval(round(floatval($string), $decimalDigits));
     }
 
     $dp = strpos($string, '.');
