@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(120, new lime_output_color());
+$t = new lime_test(123, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -184,6 +184,23 @@ $f->setWidgetSchema(new sfWidgetFormSchema(array(
   'image'      => new sfWidgetFormInputFile(),
 )));
 $t->is(count($f), 3, 'sfForm implements the Countable interface');
+
+// Iterator interface
+$t->diag('Iterator interface');
+$f = new FormTest();
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
+  'last_name'  => new sfWidgetFormInput(),
+  'image'      => new sfWidgetFormInputFile(),
+)));
+$values = array();
+foreach ($f as $name => $value)
+{
+  $values[$name] = $value;
+}
+$t->is(isset($values['first_name']), true, 'sfForm implements the Iterator interface');
+$t->is(isset($values['last_name']), true, 'sfForm implements the Iterator interface');
+$t->is(count($values), 3, 'sfForm implements the Iterator interface');
 
 // ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');

@@ -20,7 +20,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfForm implements ArrayAccess, Countable
+class sfForm implements ArrayAccess, Iterator, Countable
 {
   protected static
     $CSRFProtection    = false,
@@ -39,7 +39,9 @@ class sfForm implements ArrayAccess, Countable
     $taintedFiles    = array(),
     $values          = null,
     $defaults        = array(),
-    $options         = array();
+    $fieldNames      = array(),
+    $options         = array(),
+    $count           = 0;
 
   /**
    * Constructor.
@@ -898,6 +900,56 @@ class sfForm implements ArrayAccess, Countable
     }
 
     return $this->formFieldSchema;
+  }
+
+  /**
+   * Resets the field names array to the beginning (implements the Iterator interface).
+   */
+  public function rewind()
+  {
+    $this->fieldNames = array_keys($this->widgetSchema->getFields());
+
+    reset($this->fieldNames);
+    $this->count = count($this->fieldNames);
+  }
+
+  /**
+   * Gets the key associated with the current form field (implements the Iterator interface).
+   *
+   * @return string The key
+   */
+  public function key()
+  {
+    return current($this->fieldNames);
+  }
+
+  /**
+   * Returns the current form field (implements the Iterator interface).
+   *
+   * @return mixed The escaped value
+   */
+  public function current()
+  {
+    return $this[current($this->fieldNames)];
+  }
+
+  /**
+   * Moves to the next form field (implements the Iterator interface).
+   */
+  public function next()
+  {
+    next($this->fieldNames);
+    --$this->count;
+  }
+
+  /**
+   * Returns true if the current form field is valid (implements the Iterator interface).
+   *
+   * @return boolean The validity of the current element; true if it is valid
+   */
+  public function valid()
+  {
+    return $this->count > 0;
   }
 
   /**

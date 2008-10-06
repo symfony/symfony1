@@ -356,6 +356,15 @@ rendered individually in a template:
       <input type="submit" />
     </form>
 
+`sfForm` now implements the `Iterator` and the `Countable` interfaces:
+
+    [php]
+    <ul>
+      <?php foreach ($form as $field): ?>
+        <li><?php echo $field ?></li>
+      <?php endforeach; ?>
+    </ul>
+
 Validators
 ----------
 
