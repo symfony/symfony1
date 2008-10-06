@@ -504,6 +504,24 @@ Here are some example:
 
 These new widgets are now used by default for the Propel generated forms.
 
+All widgets have a new `default` option. This option sets the default value
+for the widget:
+
+    [php]
+    $widget = new sfWidgetFormInput(array('default' => 'default value'));
+    $widget->setDefault('default value');
+    echo $widget->getDefault();
+
+You can also set default values for widget schemas:
+
+    [php]
+    $widget = new sfWidgetFormSchema(...);
+    $widget->setDefault(array('name' => 'default value'));
+    echo $widget->getDefault();
+
+These defaults are taken into account in the forms when you don't override them
+with form defaults.
+
 Response
 --------
 

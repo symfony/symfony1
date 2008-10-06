@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(110, new lime_output_color());
+$t = new lime_test(119, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -139,7 +139,7 @@ $t->ok($schema['last_name'] == $widgets['last_name'], '->setWidgets() sets field
 $t->diag('ArrayAccess interface');
 $f = new FormTest();
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
   'last_name'  => new sfWidgetFormInput(),
   'image'      => new sfWidgetFormInputFile(),
 )));
@@ -147,6 +147,8 @@ $f->setValidatorSchema(new sfValidatorSchema(array(
   'first_name' => new sfValidatorPass(),
 )));
 $t->ok($f['first_name'] instanceof sfFormField, 'sfForm implements the ArrayAccess interface');
+$t->is($f['first_name']->render(), '<input type="text" name="first_name" value="Fabien" id="first_name" />', 'sfForm implements the ArrayAccess interface');
+
 try
 {
   $f['first_name'] = 'first_name';
@@ -279,17 +281,48 @@ $t->is($f->renderGlobalErrors(), $output, '->renderGlobalErrors() renders global
 
 // ->render()
 $t->diag('->render()');
-$f = new FormTest();
+$f = new FormTest(array('first_name' => 'Fabien', 'last_name' => 'Potencier'));
 $f->setValidators(array(
   'id'         => new sfValidatorInteger(),
   'first_name' => new sfValidatorString(array('min_length' => 2)),
   'last_name'  => new sfValidatorString(array('min_length' => 2)),
 ));
 $f->setWidgets(array(
-  'id'         => new sfWidgetFormInputHidden(),
-  'first_name' => new sfWidgetFormInput(),
+  'id'         => new sfWidgetFormInputHidden(array('default' => 3)),
+  'first_name' => new sfWidgetFormInput(array('default' => 'Thomas')),
   'last_name'  => new sfWidgetFormInput(),
 ));
+
+// unbound
+$output = <<<EOF
+<tr>
+  <th><label for="first_name">First name</label></th>
+  <td><input type="text" name="first_name" value="Fabien" id="first_name" /></td>
+</tr>
+<tr>
+  <th><label for="last_name">Last name</label></th>
+  <td><input type="text" name="last_name" value="Potencier" id="last_name" /><input type="hidden" name="id" value="3" id="id" /></td>
+</tr>
+
+EOF;
+$t->is($f->__toString(), $output, '->__toString() renders the form as HTML');
+$output = <<<EOF
+<tr>
+  <th><label for="first_name">First name</label></th>
+  <td><input type="text" name="first_name" value="Fabien" class="foo" id="first_name" /></td>
+</tr>
+<tr>
+  <th><label for="last_name">Last name</label></th>
+  <td><input type="text" name="last_name" value="Potencier" id="last_name" /><input type="hidden" name="id" value="3" id="id" /></td>
+</tr>
+
+EOF;
+$t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
+$t->is((string) $f['id'], '<input type="hidden" name="id" value="3" id="id" />', '->offsetGet() returns a sfFormField');
+$t->is((string) $f['first_name'], '<input type="text" name="first_name" value="Fabien" id="first_name" />', '->offsetGet() returns a sfFormField');
+$t->is((string) $f['last_name'], '<input type="text" name="last_name" value="Potencier" id="last_name" />', '->offsetGet() returns a sfFormField');
+
+// bound
 $f->bind(array(
   'id'         => '1',
   'first_name' => 'Fabien',
@@ -319,6 +352,9 @@ $output = <<<EOF
 
 EOF;
 $t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
+$t->is((string) $f['id'], '<input type="hidden" name="id" value="1" id="id" />', '->offsetGet() returns a sfFormField');
+$t->is((string) $f['first_name'], '<input type="text" name="first_name" value="Fabien" id="first_name" />', '->offsetGet() returns a sfFormField');
+$t->is((string) $f['last_name'], '<input type="text" name="last_name" value="Potencier" id="last_name" />', '->offsetGet() returns a sfFormField');
 
 // renderUsing()
 $t->diag('->renderUsing()');

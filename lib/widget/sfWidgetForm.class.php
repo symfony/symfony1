@@ -37,8 +37,29 @@ abstract class sfWidgetForm extends sfWidget
     $this->addOption('id_format', '%s');
     $this->addOption('is_hidden', false);
     $this->addOption('needs_multipart', false);
+    $this->addOption('default', null);
 
     parent::__construct($options, $attributes);
+  }
+
+  /**
+   * Sets the default value for the widget.
+   *
+   * @param string The default value for the widget
+   */
+  public function setDefault($value)
+  {
+    $this->setOption('default', $value);
+  }
+
+  /**
+   * Returns the default value for the widget.
+   *
+   * @return array An array of default values
+   */
+  public function getDefault()
+  {
+    return $this->getOption('default');
   }
 
   /**

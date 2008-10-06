@@ -83,6 +83,67 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
+   * Sets the default value for the widget.
+   *
+   * @param string The default value for the widget
+   */
+  public function setDefault($values)
+  {
+    foreach ($this->fields as $name => $widget)
+    {
+      if (array_key_exists($name, $values))
+      {
+        $widget->setDefault($values[$name]);
+      }
+    }
+  }
+
+  /**
+   * Returns the default value for the widget.
+   *
+   * @return array An array of default values
+   */
+  public function getDefault()
+  {
+    $defaults = array();
+
+    foreach ($this->fields as $name => $widget)
+    {
+      $defaults[$name] = $widget->getDefault();
+    }
+
+    return $defaults;
+  }
+
+  /**
+   * Sets the default value for the widget.
+   *
+   * This is just an alias for getDefault()
+   *
+   * @param string The default value for the widget
+   *
+   * @see setDefault()
+   */
+  public function setDefaults($values)
+  {
+    $this->setDefault($values);
+  }
+
+  /**
+   * Returns the defaults values for the widget schema.
+   *
+   * This is just an alias for getDefault()
+   *
+   * @param array An array of default values
+   *
+   * @see getDefault()
+   */
+  public function getDefaults()
+  {
+    return $this->getDefault();
+  }
+
+  /**
    * Adds a form formatter.
    *
    * @param string                      $name       The formatter name

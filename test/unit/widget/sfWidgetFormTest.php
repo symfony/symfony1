@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 class MyWidgetForm extends sfWidgetForm
 {
@@ -33,6 +33,15 @@ $t->is($w->render('foo', null, array('id' => 'id_foo')), '<input name="foo" id="
 
 $w = new MyWidgetForm(array('id_format' => false));
 $t->is($w->render('foo'), '<input name="foo" /><textarea name="foo"></textarea>', '__construct() can disable id generation');
+
+// ->getDefault() ->setDefault() ->hasDefault()
+$t->diag('->getDefault() ->setDefault() ->hasDefault()');
+$w = new MyWidgetForm();
+$t->is($w->getDefault(), null, '->getDefault() returns null if no default value has been defined');
+$w = new MyWidgetForm(array('default' => 'foo'));
+$t->is($w->getDefault(), 'foo', '->getDefault() returns the default value');
+$w->setDefault('bar');
+$t->is($w->getDefault(), 'bar', '->setDefault() changes the default value for the widget');
 
 // ->getIdFormat() ->setIdFormat()
 $t->diag('->getIdFormat() ->setIdFormat()');

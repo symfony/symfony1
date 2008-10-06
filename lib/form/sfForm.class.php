@@ -839,7 +839,7 @@ class sfForm implements ArrayAccess
 
       $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
 
-      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, isset($values[$name]) ? $values[$name] : null, $this->errorSchema[$name]);
+      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, isset($values[$name]) ? $values[$name] : $widget->getDefault(), $this->errorSchema[$name]);
     }
 
     return $this->formFields[$name];
@@ -881,7 +881,7 @@ class sfForm implements ArrayAccess
   {
     if (is_null($this->formFieldSchema))
     {
-      $this->formFieldSchema = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : $this->defaults, $this->errorSchema);
+      $this->formFieldSchema = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : array_merge($this->widgetSchema->getDefault(), $this->defaults), $this->errorSchema);
     }
 
     return $this->formFieldSchema;
