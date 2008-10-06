@@ -389,15 +389,10 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $widgetSchema = $form->getWidgetSchema();
 
-    // generate labels and default values
+    // generate default values
     $defaults = array();
     for ($i = 0; $i < $n; $i++)
     {
-      if (!isset($labels[$i]))
-      {
-        $labels[$i] = sprintf('%s (%s)', $widgetSchema->getFormFormatter()->generateLabelName($name), $i);
-      }
-
       $defaults[$i] = $form->getDefaults();
     }
 
@@ -405,9 +400,19 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
     $innerDecorator = is_null($innerDecorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
-
-    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options, $labels), $decorator);
+    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
+
+    // generate labels
+    for ($i = 0; $i < $n; $i++)
+    {
+      if (!isset($labels[$i]))
+      {
+        $labels[$i] = sprintf('%s (%s)', $this->widgetSchema->getFormFormatter()->generateLabelName($name), $i);
+      }
+    }
+
+    $this->widgetSchema[$name]->setLabels($labels);
 
     $this->resetFormFields();
   }

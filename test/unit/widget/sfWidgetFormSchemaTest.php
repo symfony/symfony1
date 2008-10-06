@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(75, new lime_output_color());
+$t = new lime_test(79, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -139,7 +139,7 @@ $t->is($company->getParent(), $author, '->getParent() returns the parent widget 
 
 // ->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()
 $t->diag('->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()');
-$w = new sfWidgetFormSchema();
+$w = new sfWidgetFormSchema(array('first_name' => new sfWidgetFormInput()));
 $w->setLabel('first_name', 'A first name');
 $t->is($w->getLabels(), array('first_name' => 'A first name'), '->getLabels() returns all current labels');
 
@@ -156,6 +156,17 @@ $w->setHelps(array('first_name', 'Please, provide your first name'));
 $t->is($w->getHelps(), array('first_name', 'Please, provide your first name'), '->setHelps() changes all help messages');
 $w->setHelp('last_name', 'Please, provide your last name');
 $t->is($w->getHelp('last_name'), 'Please, provide your last name', '->setHelp() changes one help message');
+
+// ->getLabel() ->setLabel() ->getLabels() ->setLabels()
+$t->diag('->getLabel() ->setLabel() ->getLabels() ->setLabels()');
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$w->setLabels(array('w1' => 'foo'));
+$t->is($w->getLabels(), array('w1' => 'foo', 'w2' => null), '->getLabels() returns the labels');
+$t->is($w->getLabel('w1'), 'foo', '->getLabel() returns the label for a given field');
+$w->setLabel('w2', 'foo');
+$t->is($w->getLabels(), array('w1' => 'foo', 'w2' => 'foo'), '->setLabel() sets a label for a given field');
+$w->setLabel('foo');
+$t->is($w->getLabel(), 'foo', '->setLabel() can also set the label for the widget schema');
 
 // ->getDefault() ->setDefault() ->getDefaults() ->setDefaults()
 $t->diag('->getDefault() ->setDefault() ->getDefaults() ->setDefaults()');

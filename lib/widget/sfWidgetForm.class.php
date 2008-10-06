@@ -38,6 +38,7 @@ abstract class sfWidgetForm extends sfWidget
     $this->addOption('is_hidden', false);
     $this->addOption('needs_multipart', false);
     $this->addOption('default', null);
+    $this->addOption('label', null);
 
     parent::__construct($options, $attributes);
   }
@@ -45,7 +46,7 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Sets the default value for the widget.
    *
-   * @param string The default value for the widget
+   * @param string The default value
    */
   public function setDefault($value)
   {
@@ -55,11 +56,31 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Returns the default value for the widget.
    *
-   * @return array An array of default values
+   * @return string The default value
    */
   public function getDefault()
   {
     return $this->getOption('default');
+  }
+
+  /**
+   * Sets the label for the widget.
+   *
+   * @param string The label
+   */
+  public function setLabel($value)
+  {
+    $this->setOption('label', $value);
+  }
+
+  /**
+   * Returns the label for the widget.
+   *
+   * @return string The label
+   */
+  public function getLabel()
+  {
+    return $this->getOption('label');
   }
 
   /**

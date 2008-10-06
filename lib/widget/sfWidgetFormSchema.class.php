@@ -33,7 +33,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $parent         = null,
     $formFormatters = array(),
     $options        = array(),
-    $labels         = array(),
     $fields         = array(),
     $positions      = array(),
     $helps          = array();
@@ -61,9 +60,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function __construct($fields = null, $options = array(), $attributes = array(), $labels = array(), $helps = array())
   {
-    $this->labels = $labels;
-    $this->helps  = $helps;
-
     $this->addOption('name_format', '%s');
     $this->addOption('form_formatter', self::$defaultFormatterName);
 
@@ -80,6 +76,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       throw new InvalidArgumentException('sfWidgetFormSchema constructor takes an array of sfWidget objects.');
     }
+
+    $this->setLabels($labels);
+    $this->helps = $helps;
   }
 
   /**
@@ -132,7 +131,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     foreach ($this->fields as $name => $widget)
     {
-      $defaults[$name] = $widget->getDefault();
+      $defaults[$name] = $widget instanceof sfWidgetFormSchema ? $widget->getDefaults() : $widget->getDefault();
     }
 
     return $defaults;
@@ -270,7 +269,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function setLabels($labels)
   {
-    $this->labels = $labels;
+    foreach ($this->fields as $name => $widget)
+    {
+      if (array_key_exists($name, $labels))
+      {
+        $widget->setLabel($labels[$name]);
+      }
+    }
   }
 
   /**
@@ -280,30 +285,63 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function getLabels()
   {
-    return $this->labels;
+    $labels = array();
+
+    foreach ($this->fields as $name => $widget)
+    {
+      $labels[$name] = $widget->getLabel();
+    }
+
+    return $labels;
   }
 
   /**
    * Sets a label.
    *
    * @param string $name   The field name
-   * @param string $value  The label name
+   * @param string $value  The label name (required - the default value is here because PHP do not allow signature changes with inheritance)
    */
-  public function setLabel($name, $value)
+  public function setLabel($name, $value = null)
   {
-    $this->labels[$name] = $value;
+    if (2 == func_num_args())
+    {
+      if (!isset($this->fields[$name]))
+      {
+        throw new InvalidArgumentException(sprintf('Unable to set the label on an unexistant widget ("%s").', $name));
+      }
+
+      $this->fields[$name]->setLabel($value);
+    }
+    else
+    {
+      // set the label for this widget schema
+      parent::setLabel($name);
+    }
   }
 
   /**
    * Gets a label by field name.
    *
-   * @param  string $name  The field name
+   * @param  string $name  The field name (required - the default value is here because PHP do not allow signature changes with inheritance)
    *
    * @return string The label name or an empty string if it is not defined
    */
-  public function getLabel($name)
+  public function getLabel($name = null)
   {
-    return array_key_exists($name, $this->labels) ? $this->labels[$name] : '';
+    if (1 == func_num_args())
+    {
+      if (!isset($this->fields[$name]))
+      {
+        throw new InvalidArgumentException(sprintf('Unable to get the label on an unexistant widget ("%s").', $name));
+      }
+
+      return $this->fields[$name]->getLabel();
+    }
+    else
+    {
+      // label for this widget schema
+      return parent::getLabel();
+    }
   }
 
   /**

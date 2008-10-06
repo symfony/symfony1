@@ -136,17 +136,24 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setLabel($name, $value)
+  public function setLabel($name, $value = null)
   {
-    $this->widget->setLabel($name, $value);
+    if (2 == func_num_args())
+    {
+      $this->widget->setLabel($name, $value);
+    }
+    else
+    {
+      $this->widget->setLabel($name);
+    }
   }
 
   /**
    * @see sfWidgetFormSchema
    */
-  public function getLabel($name)
+  public function getLabel($name = null)
   {
-    return $this->widget->getLabel($name);
+    return 1 == func_num_args() ? $this->widget->getLabel($name) : $this->widget->getLabel();
   }
 
   /**
