@@ -72,13 +72,15 @@ function objects_for_select($options, $value_method, $text_method = null, $selec
   foreach ($options as $option)
   {
     // text method exists?
-    if ($text_method && !method_exists($option, $text_method))
+    $method_exists = ($text_method == '__toString') ? method_exists($option, $text_method) : is_callable(array($option, $text_method));
+    if ($text_method && !$method_exists)
     {
       throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $text_method, _get_class_decorated($option)));
     }
 
     // value method exists?
-    if (!method_exists($option, $value_method))
+    $method_exists = ($value_method == '__toString') ? method_exists($option, $value_method) : is_callable(array($option, $value_method));
+    if (!$method_exists)
     {
       throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $value_method, _get_class_decorated($option)));
     }
@@ -297,7 +299,8 @@ function _get_object_value($object, $method, $default_value = null, $param = nul
   }
 
   // method exists?
-  if (!method_exists($object, $method[0]))
+  $method_exists = ($method[0] == '__toString') ? method_exists($object, $method[0]) : is_callable(array($object, $method[0]));
+  if (!$method_exists)
   {
     throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $method[0], _get_class_decorated($object)));
   }
@@ -325,3 +328,4 @@ function _get_class_decorated($object)
     return get_class($object);
   }
 }
+
