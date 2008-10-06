@@ -304,6 +304,7 @@ class sfCoreAutoload
   'sfRoute' => 'routing',
   'sfRouteCollection' => 'routing',
   'sfRouting' => 'routing',
+  'sfCacheSessionStorage' => 'storage',
   'sfDatabaseSessionStorage' => 'storage',
   'sfMySQLSessionStorage' => 'storage',
   'sfMySQLiSessionStorage' => 'storage',
