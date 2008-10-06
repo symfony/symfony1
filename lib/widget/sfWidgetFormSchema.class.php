@@ -83,11 +83,34 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
-   * Sets the default value for the widget.
+   * Sets the default value for a field.
    *
-   * @param string The default value for the widget
+   * @param string The field name
+   * @param string The default value (required - the default value is here because PHP do not allow signature changes with inheritance)
    */
-  public function setDefault($values)
+  public function setDefault($name, $value = null)
+  {
+    $this[$name]->setDefault($value);
+  }
+
+  /**
+   * Gets the default value of a field.
+   *
+   * @param  string The field name (required - the default value is here because PHP do not allow signature changes with inheritance)
+   *
+   * @return string The default value
+   */
+  public function getDefault($name = null)
+  {
+    return $this[$name]->getDefault();
+  }
+
+  /**
+   * Sets the default values for the widget.
+   *
+   * @param array The default values for the widget
+   */
+  public function setDefaults($values)
   {
     foreach ($this->fields as $name => $widget)
     {
@@ -99,11 +122,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
-   * Returns the default value for the widget.
+   * Returns the defaults values for the widget schema.
    *
-   * @return array An array of default values
+   * @param array An array of default values
    */
-  public function getDefault()
+  public function getDefaults()
   {
     $defaults = array();
 
@@ -113,34 +136,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     }
 
     return $defaults;
-  }
-
-  /**
-   * Sets the default value for the widget.
-   *
-   * This is just an alias for getDefault()
-   *
-   * @param string The default value for the widget
-   *
-   * @see setDefault()
-   */
-  public function setDefaults($values)
-  {
-    $this->setDefault($values);
-  }
-
-  /**
-   * Returns the defaults values for the widget schema.
-   *
-   * This is just an alias for getDefault()
-   *
-   * @param array An array of default values
-   *
-   * @see getDefault()
-   */
-  public function getDefaults()
-  {
-    return $this->getDefault();
   }
 
   /**

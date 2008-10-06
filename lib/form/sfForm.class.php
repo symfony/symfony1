@@ -835,11 +835,22 @@ class sfForm implements ArrayAccess
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
-      $values = $this->isBound ? $this->taintedValues : $this->defaults;
+      if ($this->isBound)
+      {
+        $value = isset($this->taintedValues[$name]) ? $this->taintedValues[$name] : null;
+      }
+      else if (isset($this->defaults[$name]))
+      {
+        $value = $this->defaults[$name];
+      }
+      else
+      {
+        $value = $widget instanceof sfWidgetFormSchema ? $widget->getDefaults() : $widget->getDefault();
+      }
 
       $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
 
-      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, isset($values[$name]) ? $values[$name] : $widget->getDefault(), $this->errorSchema[$name]);
+      $this->formFields[$name] = new $class($widget, $this->getFormFieldSchema(), $name, $value, $this->errorSchema[$name]);
     }
 
     return $this->formFields[$name];
@@ -881,7 +892,9 @@ class sfForm implements ArrayAccess
   {
     if (is_null($this->formFieldSchema))
     {
-      $this->formFieldSchema = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : array_merge($this->widgetSchema->getDefault(), $this->defaults), $this->errorSchema);
+      $values = $this->isBound ? $this->taintedValues : array_merge($this->widgetSchema->getDefaults(), $this->defaults);
+
+      $this->formFieldSchema = new sfFormFieldSchema($this->widgetSchema, null, null, $values, $this->errorSchema);
     }
 
     return $this->formFieldSchema;

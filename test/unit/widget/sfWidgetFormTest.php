@@ -34,8 +34,8 @@ $t->is($w->render('foo', null, array('id' => 'id_foo')), '<input name="foo" id="
 $w = new MyWidgetForm(array('id_format' => false));
 $t->is($w->render('foo'), '<input name="foo" /><textarea name="foo"></textarea>', '__construct() can disable id generation');
 
-// ->getDefault() ->setDefault() ->hasDefault()
-$t->diag('->getDefault() ->setDefault() ->hasDefault()');
+// ->getDefault() ->setDefault()
+$t->diag('->getDefault() ->setDefault()');
 $w = new MyWidgetForm();
 $t->is($w->getDefault(), null, '->getDefault() returns null if no default value has been defined');
 $w = new MyWidgetForm(array('default' => 'foo'));

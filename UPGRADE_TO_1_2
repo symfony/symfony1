@@ -516,8 +516,9 @@ You can also set default values for widget schemas:
 
     [php]
     $widget = new sfWidgetFormSchema(...);
-    $widget->setDefault(array('name' => 'default value'));
-    echo $widget->getDefault();
+    $widget->setDefaults(array('name' => 'default value'));
+    $widget->setDefault('name', 'default value');
+    var_export($widget->getDefaults());
 
 These defaults are taken into account in the forms when you don't override them
 with form defaults.

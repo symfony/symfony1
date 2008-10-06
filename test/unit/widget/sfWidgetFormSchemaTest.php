@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(74, new lime_output_color());
+$t = new lime_test(75, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -160,10 +160,11 @@ $t->is($w->getHelp('last_name'), 'Please, provide your last name', '->setHelp() 
 // ->getDefault() ->setDefault() ->getDefaults() ->setDefaults()
 $t->diag('->getDefault() ->setDefault() ->getDefaults() ->setDefaults()');
 $w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
-$w->setDefault(array('w1' => 'foo'));
-$t->is($w->getDefault(), array('w1' => 'foo', 'w2' => null), '->getDefault() returns the default values');
-$w->setDefaults(array('w1' => 'foo', 'w2' => 'bar'));
-$t->is($w->getDefaults(), array('w1' => 'foo', 'w2' => 'bar'), '->getDefaults() returns the default values');
+$w->setDefaults(array('w1' => 'foo'));
+$t->is($w->getDefaults(), array('w1' => 'foo', 'w2' => null), '->getDefaults() returns the default values');
+$t->is($w->getDefault('w1'), 'foo', '->getDefault() returns the default value for a given field');
+$w->setDefault('w2', 'foo');
+$t->is($w->getDefaults(), array('w1' => 'foo', 'w2' => 'foo'), '->setDefault() sets a default value for a given field');
 
 // ->needsMultipartForm()
 $t->diag('->needsMultipartForm()');
