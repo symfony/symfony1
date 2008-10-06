@@ -517,6 +517,36 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Set a validator for the given field name.
+   *
+   * @param string      $name      The field name
+   * @param sfValidator $validator The validator
+   */
+  public function setValidator($name, sfValidatorBase $validator)
+  {
+    $this->validatorSchema[$name] = $validator;
+
+    $this->resetFormFields();
+  }
+
+  /**
+   * Gets a validator for the given field name.
+   *
+   * @param  string      $name      The field name
+   *
+   * @return sfValidator $validator The validator
+   */
+  public function getValidator($name)
+  {
+    if (!isset($this->validatorSchema[$name]))
+    {
+      throw new InvalidArgumentException(sprintf('The validator "%s" does not exist.', $name));
+    }
+
+    return $this->validatorSchema[$name];
+  }
+
+  /**
    * Sets the validator schema associated with this form.
    *
    * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
@@ -546,6 +576,36 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function setWidgets(array $widgets)
   {
     $this->setWidgetSchema(new sfWidgetFormSchema($widgets));
+  }
+
+  /**
+   * Set a widget for the given field name.
+   *
+   * @param string       $name   The field name
+   * @param sfWidgetForm $widget The widget
+   */
+  public function setWidget($name, sfWidgetForm $widget)
+  {
+    $this->widgetSchema[$name] = $widget;
+
+    $this->resetFormFields();
+  }
+
+  /**
+   * Gets a widget for the given field name.
+   *
+   * @param  string       $name      The field name
+   *
+   * @return sfWidgetForm $widget The widget
+   */
+  public function getWidget($name)
+  {
+    if (!isset($this->widgetSchema[$name]))
+    {
+      throw new InvalidArgumentException(sprintf('The widget "%s" does not exist.', $name));
+    }
+
+    return $this->widgetSchema[$name];
   }
 
   /**

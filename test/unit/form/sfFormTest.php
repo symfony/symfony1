@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(123, new lime_output_color());
+$t = new lime_test(125, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -105,8 +105,8 @@ $t->ok(!$f->isMultipart(),'->isMultipart() returns false if the form does not ne
 $f->setWidgetSchema(new sfWidgetFormSchema(array('image' => new sfWidgetFormInputFile())));
 $t->ok($f->isMultipart(),'->isMultipart() returns true if the form needs a multipart form');
 
-// ->setValidators() ->setValidatorSchema() ->getValidatorSchema()
-$t->diag('->setValidators() ->setValidatorSchema() ->getValidatorSchema()');
+// ->setValidators() ->setValidatorSchema() ->getValidatorSchema() ->setValidator() ->getValidator()
+$t->diag('->setValidators() ->setValidatorSchema() ->getValidatorSchema() ->setValidator() ->getValidator()');
 $f = new FormTest();
 $validators = array(
   'first_name' => new sfValidatorPass(),
@@ -119,8 +119,10 @@ $f->setValidators($validators);
 $schema = $f->getValidatorSchema();
 $t->ok($schema['first_name'] == $validators['first_name'], '->setValidators() sets field validators');
 $t->ok($schema['last_name'] == $validators['last_name'], '->setValidators() sets field validators');
+$f->setValidator('name', $v3 = new sfValidatorPass());
+$t->ok($f->getValidator('name') == $v3, '->setValidator() sets a validator for a field');
 
-// ->setWidgets() ->setWidgetSchema() ->getWidgetSchema()
+// ->setWidgets() ->setWidgetSchema() ->getWidgetSchema() ->getWidget() ->setWidget()
 $t->diag('->setWidgets() ->setWidgetSchema() ->getWidgetSchema()');
 $f = new FormTest();
 $widgets = array(
@@ -134,6 +136,8 @@ $f->setWidgets($widgets);
 $schema = $f->getWidgetSchema();
 $t->ok($schema['first_name'] == $widgets['first_name'], '->setWidgets() sets field widgets');
 $t->ok($schema['last_name'] == $widgets['last_name'], '->setWidgets() sets field widgets');
+$f->setWidget('name', $w3 = new sfWidgetFormInput());
+$t->ok($f->getWidget('name') == $w3, '->setWidget() sets a widget for a field');
 
 // ArrayAccess interface
 $t->diag('ArrayAccess interface');
