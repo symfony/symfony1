@@ -140,7 +140,6 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 // subquery found
                 $q     = $this->query->createSubquery()->parseQuery($trimmed, false);
                 $sql   = $q->getSql();
-                $this->query->mergeSubqueryBack($q);
                 $rightExpr = '(' . $sql . ')';
 
             // If custom sql for custom subquery

@@ -611,38 +611,6 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * Merge the necessary elements of the subquery back to the main query.
-     *
-     * @param Doctrine_Query_Abstract $subquery
-     * @return void
-     */
-    public function mergeSubqueryBack(Doctrine_Query_Abstract $subquery)
-    {
-        $this->_params = $this->mergeParams($this->_params, $subquery->_params);
-        $this->_tableAliasMap = array_merge($this->_tableAliasMap, $subquery->_tableAliasMap);
-    }
-    
-    /**
-     * Merge recursive function needed to workaround the PHP 5.2.5- bug
-     * See: http://bugs.php.net/bug.php?id=42177
-     *
-     * @params Arg0,Arg1,..., ArgN Arrays to be merged
-     * @return array Merged array
-     */
-    protected function mergeParams($params1, $params2)
-    {
-        $params = array();
-
-        foreach ($params1 as $k => $v)
-        {
-            // [TODO] What if we are in an array parameter (since 1.1)?
-            $params[$k] = array_merge($params1[$k], $params2[$k]);
-        }
-
-        return $params;
-    }
-
-    /**
      * setView
      * sets a database view this query object uses
      * this method should only be called internally by doctrine
@@ -864,7 +832,7 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * copyAliases
+     * copySubqueryInfo
      * copy aliases from another Hydrate object
      *
      * this method is needed by DQL subqueries which need the aliases
@@ -874,10 +842,11 @@ abstract class Doctrine_Query_Abstract
      *                                  aliases are copied from
      * @return Doctrine_Hydrate         this object
      */
-    public function copyAliases(Doctrine_Query_Abstract $query)
+    public function copySubqueryInfo(Doctrine_Query_Abstract $query)
     {
-        $this->_tableAliasMap = $query->_tableAliasMap;
-        $this->_queryComponents = $query->_queryComponents;
+        $this->_params =& $query->_params;
+        $this->_tableAliasMap =& $query->_tableAliasMap;
+        $this->_queryComponents =& $query->_queryComponents;
         $this->_tableAliasSeeds = $query->_tableAliasSeeds;
         return $this;
     }

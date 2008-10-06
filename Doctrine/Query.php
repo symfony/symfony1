@@ -222,7 +222,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $obj   = new $class();
 
         // copy the aliases to the subquery
-        $obj->copyAliases($this);
+        $obj->copySubqueryInfo($this);
 
         // this prevents the 'id' being selected, re ticket #307
         $obj->isSubquery(true);
@@ -858,7 +858,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             // parse subquery
             $q = $this->createSubquery()->parseDqlQuery($trimmed);
             $trimmed = $q->getSql();
-            $this->mergeSubqueryBack($q);
         } else {
             // parse normal clause
             $trimmed = $this->parseClause($trimmed);
@@ -1987,6 +1986,29 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     public function __clone()
     {
         $this->_parsers = array();
+
+        // Subqueries share some information from the parent so it can intermingle
+        // with the dql of the main query. So when a subquery is cloned we need to 
+        // kill those references or it causes problems
+        if ($this->isSubquery()) {
+            $this->_killReference('_params');
+            $this->_killReference('_tableAliasMap');
+            $this->_killReference('_queryComponents');
+        }
+    }
+
+    /**
+     * Kill the reference for the passed class property.
+     * This method simply copies the value to a temporary variable and then unsets
+     * the reference and re-assigns the old value but not by reference
+     *
+     * @param string $key
+     */
+    protected function _killReference($key)
+    {
+        $tmp = $this->$key;
+        unset($this->$key);
+        $this->$key = $tmp;
     }
 
     /**
