@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(119, new lime_output_color());
+$t = new lime_test(120, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -174,6 +174,16 @@ catch (LogicException $e)
 {
   $t->pass('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
+
+// Countable interface
+$t->diag('Countable interface');
+$f = new FormTest();
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
+  'last_name'  => new sfWidgetFormInput(),
+  'image'      => new sfWidgetFormInputFile(),
+)));
+$t->is(count($f), 3, 'sfForm implements the Countable interface');
 
 // ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');

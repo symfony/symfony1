@@ -20,7 +20,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfForm implements ArrayAccess
+class sfForm implements ArrayAccess, Countable
 {
   protected static
     $CSRFProtection    = false,
@@ -898,6 +898,16 @@ class sfForm implements ArrayAccess
     }
 
     return $this->formFieldSchema;
+  }
+
+  /**
+   * Returns the number of form fields (implements the Countable interface).
+   *
+   * @return integer The number of embedded form fields
+   */
+  public function count()
+  {
+    return count($this->getFormFieldSchema());
   }
 
   /**
