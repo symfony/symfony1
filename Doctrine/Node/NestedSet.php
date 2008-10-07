@@ -134,7 +134,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     {
         $parent = $this->getParent();
         $siblings = array();
-        if ($parent->exists()) {
+        if ($parent && $parent->exists()) {
             foreach ($parent->getNode()->getChildren() as $child) {
                 if ($this->isEqualTo($child) && !$includeNode) {
                     continue;
