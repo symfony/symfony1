@@ -605,7 +605,7 @@ symfony continues to decouple its bundled software. In 1.2 the bundled Prototype
 and Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a 
 core-plugin. Core plugins behave like real plugins but are shipped by symfony platform.
 This will make the javscript and css files of the new `sfProtoculousPlugin` 
-(the more or less inofficial name of the often featured duo) behave like real plugin
+(the more or less unofficial name of the often featured duo) behave like real plugin
 assets. They will be now in `web/sfProtoculousPlugin` rather than in `web/sf` 
 (as it has been in 1.0 and 1.1). The `prototype_web_dir` setting will also now point 
 to the new directory.
