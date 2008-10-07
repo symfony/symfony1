@@ -16,7 +16,7 @@ class sfCacheSessionStorage extends sfStorage
     $context     = null,
     $request     = null,
     $response    = null,
-    $cache       = null;
+    $cache       = null,
     $data        = array(),
     $dataChanged = false;
 
@@ -63,7 +63,7 @@ class sfCacheSessionStorage extends sfStorage
     $this->response    = $this->context->getResponse();
 
     $cookie = $this->request->getCookie($this->options['session_name']);
-    
+
     if(strpos($cookie, ':') !== false)
     {
       // split cookie data id:signature(id+secret)
