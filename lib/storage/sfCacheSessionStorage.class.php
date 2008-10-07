@@ -118,7 +118,6 @@ class sfCacheSessionStorage extends sfStorage
       if(sfConfig::get('sf_logging_enabled'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Restored previous session')));
-        // $this->dispatcher->notify(new sfEvent($this, 'application.log', array(var_export($this->data, true))));
       }
     }
 
