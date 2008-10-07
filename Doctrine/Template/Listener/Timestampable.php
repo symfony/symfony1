@@ -61,14 +61,16 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     {
         if ( ! $this->_options['created']['disabled']) {
             $createdName = $event->getInvoker()->getTable()->getFieldName($this->_options['created']['name']);
-            if ( ! $event->getInvoker()->$createdName) {
+            $modified = $event->getInvoker()->getModified();
+            if ( ! isset($modified[$createdName])) {
                 $event->getInvoker()->$createdName = $this->getTimestamp('created');
             }
         }
 
         if ( ! $this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
-            if ( ! $event->getInvoker()->$updatedName) {
+            $modified = $event->getInvoker()->getModified();
+            if ( ! isset($modified[$updatedName])) {
                 $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
             }
         }
@@ -84,7 +86,8 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     {
         if ( ! $this->_options['updated']['disabled']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
-            if ( ! $event->getInvoker()->$updatedName) {
+            $modified = $event->getInvoker()->getModified();
+            if ( ! isset($modified[$updatedName])) {
                 $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
             }
         }
