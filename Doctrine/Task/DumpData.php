@@ -42,13 +42,15 @@ class Doctrine_Task_DumpData extends Doctrine_Task
         Doctrine::loadModels($this->getArgument('models_path'));
         
         $path = $this->getArgument('data_fixtures_path');
+
+        if (is_array($path) && count($path) > 0) {
+            $path = $path[0];
+            
+            Doctrine::dumpData($path);
         
-        if (is_array($path)) {
-          $path = $path[0];
+            $this->notify(sprintf('Dumped data successfully to: %s', $path));
+        } else {
+            throw new Doctrine_Task_Exception('Unable to find data fixtures path.');
         }
-        
-        Doctrine::dumpData($path);
-        
-        $this->notify(sprintf('Dumped data successfully to: %s', $path));
     }
 }
