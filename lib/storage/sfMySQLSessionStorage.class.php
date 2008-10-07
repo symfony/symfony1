@@ -100,7 +100,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     // cleanup the session id, just in case
     $id = $this->db_escape($id);
 
-    // delete the record associated with this id
+    // get the record associated with this id
     $sql = "SELECT $db_data_col FROM $db_table WHERE $db_id_col = '$id'";
 
     $result = $this->db_query($sql);
