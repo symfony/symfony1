@@ -54,7 +54,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             $r = implode(' OR ', $ret);
         } else {
 
-            $parts = $this->_tokenizer->bracketExplode($str, array(' \&\& ', ' AND '), '(', ')');
+            $parts = $this->_tokenizer->bracketExplode($str, array(' AND ', ' \&\& '), '(', ')');
             if (count($parts) > 1) {
                 $ret = array();
                 foreach ($parts as $part) {
