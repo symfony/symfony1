@@ -1149,6 +1149,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         if ($type == 'boolean' && (is_bool($old) || is_numeric($old)) && (is_bool($new) || is_numeric($new)) && $old == $new) {
             return false;
+        } else if (in_array($type, array('decimal', 'float')) && is_numeric($old) && is_numeric($new)) {
+            return $old * 100 != $new * 100;
         } else {
             return $old !== $new;
         }
