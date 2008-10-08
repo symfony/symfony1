@@ -601,13 +601,13 @@ positions. In symfony 1.1, they take the position as a second argument.
 Prototype and Scriptaculous
 ---------------------------
 
-symfony continues to decouple its bundled software. In 1.2 the bundled Prototype 
-and Scriptaculous libraries and helper (`JavascriptHelper`) have been moved to a 
-core-plugin. Core plugins behave like real plugins but are shipped by symfony platform.
-This will make the javscript and css files of the new `sfProtoculousPlugin` 
+symfony continues to decouple its bundled software. In 1.2 the bundled Prototype
+and Scriptaculous libraries and helpers (`JavascriptHelper`) have been moved to a
+core-plugin. Core plugins behave like any plugin but are shipped with symfony.
+This will make the JavaScript and CSS files of the new `sfProtoculousPlugin`
 (the more or less unofficial name of the often featured duo) behave like real plugin
-assets. They will be now in `web/sfProtoculousPlugin` rather than in `web/sf` 
-(as it has been in 1.0 and 1.1). The `prototype_web_dir` setting will also now point 
+assets. They will be now in `web/sfProtoculousPlugin` rather than in `web/sf`
+(as it has been in 1.0 and 1.1). The `prototype_web_dir` setting will also now point
 to the new directory.
 
 In addition some very basic javascript helpers that are reusable by any JS framework, have
@@ -620,15 +620,14 @@ As a new addition, `javascript_tag()` now can behave as `slot()`. This allows su
     alert('All is good')
     <?php end_javascript_tag() ?>
 
-
 >**CAUTION**
->**Work in progress:** As plugins are normally installed via a task and this invokes the 
+>**Work in progress:** As plugins are normally installed via a task and this invokes the
 >creation of the symlink in the web directory this is required for core plugins as well.
 >To do this manually you need to invoke:
 >
-> ``symfony plugin:configure-core``
+> `symfony plugin:configure-core`
 >
-> The target is that the project creation and upgrade task do this for you
+> The target is that the project creation and upgrade task do this for you.
 
 Browser
 -------
