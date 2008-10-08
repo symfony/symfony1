@@ -1098,7 +1098,21 @@ as they call the `propel:insert-sql` task.
 If you want to use these tasks in a batch and want to avoid the confirmation question,
 pass the `no-confirmation` option:
 
-   $ php symfony propel:insert-sql --no-confirmation
+    $ php symfony propel:insert-sql --no-confirmation
+
+Before symfony 1.2, the `propel:insert-sql` task was the only task to read its
+database configuration information from `propel.ini`. As of symfony 1.2, it
+reads it information from `databases.yml`. So, if you use several different
+connections in your model, the task will take those into account.
+Thanks to this new feature, you can now use the [--connection|INFO] option
+if you want to only load SQL statements for a given connection:
+
+    $ php symfony propel:insert-sql --connection=propel
+
+You can also use the `--env` and the `--application` options to select a
+specific configuration to use:
+
+    $ php symfony propel:insert-sql --env=prod --application=frontend
 
 The `sfTask` base class now provides three new methods to use in your tasks:
 
