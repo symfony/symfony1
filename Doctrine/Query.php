@@ -763,7 +763,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     } else {
                         if ( ! empty($term[0]) &&
                              ! in_array(strtoupper($term[0]), self::$_keywords) &&
-                             ! is_numeric($term[0])) {
+                             ! is_numeric($term[0]) &&
+                            $term[0] !== '?' && substr($term[0], 0, 1) !== ':') {
 
                             $componentAlias = $this->getRootAlias();
 

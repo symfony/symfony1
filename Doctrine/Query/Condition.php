@@ -44,7 +44,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
         $tmp = trim($str);
         
         $parts = $this->_tokenizer->bracketExplode($str, array(' \|\| ', ' OR '), '(', ')');
-
+        
         if (count($parts) > 1) {
             $ret = array();
             foreach ($parts as $part) {
@@ -53,8 +53,24 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             }
             $r = implode(' OR ', $ret);
         } else {
-
             $parts = $this->_tokenizer->bracketExplode($str, array(' AND ', ' \&\& '), '(', ')');
+
+            // Ticket #1388: We need to make sure we're not splitting a BETWEEN ...  AND ... clause
+            $tmp = array();
+
+            for ($i = 0, $l = count($parts); $i < $l; $i++) {
+                $test = $this->_tokenizer->sqlExplode($parts[$i]);
+
+                if (count($test) == 3 && strtoupper($test[1]) == 'BETWEEN') {
+                    $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
+                } else {
+                    $tmp[] = $parts[$i];
+                }
+            }
+            
+            $parts = $tmp;
+            unset($tmp);
+
             if (count($parts) > 1) {
                 $ret = array();
                 foreach ($parts as $part) {
