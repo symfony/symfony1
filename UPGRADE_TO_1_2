@@ -665,8 +665,8 @@ This refactor must not introduce backward incompatibility with symfony 1.1.
 
 The browser classes now add the `HTTP_REFERER` header for each request.
 
-Functional Tests
-----------------
+Tests
+-----
 
 When you write a lot of functional tests for a given module, it is sometimes
 useful to have some visual information about what it is being done.
@@ -900,6 +900,22 @@ You can also debug a form with the `debug()` method:
     ;
 
 It will output the submitted values and all the errors if any.
+
+## Coverage
+
+There is a new `test:coverage` task that output the code coverage for some given
+tests:
+
+    [php]
+    ./symfony test:coverage test/unit/model/ArticleTest.php lib/model/Article.php
+
+The first argument is a test file or a test directory. The second one is the
+file or directory you want to cover.
+
+If you want to know which lines are not covered, simply add the `--detailed` option:
+
+    [php]
+    ./symfony test:coverage --detailed test/unit/model/ArticleTest.php lib/model/Article.php
 
 YAML
 ----

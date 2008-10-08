@@ -369,6 +369,7 @@ class sfCoreAutoload
   'sfFilesystem' => 'task',
   'sfTask' => 'task',
   'sfTestAllTask' => 'task/test',
+  'sfTestCoverageTask' => 'task/test',
   'sfTestFunctionalTask' => 'task/test',
   'sfTestUnitTask' => 'task/test',
   'sfTestBrowser' => 'test',
