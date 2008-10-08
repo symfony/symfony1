@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorRegex extends sfValidatorBase
+class sfValidatorRegex extends sfValidatorString
 {
   /**
    * Configures the current validator.
@@ -28,19 +28,21 @@ class sfValidatorRegex extends sfValidatorBase
    * @param array $options   An array of options
    * @param array $messages  An array of error messages
    *
-   * @see sfValidatorBase
+   * @see sfValidatorString
    */
   protected function configure($options = array(), $messages = array())
   {
+    parent::configure($options, $messages);
+
     $this->addRequiredOption('pattern');
   }
 
   /**
-   * @see sfValidatorBase
+   * @see sfValidatorString
    */
   protected function doClean($value)
   {
-    $clean = (string) $value;
+    $clean = parent::doClean($value);
 
     if (!preg_match($this->getOption('pattern'), $clean))
     {
