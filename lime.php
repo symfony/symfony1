@@ -651,14 +651,12 @@ class lime_coverage extends lime_registration
   public $base_dir = '';
   public $harness = null;
   public $verbose = false;
+  protected $coverage = array();
 
   public function __construct($harness)
   {
     $this->harness = $harness;
-  }
 
-  public function run()
-  {
     if (!function_exists('xdebug_start_code_coverage'))
     {
       throw new Exception('You must install and enable xdebug before using lime coverage.');
@@ -668,7 +666,10 @@ class lime_coverage extends lime_registration
     {
       throw new Exception('You must set xdebug.extended_info to 1 in your php.ini to use lime coverage.');
     }
+  }
 
+  public function run()
+  {
     if (!count($this->harness->files))
     {
       throw new Exception('You must register some test files before running coverage!');
@@ -679,9 +680,22 @@ class lime_coverage extends lime_registration
       throw new Exception('You must register some files to cover!');
     }
 
-    $coverage = array();
+    $this->coverage = array();
+
+    $this->process($this->harness->files);
+
+    $this->output($this->files);
+  }
+
+  public function process($files)
+  {
+    if (!is_array($files))
+    {
+      $files = array($files);
+    }
+
     $tmp_file = lime_test::get_temp_directory().DIRECTORY_SEPARATOR.'test.php';
-    foreach ($this->harness->files as $file)
+    foreach ($files as $file)
     {
       $tmp = <<<EOF
 <?php
@@ -720,14 +734,9 @@ EOF;
 
       foreach ($cov as $file => $lines)
       {
-        if (!in_array($file, $this->files))
+        if (!isset($this->coverage[$file]))
         {
-          continue;
-        }
-
-        if (!isset($coverage[$file]))
-        {
-          $coverage[$file] = $lines;
+          $this->coverage[$file] = $lines;
           continue;
         }
 
@@ -735,20 +744,27 @@ EOF;
         {
           if ($flag == 1)
           {
-            $coverage[$file][$line] = 1;
+            $this->coverage[$file][$line] = 1;
           }
         }
       }
     }
-    unlink($tmp_file);
 
-    ksort($coverage);
+    if (file_exists($tmp_file))
+    {
+      unlink($tmp_file);
+    }
+  }
+
+  public function output($files)
+  {
+    ksort($this->coverage);
     $total_php_lines = 0;
     $total_covered_lines = 0;
-    foreach ($this->files as $file)
+    foreach ($files as $file)
     {
-      $is_covered = isset($coverage[$file]);
-      $cov = isset($coverage[$file]) ? $coverage[$file] : array();
+      $is_covered = isset($this->coverage[$file]);
+      $cov = isset($this->coverage[$file]) ? $this->coverage[$file] : array();
       $covered_lines = array();
       $missing_lines = array();
 
