@@ -327,7 +327,7 @@ the array of cleaned up values:
     }
 
 The `sfForm` class has a new `hasErrors()` method which returns true if the
-form has no errors and false otherwise. This methods returns `false` if the
+form has some errors and false otherwise. This methods returns `false` if the
 form is not bound. This method is quite useful in a template:
 
     [php]
