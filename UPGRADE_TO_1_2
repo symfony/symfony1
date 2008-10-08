@@ -665,8 +665,8 @@ This refactor must not introduce backward incompatibility with symfony 1.1.
 
 The browser classes now add the `HTTP_REFERER` header for each request.
 
-Tests
------
+Functional Tests
+----------------
 
 When you write a lot of functional tests for a given module, it is sometimes
 useful to have some visual information about what it is being done.

@@ -49,12 +49,12 @@ abstract class sfData
   /**
    * Loads data for the database from a YAML file
    *
-   * @param string $fixture_file The path to the YAML file.
+   * @param string $file The path to the YAML file.
    */
-  protected function doLoadDataFromFile($fixture_file)
+  protected function doLoadDataFromFile($file)
   {
     // import new datas
-    $data = sfYaml::load($fixture_file);
+    $data = sfYaml::load($file);
 
     $this->loadDataFromArray($data);
   }
@@ -70,51 +70,62 @@ abstract class sfData
    * Manages reading all of the fixture data files and
    * loading them into the data source
    *
-   * @param array $fixture_files The path names of the YAML data files
+   * @param array $files The path names of the YAML data files
    */
-  protected function doLoadData($fixture_files)
+  protected function doLoadData($files)
   {
     $this->object_references = array();
     $this->maps = array();
 
-    sort($fixture_files);
-    foreach ($fixture_files as $fixture_file)
+    foreach ($files as $file)
     {
-      $this->doLoadDataFromFile($fixture_file);
+      $this->doLoadDataFromFile($file);
     }
   }
 
   /**
-   * Gets a list of one or more *.yml files and returns the list in an array
+   * Gets a list of one or more *.yml files and returns the list in an array.
    *
-   * @param string $directory_or_file A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
+   * The returned array of files is sorted by alphabetical order.
    *
-   * @returns array A list of *.yml files.
+   * @param  string|array $element A directory or file name or an array of directories and/or file names
+   *                               If null, then defaults to 'sf_data_dir'/fixtures
+   *
+   * @return array A list of *.yml files
    *
    * @throws sfInitializationException If the directory or file does not exist.
    */
-  protected function getFiles($directory_or_file = null)
+  public function getFiles($element = null)
   {
-    // directory or file?
-    $fixture_files = array();
-    if (!$directory_or_file)
+    if (is_null($element))
     {
       $directory_or_file = sfConfig::get('sf_data_dir').'/fixtures';
     }
 
-    if (is_file($directory_or_file))
+    $files = array();
+    if (is_array($element))
     {
-      $fixture_files[] = $directory_or_file;
+      foreach ($element as $e)
+      {
+        $files = array_merge($files, $this->getFiles($e));
+      }
     }
-    else if (is_dir($directory_or_file))
+    else if (is_file($element))
     {
-      $fixture_files = sfFinder::type('file')->name('*.yml')->in($directory_or_file);
+      $files[] = $element;
+    }
+    else if (is_dir($element))
+    {
+      $files = sfFinder::type('file')->name('*.yml')->in($element);
     }
     else
     {
-      throw new sfInitializationException('You must give a directory or a file.');
+      throw new sfInitializationException('You must give an array, a directory or a file to sfPropelData::getFiles().');
     }
 
-    return $fixture_files;
+    $files = array_unique($files);
+    sort($files);
+
+    return $files;
   }
 }
