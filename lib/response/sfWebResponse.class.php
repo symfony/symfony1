@@ -204,9 +204,19 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * Retrieves status text for the current web response.
+   *
+   * @return string Status text
+   */
+  public function getStatusText()
+  {
+    return $this->statusText;
+  }
+
+  /**
    * Retrieves status code for the current web response.
    *
-   * @return string Status code
+   * @return integer Status code
    */
   public function getStatusCode()
   {
