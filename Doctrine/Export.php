@@ -247,7 +247,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         if (isset($options['indexes']) && ! empty($options['indexes'])) {
             foreach($options['indexes'] as $index => $definition) {
-                $queryFields .= ', ' . $this->getIndexDeclaration($index, $definition);
+                $indexDeclaration = $this->getIndexDeclaration($index, $definition);
+                // append only created index declarations
+                if ( ! is_null($indexDeclaration)) {
+                    $queryFields .= ', '.$indexDeclaration;
+                } 
             }
         }
 

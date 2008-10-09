@@ -307,7 +307,17 @@ END;';
                 $sql = array_merge($sql, $this->_makeAutoincrement($fieldName, $name));
             }
         }
-
+        
+        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            foreach ($options['indexes'] as $indexName => $definition) {
+                // create nonunique indexes, as they are a part od CREATE TABLE DDL
+                if ( ! isset($definition['type']) || 
+                    (isset($definition['type']) && strtolower($definition['type']) != 'unique')) {
+                    $sql[] = $this->createIndexSql($name, $indexName, $definition);
+                }
+            }
+        }
+        
         return $sql;
     }
 
@@ -507,5 +517,41 @@ END;';
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
         return 'DROP SEQUENCE ' . $sequenceName;
+    }
+
+    /**
+     * return Oracle's SQL code portion needed to set an index
+     * declaration to be unsed in statements like CREATE TABLE.
+     * 
+     * @param string $name      name of the index
+     * @param array $definition index definition
+     * @return string           Oracle's SQL code portion needed to set an index  
+     */    
+    public function getIndexDeclaration($name, array $definition)
+    {
+        $name = $this->conn->quoteIdentifier($name);
+        $type = '';
+        
+        if ( isset($definition['type']))
+        {
+            if(strtolower($definition['type']) == 'unique') {
+                $type = strtoupper($definition['type']);
+            } else {
+                throw new Doctrine_Export_Exception(
+                    'Unknow type '.$definition['type'] .' for index '.$name
+                );
+            }
+        } else {
+            // only unique indexes should be defined in create table statement
+            return null;
+        }
+        
+        if (!isset($definition['fields']) || !is_array($definition['fields'])) {
+            throw new Doictrine_Export_Exception('No columns given for index '.$name);
+        }
+        
+        $query = 'CONSTRAINT '.$name.' '.$type.' ('.$this->getIndexFieldDeclarationList($definition['fields']).')';
+        
+        return $query;
     }
 }
