@@ -55,6 +55,24 @@
   }
 
   /**
+   * Returns a button that'll trigger a javascript function using the
+   * onclick handler and return false after the fact.
+   *
+   * Examples:
+   *   <?php echo button_to_function('Greeting', "alert('Hello world!')") ?>
+   */
+  function button_to_function($name, $function, $html_options = array())
+  {
+    $html_options = _parse_attributes($html_options);
+
+    $html_options['onclick'] = $function.'; return false;';
+    $html_options['type']    = 'button';
+    $html_options['value']   = $name;
+
+    return tag('input', $html_options);
+  }
+
+  /**
    * Returns a JavaScript tag with the '$content' inside. If no content is passed, it works as the slot() method and will output everythin between
    * javascript_tag() and end_javascript_tag(),
    * Example:
