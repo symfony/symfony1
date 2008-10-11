@@ -218,6 +218,8 @@ class sfProjectConfiguration
   public function setPlugins(array $plugins)
   {
     $this->plugins = $plugins;
+
+    $this->pluginPaths = array();
   }
 
   /**
@@ -227,12 +229,7 @@ class sfProjectConfiguration
    */
   public function enablePlugins($plugins)
   {
-    if (!is_array($plugins))
-    {
-      $plugins = array($plugins);
-    }
-
-    $this->plugins = array_merge($this->plugins, $plugins);
+    $this->setPlugins(array_merge($this->plugins, is_array($plugins) ? $plugins : array($plugins)));
   }
 
   /**
@@ -254,6 +251,8 @@ class sfProjectConfiguration
         unset($this->plugins[$pos]);
       }
     }
+
+    $this->pluginPaths = array();
   }
 
   /**
