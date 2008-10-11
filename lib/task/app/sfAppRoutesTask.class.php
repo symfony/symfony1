@@ -47,7 +47,13 @@ EOF;
     // get routes
     $config = new sfRoutingConfigHandler();
     $routes = $config->evaluate($this->configuration->getConfigPaths('config/routing.yml'));
-    $this->routes = sfPatternRouting::flattenRoutes($routes);
+
+    $routing = new sfPatternRouting($this->dispatcher);
+    $routing->setRoutes($routes);
+
+    $this->dispatcher->notify(new sfEvent($routing, 'routing.load_configuration'));
+
+    $this->routes = $routing->getRoutes();
 
     // display
     $arguments['name'] ? $this->outputRoute($arguments['application'], $arguments['name']) : $this->outputRoutes($arguments['application']);
