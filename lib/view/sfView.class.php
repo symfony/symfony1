@@ -355,7 +355,19 @@ abstract class sfView
 
     if (!is_readable($this->directory.'/'.$this->template))
     {
-      throw new sfRenderException(sprintf('The template "%s" does not exist or is unreadable in "%s".', $this->template, $this->directory));
+      // 404?
+      if ('404' == $this->context->getResponse()->getStatusCode())
+      {
+        // use default exception templates
+        $this->directory = null;
+        $this->template = sfException::getTemplatePathForError($this->context->getRequest()->getRequestFormat(), $this->context->getConfiguration()->isDebug());
+        $this->setAttribute('code', '404');
+        $this->setAttribute('text', 'Not Found');
+      }
+      else
+      {
+        throw new sfRenderException(sprintf('The template "%s" does not exist or is unreadable in "%s".', $this->template, $this->directory));
+      }
     }
 
     // check to see if this is a decorator template

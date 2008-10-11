@@ -1,1 +1,1 @@
-<?php include dirname(__FILE__).'/exception.xml.php' ?>
+<?php include sfException::getTemplatePathForError('xml', true) ?>

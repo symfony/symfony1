@@ -48,8 +48,8 @@ Due to the removal of Creole, the following classes are removed:
  `sfMessageSource_Creole` | `sfMessageSource_PDO`
  `sfCreoleSessionStorage` | `sfPDOSessionStorage`
  
-The `propel:build-db` task has been removed as this functionality is provided by
-`propel:insert-sql`.
+The `propel:build-db` task has been removed as this functionality is not yet
+provided by Propel 1.3.
 
 The first step to upgrading is changing from Creole to PDO syntax in the
 database configuration from the project `databases.yml` file.
@@ -531,6 +531,14 @@ You can also set default values for widget schemas:
 
 These defaults are taken into account in the forms when you don't override them
 with form defaults.
+
+All widgets have a new `label` option. This option sets the label for the widget
+when used in a widget schema context:
+
+    [php]
+    $widget = new sfWidgetFormInput(array('label' => 'Enter your name here'));
+    $widget->setLabel('Enter your name here');
+    echo $widget->getLabel();
 
 Response
 --------
@@ -1102,9 +1110,9 @@ pass the `no-confirmation` option:
 
 Before symfony 1.2, the `propel:insert-sql` task was the only task to read its
 database configuration information from `propel.ini`. As of symfony 1.2, it
-reads it information from `databases.yml`. So, if you use several different
+reads its information from `databases.yml`. So, if you use several different
 connections in your model, the task will take those into account.
-Thanks to this new feature, you can now use the [--connection|INFO] option
+Thanks to this new feature, you can now use the `--connection` option
 if you want to only load SQL statements for a given connection:
 
     $ php symfony propel:insert-sql --connection=propel
@@ -1653,8 +1661,10 @@ your project or application `config/error` directory.
 
 For example, an uncaught exception during an XML request could render
 `config/error/exception.xml.php` when your application is in debug mode, or
-`config/error/error500.xml.php` when your application is not in debug mode.
+`config/error/error.xml.php` when your application is not in debug mode.
 
-Your symfony 1.1 project's `config/error500.php` file will also render, but
-your symfony 1.0 project's `web/errors/error500.php` file must be moved. This
-is done for you by the upgrade task.
+If you had customized the 500 error template in your project, you will
+need to manually move it to the new directory:
+
+  * For symfony 1.1: from `config/error500.php` to `config/error/error.html.php`
+  * For symfony 1.0: from `web/errors/error500.php` to `config/error/error.html.php`

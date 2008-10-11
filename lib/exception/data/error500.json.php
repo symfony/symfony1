@@ -1,7 +1,0 @@
-{
-  'error':
-  {
-    'code':    500,
-    'message': 'Internal Server Error'
-  }
-}
