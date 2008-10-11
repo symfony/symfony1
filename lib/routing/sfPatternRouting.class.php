@@ -169,7 +169,7 @@ class sfPatternRouting extends sfRouting
    *
    * @see connect
    */
-  public function prependRoute($name, sfRoute $route)
+  public function prependRoute($name, $route)
   {
     $routes = $this->routes;
     $this->routes = array();
@@ -186,7 +186,7 @@ class sfPatternRouting extends sfRouting
    *
    * @see connect
    */
-  public function appendRoute($name, sfRoute $route)
+  public function appendRoute($name, $route)
   {
     return $this->connect($name, $route);
   }
@@ -196,7 +196,7 @@ class sfPatternRouting extends sfRouting
    *
    * @see connect
    */
-  public function insertRouteBefore($pivot, $name, sfRoute $route)
+  public function insertRouteBefore($pivot, $name, $route)
   {
     if (!isset($this->routes[$pivot]))
     {
