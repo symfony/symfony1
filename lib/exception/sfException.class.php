@@ -99,7 +99,7 @@ class sfException extends Exception
     $code   = '500';
     $text   = 'Internal Server Error';
 
-    if (class_exists('sfContext', false) && sfContext::hasInstance())
+    if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse()))
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
 
@@ -114,34 +114,34 @@ class sfException extends Exception
         return;
       }
 
-      $request  = sfContext::getInstance()->getRequest();
-      $response = sfContext::getInstance()->getResponse();
-
-      if (is_object($response) && $response->getStatusCode() < 300)
+      if ($response->getStatusCode() < 300)
       {
         // status code has already been sent, but is included here for the purpose of testing
         $response->setStatusCode(500);
       }
 
-      if (is_object($response))
+      $response->setContentType('text/html');
+
+      if (!sfConfig::get('sf_test'))
       {
-        $response->setContentType('text/html');
-
-        if (!sfConfig::get('sf_test'))
+        foreach ($response->getHttpHeaders() as $name => $value)
         {
-          foreach ($response->getHttpHeaders() as $name => $value)
-          {
-            header($name.': '.$value);
-          }
+          header($name.': '.$value);
         }
+      }
 
-        $code = $response->getStatusCode();
-        $text = $response->getStatusText();
+      $code = $response->getStatusCode();
+      $text = $response->getStatusText();
 
-        if ($mimeType = $request->getMimeType($format = $request->getRequestFormat()))
-        {
-          $response->setContentType($mimeType);
-        }
+      $format = $request->getRequestFormat();
+      if (!$format)
+      {
+        $format = 'html';
+      }
+
+      if ($mimeType = $request->getMimeType($format))
+      {
+        $response->setContentType($mimeType);
       }
     }
     else
