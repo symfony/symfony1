@@ -750,11 +750,12 @@ abstract class Doctrine_Query_Abstract
             $name = substr($oldAlias, 0, 1);
             $i    = ((int) substr($oldAlias, 1));
 
-            if ($i == 0) {
-                $i = 1;
+            // Fix #1530: It was reaching unexistent seeds index
+            if ( ! isset($this->_tableAliasSeeds[$name])) {
+                $this->_tableAliasSeeds[$name] = 1;
             }
 
-            $newIndex  = ($this->_tableAliasSeeds[$name] + $i);
+            $newIndex  = ($this->_tableAliasSeeds[$name] + (($i == 0) ? 1 : $i));
 
             return $name . $newIndex;
         }
