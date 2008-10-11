@@ -773,11 +773,12 @@ final class Doctrine
      */
     public static function generateSqlFromModels($directory = null)
     {
-        $sql = Doctrine_Manager::connection()->export->exportSql($directory);
+        $conn = Doctrine_Manager::connection();
+        $sql = $conn->export->exportSql($directory);
 
         $build = '';
         foreach ($sql as $query) {
-            $build .= $query.";\n";
+            $build .= $query.$conn->sql_file_delimiter;
         }
 
         return $build;
