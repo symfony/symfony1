@@ -95,6 +95,10 @@ class sfException extends Exception
    */
   static protected function outputStackTrace(Exception $exception)
   {
+    $format = 'html';
+    $code   = '500';
+    $text   = 'Internal Server Error';
+
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
@@ -113,45 +117,40 @@ class sfException extends Exception
       $request  = sfContext::getInstance()->getRequest();
       $response = sfContext::getInstance()->getResponse();
 
-      if ($response->getStatusCode() < 300)
+      if (is_object($response) && $response->getStatusCode() < 300)
       {
         // status code has already been sent, but is included here for the purpose of testing
         $response->setStatusCode(500);
       }
 
-      if ($mimeType = $request->getMimeType($format = $request->getRequestFormat()))
+      if (is_object($response))
       {
-        $response->setContentType($mimeType);
-      }
-      else
-      {
-        $format = 'html';
         $response->setContentType('text/html');
-      }
 
-      if (!sfConfig::get('sf_test'))
-      {
-        foreach ($response->getHttpHeaders() as $name => $value)
+        if (!sfConfig::get('sf_test'))
         {
-          header($name.': '.$value);
+          foreach ($response->getHttpHeaders() as $name => $value)
+          {
+            header($name.': '.$value);
+          }
+        }
+
+        $code = $response->getStatusCode();
+        $text = $response->getStatusText();
+
+        if ($mimeType = $request->getMimeType($format = $request->getRequestFormat()))
+        {
+          $response->setContentType($mimeType);
         }
       }
-
-      $code = $response->getStatusCode();
-      $text = $response->getStatusText();
     }
     else
     {
       // a backward compatible default
-      $format = 'html';
-
       if (!sfConfig::get('sf_test'))
       {
         header('Content-Type: text/html; charset='.sfConfig::get('sf_charset', 'utf-8'));
       }
-
-      $code = '500';
-      $text = 'Internal Server Error';
     }
 
     // send an error 500 if not in debug mode
