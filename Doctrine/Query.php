@@ -481,7 +481,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if ( ! $this->isSubquery() && isset($this->_queryComponents[$componentAlias]['parent'])) {
             $parentAlias = $this->_queryComponents[$componentAlias]['parent'];
             if (is_string($parentAlias) && ! isset($this->_pendingFields[$parentAlias])
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SCALAR
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SINGLE_SCALAR) {
                 throw new Doctrine_Query_Exception("The left side of the join between "
                         . "the aliases '$parentAlias' and '$componentAlias' must have at least"
                         . " the primary key field(s) selected.");
@@ -496,7 +498,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         } else {
             // only auto-add the primary key fields if this query object is not
             // a subquery of another query object and we're not using HYDRATE_NONE
-            if ( ! $this->_isSubquery && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
+            if ( ! $this->_isSubquery && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SCALAR
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SINGLE_SCALAR) {
                 $fields = array_unique(array_merge((array) $table->getIdentifier(), $fields));
             }
         }

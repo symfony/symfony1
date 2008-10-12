@@ -98,7 +98,11 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         $id = array();
         $idTemplate = array();
 
-        $result = $driver->getElementCollection($rootComponentName);
+        if ($hydrationMode == Doctrine::HYDRATE_SCALAR) {
+            $result = array();
+        } else {
+            $result = $driver->getElementCollection($rootComponentName);
+        }
 
         if ($stmt === false || $stmt === 0) {
             return $result;
@@ -114,11 +118,30 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $idTemplate[$dqlAlias] = '';
         }
 
-        $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
-
         // Process result set
         $cache = array();
+
+        // Evaluate HYDRATE_SINGLE_SCALAR
+        if ($hydrationMode == Doctrine::HYDRATE_SINGLE_SCALAR) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($result) > 1 || count($result[0]) > 1) {
+                throw new Doctrine_Hydrator_Exception("The returned result was not unique.");
+            }
+            $result = $this->_gatherScalarRowData($result[0], $cache);
+            return array_shift($result);
+        }
+        
+        $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
+
         while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC)) {
+            // Evaluate HYDRATE_SCALAR
+            if ($hydrationMode == Doctrine::HYDRATE_SCALAR) {
+                $result[] = $this->_gatherScalarRowData($data, $cache);
+                continue;      
+            }
+            
+            // from here on it's all about graph construction
+            
             $id = $idTemplate; // initialize the id-memory
             $nonemptyComponents = array();
             $rowData = $this->_gatherRowData($data, $cache, $id, $nonemptyComponents);
@@ -275,7 +298,8 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             if ( ! isset($cache[$key])) {
                 // check ignored names. fastest solution for now. if we get more we'll start
                 // to introduce a list.
-                if ($key == 'DOCTRINE_ROWNUM') continue;
+                if ($this->_isIgnoredName($key)) continue;
+                
                 $e = explode('__', $key);
                 $last = strtolower(array_pop($e));
                 $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];
@@ -331,6 +355,80 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
 
         return $rowData;
     }
+    
+    /**
+     * Processes a row of the result set.
+     * Used for HYDRATE_SCALAR. This is a variant of _gatherRowData() that
+     * simply converts column names to field names and properly prepares the
+     * values. The resulting row has the same number of elements as before.
+     *
+     * @param array $data
+     * @param array $cache
+     * @return array The processed row.
+     * @todo Significant code duplication with _gatherRowData(). Good refactoring
+     *       possible without sacrificing performance noticably?
+     */
+    private function _gatherScalarRowData(&$data, &$cache)
+    {
+        $rowData = array();
+        foreach ($data as $key => $value) {
+            // Parse each column name only once. Cache the results.
+            if ( ! isset($cache[$key])) {
+                if ($this->_isIgnoredName($key)) continue;
+                
+                // cache general information like the column name <-> field name mapping
+                $e = explode('__', $key);
+                $columnName = array_pop($e);              
+                $cache[$key]['dqlAlias'] = $this->_tableAliases[implode('__', $e)];
+                $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
+                // check whether it's an aggregate value or a regular field
+                if (isset($this->_queryComponents[$cache[$key]['dqlAlias']]['agg'][$columnName])) {
+                    $fieldName = $this->_queryComponents[$cache[$key]['dqlAlias']]['agg'][$columnName];
+                    $cache[$key]['isAgg'] = true;
+                } else {
+                    $fieldName = $table->getFieldName($columnName);
+                    $cache[$key]['isAgg'] = false;
+                }
+                
+                $cache[$key]['fieldName'] = $fieldName;
+                
+                // cache type information
+                $type = $table->getTypeOfColumn($columnName);
+                if ($type == 'integer' || $type == 'string') {
+                    $cache[$key]['isSimpleType'] = true;
+                } else {
+                    $cache[$key]['type'] = $type;
+                    $cache[$key]['isSimpleType'] = false;
+                }
+            }
+
+            $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
+            $dqlAlias = $cache[$key]['dqlAlias'];
+            $fieldName = $cache[$key]['fieldName'];
+
+            if ($cache[$key]['isSimpleType'] || $cache[$key]['isAgg']) {
+                $rowData[$dqlAlias . '_' . $fieldName] = $value;
+            } else {
+                $rowData[$dqlAlias . '_' . $fieldName] = $table->prepareValue(
+                        $fieldName, $value, $cache[$key]['type']);
+            }
+        }
+        
+        return $rowData;
+    }
+    
+    /**
+     * Checks whether a name is ignored. Used during result set parsing to skip
+     * certain elements in the result set that do not have any meaning for the result.
+     * (I.e. ORACLE limit/offset emulation adds doctrine_rownum to the result set).
+     *
+     * @param string $name
+     * @return boolean
+     */
+    private function _isIgnoredName($name)
+    {
+        return $name == 'DOCTRINE_ROWNUM';
+    }
 
     /**
      * Gets the custom field used for indexing for the specified component alias.
@@ -338,7 +436,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
      * @return string  The field name of the field used for indexing or NULL
      *                 if the component does not use any custom field indices.
      */
-    protected function _getCustomIndexField($alias)
+    private function _getCustomIndexField($alias)
     {
         return isset($this->_queryComponents[$alias]['map']) ? $this->_queryComponents[$alias]['map'] : null;
     }
