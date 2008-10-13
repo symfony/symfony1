@@ -28,7 +28,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    $routes = $this->parseConfiguration($configFiles);
+    $routes = $this->parse($configFiles);
 
     $data = array();
     foreach ($routes as $name => $route)
@@ -50,7 +50,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
 
   public function evaluate($configFiles)
   {
-    $routeDefinitions = $this->parseConfiguration($configFiles);
+    $routeDefinitions = $this->parse($configFiles);
 
     $routes = array();
     foreach ($routeDefinitions as $name => $route)
@@ -68,7 +68,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
     return $routes;
   }
 
-  protected function parseConfiguration($configFiles)
+  protected function parse($configFiles)
   {
     // parse the yaml
     $config = self::getConfiguration($configFiles);

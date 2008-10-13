@@ -211,6 +211,54 @@ class sfProjectConfiguration
   }
 
   /**
+   * Gets the configuration file paths for a given relative configuration path.
+   *
+   * @param string $configPath The configuration path
+   *
+   * @return array An array of paths
+   */
+  public function getConfigPaths($configPath)
+  {
+    $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
+
+    $files = array(
+      sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath,              // symfony
+    );
+
+    foreach ($this->getPluginPaths() as $path)
+    {
+      if (is_file($file = $path.'/'.$globalConfigPath))
+      {
+        $files[] = $file;                                                            // plugins
+      }
+    }
+
+    $files = array_merge($files, array(
+      sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
+      sfConfig::get('sf_root_dir').'/'.$configPath,                                  // project
+    ));
+
+    foreach ($this->getPluginPaths() as $path)
+    {
+      if (is_file($file = $path.'/'.$configPath))
+      {
+        $files[] = $file;                                                            // plugins
+      }
+    }
+
+    $configs = array();
+    foreach (array_unique($files) as $file)
+    {
+      if (is_readable($file))
+      {
+        $configs[] = $file;
+      }
+    }
+
+    return $configs;
+  }
+
+  /**
    * Sets the enabled plugins.
    *
    * @param array An array of plugin names
