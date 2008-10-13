@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(107, new lime_output_color());
+$t = new lime_test(113, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -275,3 +275,35 @@ $t->is($arr, array(
   ),
   'simple' => 'string',
 ), '::removeArrayValueForPath() works with deep paths');
+
+// ::addIncludePath()
+$t->diag('::addIncludePath()');
+$path = get_include_path();
+$t->is(sfToolkit::addIncludePath(dirname(__FILE__)), $path, '::addIncludePath() returns the previous include_path');
+$t->is(get_include_path(), dirname(__FILE__).PATH_SEPARATOR.$path, '::addIncludePath() adds a path to the front of include_path');
+
+sfToolkit::addIncludePath(dirname(__FILE__), 'back');
+$t->is(get_include_path(), $path.PATH_SEPARATOR.dirname(__FILE__), '::addIncludePath() moves a path to the end of include_path');
+
+sfToolkit::addIncludePath(array(
+  dirname(__FILE__),
+  dirname(__FILE__).'/..',
+));
+$t->is(get_include_path(), dirname(__FILE__).PATH_SEPARATOR.dirname(__FILE__).'/..'.PATH_SEPARATOR.$path, '::addIncludePath() adds multiple paths the the front of include_path');
+
+sfToolkit::addIncludePath(array(
+  dirname(__FILE__),
+  dirname(__FILE__).'/..',
+), 'back');
+$t->is(get_include_path(), $path.PATH_SEPARATOR.dirname(__FILE__).PATH_SEPARATOR.dirname(__FILE__).'/..', '::addIncludePath() adds multiple paths the the back of include_path');
+
+try
+{
+  sfToolkit::addIncludePath(dirname(__FILE__), 'foobar');
+  $t->fail('::addIncludePath() throws an exception if position is not valid');
+}
+catch (Exception $e)
+{
+  $t->pass('::addIncludePath() throws an exception if position is not valid');
+}
+

@@ -1668,3 +1668,19 @@ need to manually move it to the new directory:
 
   * For symfony 1.1: from `config/error500.php` to `config/error/error.html.php`
   * For symfony 1.0: from `web/errors/error500.php` to `config/error/error.html.php`
+
+Include Path Management
+-----------------------
+
+symfony 1.2 adds the static method `sfToolkit::addIncludePath()` for easily
+managing the PHP `include_path` setting. This method accepts two parameters:
+a single path or array of paths, and a position string (either "front" or
+"back"). The second parameter defaults to "front".
+
+    [php]
+    // an example from sfPropelPlugin
+    sfToolkit::addIncludePath(array(
+      sfConfig::get('sf_root_dir'),
+      sfConfig::get('sf_symfony_lib_dir'),
+      realpath(dirname(__FILE__).'/../lib/vendor'),
+    ));
