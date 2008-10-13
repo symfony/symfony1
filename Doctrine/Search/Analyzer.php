@@ -32,7 +32,7 @@
  */
 class Doctrine_Search_Analyzer implements Doctrine_Search_Analyzer_Interface
 {
-    public function analyze($text)
+    public function analyze($text, $encoding='ISO8859-15')
     {
     
     }

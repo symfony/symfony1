@@ -93,12 +93,13 @@ class Doctrine_Search extends Doctrine_Record_Generator
     }
     
     /**
-     * analyze 
+     * analyze a text in the encoding format
      * 
      * @param string $text 
+     * @param string $encoding
      * @return void
      */
-    public function analyze($text)
+    public function analyze($text, $encoding='ISO8859-15')
     {
         return $this->_options['analyzer']->analyze($text);
     }
