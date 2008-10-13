@@ -71,6 +71,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     {
         $name = $this->_options['table']->getComponentName();
         $columns = $this->_options['table']->getColumns();
+        $relations = $this->_options['table']->getRelations();
 
         // remove all sequence, autoincrement and unique constraint definitions and add to the behavior model
         foreach ($columns as $column => $definition) {
@@ -86,6 +87,23 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             }
 
             $this->hasColumn($name, $definition['type'], $definition['length'], $definition);
+        }
+        
+        foreach ($relations as $relation) {
+          $definition = $relation->toArray();
+          
+          $name = $definition['class'];
+          $alias = isset($definition['alias']) ? $definition['alias'] : null;
+          if ($alias) {
+            $name .= ' as '.$alias;
+          }
+
+          $options = $definition;
+          if (isset($definition['refTable']) && $definition['refTable']) {
+              $options['refClass'] = $definition['refTable']->getOption('name');
+          }
+          $func = $definition['type'] == Doctrine_Relation::ONE ? 'hasOne':'hasMany';
+          $this->$func($name, $options);
         }
 
         // the version column should be part of the primary key definition
