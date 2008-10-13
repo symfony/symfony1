@@ -651,7 +651,32 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret = '';
 
         foreach ($definition['columns'] as $name => $column) {
-            $ret .= ' * @property ' . $column['type'] . ' $' . $name . PHP_EOL;
+            $name = isset($column['name']) ? $column['name']:$name;
+            // extract column name & field name
+            if (stripos($name, ' as '))
+            {
+                if (strpos($name, ' as')) {
+                    $parts = explode(' as ', $name);
+                } else {
+                    $parts = explode(' AS ', $name);
+                }
+
+                if (count($parts) > 1) {
+                    $fieldName = $parts[1];
+                } else {
+                    $fieldName = $parts[0];
+                }
+
+                $name = $parts[0];
+            } else {
+                $fieldName = $name;
+                $name = $name;
+            }
+
+            $name = trim($name);
+            $fieldName = trim($fieldName);
+
+            $ret .= ' * @property ' . $column['type'] . ' $' . $fieldName . PHP_EOL;
         }
 
         if (isset($definition['relations']) && ! empty($definition['relations'])) {
