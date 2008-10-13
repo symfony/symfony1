@@ -1050,14 +1050,13 @@ abstract class Doctrine_Query_Abstract
             throw new Doctrine_Query_Exception('You must have at least one component specified in your from.');
         }
 
-        $this->_preQuery();
+        $dqlParams = $this->getParams($params);
+
+        $this->_preQuery($dqlParams);
 
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
-
-        // Retrieve DQL params
-        $dqlParams = $this->getParams($params);
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
@@ -1142,7 +1141,7 @@ abstract class Doctrine_Query_Abstract
      *
      * @return void
      */
-    protected function _preQuery()
+    protected function _preQuery($params = array())
     {
         if ( ! $this->_preQueried && $this->getConnection()->getAttribute('use_dql_callbacks')) {
             $this->_preQueried = true;
@@ -1155,7 +1154,7 @@ abstract class Doctrine_Query_Abstract
             }
 
             $copy = $this->copy();
-            $copy->getSqlQuery();
+            $copy->getSqlQuery($params);
 
             foreach ($copy->getQueryComponents() as $alias => $component) {
                 $table = $component['table'];
