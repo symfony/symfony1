@@ -115,6 +115,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected $_state;
 
     /**
+     * @var array $_lastModified             an array containing field names that were modified in the previous transaction
+     */
+    protected $_lastModified = array();
+
+    /**
      * @var array $_modified                an array containing field names that have been modified
      * @todo Better name? $_modifiedFields?
      */
@@ -778,7 +783,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         if ($this->_state === Doctrine_Record::STATE_TCLEAN ||
                 $this->_state === Doctrine_Record::STATE_CLEAN) {
-            $this->_modified = array();
+            $this->_resetModified();
         }
 
         if ($err) {
@@ -828,7 +833,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             throw new Doctrine_Record_Exception('Failed to refresh. Record does not exist.');
         }
 
-        $this->_modified = array();
+        $this->_resetModified();
 
         $this->prepareIdentifiers();
 
@@ -1371,11 +1376,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @return array $a
      */
-    public function getModified($old = false)
+    public function getModified($old = false, $last = false)
     {
         $a = array();
 
-        foreach ($this->_modified as $fieldName) {
+        $modified = $last ? $this->_lastModified:$this->_modified;
+        foreach ($modified as $fieldName) {
             if ($old) {
                 $a[$fieldName] = $this->_oldValues[$fieldName];
             } else {
@@ -1383,6 +1389,17 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
         }
         return $a;
+    }
+
+    /**
+     * returns an array of the modified fields from the last transaction.
+     *
+     * @param boolean $old Whether or not to return the old values instead of the new
+     * @return array $lastModified
+     */
+    public function getLastModified($old = false)
+    {
+        return $this->getModified($old, true);
     }
 
     /**
@@ -1779,11 +1796,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->_id       = array();
             $this->_data     = $this->cleanData($this->_data);
             $this->_state    = Doctrine_Record::STATE_TCLEAN;
-            $this->_modified = array();
+            $this->_resetModified();
         } elseif ($id === true) {
             $this->prepareIdentifiers(true);
             $this->_state    = Doctrine_Record::STATE_CLEAN;
-            $this->_modified = array();
+            $this->_resetModified();
         } else {
             if (is_array($id)) {
                 foreach ($id as $fieldName => $value) {
@@ -1796,7 +1813,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $this->_data[$name] = $id;
             }
             $this->_state = Doctrine_Record::STATE_CLEAN;
-            $this->_modified = array();
+            $this->_resetModified();
         }
     }
 
@@ -2117,6 +2134,21 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         return $this;
+    }
+
+    /**
+     * Reset the modified array and store the old array in lastModified so it 
+     * can be accessed by users after saving a record since the modified array 
+     * is reset after the object is saved.
+     *
+     * @return void
+     */
+    protected function _resetModified()
+    {
+        if ( ! empty($this->_modified)) {
+            $this->_lastModified = $this->_modified;
+            $this->_modified = array();
+        }
     }
 
     /**
