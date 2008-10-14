@@ -359,8 +359,7 @@ abstract class sfView
       if ('404' == $this->context->getResponse()->getStatusCode())
       {
         // use default exception templates
-        $this->directory = null;
-        $this->template = sfException::getTemplatePathForError($this->context->getRequest()->getRequestFormat(), $this->context->getConfiguration()->isDebug());
+        $this->template = sfException::getTemplatePathForError($this->context->getRequest()->getRequestFormat(), false);
         $this->setAttribute('code', '404');
         $this->setAttribute('text', 'Not Found');
       }

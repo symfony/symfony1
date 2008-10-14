@@ -1,7 +1,5 @@
-{
-  "error":
-  {
-    "code":    <?php echo $code ?>,
-    "message": "<?php echo $text ?>"
-  }
-}
+<?php echo json_encode(array(
+  'error'       => array(
+    'code'      => $code,
+    'message'   => $message,
+))) ?>

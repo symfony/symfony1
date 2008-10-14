@@ -1,11 +1,10 @@
 /*
-  <?php echo $code ?> <?php echo $text ?>
+  <?php echo $code.' '.$text."\n" ?>
 
-  <?php echo $name ?>
-  <?php echo $message ?>
+  <?php echo $name."\n" ?>
+  <?php echo $message."\n" ?>
 
-  <?php foreach ($traces as $trace): ?>
-    <?php echo $trace ?>
-
-  <?php endforeach; ?>
+<?php foreach ($traces as $trace): ?>
+    <?php echo $trace."\n" ?>
+<?php endforeach; ?>
 */
