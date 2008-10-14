@@ -12,7 +12,7 @@
 <?php foreach ($traces as $trace): ?>
         "<?php echo addcslashes($trace, "\0..\37\\'\"\177..\377\/") ?>"
 
-<?php endoreach; ?>
+<?php endforeach; ?>
       ]
     }
   }
