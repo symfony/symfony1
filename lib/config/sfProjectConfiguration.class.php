@@ -165,7 +165,9 @@ class sfProjectConfiguration
   {
     return array_merge(
       array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template'), // project
-      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/template')       //plugins
+      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/template'),      // plugins
+      array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/default/template'),    // project (default theme)
+      $this->getPluginSubPaths('/data/generator/'.$class.'/default/template')          // plugins (default theme)
     );
   }
 
@@ -181,7 +183,9 @@ class sfProjectConfiguration
   {
     return array_merge(
       array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton'), // project
-      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/skeleton')       // plugins
+      $this->getPluginSubPaths('/data/generator/'.$class.'/'.$theme.'/skeleton'),      // plugins
+      array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/default/skeleton'),    // project (default theme)
+      $this->getPluginSubPaths('/data/generator/'.$class.'/default/skeleton')          // plugins (default theme)
     );
   }
 

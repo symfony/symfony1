@@ -76,7 +76,7 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   foreach ($options as $key => $value)
   {
-    if (is_array($value))
+    if (is_array($value) || $value instanceof sfOutputEscaperArrayDecorator)
     {
       $html .= content_tag('optgroup', options_for_select($value, $selected, $html_options), array('label' => $key))."\n";
     }
