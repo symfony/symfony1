@@ -33,18 +33,37 @@
 class Doctrine_Validator_Unsigned
 {
     /**
-     * checks if given value is a valid unsigned integer
+     * checks if given value is a valid unsigned integer or float
+     *
+     * valid values: null, '', 5, '5', 5.9, '5.9'
+     * invalid values: -5, '-5', 'five', -5.9, '-5.9', '5.5.5'
      *
      * @param mixed $value
      * @return boolean
      */
     public function validate($value)
     {
-        $int = (int) $value;
+        if(is_null($value) || $value == '')
+        {
+            return true;
+        }
 
-        if ($int != $value || $int < 0) {
+        if (preg_match('/[^0-9\-\.]/', $value)) {
             return false;
         }
-        return true;
+
+        if(strpos($value, '.') === false)
+        {
+            $number = (int) $value;
+        } else {
+            $number = (float) $value;
+        }
+
+        if ((string) $number == $value && $number >= 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
