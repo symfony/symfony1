@@ -273,6 +273,17 @@ abstract class Doctrine_Relation implements ArrayAccess
     }
 
     /**
+     * getLocalColumnName
+     * returns the column name of the local column
+     *
+     * @return string $columnName
+     */
+    final public function getLocalColumnName()
+    {
+        return $this->definition['localTable']->getColumnName($this->definition['local']);
+    }
+
+    /**
      * getForeign
      * returns the name of the foreignkey column where
      * the localkey column is pointing at
@@ -286,11 +297,22 @@ abstract class Doctrine_Relation implements ArrayAccess
     
     /**
      * getLocalFieldName
-     * returns the field name of the local column
+     * returns the field name of the foreign column
      */
     final public function getForeignFieldName()
     {
         return $this->definition['table']->getFieldName($this->definition['foreign']);
+    }
+
+    /**
+     * getForeignColumnName
+     * returns the column name of the foreign column
+     *
+     * @return string $columnName
+     */
+    final public function getForeignColumnName()
+    {
+       return $this->definition['table']->getColumnName($this->definition['foreign']);
     }
 
     /**
