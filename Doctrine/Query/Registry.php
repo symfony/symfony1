@@ -36,6 +36,10 @@ class Doctrine_Query_Registry
 
     public function add($key, $query)
     {
+        if ($query instanceof Doctrine_Query) {
+            $query = clone $query;
+        }
+
     	if (strpos($key, '/') === false) {
             $this->_queries[$key] = $query;
         } else {
@@ -65,7 +69,7 @@ class Doctrine_Query_Registry
             $query = Doctrine_Query::create()->parseQuery($query);
         }
         
-        return $query;
+        return clone $query;
     }
     
     
