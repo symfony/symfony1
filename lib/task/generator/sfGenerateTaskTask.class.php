@@ -27,9 +27,9 @@ class sfGenerateTaskTask extends sfBaseTask
     ));
 
     $this->addOptions(array(
-      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_OPTIONAL, 'The directory to create the task in', 'lib/task'),
-      new sfCommandOption('use-database', 'db', sfCommandOption::PARAMETER_OPTIONAL, 'Whether the task needs model initialization to access database', 'true'),
-      new sfCommandOption('brief-description', 'bd', sfCommandOption::PARAMETER_OPTIONAL, 'A brief task description (appears in task list)', ''),
+      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory to create the task in', 'lib/task'),
+      new sfCommandOption('use-database', null, sfCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database', 'propel'),
+      new sfCommandOption('brief-description', null, sfCommandOption::PARAMETER_REQUIRED, 'A brief task description (appears in task list)'),
     ));
 
     $this->namespace = 'generate';
@@ -37,18 +37,33 @@ class sfGenerateTaskTask extends sfBaseTask
     $this->briefDescription = 'Creates a skeleton class for a new task';
 
     $this->detailedDescription = <<<EOF
-The [generate:task|INFO] creates a new Task class based on the name passed as argument:
+The [generate:task|INFO] creates a new sfTask class based on the name passed as
+argument:
+
   [./symfony generate:task namespace:name|INFO]
 
-The `fooBarTask.class.php` skeleton task is created under the `lib/task/` directory. Note that the namespace is optional.
-If you want to create the file in another directory (relative to the project root folder), pass it in the [dir|INFO] option:
+The [namespaceNameTask.class.php|COMMENT] skeleton task is created under the [lib/task/|COMMENT]
+directory. Note that the namespace is optional.
+
+If you want to create the file in another directory (relative to the project
+root folder), pass it in the [--dir|COMMENT] option. This directory will be created
+if it does not already exist.
+
   [./symfony generate:task namespace:name --dir=plugins/myPlugin/lib/task|INFO]
 
-If the task doesn't need database access, you can remove the database initialization code with the [use-database|INFO] option:
+If you want the task to default to a connection other than [propel|COMMENT], provide
+the name of this connection with the [--use-database|COMMENT] option:
+
+  [./symfony generate:task namespace:name --use-database=main|INFO]
+
+The [--use-database|COMMENT] option can also be used to disable database
+initialization in the generated task:
+
   [./symfony generate:task namespace:name --use-database=false|INFO]
 
 You can also specify a description:
-  [./symfony generate:task namespace:name --briefDescription='Does interesting things' --detailedDescription='Usage tutorial'|INFO]
+
+  [./symfony generate:task namespace:name --brief-description="Does interesting things"|INFO]
 EOF;
   }
 
@@ -58,7 +73,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $taskName = $arguments['task_name'];
-    $taskNameComponents = split(':', $taskName);
+    $taskNameComponents = explode(':', $taskName);
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
     $taskClassName = str_replace('-', '', ($namespace ? $namespace.ucfirst($name) : $name)).'Task';
@@ -76,38 +91,49 @@ Call it with:
 
   [php symfony $taskName|INFO]
 HED;
-    
-    if($options['use-database'] == 'true')
+
+    $useDatabase = sfToolkit::literalize($options['use-database']);
+    $defaultConnection = is_string($useDatabase) ? $useDatabase : 'propel';
+
+    if ($useDatabase)
     {
       $content = <<<HED
 <?php
 
-class $taskClassName extends sfPropelBaseTask
+class $taskClassName extends sfBaseTask
 {
   protected function configure()
   {
+    // // add your own arguments here
+    // \$this->addArguments(array(
+    //   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
+    // ));
+
+    \$this->addOptions(array(
+      new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', '$defaultConnection'),
+      // add your own options here
+    ));
+
     \$this->namespace        = '$namespace';
     \$this->name             = '$name';
     \$this->briefDescription = '$briefDescription';
     \$this->detailedDescription = <<<EOF
 $detailedDescription
 EOF;
-    \$this->addArgument('application', sfCommandArgument::REQUIRED, 'The application name');
-    // add other arguments here
-    \$this->addOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev');
-    \$this->addOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'propel');
-    // add other options here
   }
 
   protected function execute(\$arguments = array(), \$options = array())
   {
-    // Database initialization
+    // initialize the database connection
     \$databaseManager = new sfDatabaseManager(\$this->configuration);
-    \$connection = Propel::getConnection(\$options['connection'] ? \$options['connection'] : '');
-    // add code here
+    \$connection = \$databaseManager->getDatabase(\$options['connection'] ? \$options['connection'] : null)->getConnection();
 
+    // add your code here
   }
 }
+
 HED;
     }
     else
@@ -119,30 +145,37 @@ class $taskClassName extends sfBaseTask
 {
   protected function configure()
   {
+    // // add your own arguments here
+    // \$this->addArguments(array(
+    //   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
+    // ));
+
+    // // add your own options here
+    // \$this->addOptions(array(
+    //   new sfCommandOption('my_option', null, sfCommandOption::PARAMETER_REQUIRED, 'My option'),
+    // ));
+
     \$this->namespace        = '$namespace';
     \$this->name             = '$name';
     \$this->briefDescription = '$briefDescription';
     \$this->detailedDescription = <<<EOF
 $detailedDescription
 EOF;
-    // add arguments here, like the following:
-    //\$this->addArgument('application', sfCommandArgument::REQUIRED, 'The application name');
-    // add options here, like the following:
-    //\$this->addOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev');
   }
 
   protected function execute(\$arguments = array(), \$options = array())
   {
-    // add code here
+    // add your code here
   }
 }
+
 HED;
     }
 
     // check that the task directory exists and that the task file doesn't exist
     if (!is_readable(sfConfig::get('sf_root_dir').'/'.$options['dir']))
     {
-      $this->getFilesystem()->mkdirs(str_replace('/', DIRECTORY_SEPARATOR, $options['dir']));
+      $this->getFilesystem()->mkdirs($options['dir']);
     }
 
     $taskFile = sfConfig::get('sf_root_dir').'/'.$options['dir'].'/'.$taskClassName.'.class.php';
