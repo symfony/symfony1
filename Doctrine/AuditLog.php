@@ -49,6 +49,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                             'pluginTable'         => false,
                             'children'            => array(),
                             'auditLog'            => true,
+                            'deleteVersions'      => true,
                             );
 
     /**

@@ -96,19 +96,21 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 	        $versionColumn = $this->_auditLog->getOption('versionColumn');
 	        $event->getInvoker()->set($versionColumn, null);
 
-	        $q = Doctrine_Query::create();
-	        foreach ((array) $this->_auditLog->getOption('table')->getIdentifier() as $id) {
-	            $conditions[] = 'obj.' . $id . ' = ?';
-	            $values[] = $event->getInvoker()->get($id);
-	        }
+            if ($this->_auditLog->getOption('deleteVersions')) {
+    	        $q = Doctrine_Query::create();
+    	        foreach ((array) $this->_auditLog->getOption('table')->getIdentifier() as $id) {
+    	            $conditions[] = 'obj.' . $id . ' = ?';
+    	            $values[] = $event->getInvoker()->get($id);
+    	        }
 
-	        $rows = $q->delete($className)
-					  ->from($className.' obj')
-					  ->where(implode(' AND ',$conditions))
-					  ->execute($values);
+    	        $rows = $q->delete($className)
+    					  ->from($className.' obj')
+    					  ->where(implode(' AND ',$conditions))
+    					  ->execute($values);
+    		}
         }
     }
-  
+
     /**
      * Pre update event hook for inserting new version record
      * This will only insert a version record if the auditLog is enabled
