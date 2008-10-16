@@ -33,10 +33,10 @@
 class Doctrine_Migration_Process
 {
     /**
-     * getConnection
+     * Get the connection for specified table name
      *
      * @param string $tableName 
-     * @return void
+     * @return Doctrine_Connection $conn
      */
     public function getConnection($tableName)
     {
@@ -44,9 +44,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processCreatedTables
+     * Process the create table changes
      *
-     * @param string $tables 
+     * @param array $tables
      * @return void
      */
     public function processCreatedTables($tables)
@@ -59,9 +59,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processDroppedTables
+     * Process the drop table changes
      *
-     * @param string $tables 
+     * @param array $tables
      * @return void
      */
     public function processDroppedTables($tables)
@@ -74,9 +74,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processRenamedTables
+     * Process the rename table changes
      *
-     * @param string $tables 
+     * @param array $tables
      * @return void
      */
     public function processRenamedTables($tables)
@@ -89,9 +89,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processAddedColumns
+     * Process the add column changes
      *
-     * @param string $columns 
+     * @param array $columns
      * @return void
      */
     public function processAddedColumns($columns)
@@ -108,9 +108,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processRenamedColumns
+     * Process the rename column changes
      *
-     * @param string $columns 
+     * @param array $columns
      * @return void
      */
     public function processRenamedColumns($columns)
@@ -128,9 +128,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processChangedColumns
+     * Process the change column changes
      *
-     * @param string $columns 
+     * @param array $columns
      * @return void
      */
     public function processChangedColumns($columns)
@@ -147,9 +147,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processRemovedColumns
+     * Process the remove column changes
      *
-     * @param string $columns 
+     * @param array $columns
      * @return void
      */
     public function processRemovedColumns($columns)
@@ -162,9 +162,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processAddexIndexes
+     * Process the add index changes
      *
-     * @param string $indexes 
+     * @param array $indexes
      * @return void
      */
     public function processAddedIndexes($indexes)
@@ -177,9 +177,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processRemovedIndexes
+     * Process the remove index changes
      *
-     * @param string $indexes 
+     * @param array $indexes
      * @return void
      */
     public function processRemovedIndexes($indexes)
@@ -192,9 +192,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processCreatedConstraints
+     * Process the create constraint changes
      *
-     * @param string $constraints 
+     * @param array $constraints
      * @return void
      */
     public function processCreatedConstraints($constraints)
@@ -207,9 +207,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processDroppedConstraints
+     * Process the drop constraint changes
      *
-     * @param string $constraints 
+     * @param array $constraints
      * @return void
      */
     public function processDroppedConstraints($constraints)
@@ -222,9 +222,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processCreatedFks
+     * Process the create foreign key changes
      *
-     * @param string $foreignKeys 
+     * @param array $foreignKeys
      * @return void
      */
     public function processCreatedFks($foreignKeys)
@@ -236,9 +236,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * processDroppedFks
+     * Process the drop foreign key changes
      *
-     * @param string $foreignKeys 
+     * @param array $foreignKeys
      * @return void
      */
     public function processDroppedFks($foreignKeys)

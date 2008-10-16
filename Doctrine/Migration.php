@@ -34,48 +34,35 @@
  */
 class Doctrine_Migration
 {
-    protected $_changes = array('created_tables'      =>  array(),
-                                'renamed_tables'      =>  array(),
-                                'created_constraints' =>  array(),
-                                'dropped_fks'         =>  array(),
-                                'created_fks'         =>  array(),
-                                'dropped_constraints' =>  array(),
-                                'removed_indexes'     =>  array(),
-                                'dropped_tables'      =>  array(),
-                                'added_columns'       =>  array(),
-                                'renamed_columns'     =>  array(),
-                                'changed_columns'     =>  array(),
-                                'removed_columns'     =>  array(),
-                                'added_indexes'       =>  array()),
-              $_migrationTableName = 'migration_version',
+    protected $_migrationTableName = 'migration_version',
               $_migrationClassesDirectory = array(),
               $_migrationClasses = array(),
-              $_loadedMigrations = array();
+              $_reflectionClass;
 
     /**
-     * construct
-     *
      * Specify the path to the directory with the migration classes.
      * The classes will be loaded and the migration table will be created if it does not already exist
      *
-     * @param string $directory 
+     * @param string $directory
      * @return void
      */
     public function __construct($directory = null)
     {
+        $this->_reflectionClass = new ReflectionClass('Doctrine_Migration_Base');
+
         if ($directory != null) {
             $this->_migrationClassesDirectory = $directory;
-            
-            $this->loadMigrationClasses();
-            
-            $this->createMigrationTable();
+
+            $this->loadMigrationClassesFromDirectory();
+
+            $this->_createMigrationTable();
         }
     }
 
     /**
-     * getTableName
+     * Get the table name for storing the version number for this migration instance
      *
-     * @return void
+     * @return string $migrationTableName
      */
     public function getTableName()
     {
@@ -83,9 +70,9 @@ class Doctrine_Migration
     }
 
     /**
-     * setTableName
+     * Set the table name for storing the version number for this migration instance
      *
-     * @param string $tableName 
+     * @param string $tableName
      * @return void
      */
     public function setTableName($tableName)
@@ -95,53 +82,30 @@ class Doctrine_Migration
     }
 
     /**
-     * createMigrationTable
-     * 
-     * Creates the migration table used to store the current version
+     * Load migration classes from the passed directory. Any file found with a .php
+     * extension will be passed to the loadMigrationClass()
      *
+     * @param string $directory  Directory to load migration classes from
      * @return void
      */
-    protected function createMigrationTable()
-    {
-        $conn = Doctrine_Manager::connection();
-        
-        try {
-            $conn->export->createTable($this->_migrationTableName, array('version' => array('type' => 'integer', 'size' => 11)));
-            
-            return true;
-        } catch(Exception $e) {
-            return false;
-        }
-    }
-
-
-    /**
-     * loadMigrationClassesFromDirectory 
-     * 
-     * refactored out from loadMigrationClasses
-     * $param array An array of classes
-     * @return void
-     */
-    public function loadMigrationClassesFromDirectory()
+    public function loadMigrationClassesFromDirectory($directory = null)
     {
         $classes = get_declared_classes();
-        
-        foreach ((array) $this->_migrationClassesDirectory as $dir) {
+        $directory = $directory ? $directory:$this->_migrationClassesDirectory;
+        foreach ((array) $directory as $dir) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                 RecursiveIteratorIterator::LEAVES_ONLY);
 
             foreach ($it as $file) {
-                $e = explode('.', $file->getFileName());
-                if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
-                    if ( ! in_array($file->getFileName(), $this->_loadedMigrations)) {
-                        require_once($file->getPathName());
+                $info = pathinfo($file->getFileName());
+                if (isset($info['extension']) && $info['extension'] == 'php') {
+                    require_once($file->getPathName());
 
-                        $requiredClass = array_diff(get_declared_classes(), $classes);
-                        $requiredClass = end($requiredClass);
+                    $array = array_diff(get_declared_classes(), $classes);
+                    $className = end($array);
 
-                        if ($requiredClass) {
-                            $this->_loadedMigrations[$requiredClass] = $file->getFileName();
-                        }
+                    if ($className) {
+                        $this->loadMigrationClass($className);
                     }
                 }
             }
@@ -149,48 +113,44 @@ class Doctrine_Migration
     }
 
     /**
-     * loadMigrationClasses
+     * Load the specified migration class name in to this migration instances queue of
+     * migration classes to execute. It must be a child of Doctrine_Migration in order
+     * to be loaded.
      *
-     * Loads the migration classes for the directory specified by the constructor
-     *
+     * @param string $name
      * @return void
      */
-    protected function loadMigrationClasses()
+    public function loadMigrationClass($name)
     {
-        if ($this->_migrationClassesDirectory !== null) {
-            $this->loadMigrationClassesFromDirectory();
-        }
-        
-        $parent = new ReflectionClass('Doctrine_Migration');
-        
-        foreach ($this->_loadedMigrations as $name => $fileName) {
-            $class = new ReflectionClass($name);
-            
-            while ($class->isSubclassOf($parent)) {
+        $class = new ReflectionClass($name);
 
-                $class = $class->getParentClass();
-                if ($class === false) {
-                    break;
-                }
-            }
-            
+        while ($class->isSubclassOf($this->_reflectionClass)) {
+
+            $class = $class->getParentClass();
             if ($class === false) {
-                continue;
+                break;
             }
-            
-            $e = explode('_', $fileName);
-            $classMigrationNum = (int) $e[0];
-            
-            $this->_migrationClasses[$classMigrationNum] = array('className' => $name, 'fileName' => $fileName);
         }
-        
-        return $this->_migrationClasses;
+
+        if ($class === false) {
+            return false;
+        }
+
+        if (empty($this->_migrationClasses)) {
+            $classMigrationNum = 1;
+        } else {
+            $nums = array_keys($this->_migrationClasses);
+            $num = end($nums);
+            $classMigrationNum = $num + 1;
+        }
+        $this->_migrationClasses[$classMigrationNum] = $name;
     }
 
     /**
-     * getMigrationClasses
+     * Get all the loaded migration classes. Array where key is the number/version
+     * and the value is the class name.
      *
-     * @return void
+     * @return array $migrationClasses
      */
     public function getMigrationClasses()
     {
@@ -198,17 +158,15 @@ class Doctrine_Migration
     }
 
     /**
-     * setCurrentVersion
+     * Set the current version of the database
      *
-     * Sets the current version in the migration table
-     *
-     * @param string $number 
+     * @param integer $number
      * @return void
      */
-    protected function setCurrentVersion($number)
+    public function setCurrentVersion($number)
     {
         $conn = Doctrine_Manager::connection();
-        
+
         if ($this->hasMigrated()) {
             $conn->exec("UPDATE " . $this->_migrationTableName . " SET version = $number");
         } else {
@@ -217,60 +175,49 @@ class Doctrine_Migration
     }
 
     /**
-     * getCurrentVersion
-     *
      * Get the current version of the database
      *
-     * @return void
+     * @return integer $version
      */
     public function getCurrentVersion()
     {
         $conn = Doctrine_Manager::connection();
-        
+
         $result = $conn->fetchColumn("SELECT version FROM " . $this->_migrationTableName);
-        
+
         return isset($result[0]) ? $result[0]:0;
     }
 
     /**
-     * hasMigrated
+     * hReturns true/false for whether or not this database has been migrated in the past
      *
-     * Returns true/false for whether or not this database has been migrated in the past
-     *
-     * @return void
+     * @return boolean $migrated
      */
     public function hasMigrated()
     {
         $conn = Doctrine_Manager::connection();
-        
+
         $result = $conn->fetchColumn("SELECT version FROM " . $this->_migrationTableName);
-        
-        return isset($result[0]) ? true:false; 
+
+        return isset($result[0]) ? true:false;
     }
 
     /**
-     * getLatestVersion
-     *
      * Gets the latest possible version from the loaded migration classes
      *
-     * @return void
+     * @return integer $latestVersion
      */
     public function getLatestVersion()
     {
-        $this->loadMigrationClasses();
-        
-        $versions = array();
-        foreach (array_keys($this->_migrationClasses) as $classMigrationNum) {
-            $versions[$classMigrationNum] = $classMigrationNum;
-        }
-        
+        $versions = array_keys($this->_migrationClasses);
         rsort($versions);
-        
+
         return isset($versions[0]) ? $versions[0]:0;
     }
 
     /**
-     * getNextVersion
+     * Get the next incremented version number based on the latest version number
+     * using getLatestVersion()
      *
      * @return integer $nextVersion
      */
@@ -280,350 +227,130 @@ class Doctrine_Migration
     }
 
     /**
-     * getMigrationClass
+     * Get the next incremented class version based on the loaded migration classes
      *
-     * Get instance of migration class for $num
-     *
-     * @param string $num 
-     * @return void
+     * @return integer $nextMigrationClassVersion
      */
-    protected function getMigrationClass($num)
+    public function getNextMigrationClassVersion()
     {
-        foreach ($this->_migrationClasses as $classMigrationNum => $info) {
-            $className = $info['className'];
-            
-            if ($classMigrationNum == $num) {
-                return new $className();
-            }
+        if (empty($this->_migrationClasses)) {
+            return 1;
+        } else {
+            $nums = array_keys($this->_migrationClasses);
+            $num = end($nums) + 1;
+            return $num;
         }
-        
-        throw new Doctrine_Migration_Exception('Could not find migration class for migration step: '.$num);
     }
 
     /**
-     * doMigrateStep
+     * Perform a migration process by specifying the migration number/version to
+     * migrate to. It will automatically know whether you are migrating up or down
+     * based on the current version of the database.
      *
-     * Perform migration directory for the specified version. Loads migration classes and performs the migration then processes the changes
-     *
-     * @param string $direction 
-     * @param string $num 
-     * @return void
-     */
-    protected function doMigrateStep($direction, $num)
-    {
-        $migrate = $this->getMigrationClass($num);
-        
-        $migrate->doMigrate($direction);
-    }
-
-    /**
-     * doMigrate
-     * 
-     * Perform migration for a migration class. Executes the up or down method then processes the changes
-     *
-     * @param string $direction 
-     * @return void
-     */
-    protected function doMigrate($direction)
-    {
-        $method = 'pre'.$direction;
-        $this->$method();
-
-        if (method_exists($this, $direction)) {
-            $this->$direction();
-
-            foreach ($this->_changes as $type => $changes) {
-                $process = new Doctrine_Migration_Process();
-                $funcName = 'process' . Doctrine_Inflector::classify($type);
-
-                if ( ! empty($changes)) {
-                    $process->$funcName($changes); 
-                }
-            }
-        }
-
-        $method = 'post'.$direction;
-        $this->$method();
-    }
-
-    /**
-     * migrate
-     *
-     * Perform a migration chain by specifying the $from and $to.
-     * If you do not specify a $from or $to then it will attempt to migrate from the current version to the latest version
-     *
-     * @param string $from 
-     * @param string $to 
-     * @return void
+     * @param  string $to Version to migrate to
+     * @return string $to The version migrated to
+     * @throws Doctrine_Migration_Exception $e When you try and migrate to the current version.
      */
     public function migrate($to = null)
     {
         $from = $this->getCurrentVersion();
-        
+
         // If nothing specified then lets assume we are migrating from the current version to the latest version
         if ($to === null) {
             $to = $this->getLatestVersion();
         }
-        
+
         if ($from == $to) {
             throw new Doctrine_Migration_Exception('Already at version # ' . $to);
         }
-        
+
         $direction = $from > $to ? 'down':'up';
-        
+
         if ($direction === 'up') {
             for ($i = $from + 1; $i <= $to; $i++) {
-                $this->doMigrateStep($direction, $i);
+                $this->_doMigrateStep($direction, $i);
             }
         } else {
             for ($i = $from; $i > $to; $i--) {
-                $this->doMigrateStep($direction, $i);
+                $this->_doMigrateStep($direction, $i);
             }
         }
-        
+
         $this->setCurrentVersion($to);
-        
+
         return $to;
     }
 
     /**
-     * addChange
+     * Get instance of migration class for number/version specified
      *
-     * @param string $type 
-     * @param string $array 
-     * @return void
+     * @param integer $num
+     * @return return Doctrine_Migration_Base $class
      */
-    protected function addChange($type, array $change = array())
+    public function getMigrationClass($num)
     {
-        $this->_changes[$type][] = $change;
+        if (isset($this->_migrationClasses[$num])) {
+            $className = $this->_migrationClasses[$num];
+            return new $className();
+        }
+
+        throw new Doctrine_Migration_Exception('Could not find migration class for migration step: '.$num);
     }
 
     /**
-     * createTable
+     * Perform a single migration step. Executes a single migration class and
+     * processes the changes
      *
-     * @param string $tableName 
-     * @param string $array 
-     * @param string $array 
+     * @param string $direction Direction to go, 'up' or 'down'
+     * @param integer $num
      * @return void
      */
-    public function createTable($tableName, array $fields = array(), array $options = array())
+    protected function _doMigrateStep($direction, $num)
     {
-        $options = get_defined_vars();
-        
-        $this->addChange('created_tables', $options);
+        $migration = $this->getMigrationClass($num);
+
+        $method = 'pre' . $direction;
+        $migration->$method();
+
+        if (method_exists($migration, $direction)) {
+            $migration->$direction();
+        } else if (method_exists($migration, 'migrate')) {
+            $migration->migrate($direction);
+        }
+
+        $changes = $migration->getChanges();
+        if ( ! empty($changes)) {
+            foreach ($changes as $type => $changes) {
+                $process = new Doctrine_Migration_Process();
+                $funcName = 'process' . Doctrine_Inflector::classify($type);
+
+                if ( ! empty($changes)) {
+                    $process->$funcName($changes);
+                }
+            }
+        }
+
+        $method = 'post' . $direction;
+        $migration->$method();
     }
 
     /**
-     * dropTable
+     * Create the migration table and return true. If it already exists it will
+     * silence the exception and return false
      *
-     * @param string $tableName 
-     * @return void
+     * @return boolean $created Whether or not the table was created. Exceptions
+     *                          are silenced when table already exists
      */
-    public function dropTable($tableName)
+    protected function _createMigrationTable()
     {
-        $options = get_defined_vars();
-        
-        $this->addChange('dropped_tables', $options);
-    }
+        $conn = Doctrine_Manager::connection();
 
-    /**
-     * renameTable
-     *
-     * @param string $oldTableName 
-     * @param string $newTableName 
-     * @return void
-     */
-    public function renameTable($oldTableName, $newTableName)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('renamed_tables', $options);
-    }
+        try {
+            $conn->export->createTable($this->_migrationTableName, array('version' => array('type' => 'integer', 'size' => 11)));
 
-    /**
-     * createConstraint
-     *
-     * @param string $tableName
-     * @param string $constraintName
-     * @return void
-     */
-    public function createConstraint($tableName, $constraintName, array $definition)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('created_constraints', $options);
+            return true;
+        } catch(Exception $e) {
+            return false;
+        }
     }
-
-    /**
-     * dropConstraint
-     *
-     * @param string $tableName
-     * @param string $constraintName
-     * @return void
-     */
-    public function dropConstraint($tableName, $constraintName, $primary = false)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('dropped_constraints', $options);
-    }
-
-    /**
-     * createForeignKey
-     *
-     * @param string $tableName
-     * @param string $constraintName
-     * @return void
-     */
-    public function createForeignKey($tableName, array $definition)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('created_fks', $options);
-    }
-
-    /**
-     * dropForeignKey
-     *
-     * @param string $tableName
-     * @param string $constraintName
-     * @return void
-     */
-    public function dropForeignKey($tableName, $fkName)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('dropped_fks', $options);
-    }
-
-    /**
-     * addColumn
-     *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @param string $type 
-     * @param string $array 
-     * @return void
-     */
-    public function addColumn($tableName, $columnName, $type, array $options = array())
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('added_columns', $options);
-    }
-
-    /**
-     * renameColumn
-     *
-     * @param string $tableName 
-     * @param string $oldColumnName 
-     * @param string $newColumnName 
-     * @return void
-     */
-    public function renameColumn($tableName, $oldColumnName, $newColumnName)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('renamed_columns', $options);
-    }
-
-    /**
-     * renameColumn
-     *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @param string $type 
-     * @param string $array 
-     * @return void
-     */
-    public function changeColumn($tableName, $columnName, $type, array $options = array())
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('changed_columns', $options);
-    }
-
-    /**
-     * removeColumn
-     *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @return void
-     */
-    public function removeColumn($tableName, $columnName)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('removed_columns', $options);
-    }
-
-    /**
-     * addIndex
-     *
-     * @param string $tableName 
-     * @param string $indexName 
-     * @param string $array 
-     * @return void
-     */
-    public function addIndex($tableName, $indexName, array $definition)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('added_indexes', $options);
-    }
-
-    /**
-     * removeIndex
-     *
-     * @param string $tableName 
-     * @param string $indexName 
-     * @return void
-     */
-    public function removeIndex($tableName, $indexName)
-    {
-        $options = get_defined_vars();
-        
-        $this->addChange('removed_indexes', $options);
-    }
-
-    /**
-     * preUp
-     *
-     * @return void
-     */
-    public function preUp()
-    {
-        return;
-    }
-
-    /**
-     * postUp
-     *
-     * @return void
-     */
-    public function postUp()
-    {
-        return;
-    }
-
-    /**
-     * preDown
-     *
-     * @return void
-     */
-    public function preDown()
-    {
-        return;
-    }
-
-    /**
-     * postDown
-     *
-     * @return void
-     */
-    public function postDown()
-    {
-        return;
-    }
-    
 }

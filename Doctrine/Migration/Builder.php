@@ -35,7 +35,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
 {
     /**
      * migrationsPath
-     * 
+     *
      * The path to your migration classes directory
      *
      * @var string
@@ -44,7 +44,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
 
     /**
      * suffix
-     * 
+     *
      * File suffix to use when writing class definitions
      *
      * @var string $suffix
@@ -78,7 +78,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
             $this->setMigrationsPath($migrationsPath);
             $this->migration = new Doctrine_Migration($migrationsPath);
         }
-        
+
         $this->loadTemplate();
     }
 
@@ -107,12 +107,12 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
 
     /**
      * loadTemplate
-     * 
+     *
      * Loads the class template used for generating classes
      *
      * @return void
      */
-    protected function loadTemplate() 
+    protected function loadTemplate()
     {
         if (isset(self::$tpl)) {
             return;
@@ -124,15 +124,15 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
  */
 class %s extends %s
 {
-	public function up()
-	{
+    public function up()
+    {
 %s
-	}
+    }
 
-	public function down()
-	{
+    public function down()
+    {
 %s
-	}
+    }
 }
 END;
     }
@@ -158,7 +158,7 @@ END;
     /**
      * generateMigrationsFromModels
      *
-     * @param string $modelsPath 
+     * @param string $modelsPath
      * @return void
      */
     public function generateMigrationsFromModels($modelsPath = null, $modelLoading = null)
@@ -172,28 +172,28 @@ END;
         $models = Doctrine::initializeModels($models);
 
         $foreignKeys = array();
-        
+
         foreach ($models as $model) {
             $export = Doctrine::getTable($model)->getExportableFormat();
-            
+
             $foreignKeys[$export['tableName']] = $export['options']['foreignKeys'];
-            
+
             $up = $this->buildCreateTable($export);
             $down = $this->buildDropTable($export);
-            
+
             $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
 
             $this->generateMigrationClass($className, array(), $up, $down);
         }
-        
+
         if ( ! empty($foreignKeys)) {
             $className = 'ApplyForeignKeyConstraints';
-        
+
             $up = '';
             $down = '';
             foreach ($foreignKeys as $tableName => $definitions)    {
                 $tableForeignKeyNames[$tableName] = array();
-            
+
                 foreach ($definitions as $definition) {
                     $definition['name'] = $tableName . '_' .implode('_', (array)$definition['local']);
 
@@ -201,18 +201,18 @@ END;
                     $down .= $this->buildDropForeignKey($tableName, $definition);
                 }
             }
-        
+
             $this->generateMigrationClass($className, array(), $up, $down);
         }
-        
+
         return true;
     }
 
     /**
      * buildCreateForeignKey
      *
-     * @param string $tableName 
-     * @param string $definition 
+     * @param string $tableName
+     * @param string $definition
      * @return void
      */
     public function buildCreateForeignKey($tableName, $definition)
@@ -223,8 +223,8 @@ END;
     /**
      * buildDropForeignKey
      *
-     * @param string $tableName 
-     * @param string $definition 
+     * @param string $tableName
+     * @param string $definition
      * @return void
      */
     public function buildDropForeignKey($tableName, $definition)
@@ -235,26 +235,26 @@ END;
     /**
      * buildCreateTable
      *
-     * @param string $tableData 
+     * @param string $tableData
      * @return void
      */
     public function buildCreateTable($tableData)
     {
         $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
-        
+
         $code .= $this->varExport($tableData['columns'], true) . ", ";
-        
+
         $code .= $this->varExport(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
-        
+
         $code .= ");";
-        
+
         return $code;
     }
 
     /**
      * buildDropTable
      *
-     * @param string $tableData 
+     * @param string $tableData
      * @return string
      */
     public function buildDropTable($tableData)
@@ -279,20 +279,21 @@ END;
             if ( ! $this->getMigrationsPath()) {
                 throw new Doctrine_Migration_Exception('You must specify the path to your migrations.');
             }
-            
-            $next = (string) $this->migration->getNextVersion();
-            
-            $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine_Inflector::tableize($className) . $this->suffix;
-            
+
+            $next = time() + $this->migration->getNextMigrationClassVersion();
+            $fileName = $next . '_' . Doctrine_Inflector::tableize($className) . $this->suffix;
+
             $class = $this->buildMigrationClass($className, $fileName, $options, $up, $down);
-            
+
             $path = $this->getMigrationsPath() . DIRECTORY_SEPARATOR . $fileName;
-            
-            if ( class_exists($className) || file_exists($path)) {
+            if (class_exists($className) || file_exists($path)) {
+                $this->migration->loadMigrationClass($className);
                 return false;
             }
-            
+
             file_put_contents($path, $class);
+            require_once($path);
+            $this->migration->loadMigrationClass($className);
 
             return true;
         }
@@ -305,16 +306,16 @@ END;
      */
     public function buildMigrationClass($className, $fileName = null, $options = array(), $up = null, $down = null)
     {
-        $extends = isset($options['extends']) ? $options['extends']:'Doctrine_Migration';
-        
+        $extends = isset($options['extends']) ? $options['extends']:'Doctrine_Migration_Base';
+
         $content  = '<?php' . PHP_EOL;
-        
+
         $content .= sprintf(self::$tpl, $className,
                                        $extends,
                                        $up,
                                        $down);
-        
-        
+
+
         return $content;
     }
 }
