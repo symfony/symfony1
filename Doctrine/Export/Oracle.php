@@ -96,7 +96,6 @@ class Doctrine_Export_Oracle extends Doctrine_Export
     public function _makeAutoincrement($name, $table, $start = 1)
     {
         $sql   = array();
-        $table = strtoupper($table);
         $indexName  = $table . '_AI_PK';
         $definition = array(
             'primary' => true,
@@ -133,16 +132,16 @@ DECLARE
    last_Sequence NUMBER;
    last_InsertID NUMBER;
 BEGIN
-   SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
+   SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
    IF (:NEW.' . $name . ' IS NULL OR :NEW.'.$name.' = 0) THEN
-      SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
+      SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
    ELSE
       SELECT NVL(Last_Number, 0) INTO last_Sequence
         FROM User_Sequences
        WHERE UPPER(Sequence_Name) = UPPER(\'' . $sequenceName . '\');
       SELECT :NEW.' . $name . ' INTO last_InsertID FROM DUAL;
       WHILE (last_InsertID > last_Sequence) LOOP
-         SELECT ' . $sequenceName . '.NEXTVAL INTO last_Sequence FROM DUAL;
+         SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO last_Sequence FROM DUAL;
       END LOOP;
    END IF;
 END;';

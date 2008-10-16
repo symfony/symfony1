@@ -242,7 +242,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
 
         if (isset($options['primary']) && ! empty($options['primary'])) {
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', array_values($options['primary'])) . ')';
+            $primaryKeys = array_map(array($this->conn, 'quoteIdentifier'), array_values($options['primary']));
+            $queryFields .= ', PRIMARY KEY(' . implode(', ', $primaryKeys) . ')';
         }
 
         if (isset($options['indexes']) && ! empty($options['indexes'])) {
