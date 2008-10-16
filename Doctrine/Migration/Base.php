@@ -200,14 +200,16 @@ abstract class Doctrine_Migration_Base
      * @param string $upDown      Whether to execute up or down
      * @param string $tableName   Name of the table to add the column to
      * @param string $columnName  Name of the column
+     * @param string $length      Length of the column
      * @param string $type        Type of the column
      * @param array  $options     Array of options for the column
      * @return void
      */
-    public function addColumn($upDown, $tableName, $columnName, $type, array $options = array())
+    public function addColumn($upDown, $tableName, $columnName, $length, $type, array $options = array())
     {
         $options = get_defined_vars();
-        
+        $options['length'] = $length;
+
         $this->_addChange('added_columns', $options);
     }
 
@@ -217,14 +219,16 @@ abstract class Doctrine_Migration_Base
      * @param string $upDown      Whether to execute up or down
      * @param string $tableName   Name of the table to add the column to
      * @param string $columnName  Name of the column
+     * @param string $length      Length of the column
      * @param string $type        Type of the column
      * @param array  $options     Array of options for the column
      * @return void
      */
-    public function removeColumn($upDown, $tableName, $columnName, $type, array $options = array())
+    public function removeColumn($upDown, $tableName, $columnName, $length, $type, array $options = array())
     {
         $options = get_defined_vars();
-        
+        $options['length'] = $length;
+
         $this->_addChange('removed_columns', $options);
     }
 
