@@ -19,8 +19,9 @@
 class sfBrowser extends sfBrowserBase
 {
   protected
-    $listeners = array(),
-    $context   = null;
+    $listeners        = array(),
+    $context          = null,
+    $currentException = null;
 
   /**
    * Calls a request to a uri.
@@ -70,11 +71,16 @@ class sfBrowser extends sfBrowserBase
         $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
         $this->context = sfContext::createInstance($configuration);
         unset($currentConfiguration);
+
+        sfConfig::clear();
+        sfConfig::add($this->rawConfiguration);
       }
       else
       {
         $this->context = sfContext::getInstance();
         $this->context->initialize($this->context->getConfiguration());
+
+        $this->rawConfiguration = sfConfig::getAll();
       }
 
       $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));

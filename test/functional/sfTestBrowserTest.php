@@ -186,3 +186,15 @@ $b->
   call('/browser', 'put')->
   with('request')->isMethod('put')
 ;
+
+// sfBrowser: clean the custom view templates
+$b->
+  get('/browser/templateCustom')->
+  checkResponseElement('#test', 'template')->
+
+  get('/browser/templateCustom/custom/1')->
+  checkResponseElement('#test', 'template 1')->
+
+  get('/browser/templateCustom')->
+  checkResponseElement('#test', 'template')
+;

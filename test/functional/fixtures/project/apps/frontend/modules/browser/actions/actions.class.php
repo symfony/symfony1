@@ -32,4 +32,12 @@ class browserActions extends sfActions
 
     return $this->renderText('ok');
   }
+
+  public function executeTemplateCustom($request)
+  {
+    if ($request->getParameter('custom'))
+    {
+      $this->setTemplate('templateCustomCustom');
+    }
+  }
 }
