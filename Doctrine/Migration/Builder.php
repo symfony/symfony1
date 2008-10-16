@@ -34,8 +34,6 @@
 class Doctrine_Migration_Builder extends Doctrine_Builder
 {
     /**
-     * migrationsPath
-     *
      * The path to your migration classes directory
      *
      * @var string
@@ -43,8 +41,6 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     private $migrationsPath = '';
 
     /**
-     * suffix
-     *
      * File suffix to use when writing class definitions
      *
      * @var string $suffix
@@ -52,15 +48,13 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     private $suffix = '.class.php';
 
     /**
-     * migration
+     * Instance of the migration class for the migration classes directory
      *
-     * @var string
+     * @var Doctrine_Migration $migration
      */
     private $migration;
 
     /**
-     * tpl
-     *
      * Class template used for writing classes
      *
      * @var $tpl
@@ -83,10 +77,10 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     }
 
     /**
-     * setMigrationsPath
+     * Set the path to write the generated migration classes
      *
      * @param string path   the path where migration classes are stored and being generated
-     * @return
+     * @return void
      */
     public function setMigrationsPath($path)
     {
@@ -96,7 +90,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     }
 
     /**
-     * getMigrationsPath
+     * Get the path where generated migration classes are written to
      *
      * @return string       the path where migration classes are stored and being generated
      */
@@ -106,8 +100,6 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     }
 
     /**
-     * loadTemplate
-     *
      * Loads the class template used for generating classes
      *
      * @return void
@@ -138,7 +130,7 @@ END;
     }
 
     /**
-     * generateMigrationsFromDb
+     * Generate a set of migration classes from the existing databases
      *
      * @return void
      */
@@ -156,9 +148,9 @@ END;
     }
 
     /**
-     * generateMigrationsFromModels
+     * Generate a set of migrations from a set of models
      *
-     * @param string $modelsPath
+     * @param  string $modelsPath
      * @return void
      */
     public function generateMigrationsFromModels($modelsPath = null, $modelLoading = null)
@@ -178,8 +170,8 @@ END;
 
             $foreignKeys[$export['tableName']] = $export['options']['foreignKeys'];
 
-            $up = $this->buildCreateTable($export);
-            $down = $this->buildDropTable($export);
+            $up = $this->buildCreateTable('up', $export);
+            $down = $this->buildDropTable('up', $export);
 
             $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
 
@@ -197,8 +189,8 @@ END;
                 foreach ($definitions as $definition) {
                     $definition['name'] = $tableName . '_' .implode('_', (array)$definition['local']);
 
-                    $up .= $this->buildCreateForeignKey($tableName, $definition);
-                    $down .= $this->buildDropForeignKey($tableName, $definition);
+                    $up .= $this->buildCreateForeignKey('up', $tableName, $definition);
+                    $down .= $this->buildDropForeignKey('up', $tableName, $definition);
                 }
             }
 
@@ -209,38 +201,41 @@ END;
     }
 
     /**
-     * buildCreateForeignKey
+     * Build the code for creating foreign keys
      *
-     * @param string $tableName
-     * @param string $definition
-     * @return void
+     * @param  string $upDown
+     * @param  string $tableName
+     * @param  array  $definition
+     * @return string $code
      */
-    public function buildCreateForeignKey($tableName, $definition)
+    public function buildCreateForeignKey($upDown, $tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey('" . $tableName . "', " . $this->varExport($definition, true) . ");";
+        return "\t\t\$this->createForeignKey('" . $upDown . "', '" . $tableName . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
-     * buildDropForeignKey
+     * Build the code for dropping foreign keys
      *
-     * @param string $tableName
-     * @param string $definition
-     * @return void
+     * @param  string $upDown
+     * @param  string $tableName
+     * @param  array  $definition
+     * @return string $code
      */
-    public function buildDropForeignKey($tableName, $definition)
+    public function buildDropForeignKey($upDown, $tableName, $definition)
     {
-        return "\t\t\$this->dropForeignKey('" . $tableName . "', '" . $definition['name'] . "');\n";
+        return "\t\t\$this->dropForeignKey('" . $upDown . "', '" . $tableName . "', '" . $definition['name'] . "');\n";
     }
 
     /**
      * buildCreateTable
      *
-     * @param string $tableData
-     * @return void
+     * @param  string $upDown
+     * @param  string $tableData
+     * @return string $code
      */
-    public function buildCreateTable($tableData)
+    public function buildCreateTable($upDown, $tableData)
     {
-        $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
+        $code  = "\t\t\$this->createTable('" . $upDown . "', '" . $tableData['tableName'] . "', ";
 
         $code .= $this->varExport($tableData['columns'], true) . ", ";
 
@@ -254,18 +249,19 @@ END;
     /**
      * buildDropTable
      *
-     * @param string $tableData
-     * @return string
+     * @param  string $upDown
+     * @param  string $tableData
+     * @return string $code
      */
-    public function buildDropTable($tableData)
+    public function buildDropTable($upDown, $tableData)
     {
-        return "\t\t\$this->dropTable('" . $tableData['tableName'] . "');";
+        return "\t\t\$this->dropTable('" . $upDown . "', '" . $tableData['tableName'] . "');";
     }
 
     /**
-     * generateMigrationClass
+     * Generate a new migration class
      *
-     * @return void
+     * @return mixed
      */
     public function generateMigrationClass($className, $options = array(), $up = null, $down = null, $return = false)
     {
@@ -300,7 +296,7 @@ END;
     }
 
     /**
-     * buildMigrationClass
+     * Build the code for a migration class
      *
      * @return string
      */
