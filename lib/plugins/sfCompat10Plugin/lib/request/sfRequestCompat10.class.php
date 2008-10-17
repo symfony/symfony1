@@ -142,7 +142,7 @@ class sfRequestCompat10
    */
   static public function getFile($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValues($name) : null;
+    return self::hasFile($request, $name) ? self::getFileValues($request, $name) : null;
   }
 
   /**
@@ -166,7 +166,7 @@ class sfRequestCompat10
    */
   static public function getFileError($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValue($name, 'error') : UPLOAD_ERR_NO_FILE;
+    return self::hasFile($request, $name) ? self::getFileValue($request, $name, 'error') : UPLOAD_ERR_NO_FILE;
   }
 
   /**
@@ -179,7 +179,7 @@ class sfRequestCompat10
    */
   static public function getFileName($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValue($name, 'name') : null;
+    return self::hasFile($request, $name) ? self::getFileValue($request, $name, 'name') : null;
   }
 
   /**
@@ -204,7 +204,7 @@ class sfRequestCompat10
    */
   static public function getFilePath($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValue($name, 'tmp_name') : null;
+    return self::hasFile($request, $name) ? self::getFileValue($request, $name, 'tmp_name') : null;
   }
 
   /**
@@ -217,7 +217,7 @@ class sfRequestCompat10
    */
   static public function getFileSize($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValue($name, 'size') : null;
+    return self::hasFile($request, $name) ? self::getFileValue($request, $name, 'size') : null;
   }
 
   /**
@@ -233,7 +233,7 @@ class sfRequestCompat10
    */
   static public function getFileType($request, $name)
   {
-    return self::hasFile($name) ? self::getFileValue($name, 'type') : null;
+    return self::hasFile($request, $name) ? self::getFileValue($request, $name, 'type') : null;
   }
 
   /**
@@ -266,7 +266,7 @@ class sfRequestCompat10
    */
   static public function hasFileError($request, $name)
   {
-    return self::hasFile($name) ? (self::getFileValue($name, 'error') != UPLOAD_ERR_OK) : false;
+    return self::hasFile($request, $name) ? (self::getFileValue($request, $name, 'error') != UPLOAD_ERR_OK) : false;
   }
 
   /**
@@ -278,9 +278,9 @@ class sfRequestCompat10
    */
   static public function hasFileErrors($request)
   {
-    foreach (self::getFileNames() as $name)
+    foreach (self::getFileNames($request) as $name)
     {
-      if (self::hasFileError($name) === true)
+      if (self::hasFileError($request, $name) === true)
       {
         return true;
       }
@@ -360,7 +360,7 @@ class sfRequestCompat10
   {
     static $mimeTypes = null;
 
-    $fileType = self::getFileType($name);
+    $fileType = self::getFileType($request, $name);
 
     if (!$fileType)
     {
@@ -393,7 +393,7 @@ class sfRequestCompat10
    */
   static public function moveFile($request, $name, $file, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
-    if (self::hasFile($name) && self::getFileValue($name, 'error') == UPLOAD_ERR_OK && self::getFileValue($name, 'size') > 0)
+    if (self::hasFile($request, $name) && self::getFileValue($request, $name, 'error') == UPLOAD_ERR_OK && self::getFileValue($request, $name, 'size') > 0)
     {
       // get our directory path from the destination filename
       $directory = dirname($file);
@@ -423,7 +423,7 @@ class sfRequestCompat10
         throw new sfFileException(sprintf('File upload path "%s" is not writable.', $directory));
       }
 
-      if (@move_uploaded_file(self::getFileValue($name, 'tmp_name'), $file))
+      if (@move_uploaded_file(self::getFileValue($request, $name, 'tmp_name'), $file))
       {
         // chmod our file
         @chmod($file, $fileMode);
