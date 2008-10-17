@@ -909,7 +909,38 @@ You can also debug a form with the `debug()` method:
 
 It will output the submitted values and all the errors if any.
 
-## Coverage
+### Propel
+
+The Propel plugin comes with a propel tester. This tester is not registered by
+default:
+
+    [php]
+    $browser->setTester('propel', 'sfTesterPropel');
+
+This tester provides a `check()` method to test a Propel model:
+
+    [php]
+    $browser->
+      post('...', array(...))->
+      with('propel')->begin()->
+        check('Article', array(), 3)->
+        check('Article', array('title' => 'new title'))->
+        check('Article', array('title' => 'new title'))->
+        check('Article', array('title' => 'new%'))->
+        check('Article', array('title' => '!new%'), 2)->
+        check('Article', array('title' => 'title'), false)->
+        check('Article', array('title' => '!title'))->
+      end()
+    ;
+
+It takes a model class name as its first argument, a `Criteria` object
+or an array of conditions as the second one. The third one can be one of:
+
+  * `true`: To check that the `Criteria` returns at least one object
+  * `false`: To check that the `Criteria` returns no object
+  * an integer to check the number of returned objects
+
+### Coverage
 
 There is a new `test:coverage` task that output the code coverage for some given
 tests:
