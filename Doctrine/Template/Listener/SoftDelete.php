@@ -73,7 +73,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     public function postDelete(Doctrine_Event $event)
     {
         $name = $this->_options['name'];
-        $event->getInvoker()->$name = true;
+        $event->getInvoker()->$name = new Doctrine_Expression('NOW()');
         $event->getInvoker()->save();
     }
 
@@ -91,8 +91,8 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         $query = $event->getQuery();
         if ( ! $query->contains($field)) {
             $query->from('')->update($params['component']['table']->getOption('name') . ' ' . $params['alias']);
-            $query->set($field, '?', array(true));
-            $query->addWhere($field . ' = ?', array(false));
+            $query->set($field, '?', 'NOW()');
+            $query->addWhere($field . ' IS NULL');
         }
     }
 
@@ -109,7 +109,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         $field = $params['alias'] . '.' . $this->_options['name'];
         $query = $event->getQuery();
         if ( ! $query->contains($field)) {
-            $query->addWhere($field . ' = ?', array(false));
+            $query->addWhere($field . ' IS NULL');
         }
     }
 }
