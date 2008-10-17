@@ -33,14 +33,33 @@
 class Doctrine_Task_GenerateMigrationsModels extends Doctrine_Task
 {
     public $description          =   'Generate migration classes for an existing set of models',
-           $requiredArguments    =   array('migrations_path' => 'Specify the path to your migration classes folder.',
-                                           'models_path'     => 'Specify the path to your doctrine models folder.'),
+           $requiredArguments    =   array('migrations_path'  => 'Specify the path to your migration classes folder.',
+                                           'models_path'      => 'Specify the path to your doctrine models folder.',
+                                           'yaml_schema_path' => 'Specify the path to your yaml schema files folder.'),
            $optionalArguments    =   array();
     
     public function execute()
     {   
-        Doctrine::generateMigrationsFromModels($this->getArgument('migrations_path'), $this->getArgument('models_path'));
-        
-        $this->notify('Generated migration classes successfully from models');
+        try {
+            $migrationsPath = $this->getArgument('migrations_path');
+            $modelsPath = $this->getArgument('models_path');
+            $yamlSchemaPath = $this->getArgument('yaml_schema_path');
+            $migration = new Doctrine_Migration($migrationsPath);
+            $result1 = false;
+            if ( ! count($migration->getMigrationClasses())) {
+                $result1 = Doctrine::generateMigrationsFromModels($migrationsPath, $modelsPath);
+            }
+            $changes = Doctrine::generateMigrationsFromDiff($migrationsPath, $modelsPath, $yamlSchemaPath);
+            $numChanges = count($changes, true) - count($changes);
+            $result = ($result1 || $numChanges) ? true:false;
+        } catch (Exception $e) {
+            $result = false;
+        }
+
+        if ( ! $result) {
+            throw new Doctrine_Task_Exception('Could not generate migration classes from models' . (isset($e) ? ': ' . $e->getMessage() : null));
+        } else {
+            $this->notify('Generated migration classes successfully from models');
+        }
     }
 }

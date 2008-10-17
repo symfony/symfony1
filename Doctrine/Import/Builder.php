@@ -121,11 +121,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_baseClassName = 'Doctrine_Record';
 
     /**
-     * _generateAccessors
+     * Prefix to all generated classes
      *
-     * @var boolean $generateAccessors
+     * @var string
      */
-    protected $_generateAccessors = false;
+    protected $_classPrefix = null;
 
     /**
      * _tpl
@@ -219,21 +219,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         return $this->_generateTableClasses;
-    }
-
-    /**
-     * Generate physical accessors for columns and relationships
-     *
-     * @param boolean $bool
-     * @return boolean $generateAccessors
-     */
-    public function generateAccessors($bool = null)
-    {
-      if ($bool !== null) {
-          $this->_generateAccessors = $bool;
-      }
-
-      return $this->_generateAccessors;
     }
 
     /**
@@ -910,7 +895,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if ( ! isset($definition['className'])) {
             throw new Doctrine_Import_Builder_Exception('Missing class name.');
         }
-
         $abstract = isset($definition['abstract']) && $definition['abstract'] === true ? 'abstract ':null;
         $className = $definition['className'];
         $extends = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends']:$this->_baseClassName;
@@ -1065,7 +1049,28 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     public function writeDefinition(array $definition)
     {
+        $originalClassName = $definition['className'];
+        if ($prefix = $this->_classPrefix) {
+            if (isset($definition['tableClassName'])) {
+                $definition['tableClassName'] = $prefix . $definition['tableClassName'];
+            }
+            $definition['className'] = $prefix . $definition['className'];
+            if (isset($definition['connectionClassName'])) {
+                $definition['connectionClassName'] = $prefix . $definition['connectionClassName'];
+            }
+            $definition['topLevelClassName'] = $prefix . $definition['topLevelClassName'];
+            if (isset($definition['inheritance']['extends'])) {
+                $definition['inheritance']['extends'] = $prefix . $definition['inheritance']['extends'];
+            }
+        }
+
         $definitionCode = $this->buildDefinition($definition);
+
+        if ($prefix) {
+            $definitionCode = str_replace("this->hasOne('", "this->hasOne('$prefix", $definitionCode);
+            $definitionCode = str_replace("this->hasMany('", "this->hasMany('$prefix", $definitionCode);
+            $definitionCode = str_replace("'refClass' => '", "'refClass' => '$prefix", $definitionCode);
+        }
 
         $fileName = $definition['className'] . $this->_suffix;
 

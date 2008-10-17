@@ -921,6 +921,22 @@ final class Doctrine
     }
 
     /**
+     * Generate a set of migration classes by generating differences between two sets
+     * of schema information
+     *
+     * @param  string $migrationsPath   Path to your Doctrine migration classes
+     * @param  string $from             From schema information
+     * @param  string $to               To schema information
+     * @return array $changes
+     */
+    public static function generateMigrationsFromDiff($migrationsPath, $from, $to)
+    {
+        $diff = new Doctrine_Migration_Diff($from, $to, $migrationsPath);
+
+        return $diff->generateMigrationClasses();
+    }
+
+    /**
      * Get the Doctrine_Table object for the passed model
      *
      * @param string $componentName

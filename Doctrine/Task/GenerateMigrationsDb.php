@@ -38,8 +38,28 @@ class Doctrine_Task_GenerateMigrationsDb extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateMigrationsFromDb($this->getArgument('migrations_path'));
-        
-        $this->notify('Generated migration classes successfully from database');
+        try {
+            $migrationsPath = $this->getArgument('migrations_path');
+            $yamlSchemaPath = $this->getArgument('yaml_schema_path');
+            $migration = new Doctrine_Migration($migrationsPath);
+            $result1 = false;
+            if ( ! count($migration->getMigrationClasses())) {
+                $result1 = Doctrine::generateMigrationsFromDb($migrationsPath);
+            }
+            $connections = array();
+            foreach (Doctrine_Manager::getInstance() as $connection) {
+                $connections[] = $connection->getName();
+            }
+            $changes = Doctrine::generateMigrationsFromDiff($migrationsPath, $connections, $yamlSchemaPath);
+            $numChanges = count($changes, true) - count($changes);
+            $result = ($result1 || $numChanges) ? true:false;
+        } catch (Exception $e) {
+            $result = false;
+        }
+        if ( ! $result) {
+            throw new Doctrine_Task_Exception('Could not generate migration classes from database');
+        } else {
+            $this->notify('Generated migration classes successfully from database');
+        }
     }
 }

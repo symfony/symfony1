@@ -1006,7 +1006,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
         $sql = '';
         if (isset($definition['name'])) {
-            $sql .= ' CONSTRAINT ' . $this->conn->quoteIdentifier($definition['name']) . ' ';
+            $sql .= 'CONSTRAINT ' . $this->conn->quoteIdentifier($definition['name']) . ' ';
         }
         $sql .= 'FOREIGN KEY (';
 

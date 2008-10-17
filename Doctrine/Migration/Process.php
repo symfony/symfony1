@@ -32,6 +32,13 @@
  */
 class Doctrine_Migration_Process
 {
+    protected $_migration;
+
+    public function __construct($migration)
+    {
+        $this->_migration = $migration;
+    }
+
     /**
      * Get the connection for specified table name
      *
@@ -52,9 +59,12 @@ class Doctrine_Migration_Process
     public function processCreatedTables($tables)
     {
         foreach ($tables as $table) {
-            $conn = $this->getConnection($table['tableName']);
-            
-            $conn->export->createTable($table['tableName'], $table['fields'], $table['options']);
+            try {
+                $conn = $this->getConnection($table['tableName']);
+                $conn->export->createTable($table['tableName'], $table['fields'], $table['options']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -67,9 +77,12 @@ class Doctrine_Migration_Process
     public function processDroppedTables($tables)
     {
         foreach ($tables as $table) {
-            $conn = $this->getConnection($table['tableName']);
-            
-            $conn->export->dropTable($table['tableName']);
+            try {
+                $conn = $this->getConnection($table['tableName']);
+                $conn->export->dropTable($table['tableName']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -82,9 +95,12 @@ class Doctrine_Migration_Process
     public function processRenamedTables($tables)
     {
         foreach ($tables as $table) {
-            $conn = $this->getConnection($table['newTableName']);
-            
-            $conn->export->alterTable($table['oldTableName'], array('name' => $table['newTableName']));
+            try {
+                $conn = $this->getConnection($table['newTableName']);
+                $conn->export->alterTable($table['oldTableName'], array('name' => $table['newTableName']));
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -97,13 +113,30 @@ class Doctrine_Migration_Process
     public function processAddedColumns($columns)
     {
         foreach ($columns as $column) {
-            $conn = $this->getConnection($column['tableName']);
-            
-            $options = array();
-            $options = $column['options'];
-            $options['type'] = $column['type'];
-            
-            $conn->export->alterTable($column['tableName'], array('add' => array($column['columnName'] => $options)));
+            try {
+                $conn = $this->getConnection($column['tableName']);
+                $conn->export->alterTable($column['tableName'], array('add' => array($column['columnName'] => $column)));
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
+        }
+    }
+
+    /**
+     * Process the remove column changes
+     *
+     * @param array $columns
+     * @return void
+     */
+    public function processRemovedColumns($columns)
+    {
+        foreach ($columns as $column) {
+            try {
+                $conn = $this->getConnection($column['tableName']);
+                $conn->export->alterTable($column['tableName'], array('remove' => array($column['columnName'] => array())));
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -116,13 +149,16 @@ class Doctrine_Migration_Process
     public function processRenamedColumns($columns)
     {
         foreach ($columns as $column) {
-            $conn = $this->getConnection($column['tableName']);
-            
-            $columnList = $conn->import->listTableColumns($column['tableName']);
-            if (isset($columnList[$column['oldColumnName']])) {
-	            $conn->export->alterTable($column['tableName'], 
-	                                      array('rename' => array($column['oldColumnName'] => array('name' => $column['newColumnName'],
-	                                      																													'definition'=>$columnList[$column['oldColumnName']]))));
+            try {
+                $conn = $this->getConnection($column['tableName']);
+                $columnList = $conn->import->listTableColumns($column['tableName']);
+                if (isset($columnList[$column['oldColumnName']])) {
+    	            $conn->export->alterTable($column['tableName'], 
+    	                                      array('rename' => array($column['oldColumnName'] => array('name' => $column['newColumnName'],
+    	                                      																													'definition'=>$columnList[$column['oldColumnName']]))));
+                }
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
             }
         }
     }
@@ -136,28 +172,17 @@ class Doctrine_Migration_Process
     public function processChangedColumns($columns)
     {
         foreach ($columns as $column) {
-            $conn = $this->getConnection($column['tableName']);
+            try {
+                $conn = $this->getConnection($column['tableName']);
             
-            $options = array();
-            $options = $column['options'];
-            $options['type'] = $column['type'];
+                $options = array();
+                $options = $column['options'];
+                $options['type'] = $column['type'];
             
-            $conn->export->alterTable($column['tableName'], array('change' => array($column['columnName'] => array('definition' => $options))));
-        }  
-    }
-
-    /**
-     * Process the remove column changes
-     *
-     * @param array $columns
-     * @return void
-     */
-    public function processRemovedColumns($columns)
-    {
-        foreach ($columns as $column) {
-            $conn = $this->getConnection($column['tableName']);
-            
-            $conn->export->alterTable($column['tableName'], array('remove' => array($column['columnName'] => array())));
+                $conn->export->alterTable($column['tableName'], array('change' => array($column['columnName'] => array('definition' => $options))));
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -170,9 +195,12 @@ class Doctrine_Migration_Process
     public function processAddedIndexes($indexes)
     {
         foreach ($indexes as $index) {
-            $conn = $this->getConnection($index['tableName']);
-            
-            $conn->export->createIndex($index['tableName'], $index['indexName'], $index['definition']);
+            try {
+                $conn = $this->getConnection($index['tableName']);
+                $conn->export->createIndex($index['tableName'], $index['indexName'], $index['definition']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -185,10 +213,13 @@ class Doctrine_Migration_Process
     public function processRemovedIndexes($indexes)
     {
         foreach ($indexes as $index) {
-            $conn = $this->getConnection($index['tableName']);
-            
-            $conn->export->dropIndex($index['tableName'], $index['indexName']);
-        } 
+            try {
+                $conn = $this->getConnection($index['tableName']);
+                $conn->export->dropIndex($index['tableName'], $index['indexName']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
+        }
     }
 
     /**
@@ -200,9 +231,13 @@ class Doctrine_Migration_Process
     public function processCreatedConstraints($constraints)
     {
         foreach ($constraints as $constraint) {
-            $conn = $this->getConnection($constraint['tableName']);
-            $conn->export->createConstraint($constraint['tableName'], $constraint['constraintName'],
-                    $constraint['definition']);
+            try {
+                $conn = $this->getConnection($constraint['tableName']);
+                $conn->export->createConstraint($constraint['tableName'], $constraint['constraintName'],
+                        $constraint['definition']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -215,9 +250,13 @@ class Doctrine_Migration_Process
     public function processDroppedConstraints($constraints)
     {
         foreach ($constraints as $constraint) {
-            $conn = $this->getConnection($constraint['tableName']);
-            $conn->export->dropConstraint($constraint['tableName'], $constraint['constraintName'],
-                    $constraint['primary']);
+            try {
+                $conn = $this->getConnection($constraint['tableName']);
+                $conn->export->dropConstraint($constraint['tableName'], $constraint['constraintName'],
+                        $constraint['primary']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -230,8 +269,12 @@ class Doctrine_Migration_Process
     public function processCreatedFks($foreignKeys)
     {
         foreach ($foreignKeys as $fk) {
-            $conn = $this->getConnection($fk['tableName']);
-            $conn->export->createForeignKey($fk['tableName'], $fk['definition']);
+            try {
+                $conn = $this->getConnection($fk['tableName']);
+                $conn->export->createForeignKey($fk['tableName'], $fk['definition']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 
@@ -244,8 +287,12 @@ class Doctrine_Migration_Process
     public function processDroppedFks($foreignKeys)
     {
         foreach ($foreignKeys as $fk) {
-            $conn = $this->getConnection($fk['tableName']);
-            $conn->export->dropForeignKey($fk['tableName'], $fk['fkName']);
+            try {
+                $conn = $this->getConnection($fk['tableName']);
+                $conn->export->dropForeignKey($fk['tableName'], $fk['definition']['name']);
+            } catch (Exception $e) {
+                $this->_migration->addError($e);
+            }
         }
     }
 }

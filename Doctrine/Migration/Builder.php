@@ -45,7 +45,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
      *
      * @var string $suffix
      */
-    private $suffix = '.class.php';
+    private $suffix = '.php';
 
     /**
      * Instance of the migration class for the migration classes directory
@@ -62,13 +62,20 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
     private static $tpl;
 
     /**
-     * __construct
+     * Instantiate new instance of the Doctrine_Migration_Builder class
+     *
+     * <code>
+     * $builder = new Doctrine_Migration_Builder('/path/to/migrations');
+     * </code>
      *
      * @return void
      */
     public function __construct($migrationsPath = null)
     {
-        if ($migrationsPath) {
+        if ($migrationsPath instanceof Doctrine_Migration) {
+            $this->setMigrationsPath($migrationsPath->getMigrationClassesDirectory());
+            $this->migration = $migrationsPath;
+        } else if (is_dir($migrationsPath)) {
             $this->setMigrationsPath($migrationsPath);
             $this->migration = new Doctrine_Migration($migrationsPath);
         }
@@ -130,6 +137,113 @@ END;
     }
 
     /**
+     * Generate migrations from a Doctrine_Migration_Diff instance
+     *
+     * @param  Doctrine_Migration_Diff $diff Instance to generate changes from
+     * @return array $changes  Array of changes produced from the diff
+     */
+    public function generateMigrationsFromDiff(Doctrine_Migration_Diff $diff)
+    {
+        $changes = $diff->generateChanges();
+
+        $up = array();
+        $down = array();
+
+        if ( ! empty($changes['dropped_tables'])) {
+            foreach ($changes['dropped_tables'] as $tableName => $table) {
+                $up[] = $this->buildDropTable("'up'", $table);
+                $down[] = $this->buildCreateTable("'up'", $table);
+            }
+        }
+
+        if ( ! empty($changes['created_tables'])) {
+            foreach ($changes['created_tables'] as $tableName => $table) {
+                $up[] = $this->buildCreateTable("'up'", $table);
+                $down[] = $this->buildDropTable("'up'", $table);
+            }
+        }
+
+        if ( ! empty($changes['removed_columns'])) {
+            foreach ($changes['removed_columns'] as $tableName => $removedColumns) {
+                foreach ($removedColumns as $name => $column) {
+                    $up[] = $this->buildRemoveColumn("'up'", $tableName, $name, $column);
+                    $down[] = $this->buildAddColumn("'up'", $tableName, $name, $column);
+                }
+            }
+        }
+
+        if ( ! empty($changes['added_columns'])) {
+            foreach ($changes['added_columns'] as $tableName => $addedColumns) {
+                foreach ($addedColumns as $name => $column) {
+                    $up[] = $this->buildAddColumn("'up'", $tableName, $name, $column);
+                    $down[] = $this->buildRemoveColumn("'up'", $tableName, $name, $column);
+                }
+            }
+        }
+
+        if ( ! empty($changes['changed_columns'])) {
+            foreach ($changes['changed_columns'] as $tableName => $changedColumns) {
+                foreach ($changedColumns as $name => $column) {
+                    $up[] = $this->buildChangeColumn($tableName, $name, $column);
+                }
+            }
+        }
+
+        if ( ! empty($up) || ! empty($down)) {
+            $up = implode("\n", $up);
+            $down = implode("\n", $down);
+            $className = 'Version' . $this->migration->getNextMigrationClassVersion();
+            $this->generateMigrationClass($className, array(), $up, $down);
+        }
+
+        $up = array();
+        $down = array();
+        if ( ! empty($changes['dropped_fks'])) {
+            foreach ($changes['dropped_fks'] as $tableName => $droppedFks) {
+                foreach ($droppedFks as $name => $foreignKey) {
+                    $up[] = $this->buildDropForeignKey("'up'", $tableName, $foreignKey);
+                    $down[] = $this->buildCreateForeignKey("'up'", $tableName, $foreignKey);
+                }
+            }
+        }
+
+        if ( ! empty($changes['removed_indexes'])) {
+            foreach ($changes['removed_indexes'] as $tableName => $removedIndexes) {
+                foreach ($removedIndexes as $name => $index) {
+                    $up[] = $this->buildRemoveIndex("'up'", $tableName, $name, $index);
+                    $down[] = $this->buildAddIndex("'up'", $tableName, $name, $index);
+                }
+            }
+        }
+
+        if ( ! empty($changes['added_indexes'])) {
+            foreach ($changes['added_indexes'] as $tableName => $addedIndexes) {
+                foreach ($addedIndexes as $name => $index) {
+                    $up[] = $this->buildAddIndex("'up'", $tableName, $name, $index);
+                    $down[] = $this->buildRemoveIndex("'up'", $tableName, $name, $index);
+                }
+            }
+        }
+
+        if ( ! empty($changes['created_fks'])) {
+            foreach ($changes['created_fks'] as $tableName => $createdFks) {
+                foreach ($createdFks as $name => $foreignKey) {
+                    $up[] = $this->buildCreateForeignKey("'up'", $tableName, $foreignKey);
+                    $down[] = $this->buildDropForeignKey("'up'", $tableName, $foreignKey);
+                }
+            }
+        }
+
+        if ( ! empty($up) || ! empty($down)) {
+            $up = implode("\n", $up);
+            $down = implode("\n", $down);
+            $className = 'Version' . $this->migration->getNextMigrationClassVersion();
+            $this->generateMigrationClass($className, array(), $up, $down);
+        }
+        return $changes;
+    }
+
+    /**
      * Generate a set of migration classes from the existing databases
      *
      * @return void
@@ -150,8 +264,9 @@ END;
     /**
      * Generate a set of migrations from a set of models
      *
-     * @param  string $modelsPath
-     * @return void
+     * @param  string $modelsPath    Path to models
+     * @param  string $modelLoading  What type of model loading to use when loading the models
+     * @return boolean
      */
     public function generateMigrationsFromModels($modelsPath = null, $modelLoading = null)
     {
@@ -166,20 +281,23 @@ END;
         $foreignKeys = array();
 
         foreach ($models as $model) {
-            $export = Doctrine::getTable($model)->getExportableFormat();
+            $table = Doctrine::getTable($model);
+            if ($table->getTableName() !== $this->migration->getTableName()) {
+                $export = $table->getExportableFormat();
 
-            $foreignKeys[$export['tableName']] = $export['options']['foreignKeys'];
+                $foreignKeys[$export['tableName']] = $export['options']['foreignKeys'];
 
-            $up = $this->buildCreateTable('up', $export);
-            $down = $this->buildDropTable('up', $export);
+                $up = $this->buildCreateTable("'up'", $export);
+                $down = $this->buildDropTable("'up'", $export);
 
-            $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
+                $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
 
-            $this->generateMigrationClass($className, array(), $up, $down);
+                $this->generateMigrationClass($className, array(), $up, $down);
+            }
         }
 
         if ( ! empty($foreignKeys)) {
-            $className = 'ApplyForeignKeyConstraints';
+            $className = 'AddFks';
 
             $up = '';
             $down = '';
@@ -187,14 +305,16 @@ END;
                 $tableForeignKeyNames[$tableName] = array();
 
                 foreach ($definitions as $definition) {
-                    $definition['name'] = $tableName . '_' .implode('_', (array)$definition['local']);
+                    $definition['name'] = $tableName . '_' .implode('_', (array) $definition['local']);
 
-                    $up .= $this->buildCreateForeignKey('up', $tableName, $definition);
-                    $down .= $this->buildDropForeignKey('up', $tableName, $definition);
+                    $up .= $this->buildCreateForeignKey("'up'", $tableName, $definition);
+                    $down .= $this->buildDropForeignKey("'up'", $tableName, $definition);
                 }
             }
 
-            $this->generateMigrationClass($className, array(), $up, $down);
+            if ($up || $down) {
+                $this->generateMigrationClass($className, array(), $up, $down);
+            }
         }
 
         return true;
@@ -210,7 +330,7 @@ END;
      */
     public function buildCreateForeignKey($upDown, $tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey('" . $upDown . "', '" . $tableName . "', " . $this->varExport($definition, true) . ");";
+        return "\t\t\$this->createForeignKey(" . $upDown . ", '" . $tableName . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
@@ -223,11 +343,11 @@ END;
      */
     public function buildDropForeignKey($upDown, $tableName, $definition)
     {
-        return "\t\t\$this->dropForeignKey('" . $upDown . "', '" . $tableName . "', '" . $definition['name'] . "');\n";
+        return "\t\t\$this->dropForeignKey(" . $upDown . ", '" . $tableName . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
-     * buildCreateTable
+     * Build the code for creating tables
      *
      * @param  string $upDown
      * @param  string $tableData
@@ -235,7 +355,7 @@ END;
      */
     public function buildCreateTable($upDown, $tableData)
     {
-        $code  = "\t\t\$this->createTable('" . $upDown . "', '" . $tableData['tableName'] . "', ";
+        $code  = "\t\t\$this->createTable(" . $upDown . ", '" . $tableData['tableName'] . "', ";
 
         $code .= $this->varExport($tableData['columns'], true) . ", ";
 
@@ -247,7 +367,7 @@ END;
     }
 
     /**
-     * buildDropTable
+     * Build the code for dropping tables
      *
      * @param  string $upDown
      * @param  string $tableData
@@ -255,12 +375,93 @@ END;
      */
     public function buildDropTable($upDown, $tableData)
     {
-        return "\t\t\$this->dropTable('" . $upDown . "', '" . $tableData['tableName'] . "');";
+        return "\t\t\$this->dropTable(" . $upDown . ", '" . $tableData['tableName'] . "');";
     }
 
     /**
-     * Generate a new migration class
+     * Build the code for adding columns
      *
+     * @param string $upDown 
+     * @param string $tableName 
+     * @param string $columnName 
+     * @param string $column 
+     * @return string $code
+     */
+    public function buildAddColumn($upDown, $tableName, $columnName, $column)
+    {
+        $length = $column['length'];
+        $type = $column['type'];
+        unset($column['length'], $column['type']);
+        return "\t\t\$this->addColumn(" . $upDown . ", '" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
+    }
+
+    /**
+     * Build the code for removing columns
+     *
+     * @param string $upDown 
+     * @param string $tableName 
+     * @param string $columnName 
+     * @param string $column 
+     * @return string $code
+     */
+    public function buildRemoveColumn($upDown, $tableName, $columnName, $column)
+    {
+        return "\t\t\$this->removeColumn(" . $upDown . ", '" . $tableName . "', '" . $columnName. "');";
+    }
+
+    /**
+     * Build the code for changing columns
+     *
+     * @param string $tableName 
+     * @param string $columnName 
+     * @param string $column 
+     * @return string $code
+     */
+    public function buildChangeColumn($tableName, $columnName, $column)
+    {
+        $length = $column['length'];
+        $type = $column['type'];
+        unset($column['length'], $column['type']);
+        return "\t\t\$this->changeColumn('" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
+    }
+
+    /**
+     * Build the code for adding indexes
+     *
+     * @param string $upDown 
+     * @param string $tableName 
+     * @param string $indexName 
+     * @param string $index 
+     * @return sgtring $code
+     */
+    public function buildAddIndex($upDown, $tableName, $indexName, $index)
+    {
+        return "\t\t\$this->addIndex(" . $upDown . ", '$tableName', '$indexName', " . $this->varExport($index) . ");";
+    }
+
+    /**
+     * Build the code for removing indexes
+     *
+     * @param string $upDown 
+     * @param string $tableName 
+     * @param string $indexName 
+     * @param string $index 
+     * @return string $code
+     */
+    public function buildRemoveIndex($upDown, $tableName, $indexName, $index)
+    {
+        return "\t\t\$this->removeIndex(" . $upDown . ", '$tableName', '$indexName', " . $this->varExport($index) . ");";
+    }
+
+    /**
+     * Generate a migration class
+     *
+     * @param string  $className   Class name to generate
+     * @param array   $options     Options for the migration class
+     * @param string  $up          The code for the up function
+     * @param string  $down        The code for the down function
+     * @param boolean $return      Whether or not to return the code.
+     *                             If true return and false it writes the class to disk.
      * @return mixed
      */
     public function generateMigrationClass($className, $options = array(), $up = null, $down = null, $return = false)
@@ -298,7 +499,12 @@ END;
     /**
      * Build the code for a migration class
      *
-     * @return string
+     * @param string  $className   Class name to generate
+     * @param string  $fileName    File name to write the class to
+     * @param array   $options     Options for the migration class
+     * @param string  $up          The code for the up function
+     * @param string  $down        The code for the down function
+     * @return string $content     The code for the generated class
      */
     public function buildMigrationClass($className, $fileName = null, $options = array(), $up = null, $down = null)
     {
@@ -310,7 +516,6 @@ END;
                                        $extends,
                                        $up,
                                        $down);
-
 
         return $content;
     }

@@ -35,16 +35,16 @@ abstract class Doctrine_Migration_Base
     protected $_changes = array('created_tables'      =>  array(),
                                 'renamed_tables'      =>  array(),
                                 'created_constraints' =>  array(),
+                                'added_columns'       =>  array(),
+                                'added_indexes'       =>  array(),
                                 'dropped_fks'         =>  array(),
                                 'created_fks'         =>  array(),
                                 'dropped_constraints' =>  array(),
                                 'removed_indexes'     =>  array(),
                                 'dropped_tables'      =>  array(),
-                                'added_columns'       =>  array(),
                                 'renamed_columns'     =>  array(),
                                 'changed_columns'     =>  array(),
-                                'removed_columns'     =>  array(),
-                                'added_indexes'       =>  array());
+                                'removed_columns'     =>  array());
 
     protected static $_opposites = array('created_tables'       => 'dropped_tables',
                                          'dropped_tables'       => 'created_tables',
@@ -66,6 +66,11 @@ abstract class Doctrine_Migration_Base
     public function getChanges()
     {
         return $this->_changes;
+    }
+
+    public function getNumChanges()
+    {
+        return (count($this->_changes, true) - count($this->_changes));
     }
 
     /**
@@ -156,7 +161,7 @@ abstract class Doctrine_Migration_Base
      * @param string $primary           Whether or not the constraint is primary
      * @return void
      */
-    public function dropConstraint($upDown, $tableName, $constraintName, array $definition, $primary = false)
+    public function dropConstraint($upDown, $tableName, $constraintName, array $definition = array(), $primary = false)
     {
         $options = get_defined_vars();
         
@@ -188,7 +193,6 @@ abstract class Doctrine_Migration_Base
      */
     public function dropForeignKey($upDown, $tableName, array $definition)
     {
-        $fkName = $definition['name'];
         $options = get_defined_vars();
         
         $this->_addChange('dropped_fks', $options);
@@ -205,10 +209,12 @@ abstract class Doctrine_Migration_Base
      * @param array  $options     Array of options for the column
      * @return void
      */
-    public function addColumn($upDown, $tableName, $columnName, $length, $type, array $options = array())
+    public function addColumn($upDown, $tableName, $columnName, $length = null, $type, array $options = array())
     {
         $options = get_defined_vars();
-        $options['length'] = $length;
+        $options['options']['length'] = $length;
+        $options = array_merge($options, $options['options']);
+        unset($options['options']);
 
         $this->_addChange('added_columns', $options);
     }
@@ -224,10 +230,12 @@ abstract class Doctrine_Migration_Base
      * @param array  $options     Array of options for the column
      * @return void
      */
-    public function removeColumn($upDown, $tableName, $columnName, $length, $type, array $options = array())
+    public function removeColumn($upDown, $tableName, $columnName, $length = null, $type = null, array $options = array())
     {
         $options = get_defined_vars();
-        $options['length'] = $length;
+        $options['options']['length'] = $length;
+        $options = array_merge($options, $options['options']);
+        unset($options['options']);
 
         $this->_addChange('removed_columns', $options);
     }
@@ -256,10 +264,11 @@ abstract class Doctrine_Migration_Base
      * @param array  $options       New options for the column
      * @return void
      */
-    public function changeColumn($tableName, $columnName, $type, array $options = array())
+    public function changeColumn($tableName, $columnName, $length = null, $type = null, array $options = array())
     {
         $options = get_defined_vars();
-        
+        $options['options']['length'] = $length;
+
         $this->_addChange('changed_columns', $options);
     }
 
@@ -288,7 +297,7 @@ abstract class Doctrine_Migration_Base
      * @param array  $definition    Definition of the index
      * @return void
      */
-    public function removeIndex($upDown, $tableName, $indexName, array $definition)
+    public function removeIndex($upDown, $tableName, $indexName, array $definition = array())
     {
         $options = get_defined_vars();
         

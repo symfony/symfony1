@@ -422,7 +422,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     $name = sprintf($name, $this->getTableName());
 
                     $definition = array('type' => (isset($identifierOptions['type']) && $identifierOptions['type']) ? $identifierOptions['type']:'integer',
-                                        'length' => (isset($identifierOptions['length']) && $identifierOptions['length']) ? $identifierOptions['length']:20,
+                                        'length' => (isset($identifierOptions['length']) && $identifierOptions['length']) ? $identifierOptions['length']:8,
                                         'autoincrement' => isset($identifierOptions['autoincrement']) ? $identifierOptions['autoincrement']:true,
                                         'primary' => isset($identifierOptions['primary']) ? $identifierOptions['primary']:true);
 
@@ -661,6 +661,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             foreach ($this->getRelations() as $name => $relation) {
                 $fk = $relation->toArray();
                 $fk['foreignTable'] = $relation->getTable()->getTableName();
+                $name = $relation['localTable']->getTableName() . '_' . implode('_', (array) $relation['local']) . '_' . $relation['table']->getTableName() . '_' . implode('_', (array) $relation['foreign']);
 
                 if ($relation->getTable() === $this && in_array($relation->getLocal(), $primary)) {
                     if ($relation->hasConstraint()) {
@@ -673,13 +674,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                    'onDelete' => $fk['onDelete']);
 
                 if ($relation instanceof Doctrine_Relation_LocalKey) {
-                    $def = array('local'        => $relation->getLocal(),
+                    $def = array('name'         => $name,
+                                 'local'        => $relation->getLocal(),
                                  'foreign'      => $relation->getForeign(),
                                  'foreignTable' => $relation->getTable()->getTableName());
 
                     if (($key = array_search($def, $options['foreignKeys'])) === false) {
-                        $options['foreignKeys'][] = $def;
-                        $constraints[] = $integrity;
+                        $options['foreignKeys'][$name] = $def;
+                        $constraints[$name] = $integrity;
                     } else {
                         if ($integrity !== $emptyIntegrity) {
                             $constraints[$key] = $integrity;
@@ -1072,6 +1074,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if ($length == null) {
             switch ($type) {
+                case 'integer':
+                    $length = 8;
+                break;
                 case 'string':
                 case 'clob':
                 case 'float':
