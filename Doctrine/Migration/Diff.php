@@ -130,8 +130,8 @@ class Doctrine_Migration_Diff
         $changes = $this->_buildChanges($fromInfo, $toInfo);
         
         // clean up tmp directories
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . 'from_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . 'to_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
         
         return $changes;
     }
