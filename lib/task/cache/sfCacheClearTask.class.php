@@ -61,7 +61,8 @@ To clear the [config|COMMENT] cache for all [prod|COMMENT] environments:
 
   [./symfony cache:clear --type=config --env=prod|INFO]
 
-The built-in types are: [config|COMMENT], [i18n|COMMENT], [routing|COMMENT], and [template|COMMENT].
+The built-in types are: [config|COMMENT], [i18n|COMMENT], [routing|COMMENT], [module|COMMENT]
+and [template|COMMENT].
 
 EOF;
   }
@@ -138,6 +139,7 @@ EOF;
     $this->clearI18NCache($appConfiguration);
     $this->clearRoutingCache($appConfiguration);
     $this->clearTemplateCache($appConfiguration);
+    $this->clearModuleCache($appConfiguration);
     $this->clearConfigCache($appConfiguration);
   }
 
@@ -171,6 +173,17 @@ EOF;
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
     $this->cleanCacheFromFactoryConfig($config['view_cache']['class'], $config['view_cache']['param']);
+  }
+
+  protected function clearModuleCache(sfApplicationConfiguration $appConfiguration)
+  {
+    $subDir = sfConfig::get('sf_cache_dir').'/'.$appConfiguration->getApplication().'/'.$appConfiguration->getEnvironment().'/modules';
+
+    if (is_dir($subDir))
+    {
+      // remove cache files
+      $this->getFilesystem()->remove(sfFinder::type('file')->discard('.sf')->in($subDir));
+    }
   }
 
   public function getFactoriesConfiguration(sfApplicationConfiguration $appConfiguration)
