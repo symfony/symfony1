@@ -143,7 +143,7 @@ class sfObjectRouteCollection extends sfRouteCollection
 
   protected function getDefaultActions()
   {
-    $actions = array('list', 'new', 'create', 'show', 'edit', 'update', 'delete');
+    $actions = array('list', 'new', 'create', 'edit', 'update', 'delete');
 
     if ($this->options['with_show'])
     {
