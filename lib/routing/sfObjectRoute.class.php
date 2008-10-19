@@ -20,6 +20,10 @@
  */
 class sfObjectRoute extends sfRequestRoute
 {
+  protected
+    $object  = false,
+    $objects = false;
+
   /**
    * Constructor.
    *
@@ -96,13 +100,18 @@ class sfObjectRoute extends sfRequestRoute
       throw new LogicException(sprintf('The route "%s" is not of type "object".', $this->pattern));
     }
 
+    if (false !== $this->object)
+    {
+      return $this->object;
+    }
+
     // check the related object
-    if (is_null($object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
+    if (is_null($this->object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
     {
       throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
     }
 
-    return $object;
+    return $this->object;
   }
 
   /**
@@ -124,14 +133,19 @@ class sfObjectRoute extends sfRequestRoute
       throw new LogicException(sprintf('The route "%s" is not of type "list".', $this->pattern));
     }
 
-    $objects = $this->getObjectsForParameters($this->parameters);
+    if (false !== $this->objects)
+    {
+      return $this->objects;
+    }
 
-    if (is_array($objects) && !count($objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
+    $this->objects = $this->getObjectsForParameters($this->parameters);
+
+    if (is_array($this->objects) && !count($this->objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
     {
       throw new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
     }
 
-    return $objects;
+    return $this->objects;
   }
 
   protected function getObjectForParameters($parameters)
