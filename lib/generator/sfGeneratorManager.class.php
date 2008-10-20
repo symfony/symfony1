@@ -19,28 +19,32 @@
 class sfGeneratorManager
 {
   protected
-    $configuration = null;
+    $configuration = null,
+    $basePath      = null;
 
   /**
    * Class constructor.
    *
    * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @param string                 $basePath      The base path for file generation
    *
    * @see initialize()
    */
-  public function __construct(sfProjectConfiguration $configuration)
+  public function __construct(sfProjectConfiguration $configuration, $basePath = null)
   {
-    $this->initialize($configuration);
+    $this->configuration = $configuration;
+    $this->basePath = $basePath;
   }
 
   /**
    * Initializes the sfGeneratorManager instance.
    *
-   * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @param      sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @deprecated
    */
   public function initialize(sfProjectConfiguration $configuration)
   {
-    $this->configuration = $configuration;
+    // DEPRECATED
   }
 
   /**
@@ -53,9 +57,41 @@ class sfGeneratorManager
     return $this->configuration;
   }
 
+  /**
+   * Gets the base path to use when generating files.
+   *
+   * @return string The base path
+   */
+  public function getBasePath()
+  {
+    if (is_null($this->basePath))
+    {
+      // for BC
+      $this->basePath = sfConfig::get('sf_module_cache_dir');
+    }
+
+    return $this->basePath;
+  }
+
+  /**
+   * Sets the base path to use when generating files.
+   *
+   * @param string $basePath The base path
+   */
+  public function setBasePath($basePath)
+  {
+    $this->basePath = $basePath;
+  }
+
+  /**
+   * Saves some content.
+   *
+   * @param string $path    The relative path
+   * @param string $content The content
+   */
   public function save($path, $content)
   {
-    $path = sfConfig::get('sf_module_cache_dir').DIRECTORY_SEPARATOR.$path;
+    $path = $this->getBasePath().DIRECTORY_SEPARATOR.$path;
 
     if (!is_dir(dirname($path)))
     {
