@@ -99,7 +99,7 @@ class sfTesterRequest extends sfTester
         $this->tester->pass(sprintf('cookie "%s" does not exist.', $name));
       }
 
-      return $this;
+      return $this->getObjectToReturn();
     }
 
     if ($exists)
@@ -128,7 +128,7 @@ class sfTesterRequest extends sfTester
     {
       $this->tester->fail(sprintf('cookie "%s" does not exist.', $name));
 
-      return $this;
+      return $this->getObjectToReturn();
     }
 
     if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))

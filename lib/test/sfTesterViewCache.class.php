@@ -71,7 +71,7 @@ class sfTesterViewCache extends sfTester
     {
       $this->tester->ok(!$boolean, 'cache is disabled');
 
-      return $this;
+      return $this->getObjectToReturn();
     }
 
     if ($uri == $this->routing->getCurrentInternalUri())
