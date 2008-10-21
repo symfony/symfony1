@@ -1063,7 +1063,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $name = 'Doctrine_Connection_' . $this->driverName . '_Exception';
 
         $exc  = new $name($e->getMessage(), (int) $e->getCode());
-        if ( ! is_array($e->errorInfo)) {
+        if ( ! isset($e->errorInfo) || ! is_array($e->errorInfo)) {
             $e->errorInfo = array(null, null, null, null);
         }
         $exc->processErrorInfo($e->errorInfo);
