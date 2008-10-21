@@ -102,9 +102,14 @@ class Doctrine_Data_Import extends Doctrine_Data
      *
      * @return void
      */
-    public function doImport()
+    public function doImport($append = false)
     {
         $array = $this->doParsing();
+        
+        if ( ! $append) {
+            $this->purge(array_reverse(array_keys($array)));
+        }
+        
         $this->_loadData($array);
     }
 

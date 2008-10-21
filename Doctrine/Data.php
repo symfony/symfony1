@@ -213,13 +213,13 @@ class Doctrine_Data
      * @param string $models 
      * @return void
      */
-    public function importData($directory, $format = 'yml', $models = array())
+    public function importData($directory, $format = 'yml', $models = array(), $append = false)
     {
         $import = new Doctrine_Data_Import($directory);
         $import->setFormat($format);
         $import->setModels($models);
         
-        return $import->doImport();
+        return $import->doImport($append);
     }
 
     /**

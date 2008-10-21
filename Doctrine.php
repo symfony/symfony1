@@ -856,11 +856,7 @@ final class Doctrine
     {
         $data = new Doctrine_Data();
 
-        if ( ! $append) {
-            $data->purge();
-        }
-
-        return $data->importData($yamlPath, 'yml');
+        return $data->importData($yamlPath, 'yml', array(), $append);
     }
 
     /**
