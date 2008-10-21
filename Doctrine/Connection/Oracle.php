@@ -59,7 +59,11 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
                           'identifier_quoting'   => true,
                           'pattern_escaping'     => true,
                           );
-        $this->sql_file_delimiter = "\n/\n";
+        
+        $this->properties['sql_file_delimiter']   = "\n/\n";
+        $this->properties['varchar2_max_length']  = 4000;
+        $this->properties['number_max_precision'] = 38;
+        
         parent::__construct($manager, $adapter);
     }
 
