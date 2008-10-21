@@ -120,8 +120,10 @@ class Doctrine_Import_Oracle extends Doctrine_Import
      */
     public function listTableColumns($table)
     {
-        $sql    = "SELECT column_name, data_type, data_length, nullable, data_default, data_scale, data_precision FROM all_tab_columns"
-                . " WHERE table_name = '" . $table . "' ORDER BY column_id";
+        $sql    = "SELECT column_name, data_type, "
+                . "CASE WHEN data_type = 'NUMBER' THEN data_precision ELSE data_length END AS data_length, "
+                . "nullable, data_default, data_scale, data_precision FROM all_tab_columns "
+                . "WHERE table_name = '" . $table . "' ORDER BY column_id";
 
         $result = $this->conn->fetchAssoc($sql);
 
@@ -142,7 +144,6 @@ class Doctrine_Import_Oracle extends Doctrine_Import
                'unsigned'   => $decl['unsigned'],
                'default'    => $val['data_default'],
                'length'     => $val['data_length'],
-               'precision'  => $val['data_precision'],
                'scale'      => $val['scale'],
             );
         }
@@ -186,7 +187,7 @@ class Doctrine_Import_Oracle extends Doctrine_Import
         {
             $result = array_change_key_case($result, CASE_LOWER);
             $relations[] = array('table'   => $result['referenced_table_name'],
-                                 'local'   => $result['column_name'],
+                                 'local'   => $result['local_column_name'],
                                  'foreign' => $result['referenced_column_name']);
         }
         return $relations;
