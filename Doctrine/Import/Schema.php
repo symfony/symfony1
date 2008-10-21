@@ -471,15 +471,21 @@ class Doctrine_Import_Schema
 
         // Array of the array keys to move to the parent, and the value to default the child definition to
         // after moving it. Will also populate the subclasses array for the inheritance parent
-        $moves = array('columns' => array());
+        $moves = array('columns' => array(),
+                       'indexes' => array(),
+                       'attributes' => array(),
+                       'options' => array(),
+                       'checks' => array());
         
         foreach ($array as $className => $definition) {
             // Move any definitions on the schema to the parent
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
                 $parent = $this->_findBaseSuperClass($array, $definition['className']);
                 foreach ($moves as $move => $resetValue) {
-                    $array[$parent][$move] = Doctrine_Lib::arrayDeepMerge($array[$parent][$move], $definition[$move]);
-                    $array[$definition['className']][$move] = $resetValue;
+                    if (isset($array[$parent][$move]) && isset($definition[$move])) {
+                        $array[$parent][$move] = Doctrine_Lib::arrayDeepMerge($array[$parent][$move], $definition[$move]);
+                        $array[$definition['className']][$move] = $resetValue;
+                    }
                 }
 
                 // Populate the parents subclasses
