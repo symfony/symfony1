@@ -199,6 +199,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     public function reset()
     {
+        $this->_subqueryAliases = array();
+        $this->_aggregateAliasMap = array();
+        $this->_pendingAggregates = array();
         $this->_pendingJoinConditions = array();
         $this->_pendingSubqueries = array();
         $this->_pendingFields = array();
@@ -207,7 +210,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_subqueryAliases = array();
         $this->_needsSubquery = false;
         $this->_isLimitSubqueryUsed = false;
-        $this->_processedParamIdx = 0;
     }
 
     /**
