@@ -180,7 +180,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         $this->_params['exec'] = $params;
 
         // Initialize prepared parameters array
-        $this->_execParams = $this->getParams();
+        $this->_execParams = $this->getFlattenedParams();
 
         // Initialize prepared parameters array
         $this->fixArrayParameterValues($this->_execParams);

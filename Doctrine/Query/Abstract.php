@@ -538,11 +538,23 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * getParams
+     * Get raw array of parameters for query and all parts.
      *
-     * @return array
+     * @return array $params
      */
-    public function getParams($params = array())
+    public function getParams()
+    {
+        return $this->_params;
+    }
+
+    /**
+     * Get flattened array of parameters for query.
+     * Used internally and used to pass flat array of params to the database.
+     *
+     * @param array $params
+     * @return void
+     */
+    public function getFlattenedParams($params = array())
     {
         return array_merge(
             $params, $this->_params['exec'], 
@@ -975,7 +987,7 @@ abstract class Doctrine_Query_Abstract
             $this->_params[$k] = $this->_conn->convertBooleans($v);
         }
 
-        $dqlParams = $this->getParams($params);
+        $dqlParams = $this->getFlattenedParams($params);
 
         // Check if we're not using a Doctrine_View
         if ( ! $this->_view) {
@@ -996,7 +1008,7 @@ abstract class Doctrine_Query_Abstract
                     $this->_params['exec'] = $params;
             
                     // Initialize prepared parameters array
-                    $this->_execParams = $this->getParams();
+                    $this->_execParams = $this->getFlattenedParams();
                     
                     // Fix possible array parameter values in SQL params
                     $this->fixArrayParameterValues($this->getInternalParams());
@@ -1050,7 +1062,7 @@ abstract class Doctrine_Query_Abstract
             throw new Doctrine_Query_Exception('You must have at least one component specified in your from.');
         }
 
-        $dqlParams = $this->getParams($params);
+        $dqlParams = $this->getFlattenedParams($params);
 
         $this->_preQuery($dqlParams);
 

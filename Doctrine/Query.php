@@ -1083,7 +1083,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_params['exec'] = $params;
 
         // Initialize prepared parameters array
-        $this->_execParams = $this->getParams();
+        $this->_execParams = $this->getFlattenedParams();
 
         if ($this->_state !== self::STATE_DIRTY) {
             $this->fixArrayParameterValues($this->getInternalParams());
