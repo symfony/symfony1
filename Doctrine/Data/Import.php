@@ -239,8 +239,13 @@ class Doctrine_Data_Import extends Doctrine_Data
             }
 
             if (Doctrine::getTable($className)->isTree()) {
-                $nestedSets[$className][] = $data;
-                $this->_buildNestedSetRows($className, $data);
+                $first = current($data);
+                if (isset($first['children'])) {
+                    $nestedSets[$className][] = $data;
+                    $this->_buildNestedSetRows($className, $data);
+                } else {
+                    $this->_buildRows($className, $data);
+                }
             } else {
                 $this->_buildRows($className, $data);
             }
