@@ -72,9 +72,13 @@ class Doctrine_Export_Schema
             $remove = array('ptype', 'ntype', 'alltypes');
             // Fix explicit length in schema, concat it to type in this format: type(length)
             foreach ($data['columns'] AS $name => $column) {
-                $data['columns'][$name]['type'] = $column['type'] . '(' . $column['length'] . ')';
-                unset($data['columns'][$name]['length']);
-
+                if (isset($column['length']) && $column['length'] && isset($column['scale']) && $column['scale']) {
+                    $data['columns'][$name]['type'] = $column['type'] . '(' . $column['length'] . ', ' . $column['scale'] . ')';
+                    unset($data['columns'][$name]['length'], $data['columns'][$name]['scale']);
+                } else {
+                    $data['columns'][$name]['type'] = $column['type'] . '(' . $column['length'] . ')';
+                    unset($data['columns'][$name]['length']);
+                }
                 // Strip out schema information which is not necessary to be dumped to the yaml schema file
                 foreach ($remove as $value) {
                     if (isset($data['columns'][$name][$value])) {

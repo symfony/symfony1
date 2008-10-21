@@ -167,6 +167,9 @@ class Doctrine_Import_Mysql extends Doctrine_Import
                           'notnull'       => (bool) ($val['null'] != 'YES'),
                           'autoincrement' => (bool) (strpos($val['extra'], 'auto_increment') !== false),
                           );
+            if (isset($decl['scale'])) {
+                $description['scale'] = $decl['scale'];
+            }
             $columns[$val['field']] = $description;
         }
 

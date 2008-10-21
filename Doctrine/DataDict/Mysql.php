@@ -250,7 +250,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             $decimal = '';
         } else {
             $length = strtok('(), ');
-            $decimal = strtok('(), ');
+            $decimal = strtok('(), ') ? strtok('(), '):null;
         }
         $type = array();
         $unsigned = $fixed = null;
@@ -260,6 +260,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
         }
 
         $values = null;
+        $scale = null;
 
         switch ($dbType) {
             case 'tinyint':
@@ -364,6 +365,9 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             break;
             case 'unknown':
             case 'decimal':
+                if ($decimal !== null) {
+                    $scale = $decimal;
+                }
             case 'numeric':
                 $type[] = 'decimal';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
@@ -403,12 +407,14 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
         }
 
         $length = ((int) $length == 0) ? null : (int) $length;
-
-        if ($values === null) {
-            return array('type' => $type, 'length' => $length, 'unsigned' => $unsigned, 'fixed' => $fixed);
-        } else {
-            return array('type' => $type, 'length' => $length, 'unsigned' => $unsigned, 'fixed' => $fixed, 'values' => $values);
+        $def =  array('type' => $type, 'length' => $length, 'unsigned' => $unsigned, 'fixed' => $fixed);
+        if ($values !== null) {
+            $def['values'] = $values;
         }
+        if ($scale !== null) {
+            $def['scale'] = $scale;
+        }
+        return $def;
     }
 
     /**

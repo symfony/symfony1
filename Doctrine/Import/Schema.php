@@ -377,7 +377,12 @@ class Doctrine_Import_Schema
                     $e = explode('(', $field['type']);
                     if (isset($e[0]) && isset($e[1])) {
                         $colDesc['type'] = $e[0];
-                        $colDesc['length'] = substr($e[1], 0, strlen($e[1]) - 1);
+                        $value = substr($e[1], 0, strlen($e[1]) - 1);
+                        $e = explode(',', $value);
+                        $colDesc['length'] = $e[0];
+                        if (isset($e[1]) && $e[1]) {
+                            $colDesc['scale'] = $e[1];
+                        }
                     } else {
                         $colDesc['type'] = isset($field['type']) ? (string) $field['type']:null;
                         $colDesc['length'] = isset($field['length']) ? (int) $field['length']:null;
