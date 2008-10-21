@@ -144,7 +144,7 @@ class Doctrine_Import_Oracle extends Doctrine_Import
                'unsigned'   => $decl['unsigned'],
                'default'    => $val['data_default'],
                'length'     => $val['data_length'],
-               'scale'      => $val['scale'],
+               'scale'      => isset($val['scale']) ? $val['scale']:null,
             );
         }
 
