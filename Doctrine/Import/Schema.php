@@ -330,6 +330,7 @@ class Doctrine_Import_Schema
         $build = array();
 
         foreach ($array as $className => $table) {
+            $table = (array) $table;
             $this->_validateSchemaElement('root', array_keys($table), $className);
 
             $columns = array();
