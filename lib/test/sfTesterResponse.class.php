@@ -147,6 +147,49 @@ class sfTesterResponse extends sfTester
   }
 
   /**
+   * Tests if a cookie was set.
+   * 
+   * @param  string $name
+   * @param  string $value
+   * @param  array  $attributes Other cookie attributes to check (expires, path, domain, etc)
+   * 
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function setsCookie($name, $value = null, $attributes = array())
+  {
+    foreach ($this->response->getCookies() as $cookie)
+    {
+      if ($name == $cookie['name'])
+      {
+        if (is_null($value))
+        {
+          $this->tester->pass(sprintf('response sets cookie "%s"', $name));
+        }
+        else
+        {
+          $this->tester->ok($value == $cookie['value'], sprintf('response sets cookie "%s" to "%s"', $name, $value));
+        }
+
+        foreach ($attributes as $attributeName => $attributeValue)
+        {
+          if (!array_key_exists($attributeName, $cookie))
+          {
+            throw new LogicException(sprintf('The cookie attribute "%s" is not valid.', $attributeName));
+          }
+
+          $this->tester->is($cookie[$attributeName], $attributeValue, sprintf('"%s" cookie "%s" attribute is "%s"', $name, $attributeName, $attributeValue));
+        }
+
+        return $this->getObjectToReturn();
+      }
+    }
+
+    $this->tester->fail(sprintf('response sets cookie "%s"', $name));
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
    * Tests whether or not a given string is in the response.
    *
    * @param string Text to check
@@ -207,6 +250,19 @@ class sfTesterResponse extends sfTester
     foreach ($this->response->getHttpHeaders() as $name => $value)
     {
       printf("%s: %s\n", $name, $value);
+    }
+
+    foreach ($this->response->getCookies() as $cookie)
+    {
+      vprintf("Set-Cookie: %s=%s; %spath=%s%s%s%s\n", array(
+        $cookie['name'],
+        $cookie['value'],
+        is_null($cookie['expire']) ? '' : sprintf('expires=%s; ', date('D d-M-Y H:i:s T', $cookie['expire'])),
+        $cookie['path'],
+        $cookie['domain'] ? sprintf('; domain=%s', $cookie['domain']) : '',
+        $cookie['secure'] ? '; secure' : '',
+        $cookie['httpOnly'] ? '; HttpOnly' : '',
+      ));
     }
 
     echo "\n";
