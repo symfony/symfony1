@@ -166,6 +166,21 @@ class sfFormField
   }
 
   /**
+   * Returns the help text.
+   *
+   * @return string The help text
+   */
+  public function renderHelp()
+  {
+    if (is_null($this->parent))
+    {
+      throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
+    }
+
+    return $this->parent->getWidget()->getHelp($this->name);
+  }
+
+  /**
    * Returns the label tag.
    *
    * @param  string $label       The label name (not null to override the current value)
