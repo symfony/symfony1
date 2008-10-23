@@ -130,8 +130,8 @@ class Doctrine_Migration_Diff
         $changes = $this->_buildChanges($fromInfo, $toInfo);
         
         // clean up tmp directories
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
         
         return $changes;
     }
@@ -276,7 +276,7 @@ class Doctrine_Migration_Diff
      */
     protected function _generateModels($prefix, $item)
     {
-        $path = sys_get_temp_dir() . strtolower($prefix) . '_doctrine_tmp_dirs';
+        $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
         $options = array('classPrefix' => $prefix);
 
         if ( is_string($item) && file_exists($item)) {
