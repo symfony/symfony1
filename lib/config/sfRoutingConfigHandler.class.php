@@ -55,12 +55,6 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
     $routes = array();
     foreach ($routeDefinitions as $name => $route)
     {
-      $arguments = array();
-      foreach ($route[1] as $argument)
-      {
-        $arguments[] = is_array($argument) ? var_export($argument, true) : sprintf("'%s'", $argument);
-      }
-
       $r = new ReflectionClass($route[0]);
       $routes[$name] = $r->newInstanceArgs($route[1]);
     }
