@@ -1449,6 +1449,27 @@ argument and must return an `Article` object:
       }
     }
 
+`sfPropelRoute` also provide a `setListCriteria()` method to override the
+route parsed parameters. This is especially useful when you want to refine the
+objects returned by the route, based on some other parameters, like
+a filter for example:
+
+    [php]
+    public function executeList($request)
+    {
+      $this->filters = new ArticleFormFilter();
+      if ($request->isMethod('post'))
+      {
+        $this->filters->bind($request->getParameter('article_filters'));
+        if ($this->filters->isValid())
+        {
+          $this->getRoute()->setListCriteria($this->filters->getCriteria());
+        }
+      }
+
+      $this->articles = $this->getRoute()->getObjects();
+    }
+
 URL helpers
 -----------
 
