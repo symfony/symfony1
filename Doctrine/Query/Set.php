@@ -48,7 +48,7 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
                     $alias = $this->query->getTableAlias($reference);
                     $map   = $this->query->getAliasDeclaration($reference);
         
-                    $dql = str_replace($part, $map['table']->getColumnName($field), $dql);
+                    $dql = str_replace($part, $map['table']->getConnection()->quoteIdentifier($map['table']->getColumnName($field)), $dql);
                 }
             }
         }

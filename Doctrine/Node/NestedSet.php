@@ -1056,7 +1056,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left columns
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', 'lft + ?')
+                ->set($componentName . '.lft', $componentName.'.lft + ?')
                 ->where($componentName . '.lft >= ?', array($delta, $first));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
@@ -1065,7 +1065,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right columns
         $resultRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', 'rgt + ?')
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?')
                 ->where($componentName . '.rgt >= ?', array($delta, $first));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
@@ -1092,7 +1092,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left column values
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', 'lft + ?')
+                ->set($componentName . '.lft', $componentName.'.lft + ?')
                 ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($delta, $first, $last));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
@@ -1101,7 +1101,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right column values
         $qRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', 'rgt + ?')
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?')
                 ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($delta, $first, $last));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
