@@ -633,7 +633,7 @@ As a new addition, `javascript_tag()` now can behave as `slot()`. This allows su
 >creation of the symlink in the web directory this is required for core plugins as well.
 >To do this manually you need to invoke:
 >
-> `symfony plugin:configure-core`
+> `symfony plugin:publish-assets --only-core`
 >
 > The target is that the project creation and upgrade task do this for you.
 
