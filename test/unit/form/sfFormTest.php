@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(125, new lime_output_color());
+$t = new lime_test(127, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -730,3 +730,36 @@ catch (LogicException $e)
 
 $errorSchema = $f1->getErrorSchema();
 $t->ok(array_key_exists('d', $errorSchema->getErrors()), 'mergeForm() merges errors after having been bound');
+
+class MyWidget extends sfWidgetForm
+{
+  protected function configure($options = array(), $attributes = array())
+  {
+    $this->addRequiredOption('name');
+  }
+
+  public function render($name, $value = null, $attributes = array(), $errors = array())
+  {
+    return null;
+  }
+
+  public function getJavaScripts()
+  {
+    return array('/path/to/a/'.$this->getOption('name').'.js');
+  }
+
+  public function getStylesheets()
+  {
+    return array('/path/to/a/'.$this->getOption('name').'.css' => 'all');
+  }
+}
+
+// ->getJavaScripts() ->getStylesheets()
+$t->diag('->getJavaScripts() ->getStylesheets()');
+$f = new FormTest();
+$f->setWidgets(array(
+  'foo' => new MyWidget(array('name' => 'foo')),
+  'bar' => new MyWidget(array('name' => 'bar')),
+));
+$t->is($f->getJavaScripts(), array('/path/to/a/foo.js', '/path/to/a/bar.js'), '->getJavaScripts() returns the stylesheets of all widgets');
+$t->is($f->getStylesheets(), array('/path/to/a/foo.css' => 'all', '/path/to/a/bar.css' => 'all'), '->getStylesheets() returns the JavaScripts of all widgets');

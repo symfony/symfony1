@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(79, new lime_output_color());
+$t = new lime_test(81, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -409,3 +409,35 @@ $t->isa_ok($w->getFormFormatter(), 'sfWidgetFormSchemaFormatterTable', 'setDefau
 sfWidgetFormSchema::setDefaultFormFormatterName('list');
 $w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
 $t->isa_ok($w->getFormFormatter(), 'sfWidgetFormSchemaFormatterList', 'setDefaultFormFormatterName() changes the default form formatter name correctly');
+
+class MyWidget extends sfWidgetForm
+{
+  protected function configure($options = array(), $attributes = array())
+  {
+    $this->addRequiredOption('name');
+  }
+
+  public function render($name, $value = null, $attributes = array(), $errors = array())
+  {
+    return null;
+  }
+
+  public function getJavaScripts()
+  {
+    return array('/path/to/a/'.$this->getOption('name').'.js');
+  }
+
+  public function getStylesheets()
+  {
+    return array('/path/to/a/'.$this->getOption('name').'.css' => 'all');
+  }
+}
+
+// ->getJavaScripts() ->getStylesheets()
+$t->diag('->getJavaScripts() ->getStylesheets()');
+$w = new sfWidgetFormSchema(array(
+  'foo' => new MyWidget(array('name' => 'foo')),
+  'bar' => new MyWidget(array('name' => 'bar')),
+));
+$t->is($w->getJavaScripts(), array('/path/to/a/foo.js', '/path/to/a/bar.js'), '->getJavaScripts() returns an array of stylesheets');
+$t->is($w->getStylesheets(), array('/path/to/a/foo.css' => 'all', '/path/to/a/bar.css' => 'all'), '->getStylesheets() returns an array of JavaScripts');

@@ -573,3 +573,55 @@ function _dynamic_path($uri, $format, $absolute = false)
 {
   return url_for($uri.(false === strpos($uri, '?') ? '?' : '&').'sf_format='.$format, $absolute);
 }
+
+/**
+ * Returns <script> tags for all javascripts associated with the given form.
+ *
+ * @return string <script> tags
+ */
+function get_javascripts_for_form(sfForm $form)
+{
+  $html = '';
+  foreach ($form->getJavascripts() as $file)
+  {
+    $html .= javascript_include_tag($file);
+  }
+
+  return $html;
+}
+
+/**
+ * Prints <script> tags for all javascripts associated with the given form.
+ *
+ * @see get_javascripts_for_form()
+ */
+function include_javascripts_for_form(sfForm $form)
+{
+  echo get_javascripts_for_form($form);
+}
+
+/**
+ * Returns <link> tags for all stylesheets associated with the given form.
+ *
+ * @return string <link> tags
+ */
+function get_stylesheets_for_form(sfForm $form)
+{
+  $html = '';
+  foreach ($form->getStylesheets() as $file => $media)
+  {
+    $html .= stylesheet_tag($file, array('media' => $media));
+  }
+
+  return $html;
+}
+
+/**
+ * Prints <link> tags for all stylesheets associated with the given form.
+ *
+ * @see get_stylesheets_for_form()
+ */
+function include_stylesheets_for_form(sfForm $form)
+{
+  echo get_stylesheets_for_form($form);
+}

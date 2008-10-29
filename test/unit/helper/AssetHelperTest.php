@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(57, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 class myRequest
 {
@@ -207,3 +207,32 @@ $t->is(get_stylesheets(),
   '<link rel="stylesheet" type="text/css" media="screen" href="module/action?sf_format=css" />'."\n", 
   'use_dynamic_stylesheet() register a dynamic stylesheet in the response'
 );
+
+class MyForm extends sfForm
+{
+  public function getStylesheets()
+  {
+    return array('/path/to/a/foo.css' => 'all', '/path/to/a/bar.css' => 'print');
+  }
+
+  public function getJavaScripts()
+  {
+    return array('/path/to/a/foo.js', '/path/to/a/bar.js');
+  }
+}
+
+// get_javascripts_for_form() get_stylesheets_for_form()
+$t->diag('get_javascripts_for_form() get_stylesheets_for_form()');
+$form = new MyForm();
+$t->is(get_javascripts_for_form($form), <<<EOF
+<script type="text/javascript" src="/path/to/a/foo.js"></script>
+<script type="text/javascript" src="/path/to/a/bar.js"></script>
+
+EOF
+, 'get_javascripts_for_form() returns script tags');
+$t->is(get_stylesheets_for_form($form), <<<EOF
+<link rel="stylesheet" type="text/css" media="all" href="/path/to/a/foo.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/path/to/a/bar.css" />
+
+EOF
+, 'get_stylesheets_for_form() returns link tags');

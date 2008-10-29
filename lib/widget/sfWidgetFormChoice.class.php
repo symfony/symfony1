@@ -71,26 +71,32 @@ class sfWidgetFormChoice extends sfWidgetForm
       }
     }
 
-    if ($this->getOption('renderer'))
+    if (!$this->getOption('renderer') && !$this->getOption('renderer_class') && $this->getOption('expanded'))
     {
-      $renderer = $this->getOption('renderer');
-    }
-    else
-    {
-      if (!$class = $this->getOption('renderer_class'))
-      {
-        $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
-        $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
-        if ($this->getOption('expanded'))
-        {
-          unset($attributes['multiple']);
-        }
-      }
-
-      $renderer = new $class(array_merge(array('choices' => new sfCallable(array($this, 'getChoices'))), $this->options['renderer_options']), $this->getAttributes());
+      unset($attributes['multiple']);
     }
 
-    return $renderer->render($name, $value, $attributes, $errors);
+    return $this->getRenderer()->render($name, $value, $attributes, $errors);
+  }
+
+  /**
+   * Gets the stylesheet paths associated with the widget.
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    return $this->getRenderer()->getStylesheets();
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the widget.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    return $this->getRenderer()->getJavaScripts();
   }
 
   public function getChoices()
@@ -102,6 +108,22 @@ class sfWidgetFormChoice extends sfWidgetForm
     }
 
     return $choices;
+  }
+
+  public function getRenderer()
+  {
+    if ($this->getOption('renderer'))
+    {
+      return $this->getOption('renderer');
+    }
+
+    if (!$class = $this->getOption('renderer_class'))
+    {
+      $type = !$this->getOption('expanded') ? '' : ($this->getOption('multiple') ? 'checkbox' : 'radio');
+      $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
+    }
+
+    return new $class(array_merge(array('choices' => new sfCallable(array($this, 'getChoices'))), $this->options['renderer_options']), $this->getAttributes());
   }
 
   public function __clone()

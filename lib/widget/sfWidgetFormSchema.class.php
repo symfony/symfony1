@@ -388,6 +388,40 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
+   * Gets the stylesheet paths associated with the widget.
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    $stylesheets = array();
+
+    foreach ($this->fields as $field)
+    {
+      $stylesheets = array_merge($stylesheets, $field->getStylesheets());
+    }
+
+    return $stylesheets;
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the widget.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    $javascripts = array();
+
+    foreach ($this->fields as $field)
+    {
+      $javascripts = array_merge($javascripts, $field->getJavaScripts());
+    }
+
+    return $javascripts;
+  }
+
+  /**
    * Returns true if the widget schema needs a multipart form.
    *
    * @return bool true if the widget schema needs a multipart form, false otherwise

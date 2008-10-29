@@ -189,6 +189,26 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   }
 
   /**
+   * Gets the stylesheet paths associated with the widget.
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    return $this->widget->getStylesheets();
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the widget.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    return $this->widget->getJavaScripts();
+  }
+
+  /**
    * @see sfWidgetFormSchema
    */
   public function needsMultipartForm()

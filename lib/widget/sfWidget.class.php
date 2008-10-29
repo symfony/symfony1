@@ -221,6 +221,30 @@ abstract class sfWidget
   }
 
   /**
+   * Gets the stylesheet paths associated with the widget.
+   *
+   * The array keys are files and values are the media names (separated by a ,):
+   *
+   *   array('/path/to/file.css' => 'all', '/another/file.css' => 'screen,print')
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    return array();
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the widget.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    return array();
+  }
+
+  /**
    * Sets the charset to use when rendering widgets.
    *
    * @param string $charset  The charset

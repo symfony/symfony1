@@ -631,6 +631,26 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Gets the stylesheet paths associated with the form.
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    return $this->widgetSchema->getStylesheets();
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the form.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    return $this->widgetSchema->getJavaScripts();
+  }
+
+  /**
    * Sets an option value.
    *
    * @param string $name  The option name

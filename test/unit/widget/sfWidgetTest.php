@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(30, new lime_output_color());
+$t = new lime_test(32, new lime_output_color());
 
 class MyWidget extends sfWidget
 {
@@ -159,3 +159,9 @@ $w = new MyWidget();
 $t->is(sfWidget::isXhtml(), true, '::isXhtml() return true if the widget must returns XHTML tags');
 sfWidget::setXhtml(false);
 $t->is($w->renderTag('input', array('value' => 'Test')), '<input value="Test">', '::setXhtml() changes the value of the XHTML tag');
+
+// ->getJavaScripts() ->getStylesheets()
+$t->diag('->getJavaScripts() ->getStylesheets()');
+$w = new MyWidget();
+$t->is($w->getJavaScripts(), array(), '->getJavaScripts() returns an array of stylesheets');
+$t->is($w->getStylesheets(), array(), '->getStylesheets() returns an array of JavaScripts');
