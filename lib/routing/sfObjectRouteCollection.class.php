@@ -39,12 +39,13 @@ class sfObjectRouteCollection extends sfRouteCollection
       'actions'       => false,
       'module'        => $this->options['name'],
       'prefix_path'   => '/'.$this->options['name'],
-      'column'        => 'id',
+      'column'        => isset($this->options['column']) ? $this->options['column'] : 'id',
       'with_show'     => true,
       'segment_names' => array('edit' => 'edit', 'new' => 'new'),
       'model_methods' => array(),
     ), $this->options);
 
+    $this->options['requirements'] = array_merge(array($this->options['column'] => '\d+'), $this->options['requirements']);
     $this->options['model_methods'] = array_merge(array('list' => null, 'object' => null), $this->options['model_methods']);
 
     if (isset($this->options['route_class']))
