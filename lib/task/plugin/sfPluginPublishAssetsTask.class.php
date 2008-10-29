@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -59,10 +59,17 @@ EOF;
       $this->logSection('plugin', 'Configuring core plugin - '.$plugin);
       $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'plugin_dir' => $corePluginsDir)));
     }
-    if (! $arguments['only-core']) {
+
+    if (!$arguments['only-core'])
+    {
       $thirdPartyPlugins = sfConfig::get('sf_plugins_dir');
-      foreach (sfFinder::type('dir')->relative()->maxdepth(0)->in($thirdPartyPlugins) as $plugin)
+      foreach (sfFinder::type('dir')->relative()->maxdepth(0)->follow_link()->in($thirdPartyPlugins) as $plugin)
       {
+        if (false === strpos($plugin, 'Plugin'))
+        {
+          continue;
+        }
+
         $this->logSection('plugin', 'Configuring plugin - '.$plugin);
         $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'plugin_dir' => $thirdPartyPlugins)));
       }
