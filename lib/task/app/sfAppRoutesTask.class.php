@@ -106,25 +106,35 @@ EOF;
     $this->log(sprintf('%s         %s', $this->formatter->format('Name', 'COMMENT'), $name));
     $this->log(sprintf('%s      %s', $this->formatter->format('Pattern', 'COMMENT'), $route->getPattern()));
     $this->log(sprintf('%s        %s', $this->formatter->format('Class', 'COMMENT'), get_class($route)));
+
     $defaults = '';
-    foreach ($route->getDefaults() as $name => $value)
+    $d = $route->getDefaults();
+    ksort($d);
+    foreach ($d as $name => $value)
     {
       $defaults .= ($defaults ? "\n".str_repeat(' ', 13) : '').$name.': '.$this->arrayToString($value);
     }
     $this->log(sprintf('%s     %s', $this->formatter->format('Defaults', 'COMMENT'), $defaults));
+
     $requirements = '';
-    foreach ($route->getRequirements() as $name => $value)
+    $r = $route->getRequirements();
+    ksort($r);
+    foreach ($r as $name => $value)
     {
       $requirements .= ($requirements ? "\n".str_repeat(' ', 13) : '').$name.': '.$this->arrayToString($value);
     }
     $this->log(sprintf('%s %s', $this->formatter->format('Requirements', 'COMMENT'), $requirements));
+
     $options = '';
-    foreach ($route->getOptions() as $name => $value)
+    $o = $route->getOptions();
+    ksort($o);
+    foreach ($o as $name => $value)
     {
       $options .= ($options ? "\n".str_repeat(' ', 13) : '').$name.': '.$this->arrayToString($value);
     }
     $this->log(sprintf('%s      %s', $this->formatter->format('Options', 'COMMENT'), $options));
     $this->log(sprintf('%s        %s', $this->formatter->format('Regex', 'COMMENT'), preg_replace('/^             /', '', preg_replace('/^/m', '             ', $route->getRegex()))));
+
     $tokens = '';
     foreach ($route->getTokens() as $token)
     {
