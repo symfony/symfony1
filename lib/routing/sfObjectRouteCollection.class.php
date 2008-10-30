@@ -58,8 +58,17 @@ class sfObjectRouteCollection extends sfRouteCollection
 
   protected function generateRoutes()
   {
-    $actions = false === $this->options['actions'] ? $this->getDefaultActions() : $this->options['actions'];
+    // collection actions
+    if (isset($this->options['collection_actions']))
+    {
+      foreach ($this->options['collection_actions'] as $action => $methods)
+      {
+        $this->routes[$this->getRoute($action)] = $this->getRouteForCollection($action, $methods);
+      }
+    }
 
+    // "standard" actions
+    $actions = false === $this->options['actions'] ? $this->getDefaultActions() : $this->options['actions'];
     foreach ($actions as $action)
     {
       $method = 'getRouteFor'.ucfirst($action);
@@ -70,6 +79,35 @@ class sfObjectRouteCollection extends sfRouteCollection
 
       $this->routes[$this->getRoute($action)] = $this->$method();
     }
+
+    // object actions
+    if (isset($this->options['object_actions']))
+    {
+      foreach ($this->options['object_actions'] as $action => $methods)
+      {
+        $this->routes[$this->getRoute($action)] = $this->getRouteForObject($action, $methods);
+      }
+    }
+  }
+
+  protected function getRouteForCollection($action, $methods)
+  {
+    return new $this->routeClass(
+      sprintf('%s/%s.:sf_format', $this->options['prefix_path'], $action),
+      array('module' => $this->options['module'], 'action' => $action, 'sf_format' => 'html'),
+      array_merge($this->options['requirements'], array('sf_method' => $methods)),
+      array('model' => $this->options['model'], 'type' => 'list', 'method' => $this->options['model_methods']['list'])
+    );
+  }
+
+  protected function getRouteForObject($action, $methods)
+  {
+    return new $this->routeClass(
+      sprintf('%s/:%s/%s.:sf_format', $this->options['prefix_path'], $this->options['column'], $action),
+      array('module' => $this->options['module'], 'action' => $method, 'sf_format' => 'html'),
+      array_merge($this->options['requirements'], array('sf_method' => $methods)),
+      array('model' => $this->options['model'], 'type' => 'object', 'method' => $this->options['model_methods']['object'])
+    );
   }
 
   protected function getRouteForList()
