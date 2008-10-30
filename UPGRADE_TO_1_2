@@ -1503,6 +1503,56 @@ a filter for example:
       $this->articles = $this->getRoute()->getObjects();
     }
 
+symfony also comes with "collection" route classes.
+
+These classes (`sfRouteCollection`, `sfObjectRouteCollection`, `sfPropelRouteCollection`)
+generate standard routes based on a definition:
+
+    [yml]
+    articles:
+      class:   sfPropelRouteCollection
+      options: { model: Article, module: article }
+
+By default, this route will generate 7 routes:
+
+  * list:    `articles        GET    /articles.:sf_format`
+  * new:     `articles_new    GET    /articles/new.:sf_format`
+  * create:  `articles_create POST   /articles.:sf_format`
+  * edit:    `articles_edit   GET    /articles/:id/edit.:sf_format`
+  * update:  `articles_update PUT    /articles/:id.:sf_format`
+  * delete:  `articles_delete DELETE /articles/:id.:sf_format`
+
+You can customize the generation with several options:
+
+  * model:              The model class name
+  * actions:            The list of actions to generate (from the 7 listed above)
+  * module:             The module name
+  * prefix_path:        The prefix path to add for every route
+  * column:             The column name for the primary key (`id` by default)
+  * with_show:          Whether to add the show method or not
+  * segment_names:      The segment names for `new` and `edit`
+  * model_methods:      The methods to use to get a collection or an object
+  * requirements:       The default requirements (by default, the `id` requirement is `\d+`)
+  * route_class:        The route class to use
+                        (by default `sfObjectRoute` for `sfObjectRouteCollection`
+                        and `sfPropelRoute` for `sfPropelRouteCollection`)
+  * collection_actions: A list of actions to add as collection actions
+  * object_actions:     A list of actions to add as object actions
+
+Here is another example with some options:
+
+    [yml]
+    articles:
+      class:   sfPropelRouteCollection
+      options:
+        model:              Article
+        module:             article
+        prefix_path:        /foo
+        methods:            [ list, edit, update ]
+        segment_names:      { list: nouveau, edit: edition }
+        collection_actions: { filter: post }
+        object_actions:     { publish: put }
+
 URL helpers
 -----------
 
