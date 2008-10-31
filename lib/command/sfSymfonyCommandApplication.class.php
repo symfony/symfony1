@@ -32,11 +32,11 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     if (is_readable($configurationFile))
     {
       require_once $configurationFile;
-      $configuration = new ProjectConfiguration(getcwd());
+      $configuration = new ProjectConfiguration(getcwd(), $this->dispatcher);
     }
     else
     {
-      $configuration = new sfProjectConfiguration(getcwd());
+      $configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
     }
 
     // application
