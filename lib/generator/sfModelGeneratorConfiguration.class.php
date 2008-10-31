@@ -43,7 +43,6 @@ class sfModelGeneratorConfiguration
         'title'          => $this->getListTitle(),
         'actions'        => $this->getListActions(),
         'object_actions' => $this->getListObjectActions(),
-        'batch_actions'  => $this->getListBatchActions(),
       ),
       'filter' => array(
         'fields'  => array(),
@@ -168,9 +167,14 @@ class sfModelGeneratorConfiguration
     }
 
     // list batch actions
-    foreach ($this->configuration['list']['batch_actions'] as $action => &$parameters)
+    $this->configuration['list']['batch_actions'] = array();
+    foreach ($this->getListBatchActions() as $action => $parameters)
     {
       $this->fixActionParameters($action, $parameters);
+
+      $action = 'batch'.ucfirst(0 === strpos($action, '_') ? substr($action, 1) : $action);
+
+      $this->configuration['list']['batch_actions'][$action] = $parameters;
     }
 
     // list field configuration
@@ -260,6 +264,7 @@ class sfModelGeneratorConfiguration
       }
 
       $this->configuration['credentials'][$action] = isset($params['credentials']) ? $params['credentials'] : array();
+      $this->configuration['credentials']['batch'.ucfirst($action)] = isset($params['credentials']) ? $params['credentials'] : array();
     }
     $this->configuration['credentials']['create'] = $this->configuration['credentials']['new'];
     $this->configuration['credentials']['update'] = $this->configuration['credentials']['edit'];
