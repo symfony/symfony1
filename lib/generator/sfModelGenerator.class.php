@@ -348,50 +348,6 @@ EOF;
   }
 
   /**
-   * Returns the configuration for fields in a given context.
-   *
-   * @param  string $context The Context
-   *
-   * @return array An array of configuration for all the fields in a given context 
-   */
-  public function getFieldsConfiguration($context)
-  {
-    $fields = array();
-
-    $names = array();
-    foreach ($this->getTableMap()->getColumns() as $column)
-    {
-      $name = sfInflector::underscore($column->getName());
-      $names[] = $name;
-      $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
-    }
-
-    foreach ($this->getManyToManyTables() as $tables)
-    {
-      $name = sfInflector::underscore($tables['middleTable']->getClassname()).'_list';
-      $names[] = $name;
-      $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
-    }
-
-    if (isset($this->config[$context]['fields']))
-    {
-      foreach ($this->config[$context]['fields'] as $name => $params)
-      {
-        if (in_array($name, $names))
-        {
-          continue;
-        }
-
-        $fields[$name] = is_array($params) ? $params : array();
-      }
-    }
-
-    unset($this->config[$context]['fields']);
-
-    return $fields;
-  }
-
-  /**
    * Validates the basic structure of the parameters.
    *
    * @param array $params An array of parameters
