@@ -73,7 +73,7 @@ class Doctrine_Parser_YamlSf_Inline
       case is_numeric($value):
         return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
       case false !== strpos($value, "\n"):
-        return sprintf('"%s"', str_replace(array('"', "\n"), array('\\"', '\n'), $value));
+        return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', ''), $value));
       case preg_match('/[ \s \' " \: \{ \} \[ \] , & \*]/x', $value):
         return sprintf("'%s'", str_replace('\'', '\'\'', $value));
       case '' == $value:
