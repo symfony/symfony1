@@ -124,7 +124,7 @@ class Doctrine_Event
     /**
      * getQuery
      *
-     * @return string       returns the query associated with this event (if any)
+     * @return Doctrine_Query       returns the query associated with this event (if any)
      */
     public function getQuery()
     {
