@@ -340,6 +340,40 @@ EOF;
     }
   }
 
+  public function getFieldsConfiguration($context)
+  {
+    $fields = array();
+
+    $names = array();
+    foreach ($this->getTableMap()->getColumns() as $column)
+    {
+      $name = sfInflector::underscore($column->getName());
+      $names[] = $name;
+      $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
+    }
+
+    foreach ($this->getManyToManyTables() as $tables)
+    {
+      $name = sfInflector::underscore($tables['middleTable']->getClassname()).'_list';
+      $names[] = $name;
+      $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
+    }
+
+    foreach ($this->config[$context]['fields'] as $name => $params)
+    {
+      if (in_array($name, $names))
+      {
+        continue;
+      }
+
+      $fields[$name] = is_array($params) ? $params : array();
+    }
+
+    unset($this->config[$context]['fields']);
+
+    return $fields;
+  }
+
   protected function validateParameters($params)
   {
     foreach (array('model_class', 'moduleName') as $key)
