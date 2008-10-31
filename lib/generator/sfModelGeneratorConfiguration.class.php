@@ -291,21 +291,6 @@ class sfModelGeneratorConfiguration
       $parameters = array();
     }
 
-    if (isset($parameters['name']))
-    {
-      $name = $parameters['name'];
-    }
-    else if ('_' != $action[0])
-    {
-      $name = $action;
-    }
-    else
-    {
-      $name = '_list' == $action ? 'Cancel' : substr($action, 1);
-    }
-
-    $parameters['name'] = sfInflector::humanize($name);
-
     if (!isset($parameters['params']))
     {
       $parameters['params'] = array();
@@ -324,5 +309,20 @@ class sfModelGeneratorConfiguration
     {
       $parameters = array_merge($defaults[$action], $parameters);
     }
+
+    if (isset($parameters['label']))
+    {
+      $label = $parameters['label'];
+    }
+    else if ('_' != $action[0])
+    {
+      $label = $action;
+    }
+    else
+    {
+      $label = '_list' == $action ? 'Cancel' : substr($action, 1);
+    }
+
+    $parameters['label'] = sfInflector::humanize($label);
   }
 }
