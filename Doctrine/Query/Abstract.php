@@ -1165,10 +1165,7 @@ abstract class Doctrine_Query_Abstract
                 return;
             }
 
-            $copy = $this->copy();
-            $copy->getSqlQuery($params);
-
-            foreach ($copy->getQueryComponents() as $alias => $component) {
+            foreach ($this->_getDqlCallbackComponents($params) as $alias => $component) {
                 $table = $component['table'];
                 $record = $table->getRecordInstance();
 
@@ -1183,6 +1180,30 @@ abstract class Doctrine_Query_Abstract
 
         // Invoke preQuery() hook on Doctrine_Query for child classes which implement this hook
         $this->preQuery();
+    }
+
+    /**
+     * Returns an array of components to execute the query callbacks for
+     *
+     * @param  array $params
+     * @return array $components
+     */
+    protected function _getDqlCallbackComponents($params = array())
+    {
+        $componentsBefore = array();
+        if ($this->isSubquery()) {
+            $componentsBefore = $this->getQueryComponents();
+        }
+
+        $copy = $this->copy();
+        $copy->getSqlQuery($params);
+        $componentsAfter = $copy->getQueryComponents();
+
+        if ($componentsBefore !== $componentsAfter) {
+            return array_diff($componentsAfter, $componentsBefore);
+        } else {
+            return $componentsAfter;
+        }
     }
 
     /**
