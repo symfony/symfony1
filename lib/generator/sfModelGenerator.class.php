@@ -82,11 +82,13 @@ abstract class sfModelGenerator extends sfGenerator
   /**
    * Gets the primary key name.
    *
+   * @param Boolean $firstOne Whether to return the first PK or not
+   *
    * @return array An array of primary keys
    */
-  public function getPrimaryKeys()
+  public function getPrimaryKeys($firstOne = false)
   {
-    return $this->primaryKey;
+    return $firstOne ? $this->primaryKey[0] : $this->primaryKey;
   }
 
   /**

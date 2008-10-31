@@ -43,6 +43,7 @@ class sfModelGeneratorConfiguration
         'title'          => $this->getListTitle(),
         'actions'        => $this->getListActions(),
         'object_actions' => $this->getListObjectActions(),
+        'batch_actions'  => $this->getListBatchActions(),
       ),
       'filter' => array(
         'fields'  => array(),
@@ -162,6 +163,12 @@ class sfModelGeneratorConfiguration
 
     // list object actions
     foreach ($this->configuration['list']['object_actions'] as $action => &$parameters)
+    {
+      $this->fixActionParameters($action, $parameters);
+    }
+
+    // list batch actions
+    foreach ($this->configuration['list']['batch_actions'] as $action => &$parameters)
     {
       $this->fixActionParameters($action, $parameters);
     }
