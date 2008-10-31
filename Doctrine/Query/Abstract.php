@@ -1581,7 +1581,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function forUpdate($flag = true)
     {
-        $this->_sqlParts[self::FOR_UPDATE] = (bool) $flag;
+        $this->_sqlParts['forUpdate'] = (bool) $flag;
         return $this;
     }
 
