@@ -102,6 +102,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $configCache->import('config/core_compile.yml', false);
     }
 
+    $this->dispatcher->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
     sfAutoload::getInstance()->register();
 
     // load base settings
@@ -133,8 +134,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     ini_set('display_errors', $this->isDebug() ? 'on' : 'off');
     error_reporting(sfConfig::get('sf_error_reporting'));
 
-    // include all config.php from plugins
-    $this->loadPluginConfig();
+    // initialize plugin configuration objects
+    $this->initializePlugins();
 
     // Disabled by default in symfony 1.1 because it causes problems with Doctrine.
     // If you want to enable it in your application, just copy the spl_autoload_register() line
@@ -151,6 +152,42 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     self::$coreLoaded = true;
+  }
+
+  /**
+   * Initializes plugin configuration objects.
+   */
+  protected function initializePlugins()
+  {
+    foreach ($this->pluginConfigurations as $name => $configuration)
+    {
+      if (
+        false === $configuration->initialize()
+        &&
+        is_readable($config = $configuration->getRootDir().'/config/config.php')
+      )
+      {
+        require $config;
+      }
+    }
+  }
+
+  /**
+   * Adds enabled plugins to autoload config.
+   * 
+   * @param   sfEvent $event
+   * @param   array   $config
+   * 
+   * @return  array
+   */
+  public function filterAutoloadConfig(sfEvent $event, array $config)
+  {
+    foreach ($this->pluginConfigurations as $name => $configuration)
+    {
+      $config = $configuration->filterAutoloadConfig($event, $config);
+    }
+
+    return $config;
   }
 
   /**
@@ -571,20 +608,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   }
 
   /**
-   * Loads config.php files from plugins
-   *
-   * @return void
+   * @deprecated
    */
   public function loadPluginConfig()
   {
-    foreach ($this->getPluginPaths() as $path)
-    {
-      $config = $path.'/config/config.php';
-      if (is_readable($config))
-      {
-        require $config;
-      }
-    }
+    $this->initializePlugins();
   }
 
   /**

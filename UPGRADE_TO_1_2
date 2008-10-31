@@ -1690,6 +1690,15 @@ methods are now part of the `sfApplicationConfiguration` class. The `sfLoader`
 methods now generate a deprecated log message and then call the new methods from
 the current active configuration.
 
+### Plugin configuration
+
+Plugins now have the option of providing a plugin configuration class. These
+plugin configuration classes setup autoloading for the plugin, and are
+instantiated in `sfProjectConfiguration`. This means symfony 1.2 tasks no
+longer require an application argument for plugin classes to be used. This
+allows plugins to connect to `command.*` events, something that was not
+previously possible.
+
 Filters
 -------
 

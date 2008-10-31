@@ -19,10 +19,11 @@
 class sfProjectConfiguration
 {
   protected
-    $rootDir       = null,
-    $symfonyLibDir = null,
-    $plugins       = array('sfPropelPlugin'),
-    $pluginPaths   = array();
+    $rootDir              = null,
+    $symfonyLibDir        = null,
+    $plugins              = array('sfPropelPlugin'),
+    $pluginPaths          = array(),
+    $pluginConfigurations = array();
 
   static protected
     $active = null;
@@ -58,6 +59,8 @@ class sfProjectConfiguration
     $this->setRootDir($this->rootDir);
 
     $this->setup();
+
+    $this->loadPlugins();
   }
 
   /**
@@ -67,6 +70,30 @@ class sfProjectConfiguration
    */
   public function setup()
   {
+  }
+
+  /**
+   * Loads the project's plugin configurations.
+   */
+  public function loadPlugins()
+  {
+    foreach ($this->getPluginPaths() as $path)
+    {
+      $name  = basename($path);
+      $class = $name.'Configuration';
+
+      if (is_readable($file = sprintf('%s/config/%sConfiguration.class.php', $path, $name)))
+      {
+        require_once $file;
+        $configuration = new $class($this, $path);
+      }
+      else
+      {
+        $configuration = new sfPluginConfigurationGeneric($this, $path);
+      }
+
+      $this->pluginConfigurations[$name] = $configuration;
+    }
   }
 
   /**
@@ -427,6 +454,23 @@ class sfProjectConfiguration
     }
 
     return $pluginPaths;
+  }
+
+  /**
+   * Returns the configuration for the requested plugin.
+   * 
+   * @param   string $name
+   * 
+   * @return  sfPluginConfiguration
+   */
+  public function getPluginConfiguration($name)
+  {
+    if (!isset($this->pluginConfigurations[$name]))
+    {
+      throw new InvalidArgumentException(sprintf('There is no configuration object for the "%s" object.', $name));
+    }
+
+    return $this->pluginConfigurations[$name];
   }
 
   /**

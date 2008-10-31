@@ -175,6 +175,8 @@ class sfCoreAutoload
   'sfFilterConfigHandler' => 'config',
   'sfGeneratorConfigHandler' => 'config',
   'sfLoader' => 'config',
+  'sfPluginConfiguration' => 'config',
+  'sfPluginConfigurationGeneric' => 'config',
   'sfProjectConfiguration' => 'config',
   'sfRootConfigHandler' => 'config',
   'sfRoutingConfigHandler' => 'config',

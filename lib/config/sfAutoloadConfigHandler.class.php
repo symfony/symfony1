@@ -161,6 +161,9 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       }
     }
 
+    $event = sfProjectConfiguration::getActive()->getEventDispatcher()->filter(new sfEvent(__CLASS__, 'autoload.filter_config'), $config);
+    $config = $event->getReturnValue();
+
     return $config;
   }
 }

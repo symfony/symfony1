@@ -1,16 +1,4 @@
 autoload:
-  # plugins
-  plugins_lib:
-    name:           plugins lib
-    path:           %SF_PLUGINS_DIR%/*/lib
-    recursive:      on
-
-  plugins_module_lib:
-    name:           plugins module lib
-    path:           %SF_PLUGINS_DIR%/*/modules/*/lib
-    prefix:         2
-    recursive:      on
-
   # project
   project:
     name:           project
