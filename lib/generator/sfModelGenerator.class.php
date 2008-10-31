@@ -318,6 +318,11 @@ EOF;
     return $this->formObject;
   }
 
+  /**
+   * Gets the form parameter name.
+   *
+   * @param string The form parameter name
+   */
   public function getFormParameterName()
   {
     return str_replace('[%s]', '', $this->getFormObject()->getWidgetSchema()->getNameFormat());
@@ -340,6 +345,13 @@ EOF;
     }
   }
 
+  /**
+   * Returns the configuration for fields in a given context.
+   *
+   * @param  string $context The Context
+   *
+   * @return array An array of configuration for all the fields in a given context 
+   */
   public function getFieldsConfiguration($context)
   {
     $fields = array();
@@ -374,6 +386,11 @@ EOF;
     return $fields;
   }
 
+  /**
+   * Validates the basic structure of the parameters.
+   *
+   * @param array $params An array of parameters
+   */
   protected function validateParameters($params)
   {
     foreach (array('model_class', 'moduleName') as $key)
@@ -395,6 +412,9 @@ EOF;
     $this->params = $params;
   }
 
+  /**
+   * Loads the configuration for this generated module.
+   */
   protected function loadConfiguration()
   {
     try
