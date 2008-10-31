@@ -371,14 +371,17 @@ EOF;
       $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
     }
 
-    foreach ($this->config[$context]['fields'] as $name => $params)
+    if (isset($this->config[$context]['fields']))
     {
-      if (in_array($name, $names))
+      foreach ($this->config[$context]['fields'] as $name => $params)
       {
-        continue;
-      }
+        if (in_array($name, $names))
+        {
+          continue;
+        }
 
-      $fields[$name] = is_array($params) ? $params : array();
+        $fields[$name] = is_array($params) ? $params : array();
+      }
     }
 
     unset($this->config[$context]['fields']);
