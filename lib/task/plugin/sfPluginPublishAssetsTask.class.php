@@ -25,10 +25,10 @@ class sfPluginPublishAssetsTask extends sfPluginBaseTask
    */
   protected function configure()
   {
-    $this->addArguments(array(
-      new sfCommandArgument('only-core', sfCommandArgument::OPTIONAL, 'if set only core plugins will pubish their assets'),
+    $this->addOptions(array(
+      new sfCommandOption('core-only', '', sfCommandOption::PARAMETER_NONE, 'If set only core plugins will publish their assets'),
     ));
-    
+
     $this->aliases = array();
     $this->namespace = 'plugin';
     $this->name = 'publish-assets';
@@ -50,17 +50,14 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    //we need the PluginManager to be listening for the event, so poke it
-    $this->getPluginManager();
-    
-    $corePluginsDir = sfConfig::get('sf_symfony_lib_dir').'/plugins/';
+    $corePluginsDir = sfConfig::get('sf_symfony_lib_dir').'/plugins';
     foreach (sfFinder::type('dir')->relative()->maxdepth(0)->in($corePluginsDir) as $plugin)
     {
       $this->logSection('plugin', 'Configuring core plugin - '.$plugin);
-      $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'plugin_dir' => $corePluginsDir)));
+      $this->installPluginAssets($plugin, $corePluginsDir);
     }
 
-    if (!$arguments['only-core'])
+    if (!$options['core-only'])
     {
       $thirdPartyPlugins = sfConfig::get('sf_plugins_dir');
       foreach (sfFinder::type('dir')->relative()->maxdepth(0)->follow_link()->in($thirdPartyPlugins) as $plugin)
@@ -71,8 +68,24 @@ EOF;
         }
 
         $this->logSection('plugin', 'Configuring plugin - '.$plugin);
-        $this->dispatcher->notify(new sfEvent($this, 'plugin.post_install', array('plugin' => $plugin, 'plugin_dir' => $thirdPartyPlugins)));
+        $this->installPluginAssets($plugin, $thirdPartyPlugins);
       }
+    }
+  }
+
+  /**
+   * Installs web content for a plugin.
+   *
+   * @param string $plugin The plugin name
+   * @param string $dir    The plugin directory
+   */
+  protected function installPluginAssets($plugin, $dir)
+  {
+    $webDir = $dir.DIRECTORY_SEPARATOR.$plugin.DIRECTORY_SEPARATOR.'web';
+    if (is_dir($webDir))
+    {
+      $filesystem = new sfFilesystem();
+      $filesystem->symlink($webDir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$plugin, true);
     }
   }
 }

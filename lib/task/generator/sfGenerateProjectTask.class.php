@@ -77,8 +77,14 @@ EOF;
     // update ProjectConfiguration class
     $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir')));
 
+    // fix permission for common directories
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);
     $fixPerms->run();
+
+    // publish assets for core plugins
+    $publishAssets = new sfPluginPublishAssetsTask($this->dispatcher, $this->formatter);
+    $publishAssets->setCommandApplication($this->commandApplication);
+    $publishAssets->run(array(), array('--core-only'));
   }
 }

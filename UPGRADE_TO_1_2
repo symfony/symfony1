@@ -359,14 +359,13 @@ As a new addition, `javascript_tag()` now can behave as `slot()`. This allows su
     alert('All is good')
     <?php end_javascript_tag() ?>
 
->**CAUTION**
->**Work in progress:** As plugins are normally installed via a task and this invokes the
->creation of the symlink in the web directory this is required for core plugins as well.
->To do this manually you need to invoke:
->
-> `symfony plugin:publish-assets --only-core`
->
-> The target is that the project creation and upgrade task do this for you.
+Assets from built-in plugins
+----------------------------
+
+Some built-in plugins come with some stylesheet and JavaScript files. To make them
+accessible to your project, you need to run the `plugin:publish-assets` task:
+
+    $ php symfony plugin:publish-assets
 
 Browser
 -------
