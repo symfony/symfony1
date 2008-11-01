@@ -153,7 +153,7 @@ abstract class sfWidgetForm extends sfWidget
 
     $attributes = $this->fixFormId($attributes);
 
-    return sprintf('<%s%s%s', $tag, $this->attributesToHtml($attributes), self::$xhtml ? ' />' : (strtolower($tag) == 'input' ? '>' : sprintf('></%s>', $tag)));
+    return parent::renderTag($tag, $attributes);
   }
 
   /**
