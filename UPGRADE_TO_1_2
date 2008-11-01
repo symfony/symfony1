@@ -367,6 +367,8 @@ accessible to your project, you need to run the `plugin:publish-assets` task:
 
     $ php symfony plugin:publish-assets
 
+The `project:upgrade1.2` task do this for you.
+
 Browser
 -------
 
