@@ -84,9 +84,13 @@ catch (LogicException $e)
 $b->
   get('/browser/responseHeader')->
   isStatusCode()->
-  isResponseHeader('content-type', 'text/plain; charset=utf-8')->
-  isResponseHeader('foo', 'bar')->
-  isResponseHeader('foo', 'foobar')
+  with('response')->begin()->
+    isHeader('content-type', 'text/plain; charset=utf-8')->
+    isHeader('content-type', '#text/plain#')->
+    isHeader('content-type', '!#text/html#')->
+    isHeader('foo', 'bar')->
+    isHeader('foo', 'foobar')->
+  end()
 ;
 
 // cookies

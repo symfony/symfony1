@@ -129,19 +129,61 @@ class sfTesterResponse extends sfTester
   public function isHeader($key, $value)
   {
     $headers = explode(', ', $this->response->getHttpHeader($key));
-
     $ok = false;
+    $regex = false;
+    $mustMatch = true;
+    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
+    {
+      $regex = $value;
+      if ($match[1] == '!')
+      {
+        $mustMatch = false;
+        $regex = substr($value, 1);
+      }
+    }
 
     foreach ($headers as $header)
     {
-      if ($header == $value)
+      if (false !== $regex)
+      {
+        if ($mustMatch)
+        {
+          if (preg_match($regex, $header))
+          {
+            $ok = true;
+            $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
+            break;
+          }
+        }
+        else
+        {
+          if (preg_match($regex, $header))
+          {
+            $ok = true;
+            $this->tester->fail(sprintf('response header "%s" does not match "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
+            break;
+          }
+        }
+      }
+      else if ($header == $value)
       {
         $ok = true;
+        $this->tester->pass(sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
         break;
       }
     }
 
-    $this->tester->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
+    if (!$ok)
+    {
+      if (!$mustMatch)
+      {
+        $this->tester->pass(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
+      }
+      else
+      {
+        $this->tester->fail(sprintf('response header "%s" matches "%s" (%s)', $key, $value, $this->response->getHttpHeader($key)));
+      }
+    }
 
     return $this->getObjectToReturn();
   }
