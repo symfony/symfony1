@@ -17,7 +17,13 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 sfConfig::set('sf_symfony_lib_dir', realpath($_test_dir.'/../lib'));
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test($plan = 3, new lime_output_color());
+
+if (!ini_get('apc.enable_cli'))
+{
+  $t->skip('APC must be enable on CLI to run these tests', $plan);
+  return;
+}
 
 // initialize the storage
 try
