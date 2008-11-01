@@ -81,12 +81,18 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    */
   protected function createDOMDocument($xml = null)
   {
-    $dom = new DOMDocument();
+    $dom = new DOMDocument('1.0', 'UTF-8');
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
 
     if (!is_null($xml) && is_string($xml))
     {
+      // Add header for XML with UTF-8
+      if (!preg_match('/<\?xml/', $xml))
+      {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".$xml;
+      }
+
       $dom->loadXML($xml);
     }
 
@@ -423,7 +429,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $date = date('c');
 
     return <<<EOD
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
  <file
   source-language="EN"
