@@ -149,7 +149,6 @@ $b->
 
 $b->
   post('/validation/Index')->
-  isStatusCode(200)->
   isRequestParameter('module', 'validation')->
   isRequestParameter('action', 'Index')->
   isResponseHeader('X-Validated', 'ko')
@@ -168,7 +167,6 @@ $b->
 
 $b->
   post('/validation/index2')->
-  isStatusCode(200)->
   isRequestParameter('module', 'validation')->
   isRequestParameter('action', 'index2')->
   isResponseHeader('X-Validated', 'ko')
