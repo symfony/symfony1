@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
@@ -69,6 +69,37 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->is($e[0]->getCode(), 'max_length', '->clean() throws a sfValidatorSchemaError');
+  $t->is($e instanceof sfValidatorErrorSchema, 'max_length', '->clean() throws a sfValidatorSchemaError');
+}
+
+$v1->setOption('max_length', 2);
+try
+{
+  $v->clean('foo');
+  $t->fail('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->skip('', 4);
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->is(count($e), 2, '->clean() throws an error for every error');
+  $t->is($e[0]->getCode(), 'max_length', '->clean() throws a sfValidatorSchemaError');
+  $t->is($e[1]->getCode(), 'max_length', '->clean() throws a sfValidatorSchemaError');
+  $t->is($e instanceof sfValidatorErrorSchema, 'max_length', '->clean() throws a sfValidatorSchemaError');
+}
+
+$v->setOption('halt_on_error', true);
+try
+{
+  $v->clean('foo');
+  $t->fail('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->skip('', 3);
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->is(count($e), 1, '->clean() only returns the first error if halt_on_error option is true');
   $t->is($e[0]->getCode(), 'max_length', '->clean() throws a sfValidatorSchemaError');
   $t->is($e instanceof sfValidatorErrorSchema, 'max_length', '->clean() throws a sfValidatorSchemaError');
 }

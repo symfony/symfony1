@@ -63,10 +63,21 @@ class sfValidatorAnd extends sfValidatorBase
   }
 
   /**
+   * Configures the current validator.
+   *
+   * Available options:
+   *
+   *  * halt_on_error: Whether to halt on the first error or not (false by default)
+   *
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
+    $this->addOption('halt_on_error', false);
+
     $this->setMessage('invalid', null);
   }
 
@@ -106,6 +117,11 @@ class sfValidatorAnd extends sfValidatorBase
       catch (sfValidatorError $e)
       {
         $errors[] = $e;
+
+        if ($this->getOption('halt_on_error'))
+        {
+          break;
+        }
       }
     }
 
