@@ -134,13 +134,23 @@ abstract class sfPluginConfiguration
       {
         if (isset($entry['path']))
         {
-          if (in_array($this->rootDir.'/lib', glob($entry['path'])))
+          $dirs = glob($entry['path']);
+          if (!is_array($dirs))
+          {
+            continue;
+          }
+
+          if (in_array($this->rootDir.'/lib', $dirs))
           {
             $addLib = false;
           }
-          else if (array_intersect(glob($this->rootDir.'/modules/*/lib'), glob($entry['path'])))
+          else
           {
-            $addModuleLib = false;
+            $moduleDirs = glob($this->rootDir.'/modules/*/lib');
+            if (is_array($moduleDirs) && array_intersect($moduleDirs, $dirs))
+            {
+              $addModuleLib = false;
+            }
           }
         }
       }
