@@ -97,7 +97,7 @@ $context = sfContext::getInstance(array(
   'response' => 'sfWebResponse',
 ));
 
-$context->configuration = new TestConfiguration('test', true, dirname(__FILE__).'/../../lib');
+$context->configuration = new TestConfiguration('test', true, sfToolkit::getTmpDir().'/sf_test_project');
 
 $response = $context->response;
 
