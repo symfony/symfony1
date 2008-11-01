@@ -367,7 +367,7 @@ class sfCommandManager
     $this->setOption($option, $value);
   }
 
-  protected function setOption(sfCommandOption $option, $value)
+  public function setOption(sfCommandOption $option, $value)
   {
     if ($option->isArray())
     {

@@ -43,6 +43,16 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
     $isDebug = $commandManager->getOptionSet()->hasOption('debug') ? $commandManager->getOptionValue('debug') : true;
 
+    if (true === $application)
+    {
+      $application = $this->getFirstApplication();
+
+      if ($commandManager->getOptionSet()->hasOption('application'))
+      {
+        $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
+      }
+    }
+
     $this->configuration = $this->createConfiguration($application, $env, $isDebug);
 
     if (!is_null($this->commandApplication) && !$this->commandApplication->withTrace())
@@ -55,37 +65,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     $this->dispatcher->notify(new sfEvent($this, 'command.post_command'));
 
     return $ret;
-  }
-
-  protected function createConfiguration($application, $env, $isDebug)
-  {
-    if (!is_null($application))
-    {
-      $this->checkAppExists($application);
-
-      require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
-
-      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $isDebug, null, $this->dispatcher);
-    }
-    else
-    {
-      if (file_exists(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php'))
-      {
-        require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
-        $configuration = new ProjectConfiguration(null, $this->dispatcher);
-      }
-      else
-      {
-        $configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
-      }
-
-      if (!is_null($env))
-      {
-        sfConfig::set('sf_environment', $env);
-      }
-    }
-
-    return $configuration;
   }
 
   /**
@@ -152,5 +131,64 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     {
       throw new sfException(sprintf('Module "%s/%s" does not exist.', $app, $module));
     }
+  }
+
+  /**
+   * Creates a configuration object.
+   *
+   * @param string  $application The application name
+   * @param string  $env         The environment name
+   * @param Boolean $isDebug     Whether to enable debugging
+   *
+   * @return sfProjectConfiguration A sfProjectConfiguration instance
+   */
+  protected function createConfiguration($application, $env, $isDebug)
+  {
+    if (!is_null($application))
+    {
+      $this->checkAppExists($application);
+
+      require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
+
+      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $isDebug, null, $this->dispatcher);
+    }
+    else
+    {
+      if (file_exists(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php'))
+      {
+        require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
+        $configuration = new ProjectConfiguration(null, $this->dispatcher);
+      }
+      else
+      {
+        $configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
+      }
+
+      if (!is_null($env))
+      {
+        sfConfig::set('sf_environment', $env);
+      }
+
+      $autoloader = sfSimpleAutoload::getInstance();
+      $autoloader->addDirectory(sfConfig::get('sf_lib_dir'));
+      $autoloader->register();
+    }
+
+    return $configuration;
+  }
+
+  /**
+   * Returns the first application in apps.
+   *
+   * @return string The Application name
+   */
+  protected function getFirstApplication()
+  {
+    if (count($dirs = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative()->in(sfConfig::get('sf_apps_dir'))))
+    {
+      return $dirs[0];
+    }
+
+    return null;
   }
 }
