@@ -170,7 +170,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       }
 
       $autoloader = sfSimpleAutoload::getInstance();
-      $autoloader->addDirectory(sfConfig::get('sf_lib_dir'));
+      $autoloader->addFiles(sfFinder::type('file')->prune('symfony')->follow_link()->name('*.php')->in(sfConfig::get('sf_lib_dir')));
       $autoloader->register();
     }
 
