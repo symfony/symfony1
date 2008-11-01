@@ -159,7 +159,7 @@ abstract class sfPluginConfiguration
       $config['autoload'][basename($this->rootDir).'_module_libs'] = array(
         'path'      => $this->rootDir.'/modules/*/lib',
         'recursive' => true,
-        'prefix'    => 2,
+        'prefix'    => 1,
       );
     }
 
