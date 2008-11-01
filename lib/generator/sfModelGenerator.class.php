@@ -108,7 +108,7 @@ abstract class sfModelGenerator extends sfGenerator
    */
   public function getPluralName()
   {
-    return isset($this->params['plural']) ? $this->params['plural'] : $singularName.'_list';
+    return isset($this->params['plural']) ? $this->params['plural'] : $this->getSingularName().'_list';
   }
 
   /**
