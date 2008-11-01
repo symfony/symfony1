@@ -34,7 +34,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     $this->dispatcher->notifyUntil($event);
     if ($event->isProcessed())
     {
-      return $this->getReturnValue();
+      return $event->getReturnValue();
     }
 
     $this->checkProjectExists();

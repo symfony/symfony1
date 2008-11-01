@@ -288,7 +288,7 @@ abstract class sfTask
     $this->dispatcher->notifyUntil($event);
     if ($event->isProcessed())
     {
-      return $this->getReturnValue();
+      return $event->getReturnValue();
     }
 
     $ret = $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
