@@ -299,8 +299,7 @@ function _get_object_value($object, $method, $default_value = null, $param = nul
   }
 
   // method exists?
-  $method_exists = ($method[0] == '__toString') ? method_exists($object, $method[0]) : is_callable(array($object, $method[0]));
-  if (!$method_exists)
+  if (!is_callable(array($object, $method[0])))
   {
     throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $method[0], _get_class_decorated($object)));
   }
