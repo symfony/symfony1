@@ -446,7 +446,7 @@ EOF;
   padding: 5px;
   padding-left: 0;
   display: inline;
-  margin-right: 0;
+  margin: 0;
 }
 
 #sfWebDebugBar .menu li
@@ -519,8 +519,9 @@ EOF;
   position: absolute;
   left: 0px;
   top: 0px;
-  width: 100%;
-  padding: 10px;
+  width: 98%;
+  padding: 0 1%;
+  margin: 0;
   z-index: 9999;
   background-color: #efefef;
   border-bottom: 1px solid #aaa;
