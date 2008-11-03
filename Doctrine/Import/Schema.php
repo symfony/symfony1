@@ -224,17 +224,20 @@ class Doctrine_Import_Schema
             } else if (is_dir($s)) {
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($s),
                                                       RecursiveIteratorIterator::LEAVES_ONLY);
+				$hasFile = false;
 
-                if (count($it) > 0) {
-	                foreach ($it as $file) {
-	                    $e = explode('.', $file->getFileName());
-	                    if (end($e) === $format) {
-	                        $array = array_merge($array, $this->parseSchema($file->getPathName(), $format));
-	                    }
-	                }
-                } else {
-	                throw new Doctrine_Import_Exception("No files were found in directory '$s'. Are you sure your schema files ended with '$format'?");
-                }
+				foreach ($it as $file) {
+					$e = explode('.', $file->getFileName());
+
+					if (end($e) === $format) {
+						$array = array_merge($array, $this->parseSchema($file->getPathName(), $format));
+						$hasFile = true;
+					}
+				}
+
+				if ( ! $hasFile) {
+					throw new Doctrine_Import_Exception("No files were found in directory '$s'. Are you sure your schema file(s) end(s) with '$format'?");
+				}
             } else {
               $array = array_merge($array, $this->parseSchema($s, $format));
             }
