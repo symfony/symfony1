@@ -650,9 +650,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             // Update lft/rgt/root/level for all descendants
             $q = new Doctrine_Query($conn);
             $q = $q->update($componentName)
-                    ->set($componentName . '.lft', 'lft + ?', $diff)
-                    ->set($componentName . '.rgt', 'rgt + ?', $diff)
-                    ->set($componentName . '.level', 'level + ?', $levelDiff)
+                    ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
+                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
+                    ->set($componentName . '.level', $componentName.'.level + ?', $levelDiff)
                     ->set($componentName . '.' . $rootColName, '?', $newRoot)
                     ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
                     array($oldLft, $oldRgt));
@@ -821,9 +821,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $rootColName = $this->_tree->getAttribute('rootColumnName');
             $q = new Doctrine_Query($conn);
             $q = $q->update($componentName)
-                    ->set($componentName . '.lft', 'lft + ?', $diff)
-                    ->set($componentName . '.rgt', 'rgt + ?', $diff)
-                    ->set($componentName . '.level', 'level - ?', $oldLevel)
+                    ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
+                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
+                    ->set($componentName . '.level', $componentName.'.level - ?', $oldLevel)
                     ->set($componentName . '.' . $rootColName, '?', $newRoot)
                     ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
                     array($oldLft, $oldRgt));
@@ -1015,7 +1015,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             // update level for descendants
             $q = new Doctrine_Query();
             $q = $q->update($componentName)
-                    ->set($componentName . '.level', 'level + ?')
+                    ->set($componentName . '.level', $componentName.'.level + ?')
                     ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
                             array($levelDiff, $left, $right));
             $q = $this->_tree->returnQueryWithRootId($q, $rootId);
