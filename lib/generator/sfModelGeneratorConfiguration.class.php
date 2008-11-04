@@ -90,61 +90,6 @@ class sfModelGeneratorConfiguration
       ));
     }
 
-    // "virtual" fields for filters
-    foreach ($this->getFilterDisplay() as $field)
-    {
-      list($field, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($field);
-
-      if (isset($this->configuration['filter']['fields'][$field]))
-      {
-        continue;
-      }
-
-      if (!in_array($flag, array('_', '~')))
-      {
-        throw new InvalidArgumentException(sprintf('The virtual filter "%s" field can only be a partial or a component.', $field));
-      }
-
-      $this->configuration['filter']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge(
-        isset($config['default'][$field]) ? $config['default'][$field] : array(),
-        isset($config['filter'][$field]) ? $config['filter'][$field] : array(),
-        array('is_real' => false, 'type' => 'Text', 'flag' => $flag)
-      ));
-    }
-
-    // "virtual" fields for form/edit/new
-    foreach (array('new', 'edit') as $context)
-    {
-      $method = sprintf('get%sDisplay', $context);
-      if (!$fieldsets = $this->$method())
-      {
-        $fieldsets = $this->getFormDisplay();
-      }
-      foreach ($fieldsets as $fieldset => $fields)
-      {
-        foreach ($fields as $field)
-        {
-          list($field, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($field);
-
-          if (isset($this->configuration[$context]['fields'][$field]))
-          {
-            continue;
-          }
-
-          if (!in_array($flag, array('_', '~')))
-          {
-            throw new InvalidArgumentException(sprintf('The virtual %s "%s" field can only be a partial or a component.', $context, $field));
-          }
-
-          $this->configuration[$context]['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge(
-            isset($config['default'][$field]) ? $config['default'][$field] : array(),
-            isset($config[$context][$field]) ? $config[$context][$field] : array(),
-            array('is_real' => false, 'type' => 'Text', 'flag' => $flag)
-          ));
-        }
-      }
-    }
-
     // form actions
     foreach (array('edit', 'new') as $context)
     {
@@ -204,47 +149,6 @@ class sfModelGeneratorConfiguration
       $field = $this->configuration['list']['fields'][$name];
       $field->setFlag($flag);
       $this->configuration['list']['params'] = str_replace('%%'.$flag.$name.'%%', '%%'.$name.'%%', $this->configuration['list']['params']);
-    }
-
-    // filter field configuration
-    $this->configuration['filter']['display'] = array();
-    foreach ($this->getFilterDisplay() as $name)
-    {
-      list($name, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($name);
-      if (!isset($this->configuration['filter']['fields'][$name]))
-      {
-        throw new InvalidArgumentException(sprintf('The field "%s" does not exist.', $name));
-      }
-      $field = $this->configuration['filter']['fields'][$name];
-      $field->setFlag($flag);
-      $this->configuration['filter']['display'][$name] = $field;
-    }
-
-    // form field configuration
-    foreach (array('edit', 'new') as $context)
-    {
-      $this->configuration[$context]['display'] = array();
-      $method = sprintf('get%sDisplay', ucfirst($context));
-      if (!$fieldsets = $this->$method())
-      {
-        $fieldsets = $this->getFormDisplay();
-      }
-      foreach ($fieldsets as $fieldset => $names)
-      {
-        $this->configuration[$context]['display'][$fieldset] = array();
-
-        foreach ($names as $name)
-        {
-          list($name, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($name);
-          if (!isset($this->configuration[$context]['fields'][$name]))
-          {
-            throw new InvalidArgumentException(sprintf('The field "%s" does not exist.', $name));
-          }
-          $field = $this->configuration[$context]['fields'][$name];
-          $field->setFlag($flag);
-          $this->configuration[$context]['display'][$fieldset][$name] = $field;
-        }
-      }
     }
 
     // action credentials
@@ -331,6 +235,115 @@ class sfModelGeneratorConfiguration
     }
 
     return $escaped ? str_replace("'", "\\'", $v) : $v;
+  }
+
+  /**
+   * Gets the fields that represents the filters.
+   *
+   * If no filter.display parameter is passed in the configuration,
+   * all the fields from the form are returned (dynamically).
+   *
+   * @param array An array of fields
+   */
+  public function getFormFilterFields(sfForm $form)
+  {
+    if ($this->getFilterDisplay())
+    {
+      $fields = array();
+      foreach ($this->getFilterDisplay() as $name)
+      {
+        list($name, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($name);
+        if (!isset($this->configuration['filter']['fields'][$name]))
+        {
+          $this->configuration['filter']['fields'][$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+            isset($config['default'][$name]) ? $config['default'][$name] : array(),
+            isset($config['filter'][$name]) ? $config['filter'][$name] : array(),
+            array('is_real' => false, 'type' => 'Text', 'flag' => $flag)
+          ));
+        }
+        $field = $this->configuration['filter']['fields'][$name];
+        $field->setFlag($flag);
+        $fields[$name] = $field;
+      }
+
+      return $fields;
+    }
+
+    $fields = array();
+    foreach (array_keys($form->getWidgetSchema()->getFields()) as $name)
+    {
+      $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+        isset($config['default'][$name]) ? $config['default'][$name] : array(),
+        isset($config['filter'][$name]) ? $config['filter'][$name] : array(),
+        array('is_real' => false, 'type' => 'Text')
+      ));
+    }
+
+    return $fields;
+  }
+
+  /**
+   * Gets the fields that represents the form.
+   *
+   * If no form.display parameter is passed in the configuration,
+   * all the fields from the form are returned (dynamically).
+   *
+   * @param array An array of fields
+   */
+  public function getFormFields(sfForm $form, $context)
+  {
+    $method = sprintf('get%sDisplay', ucfirst($context));
+    if (!$fieldsets = $this->$method())
+    {
+      $fieldsets = $this->getFormDisplay();
+    }
+
+    if ($fieldsets)
+    {
+      $fields = array();
+
+      // with fieldsets?
+      if (!is_array(current($fieldsets)))
+      {
+        $fieldsets = array('NONE' => $fieldsets);
+      }
+
+      foreach ($fieldsets as $fieldset => $names)
+      {
+        $fields[$fieldset] = array();
+
+        foreach ($names as $name)
+        {
+          list($name, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($name);
+          if (!isset($this->configuration[$context]['fields'][$name]))
+          {
+            $this->configuration[$context]['fields'][$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+              isset($config['default'][$name]) ? $config['default'][$name] : array(),
+              isset($config[$context][$name]) ? $config[$context][$name] : array(),
+              array('is_real' => false, 'type' => 'Text', 'flag' => $flag)
+            ));
+          }
+
+          $field = $this->configuration[$context]['fields'][$name];
+          $field->setFlag($flag);
+          $fields[$fieldset][$name] = $field;
+        }
+      }
+
+      return $fields;
+    }
+
+    $fields = array();
+    foreach (array_keys($form->getWidgetSchema()->getFields()) as $name)
+    {
+      $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+        isset($config['default'][$name]) ? $config['default'][$name] : array(),
+        isset($config[$context][$name]) ? $config[$context][$name] : array(),
+        array('is_real' => false, 'type' => 'Text')
+      ));
+    }
+
+    return array('NONE' => $fields);
   }
 
   /**
