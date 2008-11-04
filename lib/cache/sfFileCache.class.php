@@ -215,8 +215,6 @@ class sfFileCache extends sfCache
     @flock($fp, LOCK_SH);
     clearstatcache(); // because the filesize can be cached by PHP itself...
     $length = @filesize($path);
-    $mqr = get_magic_quotes_runtime();
-    set_magic_quotes_runtime(0);
     switch ($type)
     {
       case self::READ_TIMEOUT:
@@ -240,7 +238,6 @@ class sfFileCache extends sfCache
       default:
         throw new sfConfigurationException(sprintf('Unknown type "%s".', $type));
     }
-    set_magic_quotes_runtime($mqr);
     @flock($fp, LOCK_UN);
     @fclose($fp);
 
