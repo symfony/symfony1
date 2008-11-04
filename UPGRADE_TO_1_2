@@ -1,5 +1,5 @@
-Upgrade from 1.1 to 1.2
-=======================
+Upgrading Projects from 1.1 to 1.2
+==================================
 
 This document describes the changes made in symfony 1.2 and what need
 to be done to upgrade your symfony 1.1 projects.
@@ -17,6 +17,8 @@ How to upgrade?
 To upgrade a project:
 
   * If you don't use a SCM tool, please make a backup of your project.
+
+  * Upgrade symfony to 1.2
 
   * Launch the `project:upgrade1.2` task from your project directory
     to perform an automatic upgrade:
