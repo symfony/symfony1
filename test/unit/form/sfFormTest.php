@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(127, new lime_output_color());
+$t = new lime_test(129, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -463,6 +463,17 @@ for ($i = 0; $i < 2; $i++)
 }
 
 $t->is($w['authors'][0]->generateName('first_name'), 'article[authors][0][first_name]', '->embedFormForEach() changes the name format to reflect the embedding');
+
+// ->getEmbeddedForms()
+$t->diag('->getEmbeddedForms()');
+$article = new FormTest();
+$company = new FormTest();
+$author = new FormTest();
+$article->embedForm('company', $company);
+$article->embedForm('author', $author);
+$forms = $article->getEmbeddedForms();
+$t->is(array_keys($forms), array('company', 'author'), '->getEmbeddedForms() returns the embedded forms');
+$t->is($forms['company'], $company, '->getEmbeddedForms() returns the embedded forms');
 
 // ::convertFileInformation()
 $t->diag('::convertFileInformation()');

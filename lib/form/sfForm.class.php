@@ -41,7 +41,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $defaults        = array(),
     $fieldNames      = array(),
     $options         = array(),
-    $count           = 0;
+    $count           = 0,
+    $embeddedForms   = array();
 
   /**
    * Constructor.
@@ -350,6 +351,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
       throw new LogicException('A bound form cannot be embedded');
     }
 
+    $this->embeddedForms[$name] = $form;
+
     $form = clone $form;
     unset($form[self::$CSRFFieldName]);
 
@@ -415,6 +418,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->widgetSchema[$name]->setLabels($labels);
 
     $this->resetFormFields();
+  }
+
+  /**
+   * Gets the list of embedded forms.
+   *
+   * @return array An array of embedded forms
+   */
+  public function getEmbeddedForms()
+  {
+    return $this->embeddedForms;
   }
 
   /**
