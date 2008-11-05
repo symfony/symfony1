@@ -461,7 +461,7 @@ class sfRoute implements Serializable
         $buffer = substr($buffer, strlen($match[0]));
         $afterASeparator = false;
       }
-      else if ($afterASeparator && preg_match('#^(.+?)(?:'.$this->options['segment_separators_regex'].'|$)#', $buffer, $match))
+      else if ($afterASeparator && preg_match('#^('.$this->options['text_regex'].')(?:'.$this->options['segment_separators_regex'].'|$)#', $buffer, $match))
       {
         // a text
         $this->tokens[] = array('text', $currentSeparator, $match[1]);
@@ -557,6 +557,7 @@ class sfRoute implements Serializable
       'variable_prefixes'                => array(':'),
       'segment_separators'               => array('/', '.'),
       'variable_regex'                   => '[\w\d_]+',
+      'text_regex'                       => '.+?',
       'generate_shortest_url'            => true,
       'extra_parameters_as_query_string' => true,
     ), $this->getDefaultOptions(), $this->options);
