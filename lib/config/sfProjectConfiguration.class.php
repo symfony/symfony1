@@ -19,11 +19,12 @@
 class sfProjectConfiguration
 {
   protected
-    $rootDir              = null,
-    $symfonyLibDir        = null,
-    $plugins              = array('sfPropelPlugin'),
-    $pluginPaths          = array(),
-    $pluginConfigurations = array();
+    $rootDir               = null,
+    $symfonyLibDir         = null,
+    $plugins               = array('sfPropelPlugin'),
+    $pluginPaths           = array(),
+    $overriddenPluginPaths = array(),
+    $pluginConfigurations  = array();
 
   static protected
     $active = null;
@@ -405,15 +406,12 @@ class sfProjectConfiguration
 
     $pluginPaths = $this->getAllPluginPaths();
 
-    // order the plugins
-    $basePaths = array_map('basename', $pluginPaths);
     $this->pluginPaths[''] = array();
-
     foreach ($this->getPlugins() as $plugin)
     {
-      if (false !== $pos = array_search($plugin, $basePaths))
+      if (isset($pluginPaths[$plugin]))
       {
-        $this->pluginPaths[''][] = $pluginPaths[$pos];
+        $this->pluginPaths[''][] = $pluginPaths[$plugin];
       }
       else
       {
@@ -424,36 +422,47 @@ class sfProjectConfiguration
     return $this->pluginPaths[''];
   }
 
+  /**
+   * Returns an array of paths for all available plugins.
+   * 
+   * @return array
+   */
   protected function getAllPluginPaths()
   {
     $pluginPaths = array();
-    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative();
 
-    $bundledPlugins = $finder->discard('.*')->prune('.*')->in(sfConfig::get('sf_symfony_lib_dir').'/plugins');
-    $projectPlugins = $finder->discard('.*')->prune('.*')->in(sfConfig::get('sf_plugins_dir'));
+    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link();
+    $dirs = array(
+      sfConfig::get('sf_symfony_lib_dir').'/plugins',
+      sfConfig::get('sf_plugins_dir'),
+    );
 
-    // bundled plugins
-    foreach ($bundledPlugins as $plugin)
+    foreach ($finder->in($dirs) as $path)
     {
-      // plugins can override bundle plugins
-      if (false !== $pos = array_search($plugin, $projectPlugins))
-      {
-        $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
-        unset($projectPlugins[$pos]);
-      }
-      else
-      {
-        $pluginPaths[] = sfConfig::get('sf_symfony_lib_dir').'/plugins/'.$plugin;
-      }
+      $pluginPaths[basename($path)] = $path;
     }
 
-    // project plugins
-    foreach ($projectPlugins as $plugin)
+    foreach ($this->overriddenPluginPaths as $plugin => $path)
     {
-      $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
+      $pluginPaths[$plugin] = $path;
     }
 
     return $pluginPaths;
+  }
+
+  /**
+   * Manually sets the location of a particular plugin.
+   * 
+   * This method can be used to ease functional testing of plugins. It is not
+   * intended to support sharing plugins between projects, as many plugins
+   * save project specific code (to /lib/form, for example).
+   * 
+   * @param string $plugin
+   * @param string $path
+   */
+  public function setPluginPath($plugin, $path)
+  {
+    $this->overriddenPluginPaths[$plugin] = $path;
   }
 
   /**
