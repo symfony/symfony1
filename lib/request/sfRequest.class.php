@@ -245,4 +245,10 @@ abstract class sfRequest
 
     return $event->getReturnValue();
   }
+
+  public function __clone()
+  {
+    $this->parameterHolder = clone $this->parameterHolder;
+    $this->attributeHolder = clone $this->attributeHolder;
+  }
 }
