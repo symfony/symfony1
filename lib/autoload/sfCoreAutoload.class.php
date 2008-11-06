@@ -27,7 +27,8 @@ define('SYMFONY_VERSION', '1.2.0-DEV');
 class sfCoreAutoload
 {
   static protected
-    $instance = null;
+    $registered = false,
+    $instance   = null;
 
   protected
     $baseDir = '';
@@ -59,11 +60,18 @@ class sfCoreAutoload
    */
   static public function register()
   {
+    if (self::$registered)
+    {
+      return;
+    }
+
     ini_set('unserialize_callback_func', 'spl_autoload_call');
     if (false === spl_autoload_register(array(self::getInstance(), 'autoload')))
     {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
+
+    self::$registered = true;
   }
 
   /**
