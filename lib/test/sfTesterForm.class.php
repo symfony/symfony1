@@ -198,6 +198,11 @@ class sfTesterForm extends sfTester
    */
   public function filterTemplateParameters(sfEvent $event, $parameters)
   {
+    if (!isset($parameters['sf_type']))
+    {
+      return $parameters;
+    }
+
     if ('action' == $parameters['sf_type'])
     {
       foreach ($parameters as $key => $value)
