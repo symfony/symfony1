@@ -1261,7 +1261,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         if (strpos($queryKey, '/') !== false) {
             $e = explode('/', $queryKey);
             
-            return $queryRegistry->get($e[0], $e[1]);
+            return $queryRegistry->get($e[1], $e[0]);
         }
 
         return $queryRegistry->get($queryKey, $this->getComponentName());
