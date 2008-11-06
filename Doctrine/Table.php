@@ -1290,10 +1290,18 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             return false;
         }
 
+        $ns = $this->getComponentName();
+        $m = $name;
+        
+        // Check for possible cross-access
+        if ( ! is_array($name) && strpos($name, '/') !== false) {
+            list($ns, $m) = explode('/', $name);
+        }
+
         // Define query to be used
         if (
-            ! is_array($name) &&
-            Doctrine_Manager::getInstance()->getQueryRegistry()->has($name, $this->getComponentName())
+            ! is_array($name) && 
+            Doctrine_Manager::getInstance()->getQueryRegistry()->has($m, $ns)
         ) {
             // We're dealing with a named query
             $q = $this->createNamedQuery($name);
