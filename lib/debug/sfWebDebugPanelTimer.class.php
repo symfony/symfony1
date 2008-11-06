@@ -18,6 +18,9 @@
  */
 class sfWebDebugPanelTimer extends sfWebDebugPanel
 {
+  static protected
+    $startTime = null;
+
   /**
    * Constructor.
    *
@@ -70,8 +73,18 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
     return $newLogs;
   }
 
+  static public function startTime()
+  {
+    self::$startTime = microtime(true);
+  }
+
+  static public function isStarted()
+  {
+    return !is_null(self::$startTime);
+  }
+
   protected function getTotalTime()
   {
-    return isset($_SERVER['REQUEST_TIME']) ? sprintf('%.0f', (microtime(true) - $_SERVER['REQUEST_TIME']) * 1000) : 0;
+    return !is_null(self::$startTime) ? sprintf('%.0f', (microtime(true) - self::$startTime) * 1000) : 0;
   }
 }

@@ -96,6 +96,12 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   {
     $configCache = $this->getConfigCache();
 
+    // in debug mode, start global timer
+    if ($this->isDebug() && !sfWebDebugPanelTimer::isStarted())
+    {
+      sfWebDebugPanelTimer::startTime();
+    }
+
     // required core classes for the framework
     if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test') && !self::$coreLoaded)
     {
