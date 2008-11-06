@@ -24,7 +24,8 @@ class sfProjectConfiguration
     $plugins               = array('sfPropelPlugin'),
     $pluginPaths           = array(),
     $overriddenPluginPaths = array(),
-    $pluginConfigurations  = array();
+    $pluginConfigurations  = array(),
+    $pluginsLoaded         = false;
 
   static protected
     $active = null;
@@ -95,6 +96,8 @@ class sfProjectConfiguration
 
       $this->pluginConfigurations[$name] = $configuration;
     }
+
+    $this->pluginsLoaded = true;
   }
 
   /**
@@ -294,9 +297,16 @@ class sfProjectConfiguration
    * Sets the enabled plugins.
    *
    * @param array An array of plugin names
+   * 
+   * @throws LogicException If plugins have already been loaded
    */
   public function setPlugins(array $plugins)
   {
+    if ($this->pluginsLoaded)
+    {
+      throw new LogicException('Plugins have already been loaded.');
+    }
+
     $this->plugins = $plugins;
 
     $this->pluginPaths = array();
@@ -316,9 +326,16 @@ class sfProjectConfiguration
    * Disables a plugin.
    *
    * @param array|string A plugin name or a plugin list
+   * 
+   * @throws LogicException If plugins have already been loaded
    */
   public function disablePlugins($plugins)
   {
+    if ($this->pluginsLoaded)
+    {
+      throw new LogicException('Plugins have already been loaded.');
+    }
+
     if (!is_array($plugins))
     {
       $plugins = array($plugins);
@@ -343,9 +360,16 @@ class sfProjectConfiguration
    * Enabled all installed plugins except the one given as argument.
    *
    * @param array|string A plugin name or a plugin list
+   * 
+   * @throws LogicException If plugins have already been loaded
    */
   public function enableAllPluginsExcept($plugins = array())
   {
+    if ($this->pluginsLoaded)
+    {
+      throw new LogicException('Plugins have already been loaded.');
+    }
+
     $this->plugins = array();
     foreach ($this->getAllPluginPaths() as $plugin)
     {
