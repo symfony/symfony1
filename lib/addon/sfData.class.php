@@ -120,7 +120,7 @@ abstract class sfData
     }
     else
     {
-      throw new sfInitializationException('You must give an array, a directory or a file to sfPropelData::getFiles().');
+      throw new sfInitializationException(sprintf('You must give an array, a directory or a file to sfData::getFiles() (%s given).', $element));
     }
 
     $files = array_unique($files);
