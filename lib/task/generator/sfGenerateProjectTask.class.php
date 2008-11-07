@@ -71,7 +71,7 @@ EOF;
     $this->getFilesystem()->mirror(dirname(__FILE__).'/skeleton/project', sfConfig::get('sf_root_dir'), $finder);
 
     // update project name and directory
-    $finder = sfFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini');
+    $finder = sfFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini', 'databases.yml');
     $this->getFileSystem()->replaceTokens($finder->in(sfConfig::get('sf_config_dir')), '##', '##', array('PROJECT_NAME' => $arguments['name'], 'PROJECT_DIR' => sfConfig::get('sf_root_dir')));
 
     // update ProjectConfiguration class
