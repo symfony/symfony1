@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(130, new lime_output_color());
+$t = new lime_test(129, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -412,11 +412,6 @@ $f->setWidgets(array(
 $output = '<input type="hidden" name="id" id="id" /><input type="hidden" name="is_admin" id="is_admin" />';
 $t->is($f->renderHiddenFields(), $output, 'renderHiddenFields() renders all hidden fields, no visible fields');
 $t->is(count($f->getFormFieldSchema()), 3, 'renderHiddenFields() does not modify the form fields');
-
-$e = clone $f; // embed
-$f->embedForm('embedded', $e);
-$output = '<input type="hidden" name="id" id="id" /><input type="hidden" name="is_admin" id="is_admin" /><input type="hidden" name="embedded[id]" id="embedded_id" /><input type="hidden" name="embedded[is_admin]" id="embedded_is_admin" />';
-$t->is($f->renderHiddenFields(), $output, 'renderHiddenFields() renders hidden fields on embedded forms');
 
 // ->embedForm()
 $t->diag('->embedForm()');

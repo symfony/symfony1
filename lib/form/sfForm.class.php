@@ -154,23 +154,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * 
    * @return string
    */
-  public function renderHiddenFields(sfFormFieldSchema $fields = null)
+  public function renderHiddenFields()
   {
-    if (is_null($fields))
-    {
-      $fields = $this->getFormFieldSchema();
-    }
-
     $output = '';
-    foreach ($fields as $name => $field)
+    foreach ($this->getFormFieldSchema() as $name => $field)
     {
       if ($field->isHidden())
       {
         $output .= $field->render();
-      }
-      else if ($field instanceof sfFormFieldSchema)
-      {
-        $output .= $this->renderHiddenFields($field);
       }
     }
 
