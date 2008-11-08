@@ -55,6 +55,7 @@ class sfMySQLDatabase extends sfDatabase
         $host     = $this->getParameter('host', 'localhost');
         $password = $this->getParameter('password');
         $username = $this->getParameter('username');
+        $encoding = $this->getParameter('encoding');
 
         break;
 
@@ -109,6 +110,12 @@ class sfMySQLDatabase extends sfDatabase
     {
       // can't select the database
       throw new sfDatabaseException(sprintf('Failed to select MySQLDatabase "%s".', $database));
+    }
+
+    // set encoding if specified
+    if($encoding)
+    {
+      @mysql_query("SET NAMES '".$encoding."'", $this->connection);
     }
 
     // since we're not an abstraction layer, we copy the connection
