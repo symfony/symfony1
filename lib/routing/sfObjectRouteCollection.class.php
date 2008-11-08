@@ -36,13 +36,14 @@ class sfObjectRouteCollection extends sfRouteCollection
     }
 
     $this->options = array_merge(array(
-      'actions'       => false,
-      'module'        => $this->options['name'],
-      'prefix_path'   => '/'.$this->options['name'],
-      'column'        => isset($this->options['column']) ? $this->options['column'] : 'id',
-      'with_show'     => true,
-      'segment_names' => array('edit' => 'edit', 'new' => 'new'),
-      'model_methods' => array(),
+      'actions'             => false,
+      'module'              => $this->options['name'],
+      'prefix_path'         => '/'.$this->options['name'],
+      'column'              => isset($this->options['column']) ? $this->options['column'] : 'id',
+      'with_show'           => true,
+      'segment_names'       => array('edit' => 'edit', 'new' => 'new'),
+      'model_methods'       => array(),
+      'with_wilcard_routes' => false,
     ), $this->options);
 
     $this->options['requirements'] = array_merge(array($this->options['column'] => '\d+'), $this->options['requirements']);
