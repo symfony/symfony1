@@ -270,7 +270,7 @@ class sfModelGeneratorConfiguration
     }
 
     $fields = array();
-    foreach (array_keys($form->getWidgetSchema()->getFields()) as $name)
+    foreach ($form->getWidgetSchema()->getPositions() as $name)
     {
       $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
         isset($config['default'][$name]) ? $config['default'][$name] : array(),
@@ -334,7 +334,7 @@ class sfModelGeneratorConfiguration
     }
 
     $fields = array();
-    foreach (array_keys($form->getWidgetSchema()->getFields()) as $name)
+    foreach ($form->getWidgetSchema()->getPositions() as $name)
     {
       $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
         isset($config['default'][$name]) ? $config['default'][$name] : array(),
