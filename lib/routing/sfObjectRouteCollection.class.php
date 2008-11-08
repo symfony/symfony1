@@ -88,6 +88,25 @@ class sfObjectRouteCollection extends sfRouteCollection
         $this->routes[$this->getRoute($action)] = $this->getRouteForObject($action, $methods);
       }
     }
+
+    if ($this->options['with_wilcard_routes'])
+    {
+      // wildcard object actions
+      $this->routes[$this->getRoute('object')] = new $this->routeClass(
+        sprintf('%s/:%s/:action.:sf_format', $this->options['prefix_path'], $this->options['column']),
+        array('module' => $this->options['module'], 'sf_format' => 'html'),
+        array_merge($this->options['requirements'], array('sf_method' => 'get')),
+        array('model' => $this->options['model'], 'type' => 'object', 'method' => $this->options['model_methods']['object'])
+      );
+
+      // wildcard collection actions
+      $this->routes[$this->getRoute('collection')] = new $this->routeClass(
+        sprintf('%s/:action/action.:sf_format', $this->options['prefix_path']),
+        array('module' => $this->options['module'], 'sf_format' => 'html'),
+        array_merge($this->options['requirements'], array('sf_method' => 'post')),
+        array('model' => $this->options['model'], 'type' => 'list', 'method' => $this->options['model_methods']['list'])
+      );
+    }
   }
 
   protected function getRouteForCollection($action, $methods)
