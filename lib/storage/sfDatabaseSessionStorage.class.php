@@ -108,7 +108,6 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     {
       $this->db = $database->getResource(); 
     }
-    $this->db = $database->getResource();
     $this->con = $database->getConnection();
     
     if (is_null($this->db) && is_null($this->con))
