@@ -32,7 +32,7 @@ class sfObjectRouteCollection extends sfRouteCollection
 
     if (!isset($this->options['model']))
     {
-      throw new InvalidArgumentException('You must pass a "model" option to sfObjectRouteCollection');
+      throw new InvalidArgumentException(sprintf('You must pass a "model" option to %s ("%s" route)', get_class($this), $this->options['name']));
     }
 
     $this->options = array_merge(array(
@@ -104,7 +104,7 @@ class sfObjectRouteCollection extends sfRouteCollection
   {
     return new $this->routeClass(
       sprintf('%s/:%s/%s.:sf_format', $this->options['prefix_path'], $this->options['column'], $action),
-      array('module' => $this->options['module'], 'action' => $method, 'sf_format' => 'html'),
+      array('module' => $this->options['module'], 'action' => $action, 'sf_format' => 'html'),
       array_merge($this->options['requirements'], array('sf_method' => $methods)),
       array('model' => $this->options['model'], 'type' => 'object', 'method' => $this->options['model_methods']['object'])
     );
