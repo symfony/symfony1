@@ -73,7 +73,7 @@ class sfException extends Exception
 
       ob_start();
 
-      header('HTTP/1.1 500 Internal Server Error');
+      header('HTTP/1.0 500 Internal Server Error');
     }
 
     try
