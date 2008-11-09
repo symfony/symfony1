@@ -54,11 +54,6 @@ class sfModelGeneratorConfigurationField
       return $this->config;
     }
 
-    if ('label' == $key && !isset($this->config['label']))
-    {
-      return sfInflector::humanize(sfInflector::underscore($this->name));
-    }
-
     $value = sfModelGeneratorConfiguration::getFieldConfigValue($this->config, $key, $default);
 
     return $escaped ? str_replace("'", "\\'", $value) : $value;
