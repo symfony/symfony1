@@ -24,11 +24,23 @@ class sfPropel13Upgrade extends sfUpgrade
     $file = sfConfig::get('sf_config_dir').'/propel.ini';
     if(is_readable($file))
     {
+      // builders paths
       $content = file_get_contents($file);
       $content = str_replace('addon.propel.builder.', 'plugins.sfPropelPlugin.lib.propel.builder.', $content, $count);
 
       if ($count)
       {
+        $this->logSection('propel', sprintf('Migrating %s', $file));
+        file_put_contents($file, $content);
+      }
+
+      // nested sets paths
+      if (false === strpos($content, 'nestedsetpeer'))
+      {
+        $content .= <<<EOF
+propel.builder.nestedset.class         = plugins.sfPropelPlugin.lib.builder.SfNestedSetBuilder
+propel.builder.nestedsetpeer.class     = plugins.sfPropelPlugin.lib.builder.SfNestedSetPeerBuilder
+EOF;
         $this->logSection('propel', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
