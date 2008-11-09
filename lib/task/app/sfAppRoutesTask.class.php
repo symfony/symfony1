@@ -68,7 +68,7 @@ EOF;
     foreach ($this->routes as $name => $route)
     {
       $requirements = $route->getRequirements();
-      $method = isset($requirements['sf_method']) ? strtoupper($requirements['sf_method']) : '';
+      $method = isset($requirements['sf_method']) ? strtoupper(is_array($requirements['sf_method']) ? implode(', ', $requirements['sf_method']) : $requirements['sf_method']) : 'ANY';
 
       if (strlen($name) > $maxName)
       {
@@ -88,7 +88,7 @@ EOF;
     foreach ($this->routes as $name => $route)
     {
       $requirements = $route->getRequirements();
-      $method = isset($requirements['sf_method']) ? strtoupper($requirements['sf_method']) : '';
+      $method = isset($requirements['sf_method']) ? strtoupper(is_array($requirements['sf_method']) ? implode(', ', $requirements['sf_method']) : $requirements['sf_method']) : 'ANY';
       $this->log(sprintf($format, $name, $method, $route->getPattern()));
     }
   }
