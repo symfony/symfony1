@@ -81,6 +81,11 @@ Replace with the following:
         param:
           classname: DebugPDO
 
+    test:
+      propel:
+        param:
+          classname:  DebugPDO
+
     all:
       propel:
         class: sfPropelDatabase
