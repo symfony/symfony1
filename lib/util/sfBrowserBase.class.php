@@ -625,7 +625,7 @@ abstract class sfBrowserBase
     }
 
     // form attributes
-    $url = $form->getAttribute('action')
+    $url = $form->getAttribute('action');
     if (!$url || '#' == $url)
     {
       $url = $this->stack[$this->stackPosition]['uri'];
