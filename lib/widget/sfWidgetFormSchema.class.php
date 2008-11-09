@@ -680,6 +680,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     if (false !== $position = array_search($name, $this->positions))
     {
       unset($this->positions[$position]);
+
+      $this->positions = array_values($this->positions);
     }
   }
 

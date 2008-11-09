@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(81, new lime_output_color());
+$t = new lime_test(82, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -64,9 +64,10 @@ $w = new sfWidgetFormSchema(array('w1' => $w1));
 $t->ok($w['w1'] == $w1, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 $t->is($w['w2'], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 
-$w = new sfWidgetFormSchema(array('w1' => $w1));
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
 unset($w['w1']);
 $t->is($w['w1'], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+$t->is($w->getPositions(), array('w2'), 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 
 // ->addFormFormatter() ->setFormFormatterName() ->getFormFormatterName() ->getFormFormatter() ->getFormFormatters()
 $t->diag('->addFormFormatter() ->setFormFormatterName() ->getFormFormatterName() ->getFormFormatter() ->getFormFormatters()');
