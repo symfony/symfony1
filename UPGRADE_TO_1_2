@@ -34,6 +34,7 @@ To upgrade a project:
 
         $ php symfony propel:build-model
         $ php symfony propel:build-forms
+        $ php symfony propel:build-filters
 
 The remaining sections explain the main changes made in symfony 1.2 that need
 some kind of upgrade (automatic or not).
@@ -73,14 +74,14 @@ Replace with the following:
     [yml]
     dev:
       propel:
-        param: 
+        param:
           classname: DebugPDO
-     
+
     all:
       propel:
         class: sfPropelDatabase
         param:
-          dsn:        mysql:dbname=example;host=localhost 
+          dsn:        mysql:dbname=example;host=localhost
           username:   username
           password:   password
           encoding:   utf8
