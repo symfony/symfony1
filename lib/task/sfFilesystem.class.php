@@ -354,9 +354,9 @@ class sfFilesystem
     $commonChars = 0;
     $minPathLength = min(strlen($from), strlen($to));
     // count how many chars the strings have in common
-    for ($i = 0; $i < $minPathLength; $i++)
+    while ($commonChars < $minPathLength)
     {
-      if ($from[$i] != $to[$i]) break;
+      if ($from[$commonChars] != $to[$commonChars]) break;
       $commonChars++;
     }
     if ($commonChars)
