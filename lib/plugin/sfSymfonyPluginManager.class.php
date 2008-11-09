@@ -171,4 +171,27 @@ class sfSymfonyPluginManager extends sfPluginManager
 
     return true;
   }
+
+  /**
+   * Calculates the relative path from one to another directory.
+   * If it would go beyond topLevel the absolute path of to is returned
+   */ 
+  protected function getRelativePath($from, $to, $topLevel = "")
+  {
+    if (strstr($from, $topLevel) && strstr($to, $topLevel))
+    {
+      // both pathes share the same top level from that position
+      $commonLength = strlen($topLevel);
+      $levelUp = substr_count($from, DIRECTORY_SEPARATOR, $commonLength);
+      // up that many level
+      $relativePath  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
+      // down the remaining $to path
+      $relativePath .= substr($to, $commonLength);
+      return $relativePath;
+    }
+    else
+    {
+      return $to;
+    }
+  }
 }
