@@ -104,7 +104,7 @@ $content = $c->execute_command('propel:build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:build-model" creates model classes under "lib/model" directory');
 
 $content = $c->execute_command('propel:build-form');
-$t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'base'.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
+$t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
 
 $c->execute_command('propel:insert-sql --no-confirmation');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'database.sqlite'), '"propel:insert-sql" creates tables in the database');
