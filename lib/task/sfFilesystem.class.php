@@ -226,6 +226,22 @@ class sfFilesystem
   }
 
   /**
+   * Creates a symbolic link using a relative path if possible.
+   *
+   * @param string $originDir      The origin directory path
+   * @param string $targetDir      The symbolic link name
+   * @param bool   $copyOnWindows  Whether to copy files if on windows
+   */
+  public function relativeSymlink($originDir, $targetDir, $copyOnWindows = false)
+  {
+    if (function_exists('symlink') || !$copyOnWindows)
+    {
+      $originDir = $this->calculateRelativeDir($targetDir, $originDir);
+    }
+    $this->symlink($originDir, $targetDir, $copyOnWindows);
+  }
+
+  /**
    * Mirrors a directory to another.
    *
    * @param string   $originDir  The origin directory
@@ -324,5 +340,34 @@ class sfFilesystem
     $message = $this->formatter ? $this->formatter->formatSection($section, $message, $size) : $section.' '.$message."\n";
 
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($message)));
+  }
+
+  /**
+   * Calculates the relative path from one to another directory.
+   * If they share no common path the absolute target dir is returned
+   *
+   * @param string $from directory from that the relative path shall be calculated
+   * @param string $to target directory
+   */ 
+  protected function calculateRelativeDir($from, $to)
+  {
+    $commonChars = 0;
+    $minPathLength = min(strlen($from), strlen($to));
+    // count how many chars the strings have in common
+    for ($i = 0; $i < $minPathLength; $i++)
+    {
+      if ($from[$i] != $to[$i]) break;
+      $commonChars++;
+    }
+    if ($commonChars)
+    {
+      $levelUp = substr_count($from, DIRECTORY_SEPARATOR, $commonChars);
+      // up that many level
+      $relativeDir  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
+      // down the remaining $to path
+      $relativeDir .= substr($to, $commonChars);
+      return $relativeDir;
+    }
+    return $to;
   }
 }

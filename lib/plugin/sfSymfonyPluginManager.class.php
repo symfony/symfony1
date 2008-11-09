@@ -72,8 +72,7 @@ class sfSymfonyPluginManager extends sfPluginManager
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Installing web data for plugin')));
 
       $filesystem = new sfFilesystem();
-      $target = $this->environment->getOption('web_dir').DIRECTORY_SEPARATOR.$plugin;
-      $filesystem->symlink($this->getRelativePath($target, $webDir), $target, true);
+      $filesystem->relativeSymlink($webDir, $this->environment->getOption('web_dir').DIRECTORY_SEPARATOR.$plugin, true);
     }
   }
 
@@ -171,31 +170,5 @@ class sfSymfonyPluginManager extends sfPluginManager
     }
 
     return true;
-  }
-
-  /**
-   * Calculates the relative path from one to another directory.
-   * If it would go beyond sf_root_dir the absolute path of $to is returned.
-   *
-   * @param string $from directory from that the relative path shall be calculated
-   * @param string $to target directory
-   */ 
-  protected function getRelativePath($from, $to)
-  {
-    $root = $this->environment->getOption('sf_root_dir').DIRECTORY_SEPARATOR;
-    if (strstr($from, $root) && strstr($to, $root))
-    {
-      $levelUp = substr_count($from, DIRECTORY_SEPARATOR, strlen($root));
-      // up that many level
-      $relativePath  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
-      // down the remaining $to path
-      $relativePath .= substr($to, strlen($root));
-      return $relativePath;
-    }
-    else
-    {
-      // $to is outside sf_root_dir so return absolute path
-      return $to;
-    }
   }
 }
