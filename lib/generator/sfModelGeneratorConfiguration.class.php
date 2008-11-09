@@ -59,9 +59,8 @@ class sfModelGeneratorConfiguration
     {
       $formConfig = array_merge($config['default'][$field], $config['form'][$field]);
 
-      $this->configuration['list']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge($config['default'][$field], $config['list'][$field]));
+      $this->configuration['list']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge(array('label' => sfInflector::humanize(sfInflector::underscore($field))), $config['default'][$field], $config['list'][$field]));
       $this->configuration['filter']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge($config['default'][$field], $config['filter'][$field]));
-      $this->configuration['form']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, $formConfig);
       $this->configuration['new']['fields'][$field]    = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, $config['new'][$field]));
       $this->configuration['edit']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, $config['edit'][$field]));
     }
@@ -77,6 +76,7 @@ class sfModelGeneratorConfiguration
       }
 
       $this->configuration['list']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge(
+        array('label' => sfInflector::humanize(sfInflector::underscore($field))),
         isset($config['default'][$field]) ? $config['default'][$field] : array(),
         isset($config['list'][$field]) ? $config['list'][$field] : array(),
         array('is_real' => false, 'type' => 'Text', 'flag' => $flag)
