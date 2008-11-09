@@ -14,13 +14,13 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 class mySymfonyPluginManager extends sfSymfonyPluginManager
 {
-  public function getRelativePath($from, $to, $topLevel)
+  public function getRelativePath($from, $to)
   {
-    return parent::getRelativePath($from, $to, $topLevel);
+    return parent::getRelativePath($from, $to);
   }
 }
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(3, new lime_output_color());
 
 $options = array(
   'sf_root_dir'        => DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'sfproject',
@@ -36,6 +36,9 @@ $pluginManager = new mySymfonyPluginManager($dispatcher, $environment);
 $t->is($pluginManager->getEnvironment(), $environment, '->initialize() takes a sfPearEnvironment as its second argument');
 
 $t->diag('sfPluginManager calculates relative pathes');
-$source = $options['sf_root_dir'].'webdir'.DIRECTORY_SEPARATOR.'myplugin';
-$target = $options['sf_root_dir'].'plugin'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web';
-$t->is($pluginManager->getRelativePath($source, $target, $options['sf_root_dir']), '..'.DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web', '->getRelativePath() correctly calculates the relative path');
+$source = $options['web_dir'].DIRECTORY_SEPARATOR.'myplugin';
+$target = $options['plugin_dir'].DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web';
+$t->is($pluginManager->getRelativePath($source, $target), '..'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web', '->getRelativePath() correctly calculates the relative path');
+
+$target = '/mnt/cd-rom/symfony/plugin'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web';
+$t->is($pluginManager->getRelativePath($source, $target), '/mnt/cd-rom/symfony/plugin'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web', '->getRelativePath() returns absolute path when one argument is outside of sf_root_dir');

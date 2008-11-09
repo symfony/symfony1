@@ -72,7 +72,8 @@ class sfSymfonyPluginManager extends sfPluginManager
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Installing web data for plugin')));
 
       $filesystem = new sfFilesystem();
-      $filesystem->symlink($webDir, $this->environment->getOption('web_dir').DIRECTORY_SEPARATOR.$plugin, true);
+      $target = $this->environment->getOption('web_dir').DIRECTORY_SEPARATOR.$plugin;
+      $filesystem->symlink($this->getRelativePath($target, $webDir), $target, true);
     }
   }
 
@@ -174,23 +175,26 @@ class sfSymfonyPluginManager extends sfPluginManager
 
   /**
    * Calculates the relative path from one to another directory.
-   * If it would go beyond topLevel the absolute path of to is returned
+   * If it would go beyond sf_root_dir the absolute path of $to is returned.
+   *
+   * @param string $from directory from that the relative path shall be calculated
+   * @param string $to target directory
    */ 
-  protected function getRelativePath($from, $to, $topLevel = "")
+  protected function getRelativePath($from, $to)
   {
-    if (strstr($from, $topLevel) && strstr($to, $topLevel))
+    $root = $this->environment->getOption('sf_root_dir').DIRECTORY_SEPARATOR;
+    if (strstr($from, $root) && strstr($to, $root))
     {
-      // both pathes share the same top level from that position
-      $commonLength = strlen($topLevel);
-      $levelUp = substr_count($from, DIRECTORY_SEPARATOR, $commonLength);
+      $levelUp = substr_count($from, DIRECTORY_SEPARATOR, strlen($root));
       // up that many level
       $relativePath  = str_repeat("..".DIRECTORY_SEPARATOR, $levelUp);
       // down the remaining $to path
-      $relativePath .= substr($to, $commonLength);
+      $relativePath .= substr($to, strlen($root));
       return $relativePath;
     }
     else
     {
+      // $to is outside sf_root_dir so return absolute path
       return $to;
     }
   }
