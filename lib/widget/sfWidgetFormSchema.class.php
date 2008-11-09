@@ -61,7 +61,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   public function __construct($fields = null, $options = array(), $attributes = array(), $labels = array(), $helps = array())
   {
     $this->addOption('name_format', '%s');
-    $this->addOption('form_formatter', self::$defaultFormatterName);
+    $this->addOption('form_formatter', null);
 
     parent::__construct($options, $attributes);
 
@@ -197,7 +197,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function getFormFormatterName()
   {
-    return $this->options['form_formatter'];
+    return is_null($this->options['form_formatter']) ? self::$defaultFormatterName : $this->options['form_formatter'];
   }
 
   /**
