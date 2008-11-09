@@ -36,8 +36,6 @@ class sfTimerManager
       self::$timers[$name] = new sfTimer($name);
     }
 
-    self::$timers[$name]->startTimer();
-
     return self::$timers[$name];
   }
 
