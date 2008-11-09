@@ -49,7 +49,6 @@ default:
     admin_web_dir:          /sf/sf_admin
     web_debug_web_dir:      /sf/sf_web_debug
     calendar_web_dir:       /sf/calendar
-    admin_module_web_dir:   /sfPropelPlugin
 
     # Helpers included in all templates by default
     standard_helpers:       [Partial, Cache, Form]
