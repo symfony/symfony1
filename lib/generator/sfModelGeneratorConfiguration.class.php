@@ -86,23 +86,23 @@ class sfModelGeneratorConfiguration
     // form actions
     foreach (array('edit', 'new') as $context)
     {
-      foreach ($this->configuration[$context]['actions'] as $action => &$parameters)
+      foreach ($this->configuration[$context]['actions'] as $action => $parameters)
       {
-        $this->fixActionParameters($action, $parameters);
+        $this->configuration[$context]['actions'][$action] = $this->fixActionParameters($action, $parameters);
       }
     }
 
     // list actions
-    foreach ($this->configuration['list']['actions'] as $action => &$parameters)
+    foreach ($this->configuration['list']['actions'] as $action => $parameters)
     {
-      $this->fixActionParameters($action, $parameters);
+      $this->configuration['list']['actions'][$action] = $this->fixActionParameters($action, $parameters);
     }
 
     // list batch actions
     $this->configuration['list']['batch_actions'] = array();
     foreach ($this->getListBatchActions() as $action => $parameters)
     {
-      $this->fixActionParameters($action, $parameters);
+      $this->configuration['list']['batch_actions'][$action] = $this->fixActionParameters($action, $parameters);
 
       $action = 'batch'.ucfirst(0 === strpos($action, '_') ? substr($action, 1) : $action);
 
@@ -110,9 +110,9 @@ class sfModelGeneratorConfiguration
     }
 
     // list object actions
-    foreach ($this->configuration['list']['object_actions'] as $action => &$parameters)
+    foreach ($this->configuration['list']['object_actions'] as $action => $parameters)
     {
-      $this->fixActionParameters($action, $parameters);
+      $this->configuration['list']['object_actions'][$action] = $this->fixActionParameters($action, $parameters);
     }
 
     // list field configuration
@@ -380,7 +380,7 @@ class sfModelGeneratorConfiguration
     return $default;
   }
 
-  protected function fixActionParameters($action, &$parameters)
+  protected function fixActionParameters($action, $parameters)
   {
     if (is_null($parameters))
     {
@@ -420,6 +420,8 @@ class sfModelGeneratorConfiguration
     }
 
     $parameters['label'] = sfInflector::humanize($label);
+
+    return $parameters;
   }
 
   protected function getConfig()
