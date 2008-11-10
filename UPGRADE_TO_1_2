@@ -278,13 +278,6 @@ had a required `culture` option in symfony 1.1. As the culture is not used in th
 validators, the `culture` option is now deprecated. It is still there to maintain
 backward compatibility but you don't need to provide it anymore.
 
-Also, two new methods have been added to the `sfValidatorBase` class allowing to
-define default standard messages for `required` and `invalid` error codes:
-
-    [php]
-    sfValidatorBase::setRequiredMessage('this is required');
-    sfValidatorBase::setInvalidMessage('this is invalid');
-
 Forms 
 ----- 
     
