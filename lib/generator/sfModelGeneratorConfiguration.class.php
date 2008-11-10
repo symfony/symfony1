@@ -98,12 +98,6 @@ class sfModelGeneratorConfiguration
       $this->fixActionParameters($action, $parameters);
     }
 
-    // list object actions
-    foreach ($this->configuration['list']['object_actions'] as $action => &$parameters)
-    {
-      $this->fixActionParameters($action, $parameters);
-    }
-
     // list batch actions
     $this->configuration['list']['batch_actions'] = array();
     foreach ($this->getListBatchActions() as $action => $parameters)
@@ -113,6 +107,12 @@ class sfModelGeneratorConfiguration
       $action = 'batch'.ucfirst(0 === strpos($action, '_') ? substr($action, 1) : $action);
 
       $this->configuration['list']['batch_actions'][$action] = $parameters;
+    }
+
+    // list object actions
+    foreach ($this->configuration['list']['object_actions'] as $action => &$parameters)
+    {
+      $this->fixActionParameters($action, $parameters);
     }
 
     // list field configuration
