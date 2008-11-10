@@ -60,4 +60,24 @@ class sfWidgetFormDateRange extends sfWidgetForm
       '%to_date%'        => $this->getOption('to_date')->render($name.'[to]', $value['to']),
     ));
   }
+
+  /**
+   * Gets the stylesheet paths associated with the widget.
+   *
+   * @return array An array of stylesheet paths
+   */
+  public function getStylesheets()
+  {
+    return array_unique(array_merge($this->getOption('from_date')->getStylesheets(), $this->getOption('to_date')->getStylesheets()));
+  }
+
+  /**
+   * Gets the JavaScript paths associated with the widget.
+   *
+   * @return array An array of JavaScript paths
+   */
+  public function getJavaScripts()
+  {
+    return array_unique(array_merge($this->getOption('from_date')->getJavaScripts(), $this->getOption('to_date')->getJavaScripts()));
+  }
 }
