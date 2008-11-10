@@ -10,28 +10,30 @@
  */
 
 // project exists?
-if (file_exists('config/config.php'))
+if (file_exists('config/ProjectConfiguration.class.php'))
 {
-  include('config/config.php');
-}
+  require_once('config/ProjectConfiguration.class.php');
+  $configuration = new ProjectConfiguration();
 
-if (!isset($sf_symfony_lib_dir))
+  $dir = $configuration->getSymfonyLibDir();
+}
+else
 {
   if (is_readable(dirname(__FILE__).'/../../lib/autoload/sfCoreAutoload.class.php'))
   {
     // SVN
-    $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
+    $dir = realpath(dirname(__FILE__).'/../../lib');
   }
   else
   {
     // PEAR
-    $sf_symfony_lib_dir  = '@PEAR-DIR@/symfony';
+    $dir = '@PEAR-DIR@/symfony';
 
-    if (!is_dir($sf_symfony_lib_dir))
+    if (!is_dir($dir))
     {
       throw new Exception('Unable to find symfony libraries');
     }
   }
 }
 
-include($sf_symfony_lib_dir.'/command/cli.php');
+include($dir.'/command/cli.php');
