@@ -93,7 +93,7 @@ abstract class sfPluginConfiguration
    */
   public function initializeAutoload()
   {
-    $autoload = sfSimpleAutoload::getInstance();
+    $autoload = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
 
     if (is_readable($file = $this->rootDir.'/config/autoload.yml'))
     {
