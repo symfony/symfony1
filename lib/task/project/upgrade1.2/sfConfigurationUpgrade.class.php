@@ -25,7 +25,7 @@ class sfConfigurationUpgrade extends sfUpgrade
 
     if (!preg_match('/(enablePlugins|disablePlugins|enableAllPluginsExcept)/', $content))
     {
-      $content = preg_replace("#(setup\(\)\s+{\s+)#s", "$1  \$this->enableAllPluginsExcept('sfDoctrinePlugin');\n  ", $content, -1, $count);
+      $content = preg_replace("#(setup\(\)\s+{\s+)#s", "$1  \$this->enableAllPluginsExcept(array('sfDoctrinePlugin', 'sfCompat10Plugin));\n  ", $content, -1, $count);
       if ($count)
       {
         $this->logSection('config', sprintf('Migrating %s', $file));
