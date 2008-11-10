@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(44, new lime_output_color());
 
 class ValidatorIdentity extends sfValidatorBase
 {
@@ -230,3 +230,12 @@ $t->is($v->asString(), 'ValidatorIdentity({ required: false, foo: foo }, { requi
 $v = new ValidatorIdentity();
 $v->setMessage('required', 'This is required.');
 $t->is($v->asString(), 'ValidatorIdentity({}, { required: \'This is required.\' })', '->asString() returns a string representation of the validator');
+
+// setRequiredMessage() setInvalidMessage()
+$t->diag('setRequiredMessage() setInvalidMessage()');
+ValidatorIdentity::setRequiredMessage('this is required by default');
+ValidatorIdentity::setInvalidMessage('this is invalid by default');
+$v = new ValidatorIdentity();
+$defaultMessages = $v->getDefaultMessages();
+$t->is($defaultMessages['required'], 'this is required by default', 'setRequiredMessage() sets the default required message');
+$t->is($defaultMessages['invalid'], 'this is invalid by default', 'setInvalidMessage() sets the default required message');
