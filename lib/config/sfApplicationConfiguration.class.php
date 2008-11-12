@@ -479,7 +479,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // plugins
-    return array_merge($dirs, $this->getPluginPaths('/i18n'));
+    return array_merge($dirs, $this->getPluginSubPaths('/i18n'));
   }
 
   /**
