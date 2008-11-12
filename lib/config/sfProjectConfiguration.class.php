@@ -81,10 +81,13 @@ class sfProjectConfiguration
   {
     foreach ($this->getPluginPaths() as $path)
     {
-      $name  = basename($path);
-      $class = $name.'Configuration';
+      if (false === $plugin = array_search($path, $this->overriddenPluginPaths))
+      {
+        $plugin = basename($path);
+      }
+      $class = $plugin.'Configuration';
 
-      if (is_readable($file = sprintf('%s/config/%sConfiguration.class.php', $path, $name)))
+      if (is_readable($file = sprintf('%s/config/%s.class.php', $path, $class)))
       {
         require_once $file;
         $configuration = new $class($this, $path);
@@ -94,7 +97,7 @@ class sfProjectConfiguration
         $configuration = new sfPluginConfigurationGeneric($this, $path);
       }
 
-      $this->pluginConfigurations[$name] = $configuration;
+      $this->pluginConfigurations[$plugin] = $configuration;
     }
 
     $this->pluginsLoaded = true;
@@ -371,9 +374,9 @@ class sfProjectConfiguration
     }
 
     $this->plugins = array();
-    foreach ($this->getAllPluginPaths() as $plugin)
+    foreach ($this->getAllPluginPaths() as $plugin => $path)
     {
-      $this->plugins[] = basename($plugin);
+      $this->plugins[] = $plugin;
     }
 
     $this->disablePlugins($plugins);
@@ -479,14 +482,14 @@ class sfProjectConfiguration
    * 
    * This method can be used to ease functional testing of plugins. It is not
    * intended to support sharing plugins between projects, as many plugins
-   * save project specific code (to /lib/form, for example).
+   * save project specific code (to /lib/form/base, for example).
    * 
    * @param string $plugin
    * @param string $path
    */
   public function setPluginPath($plugin, $path)
   {
-    $this->overriddenPluginPaths[$plugin] = $path;
+    $this->overriddenPluginPaths[$plugin] = realpath($path);
   }
 
   /**
