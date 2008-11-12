@@ -1069,6 +1069,19 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
+     * Set a fieldname to have a custom accessor and mutator
+     *
+     * @param string $fieldname
+     * @param string $accessor
+     * @param string $mutator
+     */
+    public function hasAccessorMutator($fieldName, $accessor, $mutator)
+    {
+        $this->hasAccessor($fieldName, $accessor);
+        $this->hasMutator($fieldName, $mutator);
+    }
+
+    /**
      * get
      * returns a value of a property or a related component
      *
