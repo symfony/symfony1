@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(41, new lime_output_color());
+$t = new lime_test(43, new lime_output_color());
 
 // ->matchesUrl()
 $t->diag('->matchesUrl()');
@@ -147,3 +147,54 @@ $t->is($route->matchesUrl('/foo/bar'), array(), '->parseStarParameter() is able 
 $t->diag('->generateStarParameter()');
 $route = new sfRoute('/foo/:foo/*');
 $t->is($route->generate(array('foo' => 'bar', 'bar' => 'foo')), '/foo/bar/bar/foo', '->generateStarParameter() replaces * with all the key/pair values that are not variables');
+
+// custom token
+$t->diag('custom token');
+
+class MyRoute extends sfRoute
+{
+  protected function tokenizeBufferBefore(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
+  {
+    if ($afterASeparator && preg_match('#^=('.$this->options['variable_regex'].')#', $buffer, $match))
+    {
+      // a labelled variable
+      $this->tokens[] = array('label', $currentSeparator, $match[0], $match[1]);
+
+      $currentSeparator = '';
+      $buffer = substr($buffer, strlen($match[0]));
+      $afterASeparator = false;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  protected function compileForLabel($separator, $name, $variable)
+  {
+    if (!isset($this->requirements[$variable]))
+    {
+      $this->requirements[$variable] = $this->options['variable_content_regex'];
+    }
+
+    $this->segments[] = preg_quote($separator, '#').$variable.$separator.'(?P<'.$variable.'>'.$this->requirements[$variable].')';
+    $this->variables[$variable] = $name;
+
+    if (!isset($this->defaults[$variable]))
+    {
+      $this->firstOptional = count($this->segments);
+    }
+  }
+
+  protected function generateForLabel($optional, $tparams, $separator, $name, $variable)
+  {
+    if (!empty($tparams[$variable]) && (!$optional || !isset($this->defaults[$variable]) || $tparams[$variable] != $this->defaults[$variable]))
+    {
+      return $variable . '/' . urlencode($tparams[$variable]);
+    }
+  }
+}
+
+$route = new MyRoute('/=foo');
+$t->is($route->matchesUrl('/foo/bar'), array('foo' => 'bar'), '->tokenizeBufferBefore() allows to add a custom token');
+$t->is($route->generate(array('foo' => 'bar')), '/foo/bar', '->compileForLabel() adds logic to generate a route for a custom token');

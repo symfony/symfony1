@@ -31,7 +31,8 @@ class sfRoute implements Serializable
     $variables         = array(),
     $defaults          = array(),
     $requirements      = array(),
-    $tokens            = array();
+    $tokens            = array(),
+    $customToken       = false;
 
   /**
    * Constructor.
@@ -210,45 +211,9 @@ class sfRoute implements Serializable
       throw new InvalidArgumentException(sprintf('The "%s" route has some missing mandatory parameters (%s).', $this->pattern, implode(', ', $diff)));
     }
 
-    if ($this->options['generate_shortest_url'])
+    if ($this->options['generate_shortest_url'] || $this->customToken)
     {
-      // construct the shortest URL possible
-      $url = array();
-      $optional = true;
-      $first = true;
-      $tokens = array_reverse($this->tokens);
-      foreach ($tokens as $token)
-      {
-        switch ($token[0])
-        {
-          case 'variable':
-            if (!$optional || !isset($this->defaults[$token[3]]) || $tparams[$token[3]] != $this->defaults[$token[3]])
-            {
-              $url[] = urlencode($tparams[$token[3]]);
-              $optional = false;
-            }
-            break;
-          case 'text':
-            $url[] = $token[2];
-            $optional = false;
-            break;
-          case 'separator':
-          default:
-            if (false === $optional || $first)
-            {
-              $url[] = $token[2];
-            }
-            break;
-        }
-
-        $first = false;
-      }
-
-      $url = implode('', array_reverse($url));
-      if (!$url)
-      {
-        $url = '/';
-      }
+      $url = $this->generateWithTokens($tparams);
     }
     else
     {
@@ -271,6 +236,60 @@ class sfRoute implements Serializable
       {
         $url .= '?'.http_build_query($extra);
       }
+    }
+
+    return $url;
+  }
+
+  /**
+   * Generates a URL for the given parameters by using the route tokens.
+   *
+   * @param array $parameters An array of parameters
+   */
+  protected function generateWithTokens($parameters)
+  {
+    $url = array();
+    $optional = $this->options['generate_shortest_url'];
+    $first = true;
+    $tokens = array_reverse($this->tokens);
+    foreach ($tokens as $token)
+    {
+      switch ($token[0])
+      {
+        case 'variable':
+          if (!$optional || !isset($this->defaults[$token[3]]) || $parameters[$token[3]] != $this->defaults[$token[3]])
+          {
+            $url[] = urlencode($parameters[$token[3]]);
+            $optional = false;
+          }
+          break;
+        case 'text':
+          $url[] = $token[2];
+          $optional = false;
+          break;
+        case 'separator':
+          if (false === $optional || $first)
+          {
+            $url[] = $token[2];
+          }
+          break;
+        default:
+          // handle custom tokens
+          if ($segment = call_user_func_array(array($this, 'generateFor'.ucfirst(array_shift($token))), array_merge(array($optional, $parameters), $token)))
+          {
+            $url[] = $segment;
+            $optional = false;
+          }
+          break;
+      }
+
+      $first = false;
+    }
+
+    $url = implode('', array_reverse($url));
+    if (!$url)
+    {
+      $url = '/';
     }
 
     return $url;
@@ -422,6 +441,9 @@ class sfRoute implements Serializable
     $this->regex = "#^\n".implode("\n", $this->segments)."\n".preg_quote($separator, '#')."$#x";
   }
 
+  /**
+   * Pre-compiles a route.
+   */
   protected function preCompile()
   {
     // a route must start with a slash
@@ -431,6 +453,9 @@ class sfRoute implements Serializable
     }
   }
 
+  /**
+   * Post-compiles a route.
+   */
   protected function postCompile()
   {
     // all segments after the last static segment are optional
@@ -442,6 +467,9 @@ class sfRoute implements Serializable
     }
   }
 
+  /**
+   * Tokenizes the route.
+   */
   protected function tokenize()
   {
     $this->tokens = array();
@@ -454,6 +482,8 @@ class sfRoute implements Serializable
     {
       if (false !== $this->tokenizeBufferBefore($buffer, $tokens, $afterASeparator, $currentSeparator))
       {
+        // a custom token
+        $this->customToken = true;
       }
       else if ($afterASeparator && preg_match('#^'.$this->options['variable_prefix_regex'].'('.$this->options['variable_regex'].')#', $buffer, $match))
       {
@@ -484,6 +514,8 @@ class sfRoute implements Serializable
       }
       else if (false !== $this->tokenizeBufferAfter($buffer, $tokens, $afterASeparator, $currentSeparator))
       {
+        // a custom token
+        $this->customToken = true;
       }
       else
       {
@@ -493,11 +525,35 @@ class sfRoute implements Serializable
     }
   }
 
+  /**
+   * Tokenizes the buffer before default logic is applied.
+   *
+   * This method must return false if the buffer has not been parsed.
+   *
+   * @param string   $buffer           The current route buffer
+   * @param array    $tokens           An array of current tokens
+   * @param Boolean  $afterASeparator  Whether the buffer is just after a separator
+   * @param string   $currentSeparator The last matched separator
+   *
+   * @return Boolean true if a token has been generated, false otherwise
+   */
   protected function tokenizeBufferBefore(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
   {
     return false;
   }
 
+  /**
+   * Tokenizes the buffer after default logic is applied.
+   *
+   * This method must return false if the buffer has not been parsed.
+   *
+   * @param string   $buffer           The current route buffer
+   * @param array    $tokens           An array of current tokens
+   * @param Boolean  $afterASeparator  Whether the buffer is just after a separator
+   * @param string   $currentSeparator The last matched separator
+   *
+   * @return Boolean true if a token has been generated, false otherwise
+   */
   protected function tokenizeBufferAfter(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
   {
     return false;
@@ -597,7 +653,7 @@ class sfRoute implements Serializable
     return false !== strpos($this->regex, '<_star>');
   }
 
-  protected function generateStarParameter($url, $defaults, $tparams)
+  protected function generateStarParameter($url, $defaults, $parameters)
   {
     if (false === strpos($this->regex, '<_star>'))
     {
@@ -605,7 +661,7 @@ class sfRoute implements Serializable
     }
 
     $tmp = array();
-    foreach (array_diff_key($tparams, $this->variables, $defaults) as $key => $value)
+    foreach (array_diff_key($parameters, $this->variables, $defaults) as $key => $value)
     {
       if (is_array($value))
       {
