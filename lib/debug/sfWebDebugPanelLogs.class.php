@@ -20,7 +20,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
 {
   public function getTitle()
   {
-    return '<img src="'.$this->webDebug->getOption('image_root_path').'/log.png" /> logs';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/log.png" alt="Log" /> logs';
   }
 
   public function getPanelTitle()
@@ -53,7 +53,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
       $debug_info = '';
       if (count($log['debug_stack']))
       {
-        $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" /></a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
+        $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" alt="Toggle XDebug details" /></a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
         foreach ($log['debug_stack'] as $i => $logLine)
         {
           $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($logLine).'<br/>';
@@ -66,7 +66,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
         ucfirst($priority),
         $log['type'],
         $line_nb,
-        '<img src="'.$this->webDebug->getOption('image_root_path').'/'.$priority.'.png" />',
+        '<img src="'.$this->webDebug->getOption('image_root_path').'/'.$priority.'.png" alt="'.ucfirst($priority).'"/>',
         $type,
         $this->formatLogLine($log['message']),
         $debug_info
@@ -84,9 +84,9 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
       <ul id="sfWebDebugLogMenu">
         <li><a href="#" onclick="sfWebDebugToggleAllLogLines(true, \'sfWebDebugLogLine\'); return false;">[all]</a></li>
         <li><a href="#" onclick="sfWebDebugToggleAllLogLines(false, \'sfWebDebugLogLine\'); return false;">[none]</a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'info\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/info.png" /></a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'warning\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/warning.png" /></a></li>
-        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/error.png" /></a></li>
+        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'info\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/info.png" alt="Show only infos" /></a></li>
+        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'warning\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/warning.png" alt="Show only warnings" /></a></li>
+        <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/error.png" alt="Show only errors" /></a></li>
         <li>'.implode("</li>\n<li>", $types).'</li>
       </ul>
       <div id="sfWebDebugLogLines">'.$html.'</div>

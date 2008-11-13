@@ -35,7 +35,7 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
   public function getTitle()
   {
-    return '<img src="'.$this->webDebug->getOption('image_root_path').'/time.png" /> '.$this->getTotalTime().' ms';
+    return '<img src="'.$this->webDebug->getOption('image_root_path').'/time.png" alt="Time" /> '.$this->getTotalTime().' ms';
   }
 
   public function getPanelTitle()
