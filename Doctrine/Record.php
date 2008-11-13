@@ -602,6 +602,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         $this->_values = array_merge($this->_values, $this->cleanData($data));
         $this->_data = array_merge($this->_data, $data);
+        if (count($this->_values) < $this->_table->getColumnCount()) {
+            $this->_state = self::STATE_PROXY;
+        }
         $this->prepareIdentifiers(true);
     }
 
