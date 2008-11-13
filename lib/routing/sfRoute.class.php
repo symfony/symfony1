@@ -206,7 +206,7 @@ class sfRoute implements Serializable
     $tparams = $this->mergeArrays($defaults, $params);
 
     // all params must be given
-    if ($diff = array_diff_key($this->variables, $tparams))
+    if ($diff = array_diff_key($this->variables, array_filter($tparams)))
     {
       throw new InvalidArgumentException(sprintf('The "%s" route has some missing mandatory parameters (%s).', $this->pattern, implode(', ', $diff)));
     }
