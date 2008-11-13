@@ -175,7 +175,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
      */
     public function listTables($database = null)
     {
-        $sql = "SELECT name FROM sqlite_master WHERE type = 'table' "
+        $sql = "SELECT name FROM sqlite_master WHERE type = 'table' AND name != 'sqlite_sequence' "
              . "UNION ALL SELECT name FROM sqlite_temp_master "
              . "WHERE type = 'table' ORDER BY name";
 
