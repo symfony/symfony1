@@ -452,7 +452,10 @@ class sfRoute implements Serializable
     // a route is an array of (separator + variable) or (separator + text) segments
     while (strlen($buffer))
     {
-      if ($afterASeparator && preg_match('#^'.$this->options['variable_prefix_regex'].'('.$this->options['variable_regex'].')#', $buffer, $match))
+      if (false !== $this->tokenizeBufferBefore($buffer, $tokens, $afterASeparator, $currentSeparator))
+      {
+      }
+      else if ($afterASeparator && preg_match('#^'.$this->options['variable_prefix_regex'].'('.$this->options['variable_regex'].')#', $buffer, $match))
       {
         // a variable
         $this->tokens[] = array('variable', $currentSeparator, $match[0], $match[1]);
@@ -479,18 +482,23 @@ class sfRoute implements Serializable
         $buffer = substr($buffer, strlen($match[0]));
         $afterASeparator = true;
       }
+      else if (false !== $this->tokenizeBufferAfter($buffer, $tokens, $afterASeparator, $currentSeparator))
+      {
+      }
       else
       {
-        if (false === $this->tokenizeBuffer($buffer, $tokens, $afterASeparator, $currentSeparator))
-        {
-          // parsing problem
-          throw new InvalidArgumentException(sprintf('Unable to parse "%s" route near "%s".', $this->pattern, $buffer));
-        }
+        // parsing problem
+        throw new InvalidArgumentException(sprintf('Unable to parse "%s" route near "%s".', $this->pattern, $buffer));
       }
     }
   }
 
-  protected function tokenizeBuffer(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
+  protected function tokenizeBufferBefore(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
+  {
+    return false;
+  }
+
+  protected function tokenizeBufferAfter(&$buffer, &$tokens, &$afterASeparator, &$currentSeparator)
   {
     return false;
   }
