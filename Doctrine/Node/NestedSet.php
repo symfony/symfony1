@@ -1056,8 +1056,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left columns
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', $componentName.'.lft + ?')
-                ->where($componentName . '.lft >= ?', array($delta, $first));
+                ->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
+                ->where($componentName . '.lft >= ?', $first);
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
         
@@ -1065,8 +1065,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right columns
         $resultRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', $componentName.'.rgt + ?')
-                ->where($componentName . '.rgt >= ?', array($delta, $first));
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
+                ->where($componentName . '.rgt >= ?', $first);
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 
@@ -1092,8 +1092,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         // shift left column values
         $componentName = $this->_tree->getBaseComponent();
         $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', $componentName.'.lft + ?')
-                ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($delta, $first, $last));
+                ->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
+                ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($first, $last));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
 
@@ -1101,8 +1101,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         
         // shift right column values
         $qRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', $componentName.'.rgt + ?')
-                ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($delta, $first, $last));
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
+                ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($first, $last));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 
