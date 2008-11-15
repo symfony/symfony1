@@ -45,9 +45,9 @@ for a new module in an existing application:
 The task can also change the author name found in the [actions.class.php|COMMENT]
 if you have configure it in [config/properties.ini|COMMENT]:
 
-  [symfony]
+  [[symfony]
     name=blog
-    author=Fabien Potencier <fabien.potencier@sensio.com>
+    author=Fabien Potencier <fabien.potencier@sensio.com>|INFO]
 
 You can customize the default skeleton used by the task by creating a
 [%sf_data_dir%/skeleton/module|COMMENT] directory.
