@@ -591,7 +591,7 @@ class sfWebRequest extends sfRequest
    *
    * @return  array Path information
    */
-  protected function getPathInfoArray()
+  public function getPathInfoArray()
   {
     if (!$this->pathInfoArray)
     {
@@ -766,7 +766,7 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Returns the remote IP address for the request.
+   * Returns the remote IP address that made the request.
    *
    * @return string The remote IP address
    */
@@ -778,14 +778,17 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Returns the remote IP addressed after resolved from the forward.
+   * Returns an array containing a list of IPs, the first being the client address
+   * and the others the addresses of each proxy that passed the request. The address 
+   * for the last proxy can be retrieved via getRemoteAddress().
    *
-   * This is useful if you are testing to see if the user is behind a proxy. However,
-   * it should not be trusted.
+   * This method returns null if no proxy passed this request. Note that some proxies
+   * do not use this header, and act as if they were the client.
    *
-   * @return string|null The remote IP address resolved from a forward, null if none set
+   * @return string|null An array of IP from the client and the proxies that passed
+   * the request, or null if no proxy was used.
    */
-  public function getForwardedRemoteAddress()
+  public function getForwardedFor()
   {
     $pathInfo = $this->getPathInfoArray();
 
@@ -794,7 +797,7 @@ class sfWebRequest extends sfRequest
       return null;
     }
 
-    return $pathInfo['HTTP_X_FORWARDED_FOR'];
+    return split(', ', $pathInfo['HTTP_X_FORWARDED_FOR']);
   }
 
   /**

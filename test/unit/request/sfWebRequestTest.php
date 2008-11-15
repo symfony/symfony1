@@ -137,11 +137,11 @@ $t->diag('->getRemoteAddress()');
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 $t->is($request->getRemoteAddress(), '127.0.0.1', '->getRemoteAddress() returns the remote address');
 
-// ->getForwardedRemoteAddress()
-$t->diag('->getForwardedRemoteAddress()');
-$t->is($request->getForwardedRemoteAddress(), null, '->getForwardedRemoteAddress() returns null if the request was not forwarded.');
-$_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1';
-$t->is($request->getForwardedRemoteAddress(), '10.0.0.1', '->getForwardedRemoteAddress() returns the value from HTTP_X_FORWARDED_FOR');
+// ->getForwardedFor()
+$t->diag('->getForwardedFor()');
+$t->is($request->getForwardedFor(), null, '->getForwardedFor() returns null if the request was not forwarded.');
+$_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1, 10.0.0.2';
+$t->is_deeply($request->getForwardedFor(), array('10.0.0.1', '10.0.0.2'), '->getForwardedFor() returns the value from HTTP_X_FORWARDED_FOR');
 
 // methods
 $t->diag('methods');
