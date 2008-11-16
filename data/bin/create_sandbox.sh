@@ -33,12 +33,10 @@ echo ">>> default to sqlite"
 ${PHP} symfony configure:database "sqlite:%SF_DATA_DIR%/sandbox.db"
 
 echo ">>> add some empty files in empty directories"
-touch apps/${APP_NAME}/modules/.sf apps/${APP_NAME}/i18n/.sf doc/.sf web/images/.sf
-touch log/.sf cache/.sf
-touch lib/symfony/plugins/sfPropelPlugin/data/generator/sfPropelAdmin/default/skeleton/templates/.sf
-touch plugins/.sf web/js/.sf
+touch apps/${APP_NAME}/modules/.sf apps/${APP_NAME}/i18n/.sf
+touch cache/.sf doc/.sf log/.sf plugins/.sf
 touch test/unit/.sf test/functional/.sf test/functional/${APP_NAME}/.sf
-touch web/uploads/assets/.sf
+touch web/images/.sf web/js/.sf web/uploads/assets/.sf
 
 touch data/sandbox.db
 chmod 777 data
