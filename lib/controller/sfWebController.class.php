@@ -36,6 +36,12 @@ abstract class sfWebController extends sfController
       return $parameters;
     }
 
+    // relative URL?
+    if (is_string($parameters) && '/' == $parameters[0])
+    {
+      return $parameters;
+    }
+
     if (is_string($parameters) && $parameters == '#')
     {
       return $parameters;
