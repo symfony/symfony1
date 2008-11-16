@@ -44,13 +44,7 @@ class sfProjectConfiguration
     }
 
     $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
-
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');
-
-    // initializes autoloading for symfony core classes
-    require_once $this->symfonyLibDir.'/autoload/sfCoreAutoload.class.php';
-    sfCoreAutoload::register();
-
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
 
     ini_set('magic_quotes_runtime', 'off');
