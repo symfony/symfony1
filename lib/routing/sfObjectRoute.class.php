@@ -157,6 +157,11 @@ class sfObjectRoute extends sfRequestRoute
       throw new InvalidArgumentException(sprintf('You must pass a "method" option for a %s object.', get_class($this)));
     }
 
+    if (!method_exists($className, $this->options['method']))
+    {
+      throw new InvalidArgumentException(sprintf('The "%s::%s()" method does not exist.', $className, $this->options['method']));
+    }
+
     return call_user_func(array($className, $this->options['method']), $this->filterParameters($parameters));
   }
 
@@ -167,6 +172,11 @@ class sfObjectRoute extends sfRequestRoute
     if (!isset($this->options['method']))
     {
       throw new InvalidArgumentException(sprintf('You must pass a "method" option for a %s object.', get_class($this)));
+    }
+
+    if (!method_exists($className, $this->options['method']))
+    {
+      throw new InvalidArgumentException(sprintf('The "%s::%s()" method does not exist.', $className, $this->options['method']));
     }
 
     return call_user_func(array($className, $this->options['method']), $this->filterParameters($parameters));
