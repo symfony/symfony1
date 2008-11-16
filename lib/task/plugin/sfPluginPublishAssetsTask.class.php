@@ -27,6 +27,7 @@ class sfPluginPublishAssetsTask extends sfPluginBaseTask
   {
     $this->addOptions(array(
       new sfCommandOption('core-only', '', sfCommandOption::PARAMETER_NONE, 'If set only core plugins will publish their assets'),
+      new sfCommandOption('symfony-lib-dir', '', sfCommandOption::PARAMETER_REQUIRED, 'The symfony lib dir'),
     ));
 
     $this->aliases = array();
@@ -50,7 +51,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $corePluginsDir = sfConfig::get('sf_symfony_lib_dir').'/plugins';
+    $corePluginsDir = ($options['symfony-lib-dir'] ? $options['symfony-lib-dir'] : sfConfig::get('sf_symfony_lib_dir')).'/plugins';
     foreach (sfFinder::type('dir')->relative()->maxdepth(0)->in($corePluginsDir) as $plugin)
     {
       $this->logSection('plugin', 'Configuring core plugin - '.$plugin);

@@ -88,12 +88,18 @@ EOF;
     $this->getFilesystem()->mirror($symfonyDataDir, sfConfig::get('sf_data_dir').'/symfony', $finder);
     $this->getFilesystem()->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');
 
+    $publishAssets = new sfPluginPublishAssetsTask($this->dispatcher, $this->formatter);
+    $publishAssets->setCommandApplication($this->commandApplication);
+
     // change symfony path in ProjectConfiguration.class.php
     $config = sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
     $content = file_get_contents($config);
     $content = str_replace('<?php', "<?php\n\n# FROZEN_SF_LIB_DIR: $symfonyLibDir", $content);
     $content = preg_replace('#(\'|")'.preg_quote($symfonyLibDir, '#').'#', "dirname(__FILE__).$1/../lib/symfony", $content);
     file_put_contents($config, $content);
+
+    // re-publish assets
+    $publishAssets->run(array(), array('--symfony-lib-dir='.sfConfig::get('sf_lib_dir').'/symfony'));
   }
 
   public function excludeTests($dir, $entry)
