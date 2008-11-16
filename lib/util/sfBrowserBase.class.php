@@ -539,6 +539,88 @@ abstract class sfBrowserBase
   }
 
   /**
+   * Simulates deselecting a checkbox or radiobutton.
+   *
+   * @param string  $name       The checkbox or radiobutton id, name or text
+   *
+   * @return sfBrowser
+   *
+   * @see    doSelect()
+   */
+  public function deselect($name)
+  {
+    $this->doSelect($name, false);
+
+    return $this;
+  }
+
+  /**
+   * Simulates selecting a checkbox or radiobutton.
+   *
+   * @param string  $name       The checkbox or radiobutton id, name or text
+   *
+   * @return sfBrowser
+   *
+   * @see    doSelect()
+   */
+  public function select($name)
+  {
+    $this->doSelect($name, true);
+
+    return $this;
+  }
+
+  /**
+   * Simulates selecting a checkbox or radiobutton.
+   *
+   * This method is called internally by the select() and deselect() methods.
+   *
+   * @param string  $name       The checkbox or radiobutton id, name or text
+   * @param boolean $selected   If true the item will be selected
+   *
+   */
+  public function doSelect($name, $selected)
+  {
+    $position = 0;
+    $dom = $this->getResponseDom();
+
+    if (!$dom)
+    {
+      throw new LogicException('Cannot select because there is no current page in the browser.');
+    }
+
+    $xpath = new DomXpath($dom);
+
+    if ($element = $xpath->query(sprintf('//input[(@type="radio" or @type="checkbox") and (.="%s" or @id="%s" or @name="%s")]', $name, $name, $name))->item($position))
+    {
+      if ($selected)
+      {
+        if ($element->getAttribute('type') == 'radio')
+        {
+          //we need to deselect all other radio buttons with the same name
+          foreach ($xpath->query(sprintf('//input[@type="radio" and @name="%s"]', $element->getAttribute('name'))) as $radio)
+          {
+            $radio->removeAttribute('checked');
+          }
+        }
+        $element->setAttribute('checked', 'checked');
+      }
+      else
+      {
+        if ($element->getAttribute('type') == 'radio')
+        {
+          throw new InvalidArgumentException('Radiobutton cannot be deselected - Select another radiobutton to deselect the current.');
+        }
+        $element->removeAttribute('checked');
+      }
+    }
+    else
+    {
+      throw new InvalidArgumentException(sprintf('Cannot find the "%s" checkbox or radiobutton.', $name));
+    }
+  }
+
+  /**
    * Simulates a click on a link or button.
    *
    * @param string  $name       The link or button text

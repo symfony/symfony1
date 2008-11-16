@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(54, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -78,6 +78,9 @@ $html = <<<EOF
       <input type="file" name="myfile" />
       <input type="checkbox" name="checkbox1" value="checkboxvalue" checked="checked" />
       <input type="checkbox" name="checkbox2" checked="checked" />
+      <input type="checkbox" name="checkbox3" />
+      <input type="radio" name="radio1" value="a" id="a-radio" />
+      <input type="radio" name="radio1" value="b" id="b-radio" />
       <input type="button" name="mybutton" value="mybuttonvalue" />
       <input type="submit" name="submit" value="submit" />
     </form>
@@ -232,6 +235,33 @@ list($method, $uri, $parameters) = $b->
 ;
 $t->is($parameters['text_default_value'], 'yourvalue', '->setField() is overriden by parameters from click call');
 $t->is($parameters['text'], 'yourothervalue', '->setField() is overriden by parameters from click call');
+
+// ->deselect()/select()
+$t->diag('->deselect()/select()');
+list($method, $uri, $parameters) = $b->
+  deselect('checkbox1')->
+  select('checkbox3')->
+  select('b-radio')->
+  click('submit')
+;
+$t->is(isset($parameters['checkbox1']), false, '->deselect() unckecks a checkbox');
+$t->is(isset($parameters['checkbox3']), true, '->select() ckecks a checkbox');
+$t->is($parameters['radio1'], 'b', '->select() selects a radiobutton');
+list($method, $uri, $parameters) = $b->
+  select('a-radio')->
+  click('submit')
+;
+$t->is($parameters['radio1'], 'a', '->select() toggles radiobuttons');
+
+try
+{
+  $b->deselect('b-radio');
+  $t->fail('->deselect() cannot deselect radiobuttons');
+}
+catch(Exception $e)
+{
+  $t->pass('->deselect() cannot deselect radiobuttons');
+}
 
 // ->call()
 $t->diag('->call()');

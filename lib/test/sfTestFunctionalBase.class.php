@@ -248,6 +248,34 @@ abstract class sfTestFunctionalBase
   }
 
   /**
+   * Simulates deselecting a checkbox or radiobutton.
+   *
+   * @param string  $name       The checkbox or radiobutton id, name or text
+   *
+   * @return sfBrowser
+   */
+  public function deselect($name)
+  {
+    $this->browser->doSelect($name, false);
+
+    return $this;
+  }
+
+  /**
+   * Simulates selecting a checkbox or radiobutton.
+   *
+   * @param string  $name       The checkbox or radiobutton id, name or text
+   *
+   * @return sfBrowser
+   */
+  public function select($name)
+  {
+    $this->browser->doSelect($name, true);
+
+    return $this;
+  }
+
+  /**
    * Simulates a click on a link or button.
    *
    * @param string  $name       The link or button text
