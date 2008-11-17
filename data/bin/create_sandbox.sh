@@ -44,8 +44,8 @@ chmod 777 data/sandbox.db
 
 echo ">>> create archive"
 cd ..
-tar zcpf ${SANDBOX_NAME}.tgz ${SANDBOX_NAME}
-zip -rq ${SANDBOX_NAME}.zip ${SANDBOX_NAME}
+tar --exclude=".svn" zcpf ${SANDBOX_NAME}.tgz ${SANDBOX_NAME}
+zip -rq ${SANDBOX_NAME}.zip ${SANDBOX_NAME} -x \*/\*.svn/\*
 
 echo ">>> cleanup"
 rm -rf ${SANDBOX_NAME}
