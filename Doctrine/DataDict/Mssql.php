@@ -148,6 +148,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             break;
             case 'datetime':
             case 'timestamp':
+            case 'smalldatetime':
                 $type[0] = 'timestamp';
             break;
             case 'float':
@@ -157,6 +158,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             break;
             case 'decimal':
             case 'money':
+            case 'smallmoney':
                 $type[0] = 'decimal';
             break;
             case 'text':
