@@ -126,7 +126,9 @@ abstract class Doctrine_Parser
         }
 
         include($path);
-        $contents = iconv("UTF-8", "UTF-8", ob_get_clean());
+        
+        // Fix #1569. Need to check if it's still all valid
+        $contents = ob_get_clean(); //iconv("UTF-8", "UTF-8", ob_get_clean());
 
         return $contents;
     }
