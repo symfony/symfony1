@@ -667,7 +667,11 @@ class sfWebRequest extends sfRequest
   /**
    * Gets the request format.
    *
-   * If no format is defined by the user, it defaults to the sf_format request parameter if available.
+   * Here is the process to determine the format:
+   *
+   *  * format defined by the user (with setRequestFormat())
+   *  * sf_format request parameter
+   *  * null
    *
    * @return string The request format
    */
@@ -675,20 +679,7 @@ class sfWebRequest extends sfRequest
   {
     if (is_null($this->format))
     {
-      if ($this->getParameter('sf_format'))
-      {
-        $this->setRequestFormat($this->getParameter('sf_format'));
-      }
-      else
-      {
-        $acceptableContentTypes = $this->getAcceptableContentTypes();
-
-        // skip if no acceptable content types or browsers
-        if (isset($acceptableContentTypes[0]) && ('text/xml' != $acceptableContentTypes[0] && 'application/xml' != $acceptableContentTypes[0]))
-        {
-          $this->setRequestFormat($this->getFormat($acceptableContentTypes[0]));
-        }
-      }
+      $this->setRequestFormat($this->getParameter('sf_format'));
     }
 
     return $this->format;

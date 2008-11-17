@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -92,13 +92,6 @@ $t->is($request->getRequestFormat(), 'js', '->getRequestFormat() returns the req
 
 $request->setRequestFormat('css');
 $t->is($request->getRequestFormat(), 'css', '->setRequestFormat() sets the request format');
-
-$request->acceptableContentTypes = null;
-$_SERVER['HTTP_ACCEPT'] = 'application/json';
-$request->setFormat('json', 'application/json');
-$request->setParameter('sf_format', null);
-$request->setRequestFormat(null);
-$t->is($request->getRequestFormat(), 'json', '->getRequestFormat() uses the Accept HTTP header to guess the format');
 
 // ->getFormat() ->setFormat()
 $t->diag('->getFormat() ->setFormat()');

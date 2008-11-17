@@ -70,17 +70,6 @@ $b->
 ;
 
 $b->
-  setHttpHeader('Accept', 'application/javascript')->
-  get('/format/jsWithAccept')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'format')->
-  isRequestParameter('action', 'jsWithAccept')->
-  isRequestFormat('js')->
-  isResponseHeader('content-type', 'application/javascript')
-;
-$b->test()->like($b->getResponse()->getContent(), '/This is a js file/', 'response content is ok');
-
-$b->
   get('/format/js')->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
@@ -106,21 +95,3 @@ $b->
   getAndCheck('format', 'throwsException', null, 500)->
   throwsException('Exception', '/message/')
 ;
-
-$b->
-  setHttpHeader('Accept', 'application/javascript')->
-  getAndCheck('format', 'throwsException', null, 500)->
-  isRequestFormat('js')->
-  isResponseHeader('content-type', 'application/javascript')->
-  throwsException('Exception', '/message/')
-;
-$b->test()->like($b->getResponse()->getContent(), '/Exception/', 'response is exception template');
-
-$b->
-  setHttpHeader('Accept', 'text/css')->
-  getAndCheck('format', 'throwsNonDebugException', null, 500)->
-  isRequestFormat('css')->
-  isResponseHeader('content-type', 'text/css; charset=utf-8')->
-  throwsException('Exception', '/message/')
-;
-$b->test()->unlike($b->getResponse()->getContent(), '/Exception/', 'response is error 500 template');
