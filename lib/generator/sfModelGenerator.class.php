@@ -321,16 +321,6 @@ EOF;
   }
 
   /**
-   * Gets the form parameter name.
-   *
-   * @param string The form parameter name
-   */
-  public function getFormParameterName()
-  {
-    return str_replace('[%s]', '', $this->getFormObject()->getWidgetSchema()->getNameFormat());
-  }
-
-  /**
    * Gets the HTML to add to the form tag if the form is multipart.
    *
    * @return string

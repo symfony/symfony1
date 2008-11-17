@@ -738,11 +738,6 @@ EOF;
     return isset($this->params['form_class']) ? $this->params['form_class'] : $this->getClassName().'Form';
   }
 
-  public function getFormParameterName()
-  {
-    return str_replace('[%s]', '', $this->getFormObject()->getWidgetSchema()->getNameFormat());
-  }
-
   /**
    * Retrieves all hidden fields in the widget schema
    *

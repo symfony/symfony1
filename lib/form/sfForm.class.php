@@ -328,6 +328,23 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Returns the array name under which user data can retrieved.
+   *
+   * If the user data is not stored under an array, it returns null.
+   *
+   * @return string The name
+   */
+  public function getName()
+  {
+    if ('%s' == $nameFormat = $this->widgetSchema->getNameFormat())
+    {
+      return false;
+    }
+
+    return str_replace('[%s]', '', $nameFormat);
+  }
+
+  /**
    * Gets the error schema associated with the form.
    *
    * @return sfValidatorErrorSchema A sfValidatorErrorSchema instance
