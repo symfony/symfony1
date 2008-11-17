@@ -2119,15 +2119,22 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         $ids = (array) $ids;
 
+        // fix for #1622
+        if ( ! isset($this->_references[$alias]) && $this->hasRelation($alias)) {
+            $this->loadReference($alias);
+        }		
+
         if (isset($this->_references[$alias])) {
             foreach ($this->_references[$alias] as $k => $record) {
                 if (in_array(current($record->identifier()), $ids) || empty($ids)) {
                     $this->_references[$alias]->remove($k);
                 }
             }
+
             $this->_references[$alias]->takeSnapshot();
         }
-        if (!$this->exists() || $now === false) {
+
+        if ( ! $this->exists() || $now === false) {
             if (count($ids)) {
                 foreach ($ids as $id) {
                     $this->_pendingUnlinks[$alias][$id] = true;
@@ -2135,6 +2142,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             } else {
                 $this->_pendingUnlinks[$alias] = false;
             }
+
             return $this;
         } else {
             return $this->unlinkInDb($alias, $ids);
@@ -2187,19 +2195,23 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ( ! count($ids)) {
             return $this;
         }
-        if (!$this->exists() || $now === false) {
+
+        if ( ! $this->exists() || $now === false) {
             $relTable = $this->getTable()->getRelation($alias)->getTable();
             $records = $relTable->createQuery()
                 ->whereIn($relTable->getIdentifier(), $ids)
                 ->execute();
+
             foreach ($records as $record) {
                 $this->$alias->add($record);
             }
+
             foreach ($ids as $id) {
                 if (isset($this->_pendingUnlinks[$alias][$id])) {
                     unset($this->_pendingUnlinks[$alias][$id]);
                 }
             }
+
             return $this;
         } else {
             return $this->linkInDb($alias, $ids);
@@ -2214,29 +2226,30 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $rel = $this->getTable()->getRelation($alias);
 
         if ($rel instanceof Doctrine_Relation_Association) {
-
             $modelClassName = $rel->getAssociationTable()->getComponentName();
             $localFieldName = $rel->getLocalFieldName();
             $localFieldDef  = $rel->getAssociationTable()->getColumnDefinition($localFieldName);
+
             if ($localFieldDef['type'] == 'integer') {
                 $identifier = (integer) $identifier;
             }
+
             $foreignFieldName = $rel->getForeignFieldName();
             $foreignFieldDef  = $rel->getAssociationTable()->getColumnDefinition($foreignFieldName);
+
             if ($foreignFieldDef['type'] == 'integer') {
-                for ($i = 0; $i < count($ids); $i++) {
+                for ($i = 0, $l = count($ids); $i < $l; $i++) {
                     $ids[$i] = (integer) $ids[$i];
                 }
             }
+
             foreach ($ids as $id) {
                 $record = new $modelClassName;
                 $record[$localFieldName] = $identifier;
                 $record[$foreignFieldName] = $id;
                 $record->save();
             }
-
         } else if ($rel instanceof Doctrine_Relation_ForeignKey) {
-
             $q = new Doctrine_Query();
 
             $q->update($rel->getTable()->getComponentName())
@@ -2247,9 +2260,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
 
             $q->execute();
-
         } else if ($rel instanceof Doctrine_Relation_LocalKey) {
-
             $q = new Doctrine_Query();
 
             $q->update($this->getTable()->getComponentName())
