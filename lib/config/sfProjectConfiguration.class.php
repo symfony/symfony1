@@ -452,7 +452,7 @@ class sfProjectConfiguration
   {
     $pluginPaths = array();
 
-    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link();
+    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->name('*Plugin');
     $dirs = array(
       sfConfig::get('sf_symfony_lib_dir').'/plugins',
       sfConfig::get('sf_plugins_dir'),
