@@ -88,7 +88,7 @@ class sfTesterUser extends sfTester
    */
   public function isAuthenticated($boolean = true)
   {
-    $this->tester->is($this->user->isAuthenticated(), $boolean, sprintf('user is %sautenticated', $boolean ? '' : 'not '));
+    $this->tester->is($this->user->isAuthenticated(), $boolean, sprintf('user is %sauthenticated', $boolean ? '' : 'not '));
 
     return $this->getObjectToReturn();
   }
