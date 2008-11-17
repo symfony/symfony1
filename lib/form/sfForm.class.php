@@ -363,6 +363,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function embedForm($name, sfForm $form, $decorator = null)
   {
+    $name = (string) $name;
     if (true === $this->isBound() || true === $form->isBound())
     {
       throw new LogicException('A bound form cannot be embedded');
