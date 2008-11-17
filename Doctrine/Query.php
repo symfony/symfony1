@@ -1108,7 +1108,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // process the DQL parts => generate the SQL parts.
         // this will also populate the $_queryComponents.
         foreach ($this->_dqlParts as $queryPartName => $queryParts) {
-            $this->_processDqlQueryPart($queryPartName, $queryParts);
+	        // FIX #1667: _sqlParts are cleaned inside _processDqlQueryPart.
+            if ($queryPartName != 'forUpdate') {
+                $this->_processDqlQueryPart($queryPartName, $queryParts);
+            }
         }
         $this->_state = self::STATE_CLEAN;
 
