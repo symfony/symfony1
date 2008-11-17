@@ -473,7 +473,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     $dirs = array();
 
     // application
-    if (is_dir($dir = sfConfig::get('sf_app_dir').'/i18n'))
+    if (is_dir($dir = sfConfig::get('sf_app_i18n_dir')))
     {
       $dirs[] = $dir;
     }
@@ -500,7 +500,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // application
-    if (is_dir($dir = sfConfig::get('sf_app_dir').'/i18n'))
+    if (is_dir($dir = sfConfig::get('sf_app_i18n_dir')))
     {
       $dirs[] = $dir;
     }
