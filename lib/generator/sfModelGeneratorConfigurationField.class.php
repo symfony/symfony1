@@ -139,6 +139,46 @@ class sfModelGeneratorConfigurationField
     $this->config['is_link'] = $boolean;
   }
 
+  /**
+   * Sets the list renderer for the field.
+   *
+   * @param mixed A PHP callable
+   */
+  public function setRenderer($renderer)
+  {
+    $this->config['renderer'] = $renderer;
+  }
+
+  /**
+   * Gets the list renderer for the field.
+   *
+   * @return mixed A PHP callable
+   */
+  public function getRenderer()
+  {
+    return isset($this->config['renderer']) ? $this->config['renderer'] : null;
+  }
+
+  /**
+   * Sets the list renderer arguments for the field.
+   *
+   * @param array An array of arguments to pass to the renderer
+   */
+  public function setRendererArguments(array $arguments)
+  {
+    $this->config['renderer_arguments'] = $arguments;
+  }
+
+  /**
+   * Gets the list renderer arguments for the field.
+   *
+   * @return array An array of arguments to pass to the renderer
+   */
+  public function getRendererArguments()
+  {
+    return isset($this->config['renderer_arguments']) ? $this->config['renderer_arguments'] : array();
+  }
+
   static public function splitFieldWithFlag($field)
   {
     if (in_array($flag = $field[0], array('=', '_', '~')))
