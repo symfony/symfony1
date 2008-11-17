@@ -113,7 +113,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         // 1 - We are in the root query
         // 2 - We are in the subquery and it defines the component with that alias
         if (( ! $query->isSubquery() || ($query->isSubquery() && $query->contains(' ' . $params['alias'] . ' '))) && ! $query->contains($field)) {
-            $query->addWhere($field . ' IS NULL');
+            $query->addPendingJoinCondition($params['alias'], $field . ' IS NULL');
         }
     }
 }

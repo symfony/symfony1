@@ -202,7 +202,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_subqueryAliases = array();
         $this->_aggregateAliasMap = array();
         $this->_pendingAggregates = array();
-        $this->_pendingJoinConditions = array();
         $this->_pendingSubqueries = array();
         $this->_pendingFields = array();
         $this->_neededTables = array();
@@ -239,9 +238,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * @param string $joinCondition     dql join condition
      * @return Doctrine_Query           this object
      */
-    protected function _addPendingJoinCondition($componentAlias, $joinCondition)
+    public function addPendingJoinCondition($componentAlias, $joinCondition)
     {
-        $this->_pendingJoins[$componentAlias] = $joinCondition;
+        $this->_pendingJoinConditions[$componentAlias] = $joinCondition;
     }
 
     /**
@@ -1016,47 +1015,63 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     protected function _buildSqlFromPart()
     {
         $q = '';
+        
         foreach ($this->_sqlParts['from'] as $k => $part) {
+            $e = explode(' ', $part);
+            
             if ($k === 0) {
+                if ($this->_type == self::SELECT) {
+                    // We may still have pending conditions
+                    $alias = count($e) > 1 
+                        ? $this->getComponentAlias($e[1]) 
+                        : null;
+                    $where = $this->_processPendingJoinConditions($alias);
+                
+                    // apply inheritance to WHERE part
+                    if ( ! empty($where)) {
+                        if (count($this->_sqlParts['where']) > 0) {
+                            $this->_sqlParts['where'][] = 'AND';
+                        }
+
+                        if (substr($where, 0, 1) === '(' && substr($where, -1) === ')') {
+                            $this->_sqlParts['where'][] = $where;
+                        } else {
+                            $this->_sqlParts['where'][] = '(' . $where . ')';
+                        }
+                    }
+                }
+                
                 $q .= $part;
+                
                 continue;
             }
 
             // preserve LEFT JOINs only if needed
             // Check if it's JOIN, if not add a comma separator instead of space
-            if (!preg_match('/\bJOIN\b/i', $part) && !isset($this->_pendingJoinConditions[$k])) {
+            if ( ! preg_match('/\bJOIN\b/i', $part) && ! isset($this->_pendingJoinConditions[$k])) {
                 $q .= ', ' . $part;
             } else {
-                $e = explode(' ', $part);
-
                 if (substr($part, 0, 9) === 'LEFT JOIN') {
                     $aliases = array_merge($this->_subqueryAliases,
                                 array_keys($this->_neededTables));
 
-                    if ( ! in_array($e[3], $aliases) &&
-                        ! in_array($e[2], $aliases) &&
-
-                        ! empty($this->_pendingFields)) {
+                    if ( ! in_array($e[3], $aliases) && ! in_array($e[2], $aliases) && ! empty($this->_pendingFields)) {
                         continue;
                     }
 
                 }
 
                 if (isset($this->_pendingJoinConditions[$k])) {
-                    $parser = new Doctrine_Query_JoinCondition($this, $this->_tokenizer);
-
                     if (strpos($part, ' ON ') !== false) {
                         $part .= ' AND ';
                     } else {
                         $part .= ' ON ';
                     }
-                    $part .= $parser->parse($this->_pendingJoinConditions[$k]);
-
-                    unset($this->_pendingJoinConditions[$k]);
+                
+                    $part .= $this->_processPendingJoinConditions($k);
                 }
-
+                    
                 $componentAlias = $this->getComponentAlias($e[3]);
-
                 $string = $this->getInheritanceCondition($componentAlias);
 
                 if ($string) {
@@ -1069,6 +1084,29 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $this->_sqlParts['from'][$k] = $part;
         }
         return $q;
+    }
+    
+    /**
+     * Processes the pending join conditions, used for dynamically add conditions 
+     * to root component/joined components without interferring in the main dql
+     * processment.
+     * 
+     * @param string $alias Component Alias
+     * @return Processed pending conditions
+     */
+    protected function _processPendingJoinConditions($alias)
+    {
+        $part = '';
+        
+        if ($alias !== null && isset($this->_pendingJoinConditions[$alias])) {
+            $parser = new Doctrine_Query_JoinCondition($this, $this->_tokenizer);
+                    
+            $part = $parser->parse($this->_pendingJoinConditions[$alias]);
+
+            unset($this->_pendingJoinConditions[$alias]);
+        }
+        
+        return $part;
     }
 
     /**
@@ -1093,18 +1131,19 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             // Return compiled SQL
             return $this->_sql;
         }
-
+        
         // reset the state
         if ( ! $this->isSubquery()) {
             $this->_queryComponents = array();
             $this->_pendingAggregates = array();
             $this->_aggregateAliasMap = array();
         }
+        
         $this->reset();
 
         // invoke the preQuery hook
         $this->_preQuery();
-
+        
         // process the DQL parts => generate the SQL parts.
         // this will also populate the $_queryComponents.
         foreach ($this->_dqlParts as $queryPartName => $queryParts) {
@@ -1116,7 +1155,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_state = self::STATE_CLEAN;
 
         // Proceed with the generated SQL
-
         if (empty($this->_sqlParts['from'])) {
             return false;
         }
@@ -1139,6 +1177,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $sql = array();
+        
         if ( ! empty($this->_pendingFields)) {
             foreach ($this->_queryComponents as $alias => $map) {
                 $fieldSql = $this->processPendingFields($alias);
@@ -1147,6 +1186,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 }
             }
         }
+        
         if ( ! empty($sql)) {
             array_unshift($this->_sqlParts['select'], implode(', ', $sql));
         }
@@ -1177,36 +1217,38 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $modifyLimit = true;
+        
         if ( ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) && $needsSubQuery) {
-                $subquery = $this->getLimitSubquery();
-                // what about composite keys?
-                $idColumnName = $table->getColumnName($table->getIdentifier());
-                switch (strtolower($this->_conn->getDriverName())) {
-                    case 'mysql':
-                        // mysql doesn't support LIMIT in subqueries
-                        $list = $this->_conn->execute($subquery, $params)->fetchAll(Doctrine::FETCH_COLUMN);
-                        $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));
-                        break;
-                    case 'pgsql':
-                        // pgsql needs special nested LIMIT subquery
-                        $subquery = 'SELECT '
-                                . $this->_conn->quoteIdentifier('doctrine_subquery_alias.' . $idColumnName)
-                                . ' FROM (' . $subquery . ') AS doctrine_subquery_alias';
-                        break;
+            $subquery = $this->getLimitSubquery();
+            // what about composite keys?
+            $idColumnName = $table->getColumnName($table->getIdentifier());
+                
+            switch (strtolower($this->_conn->getDriverName())) {
+                case 'mysql':
+                    // mysql doesn't support LIMIT in subqueries
+                    $list = $this->_conn->execute($subquery, $params)->fetchAll(Doctrine::FETCH_COLUMN);
+                    $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));
+                    break;
+                case 'pgsql':
+                    // pgsql needs special nested LIMIT subquery
+                    $subquery = 'SELECT '
+                            . $this->_conn->quoteIdentifier('doctrine_subquery_alias.' . $idColumnName)
+                            . ' FROM (' . $subquery . ') AS doctrine_subquery_alias';
+                    break;
+            }
+
+            $field = $this->getSqlTableAlias($rootAlias) . '.' . $idColumnName;
+
+            // only append the subquery if it actually contains something
+            if ($subquery !== '') {
+                if (count($this->_sqlParts['where']) > 0) {
+                    array_unshift($this->_sqlParts['where'], 'AND');
                 }
 
-                $field = $this->getSqlTableAlias($rootAlias) . '.' . $idColumnName;
+                array_unshift($this->_sqlParts['where'], $this->_conn->quoteIdentifier($field) . ' IN (' . $subquery . ')');
+            }
 
-                // only append the subquery if it actually contains something
-                if ($subquery !== '') {
-                    if (count($this->_sqlParts['where']) > 0) {
-                        array_unshift($this->_sqlParts['where'], 'AND');
-                    }
-
-                    array_unshift($this->_sqlParts['where'], $this->_conn->quoteIdentifier($field) . ' IN (' . $subquery . ')');
-                }
-
-                $modifyLimit = false;
+            $modifyLimit = false;
         }
 
         $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where']) : '';
@@ -1664,20 +1706,22 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 }
 
                 $queryPart .= $this->buildInheritanceJoinSql($table->getComponentName(), $componentAlias);
-
                 $this->_sqlParts['from'][$componentAlias] = $queryPart;
+                
                 if ( ! empty($joinCondition)) {
                     $this->_pendingJoinConditions[$componentAlias] = $joinCondition;
                 }
             }
+            
             if ($loadFields) {
-
                 $restoreState = false;
+                
                 // load fields if necessary
                 if ($loadFields && empty($this->_dqlParts['select'])) {
                     $this->_pendingFields[$componentAlias] = array('*');
                 }
             }
+            
             $parent = $prevPath;
         }
 

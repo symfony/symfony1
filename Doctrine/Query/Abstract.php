@@ -505,7 +505,7 @@ abstract class Doctrine_Query_Abstract
             throw new Doctrine_Query_Exception('Unknown query part ' . $name);
         }
 
-        if ($name == 'limit' || $name == 'offset') {
+        if ($name == 'limit' || $name == 'offset' || $name == 'forUpdate') {
             $this->_sqlParts[$name] = false;
         } else {
             $this->_sqlParts[$name] = array();
@@ -873,10 +873,11 @@ abstract class Doctrine_Query_Abstract
     public function getRootAlias()
     {
         if ( ! $this->_queryComponents) {
-          $this->getSql();
+            $this->getSql();
         }
+        
         reset($this->_queryComponents);
-
+        
         return key($this->_queryComponents);
     }
 
@@ -1220,6 +1221,8 @@ abstract class Doctrine_Query_Abstract
         $copy->getSqlQuery($params);
         $componentsAfter = $copy->getQueryComponents();
 
+        $this->_rootAlias = $copy->getRootAlias();
+        
         if ($componentsBefore !== $componentsAfter) {
             return array_diff($componentsAfter, $componentsBefore);
         } else {
