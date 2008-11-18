@@ -98,9 +98,9 @@ $t->diag('->asString()');
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
 $v = new sfValidatorOr(array($v1, $v2));
-$t->is($v->asString(), "(\n  String({ max_length: 3 })\n  or({ required: false })\n  String({ min_length: 3 })\n)"
+$t->is($v->asString(), "(\n  String({ max_length: 3 })\n  or\n  String({ min_length: 3 })\n)"
 , '->asString() returns a string representation of the validator');
 
 $v = new sfValidatorOr(array($v1, $v2), array(), array('required' => 'This is required.'));
-$t->is($v->asString(), "(\n  String({ max_length: 3 })\n  or({ required: false }, { required: 'This is required.' })\n  String({ min_length: 3 })\n)"
+$t->is($v->asString(), "(\n  String({ max_length: 3 })\n  or({}, { required: 'This is required.' })\n  String({ min_length: 3 })\n)"
 , '->asString() returns a string representation of the validator');

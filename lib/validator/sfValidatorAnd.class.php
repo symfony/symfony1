@@ -54,11 +54,6 @@ class sfValidatorAnd extends sfValidatorBase
       throw new InvalidArgumentException('sfValidatorAnd constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }
     
-    if (!isset($options['required']))
-    {
-      $options['required'] = false;
-    }
-
     parent::__construct($options, $messages);
   }
 
