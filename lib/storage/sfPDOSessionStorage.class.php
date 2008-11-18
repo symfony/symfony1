@@ -111,7 +111,7 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
 
       $stmt->execute();
       // it is recommended to use fetchAll so that PDO can close the DB cursor
-      // we anyway expect either no rows, or one row with ont column. fetchColumn, seems to be buggy #4777
+      // we anyway expect either no rows, or one row with one column. fetchColumn, seems to be buggy #4777
       $sessionRows = $stmt->fetchAll(PDO::FETCH_NUM);
       if (count($sessionRows) == 1)
       {
