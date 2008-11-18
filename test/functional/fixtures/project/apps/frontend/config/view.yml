@@ -9,7 +9,11 @@ default:
     keywords:     symfony, project
     language:     en
 
-  stylesheets:    [main]
+  stylesheets:
+    - main
+    -
+      ie6:
+        condition: lte IE 6
 
   javascripts:    [ ]
 

@@ -18,12 +18,13 @@ $b = new sfTestBrowser();
 
 // default main page
 $b->
-  get('/')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'default')->
-  isRequestParameter('action', 'index')->
-  checkResponseElement('body', '/congratulations/i')->
-  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+  getAndCheck('default', 'index', '/')->
+  with('response')->begin()->
+    checkElement('body', '/congratulations/i')->
+    checkElement('link[href="/sf/sf_default/css/screen.css"]')->
+    checkElement('link[href="/css/main.css"]')->
+    contains('<!--[if lte IE 6]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie6.css" /><![endif]-->')->
+  end()
 ;
 
 // default 404
