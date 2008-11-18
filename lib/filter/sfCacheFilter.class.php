@@ -85,7 +85,7 @@ class sfCacheFilter extends sfFilter
     if ($cacheable && $this->cacheManager->withLayout($uri))
     {
       $inCache = $this->cacheManager->getPageCache($uri);
-      $this->cache[$uri] = !$inCache;
+      $this->cache[$uri] = $inCache;
 
       if ($inCache)
       {
@@ -111,7 +111,7 @@ class sfCacheFilter extends sfFilter
     $uri = $this->routing->getCurrentInternalUri();
 
     // save page in cache
-    if (isset($this->cache[$uri]))
+    if (isset($this->cache[$uri]) && false === $this->cache[$uri])
     {
       // set some headers that deals with cache
       if ($lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
