@@ -35,6 +35,7 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
     public function parse($dql)
     {
 	    $terms = $this->_tokenizer->sqlExplode($dql, ' ');
+        $termsTranslation = array();
     	
         foreach ($terms as $term) {
 	        $termOriginal = $term;
@@ -60,13 +61,13 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 	                    $columnName = $aliasMap['table']->getColumnName($fieldName);
                         $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($columnName);
 
-                        $dql = str_replace($termOriginal, $lftExpr . $columnName . $rgtExpr, $dql);
+                        $termsTranslation[$termOriginal] = $lftExpr . $columnName . $rgtExpr;
                     }
                 }
             }
         } 
 
-        return $dql;
+        return strtr($dql, $termsTranslation);
     }
 
 
