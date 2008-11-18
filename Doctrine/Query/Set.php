@@ -34,23 +34,29 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 {
     public function parse($dql)
     {
-    	$terms = $this->_tokenizer->sqlExplode($dql, ' ');
-    	foreach ($terms as $term) {
-            preg_match_all("/[a-z0-9_]+\.[a-z0-9_]+[\.[a-z0-9]+]*/i", $term, $m);
+	    $terms = $this->_tokenizer->sqlExplode($dql, ' ');
+    	
+        foreach ($terms as $term) {
+	        preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9]+]*/i", $term, $m);
             
             if (isset($m[0])) {
                 foreach ($m[0] as $part) {
-                    $e = explode('.', trim($part));
-                    $field = array_pop($e);
-        
-                    $reference = implode('.', $e);
-        
-                    $alias = $this->query->getTableAlias($reference);
-                    $map   = $this->query->getAliasDeclaration($reference);
-        
-                    $dql = str_replace($part, $map['table']->getConnection()->quoteIdentifier($map['table']->getColumnName($field)), $dql);
+	                $part = trim($part);
+	                $lcpart = strtolower($part);
+	
+	                // we need to escape single valued possibilities (numeric, true, false, null)
+	                if ( ! (is_numeric($part) || $lcpart == 'true' || $lcpart == 'false' || $lcpart == 'null')) {
+                        $e = explode('.', $part);
+
+                        $fieldName  = array_pop($e);
+                        $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
+                        $aliasMap   = $this->query->getAliasDeclaration($reference);
+                        $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($aliasMap['table']->getColumnName($fieldName));
+
+                        $dql = str_replace($part, $columnName, $dql);
+                    }
                 }
-            }
+            }            
         }
 
         return $dql;

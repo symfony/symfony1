@@ -1058,9 +1058,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $qLeft = $qLeft->update($componentName)
                 ->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
                 ->where($componentName . '.lft >= ?', $first);
-        
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
-        
+
         $resultLeft = $qLeft->execute();
         
         // shift right columns

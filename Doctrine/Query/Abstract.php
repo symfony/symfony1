@@ -1678,7 +1678,7 @@ abstract class Doctrine_Query_Abstract
                 }
             }
 
-            return $this->_addDqlQueryPart('set', $this->_conn->quoteIdentifier($key) . ' = ' . $value, true);
+            return $this->_addDqlQueryPart('set', $key . ' = ' . $value, true);
         }
     }
 
