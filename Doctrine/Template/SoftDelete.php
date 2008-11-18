@@ -68,4 +68,12 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
 
         $this->addListener(new Doctrine_Template_Listener_SoftDelete($this->_options));
     }
+
+    /**
+     * @nodoc
+     */
+    public function getOption($name)
+    {
+        return $this->_options[$name];
+    }
 }

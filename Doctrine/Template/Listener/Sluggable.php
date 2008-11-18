@@ -164,6 +164,14 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         ->where($whereString , $whereParams)
         ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
 
+        // We need to introspect SoftDelete to check if we are not disabling unique records too
+        if ($record->getTable()->hasTemplate('Doctrine_Template_SoftDelete')) {
+	        $softDelete = $record->getTable()->getTemplate('Doctrine_Template_SoftDelete');
+	
+	        // we have to consider both situations here
+            $query->addWhere('(r.' . $softDelete->getOption('name') . ' = true OR r.' . $softDelete->getOption('name') . ' IS NOT NULL OR r.' . $softDelete->getOption('name') . ' = false OR r.' . $softDelete->getOption('name') . ' IS NULL)');
+        }
+
         $similarSlugResult = $query->execute();
 
         // Change indexby back
