@@ -37,33 +37,34 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 	    $terms = $this->_tokenizer->sqlExplode($dql, ' ');
     	
         foreach ($terms as $term) {
+	        $termOriginal = $term;
+	    
 	        // We need to check for agg functions here
             $matches = array();
             $hasAggExpression = $this->_processPossibleAggExpression($term, $matches);
+
+            $lftExpr = (($hasAggExpression) ? $matches[1] . '(' : '');
+            $rgtExpr = (($hasAggExpression) ? $matches[3] . ')' : '');
 	
-	        if ( ! $hasAggExpression) {
-                preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9]+]*/i", $term, $m);
+	        preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*/i", $term, $m);
             
-                if (isset($m[0])) {
-                    foreach ($m[0] as $part) {
-	                    $part = trim($part);
-	                    $lcpart = strtolower($part);
-	
-                        // we need to escape single valued possibilities (numeric, true, false, null)
-	                    if ( ! (is_numeric($part) || $lcpart == 'true' || $lcpart == 'false' || $lcpart == 'null')) {
-                            $e = explode('.', $part);
+            if (isset($m[0])) {
+                foreach ($m[0] as $part) {
+	                $e = explode('.', trim($part));
 
-                            $fieldName  = array_pop($e);
-                            $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
-                            $aliasMap   = $this->query->getAliasDeclaration($reference);
-                            $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($aliasMap['table']->getColumnName($fieldName));
+                    $fieldName  = array_pop($e);
+                    $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
+                    $aliasMap   = $this->query->getAliasDeclaration($reference);
 
-                            $dql = str_replace($part, $columnName, $dql);
-                        }
+                    if ($aliasMap['table']->hasField($fieldName)) {	
+	                    $columnName = $aliasMap['table']->getColumnName($fieldName);
+                        $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($columnName);
+
+                        $dql = str_replace($termOriginal, $lftExpr . $columnName . $rgtExpr, $dql);
                     }
                 }
-            }            
-        }
+            }
+        } 
 
         return $dql;
     }
