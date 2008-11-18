@@ -1148,7 +1148,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $success = false;
             foreach ($this->_table->getFilters() as $filter) {
                 try {
-                    $value = $filter->filterGet($this, $fieldName, $value);
+                    $value = $filter->filterGet($this, $fieldName);
                     $success = true;
                 } catch (Doctrine_Exception $e) {}
             }

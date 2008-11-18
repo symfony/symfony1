@@ -37,28 +37,61 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 	    $terms = $this->_tokenizer->sqlExplode($dql, ' ');
     	
         foreach ($terms as $term) {
-	        preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9]+]*/i", $term, $m);
-            
-            if (isset($m[0])) {
-                foreach ($m[0] as $part) {
-	                $part = trim($part);
-	                $lcpart = strtolower($part);
+	        // We need to check for agg functions here
+            $matches = array();
+            $hasAggExpression = $this->_processPossibleAggExpression($term, $matches);
 	
-	                // we need to escape single valued possibilities (numeric, true, false, null)
-	                if ( ! (is_numeric($part) || $lcpart == 'true' || $lcpart == 'false' || $lcpart == 'null')) {
-                        $e = explode('.', $part);
+	        if ( ! $hasAggExpression) {
+                preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9]+]*/i", $term, $m);
+            
+                if (isset($m[0])) {
+                    foreach ($m[0] as $part) {
+	                    $part = trim($part);
+	                    $lcpart = strtolower($part);
+	
+                        // we need to escape single valued possibilities (numeric, true, false, null)
+	                    if ( ! (is_numeric($part) || $lcpart == 'true' || $lcpart == 'false' || $lcpart == 'null')) {
+                            $e = explode('.', $part);
 
-                        $fieldName  = array_pop($e);
-                        $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
-                        $aliasMap   = $this->query->getAliasDeclaration($reference);
-                        $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($aliasMap['table']->getColumnName($fieldName));
+                            $fieldName  = array_pop($e);
+                            $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
+                            $aliasMap   = $this->query->getAliasDeclaration($reference);
+                            $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($aliasMap['table']->getColumnName($fieldName));
 
-                        $dql = str_replace($part, $columnName, $dql);
+                            $dql = str_replace($part, $columnName, $dql);
+                        }
                     }
                 }
             }            
         }
 
         return $dql;
+    }
+
+
+    protected function _processPossibleAggExpression(& $expr, & $matches = array())
+    {
+        $hasAggExpr = preg_match('/(.*[^\s\(\=])\(([^\)]*)\)(.*)/', $expr, $matches);
+        
+        if ($hasAggExpr) {
+            $expr = $matches[2];
+
+            // We need to process possible comma separated items
+            if (substr(trim($matches[3]), 0, 1) == ',') {
+                $xplod = $this->_tokenizer->sqlExplode(trim($matches[3], ' )'), ',');
+                
+                $matches[3] = array();
+                    
+                foreach ($xplod as $part) {
+                    if ($part != '') {
+                        $matches[3][] = $this->parseLiteralValue($part);
+                    }
+                }
+
+                $matches[3] = '), ' . implode(', ', $matches[3]);
+            }
+        }
+        
+        return $hasAggExpr;
     }
 }
