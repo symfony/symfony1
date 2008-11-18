@@ -192,7 +192,7 @@ class Doctrine_Data_Export extends Doctrine_Data
                         $relationValue = $relationClassName . '_' . $value;
 
                         $preparedData[$className][$recordKey][$relationAlias] = $relationValue;
-                    } else if ($record->getTable()->hasColumn($key)) {                        
+                    } else if ($record->getTable()->hasField($key)) {                        
                         $preparedData[$className][$recordKey][$key] = $value;
                     }
                 }
