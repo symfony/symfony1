@@ -51,26 +51,15 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $corePluginsDir = ($options['symfony-lib-dir'] ? $options['symfony-lib-dir'] : sfConfig::get('sf_symfony_lib_dir')).'/plugins';
-    foreach (sfFinder::type('dir')->relative()->maxdepth(0)->in($corePluginsDir) as $plugin)
+    foreach ($this->configuration->getPluginPaths() as $path)
     {
-      $this->logSection('plugin', 'Configuring core plugin - '.$plugin);
-      $this->installPluginAssets($plugin, $corePluginsDir);
-    }
-
-    if (!$options['core-only'])
-    {
-      $thirdPartyPlugins = sfConfig::get('sf_plugins_dir');
-      foreach (sfFinder::type('dir')->relative()->maxdepth(0)->follow_link()->in($thirdPartyPlugins) as $plugin)
+      if ($options['core-only'] && dirname($path) != $this->configuration->getSymfonyLibDir().'/plugins')
       {
-        if (false === strpos($plugin, 'Plugin'))
-        {
-          continue;
-        }
-
-        $this->logSection('plugin', 'Configuring plugin - '.$plugin);
-        $this->installPluginAssets($plugin, $thirdPartyPlugins);
+        continue;
       }
+
+      $this->logSection('plugin', 'Configuring plugin - '.basename($path));
+      $this->installPluginAssets(basename($path), dirname($path));
     }
   }
 
