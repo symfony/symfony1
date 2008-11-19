@@ -42,6 +42,20 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      * @var array $fields
      */
     private $fields = array();
+
+    /**
+     * Constructor.
+     *
+     * @param Doctrine_Connection  The connection object the query will use.
+     * @param Doctrine_Hydrator_Abstract  The hydrator that will be used for generating result sets.
+     */
+    function __construct(Doctrine_Connection $connection = null, Doctrine_Hydrator_Abstract $hydrator = null) {
+        parent::__construct($connection, $hydrator);
+
+        // Fix #1472. It's alid to disable QueryCache since there's no DQL for RawSql.
+        // RawSql expects to be plain SQL + syntax for SELECT part. It is used as is in query execution.
+        $this->useQueryCache(false);
+    }
     
     /**
      * @deprecated
