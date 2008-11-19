@@ -205,12 +205,18 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
             // TODO: if record doesn't exist, throw exception or similar?
             return false;
         }
-        //$depth = isset($options['depth']) ? $options['depth'] : null;
+
+        $depth = isset($options['depth']) ? $options['depth'] : null;
 
         $q = $this->getBaseQuery();
         $params = array($record->get('lft'), $record->get('rgt'));
         $q->addWhere($this->_baseAlias . ".lft >= ? AND " . $this->_baseAlias . ".rgt <= ?", $params)
                 ->addOrderBy($this->_baseAlias . ".lft asc");
+
+		if ( ! is_null($depth)) { 
+            $q->addWhere($this->_baseAlias . ".level BETWEEN ? AND ?", array($record->get('level'), $record->get('level')+$depth)); 
+        }
+
         $q = $this->returnQueryWithRootId($q, $record->getNode()->getRootValue());
 
         return $q->execute(array(), $hydrationMode);
