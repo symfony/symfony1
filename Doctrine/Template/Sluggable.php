@@ -54,17 +54,6 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
     );
 
     /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
-
-    /**
      * Set table definition for Sluggable behavior
      *
      * @return void

@@ -33,24 +33,6 @@
 class Doctrine_Template_NestedSet extends Doctrine_Template
 {
     /**
-     * Array of options for NestedSet implementation
-     *
-     * @var array
-     */
-    private $_options;
-
-    /**
-     * __construct
-     *
-     * @param array $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
-
-    /**
      * Set up NestedSet template
      *
      * @return void

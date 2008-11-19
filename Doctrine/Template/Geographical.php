@@ -49,17 +49,6 @@ class Doctrine_Template_Geographical extends Doctrine_Template
                                                      'options'  =>  array()));
 
     /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
-
-    /**
      * Set table definition for Geographical behavior
      *
      * @return void

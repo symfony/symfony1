@@ -46,7 +46,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
                                                     'format'        =>  'Y-m-d H:i:s',
                                                     'disabled'      =>  false,
                                                     'expression'    =>  false,
-                                                    'options'       =>  array()),
+                                                    'options'       =>  array('notnull' => true)),
                                 'updated' =>  array('name'          =>  'updated_at',
                                                     'alias'         =>  null,
                                                     'type'          =>  'timestamp',
@@ -54,18 +54,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
                                                     'disabled'      =>  false,
                                                     'expression'    =>  false,
                                                     'onInsert'      =>  true,
-                                                    'options'       =>  array()));
-
-    /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
+                                                    'options'       =>  array('notnull' => true)));
 
     /**
      * Set table definition for Timestampable behavior

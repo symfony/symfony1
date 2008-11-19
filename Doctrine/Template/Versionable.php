@@ -42,7 +42,8 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      */
     public function __construct(array $options = array())
     {
-        $this->_plugin = new Doctrine_AuditLog($options);
+	    parent::__construct($options);
+        $this->_plugin = new Doctrine_AuditLog($this->_options);
     }
 
     /**
