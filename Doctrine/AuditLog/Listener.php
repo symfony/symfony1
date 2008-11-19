@@ -58,9 +58,10 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
      */
     public function preInsert(Doctrine_Event $event)
     {
-        $versionColumn = $this->_auditLog->getOption('versionColumn');
+        $version = $this->_auditLog->getOption('version');
+        $name = $version['alias'] === null ? $version['name'] : $version['alias'];
 
-        $event->getInvoker()->set($versionColumn, 1);
+        $event->getInvoker()->set($name, 1);
     }
 
     /**
@@ -93,8 +94,9 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     {
         if ($this->_auditLog->getOption('auditLog')) {
 	        $className = $this->_auditLog->getOption('className');
-	        $versionColumn = $this->_auditLog->getOption('versionColumn');
-	        $event->getInvoker()->set($versionColumn, null);
+            $version = $this->_auditLog->getOption('version');
+            $name = $version['alias'] === null ? $version['name'] : $version['alias'];
+	        $event->getInvoker()->set($name, null);
 
             if ($this->_auditLog->getOption('deleteVersions')) {
     	        $q = Doctrine_Query::create();
@@ -124,9 +126,10 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
             $class  = $this->_auditLog->getOption('className');
             $record = $event->getInvoker();
 
-            $versionColumn = $this->_auditLog->getOption('versionColumn');
+            $version = $this->_auditLog->getOption('version');
+            $name = $version['alias'] === null ? $version['name'] : $version['alias'];
 
-            $record->set($versionColumn, $this->_getNextVersion($record));
+            $record->set($name, $this->_getNextVersion($record));
 
             $version = new $class();
             $version->merge($record->toArray(), false);
