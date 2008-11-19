@@ -39,7 +39,11 @@ class Doctrine_Task_DumpData extends Doctrine_Task
 
     public function execute()
     {
-        Doctrine::loadModels($this->getArgument('models_path'));
+        $models = Doctrine::loadModels($this->getArgument('models_path')); 
+
+        if (empty($models)) { 
+            throw new Doctrine_Task_Exception('No models were loaded'); 
+        }
 
         $path = $this->getArgument('data_fixtures_path');
 
