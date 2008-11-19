@@ -35,7 +35,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     /**
      * Array of AuditLog Options
      *
-     * @var string
+     * @var array
      */
     protected $_options = array('className'         => '%CLASS%Version',
                                 'version'           => array('name'   => 'version',

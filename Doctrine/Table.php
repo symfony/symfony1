@@ -2088,11 +2088,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function getTemplate($template)
     {
-        if ( ! isset($this->_templates[$template])) {
-            throw new Doctrine_Table_Exception('Template ' . $template . ' not loaded');
+        if (isset($this->_templates['Doctrine_Template_' . $template])) {
+            return $this->_templates['Doctrine_Template_' . $template];
+        } else if (isset($this->_templates[$template])) {
+            return $this->_templates[$template];
         }
 
-        return $this->_templates[$template];
+        throw new Doctrine_Table_Exception('Template ' . $template . ' not loaded');
     }
 
     /**
@@ -2103,7 +2105,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function hasTemplate($template)
     {
-        return isset($this->_templates[$template]);
+        return isset($this->_templates[$template]) || isset($this->_templates['Doctrine_Template_' . $template]);
     }
 
     /**
