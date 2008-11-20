@@ -252,7 +252,7 @@ class Doctrine_Lib
                 $args[1] = self::arrayDeepMerge($args[0], $args[1]);
                 array_shift($args);
 
-                return call_user_func_array(array('Doctrine', 'arrayDeepMerge'), $args);
+                return call_user_func_array(array('Doctrine_Lib', 'arrayDeepMerge'), $args);
             break;
         }
     }
