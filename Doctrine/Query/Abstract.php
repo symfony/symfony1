@@ -1951,7 +1951,10 @@ abstract class Doctrine_Query_Abstract
         }
         $this->_resultCache = $driver;
 
-        return $this->setResultCacheLifeSpan($timeToLive);
+        if ($timeToLive !== null) {
+            $this->setResultCacheLifeSpan($timeToLive);
+        }
+        return $this;
     }
 
     /**
@@ -1961,7 +1964,7 @@ abstract class Doctrine_Query_Abstract
      * @param integer $timeToLive                        how long the cache entry is valid
      * @return Doctrine_Hydrate         this object
      */
-    public function useQueryCache($driver = true, $timeToLive = false)
+    public function useQueryCache($driver = true, $timeToLive = null)
     {
         if ($driver !== null && $driver !== true && $driver !== false && ! ($driver instanceOf Doctrine_Cache_Interface)) {
             $msg = 'First argument should be instance of Doctrine_Cache_Interface or null.';
@@ -1969,10 +1972,9 @@ abstract class Doctrine_Query_Abstract
         }
         $this->_queryCache = $driver;
 
-        if ($timeToLive !== false) { 
-            $this->setResultCacheLifeSpan($timeToLive); 
-        } 
-
+        if ($timeToLive !== null) {
+            $this->setResultCacheLifeSpan($timeToLive);
+        }
         return $this;
     }
 
