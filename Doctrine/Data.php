@@ -263,11 +263,8 @@ class Doctrine_Data
             $models = Doctrine::getLoadedModels();
         }
 
-        foreach ($models as $model)
-        {
-            $model = new $model();
-
-            $model->getTable()->createQuery()->delete($model)->execute();
+        foreach ($models as $model) {
+            Doctrine::getTable($model)->createQuery()->delete()->execute();
         }
     }
 }
