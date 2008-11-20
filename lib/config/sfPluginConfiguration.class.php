@@ -21,19 +21,22 @@ abstract class sfPluginConfiguration
   protected
     $configuration = null,
     $dispatcher    = null,
+    $name          = null,
     $rootDir       = null;
 
   /**
    * Constructor.
    * 
    * @param sfProjectConfiguration  $configuration
-   * @param string                  $rootDir        The plugin's root directory
+   * @param string                  $rootDir        The plugin root directory
+   * @param string                  $name           The plugin name
    */
-  public function __construct(sfProjectConfiguration $configuration, $rootDir = null)
+  public function __construct(sfProjectConfiguration $configuration, $rootDir = null, $name = null)
   {
     $this->configuration = $configuration;
     $this->dispatcher = $configuration->getEventDispatcher();
-    $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
+    $this->rootDir = is_null($rootDir) ? $this->guessRootDir() : realpath($rootDir);
+    $this->name = is_null($name) ? $this->guessName() : $name;
 
     $this->setup();
     $this->configure();
@@ -75,7 +78,7 @@ abstract class sfPluginConfiguration
   }
 
   /**
-   * Returns the plugin's root directory.
+   * Returns the plugin root directory.
    * 
    * @return string
    */
@@ -85,11 +88,23 @@ abstract class sfPluginConfiguration
   }
 
   /**
+   * Returns the plugin name.
+   * 
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  /**
    * Initializes autoloading for the plugin.
    * 
    * This method is called when a plugin is initialized in a project
-   * configuration. Otherwise, autoload is handled (and cached) in
-   * sfApplicationConfiguration.
+   * configuration. Otherwise, autoload is handled in
+   * {@link sfApplicationConfiguration} using {@link sfAutoload}.
+   * 
+   * @see sfSimpleAutoload
    */
   public function initializeAutoload()
   {
@@ -124,53 +139,26 @@ abstract class sfPluginConfiguration
    */
   public function filterAutoloadConfig(sfEvent $event, array $config)
   {
-    $addLib = true;
-    $addModuleLib = true;
-
-    // if the plugin has an autoload.yml we need to play nice
-    if (is_readable($this->rootDir.'/config/autoload.yml'))
+    // use array_merge so config is added to the front of the autoload array
+    if (!isset($config['autoload'][$this->name.'_lib']))
     {
-      foreach ($config['autoload'] as $name => $entry)
-      {
-        if (isset($entry['path']))
-        {
-          $dirs = glob($entry['path']);
-          if (!is_array($dirs))
-          {
-            continue;
-          }
-
-          if (in_array($this->rootDir.'/lib', $dirs))
-          {
-            $addLib = false;
-          }
-          else
-          {
-            $moduleDirs = glob($this->rootDir.'/modules/*/lib');
-            if (is_array($moduleDirs) && array_intersect($moduleDirs, $dirs))
-            {
-              $addModuleLib = false;
-            }
-          }
-        }
-      }
+      $config['autoload'] = array_merge(array(
+        $this->name.'_lib' => array(
+          'path'      => $this->rootDir.'/lib',
+          'recursive' => true,
+        ),
+      ), $config['autoload']);
     }
 
-    if ($addLib)
+    if (!isset($config['autoload'][$this->name.'_module_libs']))
     {
-      $config['autoload'][basename($this->rootDir).'_lib'] = array(
-        'path'      => $this->rootDir.'/lib',
-        'recursive' => true,
-      );
-    }
-
-    if ($addModuleLib)
-    {
-      $config['autoload'][basename($this->rootDir).'_module_libs'] = array(
-        'path'      => $this->rootDir.'/modules/*/lib',
-        'recursive' => true,
-        'prefix'    => 1,
-      );
+      $config['autoload'] = array_merge(array(
+        $this->name.'_module_libs' => array(
+          'path'      => $this->rootDir.'/modules/*/lib',
+          'recursive' => true,
+          'prefix'    => 1,
+        ),
+      ), $config['autoload']);
     }
 
     return $config;
@@ -181,8 +169,19 @@ abstract class sfPluginConfiguration
    * 
    * @return string
    */
-  static protected function guessRootDir()
+  protected function guessRootDir()
   {
-    return realpath(dirname(__FILE__).'/..');
+    $r = new ReflectionClass(get_class($this));
+    return realpath(dirname($r->getFilename()).'/..');
+  }
+
+  /**
+   * Guesses the plugin name.
+   * 
+   * @return string
+   */
+  protected function guessName()
+  {
+    return substr(get_class($this), 0, -13);
   }
 }

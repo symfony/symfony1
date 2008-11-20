@@ -151,10 +151,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
    */
   static public function getConfiguration(array $configFiles)
   {
-    $event = sfProjectConfiguration::getActive()->getEventDispatcher()->filter(new sfEvent(__CLASS__, 'autoload.filter_config'), array('autoload' => array()));
-    $pluginConfig = $event->getReturnValue();
-
-    $config = array_merge_recursive($pluginConfig, self::replaceConstants(self::parseYamls($configFiles)));
+    $config = self::replaceConstants(self::parseYamls($configFiles));
 
     foreach ($config['autoload'] as $name => $values)
     {
@@ -163,6 +160,9 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $config['autoload'][$name]['path'] = self::replacePath($values['path']);
       }
     }
+
+    $event = sfProjectConfiguration::getActive()->getEventDispatcher()->filter(new sfEvent(__CLASS__, 'autoload.filter_config'), $config);
+    $config = $event->getReturnValue();
 
     return $config;
   }

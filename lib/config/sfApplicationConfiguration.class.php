@@ -523,9 +523,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   {
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
 
-    $files = array(
-      sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath,              // symfony
-    );
+    $files = array();
 
     foreach ($this->getPluginPaths() as $path)
     {
@@ -533,7 +531,13 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       {
         $files[] = $file;                                                            // plugins
       }
+      if (is_file($file = $path.'/'.$configPath))
+      {
+        $files[] = $file;                                                            // plugins
+      }
     }
+
+    $files[] = sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath;     // symfony
 
     $files = array_merge($files, array(
       sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
@@ -541,14 +545,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                             // application
       sfConfig::get('sf_app_cache_dir').'/'.$configPath,                             // generated modules
     ));
-
-    foreach ($this->getPluginPaths() as $path)
-    {
-      if (is_file($file = $path.'/'.$configPath))
-      {
-        $files[] = $file;                                                            // plugins
-      }
-    }
 
     $files[] = sfConfig::get('sf_app_dir').'/'.$configPath;                          // module
 

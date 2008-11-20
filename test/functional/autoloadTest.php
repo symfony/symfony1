@@ -23,3 +23,11 @@ $b->
   isRequestParameter('action', 'myAutoload')->
   checkResponseElement('body div', 'foo')
 ;
+
+$t = $b->test();
+
+$t->ok(class_exists('BaseExtendMe'), 'plugin lib directory added to autoload');
+$r = new ReflectionClass('ExtendMe');
+$t->like($r->getFilename(), '~project/lib/ExtendMe~', 'plugin class can be replaced by project');
+$t->ok(class_exists('NotInLib'), 'plugin autoload sets class paths');
+$t->ok(!class_exists('ExcludedFromAutoload'), 'plugin autoload excludes directories');
