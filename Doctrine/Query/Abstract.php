@@ -1636,9 +1636,12 @@ abstract class Doctrine_Query_Abstract
      *
      * @return Doctrine_Query
      */
-    public function delete()
+    public function delete($from = null)
     {
         $this->_type = self::DELETE;
+        if ($from != null) {
+            return $this->_addDqlQueryPart('from', $from);
+        }
         return $this;
     }
 
@@ -1649,10 +1652,13 @@ abstract class Doctrine_Query_Abstract
      * @param string $update        Query UPDATE part
      * @return Doctrine_Query
      */
-    public function update($update)
+    public function update($from = null)
     {
         $this->_type = self::UPDATE;
-        return $this->_addDqlQueryPart('from', $update);
+        if ($from != null) {
+            return $this->_addDqlQueryPart('from', $from);
+        }
+        return $this;
     }
 
     /**
