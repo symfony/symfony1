@@ -88,22 +88,22 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             $identifierColumnNames = $record->getTable()->getIdentifierColumnNames();
             $identifier = array_pop($identifierColumnNames);
     
-            $sub = 'SELECT ' . $this->getForeign()
+            $sub = 'SELECT ' . $this->getForeignRefColumnName()
                  . ' FROM ' . $assocTable 
-                 . ' WHERE ' . $this->getLocal() 
+                 . ' WHERE ' . $this->getLocalRefColumnName() 
                  . ' = ?';
 
             $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub . ')';
-            $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getForeign();
+            $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getForeignRefColumnName();
 
             if ($this->definition['equal']) {
-                $sub2   = 'SELECT ' . $this->getLocal()
+                $sub2   = 'SELECT ' . $this->getLocalRefColumnName()
                         . ' FROM '  . $assocTable
-                        . ' WHERE ' . $this->getForeign()
+                        . ' WHERE ' . $this->getForeignRefColumnName()
                         . ' = ?';
 
                 $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub2 . ')';
-                $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getLocal();
+                $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getLocalRefColumnName();
             }
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))

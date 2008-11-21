@@ -64,16 +64,52 @@ class Doctrine_Relation_Association extends Doctrine_Relation
                 $dql  = 'FROM ' . $this->getTable()->getComponentName();
                 $dql .= '.' . $component;
                 $dql .= ' WHERE ' . $this->getTable()->getComponentName()
-                . '.' . $component . '.' . $this->definition['local'] . ' IN (' . $sub . ')';
+                . '.' . $component . '.' . $this->getLocalRefColumnName() . ' IN (' . $sub . ')';
                 break;
             case "collection":
                 $sub  = substr(str_repeat("?, ", $count),0,-2);
                 $dql  = 'FROM ' . $component . '.' . $this->getTable()->getComponentName();
-                $dql .= ' WHERE ' . $component . '.' . $this->definition['local'] . ' IN (' . $sub . ')';
+                $dql .= ' WHERE ' . $component . '.' . $this->getLocalRefColumnName() . ' IN (' . $sub . ')';
                 break;
         }
 
         return $dql;
+    }
+
+	/**
+     * getLocalRefColumnName
+     * returns the column name of the local reference column
+     */
+    final public function getLocalRefColumnName()
+    {
+	    return $this->definition['refTable']->getColumnName($this->definition['local']);
+    }
+
+    /**
+     * getLocalRefFieldName
+     * returns the field name of the local reference column
+     */
+    final public function getLocalRefFieldName()
+    {
+	    return $this->definition['refTable']->getFieldName($this->definition['local']);
+    }
+
+    /**
+     * getForeignRefColumnName
+     * returns the column name of the foreign reference column
+     */
+    final public function getForeignRefColumnName()
+    {
+	    return $this->definition['refTable']->getColumnName($this->definition['foreign']);
+    }
+
+    /**
+     * getForeignRefFieldName
+     * returns the field name of the foreign reference column
+     */
+    final public function getForeignRefFieldName()
+    {
+	    return $this->definition['refTable']->getFieldName($this->definition['foreign']);
     }
 
     /**
