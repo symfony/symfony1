@@ -1792,13 +1792,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $queryPart .= $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
                     . ' = '
-                    . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeignColumnName());
+                    . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeignRefColumnName());
 
         if ($relation->isEqual()) {
             $queryPart .= ' OR '
                         . $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
                         . ' = '
-                        . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocalColumnName())
+                        . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocalRefColumnName())
                         . ') AND '
                         . $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
                         . ' != '
