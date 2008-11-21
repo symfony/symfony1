@@ -73,11 +73,13 @@ yaml: |
     all my favorite symbols: '#:!/%.)' 
     a few i hate: '&(*' 
     why do i hate them?: 'it''s very hard to explain' 
+    entities: '&pound; me'
 php: | 
     array(
       'all my favorite symbols' => '#:!/%.)', 
       'a few i hate' => '&(*', 
-      'why do i hate them?' => 'it\'s very hard to explain' 
+      'why do i hate them?' => 'it\'s very hard to explain', 
+      'entities' => '&pound; me'
     )
 --- 
 test: Double-quoted Strings 
