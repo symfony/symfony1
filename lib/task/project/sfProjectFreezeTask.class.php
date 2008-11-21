@@ -77,7 +77,7 @@ EOF;
       throw new sfCommandException(sprintf('The symfony data dir does not seem to be located at "%s".', $symfonyDataDir));
     }
 
-    $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfonyLibDir));
+    $this->logSection('freeze', sprintf('freezing lib found in "%s"', $symfonyLibDir));
     $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfonyDataDir));
 
     $this->getFilesystem()->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
