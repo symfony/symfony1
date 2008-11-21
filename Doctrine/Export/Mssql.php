@@ -269,7 +269,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
 
         if (isset($definition['type'])) {
             if (strtolower($definition['type']) == 'unique') {
-                $type = strtoupper($definition['type']) . ' ';
+                $type = strtoupper($definition['type']);
             } else {
                 throw new Doctrine_Export_Exception(
                     'Unknown type ' . $definition['type'] . ' for index ' . $name
@@ -281,8 +281,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
             throw new Doctrine_Export_Exception('No columns given for index ' . $name);
         }
 
-        $query = $type . 'NONCLUSTERED ' . $name;
-
+        $query = 'CONSTRAINT ' . $name . ' ' . $type;
         $query .= ' (' . $this->getIndexFieldDeclarationList($definition['fields']) . ')';
 
         return $query;
