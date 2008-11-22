@@ -78,4 +78,11 @@ abstract class sfTester
   {
     return $this->inABlock ? $this : $this->browser;
   }
+
+  public function __call($method, $arguments)
+  {
+    call_user_func_array(array($this->browser, $method), $arguments);
+
+    return $this;
+  }
 }
