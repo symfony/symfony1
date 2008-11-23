@@ -238,11 +238,6 @@ class sfPatternRouting extends sfRouting
    */
   public function connect($name, $route)
   {
-    if (isset($this->routes[$name]))
-    {
-      throw new sfConfigurationException(sprintf('This named route already exists ("%s").', $name));
-    }
-
     $routes = $route instanceof sfRouteCollection ? $route : array($name => $route);
     foreach (self::flattenRoutes($routes) as $name => $route)
     {
