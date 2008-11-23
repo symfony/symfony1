@@ -30,7 +30,7 @@ class sfValidatorDate extends sfValidatorBase
    *  * date_format_error:       The date format to use when displaying an error for a bad_format error (use date_format if not provided)
    *  * max:                     The maximum date allowed (as a timestamp)
    *  * min:                     The minimum date allowed (as a timestamp)
-   *  * date_format_range_error: The date format to use when displaying an error for min/max (default to m/d/Y H:i:s)
+   *  * date_format_range_error: The date format to use when displaying an error for min/max (default to d/m/Y H:i:s)
    *
    * Available error codes:
    *
