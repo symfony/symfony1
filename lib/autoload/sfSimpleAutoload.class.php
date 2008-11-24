@@ -145,7 +145,10 @@ class sfSimpleAutoload
   {
     if ($this->cacheChanged)
     {
-      file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
+      if (is_writable(dirname($this->cacheFile)))
+      {
+        file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
+      }
 
       $this->cacheChanged = false;
     }
