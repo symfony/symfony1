@@ -9,6 +9,9 @@
  */
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
+//lazy constant, cause it is so often used in this test
+define("DS", DIRECTORY_SEPARATOR);
+
 class myFilesystem extends sfFilesystem
 {
   public function calculateRelativeDir($from, $to)
@@ -17,21 +20,33 @@ class myFilesystem extends sfFilesystem
   }
 }
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 $filesystem = new myFilesystem($dispatcher, null);
 
 $t->diag('sfFilesystem calculates relative pathes');
-$common = DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'sfproject'.DIRECTORY_SEPARATOR;
-$source = $common.'web'.DIRECTORY_SEPARATOR.'myplugin';
-$target = $common.'plugins'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web';
-$t->is($filesystem->calculateRelativeDir($source, $target), '..'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.'myplugin'.DIRECTORY_SEPARATOR.'web', '->calculateRelativeDir() correctly calculates the relative path');
+$common = DS.'tmp'.DS.'sfproject'.DS;
+$source = $common.'web'.DS.'myplugin';
+$target = $common.'plugins'.DS.'myplugin'.DS.'web';
+$t->is($filesystem->calculateRelativeDir($source, $target), '..'.DS.'plugins'.DS.'myplugin'.DS.'web', '->calculateRelativeDir() correctly calculates the relative path');
 
-$source = $common.'web'.DIRECTORY_SEPARATOR.'myplugin';
-$target = $common.'web'.DIRECTORY_SEPARATOR.'otherplugin'.DIRECTORY_SEPARATOR.'sub';
-$t->is($filesystem->calculateRelativeDir($source, $target), 'otherplugin'.DIRECTORY_SEPARATOR.'sub', '->calculateRelativeDir() works without going up one dir');
+$source = $common.'web'.DS.'myplugin';
+$target = $common.'webplugins'.DS.'myplugin'.DS.'web';
+$t->is($filesystem->calculateRelativeDir($source, $target), '..'.DS.'webplugins'.DS.'myplugin'.DS.'web', '->calculateRelativeDir() correctly calculates the relative path for dirs that share chars');
+
+$source = $common.'web'.DS.'myplugin';
+$target = $common.'web'.DS.'otherplugin'.DS.'sub';
+$t->is($filesystem->calculateRelativeDir($source, $target), 'otherplugin'.DS.'sub', '->calculateRelativeDir() works without going up one dir');
 
 $source = 'c:\sfproject\web\myplugin';
 $target = 'd:\symfony\plugins\myplugin\web';
 $t->is($filesystem->calculateRelativeDir($source, $target), 'd:\symfony\plugins\myplugin\web', '->calculateRelativeDir() returns absolute path when no relative path possible');
+
+$source = $common.'web'.DS.'myplugin';
+$target = $common.'web'.DS.'myotherplugin'.DS.'sub';
+$t->is($filesystem->calculateRelativeDir($source, $target), 'myotherplugin'.DS.'sub', '->calculateRelativeDir() correctly calculates the relative path for dirs that share chars');
+
+$source = $common.'web'.DS.'myplugin';
+$target = $common.'web'.DS.'motherplugin'.DS.'sub';
+$t->is($filesystem->calculateRelativeDir($source, $target), 'motherplugin'.DS.'sub', '->calculateRelativeDir() correctly calculates the relative path for dirs that share chars');
