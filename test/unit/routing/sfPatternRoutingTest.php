@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(122, new lime_output_color());
+$t = new lime_test(121, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -69,19 +69,6 @@ $t->is($r->hasRoutes(), true, '->hasRoutes() returns true if some routes are reg
 
 // ->connect()
 $t->diag('->connect()');
-$r->clearRoutes();
-$msg = '->connect() throws an sfConfigurationException when a route already exists with same name';
-$r->connect('test', new sfRoute('/index.php/:module/:action', array('module' => 'default', 'action' => 'index')));
-try
-{
-  $r->connect('test', new sfRoute('/index.php/:module/:action', array('module' => 'default', 'action' => 'index')));
-
-  $t->fail($msg);
-}
-catch (sfConfigurationException $e)
-{
-  $t->pass($msg);
-}
 $r->clearRoutes();
 /*
 $routes = $r->connect('test', new sfRoute(':module/:action', array('module' => 'default', 'action' => 'index')));
