@@ -1098,6 +1098,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         if (isset($this->tables[$name])) {
             return $this->tables[$name];
         }
+        
         $class = $name . 'Table';
 
         if (class_exists($class, $this->getAttribute(Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES)) &&
@@ -1106,9 +1107,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } else {
             $table = new Doctrine_Table($name, $this, true);
         }
-
-        $this->tables[$name] = $table;
-
+        
         return $table;
     }
 

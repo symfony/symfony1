@@ -225,12 +225,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function __construct($name, Doctrine_Connection $conn, $initDefinition = false)
     {
         $this->_conn = $conn;
-
-        $this->setParent($this->_conn);
-
         $this->_options['name'] = $name;
+        
+        $this->setParent($this->_conn);           
+        $this->_conn->addTable($this);
+        
         $this->_parser = new Doctrine_Relation_Parser($this);
-
+        
         if ($initDefinition) {
             $this->record = $this->initDefinition();
 
@@ -247,6 +248,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $this->setTableName(Doctrine_Inflector::tableize($this->_options['name']));
             }
         }
+        
         $this->_filters[]  = new Doctrine_Record_Filter_Standard();
         $this->_repository = new Doctrine_Table_Repository($this);
 

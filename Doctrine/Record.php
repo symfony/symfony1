@@ -240,7 +240,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         $repository = $this->_table->getRepository();
-        $repository->add($this);
+        
+        // Fix for #1682. Doctrine_Table does not have the repository yet during dummy record creation.
+        if ($repository) {
+            $repository->add($this);
+        }
 
         $this->construct();
     }
