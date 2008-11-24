@@ -150,7 +150,7 @@ class sfRoute implements Serializable
     $tparams = $this->mergeArrays($defaults, $params);
 
     // all $variables must be defined in the $tparams array
-    if (array_diff_key($this->variables, array_filter($tparams)))
+    if (array_diff_key($this->variables, $tparams))
     {
       return false;
     }
@@ -158,7 +158,12 @@ class sfRoute implements Serializable
     // check requirements
     foreach (array_keys($this->variables) as $variable)
     {
-      if (!is_null($tparams[$variable]) && !preg_match('#'.$this->requirements[$variable].'#', $tparams[$variable]))
+      if (!$tparams[$variable])
+      {
+        continue;
+      }
+
+      if (!preg_match('#'.$this->requirements[$variable].'#', $tparams[$variable]))
       {
         return false;
       }
@@ -167,14 +172,14 @@ class sfRoute implements Serializable
     // all $params must be in $variables or $defaults if there is no * in route
     if (!$this->options['extra_parameters_as_query_string'])
     {
-      if (false === strpos($this->regex, '<_star>') && array_diff_key(array_filter($params), $this->variables, $defaults))
+      if (false === strpos($this->regex, '<_star>') && array_diff_key($params, $this->variables, $defaults))
       {
         return false;
       }
     }
 
     // check that $params does not override a default value that is not a variable
-    foreach (array_filter($defaults) as $key => $value)
+    foreach ($defaults as $key => $value)
     {
       if (!isset($this->variables[$key]) && $tparams[$key] != $value)
       {
@@ -206,7 +211,7 @@ class sfRoute implements Serializable
     $tparams = $this->mergeArrays($defaults, $params);
 
     // all params must be given
-    if ($diff = array_diff_key($this->variables, array_filter($tparams)))
+    if ($diff = array_diff_key($this->variables, $tparams))
     {
       throw new InvalidArgumentException(sprintf('The "%s" route has some missing mandatory parameters (%s).', $this->pattern, implode(', ', $diff)));
     }
@@ -497,7 +502,7 @@ class sfRoute implements Serializable
       else if ($afterASeparator && preg_match('#^('.$this->options['text_regex'].')(?:'.$this->options['segment_separators_regex'].'|$)#', $buffer, $match))
       {
         // a text
-        $this->tokens[] = array('text', $currentSeparator, $match[1]);
+        $this->tokens[] = array('text', $currentSeparator, $match[1], null);
 
         $currentSeparator = '';
         $buffer = substr($buffer, strlen($match[1]));
@@ -506,7 +511,7 @@ class sfRoute implements Serializable
       else if (!$afterASeparator && preg_match('#^'.$this->options['segment_separators_regex'].'#', $buffer, $match))
       {
         // a separator
-        $this->tokens[] = array('separator', $currentSeparator, $match[0]);
+        $this->tokens[] = array('separator', $currentSeparator, $match[0], null);
 
         $currentSeparator = $match[0];
         $buffer = substr($buffer, strlen($match[0]));

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(43, new lime_output_color());
+$t = new lime_test(49, new lime_output_color());
 
 // ->matchesUrl()
 $t->diag('->matchesUrl()');
@@ -29,6 +29,16 @@ $t->is($route->matchesUrl('/foobar'), array('foo' => 'foobar'), '->matchesUrl() 
 
 $route = new sfRoute('/:foo', array('foo' => 'bar'));
 $t->is($route->matchesUrl('/'), array('foo' => 'bar'), '->matchesUrl() matches routes with an optional parameter at the end');
+
+$route = new sfRoute('/:foo', array('foo' => null));
+$t->is($route->matchesUrl('/'), array('foo' => null), '->matchesUrl() matches routes with an optional parameter at the end, even if it is null');
+
+$route = new sfRoute('/:foo', array('foo' => ''));
+$t->is($route->matchesUrl('/'), array('foo' => ''), '->matchesUrl() matches routes with an optional parameter at the end, even if it is empty');
+
+$route = new sfRoute('/:foo/bar', array('foo' => null));
+$t->is($route->matchesUrl('//bar'), false, '->matchesUrl() does not match routes with an empty parameter not at the end');
+$t->is($route->matchesUrl('/bar'), false, '->matchesUrl() does not match routes with an empty parameter not at the end');
 
 $route = new sfRoute('/foo/:foo/bar/:bar', array('foo' => 'bar', 'bar' => 'foo'));
 $t->is($route->matchesUrl('/foo/bar/bar'), array('foo' => 'bar', 'bar' => 'foo'), '->matchesUrl() matches routes with an optional parameter at the end');
@@ -69,7 +79,14 @@ $route = new sfRoute('/:foo');
 $t->is($route->matchesParameters(array('foo' => 'bar')), true, '->matchesParameters() matches if all variables are given as parameters');
 
 $route = new sfRoute('/:foo');
-$t->is($route->matchesParameters(array('foo' => '')), false, '->matchesParameters() checks that parameters are not empty');
+$t->is($route->matchesParameters(array('foo' => '')), true, '->matchesParameters() matches if optional parameters empty');
+$t->is($route->matchesParameters(array('foo' => null)), true, '->matchesParameters() matches if optional parameters empty');
+
+/*
+$route = new sfRoute('/:foo/bar');
+$t->is($route->matchesParameters(array('foo' => '')), false, '->matchesParameters() does not match is required parameters are empty');
+$t->is($route->matchesParameters(array('foo' => null)), false, '->matchesParameters() does not match is required parameters are empty');
+*/
 
 $route = new sfRoute('/:foo');
 $route->setDefaultParameters(array('foo' => 'bar'));
@@ -104,16 +121,29 @@ $route = new sfRoute('/:foo/:foobar');
 $t->is($route->generate(array('foo' => 'bar', 'foobar' => 'barfoo')), '/bar/barfoo', '->generate() replaces longer variables first');
 
 $route = new sfRoute('/:foo');
+$t->is($route->generate(array('foo' => '')), '/', '->generate() generates a route if a variable is empty');
+$t->is($route->generate(array('foo' => null)), '/', '->generate() generates a route if a variable is empty');
+/*
+$route = new sfRoute('/:foo/bar');
 try
 {
   $route->generate(array('foo' => ''));
-  $t->fail('->generate() cannot generate a route if a variable is empty');
+  $t->fail('->generate() cannot generate a route if a variable is empty and mandatory');
 }
 catch (Exception $e)
 {
-  $t->pass('->generate() cannot generate a route if a variable is empty');
+  $t->pass('->generate() cannot generate a route if a variable is empty and mandatory');
 }
-
+try
+{
+  $route->generate(array('foo' => null));
+  $t->fail('->generate() cannot generate a route if a variable is empty and mandatory');
+}
+catch (Exception $e)
+{
+  $t->pass('->generate() cannot generate a route if a variable is empty and mandatory');
+}
+*/
 $route = new sfRoute('/:foo');
 $t->is($route->generate(array('foo' => 'bar', 'bar' => 'foo')), '/bar?bar=foo', '->generate() generates extra parameters as a query string');
 
