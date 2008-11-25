@@ -100,12 +100,3 @@ yaml: |
   0: bar
 php: |
   array(1 => 'foo', 0 => 'bar')
----
-test: PHP evaluation
-brief: >
-  A sequence with an unordered array
-yaml: |
-  1: <?php echo 'foo' ?> 
-  0: bar
-php: |
-  array(1 => 'foo', 0 => 'bar')
