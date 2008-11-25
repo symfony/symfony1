@@ -63,6 +63,16 @@ class sfTesterForm extends sfTester
   }
 
   /**
+   * Returns the current form.
+   *
+   * @return sfForm The current sfForm form instance
+   */
+  public function getForm()
+  {
+    return $this->form;
+  }
+
+  /**
    * Tests if the submitted form has some error.
    *
    * @param  Boolean|integer $value Whether to check if the form has error or not, or the number of errors
@@ -78,7 +88,7 @@ class sfTesterForm extends sfTester
 
     if (is_int($value))
     {
-      $this->tester->is(count($this->form->hasErrors()), $value, sprintf('the submitted form has "%s" errors.', $value));
+      $this->tester->is(count($this->form->getErrorSchema()), $value, sprintf('the submitted form has "%s" errors.', $value));
     }
     else
     {
