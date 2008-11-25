@@ -43,7 +43,7 @@ class sfObjectRouteCollection extends sfRouteCollection
       'with_show'           => true,
       'segment_names'       => array('edit' => 'edit', 'new' => 'new'),
       'model_methods'       => array(),
-      'with_wilcard_routes' => false,
+      'with_wildcard_routes' => false,
     ), $this->options);
 
     $this->options['requirements'] = array_merge(array($this->options['column'] => '\d+'), $this->options['requirements']);
@@ -90,7 +90,7 @@ class sfObjectRouteCollection extends sfRouteCollection
       }
     }
 
-    if ($this->options['with_wilcard_routes'])
+    if ($this->options['with_wildcard_routes'])
     {
       // wildcard object actions
       $this->routes[$this->getRoute('object')] = new $this->routeClass(
