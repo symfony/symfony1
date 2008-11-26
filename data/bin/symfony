@@ -13,9 +13,7 @@
 if (file_exists('config/ProjectConfiguration.class.php'))
 {
   require_once('config/ProjectConfiguration.class.php');
-  $configuration = new ProjectConfiguration();
-
-  $dir = $configuration->getSymfonyLibDir();
+  $dir = sfCoreAutoload::getInstance()->getBaseDir();
 }
 else
 {

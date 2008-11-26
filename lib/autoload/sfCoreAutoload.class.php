@@ -104,6 +104,16 @@ class sfCoreAutoload
   }
 
   /**
+   * Returns the base directory this autoloader is working on.
+   *
+   * @return base directory
+   */
+   public function getBaseDir()
+   {
+     return $this->baseDir;
+   }
+
+  /**
    * Rebuilds the association array between class names and paths.
    *
    * This method overrides this file (__FILE__)
