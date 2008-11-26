@@ -169,7 +169,7 @@ class sfTesterForm extends sfTester
     {
       if (!$error)
       {
-        $this->tester->fail(sprintf('the submitted form has a "%s" error.', $field));
+        $this->tester->fail(sprintf('the submitted form has a "%s" error (%s).', $field, $value));
       }
       else
       {
