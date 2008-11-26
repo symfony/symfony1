@@ -360,6 +360,8 @@ abstract class sfView
       {
         // use default exception templates
         $this->template = sfException::getTemplatePathForError($this->context->getRequest()->getRequestFormat(), false);
+        $this->directory = dirname($this->template);
+        $this->template = basename($this->template);
         $this->setAttribute('code', '404');
         $this->setAttribute('text', 'Not Found');
       }
