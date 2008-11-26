@@ -1,9 +1,28 @@
-Version 1.2.0 RC1
+Version 1.2.0 RC2
 -------------------
 
 WARNING: See the UPGRADE_TO_1_2 file for more information about upgrading your projects from 1.1 to 1.2.
 
 All the new features are documented in the What's new? tutorial (http://www.symfony-project.org/tutorial/1_2/whats-new)
+
+* [13363]: made command line much faster. fixes #4928
+* [13361]: fixed sfForm::embedFormForEach does not properly store embedded forms (closes #5080)
+* [13360]: fixed tester message
+* [13343]: changed the form tester to test error codes instead of error messages
+* [13342]: fixed a typo in sfTesterForm
+* [13339]: reverted r12807 (closes #4287)
+* [13325]: fixed wilcard typo. needs rebuilding routes and admin. fixes #5065
+* [13324]: fixed possible notice in sfWidgetFormSelectCheckbox by applying pattern from sfWidgetFormSelect. fixes #5056
+* [13322]: fixed routing when a route parameter is empty (closes #5001, #4960, #5042)
+* [13319]: fixed relative symlinks that were incorrectly when some directories had the same prefix. added plenty tests for this.
+* [13317]: fixed warning for symfony CLI (closes #5019)
+* [13288]: removed the inability to override a route (really useful when using sfPropelRouteCollection)
+* [13281]: made type of virtual fields configurable in generators. fixes #4973
+* [13278]: fixed PHPDoc on sfValidatorDate. fixes #5039
+* [13247]: add __call() to sfTester to forward all unknown method to the browser object
+
+Version 1.2.0 RC1
+-------------------
 
 * [13212]: fixed regular expression back reference bug on windows pathes like "symfony\1.2". fixes #5021
 * [13196]: fixed plugin autoloading
@@ -46,50 +65,50 @@ All the new features are documented in the What's new? tutorial (http://www.symf
 * [12920]: fixed symfony default CLI
 
 Doctrine Plugin
- * [13231]: removed unneeded file from fixtures
- * [13219]: sfDoctrinePlugin: Fixing generated children forms and test fixtures from last commit
- * [13218]: sfDoctrinePlugin: fixing path of base filter class
- * [13217]: sfDoctrinePlugin: fixes issue with sfDoctrineRecord::toParams() (closes #5029)
- * [13211]: sfDoctrinePlugin: Fixing issue with admin generator routes (closes #5027)
- * [13210]: fixes issue with doctrine filters (closes #4944)
- * [13163]: sfDoctrinePlugin: fixes issue with duplicate saving of related records (closes #4935)
- * [13138]: fixed image URLs in admin generator (closes #4987)
- * [13121]: fixed indentation
- * [13086]: sfDoctrinePlugin: fixes issue with m2m filters (closes #4944)
- * [13085]: sfDoctrinePlugin: fixes issue with admin generator and multi-part file forms (closes #4946)
- * [13073]: sfDoctrinePlugin: added hide feature to admin gen (closes #4794)
- * [13072]: Adding coverage for ticket (addresses #4935)
- * [13062]: added a sfForm::getName() method (closes #4852)
- * [13049]: added a way to customize the actions added on a form (closes #4947)
- * [13044]: fixed embedded form saving when there is a non Doctrine form in the chain
- * [12955]: sfDoctrinePlugin: test coverage, fixing issues, updating sfFormDoctrine to be equal to sfFormPropel, fixes issue with i18n (closes #4907)
- * [12941]: sfDoctrinePlugin: changing fromArray() to not be recursive/deep as the save embedded forms takes care of this for us now
- * [12938]: sfDoctrinePlugin: fixes #4905
- * [12902]: sfDoctrinePlugin: fixing location of BaseFormDoctrine in fixtures
- * [12900]: sfDoctrinePlugin: committing update to tests for generated base models
+* [13231]: removed unneeded file from fixtures
+* [13219]: sfDoctrinePlugin: Fixing generated children forms and test fixtures from last commit
+* [13218]: sfDoctrinePlugin: fixing path of base filter class
+* [13217]: sfDoctrinePlugin: fixes issue with sfDoctrineRecord::toParams() (closes #5029)
+* [13211]: sfDoctrinePlugin: Fixing issue with admin generator routes (closes #5027)
+* [13210]: fixes issue with doctrine filters (closes #4944)
+* [13163]: sfDoctrinePlugin: fixes issue with duplicate saving of related records (closes #4935)
+* [13138]: fixed image URLs in admin generator (closes #4987)
+* [13121]: fixed indentation
+* [13086]: sfDoctrinePlugin: fixes issue with m2m filters (closes #4944)
+* [13085]: sfDoctrinePlugin: fixes issue with admin generator and multi-part file forms (closes #4946)
+* [13073]: sfDoctrinePlugin: added hide feature to admin gen (closes #4794)
+* [13072]: Adding coverage for ticket (addresses #4935)
+* [13062]: added a sfForm::getName() method (closes #4852)
+* [13049]: added a way to customize the actions added on a form (closes #4947)
+* [13044]: fixed embedded form saving when there is a non Doctrine form in the chain
+* [12955]: sfDoctrinePlugin: test coverage, fixing issues, updating sfFormDoctrine to be equal to sfFormPropel, fixes issue with i18n (closes #4907)
+* [12941]: sfDoctrinePlugin: changing fromArray() to not be recursive/deep as the save embedded forms takes care of this for us now
+* [12938]: sfDoctrinePlugin: fixes #4905
+* [12902]: sfDoctrinePlugin: fixing location of BaseFormDoctrine in fixtures
+* [12900]: sfDoctrinePlugin: committing update to tests for generated base models
 
 Propel Plugin
 
- * [13234]: fixed invalid assumption when loading propel map builders
- * [13197]: fixed propel autoload config
- * [13140]: Renamed task filenames to match classes.
- * [13137]: fixed image URLs in admin generator (closes #4987)
- * [13120]: fixed indentation
- * [13095]: fixed propel:build-schema task
- * [13084]: sfPropelPlugin: fixes issue with admin generator and multi-part file forms (closes #4946)
- * [13070]: update YUI to 2.6.0 (closes #4923)
- * [13061]: added a sfForm::getName() method (closes #4852)
- * [13048]: added a way to customize the actions added on a form (closes #4947)
- * [13045]: updated nl translations for admin gen (closes #4958, thanks dream0r)
- * [13043]: fixed embedded form saving when there is a non Propel form in the chain
- * [13039]: added more german admin gen translations. refs #4909
- * [13038]: added missing strings in i18n XLIFF file for the admin generator (closes #4841, #4909)
- * [13030]: fixed typo in admin gen pagination
- * [13027]: added a method_for_criteria option
- * [12959]: r12812 introduced a regression: fixtures order is totally random, as sfFinder returns directories entry in arbitrary order.
- * [12933]: added el translation for the admin generator (thanks to Zapantis Antreas).
- * [12930]: updated da translation for the admin generator (thanks to kjaer & henrik). closes #4896
- * [12929]: updated pt_br translation for the admin generator (thanks to Daniel)
+* [13234]: fixed invalid assumption when loading propel map builders
+* [13197]: fixed propel autoload config
+* [13140]: Renamed task filenames to match classes.
+* [13137]: fixed image URLs in admin generator (closes #4987)
+* [13120]: fixed indentation
+* [13095]: fixed propel:build-schema task
+* [13084]: sfPropelPlugin: fixes issue with admin generator and multi-part file forms (closes #4946)
+* [13070]: update YUI to 2.6.0 (closes #4923)
+* [13061]: added a sfForm::getName() method (closes #4852)
+* [13048]: added a way to customize the actions added on a form (closes #4947)
+* [13045]: updated nl translations for admin gen (closes #4958, thanks dream0r)
+* [13043]: fixed embedded form saving when there is a non Propel form in the chain
+* [13039]: added more german admin gen translations. refs #4909
+* [13038]: added missing strings in i18n XLIFF file for the admin generator (closes #4841, #4909)
+* [13030]: fixed typo in admin gen pagination
+* [13027]: added a method_for_criteria option
+* [12959]: r12812 introduced a regression: fixtures order is totally random, as sfFinder returns directories entry in arbitrary order.
+* [12933]: added el translation for the admin generator (thanks to Zapantis Antreas).
+* [12930]: updated da translation for the admin generator (thanks to kjaer & henrik). closes #4896
+* [12929]: updated pt_br translation for the admin generator (thanks to Daniel)
 
 
 Version 1.2.0 beta2
