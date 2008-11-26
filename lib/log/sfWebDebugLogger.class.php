@@ -62,6 +62,11 @@ class sfWebDebugLogger extends sfVarLogger
    */
   public function filterResponseContent(sfEvent $event, $content)
   {
+    if (!sfConfig::get('sf_web_debug'))
+    {
+      return $content;
+    }
+
     // log timers information
     $messages = array();
     foreach (sfTimerManager::getTimers() as $name => $timer)
