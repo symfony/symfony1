@@ -25,7 +25,7 @@ class sfWidgetFormTime extends sfWidgetForm
    *
    *  * format:                 The time format string (%hour%:%minute%:%second%)
    *  * format_without_seconds: The time format string without seconds (%hour%:%minute%)
-   *  * with_second:            Whether to include a select for seconds (false by default)
+   *  * with_seconds:           Whether to include a select for seconds (false by default)
    *  * hours:                  An array of hours for the hour select tag (optional)
    *  * minutes:                An array of minutes for the minute select tag (optional)
    *  * seconds:                An array of seconds for the second select tag (optional)
