@@ -529,6 +529,7 @@ class sfValidatedFile
       'application/oda' => 'oda',
       'application/ogg' => 'ogg',
       'application/pdf' => 'pdf',
+      'application/x-pdf' => 'pdf',
       'application/pgp-encrypted' => '7bit',
       'application/pgp-keys' => '7bit',
       'application/pgp-signature' => 'sig',
