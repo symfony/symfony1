@@ -41,7 +41,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
     $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
-    $isDebug = $commandManager->getOptionSet()->hasOption('debug') ? $commandManager->getOptionValue('debug') : true;
 
     if (true === $application)
     {
@@ -53,7 +52,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       }
     }
 
-    $this->configuration = $this->createConfiguration($application, $env, $isDebug);
+    $this->configuration = $this->createConfiguration($application, $env);
 
     if (!is_null($this->commandApplication) && !$this->commandApplication->withTrace())
     {
@@ -138,11 +137,10 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    *
    * @param string  $application The application name
    * @param string  $env         The environment name
-   * @param Boolean $isDebug     Whether to enable debugging
    *
    * @return sfProjectConfiguration A sfProjectConfiguration instance
    */
-  protected function createConfiguration($application, $env, $isDebug)
+  protected function createConfiguration($application, $env)
   {
     if (!is_null($application))
     {
@@ -150,7 +148,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
       require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
 
-      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $isDebug, null, $this->dispatcher);
+      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, true, null, $this->dispatcher);
     }
     else
     {
