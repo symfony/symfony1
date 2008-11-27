@@ -82,7 +82,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   protected function createDOMDocument($xml = null)
   {
     $domimp = new DOMImplementation();
-    $doctype = $domimp->createDocumentType('xliff', '-//XLIFF//DTD XLIFF//EN', 'http://www.oasis-open. org/committees/xliff/documents/xliff.dtd');
+    $doctype = $domimp->createDocumentType('xliff', '-//XLIFF//DTD XLIFF//EN', 'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd');
     $dom = $domimp->createDocument('', '', $doctype);
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
