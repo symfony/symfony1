@@ -119,17 +119,17 @@ class sfMessageSource_Aggregate extends sfMessageSource
 
   public function append($message)
   {
-    // Append to the last message source only
-    if (($count = count($this->messageSources)) > 0)
+    // Append to the first message source only
+    if (count($this->messageSources))
     {
-      $this->messageSources[$count - 1]->append($message);
+      $this->messageSources[0]->append($message);
     }
   }
 
   public function update($text, $target, $comments, $catalogue = 'messages')
   {
     // Only update one message source
-    foreach (array_reverse($this->messageSources) as $messageSource)
+    foreach ($this->messageSources as $messageSource)
     {
       if ($messageSource->update($text, $target, $comments, $catalogue))
       {
