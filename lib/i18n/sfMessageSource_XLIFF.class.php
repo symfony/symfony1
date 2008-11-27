@@ -81,7 +81,9 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    */
   protected function createDOMDocument($xml = null)
   {
-    $dom = new DOMDocument('1.0', 'UTF-8');
+    $domimp = new DOMImplementation();
+    $doctype = $domimp->createDocumentType('xliff', '-//XLIFF//DTD XLIFF//EN', 'http://www.oasis-open. org/committees/xliff/documents/xliff.dtd');
+    $dom = $domimp->createDocument('', '', $doctype);
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
 
@@ -206,7 +208,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $fileNode = $xpath->query('//file')->item(0);
     $fileNode->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
-    $dom = $this->createDOMDocument($dom->saveXML($dom->documentElement));
+    $dom = $this->createDOMDocument($dom->saveXML());
 
     // save it and clear the cache for this variant
     $dom->save($filename);
@@ -418,7 +420,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     $dom = $this->createDOMDocument($this->getTemplate($catalogue));
-    file_put_contents($file, $dom->saveXML($dom->documentElement));
+    file_put_contents($file, $dom->saveXML());
     chmod($file, 0777);
 
     return array($variant, $file);
