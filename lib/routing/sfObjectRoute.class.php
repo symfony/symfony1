@@ -106,7 +106,7 @@ class sfObjectRoute extends sfRequestRoute
     }
 
     // check the related object
-    if (is_null($this->object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
+    if (!($this->object = $this->getObjectForParameters($this->parameters)) && (!isset($this->options['allow_empty']) || !$this->options['allow_empty']))
     {
       throw new sfError404Exception(sprintf('Unable to find the %s object with the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
     }
@@ -140,7 +140,7 @@ class sfObjectRoute extends sfRequestRoute
 
     $this->objects = $this->getObjectsForParameters($this->parameters);
 
-    if (is_array($this->objects) && !count($this->objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
+    if (!count($this->objects) && isset($this->options['allow_empty']) && !$this->options['allow_empty'])
     {
       throw new sfError404Exception(sprintf('No %s object found for the following parameters "%s").', $this->options['model'], str_replace("\n", '', var_export($this->filterParameters($this->parameters), true))));
     }
