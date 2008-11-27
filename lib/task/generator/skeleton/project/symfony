@@ -11,5 +11,4 @@
 
 chdir(dirname(__FILE__));
 require_once(dirname(__FILE__).'/config/ProjectConfiguration.class.php');
-$configuration = new ProjectConfiguration();
-include($configuration->getSymfonyLibDir().'/command/cli.php');
+include(sfCoreAutoload::getInstance()->getBaseDir().'/command/cli.php');
