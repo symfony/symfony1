@@ -431,16 +431,11 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     return <<<EOD
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
- <file
-  source-language="EN"
-  target-language="{$this->culture}"
-  datatype="plaintext"
-  original="$catalogue"
-  date="$date"
-  product-name="$catalogue">
-  <body>
-  </body>
- </file>
+  <file source-language="EN" target-language="{$this->culture}" datatype="plaintext" original="$catalogue" date="$date" product-name="$catalogue">
+    <header />
+    <body>
+    </body>
+  </file>
 </xliff>
 EOD;
   }
