@@ -31,6 +31,8 @@ class sfRootConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
+    $defaultFile = self::getDefaultConfigFile($configFiles);
+
     // parse the yaml
     $config = self::getConfiguration($configFiles);
 
@@ -60,7 +62,7 @@ class sfRootConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $category));
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $defaultFile, $category));
       }
 
       $class = $keys['class'];
@@ -70,7 +72,7 @@ class sfRootConfigHandler extends sfYamlConfigHandler
         if (!is_readable($keys['file']))
         {
           // handler file doesn't exist
-          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $keys['file']));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $defaultFile, $class, $keys['file']));
         }
 
         // append our data

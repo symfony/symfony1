@@ -33,6 +33,8 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
+    $defaultFile = self::getDefaultConfigFile($configFiles);
+
     // parse the yaml
     $config = self::getConfiguration($configFiles);
 
@@ -45,7 +47,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
       if (!is_readable($file))
       {
         // file doesn't exist
-        throw new sfParseException(sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s".', $configFiles[0], $file));
+        throw new sfParseException(sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s".', $defaultFile, $file));
       }
 
       $contents = file_get_contents($file);
