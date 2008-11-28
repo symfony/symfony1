@@ -191,7 +191,7 @@ class sfValidatorFile extends sfValidatorBase
    */
   protected function guessFromFileinfo($file)
   {
-    if (!function_exists('finfo_open'))
+    if (!function_exists('finfo_open') || !is_readable($file))
     {
       return null;
     }
@@ -215,7 +215,7 @@ class sfValidatorFile extends sfValidatorBase
    */
   protected function guessFromMimeContentType($file)
   {
-    if (!function_exists('mime_content_type'))
+    if (!function_exists('mime_content_type') || !is_readable($file))
     {
       return null;
     }
