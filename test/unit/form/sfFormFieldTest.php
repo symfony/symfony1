@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(28, new lime_output_color());
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -162,6 +162,11 @@ catch (LogicException $e)
 {
   $t->pass('->renderLabelName() throws an LogicException if the form field has no parent');
 }
+
+// ->renderId()
+$t->diag('->renderId()');
+$t->is($f->renderId(), 'article_title', '->renderId() renders the id attribute of the field');
+$t->is($child['name']->renderId(), 'article_author_name', '->renderId() renders the id attribute of the field');
 
 // ->isHidden()
 $t->diag('->isHidden()');

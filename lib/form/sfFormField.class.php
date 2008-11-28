@@ -227,6 +227,16 @@ class sfFormField
   }
 
   /**
+   * Returns the id attribute of the widget.
+   *
+   * @return string The id attribute of the widget
+   */
+  public function renderId()
+  {
+    return $this->widget->generateId($this->parent ? $this->parent->getWidget()->generateName($this->name) : $this->name, $this->value);
+  }
+
+  /**
    * Returns true if the widget is hidden.
    *
    * @return Boolean true if the widget is hidden, false otherwise
