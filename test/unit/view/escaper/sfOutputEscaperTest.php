@@ -21,7 +21,7 @@ require_once(dirname(__FILE__).'/../../../../lib/config/sfConfig.class.php');
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 class OutputEscaperTestClass
 {
@@ -99,3 +99,60 @@ catch (InvalidArgumentException $e)
 {
   $t->pass('::escape() throws an InvalidArgumentException if the value cannot be escaped');
 }
+
+// ::unescape()
+$t->diag('::unescape()');
+$t->diag('::unescape() does not unescape special values');
+$t->ok(sfOutputEscaper::unescape(null) === null, '::unescape() returns null if the value to unescape is null');
+$t->ok(sfOutputEscaper::unescape(false) === false, '::unescape() returns false if the value to unescape is false');
+$t->ok(sfOutputEscaper::unescape(true) === true, '::unescape() returns true if the value to unescape is true');
+
+$t->diag('::unescape() unescapes strings');
+$t->is(sfOutputEscaper::unescape('&lt;strong&gt;escaped!&lt;/strong&gt;'), '<strong>escaped!</strong>', '::unescape() returns an unescaped string if the value to unescape is a string');
+$t->is(sfOutputEscaper::unescape('&lt;strong&gt;&eacute;chapp&eacute;&lt;/strong&gt;'), '<strong>échappé</strong>', '::unescape() returns an unescaped string if the value to unescape is a string');
+
+$t->diag('::unescape() unescapes arrays');
+$input = sfOutputEscaper::escape('esc_entities', array(
+  'foo' => '<strong>escaped!</strong>',
+  'bar' => array('foo' => '<strong>escaped!</strong>'),
+));
+$output = sfOutputEscaper::unescape($input);
+$t->ok(is_array($output), '::unescape() returns an array if the input is a sfOutputEscaperArrayDecorator object');
+$t->is($output['foo'], '<strong>escaped!</strong>', '::unescape() unescapes all elements of the original array');
+$t->is($output['bar']['foo'], '<strong>escaped!</strong>', '::unescape() is recursive');
+
+$t->diag('::unescape() unescapes objects');
+$object = new OutputEscaperTestClass();
+$input = sfOutputEscaper::escape('esc_entities', $object);
+$output = sfOutputEscaper::unescape($input);
+$t->isa_ok($output, 'OutputEscaperTestClass', '::unescape() returns the original object when a sfOutputEscaperObjectDecorator object is passed');
+$t->is($output->getTitle(), '<strong>escaped!</strong>', '::unescape() unescapes all methods of the original object');
+$t->is($output->title, '<strong>escaped!</strong>', '::unescape() unescapes all properties of the original object');
+$t->is($output->getTitleTitle(), '<strong>escaped!</strong>', '::unescape() is recursive');
+
+$t->isa_ok(sfOutputEscaperIteratorDecorator::unescape(sfOutputEscaper::escape('esc_entities', new DirectoryIterator('.'))), 'DirectoryIterator', '::unescape() unescapes sfOutputEscaperIteratorDecorator objects');
+
+$t->diag('::unescape() does not unescape object marked as being safe');
+$t->isa_ok(sfOutputEscaper::unescape(sfOutputEscaper::escape('esc_entities', new sfOutputEscaperSafe(new OutputEscaperTestClass()))), 'OutputEscaperTestClass', '::unescape() returns the original value if it is marked as being safe');
+
+sfOutputEscaper::markClassAsSafe('OutputEscaperTestClass');
+$t->isa_ok(sfOutputEscaper::unescape(sfOutputEscaper::escape('esc_entities', new OutputEscaperTestClass())), 'OutputEscaperTestClass', '::unescape() returns the original value if the object class is marked as being safe');
+$t->isa_ok(sfOutputEscaper::unescape(sfOutputEscaper::escape('esc_entities', new OutputEscaperTestClassChild())), 'OutputEscaperTestClassChild', '::unescape() returns the original value if one of the object parent class is marked as being safe');
+
+$t->diag('::unescape() do nothing to resources');
+$fh = fopen(__FILE__, 'r');
+$t->is(sfOutputEscaper::unescape($fh), $fh, '::unescape() do nothing to resources');
+
+$t->diag('::unescape() unescapes mixed arrays');
+$object = new OutputEscaperTestClass();
+$input = array(
+  'foo'    => 'bar',
+  'bar'    => sfOutputEscaper::escape('esc_entities', '<strong>bar</strong>'),
+  'foobar' => sfOutputEscaper::escape('esc_entities', $object),
+);
+$output = array(
+  'foo'    => 'bar',
+  'bar'    => '<strong>bar</strong>',
+  'foobar' => $object,
+);
+$t->is(sfOutputEscaper::unescape($input), $output, '::unescape() unescapes values with some escaped and unescaped values');

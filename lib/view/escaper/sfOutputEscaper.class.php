@@ -135,6 +135,43 @@ abstract class sfOutputEscaper
   }
 
   /**
+   * Unescapes a value that has been escaped previously with the escape() method.
+   *
+   * @param  mixed $value The value to unescape
+   *
+   * @return mixed Unescaped value
+   *
+   * @throws InvalidArgumentException If the escaping fails
+   */
+  static public function unescape($value)
+  {
+    if (is_null($value) || is_bool($value))
+    {
+      return $value;
+    }
+
+    if (is_scalar($value))
+    {
+      return html_entity_decode($value, ENT_QUOTES, sfConfig::get('sf_charset'));
+    }
+    elseif (is_array($value))
+    {
+      foreach ($value as $name => $v)
+      {
+        $value[$name] = self::unescape($v);
+      }
+
+      return $value;
+    }
+    elseif (is_object($value))
+    {
+      return $value instanceof sfOutputEscaper ? $value->getRawValue() : $value;
+    }
+
+    return $value;
+  }
+
+  /**
    * Returns true if the class if marked as safe.
    *
    * @param  string  $class  A class name

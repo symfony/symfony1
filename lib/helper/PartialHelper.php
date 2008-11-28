@@ -354,7 +354,8 @@ function _call_component($moduleName, $componentName, $vars)
   // load component's module config file
   require($context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
 
-  $componentInstance->getVarHolder()->add($vars);
+  // pass unescaped vars to the component
+  $componentInstance->getVarHolder()->add(sfOutputEscaper::unescape($vars));
 
   // dispatch component
   $componentToRun = 'execute'.ucfirst($componentName);
