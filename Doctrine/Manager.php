@@ -94,6 +94,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_IDXNAME_FORMAT               => "%s_idx",
                         Doctrine::ATTR_SEQNAME_FORMAT               => "%s_seq",
                         Doctrine::ATTR_TBLNAME_FORMAT               => "%s",
+                        Doctrine::ATTR_FKNAME_FORMAT                => "%localtbl_%localcol_%reftbl_%refcol",
                         Doctrine::ATTR_QUOTE_IDENTIFIER             => false,
                         Doctrine::ATTR_SEQCOL_NAME                  => 'id',
                         Doctrine::ATTR_PORTABILITY                  => Doctrine::PORTABILITY_NONE,

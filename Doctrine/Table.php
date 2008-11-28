@@ -652,18 +652,27 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $options['foreignKeys'] = isset($this->_options['foreignKeys']) ?
                 $this->_options['foreignKeys'] : array();
 
-        if ($parseForeignKeys && $this->getAttribute(Doctrine::ATTR_EXPORT)
-                & Doctrine::EXPORT_CONSTRAINTS) {
+        if ($parseForeignKeys && $this->getAttribute(Doctrine::ATTR_EXPORT) & Doctrine::EXPORT_CONSTRAINTS) {
 
             $constraints = array();
 
             $emptyIntegrity = array('onUpdate' => null,
                                     'onDelete' => null);
 
+            $fkName = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
+            $fkCount = 0;
+
             foreach ($this->getRelations() as $name => $relation) {
                 $fk = $relation->toArray();
                 $fk['foreignTable'] = $relation->getTable()->getTableName();
-                $name = $relation['localTable']->getTableName() . '_' . implode('_', (array) $relation['local']) . '_' . $relation['table']->getTableName() . '_' . implode('_', (array) $relation['foreign']);
+
+                $name = strtr($fkName, array(
+                    '%localtbl' => $relation['localTable']->getTableName(),
+                    '%localcol' => $relation->getLocalColumnName(), // implode('_', (array) $relation['local']),
+                    '%reftbl' => $relation['table']->getTableName(),
+                    '%refcol' => $relation->getForeignColumnName(), // implode('_', (array) $relation['foreign']),
+                    '%i' => $fkCount++,
+                ));
 
                 if ($relation->getTable() === $this && in_array($relation->getLocal(), $primary)) {
                     if ($relation->hasConstraint()) {
