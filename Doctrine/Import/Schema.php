@@ -262,6 +262,12 @@ class Doctrine_Import_Schema
         
         $array = $this->buildSchema($schema, $format);
 
+        if (count($array) == 0) { 
+            throw new Doctrine_Import_Exception(
+                sprintf('No ' . $format . ' schema found in ' . implode(", ", $schema))
+            ); 
+        }
+
         foreach ($array as $name => $definition) {
             if ( ! empty($models) && !in_array($definition['className'], $models)) {
                 continue;
