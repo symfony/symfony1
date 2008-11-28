@@ -161,7 +161,7 @@ final class Doctrine
     const ATTR_DBNAME_FORMAT        = 117;
     const ATTR_TBLCLASS_FORMAT      = 119;
     const ATTR_TBLNAME_FORMAT       = 120;
-    const ATTR_FKNANE_FORMAT        = 121;
+    const ATTR_FKNAME_FORMAT        = 171;
     const ATTR_EXPORT               = 140;
     const ATTR_DECIMAL_PLACES       = 141;
 
