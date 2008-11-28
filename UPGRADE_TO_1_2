@@ -516,6 +516,25 @@ default status code:
 
 The `redirect()` method already have this feature.
 
+Components
+----------
+
+If you have the output escaper enabled, there was a bug in symfony 1.0 and 1.1.
+When you passed some variables from an action to a component, these were escaped
+in the component. So, in some circumstances, you had to unescaped them:
+
+    [php]
+    public function executeInAComponent($request)
+    {
+      $this->foo = $this->foo->getRawValue();
+    }
+
+As of symfony 1.2, this has been fixed and all variables are now unescaped
+by default in a component method.
+
+For the above example, you will need to remove the `getRawValue()` step as
+the framework does this automatically for you.
+
 sfParameterHolder
 -----------------
 
