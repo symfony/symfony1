@@ -81,7 +81,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    // TODO: remove when the admin generator is moved to the new form framework
+    // needed to maintain BC with the 1.0 admin generator
     $r = new ReflectionClass($class);
     if (
       (class_exists('sfPropelAdminGenerator') && ('sfPropelAdminGenerator' == $class || $r->isSubclassOf(new ReflectionClass('sfPropelAdminGenerator'))))
