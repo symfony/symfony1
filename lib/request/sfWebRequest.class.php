@@ -797,7 +797,7 @@ class sfWebRequest extends sfRequest
       return null;
     }
 
-    return split(', ', $pathInfo['HTTP_X_FORWARDED_FOR']);
+    return explode(', ', $pathInfo['HTTP_X_FORWARDED_FOR']);
   }
 
   /**
