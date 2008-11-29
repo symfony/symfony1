@@ -273,8 +273,15 @@ abstract class sfBrowserBase
 
     // request parameters
     $_GET = $_POST = array();
-    if (strtoupper($method) == 'POST')
+    if (in_array(strtoupper($method), array('POST', 'DELETE', 'PUT')))
     {
+      if (isset($parameters['_with_csrf']) && $parameters['_with_csrf'])
+      {
+        unset($parameters['_with_csrf']);
+        $form = new sfForm();
+        $parameters[$form->getCSRFFieldName()] = $form->getCSRFToken();
+      }
+
       $_POST = $parameters;
     }
     if (strtoupper($method) == 'GET')
@@ -676,6 +683,11 @@ abstract class sfBrowserBase
     {
       if (in_array($method, array('post', 'put', 'delete')))
       {
+        if (isset($options['_with_csrf']) && $options['_with_csrf'])
+        {
+          $arguments['_with_csrf'] = true;
+        }
+
         return array($link->getAttribute('href'), $method, $arguments);
       }
       else
