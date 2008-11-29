@@ -43,6 +43,20 @@ To upgrade a project:
 The remaining sections explain the main changes made in symfony 1.2 that need
 some kind of upgrade (automatic or not).
 
+Upgrade to 1.2 final
+--------------------
+
+If you have upgraded your 1.1 project before 1.2 final, you need to check the
+following things:
+
+  * If you have generated CRUD modules with the `--non-verbose-templates` options,
+    you need to remove the extra `$form->renderHiddenFields()` statement in the `_form.php`
+    template. If not, you can have erroneous "CSRF attack detected" error messages.
+
+  * For all generated CRUD modules, and if you have enabled CSRF protection, you need
+    to insert `$request->checkCSRFProtection()` at the beginning of the generated
+    `executeDelete()` method to be protected from CSRF attacks.
+
 Propel
 ------
 
