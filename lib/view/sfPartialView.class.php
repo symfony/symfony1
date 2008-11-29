@@ -74,7 +74,7 @@ class sfPartialView extends sfPHPView
     {
       $mainResponse = $this->context->getResponse();
       $responseClass = get_class($mainResponse);
-      $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions()));
+      $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), array_merge($mainResponse->getOptions(), array('content_type' => $mainResponse->getContentType()))));
     }
 
     // execute pre-render check
