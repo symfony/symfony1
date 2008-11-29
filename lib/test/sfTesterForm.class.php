@@ -92,7 +92,7 @@ class sfTesterForm extends sfTester
     }
     else
     {
-      $this->tester->is($this->form->hasErrors(), $value, 'the submitted form has some errors.');
+      $this->tester->is($this->form->hasErrors(), $value, sprintf('the submitted form %s.', ($value) ? 'has some errors' : 'is valid'));
     }
 
     return $this->getObjectToReturn();
