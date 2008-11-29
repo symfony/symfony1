@@ -540,6 +540,14 @@ function _method_javascript_function($method)
     $function .= sprintf("m.setAttribute('name', 'sf_method'); m.setAttribute('value', '%s'); f.appendChild(m);", strtolower($method));
   }
 
+  // CSRF protection
+  $form = new sfForm();
+  if ($form->isCSRFProtected())
+  {
+    $function .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";
+    $function .= sprintf("m.setAttribute('name', '%s'); m.setAttribute('value', '%s'); f.appendChild(m);", $form->getCSRFFieldName(), $form->getCSRFToken());
+  }
+
   $function .= "f.submit();";
 
   return $function;
