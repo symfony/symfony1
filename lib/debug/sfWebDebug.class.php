@@ -242,6 +242,7 @@ class sfWebDebug
   public function getJavascript()
   {
     return <<<EOF
+/* <![CDATA[ */
 function sfWebDebugGetElementsByClassName(strClass, strTag, objContElm)
 {
   // http://muffinresearch.co.uk/archives/2006/04/29/getelementsbyclassname-deluxe-edition/
@@ -383,6 +384,7 @@ function sfWebDebugShowOnlyLogLines(type)
     }
   }
 }
+/* ]]> */
 EOF;
   }
 
