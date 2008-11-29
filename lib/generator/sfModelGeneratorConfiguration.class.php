@@ -57,23 +57,18 @@ class sfModelGeneratorConfiguration
 
     foreach (array_keys($config['default']) as $field)
     {
-      $formConfig = array_merge($config['default'][$field], $config['form'][$field]);
+      $formConfig = array_merge($config['default'][$field], isset($config['form'][$field]) ? $config['form'][$field] : array());
 
-      $this->configuration['list']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge(array('label' => sfInflector::humanize(sfInflector::underscore($field))), $config['default'][$field], $config['list'][$field]));
-      $this->configuration['filter']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge($config['default'][$field], $config['filter'][$field]));
-      $this->configuration['new']['fields'][$field]    = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, $config['new'][$field]));
-      $this->configuration['edit']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, $config['edit'][$field]));
+      $this->configuration['list']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge(array('label' => sfInflector::humanize(sfInflector::underscore($field))), $config['default'][$field], isset($config['list'][$field]) ? $config['list'][$field] : array()));
+      $this->configuration['filter']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge($config['default'][$field], isset($config['filter'][$field]) ? $config['filter'][$field] : array()));
+      $this->configuration['new']['fields'][$field]    = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, isset($config['new'][$field]) ? $config['new'][$field] : array()));
+      $this->configuration['edit']['fields'][$field]   = new sfModelGeneratorConfigurationField($field, array_merge($formConfig, isset($config['edit'][$field]) ? $config['edit'][$field] : array()));
     }
 
     // "virtual" fields for list
     foreach ($this->getListDisplay() as $field)
     {
       list($field, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($field);
-
-      if (isset($this->configuration['list']['fields'][$field]))
-      {
-        continue;
-      }
 
       $this->configuration['list']['fields'][$field] = new sfModelGeneratorConfigurationField($field, array_merge(
         array('type' => 'Text', 'label' => sfInflector::humanize(sfInflector::underscore($field))),
