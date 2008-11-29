@@ -810,12 +810,17 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * If you want to change the algorithm used to compute the token, you
    * can override this method.
    *
-   * @param string $secret The secret string to use
+   * @param  string $secret The secret string to use (null to use the current secret)
    *
    * @return string A token string
    */
-  public function getCSRFToken($secret)
+  public function getCSRFToken($secret = null)
   {
+    if (is_null($secret))
+    {
+      $secret = self::$CSRFSecret;
+    }
+
     return md5($secret.session_id().get_class($this));
   }
 
