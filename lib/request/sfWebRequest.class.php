@@ -800,6 +800,17 @@ class sfWebRequest extends sfRequest
     return explode(', ', $pathInfo['HTTP_X_FORWARDED_FOR']);
   }
 
+  public function checkCSRFProtection()
+  {
+    $form = new sfForm();
+    $form->bind($form->isCSRFProtected() ? array($form->getCSRFFieldName() => $this->getParameter($form->getCSRFFieldName())) : array());
+
+    if (!$form->isValid())
+    {
+      throw $form->getErrorSchema();
+    }
+  }
+
   /**
    * Parses the request parameters.
    *
