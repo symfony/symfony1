@@ -407,7 +407,7 @@ class sfWebResponse extends sfResponse
    *
    * @return string Formatted date
    */
-  public function getDate($timestamp, $type = 'rfc1123')
+  static public function getDate($timestamp, $type = 'rfc1123')
   {
     $type = strtolower($type);
 

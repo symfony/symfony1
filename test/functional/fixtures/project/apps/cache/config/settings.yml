@@ -10,7 +10,7 @@ dev:
     web_debug:              on
     cache:                  on
     no_script_name:         off
-    etag:                   off
+    etag:                   on
 
 test:
   .settings:
@@ -19,7 +19,7 @@ test:
     web_debug:              off
     cache:                  on
     no_script_name:         off
-    etag:                   off
+    etag:                   on
 
 all:
 #  .actions:

@@ -113,13 +113,8 @@ class sfCacheFilter extends sfFilter
     // save page in cache
     if (isset($this->cache[$uri]) && false === $this->cache[$uri])
     {
-      // set some headers that deals with cache
-      if ($lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
-      {
-        $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
-        $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
-        $this->response->addCacheControlHttpHeader('max-age', $lifetime);
-      }
+      $this->setCacheExpiration($uri);
+      $this->setCacheValidation($uri);
 
       // set Vary headers
       foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
@@ -130,11 +125,75 @@ class sfCacheFilter extends sfFilter
       $this->cacheManager->setPageCache($uri);
     }
 
-    // Etag support
+    // cache validation
+    $this->checkCacheValidation();
+  }
+
+  /**
+   * Sets cache expiration headers.
+   *
+   * @param string An internal URI
+   */
+  protected function setCacheExpiration($uri)
+  {
+    // don't add cache expiration (Expires) if
+    //   * the client lifetime is not set
+    //   * the response already has a cache validation (Last-Modified header)
+    //   * the Expires header has already been set
+    if (!$lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
+    {
+      return;
+    }
+
+    if ($this->response->hasHttpHeader('Last-Modified'))
+    {
+      return;
+    }
+
+    if (!$this->response->hasHttpHeader('Expires'))
+    {
+      $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+      $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+    }
+  }
+
+  /**
+   * Sets cache validation headers.
+   *
+   * @param string An internal URI
+   */
+
+  protected function setCacheValidation($uri)
+  {
+    // don't add cache validation (Last-Modified) if
+    //   * the client lifetime is set (cache.yml)
+    //   * the response already has a Last-Modified header
+    if ($this->cacheManager->getClientLifeTime($uri, 'page'))
+    {
+      return;
+    }
+
+    if (!$this->response->hasHttpHeader('Last-Modified'))
+    {
+      $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+    }
+
     if (sfConfig::get('sf_etag'))
     {
       $etag = '"'.md5($this->response->getContent()).'"';
       $this->response->setHttpHeader('ETag', $etag);
+    }
+  }
+
+  /**
+   * Checks cache validation headers.
+   */
+  protected function checkCacheValidation()
+  {
+    // Etag support
+    if (sfConfig::get('sf_etag'))
+    {
+      $etag = '"'.md5($this->response->getContent()).'"';
 
       if ($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
       {
@@ -152,9 +211,9 @@ class sfCacheFilter extends sfFilter
     // never in debug mode
     if ($this->response->hasHttpHeader('Last-Modified') && !sfConfig::get('sf_debug'))
     {
-      $last_modified = $this->response->getHttpHeader('Last-Modified');
-      $last_modified = $last_modified[0];
-      if ($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $last_modified)
+      $lastModified = $this->response->getHttpHeader('Last-Modified');
+      $lastModified = $lastModified[0];
+      if ($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $lastModified)
       {
         $this->response->setStatusCode(304);
         $this->response->setHeaderOnly(true);
