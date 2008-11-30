@@ -15,15 +15,11 @@ $t = new lime_test(8, new lime_output_color());
 $handler = new sfFilterConfigHandler();
 $handler->initialize();
 
-$dir = dirname(__FILE__).'/fixtures/sfFilterConfigHandler/';
-
-// for testing ::getDefaultConfigFile()
-sfConfig::set('sf_symfony_lib_dir', $dir.'default');
+$dir = dirname(__FILE__).DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR.'sfFilterConfigHandler'.DIRECTORY_SEPARATOR;
 
 // parse errors
 $t->diag('parse errors');
 $files = array(
-  $dir.'default/empty.yml',
   $dir.'no_class.yml',
 );
 
@@ -41,7 +37,6 @@ catch (sfParseException $e)
 foreach (array('execution', 'rendering') as $key)
 {
   $files = array(
-    $dir.'default/empty.yml',
     $dir.sprintf('no_%s.yml', $key),
   );
 
@@ -59,7 +54,7 @@ foreach (array('execution', 'rendering') as $key)
 // filter inheritance
 $t->diag('filter inheritance');
 $files = array(
-  $dir.'default/default_filters.yml',
+  $dir.'default_filters.yml',
   $dir.'not_disabled.yml',
 );
 
@@ -76,7 +71,6 @@ catch (sfConfigurationException $e)
 // disabling a filter
 $t->diag('disabling a filter');
 $files = array(
-  $dir.'default/empty.yml',
   $dir.'disable.yml',
 );
 
@@ -85,7 +79,6 @@ $t->unlike($handler->execute($files), '/defaultFilterClass/', 'you can disable a
 // condition support
 $t->diag('condition support');
 $files = array(
-  $dir.'default/empty.yml',
   $dir.'condition.yml',
 );
 
@@ -98,7 +91,7 @@ $t->unlike($handler->execute($files), '/defaultFilterClass/', 'you can add a "co
 // usual configuration
 $t->diag('usual configuration');
 $files = array(
-  $dir.'default/default_filters.yml',
+  $dir.'default_filters.yml',
   $dir.'filters.yml',
 );
 

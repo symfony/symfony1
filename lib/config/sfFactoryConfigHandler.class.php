@@ -33,8 +33,6 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    $defaultFile = self::getDefaultConfigFile($configFiles);
-
     // parse the yaml
     $config = self::getConfiguration($configFiles);
 
@@ -54,7 +52,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $defaultFile, $factory));
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $factory));
       }
 
       $class = $keys['class'];
@@ -65,7 +63,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         if (!is_readable($keys['file']))
         {
           // factory file doesn't exist
-          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $defaultFile, $class, $keys['file']));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $keys['file']));
         }
 
         // append our data
@@ -78,7 +76,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       {
         if (!is_array($keys['param']))
         {
-          throw new InvalidArgumentException(sprintf('The "param" key for the "%s" factory must be an array (in %s).', $class, $defaultFile));
+          throw new InvalidArgumentException(sprintf('The "param" key for the "%s" factory must be an array (in %s).', $class, $configFiles[0]));
         }
 
         $parameters = $keys['param'];
@@ -188,7 +186,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
               if (!isset($keys['class']))
               {
                 // missing class key
-                throw new sfParseException(sprintf('Configuration file "%s" specifies logger "%s" with missing class key.', $defaultFile, $name));
+                throw new sfParseException(sprintf('Configuration file "%s" specifies logger "%s" with missing class key.', $configFiles[0], $name));
               }
 
               $condition = true;

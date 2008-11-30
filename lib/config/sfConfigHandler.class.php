@@ -121,26 +121,6 @@ abstract class sfConfigHandler
   }
 
   /**
-   * Returns the default configuration file.
-   * 
-   * @param  array $configFiles An array of configuration files
-   * @return string
-   * @throws LogicException If no default file could be found
-   */
-  static public function getDefaultConfigFile(array $configFiles)
-  {
-    foreach ($configFiles as $configFile)
-    {
-      if (0 === strpos(realpath($configFile), sfConfig::get('sf_symfony_lib_dir')))
-      {
-        return $configFile;
-      }
-    }
-
-    throw new LogicException('Unable to determine default configuration file.');
-  }
-
-  /**
    * Returns the configuration for the current config handler.
    *
    * @param array $configFiles An array of ordered configuration files

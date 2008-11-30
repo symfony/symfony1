@@ -253,7 +253,9 @@ class sfProjectConfiguration
   {
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
 
-    $files = array();
+    $files = array(
+      sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath,              // symfony
+    );
 
     foreach ($this->getPluginPaths() as $path)
     {
@@ -261,18 +263,20 @@ class sfProjectConfiguration
       {
         $files[] = $file;                                                            // plugins
       }
-      if (is_file($file = $path.'/'.$configPath))
-      {
-        $files[] = $file;                                                            // plugins
-      }
     }
-
-    $files[] = sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath;     // symfony
 
     $files = array_merge($files, array(
       sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
       sfConfig::get('sf_root_dir').'/'.$configPath,                                  // project
     ));
+
+    foreach ($this->getPluginPaths() as $path)
+    {
+      if (is_file($file = $path.'/'.$configPath))
+      {
+        $files[] = $file;                                                            // plugins
+      }
+    }
 
     $configs = array();
     foreach (array_unique($files) as $file)

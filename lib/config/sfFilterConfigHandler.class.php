@@ -32,8 +32,6 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    $defaultFile = self::getDefaultConfigFile($configFiles);
-
     // parse the yaml
     $config = self::getConfiguration($configFiles);
 
@@ -55,7 +53,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $defaultFile, $category));
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $category));
       }
 
       $class = $keys['class'];
@@ -65,7 +63,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
         if (!is_readable($keys['file']))
         {
           // filter file doesn't exist
-          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $defaultFile, $class, $keys['file']));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $keys['file']));
         }
 
         // append our data
@@ -111,12 +109,12 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
 
     if (!$rendering)
     {
-      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "rendering".', $defaultFile));
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "rendering".', $configFiles[0]));
     }
 
     if (!$execution)
     {
-      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "execution".', $defaultFile));
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "execution".', $configFiles[0]));
     }
 
     // compile data
@@ -171,16 +169,9 @@ EOF;
    */
   static public function getConfiguration(array $configFiles)
   {
-    $defaultFile = self::getDefaultConfigFile($configFiles);
-
-    $config = self::parseYaml($defaultFile);
-    foreach ($configFiles as $i => $configFile)
+    $config = self::parseYaml($configFiles[0]);
+    foreach (array_slice($configFiles, 1) as $i => $configFile)
     {
-      if ($defaultFile == $configFile)
-      {
-        continue;
-      }
-
       // we get the order of the new file and merge with the previous configurations
       $previous = $config;
 
