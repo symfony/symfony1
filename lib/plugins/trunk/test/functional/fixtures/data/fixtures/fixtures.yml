@@ -1,0 +1,31 @@
+---
+Article:
+  Article_1:
+    Author: jwage
+    is_on_homepage: false
+    Translation:
+      en:
+        title: English Title
+        body: English Body
+      fr:
+        title: French Title
+        body: French Body
+  Article_2:
+    Author: fabpot
+    Translation:
+      en:
+        title: English Title 2
+        body: English Body 2
+      fr:
+        title: French Title 2
+        body: French Body 2
+
+Author:
+  jwage:
+    name: Jonathan H. Wage
+  fabpot:
+    name: Fabien POTENCIER
+
+Subscription:
+  Subscription_1:
+    name: Subscription #1

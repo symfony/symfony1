@@ -1,0 +1,43 @@
+---
+Article:
+  actAs:
+    I18n:
+      fields: [title, body]
+      actAs:
+        Sluggable:
+          fields: [title]
+    Timestampable:
+  columns:
+    author_id: integer
+    is_on_homepage: boolean
+    title: string(255)
+    body: string(255)
+  relations:
+    Author:
+      foreignAlias: Articles
+
+Author:
+  columns:
+    name: string(255)
+
+Subscription:
+  connection: doctrine2
+  columns:
+    name: string(255)
+    status:
+      type: enum
+      values: [New, Active, Pending, Expired]
+
+User:
+  columns:
+    username: string(255)
+    password: string(255)
+
+Profile:
+  columns:
+    user_id: integer
+    first_name: string(255)
+    last_name: string(255)
+  relations:
+    User:
+      foreignType: one

@@ -1,0 +1,9 @@
+# sfDoctrinePlugin
+
+## Overview
+
+The sfDoctrinePlugin allows you to totally replace propel with doctrine (http://www.doctrine-project.org) which is a powerful and easy-to-use ORM.
+
+## Doctrine Documentation
+
+The best source of documentation for Doctrine is on the Doctrine website at http://www.doctrine-project.org/documentation
