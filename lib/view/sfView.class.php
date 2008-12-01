@@ -126,11 +126,15 @@ abstract class sfView
       {
         $this->setExtension('.'.$format.$this->getExtension());
       }
-
+      
       if ($mimeType = $request->getMimeType($format))
       {
         $this->context->getResponse()->setContentType($mimeType);
-        $this->setDecorator(false);
+        
+        if ('html' != $format)
+        {
+          $this->setDecorator(false);
+        }
       }
 
       $this->dispatcher->notify(new sfEvent($this, 'view.configure_format', array('format' => $format, 'response' => $context->getResponse(), 'request' => $context->getRequest())));
