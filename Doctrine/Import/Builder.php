@@ -808,8 +808,16 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     public function buildListeners($listeners)
     {
         $build = '';
-        foreach($listeners as $listener) {
-            $build .= "    \$this->addListener(new " . $listener . "());" . PHP_EOL;
+        
+        foreach($listeners as $name => $options) {
+            if ( ! is_array($options) && $options !== null) {
+                $name = $options;
+                $options = null;
+            }
+
+            $useOptions = ( ! empty($options) && isset($options['useOptions']) && $options['useOptions'] == true) 
+                ? '$this->_options' : '';
+            $build .= "    \$this->addListener(new " . $name . "(" . $options . "));" . PHP_EOL;
         }
 
         return $build;
