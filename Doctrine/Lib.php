@@ -258,33 +258,6 @@ class Doctrine_Lib
     }
 
     /**
-     * getValidators
-     *
-     * Get available doctrine validators
-     *
-     * @return array $validators
-     */
-    public static function getValidators()
-    {
-        $validators = array();
-
-        $dir = Doctrine::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Validator';
-
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::LEAVES_ONLY);
-        foreach ($files as $file) {
-            $e = explode('.', $file->getFileName());
-
-            if (end($e) == 'php') {
-                $name = strtolower($e[0]);
-
-                $validators[$name] = $name;
-            }
-        }
-
-        return $validators;
-    }
-
-    /**
      * makeDirectories
      *
      * Makes the directories for a path recursively

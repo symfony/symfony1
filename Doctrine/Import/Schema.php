@@ -130,32 +130,6 @@ class Doctrine_Import_Schema
                                                           'keyValue'));
 
     /**
-     * _validators
-     *
-     * Array of available validators
-     *
-     * @see getValidators()
-     * @var array Array of available validators
-     */
-    protected $_validators = array();
-
-    /**
-     * getValidators
-     *
-     * Retrieve the array of available validators
-     *
-     * @return array
-     */
-    public function getValidators()
-    {
-        if (empty($this->_validators)) {
-            $this->_validators = Doctrine_Lib::getValidators();
-        }
-
-        return $this->_validators;
-    }
-
-    /**
      * getOption
      *
      * @param string $name 
@@ -404,7 +378,7 @@ class Doctrine_Import_Schema
                     $colDesc['values'] = isset($field['values']) ? (array) $field['values']:null;
 
                     // Include all the specified and valid validators in the colDesc
-                    $validators = $this->getValidators();
+                    $validators = Doctrine_Manager::getInstance()->getValidators();
 
                     foreach ($validators as $validator) {
                         if (isset($field[$validator])) {
@@ -729,7 +703,7 @@ class Doctrine_Import_Schema
         // Validators are a part of the column validation
         // This should be fixed, made cleaner
         if ($name == 'column') {
-            $validators = $this->getValidators();
+            $validators = Doctrine_Manager::getInstance()->getValidators();
             $validation = array_merge($validation, $validators);
         }
 

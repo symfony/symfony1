@@ -60,6 +60,16 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     protected $_queryRegistry;
 
     /**
+     * @var array                       Array of registered validators
+     */
+    protected $_validators = array();
+
+    /**
+     * @var boolean                     Whether or not the validators from disk have been loaded
+     */
+    protected $_loadedValidatorsFromDisk = false;
+
+    /**
      * constructor
      *
      * this is private constructor (use getInstance to get an instance of this class)
@@ -644,5 +654,52 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         $r[] = "Connections : ".count($this->_connections);
         $r[] = "</pre>";
         return implode("\n",$r);
+    }
+
+    /**
+     * Get available doctrine validators
+     *
+     * @return array $validators
+     */
+    public function getValidators()
+    {
+        if ( ! $this->_loadedValidatorsFromDisk) {
+            $this->_loadedValidatorsFromDisk = true;
+
+            $validators = array();
+
+            $dir = Doctrine::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Validator';
+
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::LEAVES_ONLY);
+            foreach ($files as $file) {
+                $e = explode('.', $file->getFileName());
+
+                if (end($e) == 'php') {
+                    $name = strtolower($e[0]);
+
+                    $validators[] = $name;
+                }
+            }
+
+            $this->registerValidators($validators);
+        }
+
+        return $this->_validators;
+    }
+
+    /**
+     * Register validators so that Doctrine is aware of them
+     *
+     * @param  mixed $validators Name of validator or array of validators
+     * @return void
+     */
+    public function registerValidators($validators)
+    {
+        $validators = (array) $validators;
+        foreach ($validators as $validator) {
+            if ( ! in_array($validator, $this->_validators)) {
+                $this->_validators[] = $validator;
+            }
+        }
     }
 }
