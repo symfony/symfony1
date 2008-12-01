@@ -111,6 +111,7 @@ class Doctrine_Migration
             $this->_migrationClasses = array_merge($migrationClasses, $this->_migrationClasses);
         }
 
+        $classesToLoad = array();
         $classes = get_declared_classes();
         foreach ((array) $directory as $dir) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
@@ -125,10 +126,17 @@ class Doctrine_Migration
                     $className = end($array);
 
                     if ($className) {
-                        $this->loadMigrationClass($className, $file->getPathName());
+                        $e = explode('_', $file->getFileName());
+                        $timestamp = $e[0];
+
+                        $classesToLoad[$timestamp] = array('className' => $className, 'path' => $file->getPathName());
                     }
                 }
             }
+        }
+        ksort($classesToLoad);
+        foreach ($classesToLoad as $class) {
+            $this->loadMigrationClass($class['className'], $class['path']);
         }
     }
 
