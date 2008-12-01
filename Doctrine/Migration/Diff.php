@@ -67,10 +67,10 @@ class Doctrine_Migration_Diff
         $this->_from = $from;
         $this->_to = $to;
 
-        if (is_dir($migration)) {
-            $this->_migration = new Doctrine_Migration($migration);
-        } else if ($migration instanceof Doctrine_Migration) {
+        if ($migration instanceof Doctrine_Migration) {
             $this->_migration = $migration;
+        } else if (is_dir($migration)) {
+            $this->_migration = new Doctrine_Migration($migration);
         }
     }
 
@@ -172,20 +172,19 @@ class Doctrine_Migration_Diff
             }
             // Check for new foreign keys
             foreach ($info['options']['foreignKeys'] as $name => $foreignKey) {
-                $fkName = $name . '_idx';
-                $foreignKey['name'] = $fkName;
+                $foreignKey['name'] = $name;
                 // If foreign key doesn't exist in the from schema information then we need to add a index and the new fk
                 if ( ! isset($from[$className]['options']['foreignKeys'][$name])) {
-                    $this->_changes['created_fks'][$info['tableName']][$fkName] = $foreignKey;
+                    $this->_changes['created_fks'][$info['tableName']][$name] = $foreignKey;
                     $this->_changes['added_indexes'][$info['tableName']][$name] = array('fields' => array($foreignKey['local']));
                 // If foreign key does exist then lets see if anything has changed with it
                 } else if (isset($from[$className]['options']['foreignKeys'][$name])) {
                     $oldForeignKey = $from[$className]['options']['foreignKeys'][$name];
-                    $oldForeignKey['name'] = $fkName;
+                    $oldForeignKey['name'] = $name;
                     // If the foreign key has changed any then we need to drop the foreign key and readd it
                     if ($foreignKey !== $oldForeignKey) {
-                        $this->_changes['dropped_fks'][$info['tableName']][$fkName] = $oldForeignKey;
-                        $this->_changes['created_fks'][$info['tableName']][$fkName] = $foreignKey;
+                        $this->_changes['dropped_fks'][$info['tableName']][$name] = $oldForeignKey;
+                        $this->_changes['created_fks'][$info['tableName']][$name] = $foreignKey;
                     }
                 }
             }
@@ -222,8 +221,7 @@ class Doctrine_Migration_Diff
             foreach ($info['options']['foreignKeys'] as $name => $foreignKey) {
                 // If the foreign key exists in the from but not in the to then we need to drop it
                 if ( ! isset($to[$className]['options']['foreignKeys'][$name])) {
-                    $fkName = $name . '_idx';
-                    $this->_changes['dropped_fks'][$info['tableName']][$fkName] = $foreignKey;
+                    $this->_changes['dropped_fks'][$info['tableName']][$name] = $foreignKey;
                 }
             }
             // Check for removed indexes

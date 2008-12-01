@@ -151,23 +151,23 @@ END;
 
         if ( ! empty($changes['dropped_tables'])) {
             foreach ($changes['dropped_tables'] as $tableName => $table) {
-                $up[] = $this->buildDropTable("'up'", $table);
-                $down[] = $this->buildCreateTable("'up'", $table);
+                $up[] = $this->buildDropTable($table);
+                $down[] = $this->buildCreateTable($table);
             }
         }
 
         if ( ! empty($changes['created_tables'])) {
             foreach ($changes['created_tables'] as $tableName => $table) {
-                $up[] = $this->buildCreateTable("'up'", $table);
-                $down[] = $this->buildDropTable("'up'", $table);
+                $up[] = $this->buildCreateTable($table);
+                $down[] = $this->buildDropTable($table);
             }
         }
 
         if ( ! empty($changes['removed_columns'])) {
             foreach ($changes['removed_columns'] as $tableName => $removedColumns) {
                 foreach ($removedColumns as $name => $column) {
-                    $up[] = $this->buildRemoveColumn("'up'", $tableName, $name, $column);
-                    $down[] = $this->buildAddColumn("'up'", $tableName, $name, $column);
+                    $up[] = $this->buildRemoveColumn($tableName, $name, $column);
+                    $down[] = $this->buildAddColumn($tableName, $name, $column);
                 }
             }
         }
@@ -175,8 +175,8 @@ END;
         if ( ! empty($changes['added_columns'])) {
             foreach ($changes['added_columns'] as $tableName => $addedColumns) {
                 foreach ($addedColumns as $name => $column) {
-                    $up[] = $this->buildAddColumn("'up'", $tableName, $name, $column);
-                    $down[] = $this->buildRemoveColumn("'up'", $tableName, $name, $column);
+                    $up[] = $this->buildAddColumn($tableName, $name, $column);
+                    $down[] = $this->buildRemoveColumn($tableName, $name, $column);
                 }
             }
         }
@@ -201,8 +201,8 @@ END;
         if ( ! empty($changes['dropped_fks'])) {
             foreach ($changes['dropped_fks'] as $tableName => $droppedFks) {
                 foreach ($droppedFks as $name => $foreignKey) {
-                    $up[] = $this->buildDropForeignKey("'up'", $tableName, $foreignKey);
-                    $down[] = $this->buildCreateForeignKey("'up'", $tableName, $foreignKey);
+                    $up[] = $this->buildDropForeignKey($tableName, $foreignKey);
+                    $down[] = $this->buildCreateForeignKey($tableName, $foreignKey);
                 }
             }
         }
@@ -210,8 +210,8 @@ END;
         if ( ! empty($changes['removed_indexes'])) {
             foreach ($changes['removed_indexes'] as $tableName => $removedIndexes) {
                 foreach ($removedIndexes as $name => $index) {
-                    $up[] = $this->buildRemoveIndex("'up'", $tableName, $name, $index);
-                    $down[] = $this->buildAddIndex("'up'", $tableName, $name, $index);
+                    $up[] = $this->buildRemoveIndex($tableName, $name, $index);
+                    $down[] = $this->buildAddIndex($tableName, $name, $index);
                 }
             }
         }
@@ -219,8 +219,8 @@ END;
         if ( ! empty($changes['added_indexes'])) {
             foreach ($changes['added_indexes'] as $tableName => $addedIndexes) {
                 foreach ($addedIndexes as $name => $index) {
-                    $up[] = $this->buildAddIndex("'up'", $tableName, $name, $index);
-                    $down[] = $this->buildRemoveIndex("'up'", $tableName, $name, $index);
+                    $up[] = $this->buildAddIndex($tableName, $name, $index);
+                    $down[] = $this->buildRemoveIndex($tableName, $name, $index);
                 }
             }
         }
@@ -228,8 +228,8 @@ END;
         if ( ! empty($changes['created_fks'])) {
             foreach ($changes['created_fks'] as $tableName => $createdFks) {
                 foreach ($createdFks as $name => $foreignKey) {
-                    $up[] = $this->buildCreateForeignKey("'up'", $tableName, $foreignKey);
-                    $down[] = $this->buildDropForeignKey("'up'", $tableName, $foreignKey);
+                    $up[] = $this->buildCreateForeignKey($tableName, $foreignKey);
+                    $down[] = $this->buildDropForeignKey($tableName, $foreignKey);
                 }
             }
         }
@@ -287,8 +287,8 @@ END;
 
                 $foreignKeys[$export['tableName']] = $export['options']['foreignKeys'];
 
-                $up = $this->buildCreateTable("'up'", $export);
-                $down = $this->buildDropTable("'up'", $export);
+                $up = $this->buildCreateTable($export);
+                $down = $this->buildDropTable($export);
 
                 $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
 
@@ -299,19 +299,21 @@ END;
         if ( ! empty($foreignKeys)) {
             $className = 'AddFks';
 
-            $up = '';
-            $down = '';
+            $up = array();
+            $down = array();
             foreach ($foreignKeys as $tableName => $definitions)    {
                 $tableForeignKeyNames[$tableName] = array();
 
                 foreach ($definitions as $definition) {
                     $definition['name'] = $tableName . '_' .implode('_', (array) $definition['local']);
 
-                    $up .= $this->buildCreateForeignKey("'up'", $tableName, $definition);
-                    $down .= $this->buildDropForeignKey("'up'", $tableName, $definition);
+                    $up[] = $this->buildCreateForeignKey($tableName, $definition);
+                    $down[] = $this->buildDropForeignKey($tableName, $definition);
                 }
             }
 
+            $up = implode("\n", $up);
+            $down = implode("\n", $down);
             if ($up || $down) {
                 $this->generateMigrationClass($className, array(), $up, $down);
             }
@@ -323,39 +325,36 @@ END;
     /**
      * Build the code for creating foreign keys
      *
-     * @param  string $upDown
      * @param  string $tableName
      * @param  array  $definition
      * @return string $code
      */
-    public function buildCreateForeignKey($upDown, $tableName, $definition)
+    public function buildCreateForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey(" . $upDown . ", '" . $tableName . "', " . $this->varExport($definition, true) . ");";
+        return "\t\t\$this->createForeignKey('" . $tableName . "', '" . $definition['name'] . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
      * Build the code for dropping foreign keys
      *
-     * @param  string $upDown
      * @param  string $tableName
      * @param  array  $definition
      * @return string $code
      */
-    public function buildDropForeignKey($upDown, $tableName, $definition)
+    public function buildDropForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->dropForeignKey(" . $upDown . ", '" . $tableName . "', " . $this->varExport($definition, true) . ");";
+        return "\t\t\$this->dropForeignKey('" . $tableName . "', '" . $definition['name'] . "');";
     }
 
     /**
      * Build the code for creating tables
      *
-     * @param  string $upDown
      * @param  string $tableData
      * @return string $code
      */
-    public function buildCreateTable($upDown, $tableData)
+    public function buildCreateTable($tableData)
     {
-        $code  = "\t\t\$this->createTable(" . $upDown . ", '" . $tableData['tableName'] . "', ";
+        $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
 
         $code .= $this->varExport($tableData['columns'], true) . ", ";
 
@@ -369,44 +368,41 @@ END;
     /**
      * Build the code for dropping tables
      *
-     * @param  string $upDown
      * @param  string $tableData
      * @return string $code
      */
-    public function buildDropTable($upDown, $tableData)
+    public function buildDropTable($tableData)
     {
-        return "\t\t\$this->dropTable(" . $upDown . ", '" . $tableData['tableName'] . "');";
+        return "\t\t\$this->dropTable('" . $tableData['tableName'] . "');";
     }
 
     /**
      * Build the code for adding columns
      *
-     * @param string $upDown 
      * @param string $tableName 
      * @param string $columnName 
      * @param string $column 
      * @return string $code
      */
-    public function buildAddColumn($upDown, $tableName, $columnName, $column)
+    public function buildAddColumn($tableName, $columnName, $column)
     {
         $length = $column['length'];
         $type = $column['type'];
         unset($column['length'], $column['type']);
-        return "\t\t\$this->addColumn(" . $upDown . ", '" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
+        return "\t\t\$this->addColumn('" . $tableName . "', '" . $columnName. "', '" . $type . "', '" . $length . "', " . $this->varExport($column) . ");";
     }
 
     /**
      * Build the code for removing columns
      *
-     * @param string $upDown 
      * @param string $tableName 
      * @param string $columnName 
      * @param string $column 
      * @return string $code
      */
-    public function buildRemoveColumn($upDown, $tableName, $columnName, $column)
+    public function buildRemoveColumn($tableName, $columnName, $column)
     {
-        return "\t\t\$this->removeColumn(" . $upDown . ", '" . $tableName . "', '" . $columnName. "');";
+        return "\t\t\$this->removeColumn('" . $tableName . "', '" . $columnName. "');";
     }
 
     /**
@@ -428,29 +424,27 @@ END;
     /**
      * Build the code for adding indexes
      *
-     * @param string $upDown 
      * @param string $tableName 
      * @param string $indexName 
      * @param string $index 
      * @return sgtring $code
      */
-    public function buildAddIndex($upDown, $tableName, $indexName, $index)
+    public function buildAddIndex($tableName, $indexName, $index)
     {
-        return "\t\t\$this->addIndex(" . $upDown . ", '$tableName', '$indexName', " . $this->varExport($index) . ");";
+        return "\t\t\$this->addIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
     }
 
     /**
      * Build the code for removing indexes
      *
-     * @param string $upDown 
      * @param string $tableName 
      * @param string $indexName 
      * @param string $index 
      * @return string $code
      */
-    public function buildRemoveIndex($upDown, $tableName, $indexName, $index)
+    public function buildRemoveIndex($tableName, $indexName, $index)
     {
-        return "\t\t\$this->removeIndex(" . $upDown . ", '$tableName', '$indexName', " . $this->varExport($index) . ");";
+        return "\t\t\$this->removeIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
     }
 
     /**
