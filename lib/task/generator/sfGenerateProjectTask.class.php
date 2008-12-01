@@ -78,7 +78,7 @@ EOF;
     $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir')));
 
     // update vhost sample file
-    $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/vhost.sample', '##', '##', array('PROJECT_NAME' => $arguments['name'], 'SYMFONY_WEB_DIR'  => sfConfig::get('sf_web_dir'), 'SYMFONY_SF_DIR'  => sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . 'sf'));
+    $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/vhost.sample', '##', '##', array('PROJECT_NAME' => $arguments['name'], 'SYMFONY_WEB_DIR' => sfConfig::get('sf_web_dir'), 'SYMFONY_SF_DIR' => realpath(sfCoreAutoload::getInstance()->getBaseDir().'../data/web/sf')));
 
     // fix permission for common directories
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
