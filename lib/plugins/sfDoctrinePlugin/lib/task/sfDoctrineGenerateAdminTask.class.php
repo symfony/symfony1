@@ -60,13 +60,12 @@ The task creates a module in the [%frontend%|COMMENT] application for the
 [%article%|COMMENT] route definition found in [routing.yml|COMMENT].
 
 For the filters and batch actions to work properly, you need to add
-collection routes for them:
+the [wildcard|COMMENT] option to the route:
 
   article:
     class: sfDoctrineRouteCollection
     options:
       model:              Article
-      collection_actions: { filter: post, batch: post }
       with_wildcard_routes:   true
 EOF;
   }
