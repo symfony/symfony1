@@ -446,10 +446,11 @@ class Doctrine_Import_Schema
                     if ( ! isset($array[$className]['inheritance']['keyValue'])) {
                         $array[$className]['inheritance']['keyValue'] = $className;
                     }
-                    
+
+                    $parent = $this->_findBaseSuperClass($array, $definition['className']);
                     // Add the keyType column to the parent if a definition does not already exist
-                    if ( ! isset($array[$array[$className]['inheritance']['extends']]['columns'][$array[$className]['inheritance']['keyField']])) {
-                        $array[$definition['inheritance']['extends']]['columns'][$array[$className]['inheritance']['keyField']] = array('name' => $array[$className]['inheritance']['keyField'], 'type' => 'string', 'length' => 255);
+                    if ( ! isset($array[$parent]['columns'][$array[$className]['inheritance']['keyField']])) {
+                        $array[$parent]['columns'][$array[$className]['inheritance']['keyField']] = array('name' => $array[$className]['inheritance']['keyField'], 'type' => 'string', 'length' => 255);
                     }
                 }
             }
@@ -462,7 +463,7 @@ class Doctrine_Import_Schema
                        'attributes' => array(),
                        'options' => array(),
                        'checks' => array());
-        
+
         foreach ($array as $className => $definition) {
             // Move any definitions on the schema to the parent
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
