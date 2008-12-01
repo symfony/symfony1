@@ -390,9 +390,6 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'bit';
             break;
             case 'geometry':
-                $type[] = 'geometry';
-                $length = null;
-            break;
             case 'geometrycollection':
             case 'point':
             case 'multipoint':
