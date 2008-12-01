@@ -61,7 +61,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     public function setTableDefinition()
     {
         if ($root = $this->getAttribute('rootColumnName')) {
-            $this->table->setColumn($root, 'integer', 4);
+            $this->table->setColumn($root, 'integer');
         }
 
         $this->table->setColumn('lft', 'integer', 4);
