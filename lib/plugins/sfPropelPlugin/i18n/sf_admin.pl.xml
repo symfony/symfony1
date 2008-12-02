@@ -33,6 +33,14 @@
         <source>Cancel</source>
         <target>Anuluj</target>
       </trans-unit>
+      <trans-unit>
+        <source>Choose an action</source>
+        <target>Wybierz akcję</target>
+      </trans-unit>
+      <trans-unit>
+        <source>go</source>
+        <target>ok</target>
+      </trans-unit>
 
       <!-- Filters -->
       <trans-unit>
@@ -51,7 +59,7 @@
       </trans-unit>
       <trans-unit>
         <source>Actions</source>
-        <target>Opcje</target>
+        <target>Akcje</target>
       </trans-unit>
       <trans-unit>
         <source>(page %%page%%/%%nb_pages%%)</source>
@@ -64,6 +72,10 @@
       <trans-unit>
         <source>desc</source>
         <target>malejąco</target>
+      </trans-unit>
+      <trans-unit>
+        <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
+        <target>[0] brak wyników![1] 1 wynik|(1,+Inf] %1% wyników</target>
       </trans-unit>
 
       <!-- Pagination -->
@@ -108,6 +120,26 @@
       <trans-unit>
         <source>The item was deleted successfully.</source>
         <target>Obiekt został poprawnie skasowany.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>You must at least select one item.</source>
+        <target>Musisz wybrać co najmniej jeden obiekt.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>You must select an action to execute on the selected items.</source>
+        <target>Musisz wybrać akcję do wykonania na wybranych obiektach.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items as some items do not exist anymore.</source>
+        <target>Wystąpił błąd podczas usuwania wybranych obiektów, ponieważ niektóre już nie istnieją.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>The selected items have been deleted successfully.</source>
+        <target>Wybrane obiekty zostały skasowane.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items.</source>
+        <target>Wystąpił błąd podczas usuwania wybranych obiektów.</target>
       </trans-unit>
     </body>
   </file>
