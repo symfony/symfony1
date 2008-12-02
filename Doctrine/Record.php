@@ -1851,8 +1851,32 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function isModified()
     {
-        return ($this->_state === Doctrine_Record::STATE_DIRTY ||
+        $modified = ($this->_state === Doctrine_Record::STATE_DIRTY ||
                 $this->_state === Doctrine_Record::STATE_TDIRTY);
+        if ( ! $modified) {
+            if ($this->_state == self::STATE_LOCKED || $this->_state == self::STATE_TLOCKED) {
+                return false;
+            }
+
+            $stateBeforeLock = $this->_state;
+            $this->_state = $this->exists() ? self::STATE_LOCKED : self::STATE_TLOCKED;
+
+            foreach ($this->_references as $reference) {
+                if ($reference instanceof Doctrine_Record) {
+                    if ($modified = $reference->isModified()) {
+                        break;
+                    }
+                } else if ($reference instanceof Doctrine_Collection) {
+                    foreach ($reference as $record) {
+                        if ($modified = $record->isModified()) {
+                            break;
+                        }
+                    }
+                }
+            }
+            $this->_state = $stateBeforeLock;
+        }
+        return $modified;
     }
 
     /**
