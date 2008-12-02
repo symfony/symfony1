@@ -230,6 +230,15 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
 
             $result = true;
             if ( ! $event->skipOperation) {
+
+                if ($this->_conn->getAttribute(Doctrine::PORTABILITY_EMPTY_TO_NULL)) {
+                    foreach ($params as $key => $value) {
+                        if ($value == '') {
+                            $params[$key] = null;
+                        }
+                    }
+                }
+
                 $result = $this->_stmt->execute($params);
                 $this->_conn->incrementQueryCount();
             }
