@@ -817,7 +817,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
             $useOptions = ( ! empty($options) && isset($options['useOptions']) && $options['useOptions'] == true) 
                 ? '$this->_options' : '';
-            $build .= "    \$this->addListener(new " . $name . "(" . $options . "));" . PHP_EOL;
+            $class = ( ! empty($options) && isset($options['class'])) ? $options['class'] : $name;
+
+            $build .= "    \$this->addListener(new " . $class . "(" . $options . "), '" . $name . "');" . PHP_EOL;
         }
 
         return $build;

@@ -40,6 +40,43 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     protected $_listeners = array();
 
     /**
+     * @var array $_options        an array containing chain options
+     */
+    protected $_options = array('disabled' => false); 
+
+    /** 
+     * setOption 
+     * sets an option in order to allow flexible listener chaining 
+     * 
+     * @param mixed $name              the name of the option to set 
+     * @param mixed $value              the value of the option 
+     */ 
+    public function setOption($name, $value = null) 
+    { 
+        if (is_array($name)) { 
+            $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $name); 
+        } else { 
+            $this->_options[$name] = $value; 
+        }
+    } 
+
+    /** 
+     * getOption 
+     * returns the value of given option 
+     * 
+     * @param string $name  the name of the option 
+     * @return mixed        the value of given option 
+     */ 
+    public function getOption($name) 
+    { 
+        if (isset($this->_options[$name])) { 
+            return $this->_options[$name]; 
+        } 
+
+        return null; 
+    }
+
+    /**
      * add
      * adds a listener to the chain of listeners
      *
@@ -90,134 +127,286 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
 
     public function preSerialize(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preSerialize($event);
+	    $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preSerialize', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preSerialize', $disabled))) {
+                    $listener->preSerialize($event);
+                }
+            }
         }
     }
 
     public function postSerialize(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postSerialize($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postSerialize', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postSerialize', $disabled))) {
+                    $listener->postSerialize($event);
+                }
+            }
         }
     }
 
     public function preUnserialize(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preUnserialize($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preUnserialize', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preUnserialize', $disabled))) {
+                    $listener->preUnserialize($event);
+                }
+            }
         }
     }
 
     public function postUnserialize(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postUnserialize($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postUnserialize', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postUnserialize', $disabled))) {
+                    $listener->postUnserialize($event);
+                }
+            }
         }
     }
 
     public function preDqlSelect(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlSelect($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlSelect', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlSelect', $disabled))) {
+                    $listener->preDqlSelect($event);
+                }
+            }
         }
     }
 
     public function preSave(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preSave($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preSave', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preSave', $disabled))) {
+                    $listener->preSave($event);
+                }
+            }
         }
     }
 
     public function postSave(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postSave($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postSave', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postSave', $disabled))) {
+                    $listener->postSave($event);
+                }
+            }
         }
     }
 
     public function preDqlDelete(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlDelete($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlDelete', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlDelete', $disabled))) {
+                    $listener->preDqlDelete($event);
+                }
+            }
         }
     }
 
     public function preDelete(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDelete($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preDelete', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preDelete', $disabled))) {
+                    $listener->preDelete($event);
+                }
+            }
         }
     }
 
     public function postDelete(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postDelete($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postDelete', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postDelete', $disabled))) {
+                    $listener->postDelete($event);
+                }
+            }
         }
     }
 
     public function preDqlUpdate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlUpdate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlUpdate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preDqlUpdate', $disabled))) {
+                    $listener->preDqlUpdate($event);
+                }
+            }
         }
     }
 
     public function preUpdate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preUpdate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preUpdate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preUpdate', $disabled))) {
+                    $listener->preUpdate($event);
+                }
+            }
         }
     }
 
     public function postUpdate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postUpdate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postUpdate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postUpdate', $disabled))) {
+                    $listener->postUpdate($event);
+                }
+            }
         }
     }
 
     public function preInsert(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preInsert($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preInsert', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preInsert', $disabled))) {
+                    $listener->preInsert($event);
+                }
+            }
         }
     }
 
     public function postInsert(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postInsert($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postInsert', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postInsert', $disabled))) {
+                    $listener->postInsert($event);
+                }
+            }
         }
     }
 
     public function preHydrate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->preHydrate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preHydrate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preHydrate', $disabled))) {
+                    $listener->preHydrate($event);
+                }
+            }
         }
     }
 
     public function postHydrate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postHydrate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postHydrate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postHydrate', $disabled))) {
+                    $listener->postHydrate($event);
+                }
+            }
         }
     }
     
     public function preValidate(Doctrine_Event $event)
     { 
-        foreach ($this->_listeners as $listener) {
-            $listener->preValidate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('preValidate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('preValidate', $disabled))) {
+                    $listener->preValidate($event);
+                }
+            }
         }
     }
     
     public function postValidate(Doctrine_Event $event)
     {
-        foreach ($this->_listeners as $listener) {
-            $listener->postValidate($event);
+        $disabled = $this->getOption('disabled');
+	
+	    if ($disabled !== true || ! (is_array($disabled) && in_array('postValidate', $disabled))) {
+            foreach ($this->_listeners as $listener) {
+                $disabled = $listener->getOption('disabled');
+
+                if ($disabled !== true || ! (is_array($disabled) && in_array('postValidate', $disabled))) {
+                    $listener->postValidate($event);
+                }
+            }
         }
     }
 }
