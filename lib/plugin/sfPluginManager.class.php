@@ -442,6 +442,13 @@ class sfPluginManager
         return false;
       }
     }
+    else
+    {
+      if (!$this->isPluginCompatible($plugin, $version))
+      {
+        throw new sfPluginDependencyException(sprintf('Plugin "%s" in version "%s" is not compatible with the current application', $plugin, $version));
+      }
+    }
 
     return $rest->getPluginLicense($plugin, $version);
   }
