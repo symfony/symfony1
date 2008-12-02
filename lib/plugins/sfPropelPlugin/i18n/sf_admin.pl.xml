@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit>
         <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
-        <target>[0] brak wyników![1] 1 wynik|(1,+Inf] %1% wyników</target>
+        <target>[0] brak wyników|[1,+Inf] wyników: %1%</target> 
       </trans-unit>
 
       <!-- Pagination -->
