@@ -88,7 +88,13 @@ EOF;
 
     if (!$options['skip-forms'])
     {
-      $this->logBlock('Phing was run before and used many custom classes that might conflict with your model classes. In case of errors try running "propel:build-forms" and "propel:build-filters" alone. This is due to a PHP limitation that cannot be fixed in symfony.','INFO');
+      $this->logBlock(array(
+        'Phing was run before and used many custom classes that might conflict with',
+        'your model classes. In case of errors try running "propel:build-forms" and',
+        '"propel:build-filters" alone. This is due to a PHP limitation that cannot be',
+        'fixed in symfony.',
+      ), 'INFO');
+
       $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
       $buildForms->setCommandApplication($this->commandApplication);
       $ret = $buildForms->run();
