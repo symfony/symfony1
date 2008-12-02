@@ -66,7 +66,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      */
     public function addListener($listener, $name = null)
     {
-        $this->_table->addRecordListener($listener, $name = null);
+        $this->_table->addRecordListener($listener, $name);
 
         return $this;
     }
