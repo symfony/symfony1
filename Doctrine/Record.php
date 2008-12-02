@@ -325,7 +325,23 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $this->getTable()->getRecordListener()->postValidate($event);
         $this->postValidate($event);
 
-        return $this->getErrorStack()->count() == 0 ? true : false;
+        $valid = $this->getErrorStack()->count() == 0 ? true : false;
+        if ($valid) {
+            foreach ($this->_references as $reference) {
+                if ($reference instanceof Doctrine_Record) {
+                    if ( ! $valid = $reference->isValid()) {
+                        break;
+                    }
+                } else if ($reference instanceof Doctrine_Collection) {
+                    foreach ($reference as $record) {
+                        if ( ! $valid = $record->isValid()) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return $valid;
     }
 
     /**
