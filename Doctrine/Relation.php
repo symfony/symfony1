@@ -354,6 +354,16 @@ abstract class Doctrine_Relation implements ArrayAccess
     abstract public function fetchRelatedFor(Doctrine_Record $record);
 
     /**
+     * Get the name of the foreign key for this relationship
+     *
+     * @return string $foreignKeyName
+     */
+    public function getForeignKeyName()
+    {
+        return $this['localTable']->getConnection()->getRelationForeignKeyName($this);
+    }
+
+    /**
      * __toString
      *
      * @return string

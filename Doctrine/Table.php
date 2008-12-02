@@ -659,20 +659,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $emptyIntegrity = array('onUpdate' => null,
                                     'onDelete' => null);
 
-            $fkName = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
-            $fkCount = 0;
-
             foreach ($this->getRelations() as $name => $relation) {
                 $fk = $relation->toArray();
                 $fk['foreignTable'] = $relation->getTable()->getTableName();
-
-                $name = strtr($fkName, array(
-                    '%localtbl' => $relation['localTable']->getTableName(),
-                    '%localcol' => $relation->getLocalColumnName(), // implode('_', (array) $relation['local']),
-                    '%reftbl' => $relation['table']->getTableName(),
-                    '%refcol' => $relation->getForeignColumnName(), // implode('_', (array) $relation['foreign']),
-                    '%i' => $fkCount++,
-                ));
 
                 if ($relation->getTable() === $this && in_array($relation->getLocal(), $primary)) {
                     if ($relation->hasConstraint()) {
@@ -684,15 +673,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $integrity = array('onUpdate' => $fk['onUpdate'],
                                    'onDelete' => $fk['onDelete']);
 
+                $fkName = $relation->getForeignKeyName();
+
                 if ($relation instanceof Doctrine_Relation_LocalKey) {
-                    $def = array('name'         => $name,
+                    $def = array('name'         => $fkName,
                                  'local'        => $relation->getLocalColumnName(),
                                  'foreign'      => $relation->getForeignColumnName(),
                                  'foreignTable' => $relation->getTable()->getTableName());
 
                     if (($key = array_search($def, $options['foreignKeys'])) === false) {
-                        $options['foreignKeys'][$name] = $def;
-                        $constraints[$name] = $integrity;
+                        $options['foreignKeys'][$fkName] = $def;
+                        $constraints[$fkName] = $integrity;
                     } else {
                         if ($integrity !== $emptyIntegrity) {
                             $constraints[$key] = $integrity;

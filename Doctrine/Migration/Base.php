@@ -262,7 +262,7 @@ abstract class Doctrine_Migration_Base
      */
     public function addColumn($tableName, $columnName, $type, $length = null, array $options = array())
     {
-        $this->column('up', $tableName, $columnName, $length, $type, $options);
+        $this->column('up', $tableName, $columnName, $type, $length, $options);
     }
 
     /**

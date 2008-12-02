@@ -177,6 +177,11 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     protected $_count = 0;
 
     /**
+     * @var array $_userFkNames                 array of foreign key names that have been used
+     */
+    protected $_usedFkNames = array();
+
+    /**
      * the constructor
      *
      * @param Doctrine_Manager $manager                 the manager object
@@ -1584,5 +1589,53 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         foreach ($array as $name => $values) {
             $this->$name = $values;
         }
+    }
+
+    /**
+     * Get/generate the foreign key name for a relationship
+     *
+     * @param  Doctrine_Relation $relation
+     * @return string $fkName
+     */
+    public function getRelationForeignKeyName(Doctrine_Relation $relation)
+    {
+        $parts = array(
+            $relation['localTable']->getTableName(),
+            $relation->getLocalColumnName(),
+            $relation['table']->getTableName(),
+            $relation->getForeignColumnName(),
+        );
+        $key = implode('_', array_merge($parts, array($relation['onDelete']), array($relation['onUpdate'])));
+
+        if (isset($this->_usedFkNames[$key])) {
+            return $this->_usedFkNames[$key];
+        }
+
+        $fkName = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
+
+        $generated = implode('_', $parts);
+        if (strlen($generated) > 64) {
+            $generated = '';
+            foreach ($parts as $part) {
+                $generated .= $part[0];
+            }
+        }
+
+        $fkName = sprintf($fkName, $generated);
+
+        $count = 1;
+        while (in_array($fkName, $this->_usedFkNames)) {
+            $e = explode('_', $fkName);
+            $end = end($e);
+            if (is_numeric($end))
+            {
+              unset($e[count($e) - 1]);
+              $fkName = implode('_', $e);
+            }
+            $fkName = $fkName . '_' . $count++;
+        }
+        $this->_usedFkNames[$key] = $fkName;
+
+        return $fkName;
     }
 }
