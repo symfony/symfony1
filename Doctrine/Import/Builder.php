@@ -716,10 +716,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret[] = '@package    ' . $this->_phpDocPackage;
         $ret[] = '@subpackage ' . $this->_phpDocSubpackage;
         $ret[] = '@author     ' . $this->_phpDocName . ' <' . $this->_phpDocEmail . '>';
-        $ret[] = '@version    SVN: $Id$definition['className']  . $this->_suffix . ' 0 ' . date('Y-m-d h:i:s') . ' ' . $this->_phpDocUsername . ' $';
+
+        $fileName = $definition['className']  . $this->_suffix;
+        $ret[] = '@version    SVN: $Id$fileName . ' 0 ' . date('Y-m-d h:i:s') . ' ' . $this->_phpDocUsername . ' $';
 
         $ret = ' * ' . implode(PHP_EOL . ' * ', $ret);
         $ret = ' ' . trim($ret);
+
         return $ret;
     }
 
