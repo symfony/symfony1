@@ -132,10 +132,18 @@ class sfModelGeneratorConfiguration
       list($name, $flag) = sfModelGeneratorConfigurationField::splitFieldWithFlag($name);
       if (!isset($this->configuration['list']['fields'][$name]))
       {
-        throw new InvalidArgumentException(sprintf('The field "%s" does not exist.', $name));
+        $this->configuration['list']['fields'][$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+          array('type' => 'Text', 'label' => sfInflector::humanize(sfInflector::underscore($name))),
+          isset($config['default'][$name]) ? $config['default'][$name] : array(),
+          isset($config['list'][$name]) ? $config['list'][$name] : array(),
+          array('flag' => $flag)
+        ));
       }
-      $field = $this->configuration['list']['fields'][$name];
-      $field->setFlag($flag);
+      else
+      {
+        $this->configuration['list']['fields'][$name]->setFlag($flag);
+      }
+
       $this->configuration['list']['params'] = str_replace('%%'.$flag.$name.'%%', '%%'.$name.'%%', $this->configuration['list']['params']);
     }
 
