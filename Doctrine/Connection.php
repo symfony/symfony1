@@ -1615,14 +1615,16 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         $generated = implode('_', $parts);
         $generated = sprintf($fkName, $generated);
+        // If length is greater than 64 we need to create an abbreviated fk name
         if (strlen($generated) > 64) {
             $generated = '';
             foreach ($parts as $part) {
                 $generated .= $part[0];
             }
+            $fkName = sprintf($fkName, $generated);
+        } else {
+            $fkName = $generated;
         }
-
-        $fkName = sprintf($fkName, $generated);
 
         $count = 1;
         while (in_array($fkName, $this->_usedFkNames)) {
