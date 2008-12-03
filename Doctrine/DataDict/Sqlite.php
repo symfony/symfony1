@@ -194,6 +194,10 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             case 'text':
             case 'varchar':
             case 'varchar2':
+            case 'nvarchar':
+            case 'ntext':
+            case 'image':
+            case 'nchar':
                 $fixed = false;
             case 'char':
                 $type[] = 'text';
