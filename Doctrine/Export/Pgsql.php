@@ -339,7 +339,17 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
             $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
         }
 
-        $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields . ')';
+        $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
+
+        if ($check = $this->getCheckDeclaration($fields)) {
+            $query .= ', ' . $check;
+        }
+
+        if (isset($options['checks']) && $check = $this->getCheckDeclaration($options['checks'])) {
+            $query .= ', ' . $check;
+        }
+
+        $query .= ')';
 
         $sql[] = $query;
 
