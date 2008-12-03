@@ -561,7 +561,7 @@ abstract class sfTestFunctionalBase
         break;
       case E_NOTICE:
         $msg = sprintf($msg, 'notice');
-        throw new RuntimeException();
+        throw new RuntimeException($msg);
         break;
       case E_STRICT:
         $msg = sprintf($msg, 'strict');
