@@ -1134,6 +1134,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         $value = self::$_null;
 
+        if (array_key_exists($fieldName, $this->_values)) {
+            return $this->_values[$fieldName];
+        }
+
         if (array_key_exists($fieldName, $this->_data)) {
             // check if the value is the Doctrine_Null object located in self::$_null)
             if ($this->_data[$fieldName] === self::$_null && $load) {
@@ -1147,10 +1151,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
             
             return $value;
-        }
-
-        if (array_key_exists($fieldName, $this->_values)) {
-            return $this->_values[$fieldName];
         }
         
         try {
@@ -1190,7 +1190,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @param mixed $value                  mixed value to be mapped
      * @return void
      */
-    public function mapValue($name, $value)
+    public function mapValue($name, $value = null)
     {
         $this->_values[$name] = $value;
     }
@@ -1227,7 +1227,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     protected function _set($fieldName, $value, $load = true)
     {
-        if (isset($this->_data[$fieldName])) {
+        if (array_key_exists($fieldName, $this->_values)) {
+            $this->_values[$fieldName] = $value;
+        } else if (isset($this->_data[$fieldName])) {
             $type = $this->_table->getTypeOf($fieldName);
             if ($value instanceof Doctrine_Record) {
                 $id = $value->getIncremented();
