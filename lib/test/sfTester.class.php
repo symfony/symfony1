@@ -83,6 +83,6 @@ abstract class sfTester
   {
     call_user_func_array(array($this->browser, $method), $arguments);
 
-    return $this;
+    return $this->getObjectToReturn();
   }
 }
