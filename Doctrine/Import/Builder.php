@@ -156,13 +156,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_phpDocEmail = '##EMAIL##';
 
     /**
-     * Svn username to use for the generated php docs
-     *
-     * @var string
-     */
-    protected $_phpDocUsername = '##USERNAME##';
-
-    /**
      * _tpl
      *
      * Class template used for writing classes
@@ -718,7 +711,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret[] = '@author     ' . $this->_phpDocName . ' <' . $this->_phpDocEmail . '>';
 
         $fileName = $definition['className']  . $this->_suffix;
-        $ret[] = '@version    SVN: $Id$fileName . ' 0 ' . date('Y-m-d h:i:s') . ' ' . $this->_phpDocUsername . ' $';
+        $ret[] = '@version    SVN: $Id$';
 
         $ret = ' * ' . implode(PHP_EOL . ' * ', $ret);
         $ret = ' ' . trim($ret);
