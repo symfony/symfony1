@@ -74,7 +74,7 @@ class sfModelGeneratorConfiguration
         array('type' => 'Text', 'label' => sfInflector::humanize(sfInflector::underscore($field))),
         isset($config['default'][$field]) ? $config['default'][$field] : array(),
         isset($config['list'][$field]) ? $config['list'][$field] : array(),
-        array('is_real' => false, 'flag' => $flag)
+        array('flag' => $flag)
       ));
     }
 
