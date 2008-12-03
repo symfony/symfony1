@@ -556,19 +556,19 @@ abstract class sfTestFunctionalBase
     switch ($errno)
     {
       case E_WARNING:
-        $msg = printf($msg, 'warning');
+        $msg = sprintf($msg, 'warning');
         throw new RuntimeException($msg);
         break;
       case E_NOTICE:
-        $msg = printf($msg, 'notice');
+        $msg = sprintf($msg, 'notice');
         throw new RuntimeException();
         break;
       case E_STRICT:
-        $msg = printf($msg, 'strict');
+        $msg = sprintf($msg, 'strict');
         throw new RuntimeException($msg);
         break;
       case E_RECOVERABLE_ERROR:
-        $msg = printf($msg, 'catchable');
+        $msg = sprintf($msg, 'catchable');
         throw new RuntimeException($msg);
         break;
     }
