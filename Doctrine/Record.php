@@ -1803,7 +1803,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param string $type Format type: xml, yml, json
      * @param string $deep Whether or not to export deep in to all relationships
-     * @return void
+     * @return mixed $exported
      */
     public function exportTo($type, $deep = true)
     {
