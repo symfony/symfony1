@@ -1614,6 +1614,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $fkName = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
 
         $generated = implode('_', $parts);
+        $generated = sprintf($fkName, $generated);
         if (strlen($generated) > 64) {
             $generated = '';
             foreach ($parts as $part) {
