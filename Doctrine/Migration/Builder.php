@@ -377,9 +377,9 @@ END;
     /**
      * Build the code for adding columns
      *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @param string $column 
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $column
      * @return string $code
      */
     public function buildAddColumn($tableName, $columnName, $column)
@@ -393,9 +393,9 @@ END;
     /**
      * Build the code for removing columns
      *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @param string $column 
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $column
      * @return string $code
      */
     public function buildRemoveColumn($tableName, $columnName, $column)
@@ -406,9 +406,9 @@ END;
     /**
      * Build the code for changing columns
      *
-     * @param string $tableName 
-     * @param string $columnName 
-     * @param string $column 
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $column
      * @return string $code
      */
     public function buildChangeColumn($tableName, $columnName, $column)
@@ -422,9 +422,9 @@ END;
     /**
      * Build the code for adding indexes
      *
-     * @param string $tableName 
-     * @param string $indexName 
-     * @param string $index 
+     * @param string $tableName
+     * @param string $indexName
+     * @param string $index
      * @return sgtring $code
      */
     public function buildAddIndex($tableName, $indexName, $index)
@@ -435,9 +435,9 @@ END;
     /**
      * Build the code for removing indexes
      *
-     * @param string $tableName 
-     * @param string $indexName 
-     * @param string $index 
+     * @param string $tableName
+     * @param string $indexName
+     * @param string $index
      * @return string $code
      */
     public function buildRemoveIndex($tableName, $indexName, $index)
