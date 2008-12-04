@@ -552,6 +552,11 @@ final class Doctrine
                                     }
                                 }
                             }
+                            $previouslyLoaded = array_keys(self::$_loadedModelFiles, $file->getPathName());
+                            if ( ! empty($previouslyLoaded)) {
+                                $previouslyLoaded = array_combine(array_values($previouslyLoaded), array_values($previouslyLoaded));
+                                $loadedModels = array_merge($loadedModels, $previouslyLoaded);
+                            }
                         }
                     }
                 }
