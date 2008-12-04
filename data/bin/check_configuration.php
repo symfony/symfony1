@@ -72,6 +72,12 @@ check(!ini_get('zend.ze1_compatibility_mode'), 'php.ini: requires zend.ze1_compa
 
 // warnings
 echo "\n** Optional checks **\n\n";
+check(class_exists('PDO'), 'PDO is installed', 'Install PDO (mandatory for Propel and Doctrine)', false);
+if (class_exists('PDO'))
+{
+  $drivers = PDO::getAvailableDrivers();
+  check(count($drivers), 'PDO has some drivers installed: '.implode(', ', $drivers), 'Install PDO drivers (mandatory for Propel and Doctrine)', false);
+}
 check(function_exists('token_get_all'), 'can use token_get_all()', 'Install token_get_all() function (highly recommended)', false);
 check(function_exists('mb_strlen'), 'can use mb_strlen()', 'Install mb_strlen() function', false);
 check(function_exists('iconv'), 'can use iconv()', 'Install iconv() function', false);
