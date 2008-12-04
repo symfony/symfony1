@@ -90,7 +90,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
       }
       else if (preg_match('/Binding (.*) at position (.+?) w\//', $log['message'], $match))
       {
-        $bindings[$i - 1][] = $match[2].' = '.$match[1];
+        $bindings[$i - 1][$match[2]] = $match[1];
       }
     }
 
@@ -98,7 +98,10 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     {
       if (count($bindings[$i]))
       {
-        $logs[$i] .= sprintf(' (%s)', implode(', ', $bindings[$i]));
+        foreach ($bindings[$i] as $search => $replace)
+        {
+          $logs[$i] = str_replace($search, $replace, $logs[$i]);
+        }
       }
     }
 
