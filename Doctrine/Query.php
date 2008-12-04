@@ -174,12 +174,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * @var string $_sql            cached SQL query
      */
     protected $_sql;
-    
-    
-    /**
-     * @var int $_processedParamIdx          Current index of processed param.
-     */
-    protected $_processedParamIdx = 0;
 
 
     /**
@@ -347,9 +341,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // Retrieve all params
         $params = $this->getInternalParams();
 
-        // Update processed param index
-        $this->_processedParamIdx = $index + count($params[$index]);
-
         // Retrieve already processed values
         $first = array_slice($params, 0, $index);
         $last = array_slice($params, $index, count($params) - $index);
@@ -361,13 +352,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_execParams = array_merge($first, $last);
     }
 
-    /**
-     * @nodoc
-     */
-    public function getProcessedParamIndex()
-    {
-        return $this->_processedParamIdx;
-    }
 
     /**
      * parseQueryPart
@@ -1226,7 +1210,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             switch (strtolower($this->_conn->getDriverName())) {
                 case 'mysql':
                     // mysql doesn't support LIMIT in subqueries
-                    $list = $this->_conn->execute($subquery, $params)->fetchAll(Doctrine::FETCH_COLUMN);
+                    $list = $this->_conn->execute($subquery, $this->_execParams)->fetchAll(Doctrine::FETCH_COLUMN);
                     $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));
                     break;
                 case 'pgsql':

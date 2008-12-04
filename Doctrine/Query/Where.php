@@ -110,7 +110,7 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
         $params = $this->query->getInternalParams();
         $value = array();
 
-        for ($i = $this->query->getProcessedParamIndex(), $l = count($params); $i < $l; $i++) {
+        for ($i = 0, $l = count($params); $i < $l; $i++) {
             if (is_array($params[$i])) {
                 $value = array_fill(0, count($params[$i]), $rightExpr);
                 $this->query->adjustProcessedParam($i);
