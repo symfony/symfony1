@@ -1446,9 +1446,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
         }
 
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
-
         if (isset($e)) {
             return $e;
         } else {
@@ -1489,9 +1486,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } else {
             $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
         }
-
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
 
         if (isset($e)) {
             return $e;
