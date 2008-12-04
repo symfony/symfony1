@@ -686,10 +686,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         unset($vars['_filter']);
         unset($vars['_node']);
 
-        $name = $this->_table->getIdentifier();
-        $this->_data = array_merge($this->_data, $this->_id);
+        $data = $this->_data;
+        if ($this->exists()) {
+            $data = array_merge($data, $this->_id);
+        }
 
-        foreach ($this->_data as $k => $v) {
+        foreach ($data as $k => $v) {
             if ($v instanceof Doctrine_Record && $this->_table->getTypeOf($k) != 'object') {
                 unset($vars['_data'][$k]);
             } elseif ($v === self::$_null) {
