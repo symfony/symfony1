@@ -176,7 +176,8 @@ class Doctrine_Migration_Diff
                 // If foreign key doesn't exist in the from schema information then we need to add a index and the new fk
                 if ( ! isset($from[$className]['options']['foreignKeys'][$name])) {
                     $this->_changes['created_fks'][$info['tableName']][$name] = $foreignKey;
-                    $this->_changes['added_indexes'][$info['tableName']][$name] = array('fields' => array($foreignKey['local']));
+                    $indexName = Doctrine_Manager::connection()->generateUniqueIndexName($info['tableName'], $foreignKey['local']);
+                    $this->_changes['added_indexes'][$info['tableName']][$indexName] = array('fields' => array($foreignKey['local']));
                 // If foreign key does exist then lets see if anything has changed with it
                 } else if (isset($from[$className]['options']['foreignKeys'][$name])) {
                     $oldForeignKey = $from[$className]['options']['foreignKeys'][$name];

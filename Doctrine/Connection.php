@@ -179,7 +179,10 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     /**
      * @var array $_userFkNames                 array of foreign key names that have been used
      */
-    protected $_usedFkNames = array();
+    protected $_usedNames = array(
+            'foreign_keys' => array(),
+            'indexes' => array()
+        );
 
     /**
      * the constructor
@@ -1586,12 +1589,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * Get/generate the foreign key name for a relationship
+     * Get/generate a unique foreign key name for a relationship
      *
-     * @param  Doctrine_Relation $relation
+     * @param  Doctrine_Relation $relation  Relation object to generate the foreign key name for
      * @return string $fkName
      */
-    public function getRelationForeignKeyName(Doctrine_Relation $relation)
+    public function generateUniqueRelationForeignKeyName(Doctrine_Relation $relation)
     {
         $parts = array(
             $relation['localTable']->getTableName(),
@@ -1600,38 +1603,60 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $relation->getForeignColumnName(),
         );
         $key = implode('_', array_merge($parts, array($relation['onDelete']), array($relation['onUpdate'])));
+        $format = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
 
-        if (isset($this->_usedFkNames[$key])) {
-            return $this->_usedFkNames[$key];
+        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, 64);
+    }
+
+    /**
+     * Get/generate unique index name for a table name and set of fields
+     *
+     * @param string $tableName     The name of the table the index exists
+     * @param string $fields        The fields that makes up the index
+     * @return string $indexName    The name of the generated index
+     */
+    public function generateUniqueIndexName($tableName, $fields)
+    {
+        $fields = (array) $fields;
+        $parts = array($tableName);
+        $parts = array_merge($parts, $fields);
+        $key = implode('_', $parts);
+        $format = $this->getAttribute(Doctrine::ATTR_IDXNAME_FORMAT);
+
+        return $this->_generateUniqueName('indexes', $parts, $key, $format, 64);
+    }
+
+    protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = 64)
+    {
+        if (isset($this->_usedNames[$type][$key])) {
+            return $this->_usedNames[$type][$key];
         }
-
-        $fkNameFormat = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
 
         $generated = implode('_', $parts);
         // If the final length is greater than 64 we need to create an abbreviated fk name
-        if (strlen(sprintf($fkNameFormat, $generated)) > 64) {
+        if (strlen(sprintf($format, $generated)) > $maxLength) {
             $generated = '';
             foreach ($parts as $part) {
                 $generated .= $part[0];
             }
-            $fkName = $generated;
+            $name = $generated;
         } else {
-            $fkName = $generated;
+            $name = $generated;
         }
 
         $count = 1;
-        while (in_array($fkName, $this->_usedFkNames)) {
-            $e = explode('_', $fkName);
+        while (in_array($name, $this->_usedNames[$type])) {
+            $e = explode('_', $name);
             $end = end($e);
             if (is_numeric($end))
             {
               unset($e[count($e) - 1]);
               $fkName = implode('_', $e);
             }
-            $fkName = $fkName . '_' . $count++;
+            $name = $name . '_' . $count++;
         }
-        $this->_usedFkNames[$key] = $fkName;
+        $this->_usedNames[$type][$key] = $name;
 
-        return $fkName;
+        return $name;
     }
 }

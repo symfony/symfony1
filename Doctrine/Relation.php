@@ -360,7 +360,7 @@ abstract class Doctrine_Relation implements ArrayAccess
      */
     public function getForeignKeyName()
     {
-        return $this['localTable']->getConnection()->getRelationForeignKeyName($this);
+        return $this['localTable']->getConnection()->generateUniqueRelationForeignKeyName($this);
     }
 
     /**
