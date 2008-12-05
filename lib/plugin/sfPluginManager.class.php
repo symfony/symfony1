@@ -42,7 +42,7 @@ class sfPluginManager
    * @param sfEventDispatcher $dispatcher   An event dispatcher instance
    * @param sfPearEnvironment $environment  A sfPearEnvironment instance
    */
-  public function initialize(sfEventDispatcher $dispatcher, $environment)
+  public function initialize(sfEventDispatcher $dispatcher, sfPearEnvironment $environment)
   {
     $this->dispatcher  = $dispatcher;
     $this->environment = $environment;
