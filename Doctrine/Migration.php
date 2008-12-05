@@ -472,11 +472,18 @@ class Doctrine_Migration
             }
 
             if ($migration->getNumChanges() > 0) {
-                $allChanges = $migration->getChanges();
-                foreach ($allChanges as $type => $changes) {
+                $changes = $migration->getChanges();
+                foreach ($changes as $value) {
+                    list($type, $change) = $value;
                     $funcName = 'process' . Doctrine_Inflector::classify($type);
                     if (method_exists($this->_process, $funcName)) {
-                        $this->_process->$funcName($changes);
+                        try {
+                            $this->_process->$funcName($change);
+                        } catch (Exception $e) {
+                            $this->addError($e);
+                        }
+                    } else {
+                        throw new Doctrine_Migration_Exception(sprintf('Invalid migration change type: %s', $type));
                     }
                 }
             }

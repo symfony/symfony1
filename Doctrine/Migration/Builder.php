@@ -163,8 +163,8 @@ END;
             }
         }
 
-        if ( ! empty($changes['removed_columns'])) {
-            foreach ($changes['removed_columns'] as $tableName => $removedColumns) {
+        if ( ! empty($changes['dropped_columns'])) {
+            foreach ($changes['dropped_columns'] as $tableName => $removedColumns) {
                 foreach ($removedColumns as $name => $column) {
                     $up[] = $this->buildRemoveColumn($tableName, $name, $column);
                     $down[] = $this->buildAddColumn($tableName, $name, $column);
@@ -172,8 +172,8 @@ END;
             }
         }
 
-        if ( ! empty($changes['added_columns'])) {
-            foreach ($changes['added_columns'] as $tableName => $addedColumns) {
+        if ( ! empty($changes['created_columns'])) {
+            foreach ($changes['created_columns'] as $tableName => $addedColumns) {
                 foreach ($addedColumns as $name => $column) {
                     $up[] = $this->buildAddColumn($tableName, $name, $column);
                     $down[] = $this->buildRemoveColumn($tableName, $name, $column);
@@ -198,8 +198,8 @@ END;
 
         $up = array();
         $down = array();
-        if ( ! empty($changes['dropped_fks'])) {
-            foreach ($changes['dropped_fks'] as $tableName => $droppedFks) {
+        if ( ! empty($changes['dropped_foreign_keys'])) {
+            foreach ($changes['dropped_foreign_keys'] as $tableName => $droppedFks) {
                 foreach ($droppedFks as $name => $foreignKey) {
                     $up[] = $this->buildDropForeignKey($tableName, $foreignKey);
                     $down[] = $this->buildCreateForeignKey($tableName, $foreignKey);
@@ -207,8 +207,8 @@ END;
             }
         }
 
-        if ( ! empty($changes['removed_indexes'])) {
-            foreach ($changes['removed_indexes'] as $tableName => $removedIndexes) {
+        if ( ! empty($changes['dropped_indexes'])) {
+            foreach ($changes['dropped_indexes'] as $tableName => $removedIndexes) {
                 foreach ($removedIndexes as $name => $index) {
                     $up[] = $this->buildRemoveIndex($tableName, $name, $index);
                     $down[] = $this->buildAddIndex($tableName, $name, $index);
@@ -216,8 +216,8 @@ END;
             }
         }
 
-        if ( ! empty($changes['added_indexes'])) {
-            foreach ($changes['added_indexes'] as $tableName => $addedIndexes) {
+        if ( ! empty($changes['created_indexes'])) {
+            foreach ($changes['created_indexes'] as $tableName => $addedIndexes) {
                 foreach ($addedIndexes as $name => $index) {
                     $up[] = $this->buildAddIndex($tableName, $name, $index);
                     $down[] = $this->buildRemoveIndex($tableName, $name, $index);
@@ -225,8 +225,8 @@ END;
             }
         }
 
-        if ( ! empty($changes['created_fks'])) {
-            foreach ($changes['created_fks'] as $tableName => $createdFks) {
+        if ( ! empty($changes['created_foreign_keys'])) {
+            foreach ($changes['created_foreign_keys'] as $tableName => $createdFks) {
                 foreach ($createdFks as $name => $foreignKey) {
                     $up[] = $this->buildCreateForeignKey($tableName, $foreignKey);
                     $down[] = $this->buildDropForeignKey($tableName, $foreignKey);

@@ -32,30 +32,18 @@
  */
 abstract class Doctrine_Migration_Base
 {
-    protected $_changes = array('created_tables'      =>  array(),
-                                'renamed_tables'      =>  array(),
-                                'created_constraints' =>  array(),
-                                'added_columns'       =>  array(),
-                                'added_indexes'       =>  array(),
-                                'dropped_fks'         =>  array(),
-                                'created_fks'         =>  array(),
-                                'dropped_constraints' =>  array(),
-                                'removed_indexes'     =>  array(),
-                                'dropped_tables'      =>  array(),
-                                'renamed_columns'     =>  array(),
-                                'changed_columns'     =>  array(),
-                                'removed_columns'     =>  array());
+    protected $_changes = array();
 
-    protected static $_opposites = array('created_tables'       => 'dropped_tables',
-                                         'dropped_tables'       => 'created_tables',
-                                         'created_constraints'  => 'dropped_constraints',
-                                         'dropped_constraints'  => 'created_constraints',
-                                         'created_fks'          => 'dropped_fks',
-                                         'dropped_fks'          => 'created_fks',
-                                         'added_columns'        => 'removed_columns',
-                                         'removed_columns'      => 'added_columns',
-                                         'added_indexes'        => 'removed_indexes',
-                                         'removed_indexes'      => 'added_indexes',
+    protected static $_opposites = array('created_table'       => 'dropped_table',
+                                         'dropped_table'       => 'created_table',
+                                         'created_constraint'  => 'dropped_constraint',
+                                         'dropped_constraint'  => 'created_constraint',
+                                         'created_foreign_key' => 'dropped_foreign_key',
+                                         'dropped_foreign_key' => 'created_foreign_key',
+                                         'created_column'      => 'dropped_column',
+                                         'dropped_column'      => 'created_column',
+                                         'created_index'       => 'dropped_index',
+                                         'dropped_index'       => 'created_index',
                                          );
 
     /**
@@ -70,7 +58,7 @@ abstract class Doctrine_Migration_Base
 
     public function getNumChanges()
     {
-        return (count($this->_changes, true) - count($this->_changes));
+        return count($this->_changes);
     }
 
     /**
@@ -83,13 +71,14 @@ abstract class Doctrine_Migration_Base
     protected function _addChange($type, array $change = array())
     {
         if (isset($change['upDown']) && $change['upDown'] !== null && isset(self::$_opposites[$type])) {
-            if ($change['upDown'] == 'down') {
-                $opposite = self::$_opposites[$type];
-                return $this->_changes[$opposite][] = $change;
-            }
+            $upDown = $change['upDown'];
             unset($change['upDown']);
+            if ($upDown == 'down') {
+                $opposite = self::$_opposites[$type];
+                return $this->_changes[] = array($opposite, $change);
+            }
         }
-        return $this->_changes[$type][] = $change;
+        return $this->_changes[] = array($type, $change);
     }
 
     /**
@@ -105,7 +94,7 @@ abstract class Doctrine_Migration_Base
     {
         $options = get_defined_vars();
 
-        $this->_addChange('created_tables', $options);
+        $this->_addChange('created_table', $options);
     }
 
     /**
@@ -143,7 +132,7 @@ abstract class Doctrine_Migration_Base
     {
         $options = get_defined_vars();
         
-        $this->_addChange('renamed_tables', $options);
+        $this->_addChange('renamed_table', $options);
     }
 
     /**
@@ -159,7 +148,7 @@ abstract class Doctrine_Migration_Base
     {
         $options = get_defined_vars();
         
-        $this->_addChange('created_constraints', $options);
+        $this->_addChange('created_constraint', $options);
     }
 
     /**
@@ -201,7 +190,7 @@ abstract class Doctrine_Migration_Base
         $definition['name'] = $name;
         $options = get_defined_vars();
 
-        $this->_addChange('created_fks', $options);
+        $this->_addChange('created_foreign_key', $options);
     }
 
     /**
@@ -247,7 +236,7 @@ abstract class Doctrine_Migration_Base
         $options = array_merge($options, $options['options']);
         unset($options['options']);
 
-        $this->_addChange('added_columns', $options);
+        $this->_addChange('created_column', $options);
     }
 
     /**
@@ -289,7 +278,7 @@ abstract class Doctrine_Migration_Base
     {
         $options = get_defined_vars();
         
-        $this->_addChange('renamed_columns', $options);
+        $this->_addChange('renamed_column', $options);
     }
 
     /**
@@ -306,7 +295,7 @@ abstract class Doctrine_Migration_Base
         $options = get_defined_vars();
         $options['options']['length'] = $length;
 
-        $this->_addChange('changed_columns', $options);
+        $this->_addChange('changed_column', $options);
     }
 
     /**
@@ -322,7 +311,7 @@ abstract class Doctrine_Migration_Base
     {
         $options = get_defined_vars();
         
-        $this->_addChange('added_indexes', $options);
+        $this->_addChange('created_index', $options);
     }
 
     /**
