@@ -61,6 +61,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      */
     public function preDelete(Doctrine_Event $event)
     {
+        $name = $this->_options['name'];
+        $event->getInvoker()->$name = date('Y-m-d H:i:s', time());
+
         $event->skipOperation();
     }
 
@@ -72,8 +75,6 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      */
     public function postDelete(Doctrine_Event $event)
     {
-        $name = $this->_options['name'];
-        $event->getInvoker()->$name = new Doctrine_Expression('NOW()');
         $event->getInvoker()->save();
     }
 
