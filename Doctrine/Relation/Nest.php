@@ -108,11 +108,11 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
               ->where(implode(' OR ', $condition));
-            $q->addComponent($tableName,  $record->getTable()->getComponentName());
+            $q->addComponent($tableName,  $this->getClass());
             
-            $path = $record->getTable()->getComponentName(). '.' . $this->getAssociationFactory()->getComponentName();
+            $path = $this->getClass(). '.' . $this->getAssociationFactory()->getComponentName();
             if ($this->definition['refClassRelationAlias']) {
-                $path = $record->getTable()->getComponentName(). '.' . $this->definition['refClassRelationAlias'];
+                $path = $this->getClass(). '.' . $this->definition['refClassRelationAlias'];
             }
             $q->addComponent($assocTable, $path);
 
