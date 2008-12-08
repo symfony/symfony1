@@ -100,6 +100,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
 
     $cli = new sfDoctrineCli($config);
     $cli->setDispatcher($this->dispatcher);
+    $cli->setFormatter($this->formatter);
     $cli->run($arguments);
   }
 }
