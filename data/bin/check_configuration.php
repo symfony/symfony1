@@ -78,6 +78,7 @@ if (class_exists('PDO'))
   $drivers = PDO::getAvailableDrivers();
   check(count($drivers), 'PDO has some drivers installed: '.implode(', ', $drivers), 'Install PDO drivers (mandatory for Propel and Doctrine)', false);
 }
+check(class_exists('DomDocument'), 'PHP-XML module installed', 'Install the php-xml module (required by Propel)', false);
 check(function_exists('token_get_all'), 'can use token_get_all()', 'Install token_get_all() function (highly recommended)', false);
 check(function_exists('mb_strlen'), 'can use mb_strlen()', 'Install mb_strlen() function', false);
 check(function_exists('iconv'), 'can use iconv()', 'Install iconv() function', false);
@@ -90,7 +91,7 @@ $accelerator =
   ||
   function_exists('xcache_set')
 ;
-check($accelerator, 'has a PHP accelerator', 'Install a PHP accelerator (highly recommended)', false);
+check($accelerator, 'has a PHP accelerator', 'Install a PHP accelerator like APC (highly recommended)', false);
 
 check(!ini_get('magic_quotes_gpc'), 'php.ini: magic_quotes_gpc set to off', 'Set it to off in php.ini');
 check(!ini_get('register_globals'), 'php.ini: register_globals set to off', 'Set it to off in php.ini');
