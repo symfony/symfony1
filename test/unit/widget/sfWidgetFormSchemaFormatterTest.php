@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
 
 class MyFormatter extends sfWidgetFormSchemaFormatter
 {
@@ -140,6 +140,7 @@ $t->is($f->generateLabel('first_name'), '', '->generateLabel() returns an empty 
 $w->setLabel('first_name', 'Your First Name');
 $t->is($f->generateLabel('first_name'), '<label for="first_name">Your First Name</label>', '->generateLabelName() returns a label tag');
 $t->is($f->generateLabel('first_name', array('class' => 'foo')), '<label class="foo" for="first_name">Your First Name</label>', '->generateLabelName() returns a label tag with optional HTML attributes');
+$t->is($f->generateLabel('first_name', array('for' => 'myid')), '<label for="myid">Your First Name</label>', '->generateLabelName() returns a label tag with specified for-id');
 
 $w->setLabel('last_name', 'Your Last Name');
 $t->is($f->generateLabel('last_name'), '<label for="last_name">Your Last Name</label>', '->generateLabelName() returns a label tag');

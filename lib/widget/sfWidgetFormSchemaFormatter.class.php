@@ -170,8 +170,10 @@ abstract class sfWidgetFormSchemaFormatter
       return '';
     }
 
-    $widgetId = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
-    $attributes = array_merge($attributes, array('for' => $widgetId));
+    if (!isset($attributes['for']))
+    {
+      $attributes['for'] = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
+    }
 
     return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);
   }
