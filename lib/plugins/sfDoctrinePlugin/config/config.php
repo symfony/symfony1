@@ -18,7 +18,7 @@ spl_autoload_register(array('Doctrine', 'autoload'));
 
 $manager = Doctrine_Manager::getInstance();
 $manager->setAttribute('export', 'all');
-$manager->setAttribute('validate', true);
+$manager->setAttribute('validate', 'all');
 $manager->setAttribute('recursive_merge_fixtures', true);
 $manager->setAttribute('auto_accessor_override', true);
 $manager->setAttribute('autoload_table_classes', true);
