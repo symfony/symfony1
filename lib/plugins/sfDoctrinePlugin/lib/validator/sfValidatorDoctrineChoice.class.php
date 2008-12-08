@@ -48,10 +48,9 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $q = is_null($this->getOption('query')) ? Doctrine_Query::create() : $this->getOption('query');
     $a = $this->getOption('alias');
-    $q->from($this->getOption('model') . ' ' . $a)
-      ->addWhere($a . '.' . $this->getColumn() . ' = ?', $value);
+    $q = is_null($this->getOption('query')) ? Doctrine_Query::create()->from($this->getOption('model') . ' ' . $a) : $this->getOption('query');
+    $q->addWhere($a . '.' . $this->getColumn() . ' = ?', $value);
 
     $object = $q->fetchOne();
     
