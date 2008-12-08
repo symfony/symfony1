@@ -129,7 +129,7 @@ EOF;
       {
         foreach ($array as $key => $value)
         {
-          if ($key == 'package' || isset($value['package']))
+          if ($key == 'package' || (is_array($value) && isset($value['package'])))
           {
             throw new sfDoctrineException(
               sprintf('Cannot use package parameter in symfony Doctrine schema files. Found in "%s"', $file)
