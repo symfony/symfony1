@@ -71,6 +71,7 @@ class sfDoctrineRoute extends sfObjectRoute
   {
     $this->options['model'] = Doctrine::getTable($this->options['model']);
 
+    $variables = array();
     foreach($this->getRealVariables() as $variable)
     {
       if($this->options['model']->hasColumn($this->options['model']->getColumnName($variable)))
