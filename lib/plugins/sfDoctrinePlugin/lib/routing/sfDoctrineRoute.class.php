@@ -42,6 +42,26 @@ class sfDoctrineRoute extends sfObjectRoute
     $this->options['object_model'] = $this->options['model'];
   }
 
+  public function getObject()
+  {
+    $object = parent::getObject();
+    if ($object instanceof Doctrine_Collection)
+    {
+      $object = $object->getFirst();
+    }
+    return $object;
+  }
+
+  public function getObjects()
+  {
+    $objects = parent::getObjects();
+    if ($objects instanceof Doctrine_Record)
+    {
+      $objects = new Doctrine_Collection($objects->getTable());
+    }
+    return $objects;
+  }
+
   protected function getObjectForParameters($parameters)
   {
     return $this->getObjectsForParameters($parameters);
@@ -50,10 +70,17 @@ class sfDoctrineRoute extends sfObjectRoute
   protected function getObjectsForParameters($parameters)
   {
     $this->options['model'] = Doctrine::getTable($this->options['model']);
+
+    foreach($this->getRealVariables() as $variable)
+    {
+      if($this->options['model']->hasColumn($this->options['model']->getColumnName($variable)))
+      {
+        $variables[] = $variable;
+      }
+    }
+
     if (!isset($this->options['method']))
     {
-      $variables = $this->getRealVariables();
-      
       switch(count($variables))
       {
         case 0:
@@ -66,16 +93,39 @@ class sfDoctrineRoute extends sfObjectRoute
         default:
           $this->options['method'] = 'findByDQL';
           $wheres = array();
+          $values = array();
           foreach ($variables as $variable)
           {
             $variable = $this->options['model']->getFieldName($variable);
-            $wheres[] = $variable." = '".$parameters[$variable]."'";
+            $wheres[] = $variable.' = ?';
+            $values[] = $parameters[$variable];
           }
-          $parameters = implode(' AND ', $wheres);
+          $parameters = array();
+          $parameters[] = implode(' AND ', $wheres);
+          $parameters[] = $values;
       }
-    }
+      
+      $className = $this->options['model'];
 
-    return parent::getObjectsForParameters($parameters);
+      return call_user_func_array(array($className, $this->options['method']), $parameters);
+    } else {
+      $q = $this->options['model']->createQuery('a');
+      foreach ($variables as $variable)
+      {
+        $fieldName = $this->options['model']->getFieldName($variable);
+        $q->andWhere('a.'. $fieldName . ' = ?', $parameters[$variable]);
+      }
+      $parameters = $q;
+
+      $className = $this->options['model'];
+
+      if (!isset($this->options['method']))
+      {
+        throw new InvalidArgumentException(sprintf('You must pass a "method" option for a %s object.', get_class($this)));
+      }
+
+      return call_user_func(array($className, $this->options['method']), $parameters);
+    }
   }
 
   protected function doConvertObjectToArray($object)
