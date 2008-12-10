@@ -113,8 +113,8 @@ class sfDebug
     }
 
     return array(
-      'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
-      'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
+      'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder(), true),
+      'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder(), true),
     );
   }
 
@@ -159,7 +159,7 @@ class sfDebug
 
     return array(
       'options'         => $user->getOptions(),
-      'attributeHolder' => self::flattenParameterHolder($user->getAttributeHolder()),
+      'attributeHolder' => self::flattenParameterHolder($user->getAttributeHolder(), true),
       'culture'         => $user->getCulture(),
     );
   }
@@ -168,10 +168,11 @@ class sfDebug
    * Returns a parameter holder as an array.
    *
    * @param sfParameterHolder $parameterHolder A sfParameterHolder instance
+   * @param boolean $removeObjects when set to true, objects are removed. default is false for BC.
    *
    * @return array The parameter holder as an array
    */
-  public static function flattenParameterHolder($parameterHolder)
+  public static function flattenParameterHolder($parameterHolder, $removeObjects = false)
   {
     $values = array();
     if ($parameterHolder instanceof sfNamespacedParameterHolder)
@@ -194,8 +195,42 @@ class sfDebug
       }
     }
 
+    if ($removeObjects)
+    {
+      $values = self::removeObjects($values);
+    }
+
     ksort($values);
 
     return $values;
+  }
+
+  /**
+   * Removes objects from the array by replacing them with a String containing the class name.
+   *
+   * @param array $values an array
+   *
+   * @return array The array without objects
+   */
+  public static function removeObjects($values)
+  {
+    $nvalues = array();
+    foreach ($values as $key => $value)
+    {
+      if (is_array($value))
+      {
+        $nvalues[$key] = self::removeObjects($value);
+      }
+      else if (is_object($value))
+      {
+        $nvalues[$key] = sprintf('%s Object()', get_class($value));
+      }
+      else
+      {
+        $nvalues[$key] = $value;
+      }
+    }
+
+    return $nvalues;
   }
 }

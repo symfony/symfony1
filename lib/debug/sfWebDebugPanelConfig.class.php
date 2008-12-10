@@ -75,29 +75,7 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
 
     return '
     <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" alt="Toggle details" /></a></h2>
-    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlspecialchars(sfYaml::dump(self::removeObjects($values)), ENT_QUOTES, sfConfig::get('sf_charset')).'</pre></div>
+    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlspecialchars(sfYaml::dump(sfDebug::removeObjects($values)), ENT_QUOTES, sfConfig::get('sf_charset')).'</pre></div>
     ';
-  }
-
-  static protected function removeObjects($values)
-  {
-    $nvalues = array();
-    foreach ($values as $key => $value)
-    {
-      if (is_array($value))
-      {
-        $nvalues[$key] = self::removeObjects($value);
-      }
-      else if (is_object($value))
-      {
-        $nvalues[$key] = sprintf('%s Object()', get_class($value));
-      }
-      else
-      {
-        $nvalues[$key] = $value;
-      }
-    }
-
-    return $nvalues;
   }
 }
