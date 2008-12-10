@@ -448,7 +448,7 @@ class sfProjectConfiguration
    * 
    * @return array
    */
-  protected function getAllPluginPaths()
+  public function getAllPluginPaths()
   {
     $pluginPaths = array();
 
