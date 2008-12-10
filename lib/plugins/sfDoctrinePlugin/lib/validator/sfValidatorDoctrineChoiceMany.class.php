@@ -37,7 +37,7 @@ class sfValidatorDoctrineChoiceMany extends sfValidatorDoctrineChoice
 
     $a = $this->getOption('alias');
     $q = is_null($this->getOption('query')) ? Doctrine_Query::create()->from($this->getOption('model') . ' ' . $a) : $this->getOption('query');
-    $q = $q->addWhereIn($a . ' ' . $this->getColumn(), $values);
+    $q = $q->andWhereIn($a . '.' . $this->getColumn(), $values);
 
     $objects = $q->execute();
 
