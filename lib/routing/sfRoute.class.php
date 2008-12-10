@@ -237,7 +237,7 @@ class sfRoute implements Serializable
     if ($this->options['extra_parameters_as_query_string'] && !$this->hasStarParameter())
     {
       // add a query string if needed
-      if ($extra = array_diff_key(array_filter($params), $this->variables, $defaults))
+      if ($extra = array_diff_key($params, $this->variables, $defaults))
       {
         $url .= '?'.http_build_query($extra);
       }
