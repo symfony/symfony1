@@ -219,6 +219,7 @@ class sfPropelFormGenerator extends sfGenerator
       case PropelColumnTypes::BOOLEAN:
         $name = 'InputCheckbox';
         break;
+      case PropelColumnTypes::CLOB:
       case PropelColumnTypes::LONGVARCHAR:
         $name = 'Textarea';
         break;
@@ -280,6 +281,7 @@ class sfPropelFormGenerator extends sfGenerator
       case PropelColumnTypes::BOOLEAN:
         $name = 'Boolean';
         break;
+      case PropelColumnTypes::CLOB:
       case PropelColumnTypes::CHAR:
       case PropelColumnTypes::VARCHAR:
       case PropelColumnTypes::LONGVARCHAR:
@@ -351,6 +353,7 @@ class sfPropelFormGenerator extends sfGenerator
     {
       switch ($column->getType())
       {
+        case PropelColumnTypes::CLOB:
         case PropelColumnTypes::CHAR:
         case PropelColumnTypes::VARCHAR:
         case PropelColumnTypes::LONGVARCHAR:

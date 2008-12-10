@@ -208,7 +208,7 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     {
       return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => 7));
     }
-    else if ($type == PropelColumnTypes::LONGVARCHAR)
+    else if ($type == PropelColumnTypes::LONGVARCHAR || $type == PropelColumnTypes::CLOB)
     {
       return $this->getPHPObjectHelper('textarea_tag', $column, $params, array('size' => '30x3'));
     }
@@ -279,7 +279,7 @@ class sfPropelCrudGenerator extends sfAdminGenerator
 
       return "select_tag($name, $options, $params)";
     }
-    else if ($type == PropelColumnTypes::CHAR || $type == PropelColumnTypes::VARCHAR || $type == PropelColumnTypes::LONGVARCHAR)
+    else if ($type == PropelColumnTypes::CHAR || $type == PropelColumnTypes::VARCHAR || $type == PropelColumnTypes::LONGVARCHAR || $type == PropelColumnTypes::CLOB)
     {
       $size = ($column->getSize() < 15 ? $column->getSize() : 15);
       $params = $this->getObjectTagParams($params, array('size' => $size));
