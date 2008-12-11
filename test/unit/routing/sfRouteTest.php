@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(49, new lime_output_color());
+$t = new lime_test(50, new lime_output_color());
 
 // ->matchesUrl()
 $t->diag('->matchesUrl()');
@@ -149,6 +149,10 @@ $t->is($route->generate(array('foo' => 'bar', 'bar' => 'foo')), '/bar?bar=foo', 
 
 $route = new sfRoute('/:foo', array(), array(), array('extra_parameters_as_query_string' => false));
 $t->is($route->generate(array('foo' => 'bar', 'bar' => 'foo')), '/bar', '->generate() ignores extra parameters if extra_parameters_as_query_string is false');
+
+// checks that explicit 0 values also work - see #5175
+$route = new sfRoute('/:foo', array(), array(), array('extra_parameters_as_query_string' => true));
+$t->is($route->generate(array('foo' => 'bar', 'bar' => '0')), '/bar?bar=0', '->generate() adds extra parameters if extra_parameters_as_query_string is true');
 
 $route = new sfRoute('/:foo/:bar', array('bar' => 'foo'));
 $t->is($route->generate(array('foo' => 'bar')), '/bar', '->generate() generates the shortest URL possible');
