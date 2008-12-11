@@ -116,6 +116,16 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                         AND a.attrelid = c.oid
                                                         AND a.atttypid = t.oid
                                                   ORDER BY a.attnum",
+                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
+                                                          FROM pg_catalog.pg_constraint r
+                                                          WHERE r.conrelid =
+                                                          (
+                                                              SELECT c.oid
+                                                              FROM pg_catalog.pg_class c
+                                                              LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                                                              WHERE c.relname ~ ? AND pg_catalog.pg_table_is_visible(c.oid)
+                                                          )
+                                                          AND r.contype = 'f'"
                         );
 
     /**
@@ -247,5 +257,26 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
     public function listTableViews($table)
     {
         return $this->conn->fetchColumn($table);
+    }
+
+    public function listTableRelations($table)
+    {
+        $sql = $this->sql['listTableRelations'];
+        $param = array('^(' . $table . ')$');
+
+        $relations = array();
+
+        $results = $this->conn->fetchAssoc($sql, $param);
+        foreach ($results as $result)
+        {
+            preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $result['condef'], $values);
+            if ((strpos(',', $values[1]) === false) && (strpos(',', $values[3]) === false)) {
+                $relations[] = array('table'   => $values[2],
+                                     'local'   => $values[1],
+                                     'foreign' => $values[3]);
+            }
+        }
+
+        return $relations;
     }
 }
