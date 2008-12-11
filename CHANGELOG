@@ -1,9 +1,52 @@
-Version 1.2.0
+Version 1.2.1
 -------------
 See the UPGRADE_TO_1_1 for upgrading 1.0 projects first to 1.1.
 See the UPGRADE_TO_1_2 file for more information about upgrading your projects from 1.1 to 1.2.
 
 All the new features are documented in the What's new? tutorial (http://www.symfony-project.org/tutorial/1_2/whats-new)
+
+* [13947]: fixed admin generator configuration file loading (closes #5137, #5140)
+* [13931]: removing objects from the debug output to prevent crashing php with recursions very likely happening on especially routing objects. fixes #5178. refs #3477
+* [13930]: fixes small typo/mistake (closes #5192)
+* [13929]: publish-assets now works correctly for all active plugins, even when they set the plugin path to a different directory. fixes #5163. refs #4926
+* [13928]: fixed remaining array_filter in sfRoute. fixes #5175
+* [13869]: applied performance patch for sfToolkit::stripComments from Wicked. Thanks for providing those well done patches. fixes #5237
+* [13848]: added check for php-xml to check_configuration.php. fixes #5200
+* [13844]: fixed overriding for attribute of generated labels in sfWidgetFormSchemaFormatter. fixes #5220
+* [13811]: suppressing warning popping up in dev env
+* [13805]: fixed a potential warning
+* [13759]: fixed strict standards notice. fixes #5187
+* [13726]: added missing check for PDO
+* [13696]: fixed typos in functional test php error handling
+* [13691]: fixed fluent return value in `sfTester::__call()`
+* [13653]: fixed inserting of virtual columns for stacked layouts
+* [13652]: fixed fields in admin generator cannot be real (closes #5123)
+* [13645]: fixed formatting of phing notice
+* [13643]: updated polish translation according to ticket. fixes #5130
+* [13634]: fixed a warning when installing a plugin with a non-valid version
+* [13615]: updated pl translation for admin gen. closes #5130
+* [13596]: fixed package template
+* [13588]: fixed bad path in generated vhost.sample
+* [13579]: applied performance patch from Wicket, reducing select_currency, select_language and select_country tag time greatly. closes #5114
+* [13578]: applied performance patch from Wicket, reducing options_for_select time greatly. closes #5113
+* [13572]: fixed request format does not always set layout false for non-html content 
+
+Doctrine Plugin
+* [13857]: sfDoctrinePlugin: fisxes issue with choice validators (fixes #5192)
+* [13856]: sfDoctrinePlugin: fixing strict standards notice
+* [13854]: sfDoctrinePlugin: fixes issue with global schema elements (fixes #5194)
+* [13853]: sfDoctrinePlugin: fixing validation so it is on by default like it is supposed to be (addresses #5161)
+* [13852]: sfDoctrinePlugin: Updating Doctrine external to 1.0 branch instead of tag.
+* [13851]: sfDoctrinePlugin: fixes issue with Doctrine cli messages not being forwarded to symfony cli (fixes #5181)
+* [13845]: sfDoctrinePlugin: fixes multiple issues and missing functionality in sfDoctrineRoute
+
+Propel Plugin
+* [13927]: fixed a regression with the handling of CLOB datatype in propel 1.3 in conjunction with forms. fixes #5263
+* [13723]: made queries in the propel debug toolbar copy-and-pasteable
+* [13592]: fixed propel:generate-admin task help message
+
+Version 1.2.0
+-------------
 
 * [13564]: fixed Last-Modified is not checked because expire and cache-control (closes #3597) 
 * [13547]: reverted r13470, partial revert of r13196, fixed order of autoload config files so plugin files are processed first (closes #5041)
