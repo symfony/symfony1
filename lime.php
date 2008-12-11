@@ -772,6 +772,7 @@ EOF;
     $total_covered_lines = 0;
     foreach ($files as $file)
     {
+      $file = realpath($file);
       $is_covered = isset($this->coverage[$file]);
       $cov = isset($this->coverage[$file]) ? $this->coverage[$file] : array();
       $covered_lines = array();
