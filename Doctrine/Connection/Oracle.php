@@ -63,6 +63,7 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
         $this->properties['sql_file_delimiter']   = "\n/\n";
         $this->properties['varchar2_max_length']  = 4000;
         $this->properties['number_max_precision'] = 38;
+        $this->properties['max_identifier_length'] = 30;
         
         parent::__construct($manager, $adapter);
     }

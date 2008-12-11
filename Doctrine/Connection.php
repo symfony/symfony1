@@ -153,6 +153,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
                                   'wildcards'           => array('%', '_'),
                                   'varchar_max_length'  => 255,
                                   'sql_file_delimiter'  => ";\n",
+                                  'max_identifier_length' => 64,
                                   );
 
     /**
@@ -1605,7 +1606,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', array_merge($parts, array($relation['onDelete']), array($relation['onUpdate'])));
         $format = $this->getAttribute(Doctrine::ATTR_FKNAME_FORMAT);
 
-        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, 64);
+        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, $this->properties['max_identifier_length']);
     }
 
     /**
@@ -1623,7 +1624,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', $parts);
         $format = $this->getAttribute(Doctrine::ATTR_IDXNAME_FORMAT);
 
-        return $this->_generateUniqueName('indexes', $parts, $key, $format, 64);
+        return $this->_generateUniqueName('indexes', $parts, $key, $format, $this->properties['max_identifier_length']);
     }
 
     protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = 64)
