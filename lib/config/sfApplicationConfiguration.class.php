@@ -348,6 +348,29 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   }
 
   /**
+   * Gets directories where lib files are stored for a given module.
+   *
+   * @param string $moduleName The module name
+   *
+   * @return array An array of directories
+   */
+  public function getLibDirs($moduleName)
+  {
+    $dirs = array();
+    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
+    {
+      $dirs[] = $key.'/'.$moduleName.'/lib';
+    }
+
+    $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/lib';                  // application
+    $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/lib')); // plugins
+    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/controller/'.$moduleName.'/lib';      // core modules
+    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName.'/lib');   // generated templates in cache
+
+    return $dirs;
+  }
+
+  /**
    * Gets directories where template files are stored for a given module.
    *
    * @param string $moduleName The module name

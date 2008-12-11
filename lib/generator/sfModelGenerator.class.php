@@ -392,15 +392,17 @@ EOF;
 
     require_once $this->getGeneratorManager()->getBasePath().'/'.$basePath;
 
-    $moduleDirs = array_keys($config->getControllerDirs($this->getModuleName()));
-    if (is_file($moduleDirs[0].'/../lib/configuration.php'))
+    $class = 'Base'.ucfirst($this->getModuleName()).'GeneratorConfiguration';
+    foreach ($config->getLibDirs($this->getModuleName()) as $dir)
     {
-      require_once $moduleDirs[0].'/../lib/configuration.php';
+      if (!is_file($configuration = $dir.'/'.$this->getModuleName().'GeneratorConfiguration.class.php'))
+      {
+        continue;
+      }
+
+      require_once $configuration;
       $class = $this->getModuleName().'GeneratorConfiguration';
-    }
-    else
-    {
-      $class = 'Base'.ucfirst($this->getModuleName()).'GeneratorConfiguration';
+      break;
     }
 
     // validate configuration
