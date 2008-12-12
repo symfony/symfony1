@@ -537,7 +537,7 @@ END;';
                 $type = strtoupper($definition['type']);
             } else {
                 throw new Doctrine_Export_Exception(
-                    'Unknow type '.$definition['type'] .' for index '.$name
+                    'Unknown type '.$definition['type'] .' for index '.$name
                 );
             }
         } else {
@@ -546,7 +546,7 @@ END;';
         }
         
         if (!isset($definition['fields']) || !is_array($definition['fields'])) {
-            throw new Doictrine_Export_Exception('No columns given for index '.$name);
+            throw new Doctrine_Export_Exception('No columns given for index '.$name);
         }
         
         $query = 'CONSTRAINT '.$name.' '.$type.' ('.$this->getIndexFieldDeclarationList($definition['fields']).')';
