@@ -286,10 +286,11 @@ abstract class sfBrowserBase
     }
     if (strtoupper($method) == 'GET')
     {
-      $_GET  = $parameters;
+      $_GET = $parameters;
     }
 
     // handle input type="file" fields
+    $_FILES = array();
     if (count($this->files))
     {
       $_FILES = $this->files;
