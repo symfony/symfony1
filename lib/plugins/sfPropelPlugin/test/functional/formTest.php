@@ -42,6 +42,42 @@ $attachments = AttachmentPeer::doSelect($c);
 $b->test()->is(count($attachments), 1, 'the attachment has been saved in the database');
 $b->test()->is($attachments[0]->getFile(), 'uploaded.yml', 'the attachment filename has been saved in the database');
 
+@unlink($uploadedFile);
+AttachmentPeer::doDeleteAll();
+$b->test()->ok(!file_exists($uploadedFile), 'uploaded file is deleted');
+
+// file upload in embedded form
+$b->
+  getAndCheck('attachment', 'embedded')->
+  with('response')->begin()->
+    checkElement('input[name="article[attachment][article_id]"]', false)->
+    checkElement('input[type="file"][name="article[attachment][file]"]')->
+  end()->
+
+  setField('article[title]', 'Test Article')->
+  setField('article[attachment][name]', $name)->
+  setField('article[attachment][file]', $fileToUpload)->
+  click('submit')->
+
+  with('form')->hasErrors(false)->
+
+  isRedirected()->
+  followRedirect()->
+
+  with('response')->contains('ok')
+;
+
+$b->test()->ok(file_exists($uploadedFile), 'file is uploaded');
+$b->test()->is(file_get_contents($uploadedFile), file_get_contents($fileToUpload), 'file is correctly uploaded');
+
+$c = new Criteria();
+$c->add(AttachmentPeer::NAME, $name);
+$attachments = AttachmentPeer::doSelect($c);
+
+$b->test()->is(count($attachments), 1, 'the attachment has been saved in the database');
+$b->test()->ok($attachments[0]->getArticleId(), 'the attachment is tied to an article');
+$b->test()->is($attachments[0]->getFile(), 'uploaded.yml', 'the attachment filename has been saved in the database');
+
 // sfValidatorPropelUnique
 
 // create a category with a unique name

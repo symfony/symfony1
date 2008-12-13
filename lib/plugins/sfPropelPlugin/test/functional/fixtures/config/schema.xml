@@ -86,8 +86,12 @@
 
   <table name="attachment">
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+    <column name="article_id" type="integer" />
     <column name="name" type="varchar" size="255" />
     <column name="file" type="varchar" size="255" />
+    <foreign-key foreignTable="article">
+      <reference local="article_id" foreign="id" onDelete="setnull" />
+    </foreign-key>
   </table>
 
 </database>
