@@ -18,3 +18,8 @@ if (sfConfig::get('sf_web_debug'))
 
   $this->dispatcher->connect('debug.web.load_panels', array('sfWebDebugPanelPropel', 'listenToAddPanelEvent'));
 }
+
+if (sfConfig::get('sf_test'))
+{
+  $this->dispatcher->connect('context.load_factories', array('sfPropel', 'clearAllInstancePools'));
+}

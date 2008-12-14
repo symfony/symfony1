@@ -137,4 +137,21 @@ class sfPropel
     // return qualified name
     return $class;
   }
+
+  /**
+   * Clears all instance pools.
+   */
+  static public function clearAllInstancePools()
+  {
+    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
+    foreach ($files as $file)
+    {
+      $omClass = basename($file, 'MapBuilder.php');
+      if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
+      {
+        $peer = constant($omClass.'::PEER');
+        call_user_func(array($peer, 'clearInstancePool'));
+      }
+    }
+  }
 }
