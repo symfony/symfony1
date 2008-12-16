@@ -63,35 +63,28 @@ EOF;
 
     $this->_checkForPackageParameter($config['yaml_schema_path']);
 
-    $pluginSchemaDirectories = glob(sfConfig::get('sf_plugins_dir') . DIRECTORY_SEPARATOR . '*' .DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'doctrine'); 
+    $tmpPath = sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'tmp';
 
-    $pluginSchemas = sfFinder::type('file')->name('*.yml')->in($pluginSchemaDirectories);
-
-    $tmpPath = sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . 'tmp';
-
-    if ( ! file_exists($tmpPath))
+    if (!file_exists($tmpPath))
     {
       Doctrine_Lib::makeDirectories($tmpPath);
     }
 
-    $plugins = $this->configuration->getPlugins();
-
-    foreach ($pluginSchemas as $schema)
+    foreach ($this->configuration->getPluginPaths() as $plugin => $path)
     {
-      $schema = str_replace('/', DIRECTORY_SEPARATOR, $schema);
-      $plugin = str_replace(sfConfig::get('sf_plugins_dir') . DIRECTORY_SEPARATOR, '', $schema);
-      $e = explode(DIRECTORY_SEPARATOR, $plugin);
-      $plugin = $e[0];
-      $name = basename($schema);
-
-      if (in_array($plugin, $plugins))
+      if (!count($files = sfFinder::type('file')->name('*.yml')->in($path.'/config/doctrine')))
       {
-        $tmpSchemaPath = $tmpPath . DIRECTORY_SEPARATOR . $plugin . '-' . $name;
+        continue;
+      }
+
+      foreach ($files as $schema)
+      {
+        $tmpSchemaPath = $tmpPath.DIRECTORY_SEPARATOR.$plugin.'-'.basename($schema);
 
         $models = Doctrine_Parser::load($schema, 'yml');
-        if(!isset($models['package'])) 
+        if (!isset($models['package']))
         {
-          $models['package'] = $plugin . '.lib.model.doctrine'; 
+          $models['package'] = $plugin.'.lib.model.doctrine';
         }
         Doctrine_Parser::dump($models, 'yml', $tmpSchemaPath);
       }
