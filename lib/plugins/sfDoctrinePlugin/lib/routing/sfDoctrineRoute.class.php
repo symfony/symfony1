@@ -42,6 +42,16 @@ class sfDoctrineRoute extends sfObjectRoute
     $this->options['object_model'] = $this->options['model'];
   }
 
+  public function setListQuery(Doctrine_Query $query)
+  {
+    if (!$this->isBound())
+    {
+      throw new LogicException('The route is not bound.');
+    }
+
+    $this->query = $query;
+  }
+
   public function getObject()
   {
     $object = parent::getObject();
@@ -72,60 +82,39 @@ class sfDoctrineRoute extends sfObjectRoute
     $this->options['model'] = Doctrine::getTable($this->options['model']);
 
     $variables = array();
+    $values = array();
     foreach($this->getRealVariables() as $variable)
     {
       if($this->options['model']->hasColumn($this->options['model']->getColumnName($variable)))
       {
         $variables[] = $variable;
+        $values[$variable] = $parameters[$variable];
       }
     }
 
     if (!isset($this->options['method']))
     {
-      switch(count($variables))
+      if (is_null($this->query))
       {
-        case 0:
-          $this->options['method'] = 'findAll';
-          break;
-        case 1:
-          $this->options['method'] = 'findOneBy'.sfInflector::camelize($variables[0]);
-          $parameters = $parameters[$variables[0]];
-          break;
-        default:
-          $this->options['method'] = 'findByDQL';
-          $wheres = array();
-          $values = array();
-          foreach ($variables as $variable)
-          {
-            $variable = $this->options['model']->getFieldName($variable);
-            $wheres[] = $variable.' = ?';
-            $values[] = $parameters[$variable];
-          }
-          $parameters = array();
-          $parameters[] = implode(' AND ', $wheres);
-          $parameters[] = $values;
+        $q = $this->options['model']->createQuery('a');
+        foreach ($values as $variable => $value)
+        {
+          $fieldName = $this->options['model']->getFieldName($variable);
+          $q->andWhere('a.'. $fieldName . ' = ?', $parameters[$variable]);
+        }
+      } else {
+        $q = $this->query;
       }
-      
-      $className = $this->options['model'];
-
-      return call_user_func_array(array($className, $this->options['method']), $parameters);
+      if (isset($this->options['method_for_query']))
+      {
+        $method = $this->options['method_for_query'];
+        return $this->options['model']->$method($q);
+      } else {
+        return $q->execute();
+      }
     } else {
-      $q = $this->options['model']->createQuery('a');
-      foreach ($variables as $variable)
-      {
-        $fieldName = $this->options['model']->getFieldName($variable);
-        $q->andWhere('a.'. $fieldName . ' = ?', $parameters[$variable]);
-      }
-      $parameters = $q;
-
-      $className = $this->options['model'];
-
-      if (!isset($this->options['method']))
-      {
-        throw new InvalidArgumentException(sprintf('You must pass a "method" option for a %s object.', get_class($this)));
-      }
-
-      return call_user_func(array($className, $this->options['method']), $parameters);
+      $method = $this->options['method'];
+      return $this->options['model']->$method($values);
     }
   }
 
