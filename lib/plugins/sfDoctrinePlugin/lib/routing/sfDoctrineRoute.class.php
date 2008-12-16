@@ -67,7 +67,9 @@ class sfDoctrineRoute extends sfObjectRoute
     $objects = parent::getObjects();
     if ($objects instanceof Doctrine_Record)
     {
-      $objects = new Doctrine_Collection($objects->getTable());
+      $obj = $objects;
+      $objects = new Doctrine_Collection($obj->getTable());
+      $objects[] = obj;
     }
     return $objects;
   }
