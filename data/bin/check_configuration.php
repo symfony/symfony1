@@ -79,6 +79,7 @@ if (class_exists('PDO'))
   check(count($drivers), 'PDO has some drivers installed: '.implode(', ', $drivers), 'Install PDO drivers (mandatory for Propel and Doctrine)', false);
 }
 check(class_exists('DomDocument'), 'PHP-XML module installed', 'Install the php-xml module (required by Propel)', false);
+check(class_exists('XSLTProcessor'), 'XSL module installed', 'Install the XSL module (required by Propel)', false);
 check(function_exists('token_get_all'), 'can use token_get_all()', 'Install token_get_all() function (highly recommended)', false);
 check(function_exists('mb_strlen'), 'can use mb_strlen()', 'Install mb_strlen() function', false);
 check(function_exists('iconv'), 'can use iconv()', 'Install iconv() function', false);
