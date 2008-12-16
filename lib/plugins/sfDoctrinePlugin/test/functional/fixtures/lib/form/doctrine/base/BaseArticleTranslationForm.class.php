@@ -27,6 +27,10 @@ class BaseArticleTranslationForm extends BaseFormDoctrine
       'slug'  => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 
+    $this->validatorSchema->setPostValidator(
+      new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('slug')))
+    );
+
     $this->widgetSchema->setNameFormat('article_translation[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);

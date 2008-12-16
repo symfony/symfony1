@@ -559,6 +559,30 @@ class sfDoctrineFormGenerator extends sfGenerator
     return $columns;
   }
 
+  public function getUniqueColumnNames()
+  {
+    $uniqueColumns = array();
+
+    foreach ($this->getColumns() as $column)
+    {
+      if ($column->getDefinitionKey('unique'))
+      {
+        $uniqueColumns[] = array($column->getName());
+      }
+    }
+
+    $indexes = $this->table->getOption('indexes');
+    foreach ($indexes as $name => $index)
+    {
+      if (isset($index['type']) && $index['type'] == 'unique')
+      {
+        $uniqueColumns[] = $index['fields'];
+      }
+    }
+
+    return $uniqueColumns;
+  }
+
   /**
    * Loads all Doctrine builders.
    */

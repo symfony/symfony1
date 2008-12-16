@@ -30,6 +30,20 @@ class Base<?php echo $this->modelName ?>Form extends BaseFormDoctrine
 <?php endforeach; ?>
     ));
 
+<?php if ($uniqueColumns = $this->getUniqueColumnNames()): ?>
+    $this->validatorSchema->setPostValidator(
+<?php if (count($uniqueColumns) > 1): ?>
+      new sfValidatorAnd(array(
+<?php foreach ($uniqueColumns as $uniqueColumn): ?>
+        new sfValidatorDoctrineUnique(array('model' => '<?php echo $this->table->getOption('name') ?>', 'column' => array('<?php echo strtolower(implode("', '", $uniqueColumn)) ?>'))),
+<?php endforeach; ?>
+      ))
+<?php else: ?>
+      new sfValidatorDoctrineUnique(array('model' => '<?php echo $this->table->getOption('name') ?>', 'column' => array('<?php echo strtolower(implode("', '", $uniqueColumns[0])) ?>')))
+<?php endif; ?>
+    );
+
+<?php endif; ?>
     $this->widgetSchema->setNameFormat('<?php echo $this->underscore($this->modelName) ?>[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
