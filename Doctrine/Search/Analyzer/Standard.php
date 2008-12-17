@@ -270,39 +270,10 @@ class Doctrine_Search_Analyzer_Standard implements Doctrine_Search_Analyzer_Inte
                             'yours'
                             );
 
-    /**
-    * Translit $text from $encoding to regular ASCII
-    * @param string $text
-    * @param string $encoding
-    * @return string translitterated text
-    */
-    private function translit($text,$encoding)
+    public function analyze($text)
     {
-        $old_locale = setlocale(LC_ALL, '0');
-
-        // iconv translit does work only if your locale is an unicode
-        // locale, so let's move to an unicode locale :-)
-        setlocale(LC_ALL, 'en_US.UTF8');
-
-        $r = '';
-        $s1 = iconv($encoding, 'ASCII//TRANSLIT', $text);
-        for ($i = 0; $i < strlen($s1); $i++)
-        {
-            $ch1 = $s1[$i];
-            $ch2 = mb_substr($text, $i, 1);
-
-            $r .= $ch1=='?'?$ch2:$ch1;
-        }
-
-        setlocale(LC_ALL, $old_locale);
-        return $r;
-    }
-
-    public function analyze($text, $encoding='ISO-8859-15')
-    {
-        $text = $this->translit($text,$encoding); 
-
         $text = preg_replace('/[\'`´"]/', '', $text);
+        $text = Doctrine_Inflector::unaccent($text);
         $text = preg_replace('/[^A-Za-z0-9]/', ' ', $text);
         $text = str_replace('  ', ' ', $text);
 

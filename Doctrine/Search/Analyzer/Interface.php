@@ -32,5 +32,5 @@
  */
 interface Doctrine_Search_Analyzer_Interface
 {
-    public function analyze($text, $encoding='ISO8859-15');
+    public function analyze($text);
 }
