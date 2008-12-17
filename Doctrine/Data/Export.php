@@ -173,6 +173,9 @@ class Doctrine_Data_Export extends Doctrine_Data
                     }
 
                     if ($relation = $this->isRelation($record, $key)) {
+                        if ( ! $value) {
+                            continue;
+                        }
                         $relationAlias = $relation['alias'];
                         $relationRecord = $record->$relationAlias;
 
@@ -182,7 +185,7 @@ class Doctrine_Data_Export extends Doctrine_Data
                         }
 
                         // If relation is null or does not exist then continue
-                        if ($relationRecord instanceof Doctrine_Null || !$relationRecord) {
+                        if ($relationRecord instanceof Doctrine_Null || ! $relationRecord) {
                             continue;
                         }
 
