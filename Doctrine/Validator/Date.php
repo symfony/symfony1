@@ -48,6 +48,8 @@ class Doctrine_Validator_Date
         if (count($e) !== 3) {
             return false;
         }
+        $e2 = explode(' ', $e[2]);
+        $e[2] = $e2[0];
         return checkdate($e[1], $e[2], $e[0]);
     }
 }
