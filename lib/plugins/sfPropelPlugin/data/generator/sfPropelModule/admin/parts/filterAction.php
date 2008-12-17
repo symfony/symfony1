@@ -17,6 +17,7 @@
       $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
     }
 
+    $this->setPage(1);
     $this->pager = $this->getPager();
     $this->sort = $this->getSort();
 
