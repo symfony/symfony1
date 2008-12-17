@@ -33,6 +33,14 @@
         <source>Cancel</source>
         <target>Annulla</target>
       </trans-unit>
+      <trans-unit>
+        <source>Choose an action</source>
+        <target>Scegli un'azione</target>
+      </trans-unit>
+      <trans-unit>
+        <source>go</source>
+        <target>ok</target>
+      </trans-unit>
 
       <!-- Filters -->
       <trans-unit>
@@ -63,7 +71,11 @@
       </trans-unit>
       <trans-unit>
         <source>desc</source>
-        <target>desc</target>
+        <target>disc</target>
+      </trans-unit>
+      <trans-unit>
+        <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
+        <target>[0] nessun risultato|[1] 1 risultato|(1,+Inf] %1% risultati</target>
       </trans-unit>
 
       <!-- Pagination -->
@@ -109,6 +121,26 @@
         <source>The item was deleted successfully.</source>
         <target>L'elemento è stato cancellato con successo.</target>
       </trans-unit>
-    </body>
+      <trans-unit>
+        <source>You must at least select one item.</source>
+        <target>Selezionare almeno un elemento.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>You must select an action to execute on the selected items.</source>
+        <target>Selezionare un'azione da eseguire sugli elementi selezionati.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items as some items do not exist anymore.</source>
+        <target>Si è verificato un problema durante la cancellazione degli elementi selezionati, alcuni elementi non esistono più.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>The selected items have been deleted successfully.</source>
+        <target>Gli elementi selezionati sono stati cancellati.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items.</source>
+        <target>Si è verificato un problema durante la cancellazione degli elementi selezionati.</target>
+      </trans-unit>
+   </body>
   </file>
 </xliff>
