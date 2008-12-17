@@ -550,6 +550,14 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             case 'longblob':
             case 'blob':
             case 'bytea':
+            case 'geometry':
+            case 'geometrycollection':
+            case 'point':
+            case 'multipoint':
+            case 'linestring':
+            case 'multilinestring':
+            case 'polygon':
+            case 'multipolygon':
                 $type[] = 'blob';
                 $length = null;
                 break;
