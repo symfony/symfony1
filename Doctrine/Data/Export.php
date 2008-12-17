@@ -199,8 +199,6 @@ class Doctrine_Data_Export extends Doctrine_Data
                         $preparedData[$className][$recordKey][$key] = $value;
                     }
                 }
-
-                $record->free();
             }
         }
         
