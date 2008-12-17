@@ -185,20 +185,32 @@ class sfToolkit
       return $source;
     }
 
-    $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
     $output = '';
 
-    foreach (token_get_all($source) as $token) {
-      // array
-      if (isset($token[1])) {
-        // no action on comments
-        if (!isset($ignore[$token[0]])) {
-          // anything else -> output "as is"
-          $output .= $token[1];
-        }
-      } else {
+    $tokens = token_get_all($source);
+    foreach ($tokens as $token)
+    {
+      if (is_string($token))
+      {
         // simple 1-character token
         $output .= $token;
+      }
+      else
+      {
+        // token array
+        list($id, $text) = $token;
+
+        switch ($id)
+        {
+          case T_COMMENT:
+          case T_DOC_COMMENT:
+            // no action on comments
+            break;
+          default:
+            // anything else -> output "as is"
+            $output .= $text;
+            break;
+        }
       }
     }
 
