@@ -76,7 +76,8 @@ EOF;
       {
         continue;
       }
-
+      $info = pathinfo($path);
+      $plugin = $info['basename'];
       foreach ($files as $schema)
       {
         $tmpSchemaPath = $tmpPath.DIRECTORY_SEPARATOR.$plugin.'-'.basename($schema);
