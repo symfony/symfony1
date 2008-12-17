@@ -1209,6 +1209,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 
             switch (strtolower($this->_conn->getDriverName())) {
                 case 'mysql':
+                    $this->useQueryCache(false);
                     // mysql doesn't support LIMIT in subqueries
                     $list = $this->_conn->execute($subquery, $this->_execParams)->fetchAll(Doctrine::FETCH_COLUMN);
                     $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));

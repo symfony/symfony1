@@ -1041,12 +1041,16 @@ abstract class Doctrine_Query_Abstract
                 } else {
                     // Generate SQL or pick already processed one
                     $query = $this->getSqlQuery($params);
-                    
-                    // Convert query into a serialized form
-                    $serializedQuery = $this->getCachedForm($query);
-                    
-                    // Save cached query
-                    $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
+
+                    // Check again because getSqlQuery() above could have flipped the _queryCache flag
+                    // if this query contains the limit sub query algorithm we don't need to cache it
+                    if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
+                        // Convert query into a serialized form
+                        $serializedQuery = $this->getCachedForm($query);
+
+                        // Save cached query
+                        $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
+                    }
                 }
             } else {
                 $query = $this->getSqlQuery($params);
