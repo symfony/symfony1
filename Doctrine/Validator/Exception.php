@@ -62,24 +62,13 @@ class Doctrine_Validator_Exception extends Doctrine_Exception implements Countab
     }
 
     /**
-     * __toString
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-
-        return parent::__toString();
-    }
-
-    /**
      * Generate a message with all classes that have exceptions
      */
     private function generateMessage()
     {
-        $message = "";
+        $message = '';
         foreach ($this->invalid as $record) {
-           $message .= "Validation error in class " . get_class($record) . " ";
+            $message .= $record->getErrorStackAsString();
         }
         return $message;
     }
