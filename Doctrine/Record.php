@@ -169,6 +169,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected static $_customMutators = array();
 
     /**
+     * Whether or not to serialize references when a Doctrine_Record is serialized
+     *
+     * @var boolean
+     */
+    protected $_serializeReferences = false;
+
+    /**
      * @var integer $index                  this index is used for creating object identifiers
      */
     private static $_index = 1;
@@ -247,6 +254,22 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         $this->construct();
+    }
+
+    /**
+     * Set whether or not to serialize references.
+     * This is used by caching since we want to serialize references when caching
+     * but not when just normally serializing a instance
+     *
+     * @param boolean $bool
+     * @return boolean $bool
+     */
+    public function serializeReferences($bool = null)
+    {
+        if ( ! is_null($bool)) {
+            $this->_serializeReferences = $bool;
+        }
+        return $this->_serializeReferences;
     }
 
     /**
@@ -703,7 +726,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         $vars = get_object_vars($this);
 
-        unset($vars['_references']);
+        if ( ! $this->serializeReferences()) {
+            unset($vars['_references']);
+        }
         unset($vars['_table']);
         unset($vars['_errorStack']);
         unset($vars['_filter']);

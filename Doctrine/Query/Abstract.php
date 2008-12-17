@@ -996,7 +996,6 @@ abstract class Doctrine_Query_Abstract
     public function calculateResultCacheHash($params = array())
     {
         $dql = $this->getDql();
-        $params = $this->getParams($params);
         $conn = $this->getConnection();
         $hash = md5($conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
         return $hash;
@@ -1299,6 +1298,12 @@ abstract class Doctrine_Query_Abstract
             }
             if (isset($components['map'])) {
                 $componentInfo[$alias][] = $components['map'];
+            }
+        }
+
+        if ($customComponent instanceof Doctrine_Collection) {
+            foreach ($customComponent as $record) {
+                $record->serializeReferences(true);
             }
         }
 
