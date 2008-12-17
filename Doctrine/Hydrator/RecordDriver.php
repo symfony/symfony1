@@ -159,6 +159,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
             $table = Doctrine::getTable($subclass);
             $inheritanceMap = $table->getOption('inheritanceMap');
             list($key, $value) = each($inheritanceMap);
+            $key = $this->_tables[$component]->getFieldName($key);
             if ( ! isset($data[$key]) || $data[$key] != $value) {
                 continue;
             } else {
