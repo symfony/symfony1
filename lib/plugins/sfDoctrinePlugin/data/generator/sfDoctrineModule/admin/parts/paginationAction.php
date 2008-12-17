@@ -3,6 +3,8 @@
     $pager = $this->configuration->getPager('<?php echo $this->getModelClass() ?>');
     $pager->setQuery($this->buildQuery());
     $pager->setPage($this->getPage());
+    $pager->setTableMethod($this->configuration->getTableMethod());
+    $pager->setTableCountMethod($this->configuration->getTableCountMethod());
     $pager->init();
 
     return $pager;

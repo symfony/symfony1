@@ -18,18 +18,51 @@
  */
 class sfDoctrinePager extends sfPager implements Serializable
 {
-  protected $query;
+  protected
+    $query                 = null,
+    $tableMethodName       = null,
+    $tableCountMethodName  = null;
 
   /**
-   * __construct
+   * Get the name of the table method used to retrieve the query object for the pager
    *
+   * @return string $tableMethodName
+   */
+  public function getTableMethod()
+  {
+    return $this->tableMethodName;
+  }
+
+  /**
+   * Set the name of the table method used to retrieve the query object for the pager
+   *
+   * @param string $tableMethodName 
    * @return void
    */
-  public function __construct($class, $defaultMaxPerPage = 10)
+  public function setTableMethod($tableMethodName)
   {
-    parent::__construct($class, $defaultMaxPerPage);
+    $this->tableMethodName = $tableMethodName;
+  }
 
-    $this->setQuery(Doctrine_Query::create()->from($class));
+  /**
+   * Get the name of the table method used to retrieve the query object for the pager count
+   *
+   * @return string $tableCountMethodName
+   */
+  public function getTableCountMethod()
+  {
+    return $this->tableCountMethodName;
+  }
+
+  /**
+   * Set the name of the table method used to retrieve the query object for the pager count
+   *
+   * @param string $tableCountMethodName 
+   * @return void
+   */
+  public function setTableCountMethod($tableCountMethodName)
+  {
+    $this->tableCountMethodName = $tableCountMethodName;
   }
 
   /**
@@ -60,6 +93,21 @@ class sfDoctrinePager extends sfPager implements Serializable
     }
   }
 
+  public function getCountQuery()
+  {
+    if (!$this->tableCountMethodName)
+    {
+      $q = clone $this->getQuery()
+        ->offset(0)
+        ->limit(0);
+
+      return $q;
+    } else {
+      $method = $this->tableCountMethodName;
+      return Doctrine::getTable($this->getClass())->$method();
+    }
+  }
+
   /**
    * Initialize the pager instance and prepare it to be used for rendering
    *
@@ -67,7 +115,8 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function init()
   {
-    $count = $this->getQuery()->offset(0)->limit(0)->count();
+    $countQuery = $this->getCountQuery();
+    $count = $countQuery->count();
 
     $this->setNbResults($count);
 
@@ -96,7 +145,18 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function getQuery()
   {
-    return $this->query;
+    if (!$this->tableMethodName)
+    {
+      if (!$this->query)
+      {
+        $this->query = Doctrine_Query::create()->from($this->getClass());
+      }
+
+      return $this->query;
+    } else {
+      $method = $this->tableMethodName;
+      return Doctrine::getTable($this->getClass())->$method();
+    }
   }
 
   /**
