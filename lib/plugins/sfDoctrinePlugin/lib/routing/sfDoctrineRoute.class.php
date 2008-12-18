@@ -116,7 +116,7 @@ class sfDoctrineRoute extends sfObjectRoute
       }
     } else {
       $method = $this->options['method'];
-      return $this->options['model']->$method($values);
+      return $this->options['model']->$method($this->filterParameters($parameters));
     }
   }
 
