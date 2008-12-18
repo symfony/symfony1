@@ -325,6 +325,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ( ! $this->_table->getAttribute(Doctrine::ATTR_VALIDATE)) {
             return true;
         }
+
+        if ($this->_state == self::STATE_LOCKED || $this->_state == self::STATE_TLOCKED) {
+            return true;
+        }
+
         // Clear the stack from any previous errors.
         $this->getErrorStack()->clear();
 
@@ -350,6 +355,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         $valid = $this->getErrorStack()->count() == 0 ? true : false;
         if ($valid) {
+            $stateBeforeLock = $this->_state;
+            $this->_state = $this->exists() ? self::STATE_LOCKED : self::STATE_TLOCKED;
+
             foreach ($this->_references as $reference) {
                 if ($reference instanceof Doctrine_Record) {
                     if ( ! $valid = $reference->isValid()) {
@@ -363,7 +371,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     }
                 }
             }
+            $this->_state = $stateBeforeLock;
         }
+
         return $valid;
     }
 
