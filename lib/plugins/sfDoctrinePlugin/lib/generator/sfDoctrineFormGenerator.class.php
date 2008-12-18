@@ -89,6 +89,8 @@ class sfDoctrineFormGenerator extends sfGenerator
       file_put_contents($file, $this->evalTemplate('sfDoctrineFormBaseTemplate.php'));
     }
 
+    $pluginPaths = $this->generatorManager->getConfiguration()->getAllPluginPaths();
+
     // create a form class for every Doctrine class
     foreach ($models as $model)
     {
@@ -112,7 +114,7 @@ class sfDoctrineFormGenerator extends sfGenerator
       file_put_contents($baseDir.'/base/Base'.$model.'Form.class.php', $this->evalTemplate('sfDoctrineFormGeneratedTemplate.php'));
       if ($isPluginModel)
       {
-        $pluginBaseDir = sfConfig::get('sf_plugins_dir') . '/' . $pluginName . '/lib/form/doctrine';
+        $pluginBaseDir = $pluginPaths[$pluginName].'/lib/form/doctrine';
         if (!file_exists($classFile = $pluginBaseDir.'/Plugin'.$model.'Form.class.php'))
         {
             if (!is_dir($pluginBaseDir))
@@ -146,13 +148,17 @@ class sfDoctrineFormGenerator extends sfGenerator
   {
     if (!$this->pluginModels)
     {
-      $plugins = $this->generatorManager->getConfiguration()->getPlugins();
-      foreach ($plugins as $plugin)
-      {
-        $path = sfConfig::get('sf_plugins_dir') . '/' . $plugin . '/lib/model/doctrine';
-        $models = sfFinder::type('file')->name('*.php')->in($path);
+      $plugins     = $this->generatorManager->getConfiguration()->getPlugins();
+      $pluginPaths = $this->generatorManager->getConfiguration()->getAllPluginPaths();
 
-        foreach ($models as $path)
+      foreach ($pluginPaths as $pluginName => $path)
+      {
+        if (!in_array($pluginName, $plugins))
+        {
+          continue;
+        }
+
+        foreach (sfFinder::type('file')->name('*.php')->in($path.'/lib/model/doctrine') as $path)
         {
           $info = pathinfo($path);
           $e = explode('.', $info['filename']);
@@ -164,7 +170,6 @@ class sfDoctrineFormGenerator extends sfGenerator
             $reflection = new ReflectionClass($modelName);
             if ($reflection->isSubClassOf($parent))
             {
-              $pluginName = basename(dirname(dirname(dirname($info['dirname']))));
               $this->pluginModels[$modelName] = $pluginName;
               $generators = Doctrine::getTable($modelName)->getGenerators();
               foreach ($generators as $generator)
