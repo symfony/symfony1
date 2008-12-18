@@ -70,15 +70,15 @@ EOF;
       Doctrine_Lib::makeDirectories($tmpPath);
     }
 
-    foreach ($this->configuration->getPluginPaths() as $plugin => $path)
+    $plugins = $this->configuration->getPlugins();
+    foreach ($this->configuration->getAllPluginPaths() as $plugin => $path)
     {
-      if (!count($files = sfFinder::type('file')->name('*.yml')->in($path.'/config/doctrine')))
+      if (!in_array($plugin, $plugins))
       {
         continue;
       }
-      $info = pathinfo($path);
-      $plugin = $info['basename'];
-      foreach ($files as $schema)
+      $schemas = sfFinder::type('file')->name('*.yml')->in($path.'/config/doctrine');
+      foreach ($schemas as $schema)
       {
         $tmpSchemaPath = $tmpPath.DIRECTORY_SEPARATOR.$plugin.'-'.basename($schema);
 
