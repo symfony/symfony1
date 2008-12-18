@@ -83,7 +83,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         continue;
       }
 
-      if (preg_match('/^.*?(\b(?:SELECT|INSERT|UPDATE|DELETE)\b.*)$/', $log['message'], $match))
+      if (preg_match('/^(?:prepare|exec|query): (.*)$/s', $log['message'], $match))
       {
         $logs[$i++] = $match[1];
         $bindings[$i - 1] = array();

@@ -136,7 +136,7 @@ class sfVarLogger extends sfLogger
   {
     // get log type in {}
     $type = 'sfOther';
-    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/', $message, $matches))
+    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/s', $message, $matches))
     {
       $type    = $matches[1];
       $message = $matches[2];
