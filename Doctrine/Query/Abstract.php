@@ -557,7 +557,7 @@ abstract class Doctrine_Query_Abstract
     public function getFlattenedParams($params = array())
     {
         return array_merge(
-            $params, $this->_params['exec'], 
+            (array) $params, (array) $this->_params['exec'], 
             $this->_params['join'], $this->_params['set'],
             $this->_params['where'], $this->_params['having']
         );
@@ -1064,7 +1064,7 @@ abstract class Doctrine_Query_Abstract
 
         if ($this->isLimitSubqueryUsed() &&
                 $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
-            $params = array_merge($params, $params);
+            $params = array_merge((array) $params, (array) $params);
         }
 
         if ($this->_type !== self::SELECT) {

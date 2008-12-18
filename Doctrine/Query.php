@@ -1306,7 +1306,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // pgsql & oracle need the order by fields to be preserved in select clause
         if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
             foreach ($this->_sqlParts['orderby'] as $part) {
-                $part = trim($part);
+                // Remove identifier quoting if it exists
+                $callback = create_function('$e', 'return trim($e, \'[]`"\');');
+                $part = trim(implode('.', array_map($callback, explode('.', $part))));
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
                 $part = trim($e[0]);
 
