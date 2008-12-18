@@ -69,6 +69,7 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
                 return $record;
             }
         }
+        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $name, get_class($record)));
     }
 
     /**
@@ -90,5 +91,6 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
                 }
             }
         }
+        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $name, get_class($record)));
     }
 }
