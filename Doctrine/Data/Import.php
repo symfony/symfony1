@@ -196,7 +196,7 @@ class Doctrine_Data_Import extends Doctrine_Data
         $obj = $this->_importedObjects[$rowKey];
 
         foreach ((array) $row as $key => $value) {
-            if (method_exists($obj, 'set' . Doctrine_Inflector::classify($key))) {
+            if (is_callable($obj, 'set' . Doctrine_Inflector::classify($key))) {
                 $func = 'set' . Doctrine_Inflector::classify($key);
                 $obj->$func($value);
             } else if ($obj->getTable()->hasField($key)) {
