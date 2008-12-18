@@ -185,32 +185,20 @@ class sfToolkit
       return $source;
     }
 
+    $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
     $output = '';
 
-    $tokens = token_get_all($source);
-    foreach ($tokens as $token)
-    {
-      if (is_string($token))
-      {
+    foreach (token_get_all($source) as $token) {
+      // array
+      if (isset($token[1])) {
+        // no action on comments
+        if (!isset($ignore[$token[0]])) {
+          // anything else -> output "as is"
+          $output .= $token[1];
+        }
+      } else {
         // simple 1-character token
         $output .= $token;
-      }
-      else
-      {
-        // token array
-        list($id, $text) = $token;
-
-        switch ($id)
-        {
-          case T_COMMENT:
-          case T_DOC_COMMENT:
-            // no action on comments
-            break;
-          default:
-            // anything else -> output "as is"
-            $output .= $text;
-            break;
-        }
       }
     }
 
@@ -229,6 +217,7 @@ class sfToolkit
     return is_array($value) ? array_map(array('sfToolkit', 'stripslashesDeep'), $value) : stripslashes($value);
   }
 
+  // code from php at moechofe dot com (array_merge comment on php.net)
   /*
    * array arrayDeepMerge ( array array1 [, array array2 [, array ...]] )
    *
@@ -247,30 +236,53 @@ class sfToolkit
    * Different from array_merge
    *  If string keys have arrays for values, these arrays will merge recursively.
    */
-  public static function arrayDeepMerge($a1 = false)
+  public static function arrayDeepMerge()
   {
-    $result = $a1;
-    $args = func_get_args();
-    for ($i = 1, $c = count($args); $i < $c; $i++)
+    switch (func_num_args())
     {
-      $result = sfToolkit::_arrayDeepMerge($result, $args[$i]);
-    }
-    return $result;
-  }
-
-  protected static function _arrayDeepMerge($a1, $a2) {
-    $result = $a2;
-    if (is_array($a1) && is_array($a2))
-    {
-      $result += $a1;
-      foreach ($result as $key => $foo)
-      {
-        if (isset($a1[$key], $a2[$key]) && is_array($a1[$key]) && is_array($a2[$key])) {
-          $result[$key] = self::_arrayDeepMerge($a1[$key], $a2[$key]);
+      case 0:
+        return false;
+      case 1:
+        return func_get_arg(0);
+      case 2:
+        $args = func_get_args();
+        $args[2] = array();
+        if (is_array($args[0]) && is_array($args[1]))
+        {
+          foreach (array_unique(array_merge(array_keys($args[0]),array_keys($args[1]))) as $key)
+          {
+            $isKey0 = array_key_exists($key, $args[0]);
+            $isKey1 = array_key_exists($key, $args[1]);
+            if ($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
+            {
+              $args[2][$key] = self::arrayDeepMerge($args[0][$key], $args[1][$key]);
+            }
+            else if ($isKey0 && $isKey1)
+            {
+              $args[2][$key] = $args[1][$key];
+            }
+            else if (!$isKey1)
+            {
+              $args[2][$key] = $args[0][$key];
+            }
+            else if (!$isKey0)
+            {
+              $args[2][$key] = $args[1][$key];
+            }
+          }
+          return $args[2];
         }
-      }
+        else
+        {
+          return $args[1];
+        }
+      default :
+        $args = func_get_args();
+        $args[1] = sfToolkit::arrayDeepMerge($args[0], $args[1]);
+        array_shift($args);
+        return call_user_func_array(array('sfToolkit', 'arrayDeepMerge'), $args);
+        break;
     }
-    return $result;
   }
 
   /**
