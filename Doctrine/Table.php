@@ -1079,6 +1079,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 case 'integer':
                     $length = 8;
                 break;
+                case 'decimal':
+                    $length = 18;
+                break;
                 case 'string':
                 case 'clob':
                 case 'float':
