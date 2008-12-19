@@ -1148,7 +1148,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
         // If is the package class then we need to make the path to the complete package
         else if (isset($definition['is_package_class']) && $definition['is_package_class']) {
-            $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
+            if (isset($definition['package_custom_path'])) {
+              $writePath = $definition['package_custom_path'];
+            } else {
+              $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
+            }
 
             if ($this->generateTableClasses()) {
                 $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
