@@ -42,7 +42,7 @@ class Base<?php echo $this->table->getOption('name') ?>FormFilter extends BaseFo
   }
 
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
-  public function add<?php echo $this->underscore($relation['alias']) ?>ListColumnQuery(Doctrine_Query $query, $field, $values)
+  public function add<?php echo $relation['alias'] ?>ListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
     {
