@@ -86,6 +86,7 @@ EOF;
         if (!isset($models['package']))
         {
           $models['package'] = $plugin.'.lib.model.doctrine';
+          $models['package_custom_path'] = $path.'/lib/model/doctrine';
         }
         Doctrine_Parser::dump($models, 'yml', $tmpSchemaPath);
       }
