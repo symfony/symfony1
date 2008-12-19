@@ -996,6 +996,7 @@ abstract class Doctrine_Query_Abstract
     public function calculateResultCacheHash($params = array())
     {
         $dql = $this->getDql();
+        $params = $this->getParams($params);
         $conn = $this->getConnection();
         $hash = md5($conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
         return $hash;
@@ -1072,6 +1073,8 @@ abstract class Doctrine_Query_Abstract
         }
 
         $stmt = $this->_conn->execute($query, $params);
+
+        $this->_params['exec'] = array();
 
         return $stmt;
     }
