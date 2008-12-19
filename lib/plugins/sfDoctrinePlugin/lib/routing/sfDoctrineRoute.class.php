@@ -52,31 +52,22 @@ class sfDoctrineRoute extends sfObjectRoute
     $this->query = $query;
   }
 
-  public function getObject()
-  {
-    $object = parent::getObject();
-    if ($object instanceof Doctrine_Collection)
-    {
-      $object = $object->getFirst();
-    }
-    return $object;
-  }
-
-  public function getObjects()
-  {
-    $objects = parent::getObjects();
-    if ($objects instanceof Doctrine_Record)
-    {
-      $obj = $objects;
-      $objects = new Doctrine_Collection($obj->getTable());
-      $objects[] = obj;
-    }
-    return $objects;
-  }
-
   protected function getObjectForParameters($parameters)
   {
-    return $this->getObjectsForParameters($parameters);
+    $results = $this->getObjectsForParameters($parameters);
+
+    // If query returned Doctrine_Collection with results inside then we
+    // need to return the first Doctrine_Record otherwise return null
+    if ($results instanceof Doctrine_Collection && count($results))
+    {
+      $results = $results->getFirst();
+    }
+    else
+    {
+      $results = null;
+    }
+
+    return $results;
   }
 
   protected function getObjectsForParameters($parameters)
@@ -104,20 +95,38 @@ class sfDoctrineRoute extends sfObjectRoute
           $fieldName = $this->options['model']->getFieldName($variable);
           $q->andWhere('a.'. $fieldName . ' = ?', $parameters[$variable]);
         }
-      } else {
+      }
+      else
+      {
         $q = $this->query;
       }
       if (isset($this->options['method_for_query']))
       {
         $method = $this->options['method_for_query'];
-        return $this->options['model']->$method($q);
-      } else {
-        return $q->execute();
+        $results = $this->options['model']->$method($q);
       }
-    } else {
-      $method = $this->options['method'];
-      return $this->options['model']->$method($this->filterParameters($parameters));
+      else
+      {
+        $results = $q->execute();
+      }
     }
+    else
+    {
+      $method = $this->options['method'];
+      $results = $this->options['model']->$method($this->filterParameters($parameters));
+    }
+
+    // If query returned a Doctrine_Record instance instead of a 
+    // Doctrine_Collection then we need to create a new Doctrine_Collection with
+    // one element inside and return that
+    if ($results instanceof Doctrine_Record)
+    {
+      $obj = $results;
+      $results = new Doctrine_Collection($obj->getTable());
+      $results[] = $obj;
+    }
+
+    return $results;
   }
 
   protected function doConvertObjectToArray($object)
