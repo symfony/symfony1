@@ -219,6 +219,10 @@ class Doctrine_Data_Import extends Doctrine_Data
                 } else {
                     $obj->set($key, $this->_getImportedObject($value, $obj, $key, $rowKey));
                 }
+            // used for Doctrine plugin methods (Doctrine_Template)
+            } else if (is_callable(array($obj, 'set' . Doctrine_Inflector::classify($key)))) {
+              $func = 'set' . Doctrine_Inflector::classify($key);
+              $obj->$func($value);
             } else {
                 throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');
             }
