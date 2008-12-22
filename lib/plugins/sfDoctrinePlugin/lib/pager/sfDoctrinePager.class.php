@@ -21,7 +21,7 @@ class sfDoctrinePager extends sfPager implements Serializable
   protected
     $query                 = null,
     $tableMethodName       = null,
-    $tableCountMethodName  = null;
+    $tableMethodCalled     = false;
 
   /**
    * Get the name of the table method used to retrieve the query object for the pager
@@ -42,27 +42,6 @@ class sfDoctrinePager extends sfPager implements Serializable
   public function setTableMethod($tableMethodName)
   {
     $this->tableMethodName = $tableMethodName;
-  }
-
-  /**
-   * Get the name of the table method used to retrieve the query object for the pager count
-   *
-   * @return string $tableCountMethodName
-   */
-  public function getTableCountMethod()
-  {
-    return $this->tableCountMethodName;
-  }
-
-  /**
-   * Set the name of the table method used to retrieve the query object for the pager count
-   *
-   * @param string $tableCountMethodName 
-   * @return void
-   */
-  public function setTableCountMethod($tableCountMethodName)
-  {
-    $this->tableCountMethodName = $tableCountMethodName;
   }
 
   /**
@@ -95,17 +74,11 @@ class sfDoctrinePager extends sfPager implements Serializable
 
   public function getCountQuery()
   {
-    if (!$this->tableCountMethodName)
-    {
-      $q = clone $this->getQuery()
-        ->offset(0)
-        ->limit(0);
+    $q = clone $this->getQuery()
+      ->offset(0)
+      ->limit(0);
 
-      return $q;
-    } else {
-      $method = $this->tableCountMethodName;
-      return Doctrine::getTable($this->getClass())->$method();
-    }
+    return $q;
   }
 
   /**
@@ -145,18 +118,13 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function getQuery()
   {
-    if (!$this->tableMethodName)
+    if (!$this->tableMethodCalled && $this->tableMethodName)
     {
-      if (!$this->query)
-      {
-        $this->query = Doctrine_Query::create()->from($this->getClass());
-      }
-
-      return $this->query;
-    } else {
       $method = $this->tableMethodName;
-      return Doctrine::getTable($this->getClass())->$method();
+      $this->query = Doctrine::getTable($this->getClass())->$method($this->query);
+      $this->tableMethodCalled = true;
     }
+    return $this->query;
   }
 
   /**
