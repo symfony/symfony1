@@ -62,7 +62,7 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -139,7 +139,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
     }
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -399,7 +399,7 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -452,7 +452,7 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -507,7 +507,7 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -893,7 +893,7 @@ function _parse_value_for_date($value, $key, $format_char)
   {
     return date($format_char, $value);
   }
-  else if ($value == '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
+  else if ($value === '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
   {
     return $value;
   }

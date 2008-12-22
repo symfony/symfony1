@@ -35,7 +35,7 @@ class myRequest
   }
 }
 
-$t = new lime_test(81, new lime_output_color());
+$t = new lime_test(87, new lime_output_color());
 
 $context = sfContext::getInstance(array('user' => 'myUser', 'request' => 'myRequest', 'controller' => 'myController'));
 
@@ -50,6 +50,7 @@ $t->diag('select_day_tag()');
 $t->like(select_day_tag('day'), '/<select name="day" id="day">/', 'select_day_tag() outputs a select tag for days');
 $t->like(select_day_tag('day'), '/<option value="'.date('j').'" selected="selected">/', 'select_day_tag() selects the current day by default');
 $t->like(select_day_tag('day', 31), '/<option value="31" selected="selected">/', 'select_day_tag() takes a day as its second argument');
+$t->like(select_day_tag('day', '01'), '/<option value="1" selected="selected">/', 'select_day_tag() takes a day as its second argument');
 
 // options
 $t->like(select_day_tag('day', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_day_tag() can take an "include_custom" option');
@@ -62,7 +63,7 @@ $t->diag('select_month_tag()');
 $t->like(select_month_tag('month'), '/<select name="month" id="month">/', 'select_month_tag() outputs a select tag for months');
 $t->like(select_month_tag('month'), '/<option value="'.date('n').'" selected="selected">/', 'select_month_tag() selects the current month by default');
 $t->like(select_month_tag('month', 12), '/<option value="12" selected="selected">/', 'select_month_tag() takes a month as its second argument');
-$t->like(select_month_tag('month', 2), '/<option value="1">January<\/option>/i', 'select_month_tag() displays month names by default');
+$t->like(select_month_tag('month', '02'), '/<option value="1">January<\/option>/i', 'select_month_tag() displays month names by default');
 
 // options
 $t->like(select_month_tag('month', 2, array('use_short_month' => true)), '/<option value="1">Jan<\/option>/i', 'select_month_tag() displays short month names if passed a "use_short_month" options');
@@ -97,6 +98,7 @@ $t->diag('select_second_tag()');
 $t->like(select_second_tag('second'), '/<select name="second" id="second">/', 'select_second_tag() outputs a select tag for seconds');
 $t->like(select_second_tag('second'), '/selected="selected">'.date('s').'/', 'select_second_tag() selects the current seconds by default');
 $t->like(select_second_tag('second', 12), '/<option value="12" selected="selected">/', 'select_second_tag() takes a second number as its second argument');
+$t->like(select_second_tag('second', '02'), '/<option value="2" selected="selected">/', 'select_second_tag() takes a second number as its second argument');
 
 // options
 $t->like(select_second_tag('second', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_second_tag() can take an "include_custom" option');
@@ -110,6 +112,7 @@ $t->diag('select_minute_tag()');
 $t->like(select_minute_tag('minute'), '/<select name="minute" id="minute">/', 'select_minute_tag() outputs a select tag for minutes');
 $t->like(select_minute_tag('minute'), '/selected="selected">'.date('i').'/', 'select_minute_tag() selects the current minutes by default');
 $t->like(select_minute_tag('minute', 12), '/<option value="12" selected="selected">/', 'select_minute_tag() takes a minute number as its second argument');
+$t->like(select_minute_tag('minute', '02'), '/<option value="2" selected="selected">/', 'select_minute_tag() takes a minute number as its second argument');
 
 // options
 $t->like(select_minute_tag('minute', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_minute_tag() can take an "include_custom" option');
@@ -150,6 +153,9 @@ $t->like(select_time_tag('time'), '/<select name="time\[hour\]" id="time_hour">/
 $t->like(select_time_tag('time'), '/selected="selected">'.date('H').'/', 'select_time_tag() selects the current hours by default');
 $t->like(select_time_tag('time'), '/<select name="time\[minute\]" id="time_minute">/', 'select_time_tag() outputs a select tag for minutes');
 $t->like(select_time_tag('time'), '/selected="selected">'.date('i').'/', 'select_time_tag() selects the current minutes by default');
+$t->like(select_time_tag('time','09:01:05'), '/<option value="9" selected="selected">/', 'select_time_tag() selects hours for one digit correctly');
+$t->like(select_time_tag('time','09:01:05'), '/<option value="1" selected="selected">/', 'select_time_tag() selects minutes for one digit correctly');
+$t->like(select_time_tag('time','09:01:05', array('include_second' => true)), '/<option value="5" selected="selected">/', 'select_time_tag() selects seconds for one digit correctly');
 $t->todo('select_time_tag()');
 
 // select_datetime_tag()
