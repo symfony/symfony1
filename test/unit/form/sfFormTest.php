@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(131, new lime_output_color());
+$t = new lime_test(133, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -409,6 +409,20 @@ $output = <<<EOF
 EOF;
 $t->is($f->renderUsing('list'), $output, 'renderUsing() renders the widget schema using the given form formatter');
 $t->is($f->getWidgetSchema()->getFormFormatterName(), 'table', 'renderUsing() does not persist form formatter name for the current form instance');
+
+$w = $f->getWidgetSchema();
+$w->addFormFormatter('custom', new sfWidgetFormSchemaFormatterList($w));
+$t->is($f->renderUsing('custom'), $output, 'renderUsing() renders a custom form formatter');
+
+try
+{
+  $f->renderUsing('nonexistant');
+  $t->fail('renderUsing() throws an exception if formatter name does not exist');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('renderUsing() throws an exception if formatter name does not exist');
+}
 
 // renderHiddenFields()
 $t->diag('->renderHiddenFields()');

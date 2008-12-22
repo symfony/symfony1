@@ -133,13 +133,6 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     $currentFormatterName = $this->widgetSchema->getFormFormatterName();
 
-    $formatterClass = sprintf('sfWidgetFormSchemaFormatter%s', ucfirst($formatterName));
-
-    if (!class_exists($formatterClass))
-    {
-      throw new InvalidArgumentException(sprintf('Formatter "%s" (class "%s") does not exist', $formatterName, $formatterClass));
-    }
-
     $this->widgetSchema->setFormFormatterName($formatterName);
 
     $output = $this->render($attributes);
