@@ -97,6 +97,16 @@ class sfDoctrineGenerator extends sfModelGenerator
    */
   public function getColumnGetter($column, $developed = false, $prefix = '')
   {
+    $obj = $this->table->getRecord();
+
+    try {
+      $column = $this->table->getFieldName($column);
+      $obj->get($column);
+    // Not a real column
+    } catch (Exception $e) {
+      $column = sfInflector::camelize($column);
+    }
+
     if ($developed)
     {
       return sprintf("$%s%s['%s']", $prefix, $this->getSingularName(), $column);
@@ -147,7 +157,6 @@ class sfDoctrineGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getColumns() as $name => $column)
     {
-      $name = sfInflector::underscore($name);
       $names[] = $name;
       $fields[$name] = array_merge(array(
         'is_link'      => (Boolean) $column->isPrimaryKey(),
@@ -209,7 +218,6 @@ class sfDoctrineGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getColumns() as $name => $column)
     {
-      $name = sfInflector::underscore($name);
       $names[] = $name;
       $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
     }
@@ -251,7 +259,7 @@ class sfDoctrineGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getColumns() as $name => $column)
     {
-      $names[] = sfInflector::underscore($name);
+      $names[] = $name;
     }
 
     if ($withM2M)
@@ -274,6 +282,7 @@ class sfDoctrineGenerator extends sfModelGenerator
   {
     foreach (array_keys($this->table->getColumns()) as $name)
     {
+      $name = $this->table->getFieldName($name);
       $columns[$name] = new sfDoctrineColumn($name, $this->table);
     }
 
