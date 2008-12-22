@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(40, new lime_output_color());
 
 $w = new sfWidgetFormTime(array('with_seconds' => true));
 
@@ -41,6 +41,14 @@ $css = new sfDomCssSelector($dom);
 $t->is($css->matchSingle('#foo_hour option[value="12"][selected="selected"]')->getValue(), 12, '->render() renders a select tag for the hour');
 $t->is($css->matchSingle('#foo_minute option[value="30"][selected="selected"]')->getValue(), 30, '->render() renders a select tag for the minute');
 $t->is($css->matchSingle('#foo_second option[value="35"][selected="selected"]')->getValue(), 35, '->render() renders a select tag for the second');
+
+// time as an array - single digits
+$t->diag('time as an array - single digits');
+$dom->loadHTML($w->render('foo', '01:03:05'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#foo_hour option[value="1"][selected="selected"]')->getValue(), 1, '->render() renders a select tag for the hour');
+$t->is($css->matchSingle('#foo_minute option[value="3"][selected="selected"]')->getValue(), 3, '->render() renders a select tag for the minute');
+$t->is($css->matchSingle('#foo_second option[value="5"][selected="selected"]')->getValue(), 5, '->render() renders a select tag for the second');
 
 // invalid time
 $t->diag('time as an array');

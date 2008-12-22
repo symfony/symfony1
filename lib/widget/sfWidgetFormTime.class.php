@@ -77,7 +77,8 @@ class sfWidgetFormTime extends sfWidgetForm
       }
       else
       {
-        $value = array('hour' => date('G', $value), 'minute' => date('i', $value), 'second' => date('s', $value));
+        // int cast required to get rid of leading zeros
+        $value = array('hour' => (int) date('H', $value), 'minute' => (int) date('i', $value), 'second' => (int) date('s', $value));
       }
     }
 
