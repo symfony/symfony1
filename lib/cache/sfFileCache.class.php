@@ -52,12 +52,19 @@ class sfFileCache extends sfCache
    */
   public function get($key, $default = null)
   {
-    if (!$this->has($key))
+    $file_path = $this->getFilePath($key);
+    if (!file_exists($file_path))
     {
       return $default;
     }
 
-    return $this->read($this->getFilePath($key));
+    $data = $this->read($file_path, self::READ_DATA);
+
+    if ($data[self::READ_DATA] === null) {
+      return $default;
+    }
+
+    return $data[self::READ_DATA];
   }
 
   /**
@@ -65,7 +72,8 @@ class sfFileCache extends sfCache
    */
   public function has($key)
   {
-    return file_exists($this->getFilePath($key)) && time() < $this->read($this->getFilePath($key), self::READ_TIMEOUT);
+    $path = $this->getFilePath($key);
+    return file_exists($path) && $this->isValid($path);
   }
 
   /**
@@ -139,7 +147,7 @@ class sfFileCache extends sfCache
     $result = true;
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $file)
     {
-      if (sfCache::ALL == $mode || time() > $this->read($file, self::READ_TIMEOUT))
+      if (sfCache::ALL == $mode || !$this->isValid($file))
       {
         $result = $result && @unlink($file);
       }
@@ -160,9 +168,9 @@ class sfFileCache extends sfCache
       return 0;
     }
 
-    $timeout = $this->read($path, self::READ_TIMEOUT);
+    $data = $this->read($path, self::READ_TIMEOUT);
 
-    return $timeout < time() ? 0 : $timeout;
+    return $data[self::READ_TIMEOUT] < time() ? 0 : $data[self::READ_TIMEOUT];
   }
 
   /**
@@ -172,12 +180,24 @@ class sfFileCache extends sfCache
   {
     $path = $this->getFilePath($key);
 
-    if (!file_exists($path) || $this->read($path, self::READ_TIMEOUT) < time())
+    if (!file_exists($path))
     {
       return 0;
     }
+    
+    $data = $this->read($path, self::READ_TIMEOUT | self::READ_LAST_MODIFIED);
 
-    return $this->read($path, self::READ_LAST_MODIFIED);
+    if ($data[self::READ_TIMEOUT] < time())
+    {
+      return 0;
+    }
+    return $data[self::READ_LAST_MODIFIED];
+  }
+
+  protected function isValid($path)
+  {
+    $data = $this->read($path, self::READ_TIMEOUT);
+    return time() < $data[self::READ_TIMEOUT];
   }
 
  /**
@@ -201,7 +221,7 @@ class sfFileCache extends sfCache
   *                     sfFileCache::READ_TIMEOUT: The timeout
   *                     sfFileCache::READ_LAST_MODIFIED: The last modification timestamp
   *
-  * @return string The content of the cache file.
+  * @return array the (meta)data of the cache file. E.g. $data[sfFileCache::READ_DATA]
   *
   * @throws sfCacheException
   */
@@ -213,30 +233,22 @@ class sfFileCache extends sfCache
     }
 
     @flock($fp, LOCK_SH);
-    clearstatcache(); // because the filesize can be cached by PHP itself...
-    $length = @filesize($path);
-    switch ($type)
-    {
-      case self::READ_TIMEOUT:
-        $data = $length ? intval(@fread($fp, 12)) : 0;
-        break;
-      case self::READ_LAST_MODIFIED:
-        @fseek($fp, 12);
-        $data = $length ? intval(@fread($fp, 12)) : 0;
-        break;
-      case self::READ_DATA:
-        if ($length)
-        {
-          @fseek($fp, 24);
-          $data = @fread($fp, $length - 24);
-        }
-        else
-        {
-          $data = '';
-        }
-        break;
-      default:
-        throw new sfConfigurationException(sprintf('Unknown type "%s".', $type));
+    $data[self::READ_TIMEOUT] = intval(@stream_get_contents($fp, 12, 0));
+    if ($type != self::READ_TIMEOUT && time() < $data[self::READ_TIMEOUT]) {
+      if ($type & self::READ_LAST_MODIFIED)
+      {
+        $data[self::READ_LAST_MODIFIED] = intval(@stream_get_contents($fp, 12, 12));
+      }
+      if ($type & self::READ_DATA)
+      {
+        fseek($fp, 0, SEEK_END);
+        $length = ftell($fp) - 24;
+        fseek($fp, 24);
+        $data[self::READ_DATA] = @fread($fp, $length);
+      }
+    } else {
+      $data[self::READ_LAST_MODIFIED] = null;
+      $data[self::READ_DATA] = null;
     }
     @flock($fp, LOCK_UN);
     @fclose($fp);
