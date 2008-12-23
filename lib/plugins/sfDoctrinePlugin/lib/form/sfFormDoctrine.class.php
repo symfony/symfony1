@@ -514,4 +514,9 @@ abstract class sfFormDoctrine extends sfForm
   {
     return sfToolkit::pregtr($text, array('#/(.?)#e' => "'::'.strtoupper('\\1')", '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
   }
+
+  public function __sleep()
+  {
+    
+  }
 }
