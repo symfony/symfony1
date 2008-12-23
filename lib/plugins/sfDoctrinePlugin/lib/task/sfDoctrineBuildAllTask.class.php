@@ -122,7 +122,13 @@ EOF;
 
     $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->setCommandApplication($this->commandApplication);
-    $ret = $insertSql->run(array(), $options['no-confirmation'] ? array('--no-confirmation') : array());
+    $insertSqlOptions = array();
+    $insertSqlOptions[] = '--env=' . $options['env'];
+    if ($options['no-confirmation'])
+    {
+      $insertSqlOptions[] = '--no-confirmation';
+    }
+    $ret = $insertSql->run(array(), $insertSqlOptions);
 
     return $ret;
   }
