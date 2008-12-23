@@ -479,7 +479,7 @@ abstract class sfFormPropel extends sfForm
 
     if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->object->$getter()))
     {
-      unlink($directory.$this->object->$getter());
+      unlink($directory.DIRECTORY_SEPARATOR.$this->object->$getter());
     }
   }
 
