@@ -48,6 +48,7 @@ class MyArticleForm extends ArticleForm
     parent::updateDefaultsFromObject();
   }
 }
+
 $article = new Article();
 $articleForm = new MyArticleForm($article);
 

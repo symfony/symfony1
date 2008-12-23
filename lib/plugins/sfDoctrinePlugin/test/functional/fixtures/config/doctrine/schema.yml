@@ -6,6 +6,7 @@ Article:
       actAs:
         Sluggable:
           fields: [title]
+          uniqueBy: [lang, title]
     Timestampable:
   columns:
     author_id: integer
@@ -30,8 +31,19 @@ Subscription:
 
 User:
   columns:
-    username: string(255)
+    username:
+      type: string(255)
+      unique: true
     password: string(255)
+  relations:
+    Groups:
+      class: Group
+      refClass: UserGroup
+      foreignAlias: Users
+    Permissions:
+      class: Permission
+      refClass: UserPermission
+      foreignAlias: Users
 
 Profile:
   columns:
@@ -41,3 +53,44 @@ Profile:
   relations:
     User:
       foreignType: one
+
+Group:
+  tableName: groups
+  columns:
+    name: string(255)
+  relations:
+    Permissions:
+      class: Permission
+      refClass: GroupPermission
+      foreignAlias: Groups
+
+Permission:
+  columns:
+    name: string(255)
+
+UserGroup:
+  columns:
+    user_id:
+      type: integer
+      primary: true
+    group_id:
+      type: integer
+      primary: true
+
+UserPermission:
+  columns:
+    user_id:
+      type: integer
+      primary: true
+    permission_id:
+      type: integer
+      primary: true
+
+GroupPermission:
+  columns:
+    group_id:
+      type: integer
+      primary: true
+    permission_id:
+      type: integer
+      primary: true

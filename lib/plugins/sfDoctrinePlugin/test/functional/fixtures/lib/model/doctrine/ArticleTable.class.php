@@ -4,5 +4,26 @@
  */
 class ArticleTable extends Doctrine_Table
 {
+  public function retrieveArticle1(Doctrine_Query $query)
+  {
+    return $query->execute();
+  }
 
+  public function retrieveArticle2(array $parameters)
+  {
+    $query = $this->createQuery('a');
+    return $query->execute();
+  }
+
+  public function retrieveArticle3(array $parameters)
+  {
+    $query = $this->createQuery('a');
+    return $query->execute();
+  }
+
+  public function retrieveArticle4(array $parameters)
+  {
+    $query = $this->createQuery('a');
+    return $query->fetchOne();
+  }
 }

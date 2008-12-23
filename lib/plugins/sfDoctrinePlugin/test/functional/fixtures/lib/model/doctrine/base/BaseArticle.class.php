@@ -20,7 +20,7 @@ abstract class BaseArticle extends myDoctrineRecord
                                   'foreign' => 'id'));
 
     $i18n0 = new Doctrine_Template_I18n(array('fields' => array(0 => 'title', 1 => 'body')));
-    $sluggable1 = new Doctrine_Template_Sluggable(array('fields' => array(0 => 'title')));
+    $sluggable1 = new Doctrine_Template_Sluggable(array('fields' => array(0 => 'title'), 'uniqueBy' => array(0 => 'lang', 1 => 'title')));
     $i18n0->addChild($sluggable1);
     $timestampable0 = new Doctrine_Template_Timestampable();
     $this->actAs($i18n0);

@@ -28,7 +28,7 @@ class BaseArticleTranslationForm extends BaseFormDoctrine
     ));
 
     $this->validatorSchema->setPostValidator(
-      new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('slug')))
+      new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('slug', 'lang', 'title')))
     );
 
     $this->widgetSchema->setNameFormat('article_translation[%s]');
