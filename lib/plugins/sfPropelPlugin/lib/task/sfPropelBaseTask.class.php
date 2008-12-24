@@ -299,6 +299,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
     chdir(sfConfig::get('sf_root_dir'));
 
+    // hack to customize output dir
+    if(isset($properties['propel.graph.dir']))
+    {
+      chdir($properties['propel.graph.dir']);
+    }
+
     // any errors?
     $ret = true;
     if (sfPhingListener::hasErrors())
