@@ -127,7 +127,16 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection
                 $alias = trim(end(spliti(' as ', array_shift(explode(',', stristr($query,$order))))));
             }
     
-            $query = preg_replace('/^SELECT\s/i', 'SELECT TOP ' . ($count+$offset) . ' ', $query);    
+            // Ticket #1259: Fix for limit-subquery in MSSQL
+            $selectRegExp = 'SELECT\s+';
+            $selectReplace = 'SELECT ';
+
+            if (preg_match('/^SELECT(\s+)DISTINCT/i',  $query)) {
+                $selectRegExp .= 'DISTINCT\s+';
+                $selectReplace .= 'DISTINCT ';
+            }
+
+            $query = preg_replace('/^'.$selectRegExp.'\s+/i', $selectReplace . 'TOP ' . ($count+$offset) . ' ', $query);
             $query = 'SELECT * FROM (SELECT TOP ' . $count . ' * FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
 
             if ($orderby !== false) {
