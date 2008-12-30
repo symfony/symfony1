@@ -53,7 +53,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (MDB2 library)
  */
-abstract class Doctrine_Connection extends Doctrine_Configurable implements Countable, IteratorAggregate
+abstract class Doctrine_Connection extends Doctrine_Configurable implements Countable, IteratorAggregate, Serializable
 {
     /**
      * @var $dbh                                the database handler
