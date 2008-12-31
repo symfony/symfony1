@@ -58,26 +58,39 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
             return $funcs;
 
         } else {
-            if ( ! is_numeric($func)) {
-                $a = explode('.', $func);
-
-                if (count($a) > 1) {
-                    $field     = array_pop($a);
-                    $reference = implode('.', $a);
-                    $map       = $this->query->load($reference, false);
-                    $field     = $map['table']->getColumnName($field);
-                    $func      = $this->query->getTableAlias($reference) . '.' . $field;
-                } else {
-                    $field = end($a);
-                    $func  = $this->query->getAggregateAlias($field);
-                }
-                return $this->query->getConnection()->quoteIdentifier($func);
-            } else {
-                return $this->query->getConnection()->quoteIdentifier($func);
-            }
+            return $this->_parseAliases($func);
         }
     }
 
+    /**
+     * _parseAliases
+     * Processes part of the query not being an aggregate function
+     *
+     * @param mixed $value
+     * @return string
+     */
+    final private function _parseAliases($value)
+    {
+        if ( ! is_numeric($value)) {
+            $a = explode('.', $value);
+
+            if (count($a) > 1) {
+                $field = array_pop($a);
+                $ref   = implode('.', $a);
+                $map   = $this->query->load($ref, false);
+                $field = $map['table']->getColumnName($field);
+                $value = $this->query->getTableAlias($ref) . '.' . $field;
+            } else {
+                $field = end($a);
+                $value = $this->query->getAggregateAlias($field);
+            }
+            
+            return $this->query->getConnection()->quoteIdentifier($value);
+        }
+        
+        
+        return $value;
+    }
 
     /**
      * load
@@ -92,11 +105,14 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
         $part = $this->parseAggregateFunction(array_shift($tokens));
         $operator  = array_shift($tokens);
         $value     = implode(' ', $tokens);
-        $part .= ' ' . $operator . ' ' . $value;
+
         // check the RHS for aggregate functions
         if (strpos($value, '(') !== false) {
           $value = $this->parseAggregateFunction($value);
         }
+
+        $part .= ' ' . $operator . ' ' . $value;
+
         return $part;
     }
 }
