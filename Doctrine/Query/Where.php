@@ -79,6 +79,7 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
             }
 
             $sql = $this->_buildSql($leftExpr, $operator, $rightExpr);
+            
 
             //echo '<pre>Built SQL: '.$sql.'</pre>';
 
@@ -91,9 +92,15 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
     protected function _buildSql($leftExpr, $operator, $rightExpr)
     {
-        // Left Expression
+        
         $leftExpr = $this->query->parseClause($leftExpr);
-
+        
+        // BETWEEN operation
+        if ('BETWEEN' == strtoupper(substr($operator, 0, 7))) {
+            $midExpr = trim(substr($operator, 7, -3));
+            $operator = 'BETWEEN ' . $this->query->parseClause($midExpr) . ' AND';
+        }
+     
         $op = strtolower($operator);
 
         // Right Expression
