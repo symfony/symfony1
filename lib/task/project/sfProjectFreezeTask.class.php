@@ -36,7 +36,10 @@ class sfProjectFreezeTask extends sfBaseTask
 The [project:freeze|INFO] task copies all the symfony core files to
 the current project:
 
-  [./symfony project:freeze|INFO]
+  [./symfony project:freeze /path/to/symfony/data/directory|INFO]
+
+The task takes a mandatory argument of the path to the symfony data
+directory.
 
 The task also changes [config/config.php|COMMENT] to switch to the
 embedded symfony files.
