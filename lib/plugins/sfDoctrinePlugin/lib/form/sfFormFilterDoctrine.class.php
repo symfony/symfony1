@@ -71,7 +71,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
     {
       try
       {
-        $method = sprintf('convert%sValue', $field);
+        $method = sprintf('convert%sValue', self::camelize($field));
       }
       catch (Exception $e)
       {
