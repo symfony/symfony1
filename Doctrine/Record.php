@@ -1788,7 +1788,14 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 }
 
                 if (is_array($value)) {
-                    $this->$key->fromArray($value, $deep);
+                    if (isset($value[0]) && ! is_array($value[0])) {
+                        $this->unlink($key, array(), false);
+                        foreach ($value as $id) {
+                            $this->link($key, $id, false);
+                        }
+                    } else {
+                        $this->$key->fromArray($value, $deep);
+                    }
                 }
             } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
@@ -1831,12 +1838,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 }
 
                 if (is_array($value)) {
-                    if (isset($value['_identifiers']) && is_array($value['_identifiers'])) {
+                    if (isset($value[0]) && ! is_array($value[0])) {
                         $this->unlink($key, array(), false);
-                        foreach ($value['_identifiers'] as $id => $exists) {
-                            if ($exists) {
-                                $this->link($key, $id, false);
-                            }
+                        foreach ($value as $id) {
+                            $this->link($key, $id, false);
                         }
                     } else {
                         $this->$key->synchronizeWithArray($value);
