@@ -43,7 +43,6 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                                                              'type'   => 'integer',
                                                              'length' => 8,
                                                              'options' => array('primary' => true)),
-                                'generateRelations' => true,
                                 'tableName'         => false,
                                 'generateFiles'     => false,
                                 'table'             => false,
@@ -89,25 +88,6 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             }
 
             $this->hasColumn($name, $definition['type'], $definition['length'], $definition);
-        }
-
-        // Check if we are allowed to build relations
-        if ($this->_options['generateRelations']) {
-	        $relations = $this->_options['table']->getRelations();
-
-            foreach ($relations as $relation) {
-                $definition = $relation->toArray();
-                $name = $definition['class'] . (isset($definition['alias']) ? ' as ' . $definition['alias'] : '');
-                $options = $definition;
-
-                if (isset($definition['refTable']) && $definition['refTable']) {
-                    $options['refClass'] = $definition['refTable']->getOption('name');
-                }
-
-                $func = ($definition['type'] == Doctrine_Relation::ONE) ? 'hasOne':'hasMany';
-
-                $this->$func($name, $options);
-	        }
         }
 
         // the version column should be part of the primary key definition
