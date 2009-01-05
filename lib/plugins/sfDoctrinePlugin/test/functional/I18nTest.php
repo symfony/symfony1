@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(8, new lime_output_color());
+$t = new lime_test(9, new lime_output_color());
 
 $article = new Article();
 $article->title = 'test';
@@ -160,3 +160,10 @@ $expected = array(
 );
 
 $t->is($articleForm->getDefaults(), $expected);
+
+
+$article = new Article();
+sfContext::getInstance()->getUser()->setCulture('en');
+$article->title = 'test';
+sfContext::getInstance()->getUser()->setCulture('fr');
+$t->is($article->title, 'test');
