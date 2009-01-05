@@ -164,9 +164,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     protected $options    = array();
 
     /**
-     * @var array $availableDrivers         an array containing all available drivers
+     * @var array $supportedDrivers         an array containing all supported drivers
      */
-    private static $availableDrivers    = array(
+    private static $supportedDrivers    = array(
                                         'Mysql',
                                         'Pgsql',
                                         'Oracle',
@@ -306,6 +306,16 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     public static function getAvailableDrivers()
     {
         return PDO::getAvailableDrivers();
+    }
+
+    /**
+     * Returns an array of supported drivers by Doctrine
+     *
+     * @return array $supportedDrivers
+     */
+    public static function getSupportedDrivers()
+    {
+        return self::$supportedDrivers;
     }
 
     /**
@@ -460,7 +470,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $found = false;
         
         if (extension_loaded('pdo')) {
-            if (in_array($e[0], PDO::getAvailableDrivers())) {
+            if (in_array($e[0], self::getAvailableDrivers())) {
             	try {
                     $this->dbh = new PDO($this->options['dsn'], $this->options['username'], 
                                      (!$this->options['password'] ? '':$this->options['password']), $this->options['other']);
