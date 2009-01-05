@@ -1,5 +1,7 @@
   public function executeFilter(sfWebRequest $request)
   {
+    $this->setPage(1);
+
     if ($request->hasParameter('_reset'))
     {
       $this->setFilters(array());
@@ -17,7 +19,6 @@
       $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
     }
 
-    $this->setPage(1);
     $this->pager = $this->getPager();
     $this->sort = $this->getSort();
 
