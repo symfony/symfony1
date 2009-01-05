@@ -320,7 +320,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @return boolean  whether or not this record is valid
      */
-    public function isValid()
+    public function isValid($deep = false)
     {
         if ( ! $this->_table->getAttribute(Doctrine::ATTR_VALIDATE)) {
             return true;
@@ -354,18 +354,18 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $this->postValidate($event);
 
         $valid = $this->getErrorStack()->count() == 0 ? true : false;
-        if ($valid) {
+        if ($valid && $deep) {
             $stateBeforeLock = $this->_state;
             $this->_state = $this->exists() ? self::STATE_LOCKED : self::STATE_TLOCKED;
 
             foreach ($this->_references as $reference) {
                 if ($reference instanceof Doctrine_Record) {
-                    if ( ! $valid = $reference->isValid()) {
+                    if ( ! $valid = $reference->isValid($deep)) {
                         break;
                     }
                 } else if ($reference instanceof Doctrine_Collection) {
                     foreach ($reference as $record) {
-                        if ( ! $valid = $record->isValid()) {
+                        if ( ! $valid = $record->isValid($deep)) {
                             break;
                         }
                     }
@@ -1913,11 +1913,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @return boolean
      */
-    public function isModified()
+    public function isModified($deep = false)
     {
         $modified = ($this->_state === Doctrine_Record::STATE_DIRTY ||
                 $this->_state === Doctrine_Record::STATE_TDIRTY);
-        if ( ! $modified) {
+        if ( ! $modified && $deep) {
             if ($this->_state == self::STATE_LOCKED || $this->_state == self::STATE_TLOCKED) {
                 return false;
             }
@@ -1927,12 +1927,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             foreach ($this->_references as $reference) {
                 if ($reference instanceof Doctrine_Record) {
-                    if ($modified = $reference->isModified()) {
+                    if ($modified = $reference->isModified($deep)) {
                         break;
                     }
                 } else if ($reference instanceof Doctrine_Collection) {
                     foreach ($reference as $record) {
-                        if ($modified = $record->isModified()) {
+                        if ($modified = $record->isModified($deep)) {
                             break;
                         }
                     }
