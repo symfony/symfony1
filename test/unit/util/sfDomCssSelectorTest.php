@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(65, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -149,6 +149,12 @@ $t->is($c->getTexts('#simplelist li:nth-child(1)'), array('First', 'First'), '->
 $t->is($c->getTexts('#simplelist li:nth-child(2)'), array('Second with a link', 'Second'), '->getTexts() :nth-child');
 $t->is($c->getTexts('#simplelist li:nth-child(3)'), array('Third with another link'), '->getTexts() :nth-child');
 $t->is($c->getTexts('#simplelist li:last-child'), array('Second with a link', 'Third with another link'), '->getTexts() :last-child');
+
+$t->diag('combinations of pseudo-selectors');
+$t->is($c->getTexts('.myfoo:contains("myfoo"):contains("bis")'), array('myfoo bis'), '->getTexts() :contains():contains()');
+$t->is($c->getTexts('.myfoo:contains("myfoo"):last'), array('myfoo bis'), '->getTexts() :contains():last');
+$t->is($c->getTexts('.myfoo:last:contains("foobarbaz")'), array(), '->getTexts() :last:contains()');
+$t->is($c->getTexts('.myfoo:contains("myfoo"):contains(\'bis\'):contains(foo)'), array('myfoo bis'), '->getTexts() :contains() supports different quote styles');
 
 // ->matchAll()
 $t->diag('->matchAll()');

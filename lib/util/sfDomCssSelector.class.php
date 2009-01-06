@@ -137,7 +137,7 @@ class sfDomCssSelector
 
           // Set nodes to contain just this element
           $nodes = array($element);
-          $nodes = $this->matchCustomSelector($nodes, $selector);
+          $nodes = $this->matchMultipleCustomSelectors($nodes, $selector);
 
           continue; // Skip to next token
         }
@@ -164,7 +164,7 @@ class sfDomCssSelector
             }
           }
 
-          $nodes = $this->matchCustomSelector($nodes, $selector);
+          $nodes = $this->matchMultipleCustomSelectors($nodes, $selector);
 
           continue; // Skip to next token
         }
@@ -241,7 +241,7 @@ class sfDomCssSelector
         // If we get here, token is JUST an element (not a class or ID selector)
         $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
 
-        $nodes = $this->matchCustomSelector($nodes, $selector);
+        $nodes = $this->matchMultipleCustomSelectors($nodes, $selector);
       }
 
       foreach ($nodes as $node)
@@ -412,6 +412,19 @@ class sfDomCssSelector
     return array($name, $selector);
   }
 
+  protected function matchMultipleCustomSelectors($nodes, $selector)
+  {
+    if (!$selector)
+    {
+      return $nodes;
+    }
+
+    foreach ($this->split_custom_selector($selector) as $selector) {
+      $nodes = $this->matchCustomSelector($nodes, $selector);
+    }
+    return $nodes;
+  }
+
   protected function matchCustomSelector($nodes, $selector)
   {
     if (!$selector)
@@ -498,6 +511,27 @@ class sfDomCssSelector
     }
 
     return $matchingNodes;
+  }
+
+  protected function split_custom_selector($selectors)
+  {
+    if (!preg_match_all('/
+      :
+      (?:[a-zA-Z0-9\-]+)
+      (?:
+        \(
+          (?:
+            ("|\')(?:.*?)?\1
+            |
+            (?:.*?)
+          )
+        \)
+      )?
+    /x', $selectors, $matches, PREG_PATTERN_ORDER))
+    {
+      throw new Exception(sprintf('Unable to split custom selector "%s".', $selectors));
+    }
+    return $matches[0];
   }
 
   protected function tokenize_custom_selector($selector)
