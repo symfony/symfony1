@@ -111,7 +111,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' == $values[$field])
+      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
       {
         continue;
       }

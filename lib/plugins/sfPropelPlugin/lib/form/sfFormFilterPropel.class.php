@@ -109,7 +109,7 @@ abstract class sfFormFilterPropel extends sfFormFilter
     $peer = constant($this->getModelName().'::PEER');
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' == $values[$field])
+      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
       {
         continue;
       }
