@@ -4,7 +4,7 @@
 
     if ($request->hasParameter('_reset'))
     {
-      $this->setFilters(array());
+      $this->setFilters($this->configuration->getFilterDefaults());
 
       $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
     }
