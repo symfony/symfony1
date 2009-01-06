@@ -44,7 +44,8 @@ class Doctrine_Migration_Diff
                                 'changed_columns'     =>  array(),
                                 'created_indexes'     =>  array(),
                                 'dropped_indexes'     =>  array()),
-              $_migration;
+              $_migration,
+              $_startingModelFiles = array();
 
     protected static $_toPrefix   = 'ToPrfx',
                      $_fromPrefix = 'FromPrfx';
@@ -66,6 +67,7 @@ class Doctrine_Migration_Diff
     {
         $this->_from = $from;
         $this->_to = $to;
+        $this->_startingModelFiles = Doctrine::getLoadedModelFiles();
 
         if ($migration instanceof Doctrine_Migration) {
             $this->_migration = $migration;
@@ -128,11 +130,9 @@ class Doctrine_Migration_Diff
 
         // Build array of changes between the from and to information
         $changes = $this->_buildChanges($fromInfo, $toInfo);
-        
-        // clean up tmp directories
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
-        
+
+        $this->_cleanup();
+
         return $changes;
     }
 
@@ -309,5 +309,26 @@ class Doctrine_Migration_Diff
                 throw new Doctrine_Migration_Exception('Could not generate models from connection: ' . $e->getMessage());
             }
         }
+    }
+
+    /**
+     * Cleanup temporary generated models after a diff is performed
+     *
+     * @return void
+     */
+    protected function _cleanup()
+    {
+        $modelFiles = Doctrine::getLoadedModelFiles();
+        $filesToClean = array_diff($modelFiles, $this->_startingModelFiles);
+
+        foreach ($filesToClean as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+
+        // clean up tmp directories
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
     }
 }
