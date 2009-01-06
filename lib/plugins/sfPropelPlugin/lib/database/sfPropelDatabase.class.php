@@ -140,7 +140,7 @@ class sfPropelDatabase extends sfPDODatabase
         'settings'    => array(
           'charset'   => array(
             'value'   => $this->getParameter('encoding', 'utf8')),
-            'queries' => $this->getParameter('queries', array()),
+          'queries'   => $this->getParameter('queries', array()),
     )));
   }
 
