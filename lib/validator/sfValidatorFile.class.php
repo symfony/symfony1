@@ -236,6 +236,8 @@ class sfValidatorFile extends sfValidatorBase
     passthru(sprintf('file -bi %s 2>/dev/null', escapeshellarg($file)), $return);
     if ($return > 0)
     {
+      ob_end_clean();
+
       return null;
     }
     $type = trim(ob_get_clean());
