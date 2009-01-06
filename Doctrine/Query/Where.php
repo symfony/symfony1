@@ -79,9 +79,6 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
             }
 
             $sql = $this->_buildSql($leftExpr, $operator, $rightExpr);
-            
-
-            //echo '<pre>Built SQL: '.$sql.'</pre>';
 
             return $sql;
         } else {
@@ -92,7 +89,7 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
     protected function _buildSql($leftExpr, $operator, $rightExpr)
     {
-        
+        $leftExprOriginal = $leftExpr;        
         $leftExpr = $this->query->parseClause($leftExpr);
         
         // BETWEEN operation
@@ -102,9 +99,18 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
         }
      
         $op = strtolower($operator);
+        $isInX = ($op == 'in' || $op == 'not in');
+
+        // Check if we are not dealing with "obj.field IN :named"
+        if (substr($rightExpr, 0 , 1) == ':' && $isInX) {
+            throw new Doctrine_Query_Exception(
+                'Cannot use ' . $operator . ' with a named parameter in "' . 
+                $leftExprOriginal . ' ' . $operator . ' ' . $rightExpr . '"'
+            );
+        }
 
         // Right Expression
-        $rightExpr = (($rightExpr == '?' || substr($rightExpr, 0 , 1) == ':') && ($op == 'in' || $op == 'not in'))
+        $rightExpr = ($rightExpr == '?' && $isInX)
             ? $this->_buildWhereInArraySqlPart($rightExpr)
             : $this->parseValue($rightExpr);
 
