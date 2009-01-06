@@ -47,10 +47,15 @@
   {
     $ids = $request->getParameter('ids');
 
-    $criteria = new Criteria(<?php echo constant($this->getModelClass().'::PEER') ?>::DATABASE_NAME);
-    $criteria->add('<?php echo call_user_func(array(constant($this->getModelClass().'::PEER'), 'translateFieldName'), $this->getPrimaryKeys(true), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_COLNAME) ?>', $ids, Criteria::IN);
-
-    $count = <?php echo constant($this->getModelClass().'::PEER') ?>::doDelete($criteria);
+    $count = 0;
+    foreach (<?php echo constant($this->getModelClass().'::PEER') ?>::retrieveByPks($ids) as $object)
+    {
+      $object->delete();
+      if ($object->isDeleted())
+      {
+        $count++;
+      }
+    }
 
     if ($count >= count($ids))
     {
