@@ -31,7 +31,7 @@ sf_unit_test_shutdown();
 
 // create test cache dir
 $sf_root_dir = sfToolkit::getTmpDir().'/sf_test_project';
-mkdir($sf_root_dir, 0777, true);
+@mkdir($sf_root_dir, 0777, true);
 
 register_shutdown_function('sf_unit_test_shutdown');
 
