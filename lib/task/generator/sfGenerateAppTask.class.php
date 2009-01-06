@@ -119,7 +119,7 @@ EOF;
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
       'NO_SCRIPT_NAME'    => $firstApp ? 'on' : 'off',
       'CSRF_SECRET'       => sfYamlInline::dump($options['csrf-secret']),
-      'ESCAPING_STRATEGY' => sfYamlInline::dump(sfYamlInline::parseScalar($options['escaping-strategy'])),
+      'ESCAPING_STRATEGY' => sfYamlInline::dump((boolean) sfYamlInline::parseScalar($options['escaping-strategy'])),
     ));
 
     $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');

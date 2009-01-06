@@ -72,7 +72,7 @@ if (!extension_loaded('SQLite'))
   return;
 }
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 $c = new sf_test_project();
 $c->initialize($t);
 
@@ -80,8 +80,12 @@ $c->initialize($t);
 $content = $c->execute_command('generate:project myproject');
 $t->ok(file_exists($c->tmp_dir.DS.'symfony'), '"generate:project" installs the symfony CLI in root project directory');
 
-$content = $c->execute_command('generate:app frontend');
+$content = $c->execute_command('generate:app frontend --escaping-strategy=on');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "frontend" directory under "apps" directory');
+$t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/escaping_strategy: +true/', '"generate:app" switches escaping_strategy "on"');
+
+$content = $c->execute_command('generate:app backend');
+$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/escaping_strategy: +false/', '"generate:app" switches escaping_strategy "off"');
 
 // failing
 $content = $c->execute_command('generate:module wrongapp foo', 1);
