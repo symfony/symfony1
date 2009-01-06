@@ -118,7 +118,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
       if ($this->getTable()->hasField($field))
       {
-        $method = sprintf('add%sColumnQuery', $this->getFieldName($field));
+        $method = sprintf('add%sColumnQuery', self::camelize($this->getFieldName($field)));
       } else {
         // not a "real" column
         if (!method_exists($this, $method = sprintf('add%sColumnQuery', self::camelize($field))))
