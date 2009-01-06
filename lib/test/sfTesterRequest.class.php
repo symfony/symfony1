@@ -142,7 +142,7 @@ class sfTesterRequest extends sfTester
         $this->tester->like($_COOKIE[$name], $value, sprintf('cookie "%s" content matches regex "%s"', $name, $value));
       }
     }
-    else if (null !== $message)
+    else
     {
       $this->tester->is($_COOKIE[$name], $value, sprintf('cookie "%s" content is ok', $name));
     }
