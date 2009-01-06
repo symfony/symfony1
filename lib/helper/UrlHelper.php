@@ -532,7 +532,7 @@ function _post_javascript_function()
 
 function _method_javascript_function($method)
 {
-  $function = "var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;";
+  $function = "var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;";
 
   if ('post' != strtolower($method))
   {

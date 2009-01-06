@@ -336,7 +336,7 @@ abstract class sfFormDoctrine extends sfForm
    */
   public function renderFormTag($url, array $attributes = array())
   {
-    $attributes['method'] = $this->isNew() ? 'POST' : 'PUT';
+    $attributes['method'] = $this->isNew() ? 'post' : 'put';
 
     return parent::renderFormTag($url, $attributes);
   }

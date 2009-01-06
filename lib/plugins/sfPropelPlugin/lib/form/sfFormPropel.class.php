@@ -339,7 +339,7 @@ abstract class sfFormPropel extends sfForm
    */
   public function renderFormTag($url, array $attributes = array())
   {
-    $attributes['method'] = $this->getObject()->isNew() ? 'POST' : 'PUT';
+    $attributes['method'] = $this->getObject()->isNew() ? 'post' : 'put';
 
     return parent::renderFormTag($url, $attributes);
   }

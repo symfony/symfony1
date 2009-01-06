@@ -7,7 +7,7 @@
 <?php else: ?>
 <form action="[?php echo url_for('<?php echo $this->getModuleName() ?>/'.($form->getObject()->isNew() ? 'create' : 'update').(!$form->getObject()->isNew() ? '?<?php echo $this->getPrimaryKeyUrlParams('$form->getObject()', true) ?> : '')) ?]" method="POST" [?php $form->isMultipart() and print 'enctype="multipart/form-data" ' ?]>
 [?php if (!$form->getObject()->isNew()): ?]
-<input type="hidden" name="sf_method" value="PUT" />
+<input type="hidden" name="sf_method" value="put" />
 [?php endif; ?]
 <?php endif;?>
   <table>
