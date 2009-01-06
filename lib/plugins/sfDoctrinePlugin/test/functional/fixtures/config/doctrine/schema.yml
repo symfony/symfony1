@@ -35,6 +35,7 @@ User:
       type: string(255)
       unique: true
     password: string(255)
+    test: string(255)
   relations:
     Groups:
       class: Group

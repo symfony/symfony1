@@ -10,6 +10,7 @@ abstract class BaseUser extends myDoctrineRecord
     $this->setTableName('user');
     $this->hasColumn('username', 'string', 255, array('type' => 'string', 'unique' => true, 'length' => '255'));
     $this->hasColumn('password', 'string', 255, array('type' => 'string', 'length' => '255'));
+    $this->hasColumn('test', 'string', 255, array('type' => 'string', 'length' => '255'));
   }
 
   public function setUp()

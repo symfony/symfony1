@@ -16,6 +16,7 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'username'         => new sfWidgetFormFilterInput(),
       'password'         => new sfWidgetFormFilterInput(),
+      'test'             => new sfWidgetFormFilterInput(),
       'groups_list'      => new sfWidgetFormDoctrineSelectMany(array('model' => 'Group')),
       'permissions_list' => new sfWidgetFormDoctrineSelectMany(array('model' => 'Permission')),
     ));
@@ -23,6 +24,7 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
     $this->setValidators(array(
       'username'         => new sfValidatorPass(array('required' => false)),
       'password'         => new sfValidatorPass(array('required' => false)),
+      'test'             => new sfValidatorPass(array('required' => false)),
       'groups_list'      => new sfValidatorDoctrineChoiceMany(array('model' => 'Group', 'required' => false)),
       'permissions_list' => new sfValidatorDoctrineChoiceMany(array('model' => 'Permission', 'required' => false)),
     ));
@@ -77,6 +79,7 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
       'id'               => 'Number',
       'username'         => 'Text',
       'password'         => 'Text',
+      'test'             => 'Text',
       'groups_list'      => 'ManyKey',
       'permissions_list' => 'ManyKey',
     );

@@ -15,6 +15,7 @@ class BaseUserForm extends BaseFormDoctrine
       'id'               => new sfWidgetFormInputHidden(),
       'username'         => new sfWidgetFormInput(),
       'password'         => new sfWidgetFormInput(),
+      'test'             => new sfWidgetFormInput(),
       'groups_list'      => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Group')),
       'permissions_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Permission')),
     ));
@@ -23,6 +24,7 @@ class BaseUserForm extends BaseFormDoctrine
       'id'               => new sfValidatorDoctrineChoice(array('model' => 'User', 'column' => 'id', 'required' => false)),
       'username'         => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'password'         => new sfValidatorString(array('max_length' => 255, 'required' => false)),
+      'test'             => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'groups_list'      => new sfValidatorDoctrineChoiceMany(array('model' => 'Group', 'required' => false)),
       'permissions_list' => new sfValidatorDoctrineChoiceMany(array('model' => 'Permission', 'required' => false)),
     ));
