@@ -40,12 +40,13 @@ class sfTesterUser extends sfTester
    *
    * @param string $key
    * @param string $value
+   * @param string $ns
    *
    * @return sfTestFunctionalBase|sfTester
    */
-  public function isAttribute($key, $value)
+  public function isAttribute($key, $value, $ns = null)
   {
-    $this->tester->is($this->user->getAttribute($key), $value, sprintf('user attribute "%s" is "%s"', $key, $value));
+    $this->tester->is($this->user->getAttribute($key, null, $ns), $value, sprintf('user attribute "%s" is "%s"', $key, $value));
 
     return $this->getObjectToReturn();
   }
