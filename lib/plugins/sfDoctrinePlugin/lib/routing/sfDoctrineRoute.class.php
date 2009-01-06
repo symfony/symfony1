@@ -57,12 +57,13 @@ class sfDoctrineRoute extends sfObjectRoute
     $results = $this->getObjectsForParameters($parameters);
 
     // If query returned Doctrine_Collection with results inside then we
-    // need to return the first Doctrine_Record otherwise return null
+    // need to return the first Doctrine_Record
     if ($results instanceof Doctrine_Collection && count($results))
     {
       $results = $results->getFirst();
     }
-    else
+    // If an object is returned then lets return it otherwise return null
+    else if(!is_object($results))
     {
       $results = null;
     }
