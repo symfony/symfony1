@@ -18,12 +18,19 @@ class myFilesystem extends sfFilesystem
   {
     return parent::calculateRelativeDir($from, $to);
   }
+  public function canonicalizePath($path)
+  {
+    return parent::canonicalizePath($path);
+  }
 }
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 $filesystem = new myFilesystem($dispatcher, null);
+
+$t->diag('sfFilesystem canonicalizes pathes');
+$t->is($filesystem->canonicalizePath('..'.DS.DS.'.'.DS.'..'.DS.'dir4'.DS.DS.'.'.DS.'dir5'.DS.'dir6'.DS.'..'.DS.DS.'dir7'.DS), '..'.DS.'..'.DS.'dir4'.DS.'dir5'.DS.'dir7'.DS, '->canonicalizePath() correctly resolves "\\.." and "\\."');
 
 $t->diag('sfFilesystem calculates relative pathes');
 $common = DS.'tmp'.DS.'sfproject'.DS;
@@ -50,3 +57,9 @@ $t->is($filesystem->calculateRelativeDir($source, $target), 'myotherplugin'.DS.'
 $source = $common.'web'.DS.'myplugin';
 $target = $common.'web'.DS.'motherplugin'.DS.'sub';
 $t->is($filesystem->calculateRelativeDir($source, $target), 'motherplugin'.DS.'sub', '->calculateRelativeDir() correctly calculates the relative path for dirs that share chars');
+
+// http://trac.symfony-project.org/ticket/5488
+$source = $common.'..'.DS.'web'.DS.'myplugin';
+$target = $common.'lib'.DS.'vendor'.DS.'symfony'.DS.'plugins'.DS.'myplugin'.DS.'web';
+$t->is($filesystem->calculateRelativeDir($source, $target), '..'.DS.'sfproject'.DS.'lib'.DS.'vendor'.DS.'symfony'.DS.'plugins'.DS.'myplugin'.DS.'web', '->calculateRelativeDir() correctly calculates the relative path for dirs that share chars');
+
