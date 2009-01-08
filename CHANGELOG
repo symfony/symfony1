@@ -1,9 +1,80 @@
-Version 1.2.1
+Version 1.2.2
 -------------
 See the UPGRADE_TO_1_1 for upgrading 1.0 projects first to 1.1.
 See the UPGRADE_TO_1_2 file for more information about upgrading your projects from 1.1 to 1.2.
 
 All the new features are documented in the What's new? tutorial (http://www.symfony-project.org/tutorial/1_2/whats-new)
+
+* [14523]: publish-assets now canonicalizes pathes before creating the links, thus allowing "\.." and "\.". fixes #5488
+* [14518]: added cast of `generate:app` escaping strategy to boolean (refs #5500)
+* [14516]: fixed multiple selector chaining in sfDomCssSelector.class. fixed #5321
+* [14515]: silenced possible warning (@ pattern is already used in this file). fixed #5454
+* [14512]: admin generator resets default filter values correctly. fixed #5508
+* [14511]: fixed generate:app and escaping-strategy (closes #5500)
+* [14509]: fixed the way propel handles batch deletions to notify deletion behaviours. fixed #5499
+* [14507]: fixed uppercase POST/GET are not XHTML valid (closes #5242)
+* [14499]: Fixes form filters to perform a stricter check (closes #5548)
+* [14497]: fixed typo (closes #5543)
+* [14486]: fixed sfTesterUser inability to test attribute for namespaces (closes #5256)
+* [14485]: fixed form and view_cache tester are not overridable (closes #5463)
+* [14484]: fixed unfinished ob_start in sfValidatorFile (closes #5293)
+* [14480]: updated bg translations of the admin generator
+* [14421]: updated sfProjectFreezeTask help text to be more verbose
+* [14378]: updated propel behavior inclusion logic to use only core classes
+* [14289]: fixes deletion of files in sfFormPropel missing an DIRECTORY_SEPARATOR. fixes #5361
+* [14288]: improved sfFileCache for most common cases by factor 3. Details in ticket. closes #5356
+* [14274]: fixed copy and paste leftover. fixes #5439
+* [14265]: minor improvement in search_in performance of sfFinder when not searching symlinks. fixes #5431
+* [14264]: fixed DateFormHelper not correctly resolving single digits with leading zero (eg '01'). fixes #5404
+* [14261]: fixed issue with sfWidgetFormTime not being able to preselect single digit inputs correctly. fixes #5121
+* [14246]: fixed Unable to use my own form formatter (closes #5421)
+* [14215]: One more fix for filters m2m (addresses #5157)
+* [14181]: Fixes issue with build-model task and plugin directories and plugin names (closes #5243)
+* [14173]: fixed var and propel web debug logger regular expressions (closes #5369)
+* [14157]: added check for short_open_tags to check_configuration.php
+* [14153]: fixed input_date_tag to work correctly in pear installations. fixes #4229
+* [14130]: updated italian admin generator translation. fixes #5368
+* [14119]: improved select_timezone_tag according patch from Wicked. fixes #5308
+* [14107]: admin generators should return to page 1 after applying a filter. fixes #5117
+* [14105]: added check for XSLT in check_configuration. fixes #5303
+* [14025]: added clearing of Propel instance pools between functional test requests (closes #5295)
+* [14015]: fixed Files array is not reset between sfBrowser requests (closes #5297)
+* [14010]: fixed Error when uploading files for Embeds forms (closes #5253)
+
+Doctrine Plugin
+* [14550]: fixes error when uploading files for embedded forms (closes #5485) 
+* [14501]: fixes sfDoctrineRoute to return object instead of null (closes #5540)
+* [14500]: fixes issue where filter functions for fields are not camelized (closes #5468)
+* [14472]: fixes issue where i18n doesn't fall back to default culture (fixes #5458)
+* [14466]: fixes issue with sfDoctrineFormFilter::processValues (closes #5468)
+* [14292]: temporary fix (addresses #5267 #4436)
+* [14287]: adding coverage for sfDoctrineRoute and Doctrine admin generators.
+* [14286]: fixing task so env is passed to the insert-sql task.
+* [14258]: fixes filtering on numeric columns in admin generator (closes #5028)
+* [14256]: fixes Doctrine admin generator with camelStyle column name (closes #5411)
+* [14255]: fixes help message for insert-sql task (closes #5417)
+* [14253]: fixing camel case columns for admin generators (closes #5414)
+* [14216]: fixes issue where 404 exception is not thrown when no object is found (closes #5090)
+* [14214]: fixing incorrect method names for many to many filters (closes #5157)
+* [14213]: fixes issue with application option in tasks (closes #5238)
+* [14211]: fixing build-model yet again for custom plugin paths (closes #5243)
+* [14210]: fixing bug with pagination links (closes #5405)
+* [14200]: fixing form generation for plugins using custom paths (closes #5395)
+* [14198]: fixes issue with mismatching classname and filename (closes #5381)
+* [14162]: fixing bug with sfDoctrineRoute parameters that are passed to the method option.
+* [14113]: allowed ability to configure path to Doctrine core libs to allow using a different version of Doctrine (closes #5210)
+* [14111]: fixing sfValidatorDoctrineUnique to behave the same way as sfValidatorPropelUnique if a value does not exist
+* [14110]: fixing issue introduced in previous commit
+* [14108]: fixes missing peer_method equiv. (closes #5324)
+* [14106]: fixes generated forms to unique columns are validated (closes #5189)
+* [14104]: fixes issue with plugins which are at a custom path (closes #5243)
+* [14098]: fixing small issue with overriden getObjects()
+* [14096]: fixing sfDoctrineRoute to allow method_for_query so we match the method_for_criteria method for sfPropelPlugin
+* [14095]: fixing generated form widget for m2m to be sfWidgetFormDoctrineChoiceMany instead of sfWidgetFormDoctrineSelectMany
+* [14056]: added missing sfDoctrineTester class.
+
+Version 1.2.1
+-------------
 
 * [13947]: fixed admin generator configuration file loading (closes #5137, #5140)
 * [13931]: removing objects from the debug output to prevent crashing php with recursions very likely happening on especially routing objects. fixes #5178. refs #3477
@@ -32,13 +103,13 @@ All the new features are documented in the What's new? tutorial (http://www.symf
 * [13572]: fixed request format does not always set layout false for non-html content 
 
 Doctrine Plugin
-* [13857]: sfDoctrinePlugin: fisxes issue with choice validators (fixes #5192)
-* [13856]: sfDoctrinePlugin: fixing strict standards notice
-* [13854]: sfDoctrinePlugin: fixes issue with global schema elements (fixes #5194)
-* [13853]: sfDoctrinePlugin: fixing validation so it is on by default like it is supposed to be (addresses #5161)
-* [13852]: sfDoctrinePlugin: Updating Doctrine external to 1.0 branch instead of tag.
-* [13851]: sfDoctrinePlugin: fixes issue with Doctrine cli messages not being forwarded to symfony cli (fixes #5181)
-* [13845]: sfDoctrinePlugin: fixes multiple issues and missing functionality in sfDoctrineRoute
+* [13857]: fixes issue with choice validators (fixes #5192)
+* [13856]: fixing strict standards notice
+* [13854]: fixes issue with global schema elements (fixes #5194)
+* [13853]: fixing validation so it is on by default like it is supposed to be (addresses #5161)
+* [13852]: Updating Doctrine external to 1.0 branch instead of tag.
+* [13851]: fixes issue with Doctrine cli messages not being forwarded to symfony cli (fixes #5181)
+* [13845]: fixes multiple issues and missing functionality in sfDoctrineRoute
 
 Propel Plugin
 * [13927]: fixed a regression with the handling of CLOB datatype in propel 1.3 in conjunction with forms. fixes #5263
@@ -92,41 +163,41 @@ Doctrine Plugin
 * [13511]: reverted r13509
 * [13509]: fixed typo
 * [13508]: fixed db web debug panel img is not valid xhtml
-* [13504]: sfDoctrinePlugin: fixes issue with insert-sql not working by itself (closes #5103)
-* [13503]: sfDoctrinePlugin: Updating test base classes
-* [13502]: sfDoctrinePlugin: fixed filters for all numbers (closes #5028) 
+* [13504]: fixes issue with insert-sql not working by itself (closes #5103)
+* [13503]: Updating test base classes
+* [13502]: fixed filters for all numbers (closes #5028) 
 * [13496]: fixed Field names cannot be set for Custom Fields in Admin Generator (closes #2908)
 * [13490]: fixed CSRF problem with CRUD and admin generator (closes #4915)
-* [13488]:  fixed double inclusion of hidden fields on CRUD generated modules
+* [13488]: fixed double inclusion of hidden fields on CRUD generated modules
 * [13480]: updated functional tests fixtures for sf core tests
 * [13467]: fixed _form_actions.php template is hardcoded to use edit.actions (ignoring new.actions) (closes #5062)
 * [13415]: removed the isDebug parameter for task as it cannot work with autoloading (closes #4911)
-* [13394]: sfDoctrinePlugin: fixes issue with pager when query results are empty (closes #3563)
-* [13393]: sfDoctrinePlugin: fixes issue with query params with binary data causing problems in the logs (closes #5052)
-* [13392]: sfDoctrinePlugin: moved doctrine libs to lib/vendor and changed to use Doctrine autoloader.
+* [13394]: fixes issue with pager when query results are empty (closes #3563)
+* [13393]: fixes issue with query params with binary data causing problems in the logs (closes #5052)
+* [13392]: moved doctrine libs to lib/vendor and changed to use Doctrine autoloader.
 * [13390]: fixed admin generator route generation when the primary key is not named id (closes #4966 closes #5082) 
-* [13385]: sfDoctrinePlugin: fixes issue with check for package param being too general (closes #5085)
+* [13385]: fixes issue with check for package param being too general (closes #5085)
 
 Propel Plugin
- * [13512]: [1.2] made batch actions javascript xhtml compliant
- * [13511]: [1.2] reverted r13509
- * [13509]: [1.2] fixed typo
- * [13508]: [1.2] fixed db web debug panel img is not valid xhtml
- * [13497]: [1.2] added note about possible phing errors. closes #5025
- * [13495]: [1.2] fixed Field names cannot be set for Custom Fields in Admin Generator (closes #2908)
- * [13492]: [1.2] fixed filters for all numbers (closes #5028)
- * [13489]: [1.2] fixed CSRF problem with CRUD and admin generator (closes #4915)
- * [13487]: [1.2] fixed double inclusion of hidden fields on CRUD generated modules
- * [13480]: [1.2] updated functional tests fixtures for sf core tests
- * [13466]: [1.2] fixed _form_actions.php template is hardcoded to use edit.actions (ignoring new.actions) (closes #5062)
- * [13459]: [1.2] fixed integer fields in a filter form class (closes #5028)
- * [13434]: [1.2] fixed typo (closes #5094)
- * [13414]: [1.2] removed the isDebug parameter for task as it cannot work with autoloading (closes #4911)
- * [13407]: [1.2] fixed lv admin gen trnaslations (closes #4274)
- * [13399]: [1.2] fixed XLIFF files for admin generator
- * [13397]: [1.2] fixed admin gen XLIFF files
- * [13389]: [1.2] fixed typo
- * [13384]: [1.2] fix obsolete comment
+ * [13512]: made batch actions javascript xhtml compliant
+ * [13511]: reverted r13509
+ * [13509]: fixed typo
+ * [13508]: fixed db web debug panel img is not valid xhtml
+ * [13497]: added note about possible phing errors. closes #5025
+ * [13495]: fixed Field names cannot be set for Custom Fields in Admin Generator (closes #2908)
+ * [13492]: fixed filters for all numbers (closes #5028)
+ * [13489]: fixed CSRF problem with CRUD and admin generator (closes #4915)
+ * [13487]: fixed double inclusion of hidden fields on CRUD generated modules
+ * [13480]: updated functional tests fixtures for sf core tests
+ * [13466]: fixed _form_actions.php template is hardcoded to use edit.actions (ignoring new.actions) (closes #5062)
+ * [13459]: fixed integer fields in a filter form class (closes #5028)
+ * [13434]: fixed typo (closes #5094)
+ * [13414]: removed the isDebug parameter for task as it cannot work with autoloading (closes #4911)
+ * [13407]: fixed lv admin gen trnaslations (closes #4274)
+ * [13399]: fixed XLIFF files for admin generator
+ * [13397]: fixed admin gen XLIFF files
+ * [13389]: fixed typo
+ * [13384]: fix obsolete comment
 
 Version 1.2.0 RC2
 -----------------
@@ -192,26 +263,26 @@ Version 1.2.0 RC1
 
 Doctrine Plugin
 * [13231]: removed unneeded file from fixtures
-* [13219]: sfDoctrinePlugin: Fixing generated children forms and test fixtures from last commit
-* [13218]: sfDoctrinePlugin: fixing path of base filter class
-* [13217]: sfDoctrinePlugin: fixes issue with sfDoctrineRecord::toParams() (closes #5029)
-* [13211]: sfDoctrinePlugin: Fixing issue with admin generator routes (closes #5027)
+* [13219]: Fixing generated children forms and test fixtures from last commit
+* [13218]: fixing path of base filter class
+* [13217]: fixes issue with sfDoctrineRecord::toParams() (closes #5029)
+* [13211]: Fixing issue with admin generator routes (closes #5027)
 * [13210]: fixes issue with doctrine filters (closes #4944)
-* [13163]: sfDoctrinePlugin: fixes issue with duplicate saving of related records (closes #4935)
+* [13163]: fixes issue with duplicate saving of related records (closes #4935)
 * [13138]: fixed image URLs in admin generator (closes #4987)
 * [13121]: fixed indentation
-* [13086]: sfDoctrinePlugin: fixes issue with m2m filters (closes #4944)
-* [13085]: sfDoctrinePlugin: fixes issue with admin generator and multi-part file forms (closes #4946)
-* [13073]: sfDoctrinePlugin: added hide feature to admin gen (closes #4794)
+* [13086]: fixes issue with m2m filters (closes #4944)
+* [13085]: fixes issue with admin generator and multi-part file forms (closes #4946)
+* [13073]: added hide feature to admin gen (closes #4794)
 * [13072]: Adding coverage for ticket (addresses #4935)
 * [13062]: added a sfForm::getName() method (closes #4852)
 * [13049]: added a way to customize the actions added on a form (closes #4947)
 * [13044]: fixed embedded form saving when there is a non Doctrine form in the chain
-* [12955]: sfDoctrinePlugin: test coverage, fixing issues, updating sfFormDoctrine to be equal to sfFormPropel, fixes issue with i18n (closes #4907)
-* [12941]: sfDoctrinePlugin: changing fromArray() to not be recursive/deep as the save embedded forms takes care of this for us now
-* [12938]: sfDoctrinePlugin: fixes #4905
-* [12902]: sfDoctrinePlugin: fixing location of BaseFormDoctrine in fixtures
-* [12900]: sfDoctrinePlugin: committing update to tests for generated base models
+* [12955]: test coverage, fixing issues, updating sfFormDoctrine to be equal to sfFormPropel, fixes issue with i18n (closes #4907)
+* [12941]: changing fromArray() to not be recursive/deep as the save embedded forms takes care of this for us now
+* [12938]: fixes #4905
+* [12902]: fixing location of BaseFormDoctrine in fixtures
+* [12900]: committing update to tests for generated base models
 
 Propel Plugin
 * [13234]: fixed invalid assumption when loading propel map builders
@@ -300,32 +371,32 @@ Version 1.2.0 beta2
 
 Doctrine Plugin
 * [12892]: fixed sfDoctrineForm::saveFile() when a filename is provided (closes #4839)
-* [12890]: sfDoctrinePlugin: fixes #4594
-* [12889]: sfDoctrinePlugin: fixes issue with sfDoctrineColumng::isNotNull()
-* [12888]: sfDoctrinePlugin: fix for saving nested forms (closes #4843)
-* [12886]: sfDoctrinePlugin: fixes #4879
-* [12712]: sfDoctrinePlugin: fixing dql task to output results of query
-* [12710]: sfDoctrinePlugin: fixes #4843
-* [12709]: sfDoctrinePlugin: fixing typo
+* [12890]: fixes #4594
+* [12889]: fixes issue with sfDoctrineColumng::isNotNull()
+* [12888]: fix for saving nested forms (closes #4843)
+* [12886]: fixes #4879
+* [12712]: fixing dql task to output results of query
+* [12710]: fixes #4843
+* [12709]: fixing typo
 * [12708]: fixes #4787
-* [12707]: sfDoctrinePlugin: fixes #4717
-* [12703]: sfDoctrinePlugin: fixes #4808
+* [12707]: fixes #4717
+* [12703]: fixes #4808
 * [12702]: sfDoctrineManagerPlugin: fixes issue with use of old form helpers
-* [12701]: sfDoctrinePlugin: added exception when user tries to use package
+* [12701]: added exception when user tries to use package
 * [12693]: sfDoctrineGuardPlugin: fixes #4739
 * [12691]: fixes #4764
 * [12690]: sfDoctrineGuardPlugin: fixes #4821
 * [12689]: sfDoctrineGuardPlugin: fixes #4821
-* [12687]: sfDoctrinePlugin: fixing typo and adding logic to use textarea
-* [12686]: sfDoctrinePlugin: added i18n missing catalogue information (closes #4841)
+* [12687]: fixing typo and adding logic to use textarea
+* [12686]: added i18n missing catalogue information (closes #4841)
 * [12685]: sfDoctrineGuardPlugin: fixes #4742
-* [12670]: sfDoctrinePlugin: fixing sfDoctrineRoute
-* [12669]: sfDoctrinePlugin: reporting admin and crud themes
-* [12667]: sfDoctrinePlugin: removing old admin generator and crud code
-* [12651]: sfDoctrinePlugin: cleaning up sqlite database files 
-* [12650]: sfDoctrinePlugin: fixing indention of generated forms 
-* [12649]: sfDoctrinePlugin: Fixing admin generator filters
-* [12634]: sfDoctrinePlugin: initial entry of new admin generators for Doctrine
+* [12670]: fixing sfDoctrineRoute
+* [12669]: reporting admin and crud themes
+* [12667]: removing old admin generator and crud code
+* [12651]: cleaning up sqlite database files 
+* [12650]: fixing indention of generated forms 
+* [12649]: Fixing admin generator filters
+* [12634]: initial entry of new admin generators for Doctrine
 * [12595]: fixed ObjectHelper for doctrine (closes #4602)
 
 Propel Plugin
