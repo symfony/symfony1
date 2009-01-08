@@ -281,7 +281,7 @@ abstract class sfFormDoctrine extends sfForm
         // save files
         if ($this->validatorSchema[$field] instanceof sfValidatorFile)
         {
-          $values[$field] = $this->processUploadedFile($field);
+          $values[$field] = $this->processUploadedFile($field, null, $valuesToProcess);
         }          
       }
     }
@@ -428,24 +428,30 @@ abstract class sfFormDoctrine extends sfForm
    *
    * @param  string $field The field name
    * @param  string $filename The file name of the file to save
+   * @param  array  $values An array of values
    *
    * @return string The filename used to save the file
    */
-  protected function processUploadedFile($field, $filename = null)
+  protected function processUploadedFile($field, $filename = null, $values = null)
   {
     if (!$this->validatorSchema[$field] instanceof sfValidatorFile)
     {
       throw new LogicException(sprintf('You cannot save the current file for field "%s" as the field is not a file.', $field));
     }
 
-    if ($this->getValue($field.'_delete'))
+    if (is_null($values))
+    {
+      $values = $this->values;
+    }
+
+    if (isset($values[$field.'_delete']) && $values[$field.'_delete'])
     {
       $this->removeFile($field);
 
       return '';
     }
 
-    if (!$this->getValue($field))
+    if (!$values[$field])
     {
       return $this->object->$field;
     }
@@ -453,7 +459,7 @@ abstract class sfFormDoctrine extends sfForm
     // we need the base directory
     if (!$this->validatorSchema[$field]->getOption('path'))
     {
-      return $this->getValue($field);
+      return $values[$field];
     }
 
     $this->removeFile($field);
@@ -482,31 +488,36 @@ abstract class sfFormDoctrine extends sfForm
   /**
    * Saves the current file for the field.
    *
-   * @param  string $field    The field name
-   * @param  string $filename The file name of the file to save
+   * @param  string          $field    The field name
+   * @param  string          $filename The file name of the file to save
+   * @param  sfValidatedFile $file     The validated file to save
    *
    * @return string The filename used to save the file
    */
-  protected function saveFile($field, $filename = null)
+  protected function saveFile($field, $filename = null, sfValidatedFile $file = null)
   {
     if (!$this->validatorSchema[$field] instanceof sfValidatorFile)
     {
       throw new LogicException(sprintf('You cannot save the current file for field "%s" as the field is not a file.', $field));
+    }
+    if (is_null($file))
+    {
+      $file = $this->getValue($field);
     }
 
     $method = sprintf('generate%sFilename', $field);
 
     if (!is_null($filename))
     {
-      return $this->getValue($field)->save($filename);
+      return $file->save($filename);
     }
     else if (method_exists($this->object, $method))
     {
-      return $this->getValue($field)->save($this->object->$method($this->getValue($field)));
+      return $file->save($this->object->$method($file));
     }
     else
     {
-      return $this->getValue($field)->save();
+      return $file->save();
     }
   }
 
