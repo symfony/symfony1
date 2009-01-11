@@ -369,6 +369,7 @@ class sfCoreAutoload
   'sfProjectUnfreezeTask' => 'task/project',
   'sfUpgradeTo11Task' => 'task/project',
   'sfUpgradeTo12Task' => 'task/project',
+  'sfUpgradeTo13Task' => 'task/project',
   'sfComponentUpgrade' => 'task/project/upgrade1.1',
   'sfConfigFileUpgrade' => 'task/project/upgrade1.1',
   'sfConfigUpgrade' => 'task/project/upgrade1.1',
