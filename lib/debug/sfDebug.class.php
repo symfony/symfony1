@@ -44,6 +44,8 @@ class sfDebug
       'extensions' => get_loaded_extensions(),
     );
 
+    natcasesort($values['extensions']); 
+
     // assign extension version
     if ($values['extensions'])
     {
