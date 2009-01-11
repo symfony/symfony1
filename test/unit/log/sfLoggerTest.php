@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(135, new lime_output_color());
+$t = new lime_test(136, new lime_output_color());
 
 class myLogger extends sfLogger
 {
@@ -27,7 +27,10 @@ class notaLogger
 }
 
 $dispatcher = new sfEventDispatcher();
-$logger = new myLogger($dispatcher);
+$logger = new myLogger($dispatcher, array('log_dir_name' => '/tmp'));
+
+$options = $logger->getOptions();
+$t->is($options['log_dir_name'], '/tmp', '->getOptions() returns the options for the logger instance');
 
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');
@@ -40,7 +43,7 @@ $t->is($logger->getLogLevel(), sfLogger::ERR, '->setLogLevel() accepts a class c
 // ->initialize()
 $t->diag('->initialize()');
 $logger->initialize($dispatcher, array('level' => sfLogger::ERR));
-$t->is($logger->getLogLevel(), sfLogger::ERR, '->initialize() takes an array of parameters as its second argument');
+$t->is($logger->getLogLevel(), sfLogger::ERR, '->initialize() takes an array of options as its second argument');
 
 // ::getPriorityName()
 $t->diag('::getPriorityName()');

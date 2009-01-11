@@ -38,6 +38,8 @@ abstract class sfLogger
   const DEBUG   = 7; // Debug-level messages
 
   protected
+    $dispatcher = null,
+    $options = array(),
     $level = self::INFO;
 
   /**
@@ -71,12 +73,31 @@ abstract class sfLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    if (isset($options['level']))
+    $this->dispatcher = $dispatcher;
+    $this->options = $options;
+    
+    if (isset($this->options['level']))
     {
-      $this->setLogLevel($options['level']);
+      $this->setLogLevel($this->options['level']);
     }
 
     $dispatcher->connect('application.log', array($this, 'listenToLogEvent'));
+  }
+  
+  /**
+   * Returns the options for the logger instance.
+   */
+  public function getOptions()
+  {
+    return $this->options;
+  }
+  
+  /**
+   * Returns the options for the logger instance.
+   */
+  public function setOption($name, $value)
+  {
+    $this->options[$name] = $value;
   }
 
   /**
