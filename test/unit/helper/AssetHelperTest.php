@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(67, new lime_output_color());
 
 class myRequest
 {
@@ -242,3 +242,22 @@ $t->is(get_stylesheets_for_form($form), <<<EOF
 
 EOF
 , 'get_stylesheets_for_form() returns link tags');
+
+// custom web paths
+$t->diag('Custom asset path handling');
+
+sfConfig::set('sf_web_js_dir_name', 'static/js');
+$t->is(javascript_path('xmlhr'), '/static/js/xmlhr.js', 'javascript_path() decorates a relative filename with js dir name and extension with custom js dir');
+$t->is(javascript_include_tag('xmlhr'),
+  '<script type="text/javascript" src="/static/js/xmlhr.js"></script>'."\n", 
+  'javascript_include_tag() takes a javascript name as its first argument');
+
+sfConfig::set('sf_web_css_dir_name', 'static/css');
+$t->is(stylesheet_path('style'), '/static/css/style.css', 'stylesheet_path() decorates a relative filename with css dir name and extension with custom css dir');
+$t->is(stylesheet_tag('style'), 
+  '<link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css" />'."\n", 
+  'stylesheet_tag() takes a stylesheet name as its first argument');
+
+sfConfig::set('sf_web_images_dir_name', 'static/img');
+$t->is(image_path('img'), '/static/img/img.png', 'image_path() decorates a relative filename with images dir name and png extension with custom images dir');
+$t->is(image_tag('test'), '<img src="/static/img/test.png" />', 'image_tag() takes an image name as its first argument');

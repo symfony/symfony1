@@ -75,7 +75,7 @@ function auto_discovery_link_tag($type = 'rss', $url = '', $tag_options = array(
  */
 function javascript_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'js', 'js', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_js_dir_name', 'js'), 'js', $absolute);
 }
 
 /**
@@ -163,7 +163,7 @@ function javascript_include_tag()
  */
 function stylesheet_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'css', 'css', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_css_dir_name', 'css'), 'css', $absolute);
 }
 
 /**
@@ -298,7 +298,7 @@ function decorate_with($layout)
  */
 function image_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'images', 'png', $absolute);
+  return _compute_public_path($source, sfConfig::get('sf_web_images_dir_name', 'images'), 'png', $absolute);
 }
 
 /**
