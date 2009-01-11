@@ -35,6 +35,8 @@ class sfAggregateLogger extends sfLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
+    $this->dispatcher = $dispatcher;
+    
     if (isset($options['loggers']))
     {
       if (!is_array($options['loggers']))
