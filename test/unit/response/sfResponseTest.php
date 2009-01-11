@@ -20,7 +20,7 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
@@ -29,6 +29,7 @@ $t->diag('->initialize()');
 $response = new myResponse($dispatcher, array('foo' => 'bar'));
 $options = $response->getOptions();
 $t->is($options['foo'], 'bar', '->initialize() takes an array of options as its second argument');
+$t->is($options['logging'], false, '->getOptions() returns options for response instance');
 
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');
