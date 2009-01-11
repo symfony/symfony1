@@ -46,6 +46,11 @@ class sfBasicSecurityFilter extends sfFilter
     //       used to retrieve such data and should never have to be altered
     if (!$this->context->getUser()->isAuthenticated())
     {
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires authentication, forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action')))));
+      }
+     
       // the user is not authenticated
       $this->forwardToLoginAction();
     }
@@ -53,7 +58,12 @@ class sfBasicSecurityFilter extends sfFilter
     // the user is authenticated
     $credential = $this->getUserCredential();
     if (!is_null($credential) && !$this->context->getUser()->hasCredential($credential))
-    {
+    { 
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires credential "%s", forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), $credential, sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action')))));
+      }
+    
       // the user doesn't have access
       $this->forwardToSecureAction();
     }
@@ -68,7 +78,7 @@ class sfBasicSecurityFilter extends sfFilter
    * @throws sfStopException
    */
   protected function forwardToSecureAction()
-  {
+  {    
     $this->context->getController()->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
 
     throw new sfStopException();
