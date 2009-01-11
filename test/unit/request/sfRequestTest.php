@@ -22,7 +22,7 @@ class fakeRequest
 {
 }
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(35, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
@@ -54,6 +54,20 @@ $request->initialize($dispatcher, array('foo' => 'foo', 'bar' => 'bar'));
 $t->is($request->extractParameters(array()), array(), '->extractParameters() returns parameters');
 $t->is($request->extractParameters(array('foo')), array('foo' => 'foo'), '->extractParameters() returns parameters for keys in its first parameter');
 $t->is($request->extractParameters(array('bar')), array('bar' => 'bar'), '->extractParameters() returns parameters for keys in its first parameter');
+
+// array access for request parameters
+$t->diag('Array access for request parameters');
+$t->is(isset($request['foo']), true, '->offsetExists() returns true if request parameter exists');
+$t->is(isset($request['foo2']), false, '->offsetExists() returns false if request parameter does not exist');
+$t->is($request['foo3'], false, '->offsetGet() returns false if parameter does not exist');
+$t->is($request['foo'], 'foo', '->offsetGet() returns parameter by name');
+
+$request['foo2'] = 'foo2';
+$t->is($request['foo2'], 'foo2', '->offsetSet() sets parameter by name');
+
+unset($request['foo2']);
+$t->is(isset($request['foo2']), false, '->offsetUnset() unsets parameter by name');
+
 
 $request = new myRequest($dispatcher);
 

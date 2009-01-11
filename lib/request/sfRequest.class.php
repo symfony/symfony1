@@ -20,7 +20,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-abstract class sfRequest
+abstract class sfRequest implements ArrayAccess
 {
   const GET    = 'GET';
   const POST   = 'POST';
@@ -130,6 +130,51 @@ abstract class sfRequest
     }
 
     $this->method = strtoupper($method);
+  }
+
+  /**
+   * Returns true if the request parameter exists (implements the ArrayAccess interface).
+   *
+   * @param  string $name The name of the request parameter
+   *
+   * @return Boolean true if the request parameter exists, false otherwise
+   */
+  public function offsetExists($name)
+  {
+    return $this->hasParameter($name);
+  }
+
+  /**
+   * Returns the request parameter associated with the name (implements the ArrayAccess interface).
+   *
+   * @param  string $name  The offset of the value to get
+   *
+   * @return mixed The request parameter if exists, null otherwise
+   */
+  public function offsetGet($name)
+  {
+    return $this->getParameter($name, false);
+  }
+
+  /**
+   * Sets the request parameter associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   * @param string $value The parameter value
+   */
+  public function offsetSet($offset, $value)
+  {
+    $this->setParameter($offset, $value);
+  }
+
+  /**
+   * Removes a request parameter.
+   *
+   * @param string $offset The parameter name
+   */
+  public function offsetUnset($offset)
+  {
+    $this->getParameterHolder()->remove($offset);
   }
 
   /**
