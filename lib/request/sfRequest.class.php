@@ -84,6 +84,14 @@ abstract class sfRequest implements ArrayAccess
   }
 
   /**
+   * Returns the options.
+   */
+  public function getOptions()
+  {
+    return $this->options;
+  }
+
+  /**
    * Extracts parameter values from the request.
    *
    * @param  array $names  An indexed array of parameter names to extract

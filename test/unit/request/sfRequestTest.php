@@ -22,7 +22,7 @@ class fakeRequest
 {
 }
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
@@ -32,6 +32,9 @@ $request = new myRequest($dispatcher);
 $t->is($dispatcher, $request->getEventDispatcher(), '->initialize() takes a sfEventDispatcher object as its first argument');
 $request->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
+
+$options = $request->getOptions();
+$t->is($options['logging'], false, '->getOptions() returns options for request instance');
 
 // ->getMethod() ->setMethod()
 $t->diag('->getMethod() ->setMethod()');

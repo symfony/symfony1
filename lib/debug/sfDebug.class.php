@@ -113,6 +113,7 @@ class sfDebug
     }
 
     return array(
+      'options'         => $request->getOptions(),
       'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder(), true),
       'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder(), true),
     );
