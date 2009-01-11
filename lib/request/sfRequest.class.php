@@ -30,6 +30,7 @@ abstract class sfRequest implements ArrayAccess
 
   protected
     $dispatcher      = null,
+    $content         = null,
     $method          = null,
     $options         = array(),
     $parameterHolder = null,
@@ -78,6 +79,8 @@ abstract class sfRequest implements ArrayAccess
 
     $this->parameterHolder->add($parameters);
     $this->attributeHolder->add($attributes);
+    
+    $this->content = file_get_contents('php://input'); 
   }
 
   /**
@@ -269,6 +272,16 @@ abstract class sfRequest implements ArrayAccess
   {
     $this->parameterHolder->set($name, $value);
   }
+  
+  /** 
+   * Returns the content of the current request. 
+   *  
+   * @return string 
+   */ 
+  public function getContent() 
+  { 
+    return $this->content; 
+  } 
 
   /**
    * Calls methods defined via sfEventDispatcher.
