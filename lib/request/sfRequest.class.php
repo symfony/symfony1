@@ -85,6 +85,8 @@ abstract class sfRequest implements ArrayAccess
 
   /**
    * Returns the options.
+   *
+   * @return array The options.
    */
   public function getOptions()
   {
@@ -289,7 +291,7 @@ abstract class sfRequest implements ArrayAccess
   public function getContent() 
   { 
     return $this->content; 
-  } 
+  }
 
   /**
    * Calls methods defined via sfEventDispatcher.

@@ -113,6 +113,11 @@ abstract class sfResponse implements Serializable
     $this->sendContent();
   }
 
+  /**
+   * Returns the options.
+   *
+   * @return array The options.
+   */
   public function getOptions()
   {
     return $this->options;
