@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(32, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
 
@@ -58,6 +58,23 @@ user_flush($dispatcher, $user, $storage, array('use_flash' => true));
 $userBis = new sfUser($dispatcher, $storage, array('use_flash' => true));
 $t->is($userBis->getFlash('foo'), null, 'Flashes are automatically removed after the next request');
 $t->is($userBis->hasFlash('foo'), false, '->hasFlash() returns true if the flash variable exists');
+
+// array access for user attributes
+$user->setAttribute('foo', 'foo');
+
+$t->diag('Array access for user attributes');
+$t->is(isset($user['foo']), true, '->offsetExists() returns true if user attribute exists');
+$t->is(isset($user['foo2']), false, '->offsetExists() returns false if user attribute does not exist');
+$t->is($user['foo3'], false, '->offsetGet() returns false if attribute does not exist');
+$t->is($user['foo'], 'foo', '->offsetGet() returns attribute by name');
+
+$user['foo2'] = 'foo2';
+$t->is($user['foo2'], 'foo2', '->offsetSet() sets attribute by name');
+
+unset($user['foo2']);
+$t->is(isset($user['foo2']), false, '->offsetUnset() unsets attribute by name');
+
+$user = new sfUser($dispatcher, $storage);
 
 // attribute holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');

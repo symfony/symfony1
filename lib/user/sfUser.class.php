@@ -22,7 +22,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-class sfUser
+class sfUser implements ArrayAccess
 {
   /**
    * The namespace under which attributes will be stored.
@@ -212,6 +212,51 @@ class sfUser
   public function getCulture()
   {
     return $this->culture;
+  }
+
+  /**
+   * Returns true if the user attribute exists (implements the ArrayAccess interface).
+   *
+   * @param  string $name The name of the user attribute
+   *
+   * @return Boolean true if the user attribute exists, false otherwise
+   */
+  public function offsetExists($name)
+  {
+    return $this->hasAttribute($name);
+  }
+
+  /**
+   * Returns the user attribute associated with the name (implements the ArrayAccess interface).
+   *
+   * @param  string $name  The offset of the value to get
+   *
+   * @return mixed The user attribute if exists, null otherwise
+   */
+  public function offsetGet($name)
+  {
+    return $this->getAttribute($name, false);
+  }
+
+  /**
+   * Sets the user attribute associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   * @param string $value The parameter value
+   */
+  public function offsetSet($offset, $value)
+  {
+    $this->setAttribute($offset, $value);
+  }
+
+  /**
+   * Unsets the user attribute associated with the offset (implements the ArrayAccess interface).
+   *
+   * @param string $offset The parameter name
+   */
+  public function offsetUnset($offset)
+  {
+    $this->getAttributeHolder()->remove($offset);
   }
 
   public function getAttributeHolder()
