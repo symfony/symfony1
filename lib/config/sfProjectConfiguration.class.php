@@ -38,9 +38,9 @@ class sfProjectConfiguration
    */
   public function __construct($rootDir = null, sfEventDispatcher $dispatcher = null)
   {
-    if (is_null(sfProjectConfiguration::$active) || $this instanceof sfApplicationConfiguration)
+    if (is_null(self::$active) || $this instanceof sfApplicationConfiguration)
     {
-      sfProjectConfiguration::$active = $this;
+      self::$active = $this;
     }
 
     $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
@@ -530,14 +530,29 @@ class sfProjectConfiguration
    */
   static public function getActive()
   {
-    if (is_null(sfProjectConfiguration::$active))
+    if (!self::hasActive())
     {
       throw new RuntimeException('There is no active configuration.');
     }
 
-    return sfProjectConfiguration::$active;
+    return self::$active;
   }
 
+  /**
+   * Returns true if these is an active configuration.
+   * 
+   * @return boolean
+   */
+  static public function hasActive()
+  {
+    return !is_null(self::$active);
+  }
+
+  /**
+   * Guesses the project root directory.
+   * 
+   * @return string
+   */
   static public function guessRootDir()
   {
     $r = new ReflectionClass('ProjectConfiguration');

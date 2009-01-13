@@ -10,6 +10,15 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/..');
 
-require_once(dirname(__FILE__).'/../../config/ProjectConfiguration.class.php');
-$configuration = new ProjectConfiguration(realpath($_test_dir.'/..'));
-include($configuration->getSymfonyLibDir().'/vendor/lime/lime.php');
+require_once dirname(__FILE__).'/../../config/ProjectConfiguration.class.php';
+
+if (ProjectConfiguration::hasActive())
+{
+  $configuration = ProjectConfiguration::getActive();
+}
+else
+{
+  $configuration = new ProjectConfiguration(realpath($_test_dir.'/..'));
+}
+
+include $configuration->getSymfonyLibDir().'/vendor/lime/lime.php';
