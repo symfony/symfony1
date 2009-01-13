@@ -33,6 +33,7 @@ class sfPropelBuildAllTask extends sfPropelBaseTask
       new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
       new sfCommandOption('classes-only', 'C', sfCommandOption::PARAMETER_NONE, 'Do not initialize the database'),
       new sfCommandOption('phing-arg', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Arbitrary phing argument'),
+      new sfCommandOption('skip-reload', null, sfCommandOption::PARAMETER_NONE, 'Prevents autoloader from reloading'),
     ));
 
     $this->aliases = array('propel-build-all');
@@ -79,7 +80,7 @@ EOF;
 
     $buildModel = new sfPropelBuildModelTask($this->dispatcher, $this->formatter);
     $buildModel->setCommandApplication($this->commandApplication);
-    $ret = $buildModel->run(array(), $basePhingOptions);
+    $ret = $buildModel->run(array(), array_merge($basePhingOptions, array('--skip-reload')));
 
     if ($ret)
     {
@@ -97,7 +98,7 @@ EOF;
 
       $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
       $buildForms->setCommandApplication($this->commandApplication);
-      $ret = $buildForms->run();
+      $ret = $buildForms->run(array(), array('--skip-reload'));
 
       if ($ret)
       {
@@ -106,7 +107,7 @@ EOF;
 
       $buildFilters = new sfPropelBuildFiltersTask($this->dispatcher, $this->formatter);
       $buildFilters->setCommandApplication($this->commandApplication);
-      $ret = $buildFilters->run();
+      $ret = $buildFilters->run(array(), array('--skip-reload'));
 
       if ($ret)
       {
@@ -144,6 +145,11 @@ EOF;
       {
         return $ret;
       }
+    }
+
+    if (!$options['skip-reload'])
+    {
+      $this->reloadAutoload();
     }
   }
 }

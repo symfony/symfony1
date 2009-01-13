@@ -189,4 +189,18 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     return null;
   }
+
+  /**
+   * Reloads autoloaders.
+   */
+  protected function reloadAutoload()
+  {
+    $this->logSection('autoload', 'Reloading autoloaders');
+
+    $finder = sfFinder::type('file')->name('*autoload.yml.php');
+    $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_cache_dir')));
+    sfAutoload::getInstance()->reloadClasses();
+
+    sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache')->reload();
+  }
 }

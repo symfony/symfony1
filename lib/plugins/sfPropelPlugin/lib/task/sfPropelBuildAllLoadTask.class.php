@@ -35,6 +35,7 @@ class sfPropelBuildAllLoadTask extends sfPropelBaseTask
       new sfCommandOption('phing-arg', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Arbitrary phing argument'),
       new sfCommandOption('append', null, sfCommandOption::PARAMETER_NONE, 'Don\'t delete current data in the database'),
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
+      new sfCommandOption('skip-reload', null, sfCommandOption::PARAMETER_NONE, 'Prevents autoloader from reloading'),
     ));
 
     $this->aliases = array('propel-build-all-load');
@@ -94,6 +95,10 @@ EOF;
     if ($options['no-confirmation'])
     {
       $buildAllOptions[] = '--no-confirmation';
+    }
+    if ($options['skip-reload'])
+    {
+      $buildAllOptions[] = '--skip-reload';
     }
     $ret = $buildAll->run(array(), $buildAllOptions);
 
