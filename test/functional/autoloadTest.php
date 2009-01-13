@@ -26,6 +26,9 @@ $b->
 
 $t = $b->test();
 
+$t->is(class_exists('sfaction'), true, '"sfCoreAutoload" is case insensitive');
+$t->is(class_exists('sfpropel'), true, '"sfAutoload" is case insensitive');
+
 $t->ok(class_exists('BaseExtendMe'), 'plugin lib directory added to autoload');
 $r = new ReflectionClass('ExtendMe');
 $t->like($r->getFilename(), '~project/lib/ExtendMe~', 'plugin class can be replaced by project');
