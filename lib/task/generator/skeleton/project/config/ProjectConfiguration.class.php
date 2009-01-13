@@ -1,6 +1,6 @@
 <?php
 
-require_once ##SYMFONY_LIB_DIR##/autoload/sfCoreAutoload.class.php';
+require_once ##SYMFONY_CORE_AUTOLOAD##;
 sfCoreAutoload::register();
 
 class ProjectConfiguration extends sfProjectConfiguration
