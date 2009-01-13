@@ -74,8 +74,11 @@ EOF;
     $finder = sfFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini', 'databases.yml');
     $this->getFileSystem()->replaceTokens($finder->in(sfConfig::get('sf_config_dir')), '##', '##', array('PROJECT_NAME' => $arguments['name'], 'PROJECT_DIR' => sfConfig::get('sf_root_dir')));
 
-    // update ProjectConfiguration class
-    $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir')));
+    // update ProjectConfiguration class (use a relative path when the symfony core is nested within the project)
+    $symfonyLibDir = 0 === strpos(sfConfig::get('sf_symfony_lib_dir'), sfConfig::get('sf_root_dir')) ?
+      sprintf('dirname(__FILE__).\'/..%s', str_replace(sfConfig::get('sf_root_dir'), '', sfConfig::get('sf_symfony_lib_dir'))) :
+      ('\''.sfConfig::get('sf_symfony_lib_dir'));
+    $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('SYMFONY_LIB_DIR'  => $symfonyLibDir));
 
     // update vhost sample file
     $this->getFileSystem()->replaceTokens(sfConfig::get('sf_config_dir').'/vhost.sample', '##', '##', array('PROJECT_NAME' => $arguments['name'], 'SYMFONY_WEB_DIR' => sfConfig::get('sf_web_dir'), 'SYMFONY_SF_DIR' => realpath(sfCoreAutoload::getInstance()->getBaseDir().'../data/web/sf')));
