@@ -94,6 +94,7 @@ class sfSimpleAutoload
   static public function unregister()
   {
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
+    self::$registered = false;
   }
 
   /**
