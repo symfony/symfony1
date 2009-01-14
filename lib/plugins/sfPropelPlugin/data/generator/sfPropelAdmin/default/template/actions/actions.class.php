@@ -180,7 +180,7 @@ else
 
   public function handleErrorEdit()
   {
-    $this->preExecute();
+    $this->preExecute($this->getRequest());
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
     $this->update<?php echo $this->getClassName() ?>FromRequest();
 
