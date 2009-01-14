@@ -10,8 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-// FIXME
-$t = new lime_test(0, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 class myContext extends sfContext
 {
@@ -20,6 +19,10 @@ class myContext extends sfContext
   }
 }
 
+/*
+// unit testing sfContext requires mock configuration / app
+// this test requires the functional project configurations
+
 class ProjectConfiguration extends sfProjectConfiguration
 {
 }
@@ -27,21 +30,30 @@ class ProjectConfiguration extends sfProjectConfiguration
 class frontendConfiguration extends sfApplicationConfiguration
 {
 }
-/*
+*/
+
+// use functional project configruration
+require_once realpath(dirname(__FILE__).'/../../functional/fixtures/project/config/ProjectConfiguration.class.php');
+
+$frontend_context = sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration('frontend', 'test', true));
+$i18n_context = sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration('i18n', 'test', true));
+$cache_context = sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration('cache', 'test', true));
+
 // ::getInstance()
 $t->diag('::getInstance()');
-$t->isa_ok(sfContext::getInstance('default', 'myContext'), 'myContext', '::getInstance() takes a sfContext class name as its second argument');
+$t->isa_ok($frontend_context, 'sfContext', '::createInstance() takes an application configuration and returns application context instance');
+$t->isa_ok(sfContext::getInstance('frontend'), 'sfContext', '::createInstance() creates application name context instance');
 
-$context1 = sfContext::getInstance('context1', 'myContext');
-$context2 = sfContext::getInstance('context2', 'myContext');
-
-$t->is(sfContext::getInstance('context1'), $context1, '::getInstance() returns the named context if it already exists');
+$context = sfContext::getInstance('frontend');
+$context1 = sfContext::getInstance('i18n');
+$context2 = sfContext::getInstance('cache');
+$t->is(sfContext::getInstance('i18n'), $context1, '::getInstance() returns the named context if it already exists');
 
 // ::switchTo();
 $t->diag('::switchTo()');
-sfContext::switchTo('context1');
+sfContext::switchTo('i18n');
 $t->is(sfContext::getInstance(), $context1, '::switchTo() changes the default context instance returned by ::getInstance()');
-sfContext::switchTo('context2');
+sfContext::switchTo('cache');
 $t->is(sfContext::getInstance(), $context2, '::switchTo() changes the default context instance returned by ::getInstance()');
 
 // ->get() ->set() ->has()
@@ -60,4 +72,31 @@ catch (sfException $e)
 {
   $t->pass('->get() throws an sfException if no object is stored for the given name');
 }
-*/
+
+$context['foo'] = $frontend_context;
+$t->diag('Array access for context objects');
+$t->is(isset($context['foo']), true, '->offsetExists() returns true if context object exists');
+$t->is(isset($context['foo2']), false, '->offsetExists() returns false if context object does not exist');
+$t->isa_ok($context['foo'], 'sfContext', '->offsetGet() returns attribute by name');
+
+$context['foo2'] = $i18n_context;
+$t->isa_ok($context['foo2'], 'sfContext', '->offsetSet() sets object by name');
+
+unset($context['foo2']);
+$t->is(isset($context['foo2']), false, '->offsetUnset() unsets object by name');
+
+$t->diag('->__call()');
+
+$context->setFoo4($i18n_context);
+$t->is($context->has('foo4'), true, '->__call() sets context objects by name using setName()');
+$t->isa_ok($context->getFoo4(), 'sfContext', '->__call() returns context objects by name using getName()');
+
+try
+{
+  $context->unknown();
+  $t->fail('->__call() throws an sfException if factory / method does not exist');
+}
+catch (sfException $e)
+{
+  $t->pass('->__call() throws an sfException if factory / method does not exist');
+}
