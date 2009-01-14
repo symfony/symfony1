@@ -82,6 +82,11 @@ class sfWebRequest extends sfRequest
 
         case 'PUT':
           $this->setMethod(self::PUT);
+          
+          $putParameters = array();
+          parse_str($this->getContent(), $putParameters);
+          $putParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($putParameters) : $putParameters;
+          $this->parameterHolder->add($putParameters);
           break;
 
         case 'DELETE':
@@ -180,7 +185,7 @@ class sfWebRequest extends sfRequest
       $protocol = 'http';
     }
 
-    $host = explode(":", $this->getHost());
+    $host = explode(':', $this->getHost());
     if (count($host) == 1)
     {
       $host[] = isset($pathArray['SERVER_PORT']) ? $pathArray['SERVER_PORT'] : '';
