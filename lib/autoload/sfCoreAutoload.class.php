@@ -303,6 +303,7 @@ class sfCoreAutoload
   'sfstreamlogger' => 'log/sfStreamLogger',
   'sfvarlogger' => 'log/sfVarLogger',
   'sfwebdebuglogger' => 'log/sfWebDebugLogger',
+  'sfmailer' => 'mailer/sfMailer',
   'sfpeardownloader' => 'plugin/sfPearDownloader',
   'sfpearenvironment' => 'plugin/sfPearEnvironment',
   'sfpearfrontendplugin' => 'plugin/sfPearFrontendPlugin',
