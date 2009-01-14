@@ -1,0 +1,12 @@
+autoload:
+
+  swift:
+    name:           swift
+    path:           <?php echo realpath(dirname(__FILE__).'/../lib/vendor/Swift')."\n"; ?>
+    recursive:      on
+
+  sfSwiftPlugin_lib:
+    name:           swift addon
+    path:           <?php echo realpath(dirname(__FILE__).'/../lib')."\n"; ?>
+    recursive:      on
+    exclude:        [vendor]
