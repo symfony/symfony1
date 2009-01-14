@@ -334,16 +334,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $map = call_user_func(array(constant($this->getForeignTable($column)->getClassname().'::PEER'), 'getTableMap'));
-      foreach ($map->getColumns() as $primaryKey)
-      {
-        if ($primaryKey->isPrimaryKey())
-        {
-          break;
-        }
-      }
-
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($primaryKey->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($column->getRelatedColumnName()));
     }
     else if ($column->isPrimaryKey())
     {
