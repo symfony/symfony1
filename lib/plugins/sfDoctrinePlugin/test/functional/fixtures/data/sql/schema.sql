@@ -1,5 +1,5 @@
 CREATE TABLE doctrine__record__abstract (id INTEGER PRIMARY KEY AUTOINCREMENT);
-CREATE TABLE article (id INTEGER PRIMARY KEY AUTOINCREMENT, author_id INTEGER, is_on_homepage INTEGER, created_at DATETIME, updated_at DATETIME);
+CREATE TABLE article (id INTEGER PRIMARY KEY AUTOINCREMENT, author_id INTEGER, is_on_homepage INTEGER, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL);
 CREATE TABLE author (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255));
 CREATE TABLE groups (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255));
 CREATE TABLE group_permission (group_id INTEGER, permission_id INTEGER, PRIMARY KEY(group_id, permission_id));

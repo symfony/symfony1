@@ -23,8 +23,8 @@ class BaseArticleForm extends BaseFormDoctrine
       'id'             => new sfValidatorDoctrineChoice(array('model' => 'Article', 'column' => 'id', 'required' => false)),
       'author_id'      => new sfValidatorDoctrineChoice(array('model' => 'Author', 'required' => false)),
       'is_on_homepage' => new sfValidatorBoolean(array('required' => false)),
-      'created_at'     => new sfValidatorDateTime(array('required' => false)),
-      'updated_at'     => new sfValidatorDateTime(array('required' => false)),
+      'created_at'     => new sfValidatorDateTime(),
+      'updated_at'     => new sfValidatorDateTime(),
     ));
 
     $this->widgetSchema->setNameFormat('article[%s]');
