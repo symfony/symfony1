@@ -47,7 +47,7 @@ class SfObjectBuilder extends PHP5ObjectBuilder
     // include the i18n classes if needed
     if ($this->getTable()->getAttribute('isI18N'))
     {
-      $relatedTable   = $this->getDatabase()->getTable($this->getTable()->getAttribute('i18nTable'));
+      $relatedTable = $this->getDatabase()->getTable($this->getTable()->getAttribute('i18nTable'));
 
       $script .= '
 require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPackage().'.', $relatedTable->getPhpName().'Peer').'\';
@@ -73,16 +73,34 @@ require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPacka
       $this->addI18nMethods($script);
     }
 
+    $this->addToString($script);
+
     if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
     {
       $this->addCall($script);
     }
   }
 
+  protected function addToString(&$script)
+  {
+    foreach ($this->getTable()->getColumns() as $column)
+    {
+      if ($column->getAttribute('isToString'))
+      {
+        $script .= "
+  public function __toString()
+  {
+    return \$this->get{$column->getPhpName()}();
+  }
+";
+        break;
+      }
+    }
+  }
+
   protected function addCall(&$script)
   {
     $script .= "
-
   public function __call(\$method, \$arguments)
   {
     if (!\$callable = sfMixer::getCallable('{$this->getClassname()}:'.\$method))
@@ -94,7 +112,6 @@ require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPacka
 
     return call_user_func_array(\$callable, \$arguments);
   }
-
 ";
   }
 
