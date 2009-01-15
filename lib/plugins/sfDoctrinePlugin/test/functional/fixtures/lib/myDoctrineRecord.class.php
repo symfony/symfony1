@@ -1,5 +1,5 @@
 <?php
-class myDoctrineRecord extends sfDoctrineRecord
+abstract class myDoctrineRecord extends sfDoctrineRecord
 {
   
 }

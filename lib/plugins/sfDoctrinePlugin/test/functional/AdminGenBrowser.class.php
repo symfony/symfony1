@@ -189,6 +189,7 @@ class AdminGenBrowser extends sfTestBrowser
       $this->info('Removing admin gen module "' . $module . '"');
       $fs->sh('rm -rf ' . sfConfig::get('sf_app_module_dir') . '/' . $module);
     }
+    $fs->sh('rm -rf ' . sfConfig::get('sf_test_dir') . '/functional/backend');
   }
 
   public function __destruct()
