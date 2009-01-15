@@ -413,16 +413,7 @@ class SfPeerBuilder extends PHP5PeerBuilder
     {
       file_put_contents($absolute_behavior_file_path, sprintf("<?php\nsfPropelBehavior::add('%s', %s);\n", $this->getTable()->getPhpName(), var_export(unserialize($behaviors), true)));
 
-      $behavior_include_script = <<<EOF
-
-
-if (sfProjectConfiguration::getActive() instanceof sfApplicationConfiguration)
-{
-  include_once '%s';
-}
-
-EOF;
-      $script .= sprintf($behavior_include_script, $behavior_file_path);
+      $script .= sprintf("\ninclude_once '%s';\n", $behavior_file_path);
     }
   }
 

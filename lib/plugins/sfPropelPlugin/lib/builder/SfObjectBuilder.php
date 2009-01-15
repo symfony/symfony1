@@ -372,16 +372,7 @@ EOF;
       $behavior_file_name = 'Base'.$this->getTable()->getPhpName().'Behaviors';
       $behavior_file_path = ClassTools::getFilePath($this->getStubObjectBuilder()->getPackage().'.om', $behavior_file_name);
 
-      $behavior_include_script = <<<EOF
-
-
-if (sfProjectConfiguration::getActive() instanceof sfApplicationConfiguration)
-{
-  include_once '%s';
-}
-
-EOF;
-      $script .= sprintf($behavior_include_script, $behavior_file_path);
+      $script .= sprintf("\ninclude_once '%s';\n", $behavior_file_path);
     }
   }
 
