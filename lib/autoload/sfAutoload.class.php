@@ -141,6 +141,13 @@ class sfAutoload
     return self::loadClass($class);
   }
 
+  /**
+   * Reloads class mappings (once per request) and tries again.
+   *
+   * @param  string  $class  A class name.
+   *
+   * @return boolean Returns true if the class has been loaded
+   */
   public function autoloadAgain($class)
   {
     self::reloadClasses(true);
