@@ -387,11 +387,11 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * @param integer $n                The number of times to embed the form
    * @param string  $decorator        A HTML decorator for the main form around embedded forms
    * @param string  $innerDecorator   A HTML decorator for each embedded form
-   * @param array   $attributes       Attributes for schema
    * @param array   $options          Options for schema
+   * @param array   $attributes       Attributes for schema
    * @param array   $labels           Labels for schema
    */
-  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $attributes = array(), $options = array(), $labels = array())
+  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $options = array(), $attributes = array(), $labels = array())
   {
     if (true === $this->isBound() || true === $form->isBound())
     {
@@ -418,7 +418,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
     $innerDecorator = is_null($innerDecorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
-    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options), $decorator);
+
+    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $options, $attributes), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
     // generate labels
