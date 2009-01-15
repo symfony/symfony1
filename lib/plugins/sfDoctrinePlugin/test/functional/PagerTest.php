@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $total = 50;
 for ($i = 0; $i < $total; $i++)
@@ -51,3 +51,19 @@ $results = $pager->getResults('array');
 
 $t->is(gettype($results), 'array');
 $t->is(count($results), $numPerPage);
+
+$pager = new sfDoctrinePager('Author', $numPerPage);
+$pager->setTableMethod('testTableMethod2');
+$pager->setQuery(Doctrine_Query::create()->from('Author a')->where('a.id < 9999999'));
+$pager->setPage(1);
+$pager->init();
+
+$t->is($pager->getQuery()->getSql(), 'SELECT a.id AS a__id, a.name AS a__name FROM author a WHERE a.id < 9999999 AND a.id > 0 LIMIT 25');
+
+
+$pager = new sfDoctrinePager('Author', $numPerPage);
+$pager->setQuery(Doctrine_Query::create()->from('Author a')->where('a.id < 9999999'));
+$pager->setPage(1);
+$pager->init();
+
+$t->is($pager->getQuery()->getSql(), 'SELECT a.id AS a__id, a.name AS a__name FROM author a WHERE a.id < 9999999 LIMIT 25');
