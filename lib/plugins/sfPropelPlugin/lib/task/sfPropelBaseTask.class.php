@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'config/config.php');
-
 /**
  * Base class for all symfony Propel tasks.
  *
