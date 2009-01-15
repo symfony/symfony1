@@ -49,6 +49,17 @@ class SfPeerBuilder extends PHP5PeerBuilder
     parent::addIncludes($script);
   }
 
+  protected function addConstantsAndAttributes(&$script)
+  {
+    $boolean = $this->getTable()->getAttribute('isI18N') ? 'true' : 'false';
+    $script .= "
+	/** class enabled with symfony I18N functionality */
+	const IS_I18N = $boolean;
+";
+
+    parent::addConstantsAndAttributes($script);
+  }
+
   protected function addSelectMethods(&$script)
   {
     parent::addSelectMethods($script);
