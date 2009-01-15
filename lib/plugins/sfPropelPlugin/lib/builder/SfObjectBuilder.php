@@ -85,7 +85,7 @@ require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPacka
   {
     foreach ($this->getTable()->getColumns() as $column)
     {
-      if ($column->getAttribute('isToString'))
+      if ($column->getAttribute('isPrimaryString'))
       {
         $script .= "
   public function __toString()
