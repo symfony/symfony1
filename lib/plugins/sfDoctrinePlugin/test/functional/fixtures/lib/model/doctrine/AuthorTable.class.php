@@ -4,5 +4,9 @@
  */
 class AuthorTable extends Doctrine_Table
 {
-
+  public function testTableMethod()
+  {
+    return $this->createQuery('a')
+      ->where('a.id > 0');
+  }
 }

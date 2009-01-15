@@ -20,7 +20,7 @@ class sfDoctrinePager extends sfPager implements Serializable
 {
   protected
     $query                 = null,
-    $tableMethodName       = null,
+    $tableMethodName       = 'createQuery',
     $tableMethodCalled     = false;
 
   /**
