@@ -38,4 +38,28 @@ class SfMultiExtendObjectBuilder extends PHP5MultiExtendObjectBuilder
 
     parent::addIncludes($script);
   }
+
+  protected function addClassOpen(&$script)
+  {
+    parent::addClassOpen($script);
+
+    // remove comments and fix coding standards
+    $script = str_replace(array(" {\n", "\n\n\n"), array("\n{", "\n"), sfToolkit::stripComments($script));
+  }
+
+  protected function addClassBody(&$script)
+  {
+    parent::addClassBody($script);
+
+    // remove comments and fix coding standards
+    $script = str_replace(array("\t", "{\n  \n"), array('  ', "{\n"), sfToolkit::stripComments($script));
+  }
+
+  protected function addClassClose(&$script)
+  {
+    parent::addClassClose($script);
+
+    // fix coding standards
+    $script = preg_replace('#\n} // .+$#m', '}', $script);
+  }
 }
