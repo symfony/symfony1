@@ -124,9 +124,10 @@ EOF;
     $insertSql->setCommandApplication($this->commandApplication);
     $insertSqlOptions = array();
     $insertSqlOptions[] = '--env=' . $options['env'];
-    if ($options['no-confirmation'])
+    $insertSqlOptions = array();
+    if (isset($options['application']) && $options['application'])
     {
-      $insertSqlOptions[] = '--no-confirmation';
+      $insertSqlOptions[] = '--application=' . $options['application'];
     }
     $ret = $insertSql->run(array(), $insertSqlOptions);
 
