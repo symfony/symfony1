@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(133, new lime_output_color());
+$t = new lime_test(137, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -158,35 +158,54 @@ $f->setWidgetSchema(new sfWidgetFormSchema(array(
 )));
 $f->setValidatorSchema(new sfValidatorSchema(array(
   'first_name' => new sfValidatorPass(),
+  'last_name'  => new sfValidatorPass(),
+  'image'      => new sfValidatorPass(),
 )));
-$t->ok($f['first_name'] instanceof sfFormField, 'sfForm implements the ArrayAccess interface');
-$t->is($f['first_name']->render(), '<input type="text" name="first_name" value="Fabien" id="first_name" />', 'sfForm implements the ArrayAccess interface');
+$f->setDefaults(array(
+  'image' => 'default.gif',
+));
+$f->embedForm('embedded', new sfForm());
+$t->ok($f['first_name'] instanceof sfFormField, '"sfForm" implements the ArrayAccess interface');
+$t->is($f['first_name']->render(), '<input type="text" name="first_name" value="Fabien" id="first_name" />', '"sfForm" implements the ArrayAccess interface');
 
 try
 {
-  $f['first_name'] = 'first_name';
-  $t->fail('sfForm ArrayAccess implementation does not permit to set a form field');
+  $f['image'] = 'image';
+  $t->fail('"sfForm" ArrayAccess implementation does not permit to set a form field');
 }
 catch (LogicException $e)
 {
-  $t->pass('sfForm ArrayAccess implementation does not permit to set a form field');
+  $t->pass('"sfForm" ArrayAccess implementation does not permit to set a form field');
 }
-$t->ok(isset($f['first_name']), 'sfForm implements the ArrayAccess interface');
-unset($f['first_name']);
-$t->ok(!isset($f['first_name']), 'sfForm implements the ArrayAccess interface');
+$t->ok(isset($f['image']), '"sfForm" implements the ArrayAccess interface');
+unset($f['image']);
+$t->ok(!isset($f['image']), '"sfForm" implements the ArrayAccess interface');
+$t->ok(!array_key_exists('image', $f->getDefaults()), '"sfForm" ArrayAccess implementation removes form defaults');
 $v = $f->getValidatorSchema();
-$t->ok(!isset($v['first_name']), 'sfForm ArrayAccess implementation removes the widget and the validator');
+$t->ok(!isset($v['image']), '"sfForm" ArrayAccess implementation removes the widget and the validator');
 $w = $f->getWidgetSchema();
-$t->ok(!isset($w['first_name']), 'sfForm ArrayAccess implementation removes the widget and the validator');
+$t->ok(!isset($w['image']), '"sfForm" ArrayAccess implementation removes the widget and the validator');
 try
 {
   $f['nonexistant'];
-  $t->fail('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
+  $t->fail('"sfForm" ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
 catch (LogicException $e)
 {
-  $t->pass('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
+  $t->pass('"sfForm" ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
+
+unset($f['embedded']);
+$t->ok(!array_key_exists('embedded', $f->getEmbeddedForms()), '"sfForm" ArrayAccess implementation removes embedded forms');
+
+$f->bind(array(
+  'first_name' => 'John',
+  'last_name'  => 'Doe',
+));
+unset($f['first_name']);
+$t->is_deeply($f->getValues(), array('last_name' => 'Doe'), '"sfForm" ArrayAccess implementation removes bound values');
+$w['first_name'] = new sfWidgetFormInput();
+$t->is($f['first_name']->getValue(), '', '"sfForm" ArrayAccess implementation removes tainted values');
 
 // Countable interface
 $t->diag('Countable interface');
@@ -196,7 +215,7 @@ $f->setWidgetSchema(new sfWidgetFormSchema(array(
   'last_name'  => new sfWidgetFormInput(),
   'image'      => new sfWidgetFormInputFile(),
 )));
-$t->is(count($f), 3, 'sfForm implements the Countable interface');
+$t->is(count($f), 3, '"sfForm" implements the Countable interface');
 
 // Iterator interface
 $t->diag('Iterator interface');
@@ -206,14 +225,13 @@ $f->setWidgetSchema(new sfWidgetFormSchema(array(
   'last_name'  => new sfWidgetFormInput(),
   'image'      => new sfWidgetFormInputFile(),
 )));
-$values = array();
 foreach ($f as $name => $value)
 {
   $values[$name] = $value;
 }
-$t->is(isset($values['first_name']), true, 'sfForm implements the Iterator interface');
-$t->is(isset($values['last_name']), true, 'sfForm implements the Iterator interface');
-$t->is(count($values), 3, 'sfForm implements the Iterator interface');
+$t->is(isset($values['first_name']), true, '"sfForm" implements the Iterator interface');
+$t->is(isset($values['last_name']), true, '"sfForm" implements the Iterator interface');
+$t->is_deeply(array_keys($values), array('first_name', 'last_name', 'image'), '"sfForm" implements the Iterator interface');
 
 // ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');

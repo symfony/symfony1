@@ -999,7 +999,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function offsetUnset($offset)
   {
-    unset($this->widgetSchema[$offset], $this->validatorSchema[$offset]);
+    unset(
+      $this->widgetSchema[$offset],
+      $this->validatorSchema[$offset],
+      $this->defaults[$offset],
+      $this->taintedValues[$offset],
+      $this->values[$offset],
+      $this->embeddedForms[$offset]
+    );
 
     $this->resetFormFields();
   }
