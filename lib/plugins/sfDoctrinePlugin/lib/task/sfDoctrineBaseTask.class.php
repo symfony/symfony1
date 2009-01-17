@@ -51,7 +51,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
   public function getCliConfig()
   {
     $pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/data');
-    $fixtures = sfFinder::type('dir')->name('fixtures')->in(array_merge(array(sfConfig::get('sf_data_dir')), is_array($pluginDirs) ? $pluginDirs : array());
+    $fixtures = sfFinder::type('dir')->name('fixtures')->in(array_merge(array(sfConfig::get('sf_data_dir')), is_array($pluginDirs) ? $pluginDirs : array()));
     $models = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . 'doctrine';
     $migrations = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'doctrine';
     $sql = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'sql';
