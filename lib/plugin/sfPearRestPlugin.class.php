@@ -118,7 +118,7 @@ class sfPearRestPlugin extends sfPearRest11
       throw new sfPluginRestException(sprintf('Unable to get information for plugin "%s": %s', $plugin, $allreleases->getMessage()));
     }
 
-    if (!is_array($allreleases['r']) || !count($allreleases['r']))
+    if (!isset($allreleases['r']) || (isset($allreleases['r']) && !is_array($allreleases['r']) || !count($allreleases['r'])))
     {
       throw new sfPluginRestException(sprintf('No release available for plugin "%s"', $plugin));
     }
