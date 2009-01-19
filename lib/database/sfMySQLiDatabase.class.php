@@ -18,18 +18,21 @@ class sfMySQLiDatabase extends sfMySQLDatabase
 
   /**
    * Returns the appropriate connect method.
-   * 
-   * @param  bool $persistent wether persistent connections are use or not
-   * @return string name of connect method.
+   *
+   * @param  bool $persistent Whether persistent connections are use or not
+   *                          The MySQLi driver does not support persistent
+   *                          connections so this argument is ignored.
+   *
+   * @return string name of connect method
    */
   protected function getConnectMethod($persistent)
   {
-    return $persistent ? 'mysqli_pconnect' : 'mysqli_connect';
+    return 'mysqli_connect';
   }
-  
+
   /**
    * Selects the database to be used in this connection
-   * 
+   *
    * @param  string $database Name of database to be connected
    *
    * @return bool true if this was successful
@@ -41,8 +44,6 @@ class sfMySQLiDatabase extends sfMySQLDatabase
 
   /**
    * Execute the shutdown procedure
-   *
-   * @return void
    *
    * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database
    */
