@@ -27,7 +27,7 @@ class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorHelper extends s
       return '';
     }
 
-    return '<li class="sf_admin_action_delete">'.link_to(__($params['label'], array(), 'sf_admin'), $this->getUrlForAction('delete'), $object, array('method' => 'delete', 'confirm' => $params['confirm'])).'</li>';
+    return '<li class="sf_admin_action_delete">'.link_to(__($params['label'], array(), 'sf_admin'), $this->getUrlForAction('delete'), $object, array('method' => 'delete', 'confirm' => !empty($params['confirm']) ? __($params['confirm'], array(), 'sf_admin') : $params['confirm'])).'</li>';
   }
 
   public function linkToList($params)
