@@ -153,7 +153,7 @@ class Doctrine_Migration_Diff
                                'columns'   => $info['columns'],
                                'options'   => array('type'        => $info['options']['type'],
                                                     'charset'     => $info['options']['charset'],
-                                                    'collation'   => $info['options']['collation'],
+                                                    'collate'     => $info['options']['collate'],
                                                     'indexes'     => $info['options']['indexes'],
                                                     'foreignKeys' => $info['options']['foreignKeys'],
                                                     'primary'     => $info['options']['primary']));
@@ -205,7 +205,7 @@ class Doctrine_Migration_Diff
                                'columns'   => $info['columns'],
                                'options'   => array('type'        => $info['options']['type'],
                                                     'charset'     => $info['options']['charset'],
-                                                    'collation'   => $info['options']['collation'],
+                                                    'collate'     => $info['options']['collate'],
                                                     'indexes'     => $info['options']['indexes'],
                                                     'foreignKeys' => $info['options']['foreignKeys'],
                                                     'primary'     => $info['options']['primary']));
