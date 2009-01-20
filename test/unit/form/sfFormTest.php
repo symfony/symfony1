@@ -683,7 +683,8 @@ $t->is_deeply(sfForm::convertFileInformation($expected), $expected, '::convertFi
 $t->diag('->renderFormTag()');
 $f = new FormTest();
 $t->is($f->renderFormTag('/url'), '<form action="/url" method="post">', '->renderFormTag() renders the form tag');
-$t->is($f->renderFormTag('/url', array('method' => 'put')), '<form method="post" action="/url"><input type="hidden" name="sf_method" value="put" />', '->renderFormTag() adds a hidden input tag if the method is not GET or POST');
+$f->renderFormTag('/url', array('method' => 'put'));
+$t->is(isset($f['sf_method']), true, '->renderFormTag() adds a hidden input tag to widget schema if the method is not GET or POST');
 $f->setWidgetSchema(new sfWidgetFormSchema(array('image' => new sfWidgetFormInputFile())));
 $t->is($f->renderFormTag('/url'), '<form action="/url" method="post" enctype="multipart/form-data">', '->renderFormTag() adds the enctype attribute if the form is multipart');
 

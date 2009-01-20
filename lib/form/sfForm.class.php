@@ -912,14 +912,13 @@ class sfForm implements ArrayAccess, Iterator, Countable
       $attributes['enctype'] = 'multipart/form-data';
     }
 
-    $html = '';
     if (!in_array($attributes['method'], array('get', 'post')))
     {
-      $html = $this->getWidgetSchema()->renderTag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $attributes['method'], 'id' => false));
+      $this->setWidget('sf_method', new sfWidgetFormInputHidden(array('type' => 'hidden', 'default' => $attributes['method']), array('name' => 'sf_method', 'value' => $attributes['method'], 'id' => false)));
       $attributes['method'] = 'post';
     }
 
-    return sprintf('<form%s>', $this->getWidgetSchema()->attributesToHtml($attributes)).$html;
+    return sprintf('<form%s>', $this->getWidgetSchema()->attributesToHtml($attributes));
   }
 
   public function resetFormFields()
