@@ -42,8 +42,7 @@ class AdminGenBrowser extends sfTestBrowser
   {
     $this->info('Testing "articles" module embeds I18n');
 
-    $i = array('author_id' => 1, 'is_on_homepage' => false, 'en' => array('title' => 'Test English title', 'body' => 'Test English body'), 'fr' => array('title' => 'Test French title', 'body' => 'Test French body'));
-    $info = $info ? array_merge($i, $info) : $i;
+    $info = array('author_id' => 1, 'is_on_homepage' => false, 'en' => array('title' => 'Test English title', 'body' => 'Test English body'), 'fr' => array('title' => 'Test French title', 'body' => 'Test French body'), 'created_at' => array('month' => '1', 'day' => '12', 'year' => '2009', 'hour' => '10', 'minute' => '03'), 'updated_at' => array('month' => '1', 'day' => '12', 'year' => '2009', 'hour' => '10', 'minute' => '03'));
 
     $this->
       get('/articles/new')->
@@ -113,11 +112,10 @@ class AdminGenBrowser extends sfTestBrowser
       )
     );
 
-    $this->
-      click('Save', $userInfo);
+    $this->click('Save', $userInfo);
 
     $user = Doctrine::getTable('User')->findOneByUsername($userInfo['user']['username']);
-    $userInfo['user']['Profile']['user_id'] = $user->getId();
+    $userInfo['user']['Profile']['user_id'] = $user->id;
 
     $this->
         with('response')->begin()->
@@ -125,12 +123,12 @@ class AdminGenBrowser extends sfTestBrowser
           followRedirect()->
         end()->
         with('doctrine')->begin()->
-          check('User', array('username' => 'test'))->
+          check('User', array('username' => $userInfo['user']['username']))->
           check('Profile', $userInfo['user']['Profile'])->
-          check('UserGroup', array('user_id' => $user->getId(), 'group_id' => 1))->
-          check('UserGroup', array('user_id' => $user->getId(), 'group_id' => 2))->
-          check('UserPermission', array('user_id' => $user->getId(), 'permission_id' => 3))->
-          check('UserPermission', array('user_id' => $user->getId(), 'permission_id' => 4))->
+          check('UserGroup', array('user_id' => $user->id, 'group_id' => $user->Groups[0]->id))->
+          check('UserGroup', array('user_id' => $user->id, 'group_id' => $user->Groups[1]->id))->
+          check('UserPermission', array('user_id' => $user->id, 'permission_id' => $user->Permissions[0]->id))->
+          check('UserPermission', array('user_id' => $user->id, 'permission_id' => $user->Permissions[1]->id))->
         end()
     ;
 
@@ -166,7 +164,7 @@ class AdminGenBrowser extends sfTestBrowser
   }
 
   protected function _generateAdminGenModule($model, $module)
-  {
+  {    
     $this->info('Generating admin gen module "' . $module . '"');
     $task = new sfDoctrineGenerateAdminTask($this->getContext()->getEventDispatcher(), new sfFormatter());
     $task->run(array('application' => 'backend', 'route_or_model' => $model));
@@ -174,6 +172,9 @@ class AdminGenBrowser extends sfTestBrowser
 
   protected function _generateAdminGenModules()
   {
+    // $task = new sfDoctrineBuildAllReloadTask($this->getContext()->getEventDispatcher(), new sfFormatter());
+    // $task->run(array(), array('--no-confirmation'));
+
     // Generate the admin generator modules
     foreach ($this->_modules as $model => $module)
     {
@@ -190,6 +191,7 @@ class AdminGenBrowser extends sfTestBrowser
       $fs->sh('rm -rf ' . sfConfig::get('sf_app_module_dir') . '/' . $module);
     }
     $fs->sh('rm -rf ' . sfConfig::get('sf_test_dir') . '/functional/backend');
+    $fs->sh('rm -rf ' . sfConfig::get('sf_data_dir') . '/*.sqlite');
   }
 
   public function __destruct()

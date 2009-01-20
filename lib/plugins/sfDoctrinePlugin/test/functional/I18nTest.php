@@ -61,11 +61,15 @@ $data = array(
     'body'  => 'english body'),
   'fr' => array(
     'title' => 'french title',
-    'body'  => 'french body')
+    'body'  => 'french body'),
+  'created_at' => time(),
+  'updated_at' => time(),
 );
 
 $articleForm->bind($data);
 $t->is($articleForm->isValid(), true);
+
+$data = $articleForm->getValues();
 
 $values = array(
   'is_on_homepage' => true,
@@ -86,8 +90,8 @@ $values = array(
     'slug' => '',
   ),
   'id' => null,
-  'created_at' => null,
-  'updated_at' => null,
+  'created_at' => $data['created_at'],
+  'updated_at' => $data['updated_at'],
 );
 
 $t->is($articleForm->getValues(), $values);
