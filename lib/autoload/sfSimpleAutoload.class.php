@@ -117,7 +117,18 @@ class sfSimpleAutoload
     // we have a class path, let's include it
     if (isset($this->classes[$class]))
     {
-      require($this->classes[$class]);
+      try
+      {
+        require $this->classes[$class];
+      }
+      catch (sfException $e)
+      {
+        $e->printStackTrace();
+      }
+      catch (Exception $e)
+      {
+        sfException::createFromException($e)->printStackTrace();
+      }
 
       return true;
     }

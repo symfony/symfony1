@@ -175,16 +175,43 @@ class sfAutoload
     // we have a class path, let's include it
     if (isset($this->classes[$class]))
     {
-      require($this->classes[$class]);
+      try
+      {
+        require $this->classes[$class];
+      }
+      catch (sfException $e)
+      {
+        $e->printStackTrace();
+      }
+      catch (Exception $e)
+      {
+        sfException::createFromException($e)->printStackTrace();
+      }
 
       return true;
     }
 
     // see if the file exists in the current module lib directory
-    // must be in a module context
-    if (sfContext::hasInstance() && ($module = sfContext::getInstance()->getModuleName()) && isset($this->classes[$module.'/'.$class]))
+    if (
+      sfContext::hasInstance()
+      &&
+      ($module = sfContext::getInstance()->getModuleName())
+      &&
+      isset($this->classes[$module.'/'.$class])
+    )
     {
-      require($this->classes[$module.'/'.$class]);
+      try
+      {
+        require $this->classes[$module.'/'.$class];
+      }
+      catch (sfException $e)
+      {
+        $e->printStackTrace();
+      }
+      catch (Exception $e)
+      {
+        sfException::createFromException($e)->printStackTrace();
+      }
 
       return true;
     }
