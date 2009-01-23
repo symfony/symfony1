@@ -5,7 +5,7 @@
 <thead>
 <tr>
 <?php if ($this->getParameterValue('list.batch_actions')): ?>
-  <th id="sf_admin_list_th_sf_batch_actions">[?php echo checkbox_tag('foo', 1, 0, array('onclick' => "boxes = document.getElementsByTagName('input'); for(index in boxes) { box = boxes[index]; if (box.type == 'checkbox' && box.className == 'sf_admin_batch_checkbox') box.checked = this.checked } return true;")) ?]</th>
+  <th id="sf_admin_list_th_sf_batch_actions">[?php echo checkbox_tag('foo', 1, 0, array('onclick' => "boxes = document.getElementsByTagName('input'); for(var index = 0; index < boxes.length; index++) { box = boxes[index]; if (box.type == 'checkbox' && box.className == 'sf_admin_batch_checkbox') box.checked = this.checked } return true;")) ?]</th>
 <?php endif; ?>
 [?php include_partial('list_th_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>') ?]
 <?php if ($this->getParameterValue('list.object_actions')): ?>
