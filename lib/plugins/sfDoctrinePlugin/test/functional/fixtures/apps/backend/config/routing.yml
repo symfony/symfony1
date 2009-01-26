@@ -85,6 +85,15 @@ author:
     column:              id
     with_wildcard_routes: true
 
+my_articles:
+  class: sfDoctrineRouteCollection
+  options:
+    model:               Article
+    module:              my_articles
+    prefix_path:         my_articles
+    column:              id
+    with_wildcard_routes: true
+
 article:
   class: sfDoctrineRouteCollection
   options:

@@ -41,4 +41,9 @@ class ArticleTable extends Doctrine_Table
     $q->orWhere($q->getRootAlias() . '.is_on_homepage = ?', 0);
     return $q->fetchOne();
   }
+
+  public function testAdminGenTableMethod(Doctrine_Query $q)
+  {
+    return $q;
+  }
 }

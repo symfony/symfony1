@@ -38,6 +38,14 @@ class AdminGenBrowser extends sfTestBrowser
     }
   }
 
+  protected function _testAdminGenTableMethod()
+  {
+    $this->
+      get('/my_articles')->
+      isStatusCode('200')
+    ;
+  }
+
   protected function _testArticleI18nEmbedded()
   {
     $this->info('Testing "articles" module embeds I18n');
