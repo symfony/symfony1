@@ -43,7 +43,6 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
                                 'length'        =>  null,
                                 'options'       =>  array('default' => null,
                                                           'notnull' => false),
-    );
 
     /**
      * Set table definition for SoftDelete behavior
@@ -52,8 +51,10 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
      */
     public function setTableDefinition()
     {
+        // BC to 1.0.X of SoftDelete behavior
         if ($this->_options['type'] == 'boolean') {
-            $this->_options['options']['default'] = false;
+            $this->_options['length'] = 1;
+            $this->_options['options'] = array('default' => false, 'notnull' => true);
         }
     
         $this->hasColumn($this->_options['name'], $this->_options['type'], $this->_options['length'], $this->_options['options']);
