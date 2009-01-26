@@ -26,4 +26,19 @@ class ArticleTable extends Doctrine_Table
     $query = $this->createQuery('a');
     return $query->fetchOne();
   }
+
+  public function routeTest9(array $parameters)
+  {
+    return Doctrine_Query::create()
+      ->from('Article a')
+      ->where('a.id = ?', $parameters['id'])
+      ->limit(1)
+      ->execute();
+  }
+
+  public function routeTest10(Doctrine_Query $q)
+  {
+    $q->orWhere($q->getRootAlias() . '.is_on_homepage = ?', 0);
+    return $q->fetchOne();
+  }
 }

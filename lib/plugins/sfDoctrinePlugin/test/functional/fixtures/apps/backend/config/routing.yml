@@ -22,6 +22,42 @@ doctrine_route_test4:
   options: { model: Article, type: list, method: retrieveArticle4 }
   param: { module: doctrine_route_test, action: index }
 
+doctrine_route_test5:
+  url:   /doctrine/route/test5/:id/:testing_non_column
+  class: sfDoctrineRoute
+  options: { model: Article, type: object }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test6:
+  url:   /doctrine/route/test6/:slug/:testing_non_column
+  class: sfDoctrineRoute
+  options: { model: Article, type: object }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test7:
+  url:   /doctrine/route/test7/:testing_non_column
+  class: sfDoctrineRoute
+  options: { model: Article, type: list }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test8:
+  url:   /doctrine/route/test8/:id/:slug/:title/:testing_non_column2
+  class: sfDoctrineRoute
+  options: { model: Article, type: object }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test9:
+  url:   /doctrine/route/test9/:id/:slug/:title/:testing_non_column
+  class: sfDoctrineRoute
+  options: { model: Article, type: object, method: routeTest9 }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test10:
+  url:   /doctrine/route/test10/:is_on_homepage/:testing_non_column
+  class: sfDoctrineRoute
+  options: { model: Article, type: list, method_for_query: routeTest10 }
+  param: { module: doctrine_route_test, action: index }
+
 user:
   class: sfDoctrineRouteCollection
   options:

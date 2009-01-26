@@ -148,7 +148,14 @@ class sfDoctrineRoute extends sfObjectRoute
 
     foreach ($this->getRealVariables() as $variable)
     {
-      $parameters[$variable] = $object->get($variable);
+      try {
+        $parameters[$variable] = $object->$variable;
+      } catch (Exception $e) {
+        try {
+          $method = 'get'.sfInflector::camelize($variable);
+          $parameters[$variable] = $object->$method;
+        } catch (Exception $e) {}
+      }
     }
 
     return $parameters;
