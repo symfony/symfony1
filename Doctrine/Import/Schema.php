@@ -195,7 +195,7 @@ class Doctrine_Import_Schema
 
         foreach ((array) $schema AS $s) {
             if (is_file($s)) {
-                $e = explode('.', $file->getFileName());
+                $e = explode('.', $s);
                 if (end($e) === $format) {
                     $array = array_merge($array, $this->parseSchema($s, $format));
                 }          
