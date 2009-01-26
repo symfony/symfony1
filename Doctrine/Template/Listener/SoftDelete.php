@@ -92,7 +92,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         $query = $event->getQuery();
         if ( ! $query->contains($field)) {
             $query->from('')->update($params['component']['table']->getOption('name') . ' ' . $params['alias']);
-            $query->set($field, '?', 'NOW()');
+            $query->set($field, '?', date('Y-m-d H:i:s', time()));
             $query->addWhere($field . ' IS NULL');
         }
     }
