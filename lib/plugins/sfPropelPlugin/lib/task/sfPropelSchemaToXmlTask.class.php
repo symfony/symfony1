@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
 
 /**
- * Creates schema.xml from schema.yml.
+ * Creates schema.yml from schema.xml.
  *
  * @package    symfony
  * @subpackage propel
@@ -31,9 +31,9 @@ class sfPropelSchemaToXmlTask extends sfPropelBaseTask
     $this->briefDescription = 'Creates schema.xml from schema.yml';
 
     $this->detailedDescription = <<<EOF
-The [propel:schema-to-xml|INFO] task converts XML schemas to YML:
+The [propel:schema-to-xml|INFO] task converts YML schemas to XML:
 
-  [./symfony propel:convert-to-xml|INFO]
+  [./symfony propel:schema-to-xml|INFO]
 EOF;
   }
 

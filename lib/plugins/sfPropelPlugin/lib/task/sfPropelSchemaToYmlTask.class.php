@@ -31,9 +31,9 @@ class sfPropelSchemaToYmlTask extends sfPropelBaseTask
     $this->briefDescription = 'Creates schema.yml from schema.xml';
 
     $this->detailedDescription = <<<EOF
-The [propel:schema-to-yml|INFO] task converts YML schemas to XML:
+The [propel:schema-to-yml|INFO] task converts XML schemas to YML:
 
-  [./symfony propel:convert-to-yml|INFO]
+  [./symfony propel:schema-to-yml|INFO]
 EOF;
   }
 
