@@ -42,7 +42,7 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
                                 'type'          =>  'timestamp',
                                 'length'        =>  null,
                                 'options'       =>  array('default' => null,
-                                                          'notnull' => false),
+                                                          'notnull' => false));
 
     /**
      * Set table definition for SoftDelete behavior
