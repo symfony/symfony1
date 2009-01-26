@@ -46,6 +46,11 @@ class sfDoctrineDatabase extends sfDatabase
   {
     parent::initialize($parameters);
 
+    if (!is_null($this->_doctrineConnection))
+    {
+      return;
+    }
+
     $dsn = $this->getParameter('dsn');
     $name = $this->getParameter('name');
 
@@ -119,6 +124,7 @@ class sfDoctrineDatabase extends sfDatabase
     if ($this->connection !== null)
     {
       $this->connection = null;
+      $this->_doctrineConnection = null;
     }
   }
 }
