@@ -52,6 +52,10 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
      */
     public function setTableDefinition()
     {
+        if ($this->_options['type'] == 'boolean') {
+            $this->_options['options']['default'] = false;
+        }
+    
         $this->hasColumn($this->_options['name'], $this->_options['type'], $this->_options['length'], $this->_options['options']);
 
         $this->addListener(new Doctrine_Template_Listener_SoftDelete($this->_options));
