@@ -102,13 +102,13 @@ EOF;
         $content = file_get_contents($propelini);
         if (preg_match('/^(.+?):/', $arguments['dsn'], $match))
         {
-          $content = preg_replace('/^propel\.database(\s*)=(\s*)(.+?)$/m', 'propel.database$1=$2'.$match[1], $content);
-          $content = preg_replace('/^propel\.database.driver(\s*)=(\s*)(.+?)$/m', 'propel.database.driver$1=$2'.$match[1], $content);
-          $content = preg_replace('/^propel\.database\.createUrl(\s*)=(\s*)(.+?)$/m', 'propel.database.createUrl$1=$2'.$arguments['dsn'], $content);
-          $content = preg_replace('/^propel\.database\.url(\s*)=(\s*)(.+?)$/m', 'propel.database.url$1=$2'.$arguments['dsn'], $content);
+          $content = preg_replace('/^propel\.database(\s*)=(\s*)(.+?)$/m', 'propel.database$1=${2}'.$match[1], $content);
+          $content = preg_replace('/^propel\.database.driver(\s*)=(\s*)(.+?)$/m', 'propel.database.driver$1=${2}'.$match[1], $content);
+          $content = preg_replace('/^propel\.database\.createUrl(\s*)=(\s*)(.+?)$/m', 'propel.database.createUrl$1=${2}'.$arguments['dsn'], $content);
+          $content = preg_replace('/^propel\.database\.url(\s*)=(\s*)(.+?)$/m', 'propel.database.url$1=${2}'.$arguments['dsn'], $content);
 
-          $content = preg_replace('/^propel\.database\.user(\s*)=(\s*)(.+?)$/m', 'propel.database.user$1=$2'.$arguments['username'], $content);
-          $content = preg_replace('/^propel\.database\.password(\s*)=(\s*)(.+?)$/m', 'propel.database.password$1=$2'.$arguments['password'], $content);
+          $content = preg_replace('/^propel\.database\.user(\s*)=(\s*)(.+?)$/m', 'propel.database.user$1=${2}'.$arguments['username'], $content);
+          $content = preg_replace('/^propel\.database\.password(\s*)=(\s*)(.+?)$/m', 'propel.database.password$1=${2}'.$arguments['password'], $content);
 
           file_put_contents($propelini, $content);
         }
