@@ -4,5 +4,27 @@
  */
 class UserTable extends Doctrine_Table
 {
+  public function widgetChoiceTableMethod1()
+  {
+    return $this->createQuery('u');
+  }
 
+  public function widgetChoiceTableMethod2()
+  {
+    return $this->widgetChoiceTableMethod1()
+      ->execute();
+  }
+
+  public function widgetChoiceTableMethod3()
+  {
+    return $this->widgetChoiceTableMethod1()
+      ->fetchOne();
+  }
+
+  public function widgetChoiceTableMethod4()
+  {
+    return $this->widgetChoiceTableMethod1()
+      ->where('1 = 0')
+      ->execute();
+  }
 }

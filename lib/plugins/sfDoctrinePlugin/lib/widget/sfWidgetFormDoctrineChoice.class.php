@@ -53,10 +53,12 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
     $this->addRequiredOption('model');
     $this->addOption('add_empty', false);
     $this->addOption('method', '__toString');
+    $this->addOption('key_method', 'getPrimaryKey');
     $this->addOption('order_by', null);
     $this->addOption('query', null);
     $this->addOption('connection', null);
     $this->addOption('multiple', false);
+    $this->addOption('table_method', null);
 
     parent::configure($options, $attributes);
   }
@@ -74,23 +76,41 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
       $choices[''] = true === $this->getOption('add_empty') ? '' : $this->getOption('add_empty');
     }
 
-    $query = is_null($this->getOption('query')) ? Doctrine_Query::create()->from($this->getOption('model')) : $this->getOption('query');
-    if ($order = $this->getOption('order_by'))
+    if (is_null($this->getOption('table_method')))
     {
-      $query->addOrderBy($order[0] . ' ' . $order[1]);
+      $query = is_null($this->getOption('query')) ? Doctrine_Query::create()->from($this->getOption('model')) : $this->getOption('query');
+      if ($order = $this->getOption('order_by'))
+      {
+        $query->addOrderBy($order[0] . ' ' . $order[1]);
+      }
+      $objects = $query->execute();
+    } else {
+      $tableMethod = $this->getOption('table_method');
+      $results = Doctrine::getTable($this->getOption('model'))->$tableMethod();
+      if ($results instanceof Doctrine_Query)
+      {
+        $objects = $results->execute();
+      } else if ($results instanceof Doctrine_Collection) {
+        $objects = $results;
+      } else if ($results instanceof Doctrine_Record) {
+        $objects = new Doctrine_Collection($this->getOption('model'));
+        $objects[] = $results;
+      } else {
+        $objects = array();
+      }
     }
-    $objects = $query->execute();
 
     $method = $this->getOption('method');
-
-    if (!method_exists($this->getOption('model'), $method))
-    {
-      throw new RuntimeException(sprintf('Class "%s" must implement a "%s" method to be rendered in a "%s" widget', $this->getOption('model'), $method, __CLASS__));
-    }
+    $keyMethod = $this->getOption('key_method');
 
     foreach ($objects as $object)
     {
-      $choices[$object->getPrimaryKey()] = $object->$method();
+      try
+      {
+        $choices[$object->$keyMethod()] = $object->$method();
+      } catch (Exception $e) {
+        throw $e;
+      }
     }
 
     return $choices;
