@@ -1899,11 +1899,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $idColumnNames = $table->getIdentifierColumnNames();
 
         // build the query base
-        $q  = 'SELECT COUNT(DISTINCT ' . $this->_conn->quoteIdentifier($tableAlias)
-              . '.' . implode(
-                  ' || ' . $this->_conn->quoteIdentifier($tableAlias) . '.', 
-                  $this->_conn->quoteMultipleIdentifier($idColumnNames)
-              ) . ') AS num_results';
+        $q  = 'SELECT COUNT(foo.distinct_results) AS num_results FROM (SELECT DISTINCT ' . $this->_conn->quoteIdentifier($tableAlias)
+                . '.' . implode(
+                    ' , ' . $this->_conn->quoteIdentifier($tableAlias) . '.',
+                    $this->_conn->quoteMultipleIdentifier($idColumnNames)
+                    ) . ' AS distinct_results';
 
         foreach ($this->_sqlParts['select'] as $field) {
             if (strpos($field, '(') !== false) {
@@ -1942,6 +1942,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
+        $q .= ') as foo';
 
         return $q;
     }
