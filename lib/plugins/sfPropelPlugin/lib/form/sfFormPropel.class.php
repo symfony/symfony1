@@ -480,7 +480,7 @@ abstract class sfFormPropel extends sfForm
     $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $getter = 'get'.$column;
 
-    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->object->$getter()))
+    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.DIRECTORY_SEPARATOR.$this->object->$getter()))
     {
       unlink($directory.DIRECTORY_SEPARATOR.$this->object->$getter());
     }
