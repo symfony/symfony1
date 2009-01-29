@@ -176,6 +176,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected $_serializeReferences = false;
 
     /**
+     * Array containing the save hooks and events that have been invoked
+     *
+     * @var array
+     */
+    protected $_invokedSaveHooks = false;
+
+    /**
      * @var integer $index                  this index is used for creating object identifiers
      */
     private static $_index = 1;
@@ -315,12 +322,39 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         return $this->_oid;
     }
 
+    public function invokeSaveHooks($when, $type, $event = null)
+    {
+        $func = $when . ucfirst($type);
+
+        if (is_null($event)) {
+            $constant = constant('Doctrine_Event::RECORD_' . strtoupper($type));
+            //echo $func . " - " . 'Doctrine_Event::RECORD_' . strtoupper($type) . "\n";
+            $event = new Doctrine_Event($this, $constant);
+        }
+
+        if ( ! isset($this->_invokedSaveHooks[$func])) {
+            $this->$func($event);
+            $this->getTable()->getRecordListener()->$func($event);
+
+            $this->_invokedSaveHooks[$func] = $event;
+        } else {
+            $event = $this->_invokedSaveHooks[$func];
+        }
+
+        return $event;
+    }
+
+    public function clearInvokedSaveHooks()
+    {
+        $this->_invokedSaveHooks = array();
+    }
+
     /**
      * isValid
      *
      * @return boolean  whether or not this record is valid
      */
-    public function isValid($deep = false)
+    public function isValid($deep = false, $hooks = true)
     {
         if ( ! $this->_table->getAttribute(Doctrine::ATTR_VALIDATE)) {
             return true;
@@ -328,6 +362,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         if ($this->_state == self::STATE_LOCKED || $this->_state == self::STATE_TLOCKED) {
             return true;
+        }
+
+        if ($hooks) {
+            $this->invokeSaveHooks('pre', 'save');
+            $this->invokeSaveHooks('pre', $this->exists() ? 'update' : 'insert');
         }
 
         // Clear the stack from any previous errors.
