@@ -1,1 +1,1 @@
-a:2:{s:14:"NumberPatterns";a:4:{i:0;s:20:"#,##0.###;-#,##0.###";i:1;s:24:"#,##0.00 ¤;-#,##0.00 ¤";i:2;s:6:"#,##0%";i:3;s:3:"#E0";}s:7:"Version";a:1:{i:0;s:3:"1.2";}}
+a:3:{s:9:"Countries";a:1:{s:2:"UM";s:16:"USA:s yttre öar";}s:7:"Version";s:4:"1.56";s:8:"calendar";a:1:{s:9:"gregorian";a:2:{s:16:"DateTimeElements";a:2:{i:0;i:2;i:1;i:4;}s:6:"fields";a:1:{s:9:"dayperiod";a:1:{s:2:"dn";s:10:"dagsperiod";}}}}}

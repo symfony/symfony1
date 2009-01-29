@@ -310,7 +310,7 @@ class sfCultureInfo
 
         if (isset($data['__ALIAS']))
         {
-          $this->loadCultureData($data['__ALIAS'][0]);
+          $this->loadCultureData($data['__ALIAS']);
         }
         unset($data);
       }
@@ -365,7 +365,7 @@ class sfCultureInfo
       {
         if ($merge)
         {
-          $result = array_merge($info, $result);
+          $result = array_merge_recursive($result, $info);
         }
         else
         {
@@ -452,9 +452,7 @@ class sfCultureInfo
    */
   public function getCalendar()
   {
-    $info = $this->findInfo('calendar/default');
-
-    return $info[0];
+    return $this->findInfo('calendar/default');
   }
 
   /**
@@ -472,11 +470,11 @@ class sfCultureInfo
     $region = $this->findInfo("Countries/{$reg}");
     if ($region)
     {
-      return $language[0].' ('.$region[0].')';
+      return $language.' ('.$region.')';
     }
     else
     {
-      return $language[0];
+      return $language;
     }
   }
 
@@ -501,7 +499,7 @@ class sfCultureInfo
 
     $region = $culture->findInfo("Countries/{$reg}");
 
-    return $region ? $language[0].' ('.$region[0].')' : $language[0];
+    return $region ? $language.' ('.$region.')' : $language;
   }
 
   /**
@@ -636,27 +634,6 @@ class sfCultureInfo
   }
 
   /**
-   * Simplifies a single element array into its own value.
-   * E.g. <code>array(0 => array('hello'), 1 => 'world');</code>
-   * becomes <code>array(0 => 'hello', 1 => 'world');</code>
-   *
-   * @param array $array with single elements arrays
-   * @return array simplified array.
-   */
-  static protected function simplify($array)
-  {
-    foreach ($array as &$item)
-    {
-      if (is_array($item) && count($item) == 1)
-      {
-        $item = $item[0];
-      }
-    }
-
-    return $array;
-  }
-
-  /**
    * Get the country name in the current culture for the given code.
    *
    * @param  string A valid country code
@@ -665,7 +642,7 @@ class sfCultureInfo
    */
   public function getCountry($code)
   {
-    $countries = $this->simplify($this->findInfo('Countries', true));
+    $countries = $this->findInfo('Countries', true);
 
     if (!isset($countries[$code]))
     {
@@ -684,7 +661,7 @@ class sfCultureInfo
    */
   public function getCurrency($code)
   {
-    $currencies = $this->simplify($this->findInfo('Currencies', true));
+    $currencies = $this->findInfo('Currencies', true);
 
     if (!isset($currencies[$code]))
     {
@@ -703,7 +680,7 @@ class sfCultureInfo
    */
   public function getLanguage($code)
   {
-    $languages = $this->simplify($this->findInfo('Languages', true));
+    $languages = $this->findInfo('Languages', true);
 
     if (!isset($languages[$code]))
     {
@@ -722,7 +699,7 @@ class sfCultureInfo
    */
   public function getCountries($countries = null)
   {
-    $allCountries = $this->simplify($this->findInfo('Countries', true));
+    $allCountries = $this->findInfo('Countries', true);
 
     // restrict countries to a sub-set
     if (!is_null($countries))
@@ -784,7 +761,7 @@ class sfCultureInfo
    */
   public function getLanguages($languages = null)
   {
-    $allLanguages = $this->simplify($this->findInfo('Languages', true));
+    $allLanguages = $this->findInfo('Languages', true);
 
     // restrict languages to a sub-set
     if (!is_null($languages))
@@ -809,7 +786,7 @@ class sfCultureInfo
    */
   public function getScripts()
   {
-    return $this->simplify($this->findInfo('Scripts', true));
+    return $this->findInfo('Scripts', true);
   }
 
   /**
@@ -819,6 +796,6 @@ class sfCultureInfo
    */
   public function getTimeZones()
   {
-    return $this->simplify($this->findInfo('zoneStrings', true));
+    return $this->findInfo('zoneStrings', true);
   }
 }

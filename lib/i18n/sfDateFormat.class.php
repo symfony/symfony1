@@ -139,16 +139,24 @@ class sfDateFormat
       $tokens = $this->getTokens($pattern);
       $pregPattern = '';
       $matchNames = array();
+      // current regex allows any char at the end. avoids duplicating [^\d]+ pattern
+      // this could cause issues with utf character width
+      $allowsAllChars=true;
       foreach ($tokens as $token)
       {
         if ($matchName = $this->getFunctionName($token))
         {
+          $allowsAllChars = false;
           $pregPattern .= '(\d+)';
           $matchNames[] = $matchName;
         }
         else
         {
-          $pregPattern .= '[^\d]+';
+          if (!$allowsAllChars)
+          {
+            $allowsAllChars = true;
+            $pregPattern .= '[^\d]+';
+          }
         }
       }
       preg_match('@'.$pregPattern.'@', $time, $matches);

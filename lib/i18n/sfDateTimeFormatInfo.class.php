@@ -227,7 +227,7 @@ class sfDateTimeFormatInfo
    */
   function getNarrowDayNames()
   {
-    return $this->data['dayNames']['format']['narrow'];
+    return $this->data['dayNames']['stand-alone']['narrow'];
   }
 
   /**
@@ -240,7 +240,7 @@ class sfDateTimeFormatInfo
    */
   function setNarrowDayNames($value)
   {
-    $this->data['dayNames']['format']['narrow'] = $value;
+    $this->data['dayNames']['stand-alone']['narrow'] = $value;
   }
 
   /**
@@ -280,7 +280,7 @@ class sfDateTimeFormatInfo
    */
   function getNarrowMonthNames()
   {
-    return $this->data['monthNames']['format']['narrow'];
+    return $this->data['monthNames']['stand-alone']['narrow'];
   }
 
   /**
@@ -293,7 +293,7 @@ class sfDateTimeFormatInfo
    */
   function setNarrowMonthNames($value)
   {
-    $this->data['monthNames']['format']['narrow'] = $value;
+    $this->data['monthNames']['stand-alone']['narrow'] = $value;
   }
 
   /**
@@ -529,10 +529,10 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Returns the date time order pattern, "{1} {0}" (default).
+   * Returns the date time order pattern, ":1 :0" (default).
    * This is culture sensitive.
    *
-   * @return string pattern "{1} {0}".
+   * @return string pattern ":1 :0".
    */
   function getDateTimeOrderPattern()
   {
@@ -547,6 +547,6 @@ class sfDateTimeFormatInfo
    */
   function formatDateTime($date, $time)
   {
-    return str_replace(array('{0}','{1}'), array($time, $date), $this->getDateTimeOrderPattern());
+    return str_replace(array(':0',':1'), array($time, $date), $this->getDateTimeOrderPattern());
   }
 }
