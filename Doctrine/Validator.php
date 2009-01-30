@@ -152,7 +152,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
              case 'decimal':
                  return (string)$var == strval(floatval($var));
              case 'integer':
-                 return (string)$var == strval(intval($var));
+                 return (string)$var == strval(round(floatval($var)));
              case 'string':
                  return is_string($var) || is_numeric($var);
              case 'blob':
