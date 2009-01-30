@@ -56,7 +56,7 @@ $t->is($c['DateTimePatterns'][4], 'EEEE, MMMM d, yyyy', '"calendar" contains dat
 $t->is($c['DateTimePatterns'][5], 'MMMM d, yyyy', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][6], 'MMM d, yyyy', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][7], 'M/d/yy', '"calendar" contains date time patterns');
-$t->is($c['DateTimePatterns'][8], ':1 :0', '"calendar" contains date time patterns');
+$t->is($c['DateTimePatterns'][8], '{1} {0}', '"calendar" contains date time patterns');
 
 $t->diag('calendar/dayNames');
 $a = $c['dayNames']['format']['abbreviated'];

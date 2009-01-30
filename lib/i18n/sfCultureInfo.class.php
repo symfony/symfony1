@@ -365,7 +365,7 @@ class sfCultureInfo
       {
         if ($merge)
         {
-          $result = array_merge_recursive($result, $info);
+          $result = $this->array_add($result, $info);
         }
         else
         {
@@ -375,6 +375,26 @@ class sfCultureInfo
     }
 
     return $result;
+  }
+
+  /**
+   * Merges the two arrays.
+   * If an element is existing in array1 for a key it is not overwritten.
+   * If this element is an array this logic will be applied recursively.
+   */
+  private function array_add($array1, $array2)
+  {
+    foreach ($array2 as $key => $value)
+    {
+      if (isset($array1[$key]) && is_array($array1[$key]) && is_array($value))
+        $array1[$key] = $this->array_merge_only_new($array1[$key], $value);
+      }
+      else
+      {
+        $array1[$key] = $value;
+      }
+    }
+    return $array1;
   }
 
   /**
@@ -428,7 +448,7 @@ class sfCultureInfo
     if (is_null($this->dateTimeFormat))
     {
       $calendar = $this->getCalendar();
-      $info = $this->findInfo("calendar/{$calendar}");
+      $info = $this->findInfo("calendar/{$calendar}", true);
       $this->setDateTimeFormat(new sfDateTimeFormatInfo($info));
     }
 
