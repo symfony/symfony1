@@ -428,7 +428,7 @@ class sfCultureInfo
     if (is_null($this->dateTimeFormat))
     {
       $calendar = $this->getCalendar();
-      $info = $this->findInfo("calendar/{$calendar}", true);
+      $info = $this->findInfo("calendar/{$calendar}");
       $this->setDateTimeFormat(new sfDateTimeFormatInfo($info));
     }
 

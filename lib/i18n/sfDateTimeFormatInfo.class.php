@@ -529,10 +529,10 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Returns the date time order pattern, ":1 :0" (default).
+   * Returns the date time order pattern, "{1} {0}" (default).
    * This is culture sensitive.
    *
-   * @return string pattern ":1 :0".
+   * @return string pattern "{1} {0}".
    */
   function getDateTimeOrderPattern()
   {
@@ -547,6 +547,6 @@ class sfDateTimeFormatInfo
    */
   function formatDateTime($date, $time)
   {
-    return str_replace(array(':0',':1'), array($time, $date), $this->getDateTimeOrderPattern());
+    return str_replace(array('{0}','{1}'), array($time, $date), $this->getDateTimeOrderPattern());
   }
 }

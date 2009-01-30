@@ -39,7 +39,7 @@ class sfWidgetFormI18nDateTime extends sfWidgetFormDateTime
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
     // format
-    $this->setOption('format', str_replace(array(':0', ':1'), array('%time%', '%date%'), sfDateTimeFormatInfo::getInstance($culture)->getDateTimeOrderPattern()));
+    $this->setOption('format', str_replace(array('{0}', '{1}'), array('%time%', '%date%'), sfDateTimeFormatInfo::getInstance($culture)->getDateTimeOrderPattern()));
   }
 
   /**
