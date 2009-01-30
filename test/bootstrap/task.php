@@ -20,13 +20,3 @@ chdir($tmpDir);
 $application = new sfSymfonyCommandApplication(new sfEventDispatcher(), new sfFormatter(), array(
   'symfony_lib_dir' => sfConfig::get('sf_symfony_lib_dir'),
 ));
-
-register_shutdown_function('sf_shutdown_task_test');
-
-function sf_shutdown_task_test()
-{
-  global $tmpDir;
-
-  sfToolkit::clearDirectory($tmpDir);
-  rmdir($tmpDir);
-}
