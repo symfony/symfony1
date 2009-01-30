@@ -61,7 +61,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         try {
             $conn->beginInternalTransaction();
-            $saveLater = $this->saveRelated($record);
+            $this->saveRelatedLocalKeys($record);
 
             $record->state($state);
 
@@ -110,6 +110,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
+            $saveLater = $this->saveRelatedForeignKeys($record);
             foreach ($saveLater as $fk) {
                 $alias = $fk->getAlias();
 
@@ -341,24 +342,41 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      }
 
     /**
-     * saveRelated
-     * saves all related records to $record
+     * saveRelatedForeignKeys
+     * saves all related (through ForeignKey) records to $record
      *
      * @throws PDOException         if something went wrong at database level
      * @param Doctrine_Record $record
      */
-    public function saveRelated(Doctrine_Record $record)
+    public function saveRelatedForeignKeys(Doctrine_Record $record)
     {
         $saveLater = array();
+        foreach ($record->getReferences() as $k => $v) {
+            $rel = $record->getTable()->getRelation($k);
+            if ($rel instanceof Doctrine_Relation_ForeignKey) {
+                $saveLater[$k] = $rel;
+            }
+        }
+
+        return $saveLater;
+    }
+    
+    /**
+     * saveRelatedLocalKeys
+     * saves all related (through LocalKey) records to $record
+     *
+     * @throws PDOException         if something went wrong at database level
+     * @param Doctrine_Record $record
+     */
+    public function saveRelatedLocalKeys(Doctrine_Record $record)
+    {
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
 
             $local = $rel->getLocal();
             $foreign = $rel->getForeign();
 
-            if ($rel instanceof Doctrine_Relation_ForeignKey) {
-                $saveLater[$k] = $rel;
-            } else if ($rel instanceof Doctrine_Relation_LocalKey) {
+            if ($rel instanceof Doctrine_Relation_LocalKey) {
                 // ONE-TO-ONE relationship
                 $obj = $record->get($rel->getAlias());
 
@@ -378,8 +396,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
         }
-
-        return $saveLater;
     }
 
     /**
