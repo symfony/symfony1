@@ -405,8 +405,8 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                     }
                 }
                 return 'INT';
-	    case 'inet':
-		return 'INET';
+			case 'inet':
+				return 'INET';
             case 'bit':
             case 'varbit':
                 return 'VARBIT';		
@@ -415,9 +415,9 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             case 'date':
                 return 'DATE';
             case 'time':
-                return 'TIME without time zone';
+                return 'TIME';
             case 'timestamp':
-                return 'TIMESTAMP without time zone';
+                return 'TIMESTAMP';
             case 'float':
             case 'double':
                 return 'FLOAT';

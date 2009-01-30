@@ -46,20 +46,22 @@ class Doctrine_Validator_Time
             return true;
         }
 
-        $e = explode(':', $value);
-
-        if (count($e) !== 3) {
+		if ( ! preg_match('/^\s*(\d{2}):(\d{2})(:(\d{2}))?(\.(\d{3}))?([+-]\d{1,2}(:(\d{2}))?)?\s*$/', $value, $matches)) {
             return false;
         }
+		
+        $hh = intval($matches[1], 10);
+        $mm = intval($matches[2], 10);
+        $ss = intval($matches[4], 10);
+        $ms = intval($matches[6], 10);
+        $tz_hh = intval($matches[7], 10);
+        $tz_mm = intval($matches[9], 10);
 
-        if ( ! preg_match('/^ *\d{2}:\d{2}:\d{2}(.\d{6}\+\d{2})? *$/', $value)) {
-            return false;
-        }
-
-        $hr = intval($e[0], 10);
-        $min = intval($e[1], 10);
-        $sec = intval($e[2], 10);
-
-        return $hr >= 0 && $hr <= 23 && $min >= 0 && $min <= 59 && $sec >= 0 && $sec <= 59;      
+        return 	($hh >= 0 && $hh <= 23) && 
+				($mm >= 0 && $mm <= 59) &&
+				($ss >= 0 && $ss <= 59) &&
+				($ms >= 0 && $ms <= 999) &&
+				($tz_hh >= -13 && $tz_hh <= 14) &&
+				($tz_mm >= 0 && $tz_mm <= 59) ;
     }
 }
