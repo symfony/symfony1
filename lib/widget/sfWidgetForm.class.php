@@ -26,6 +26,8 @@ abstract class sfWidgetForm extends sfWidget
    *  * id_format:       The format for the generated HTML id attributes (%s by default)
    *  * is_hidden:       true if the form widget must be hidden, false otherwise (false by default)
    *  * needs_multipart: true if the form widget needs a multipart form, false otherwise (false by default)
+   *  * default:         The default value to use when rendering the widget
+   *  * label:           The label to use when the widget is rendered by a widget schema
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
