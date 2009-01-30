@@ -45,9 +45,15 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
 
   public function getPanelContent()
   {
+    $logs = array();
+    foreach ($this->getSqlLogs() as $log)
+    {
+      $logs[] = htmlspecialchars($log, ENT_QUOTES, sfConfig::get('sf_charset'));
+    }
+
     return '
       <div id="sfWebDebugDatabaseLogs">
-      <ol><li>'.implode("</li>\n<li>", $this->getSqlLogs()).'</li></ol>
+      <ol><li>'.implode("</li>\n<li>", $logs).'</li></ol>
       </div>
     ';
   }
