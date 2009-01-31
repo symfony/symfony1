@@ -829,7 +829,7 @@ class sfCultureInfo
     {
       $timeZones[$key] = $metadata['meta:'.$value];
       $timeZones[$key]['identifier'] = $key;
-      $timeZones[$key]['city'] = substr($key, strpos($key, '/') + 1);
+      $timeZones[$key]['city'] = str_replace('_', ' ', substr($key, strpos($key, '/') + 1));
     }
     return $timeZones;
   }

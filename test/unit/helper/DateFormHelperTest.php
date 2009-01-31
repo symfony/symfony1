@@ -162,7 +162,7 @@ $t->todo('select_time_tag()');
 $t->diag('select_timezone_tag()');
 $t->like(select_timezone_tag('timezone'), '/<select name="timezone" id="timezone">/', 'select_timezone_tag() outputs a select tag for timezones');
 $t->like(select_timezone_tag('timezone'), '/<option value="America\/Los_Angeles">America\/Los_Angeles<\/option>/', 'select_timezone_tag() outputs a select tag for timezones');
-$t->like(select_timezone_tag('timezone', null, array('display' => 'city')), '/<option value="America\/Los_Angeles">Los_Angeles<\/option>/', 'select_timezone_tag() respects the display option');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'city')), '/<option value="America\/Los_Angeles">Los Angeles<\/option>/', 'select_timezone_tag() respects the display option');
 $t->like(select_timezone_tag('timezone', null, array('display' => 'timezone')), '/<option value="America\/Dawson">Pacific Standard Time<\/option>/', 'select_timezone_tag() respects the display option');
 $t->like(select_timezone_tag('timezone', null, array('display' => 'timezone_abbr')), '/<option value="America\/Dawson">PST<\/option>/', 'select_timezone_tag() respects the display option');
 $t->like(select_timezone_tag('timezone', null, array('display' => 'timezone_dst')), '/<option value="America\/Dawson">Pacific Daylight Time<\/option>/', 'select_timezone_tag() respects the display option');
