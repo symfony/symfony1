@@ -833,4 +833,17 @@ class sfCultureInfo
     }
     return $timeZones;
   }
+
+  /**
+   * sorts the passed array according to the locale of this sfCultureInfo class
+   *
+   * @param  array the array to pe sorted wiht "asort" and this locale
+   */
+  public function sortArray(&$array)
+  {
+    $oldLocale=setlocale(LC_COLLATE, "0");
+    setlocale(LC_COLLATE, $this->getName());
+    asort($array, SORT_LOCALE_STRING);
+    setlocale(LC_COLLATE, $oldLocale);
+  }
 }
