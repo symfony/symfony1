@@ -862,7 +862,7 @@ function select_timezone_tag($name, $selected = null, $options = array())
   // Remove duplicate values
   $timezones = array_unique($timezones);
   
-  asort($timezones);
+  $c->sortArray($timezones);
 
   $option_tags = options_for_select($timezones, $selected);
 

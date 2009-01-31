@@ -229,7 +229,7 @@ function select_country_tag($name, $selected = null, $options = array())
     $countries = array_intersect_key($countries, array_flip($country_option)); 
   }
 
-  asort($countries);
+  $c->sortArray($countries);
 
   $option_tags = options_for_select($countries, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
@@ -275,7 +275,7 @@ function select_language_tag($name, $selected = null, $options = array())
     $languages = array_intersect_key($languages, array_flip($language_option)); 
   }
 
-  asort($languages);
+  $c->sortArray($languages);
 
   $option_tags = options_for_select($languages, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
