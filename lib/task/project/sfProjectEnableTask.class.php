@@ -59,7 +59,7 @@ EOF;
 
       $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
       $clearCache->setCommandApplication($this->commandApplication);
-      $clearCache->run();
+      $clearCache->run(array(), array('--app='.$app, '--env='.$env));
 
       $this->logSection('enable', sprintf('%s [%s] has been ENABLED', $app, $env));
     }
