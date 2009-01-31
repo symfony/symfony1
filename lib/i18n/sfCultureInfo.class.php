@@ -820,6 +820,17 @@ class sfCultureInfo
    */
   public function getTimeZones()
   {
-    return $this->findInfo('zoneStrings', true);
+    //new format since ICU 3.8
+    //zoneStrings contains metaTimezones
+    $metadata = $this->findInfo('zoneStrings', true);
+    //TimeZones contains the Timezone name => metaTimezone identifier
+    $timeZones = $this->findInfo('TimeZones', true);
+    foreach ($timeZones as $key => $value)
+    {
+      $timeZones[$key] = $metadata['meta:'.$value];
+      $timeZones[$key]['identifier'] = $key;
+      $timeZones[$key]['city'] = substr($key, strpos($key, '/') + 1);
+    }
+    return $timeZones;
   }
 }

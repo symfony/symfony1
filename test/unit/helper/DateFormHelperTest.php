@@ -35,7 +35,7 @@ class myRequest
   }
 }
 
-$t = new lime_test(87, new lime_output_color());
+$t = new lime_test(94, new lime_output_color());
 
 $context = sfContext::getInstance(array('user' => 'myUser', 'request' => 'myRequest', 'controller' => 'myController'));
 
@@ -157,6 +157,17 @@ $t->like(select_time_tag('time','09:01:05'), '/<option value="9" selected="selec
 $t->like(select_time_tag('time','09:01:05'), '/<option value="1" selected="selected">/', 'select_time_tag() selects minutes for one digit correctly');
 $t->like(select_time_tag('time','09:01:05', array('include_second' => true)), '/<option value="5" selected="selected">/', 'select_time_tag() selects seconds for one digit correctly');
 $t->todo('select_time_tag()');
+
+// select_timezone_tag()
+$t->diag('select_timezone_tag()');
+$t->like(select_timezone_tag('timezone'), '/<select name="timezone" id="timezone">/', 'select_timezone_tag() outputs a select tag for timezones');
+$t->like(select_timezone_tag('timezone'), '/<option value="America\/Los_Angeles">America\/Los_Angeles<\/option>/', 'select_timezone_tag() outputs a select tag for timezones');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'city')), '/<option value="America\/Los_Angeles">Los_Angeles<\/option>/', 'select_timezone_tag() respects the display option');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'timezone')), '/<option value="America\/Dawson">Pacific Standard Time<\/option>/', 'select_timezone_tag() respects the display option');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'timezone_abbr')), '/<option value="America\/Dawson">PST<\/option>/', 'select_timezone_tag() respects the display option');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'timezone_dst')), '/<option value="America\/Dawson">Pacific Daylight Time<\/option>/', 'select_timezone_tag() respects the display option');
+$t->like(select_timezone_tag('timezone', null, array('display' => 'timezone_dst_abbr')), '/<option value="America\/Dawson">PDT<\/option>/', 'select_timezone_tag() respects the display option');
+
 
 // select_datetime_tag()
 $t->diag('select_datetime_tag()');
