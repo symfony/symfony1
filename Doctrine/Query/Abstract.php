@@ -1225,6 +1225,13 @@ abstract class Doctrine_Query_Abstract
         }
 
         $copy = $this->copy();
+        $copy->setParams(array(
+            'exec' => array(), 
+            'join' => array(), 
+            'set' => array(), 
+            'where' => array(), 
+            'having' => array()
+        ));
         $copy->getSqlQuery($params);
         $componentsAfter = $copy->getQueryComponents();
 
