@@ -121,10 +121,15 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection
             $orderby = stristr($query, 'ORDER BY');
 
             if ($orderby !== false) {
-                $sort = (stripos($orderby, 'desc') !== false) ? 'desc' : 'asc';
+                $sort = (stripos($orderby, ' desc') !== false) ? 'desc' : 'asc';
                 $order = str_ireplace('ORDER BY', '', $orderby);
-                $order = trim(preg_replace('/ASC|DESC/i', '', $order));
-                $alias = trim(end(spliti(' as ', array_shift(explode(',', stristr($query,$order))))));
+                $order = trim(preg_replace('/\s+(ASC|DESC)$/i', '', $order));
+                
+                // Ticket #1835: Fix for ORDER BY alias
+                $aux = explode(',', stristr($query,$order));
+                $aux2 = spliti(' as ', array_shift($aux));
+                
+                $alias = trim(end($aux2));
             }
     
             // Ticket #1259: Fix for limit-subquery in MSSQL
@@ -136,24 +141,24 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection
                 $selectReplace .= 'DISTINCT ';
             }
 
-            $query = preg_replace('/^'.$selectRegExp.'\s+/i', $selectReplace . 'TOP ' . ($count+$offset) . ' ', $query);
+            $query = preg_replace('/^'.$selectRegExp.'/i', $selectReplace . 'TOP ' . ($count + $offset) . ' ', $query);
             $query = 'SELECT * FROM (SELECT TOP ' . $count . ' * FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
 
             if ($orderby !== false) {
-                $query .= ' ORDER BY ' . $this->quoteIdentifier('inner_tbl.' . $alias) . ' ';
+                $query .= ' ORDER BY ' . $this->quoteIdentifier('inner_tbl') . '.' . $alias . ' ';
                 $query .= (stripos($sort, 'asc') !== false) ? 'DESC' : 'ASC';
             }
 
             $query .= ') AS ' . $this->quoteIdentifier('outer_tbl');
 
             if ($orderby !== false) {
-                $query .= ' ORDER BY ' . $this->quoteIdentifier('outer_tbl.' . $alias) . ' ' . $sort;
+                $query .= ' ORDER BY ' . $this->quoteIdentifier('outer_tbl') . '.' . $alias . ' ' . $sort;
             }
         }
 
         return $query;
     }
-
+    
     /**
      * return version information about the server
      *
