@@ -262,6 +262,12 @@ class sfPropelFormGenerator extends sfGenerator
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
       $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => %s', $this->getForeignTable($column)->getClassname(), $column->isNotNull() ? 'false' : 'true');
+
+      $refColumn = $this->getForeignTable($column)->getColumn($column->getRelatedColumnName());
+      if (!$refColumn->isPrimaryKey())
+      {
+        $options[] = sprintf('\'key_method\' => \'get%s\'', $refColumn->getPhpName());
+      }
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';

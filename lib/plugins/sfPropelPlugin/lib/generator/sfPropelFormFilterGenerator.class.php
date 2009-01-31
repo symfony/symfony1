@@ -161,6 +161,12 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     if ($column->isForeignKey())
     {
       $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => true', $this->getForeignTable($column)->getClassname());
+
+      $refColumn = $this->getForeignTable($column)->getColumn($column->getRelatedColumnName());
+      if (!$refColumn->isPrimaryKey())
+      {
+        $options[] = sprintf('\'key_method\' => \'get%s\'', $refColumn->getPhpName());
+      }
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
@@ -223,16 +229,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
 
     if ($column->isForeignKey())
     {
-      $map = call_user_func(array(constant($this->getForeignTable($column)->getClassname().'::PEER'), 'getTableMap'));
-      foreach ($map->getColumns() as $primaryKey)
-      {
-        if ($primaryKey->isPrimaryKey())
-        {
-          break;
-        }
-      }
-
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($primaryKey->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($column->getRelatedColumnName()));
     }
     else if ($column->isPrimaryKey())
     {
