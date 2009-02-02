@@ -167,7 +167,9 @@ class Doctrine_Data_Import extends Doctrine_Data
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
         if ( ! isset($this->_importedObjects[$rowKey])) {
-            throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
+            throw new Doctrine_Data_Exception(
+                sprintf('Invalid row key specified: %s, referred to in %s', $rowkey, $referringRowKey)
+            );
         }
 
         $relatedRowKeyObject = $this->_importedObjects[$rowKey];
