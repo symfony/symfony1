@@ -41,11 +41,13 @@ class Doctrine_Validator_Email
      */
     public function validate($value)
     {
-        if ($value === null) {
+        if (empty($value)) {
             return true;
         }
+        
         if (isset($this->args) && (! isset($this->args['check_mx']) || $this->args['check_mx'] == true)) {
             $parts = explode('@', $value);
+        
             if (isset($parts[1]) && function_exists('checkdnsrr')) {
                 if ( ! checkdnsrr($parts[1], 'MX')) {
                     return false;
