@@ -180,7 +180,7 @@ abstract class sfDoctrineRecord extends Doctrine_Record
         }
 
         return call_user_func_array(
-          array($this, 'parent::' . $verb),
+          array($this, $verb),
           array_merge(array($entityName), $arguments)
         );
       } else {
