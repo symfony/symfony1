@@ -288,4 +288,23 @@ class sfDoctrineGenerator extends sfModelGenerator
 
     return $columns;
   }
+
+  /**
+   * Returns PHP code for primary keys parameters.
+   *
+   * @param integer $indent The indentation value
+   * @param string  $callee The function to call
+   *
+   * @return string The PHP code
+   */
+  public function getRetrieveByPkParamsForAction($indent)
+  {
+    $params = array();
+    foreach ($this->getPrimaryKeys() as $pk)
+    {
+      $params[] = sprintf("\$request->getParameter('%s')", sfInflector::underscore($pk));
+    }
+
+    return 'array('.implode(",\n".str_repeat(' ', max(0, $indent - strlen($this->getSingularName().$this->modelClass))), $params).')';
+  }
 }
