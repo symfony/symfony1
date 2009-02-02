@@ -645,7 +645,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $k = $this->_table->getFieldName($k);
             $old = $this->get($k, false);
 
-            if ((string) $old !== (string) $v || $old === null) {
+            if (((string) $old !== (string) $v || $old === null) && !in_array($k, $this->_modified)) {
                 $this->set($k, $v);
             }
         }
