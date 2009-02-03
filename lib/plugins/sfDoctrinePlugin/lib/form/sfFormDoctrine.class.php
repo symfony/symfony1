@@ -389,8 +389,8 @@ abstract class sfFormDoctrine extends sfForm
     {
       if ($form instanceof sfFormDoctrine)
       {
-        $form->saveEmbeddedForms($con);
         $form->getObject()->save($con);
+        $form->saveEmbeddedForms($con);
       }
       else
       {
