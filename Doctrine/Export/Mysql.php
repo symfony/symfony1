@@ -34,6 +34,27 @@
 class Doctrine_Export_Mysql extends Doctrine_Export
 {
     /**
+     * drop existing constraint
+     *
+     * @param string    $table        name of table that should be used in method
+     * @param string    $name         name of the constraint to be dropped
+     * @param string    $primary      hint if the constraint is primary
+     * @return void
+     */
+    public function dropConstraint($table, $name, $primary = false)
+    {
+        $table = $this->conn->quoteIdentifier($table);
+
+        if ( ! $primary) {
+            $name = 'CONSTRAINT ' . $this->conn->quoteIdentifier($name);
+        } else {
+            $name = 'PRIMARY KEY';
+        }
+
+        return $this->conn->exec('ALTER TABLE ' . $table . ' DROP ' . $name);
+    }
+
+    /**
      * createDatabaseSql
      *
      * @param string $name 
