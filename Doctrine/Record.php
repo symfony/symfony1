@@ -1957,9 +1957,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function exists()
     {
-        return ($this->_state !== Doctrine_Record::STATE_TCLEAN &&
-                $this->_state !== Doctrine_Record::STATE_TDIRTY &&
-                $this->_state !== Doctrine_Record::STATE_TLOCKED);
+        return ($this->_state !== Doctrine_Record::STATE_TCLEAN  &&
+                $this->_state !== Doctrine_Record::STATE_TDIRTY  &&
+                $this->_state !== Doctrine_Record::STATE_TLOCKED &&
+                $this->_state !== null);
     }
 
     /**
