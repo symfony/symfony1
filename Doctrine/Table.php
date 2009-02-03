@@ -1742,7 +1742,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $value = $value->getIncremented();
         } else if ($value instanceof Doctrine_Record && ! $value->exists()) {
             foreach($this->getRelations() as $relation) {
-                if($fieldName == $relation->getLocalFieldName() && get_class($value) == $relation->getClass()) {
+                if ($fieldName == $relation->getLocalFieldName() && (get_class($value) == $relation->getClass() || is_subclass_of($value, $relation->getClass()))) {
                     return $errorStack;
                 }
             }
