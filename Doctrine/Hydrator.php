@@ -124,6 +124,9 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         // Evaluate HYDRATE_SINGLE_SCALAR
         if ($hydrationMode == Doctrine::HYDRATE_SINGLE_SCALAR) {
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($result) == 0) {
+                return null;
+            }
             if (count($result) > 1 || count($result[0]) > 1) {
                 throw new Doctrine_Hydrator_Exception("The returned result was not unique.");
             }
