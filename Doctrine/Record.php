@@ -2476,7 +2476,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         foreach ($this->_table->getTemplates() as $template) {
-            if (method_exists($template, $method)) {
+            if (is_callable(array($template, $method))) {
                 $template->setInvoker($this);
                 $this->_table->setMethodOwner($method, $template);
 
