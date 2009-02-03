@@ -77,8 +77,13 @@ class Doctrine_I18n extends Doctrine_Record_Generator
 
         $cols = $this->_options['table']->getColumns();
 
+        $columns = array();
         foreach ($cols as $column => $definition) {
-            if (in_array($column, $this->_options['fields'])) {
+            $fieldName = $this->_options['table']->getFieldName($column);
+            if (in_array($fieldName, $this->_options['fields'])) {
+                if ($column != $fieldName) {
+                    $column .= ' as ' . $fieldName;
+                }
                 $columns[$column] = $definition;
                 $this->_options['table']->removeColumn($column);
             }
