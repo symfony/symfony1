@@ -187,6 +187,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_DEFAULT_TABLE_COLLATE;
             case Doctrine::ATTR_DEFAULT_IDENTIFIER_OPTIONS;
             case Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS;
+            case Doctrine::ATTR_HYDRATE_OVERWRITE;
 
                 break;
             case Doctrine::ATTR_SEQCOL_NAME:

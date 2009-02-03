@@ -116,7 +116,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE       => false,
                         Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS      => false,
                         Doctrine::ATTR_DEFAULT_IDENTIFIER_OPTIONS   => array(),
-                        Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS       => array()
+                        Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS       => array(),
+                        Doctrine::ATTR_HYDRATE_OVERWRITE            => true
                         ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);

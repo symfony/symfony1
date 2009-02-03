@@ -202,6 +202,7 @@ final class Doctrine
     const ATTR_DEFAULT_TABLE_COLLATE        = 168;
     const ATTR_DEFAULT_IDENTIFIER_OPTIONS   = 169;
     const ATTR_DEFAULT_COLUMN_OPTIONS       = 170;
+    const ATTR_HYDRATE_OVERWRITE            = 171;
 
     /**
      * LIMIT CONSTANTS
