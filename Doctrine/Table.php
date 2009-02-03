@@ -1757,7 +1757,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
             if ($dataType == 'enum') {
                 $enumIndex = $this->enumIndex($fieldName, $value);
-                if ($enumIndex === false) {
+                if ($enumIndex === false && $value !== null) {
                     $errorStack->add($fieldName, 'enum');
                 }
             }
