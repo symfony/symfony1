@@ -171,7 +171,7 @@ class sfWebDebug
     {
       if ($title = $panel->getTitle())
       {
-        if ($content = $panel->getPanelContent() || $panel->getTitleUrl())
+        if (($content = $panel->getPanelContent()) || $panel->getTitleUrl())
         {
           $id = sprintf('sfWebDebug%sDetails', $name);
           $titles[]  = sprintf('<li><a title="%s" href="%s"%s>%s</a></li>',
@@ -183,7 +183,7 @@ class sfWebDebug
           $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display: none"><h1>%s</h1>%s</div>',
             $id,
             $panel->getPanelTitle(),
-            $panel->getPanelContent()
+            $content
           );
         }
         else
