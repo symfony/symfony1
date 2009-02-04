@@ -85,7 +85,7 @@ class Doctrine_I18n extends Doctrine_Record_Generator
                     $column .= ' as ' . $fieldName;
                 }
                 $columns[$column] = $definition;
-                $this->_options['table']->removeColumn($column);
+                $this->_options['table']->removeColumn($fieldName);
             }
         }
 
