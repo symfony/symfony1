@@ -290,7 +290,8 @@ class sfFileCache extends sfCache
     @fclose($fp);
 
     chmod($tmpFile, 0666);
-    @rename($tmpFile, $path);
+    @unlink($path);
+    rename($tmpFile, $path);
     umask($current_umask);
 
     return true;
