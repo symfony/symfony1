@@ -30,7 +30,7 @@ class sfWidgetFormTime extends sfWidgetForm
    *  * minutes:                An array of minutes for the minute select tag (optional)
    *  * seconds:                An array of seconds for the second select tag (optional)
    *  * can_be_empty:           Whether the widget accept an empty value (true by default)
-   *  * empty_values:           An array of values to use for the empty value (empty string for year, month, and date by default)
+   *  * empty_values:           An array of values to use for the empty value (empty string for hours, minutes, and seconds by default)
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes

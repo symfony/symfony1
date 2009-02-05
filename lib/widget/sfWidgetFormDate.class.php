@@ -28,7 +28,7 @@ class sfWidgetFormDate extends sfWidgetForm
    *  * months:       An array of months for the month select tag (optional)
    *  * days:         An array of days for the day select tag (optional)
    *  * can_be_empty: Whether the widget accept an empty value (true by default)
-   *  * empty_values: An array of values to use for the empty value (empty string for year, month, and date by default)
+   *  * empty_values: An array of values to use for the empty value (empty string for year, month, and day by default)
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
