@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
-class Doctrine_Search_Analyzer_Standard implements Doctrine_Search_Analyzer_Interface
+class Doctrine_Search_Analyzer_Standard extends Doctrine_Search_Analyzer implements Doctrine_Search_Analyzer_Interface
 {
     protected static $_stopwords = array(
                             '0',
@@ -270,7 +270,7 @@ class Doctrine_Search_Analyzer_Standard implements Doctrine_Search_Analyzer_Inte
                             'yours'
                             );
 
-    public function analyze($text)
+    public function analyze($text, $encoding = null)
     {
         $text = preg_replace('/[\'`´"]/', '', $text);
         $text = Doctrine_Inflector::unaccent($text);

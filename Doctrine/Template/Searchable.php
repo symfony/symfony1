@@ -40,7 +40,7 @@ class Doctrine_Template_Searchable extends Doctrine_Template
      */
     public function __construct(array $options = array())
     {
-	    parent::__construct($options);
+	      parent::__construct($options);
         $this->_plugin = new Doctrine_Search($this->_options); 
     }
 
@@ -64,9 +64,9 @@ class Doctrine_Template_Searchable extends Doctrine_Template
      * @param integer $offset 
      * @return void
      */
-    public function batchUpdateIndex($limit = null, $offset = null)
+    public function batchUpdateIndex($limit = null, $offset = null, $encoding = null)
     {
-        $this->_plugin->batchUpdateIndex($limit, $offset);
+        $this->_plugin->batchUpdateIndex($limit, $offset, $encoding);
     }
 
     /**
@@ -76,9 +76,9 @@ class Doctrine_Template_Searchable extends Doctrine_Template
      * @param integer $offset 
      * @return void
      */
-    public function batchUpdateIndexTableProxy($limit = null, $offset = null)
+    public function batchUpdateIndexTableProxy($limit = null, $offset = null, $encoding = null)
     {
-        $this->batchUpdateIndex($limit, $offset);
+        $this->batchUpdateIndex($limit, $offset, $encoding);
     }
 
     /**

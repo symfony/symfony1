@@ -32,8 +32,15 @@
  */
 class Doctrine_Search_Analyzer implements Doctrine_Search_Analyzer_Interface
 {
-    public function analyze($text, $encoding='ISO8859-15')
+    protected $_options = array();
+
+    public function __construct($options = array())
     {
-    
+        $this->_options = $options;
+    }
+
+    public function analyze($text, $encoding = null)
+    {
+        return $text;
     }
 }

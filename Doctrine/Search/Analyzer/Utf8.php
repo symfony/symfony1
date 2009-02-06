@@ -35,10 +35,15 @@
  */
 class Doctrine_Search_Analyzer_Utf8 extends Doctrine_Search_Analyzer_Standard
 {
-    public function analyze($text, $encoding='ISO8859-15')
+    public function analyze($text, $encoding = null)
     {
+        if (is_null($encoding))
+        {
+          $encoding = isset($this->_options['encoding']) ? $this->_options['encoding']:'ISO8859-15';
+        }
+
         // check that $text encoding is utf-8, if not convert it
-        if ( strcasecmp($encoding,"utf-8") != 0 && strcasecmp($encoding,"utf8") != 0 ) {
+        if ( strcasecmp($encoding, 'utf-8') != 0 && strcasecmp($encoding, 'utf8') != 0 ) {
             $text = iconv($encoding, 'UTF-8', $text);
         }
 
