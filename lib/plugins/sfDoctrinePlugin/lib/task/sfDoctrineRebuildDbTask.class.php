@@ -52,31 +52,23 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
-    $dropDb->setCommandApplication($this->commandApplication);
+    $baseOptions = array(
+      '--application='.$this->configuration->getApplication(),
+      '--env='.$options['env'],
+    );
 
-    $dropDbOptions = array();
-    if (!empty($options['application']))
-    {
-      $dropDbOptions[] = '--application=' . $options['application'];
-    }
-    $dropDbOptions[] = '--env='.$options['env'];
+    $dropDbOptions = $baseOptions;
     if (isset($options['no-confirmation']) && $options['no-confirmation'])
     {
       $dropDbOptions[] = '--no-confirmation';
     }
 
+    $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
+    $dropDb->setCommandApplication($this->commandApplication);
     $dropDb->run(array(), $dropDbOptions);
-
-    $buildAllOptions = array();
-    if (!empty($options['application']))
-    {
-      $buildAllOptions[] = '--application=' . $options['application'];
-    }
-    $buildAllOptions[] = '--env='.$options['env'];
 
     $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->run(array(), array('--env='.$options['env']));
+    $buildAll->run(array(), $baseOptions);
   }
 }

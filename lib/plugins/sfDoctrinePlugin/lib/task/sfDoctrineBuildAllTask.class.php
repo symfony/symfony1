@@ -65,25 +65,23 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $baseOptions = array(
+      '--application='.$this->configuration->getApplication(),
+      '--env='.$options['env'],
+    );
+
     $buildDb = new sfDoctrineBuildDbTask($this->dispatcher, $this->formatter);
     $buildDb->setCommandApplication($this->commandApplication);
-    $buildDbOptions = array();
-    if (isset($options['application']) && $options['application'])
+    $ret = $buildDb->run(array(), $baseOptions);
+
+    if ($ret)
     {
-      $buildDbOptions[] = '--application=' . $options['application'];
+      return $ret;
     }
-    $buildDbOptions[] = '--env=' . $options['env'];
-    $buildDb->run(array(), $buildDbOptions);
 
     $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
     $buildModel->setCommandApplication($this->commandApplication);
-    $buildModelOptions = array();
-    if (isset($options['application']) && $options['application'])
-    {
-      $buildModelOptions[] = '--application=' . $options['application'];
-    }
-    $buildModelOptions[] = '--env=' . $options['env'];
-    $ret = $buildModel->run(array(), $buildModelOptions);
+    $ret = $buildModel->run(array(), $baseOptions);
 
     if ($ret)
     {
@@ -92,7 +90,7 @@ EOF;
 
     $buildSql = new sfDoctrineBuildSqlTask($this->dispatcher, $this->formatter);
     $buildSql->setCommandApplication($this->commandApplication);
-    $ret = $buildSql->run();
+    $ret = $buildSql->run(array(), $baseOptions);
 
     if ($ret)
     {
@@ -103,7 +101,7 @@ EOF;
     {
       $buildForms = new sfDoctrineBuildFormsTask($this->dispatcher, $this->formatter);
       $buildForms->setCommandApplication($this->commandApplication);
-      $ret = $buildForms->run();
+      $ret = $buildForms->run(array(), $baseOptions);
 
       if ($ret)
       {
@@ -112,7 +110,7 @@ EOF;
 
       $buildFilters = new sfDoctrineBuildFiltersTask($this->dispatcher, $this->formatter);
       $buildFilters->setCommandApplication($this->commandApplication);
-      $ret = $buildFilters->run();
+      $ret = $buildFilters->run(array(), $baseOptions);
 
       if ($ret)
       {
@@ -122,14 +120,7 @@ EOF;
 
     $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->setCommandApplication($this->commandApplication);
-    $insertSqlOptions = array();
-    $insertSqlOptions[] = '--env=' . $options['env'];
-    $insertSqlOptions = array();
-    if (isset($options['application']) && $options['application'])
-    {
-      $insertSqlOptions[] = '--application=' . $options['application'];
-    }
-    $ret = $insertSql->run(array(), $insertSqlOptions);
+    $ret = $insertSql->run(array(), $baseOptions);
 
     return $ret;
   }
