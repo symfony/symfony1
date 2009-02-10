@@ -22,6 +22,6 @@
     }
     else
     {
-      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.');
+      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.', false);
     }
   }
