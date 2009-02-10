@@ -73,18 +73,18 @@ $t->is(format_date('1789-07-14'), '14/07/89', 'format_date() formats pre-epoch d
 
 $context->user->culture = 'en';
 $time = time();
-$t->is(format_date($time, 'F'), date('F j, Y h:i:s A', $time).' '.date('T'), 'format_date() takes a format string as its second argument');
+$t->is(format_date($time, 'F'), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_date() takes a format string as its second argument');
 
 $context->user->culture = 'fr';
-$t->is(format_date($time, 'F', 'en'), date('F j, Y h:i:s A', $time).' '.date('T'), 'format_date() takes a culture as its third argument');
+$t->is(format_date($time, 'F', 'en'), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_date() takes a culture as its third argument');
 
 // format_datetime()
 $t->diag('format_datetime()');
 $context->user->culture = 'en';
 $time = time();
-$t->is(format_datetime($time), date('F j, Y h:i:s A', $time).' '.date('T'), 'format_datetime() format a numerical date time according to the user culture');
+$t->is(format_datetime($time), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_datetime() format a numerical date time according to the user culture');
 $t->is(format_datetime(date('Y-m-d')), date('F j, Y').' 12:00:00 AM '.date('T'), 'format_datetime() format a string date time according to the user culture');
-$t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('F j, Y h:i A', $now), 'formats timestamps correctly');
+$t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('F j, Y g:i A', $now), 'formats timestamps correctly');
 
 $t->diag('sfDateFormat');
 $df = new sfDateFormat('en_US');
