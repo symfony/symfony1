@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 
 $v1 = new sfValidatorString();
 $v2 = new sfValidatorString();
@@ -128,3 +128,45 @@ catch (LogicException $e)
 {
   $t->pass('sfValidatorErrorSchema implements the ArrayAccess interface');
 }
+
+// implements Serializable
+$t->diag('implements Serializable');
+
+class NotSerializable implements Serializable
+{
+  public function serialize()
+  {
+    throw new Exception('Not serializable');
+  }
+
+  public function unserialize($serialized)
+  {
+    throw new Exception('Not serializable');
+  }
+}
+
+function will_crash($a)
+{
+  return serialize(new sfValidatorErrorSchema(new sfValidatorString()));
+}
+
+$a = new NotSerializable();
+
+try
+{
+  $serialized = will_crash($a);
+  $t->pass('sfValidatorErrorSchema implements Serializable');
+}
+catch (Exception $e)
+{
+  $t->fail('sfValidatorErrorSchema implements Serializable');
+}
+
+$e = new sfValidatorErrorSchema($v1);
+$e1 = unserialize($serialized);
+$t->is($e1->getMessage(), $e->getMessage(), 'sfValidatorErrorSchema implements Serializable');
+$t->is($e1->getCode(), $e->getCode(), 'sfValidatorErrorSchema implements Serializable');
+$t->is(get_class($e1->getValidator()), get_class($e->getValidator()), 'sfValidatorErrorSchema implements Serializable');
+$t->is($e1->getArguments(), $e->getArguments(), 'sfValidatorErrorSchema implements Serializable');
+$t->is($e1->getNamedErrors(), $e->getNamedErrors(), 'sfValidatorErrorSchema implements Serializable');
+$t->is($e1->getGlobalErrors(), $e->getGlobalErrors(), 'sfValidatorErrorSchema implements Serializable');
