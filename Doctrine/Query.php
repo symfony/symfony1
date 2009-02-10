@@ -1943,7 +1943,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
-        $q .= ') AS ' . $this->_conn->quoteIdentifier('dctrn_count_query');
+        $q .= ') ' . $this->_conn->quoteIdentifier('dctrn_count_query');
 
         return $q;
     }
