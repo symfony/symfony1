@@ -11,15 +11,15 @@
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
  * @author     ##NAME## <##EMAIL##>
- * @version    SVN: $Id: Builder.php 5318 2008-12-19 20:44:54Z jwage $
+ * @version    SVN: $Id: Builder.php 5441 2009-01-30 22:58:43Z jwage $
  */
 abstract class BaseUserPermission extends myDoctrineRecord
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('user_permission');
-    $this->hasColumn('user_id', 'integer', null, array('type' => 'integer', 'primary' => true));
-    $this->hasColumn('permission_id', 'integer', null, array('type' => 'integer', 'primary' => true));
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('user_permission');
+        $this->hasColumn('user_id', 'integer', null, array('type' => 'integer', 'primary' => true));
+        $this->hasColumn('permission_id', 'integer', null, array('type' => 'integer', 'primary' => true));
+    }
 
 }

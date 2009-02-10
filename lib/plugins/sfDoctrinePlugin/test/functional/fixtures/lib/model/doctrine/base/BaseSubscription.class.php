@@ -13,15 +13,15 @@ Doctrine_Manager::getInstance()->bindComponent('Subscription', 'doctrine2');
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
  * @author     ##NAME## <##EMAIL##>
- * @version    SVN: $Id: Builder.php 5318 2008-12-19 20:44:54Z jwage $
+ * @version    SVN: $Id: Builder.php 5441 2009-01-30 22:58:43Z jwage $
  */
 abstract class BaseSubscription extends myDoctrineRecord
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('subscription');
-    $this->hasColumn('name', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('status', 'enum', null, array('type' => 'enum', 'values' => array(0 => 'New', 1 => 'Active', 2 => 'Pending', 3 => 'Expired')));
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('subscription');
+        $this->hasColumn('name', 'string', 255, array('type' => 'string', 'length' => '255'));
+        $this->hasColumn('status', 'enum', null, array('type' => 'enum', 'values' => array(0 => 'New', 1 => 'Active', 2 => 'Pending', 3 => 'Expired')));
+    }
 
 }

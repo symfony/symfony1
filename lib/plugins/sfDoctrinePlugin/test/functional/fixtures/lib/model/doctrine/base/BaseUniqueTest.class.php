@@ -12,19 +12,19 @@
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
  * @author     ##NAME## <##EMAIL##>
- * @version    SVN: $Id: Builder.php 5318 2008-12-19 20:44:54Z jwage $
+ * @version    SVN: $Id: Builder.php 5441 2009-01-30 22:58:43Z jwage $
  */
 abstract class BaseUniqueTest extends myDoctrineRecord
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('unique_test');
-    $this->hasColumn('unique_test1', 'string', 255, array('type' => 'string', 'unique' => true, 'length' => '255'));
-    $this->hasColumn('unique_test2', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('unique_test3', 'string', 255, array('type' => 'string', 'length' => '255'));
+    public function setTableDefinition()
+    {
+        $this->setTableName('unique_test');
+        $this->hasColumn('unique_test1', 'string', 255, array('type' => 'string', 'unique' => true, 'length' => '255'));
+        $this->hasColumn('unique_test2', 'string', 255, array('type' => 'string', 'length' => '255'));
+        $this->hasColumn('unique_test3', 'string', 255, array('type' => 'string', 'length' => '255'));
 
 
-    $this->index('unique_test', array('fields' => array(0 => 'unique_test1', 1 => 'unique_test2'), 'type' => 'unique'));
-  }
+        $this->index('unique_test', array('fields' => array(0 => 'unique_test1', 1 => 'unique_test2'), 'type' => 'unique'));
+    }
 
 }
