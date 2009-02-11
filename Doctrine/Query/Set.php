@@ -72,9 +72,6 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
                 
                 $termsTranslation[$termOriginal] = $lftExpr . implode(' ', $processed) . $rgtExpr;
             }
-            
-            // Fix #1858: CAST(quantity AS SIGNED, 0) must be processed
-            //preg_match_all("/^[a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*/i", $term, $m);
         } 
 
         return strtr($dql, $termsTranslation);
