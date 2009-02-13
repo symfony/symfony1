@@ -51,7 +51,7 @@ class Base<?php echo $this->modelName ?>Form extends BaseFormDoctrine
     parent::setup();
   }
 
-  public function getModelName()
+  static public function getModelName()
   {
     return '<?php echo $this->modelName ?>';
   }

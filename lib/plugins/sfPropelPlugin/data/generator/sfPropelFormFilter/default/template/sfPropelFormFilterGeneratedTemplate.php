@@ -68,12 +68,12 @@ class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormF
   }
 
 <?php endforeach; ?>
-  public function getModelName()
+  static public function getModelName()
   {
     return '<?php echo $this->table->getClassname() ?>';
   }
 
-  public function getFields()
+  static public function getFields()
   {
     return array(
 <?php foreach ($this->table->getColumns() as $column): ?>
