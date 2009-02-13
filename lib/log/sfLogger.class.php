@@ -242,7 +242,7 @@ abstract class sfLogger
     $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
     foreach ($event->getParameters() as $key => $message)
     {
-      if ('priority' == $key)
+      if ('priority' === $key)
       {
         continue;
       }

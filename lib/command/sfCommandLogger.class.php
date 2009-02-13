@@ -50,7 +50,7 @@ class sfCommandLogger extends sfConsoleLogger
 
     foreach ($event->getParameters() as $key => $message)
     {
-      if ('priority' == $key)
+      if ('priority' === $key)
       {
         continue;
       }
