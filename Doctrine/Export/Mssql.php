@@ -297,6 +297,9 @@ class Doctrine_Export_Mssql extends Doctrine_Export
      */
     public function getNotNullFieldDeclaration(array $definition)
     {
-        return (isset($definition['notnull']) && $definition['notnull']) ? ' NOT NULL' : ' NULL';
+        return (
+            (isset($definition['notnull']) && $definition['notnull']) || 
+            (isset($definition['primary']) && $definition['primary'])
+        ) ? ' NOT NULL' : ' NULL';
     }
 }
