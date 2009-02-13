@@ -51,18 +51,18 @@ class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
     parent::setup();
   }
 
-  static public function getModelName()
+  public function getModelName()
   {
     return '<?php echo $this->table->getClassname() ?>';
   }
 
 <?php if ($this->isI18n()): ?>
-  static public function getI18nModelName()
+  public function getI18nModelName()
   {
     return '<?php echo $this->getI18nModel() ?>';
   }
 
-  static public function getI18nFormClass()
+  public function getI18nFormClass()
   {
     return '<?php echo $this->getI18nModel() ?>Form';
   }
