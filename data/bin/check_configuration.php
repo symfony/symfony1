@@ -11,7 +11,7 @@ function is_cli()
 function check($boolean, $message, $help = '', $fatal = false)
 {
   echo $boolean ? "  OK        " : sprintf("[[%s]] ", $fatal ? ' ERROR ' : 'WARNING');
-  echo "$message\n";
+  echo sprintf("$message%s\n", $boolean ? '' : ': FAILED');
 
   if (!$boolean)
   {
