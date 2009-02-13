@@ -1270,7 +1270,7 @@ abstract class Doctrine_Query_Abstract
         $queryComponents = array();
         $cachedComponents = $cached[1];
         foreach ($cachedComponents as $alias => $components) {
-            $e = explode('.', $components[0]);
+            $e = explode('.', $components['name']);
             if (count($e) === 1) {
                 $queryComponents[$alias]['table'] = $this->_conn->getTable($e[0]);
             } else {
@@ -1278,11 +1278,11 @@ abstract class Doctrine_Query_Abstract
                 $queryComponents[$alias]['relation'] = $queryComponents[$e[0]]['table']->getRelation($e[1]);
                 $queryComponents[$alias]['table'] = $queryComponents[$alias]['relation']->getTable();
             }
-            if (isset($components[1])) {
-                $queryComponents[$alias]['agg'] = $components[1];
+            if (isset($components['agg'])) {
+                $queryComponents[$alias]['agg'] = $components['agg'];
             }
-            if (isset($components[2])) {
-                $queryComponents[$alias]['map'] = $components[2];
+            if (isset($components['map'])) {
+                $queryComponents[$alias]['map'] = $components['map'];
             }
         }
         $this->_queryComponents = $queryComponents;
@@ -1303,15 +1303,15 @@ abstract class Doctrine_Query_Abstract
 
         foreach ($this->getQueryComponents() as $alias => $components) {
             if ( ! isset($components['parent'])) {
-                $componentInfo[$alias][] = $components['table']->getComponentName();
+                $componentInfo[$alias]['name'] = $components['table']->getComponentName();
             } else {
-                $componentInfo[$alias][] = $components['parent'] . '.' . $components['relation']->getAlias();
+                $componentInfo[$alias]['name'] = $components['parent'] . '.' . $components['relation']->getAlias();
             }
             if (isset($components['agg'])) {
-                $componentInfo[$alias][] = $components['agg'];
+                $componentInfo[$alias]['agg'] = $components['agg'];
             }
             if (isset($components['map'])) {
-                $componentInfo[$alias][] = $components['map'];
+                $componentInfo[$alias]['map'] = $components['map'];
             }
         }
 
