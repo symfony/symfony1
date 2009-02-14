@@ -128,10 +128,10 @@ EOF;
 %s:
   class: sfPropelRouteCollection
   options:
-    model:               %s
-    module:              %s
-    prefix_path:         %s
-    column:              %s
+    model:                %s
+    module:               %s
+    prefix_path:          %s
+    column:               %s
     with_wildcard_routes: true
 
 
