@@ -195,6 +195,13 @@ abstract class Doctrine_Query_Abstract
      */
     protected $_queryComponents = array();
 
+	/**
+     * Stores the root DQL alias
+     *
+     * @var string
+     */
+    protected $_rootAlias = '';
+	
     /**
      * @var integer $type                   the query type
      *
@@ -866,7 +873,7 @@ abstract class Doctrine_Query_Abstract
 
     /**
      * getRootAlias
-     * returns the alias of the the root component
+     * returns the alias of the root component
      *
      * @return array
      */
@@ -876,9 +883,7 @@ abstract class Doctrine_Query_Abstract
             $this->getSql();
         }
         
-        reset($this->_queryComponents);
-        
-        return key($this->_queryComponents);
+        return $this->_rootAlias;
     }
 
     /**
@@ -889,7 +894,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function getRootDeclaration()
     {
-        $map = reset($this->_queryComponents);
+        $map = $this->_queryComponents[$this->_rootAlias];
         return $map;
     }
 
@@ -901,7 +906,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function getRoot()
     {
-        $map = reset($this->_queryComponents);
+        $map = $this->_queryComponents[$this->_rootAlias];
 
         if ( ! isset($map['table'])) {
             throw new Doctrine_Query_Exception('Root component not initialized.');

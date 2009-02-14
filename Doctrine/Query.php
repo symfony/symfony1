@@ -1131,9 +1131,24 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // process the DQL parts => generate the SQL parts.
         // this will also populate the $_queryComponents.
         foreach ($this->_dqlParts as $queryPartName => $queryParts) {
+            // If we are parsing FROM clause, we'll need to diff the queryComponents later
+            if ($queryPartName == 'from') {
+                // Pick queryComponents before processing
+                $queryComponentsBefore = $this->getQueryComponents();
+            }
+
 	        // FIX #1667: _sqlParts are cleaned inside _processDqlQueryPart.
             if ($queryPartName != 'forUpdate') {
                 $this->_processDqlQueryPart($queryPartName, $queryParts);
+            }
+
+            // We need to define the root alias
+            if ($queryPartName == 'from') {
+                // Pick queryComponents aftr processing
+                $queryComponentsAfter = $this->getQueryComponents();
+                
+                // Root alias is the key of difference of query components
+                $this->_rootAlias = key(array_diff_key($queryComponentsAfter, $queryComponentsBefore));
             }
         }
         $this->_state = self::STATE_CLEAN;
@@ -1145,9 +1160,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $needsSubQuery = false;
         $subquery = '';
-        $map = reset($this->_queryComponents);
+        $map = $this->getRootDeclaration();
         $table = $map['table'];
-        $rootAlias = key($this->_queryComponents);
+        $rootAlias = $this->getRootAlias();
 
         if ( ! empty($this->_sqlParts['limit']) && $this->_needsSubquery &&
                 $table->getAttribute(Doctrine::ATTR_QUERY_LIMIT) == Doctrine::LIMIT_RECORDS) {
