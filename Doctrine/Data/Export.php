@@ -172,6 +172,11 @@ class Doctrine_Data_Export extends Doctrine_Data
                         continue;
                     }
 
+                    if (is_object($value)) { 
+                        // If the field is an object serialize it
+                        $value = serialize($value);
+                    }
+
                     if ($relation = $this->isRelation($record, $key)) {
                         if ( ! $value) {
                             continue;
