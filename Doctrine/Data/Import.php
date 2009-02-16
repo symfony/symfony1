@@ -202,6 +202,9 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $func = 'set' . Doctrine_Inflector::classify($key);
                 $obj->$func($value);
             } else if ($obj->getTable()->hasField($key)) {
+                if ($obj->getTable()->getTypeOf($key) == 'object') {
+                    $value = unserialize($value);
+                }
                 $obj->set($key, $value);
             } else if ($obj->getTable()->hasRelation($key)) {
                 if (is_array($value)) {
