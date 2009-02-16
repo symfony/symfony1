@@ -688,7 +688,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     	   return $clause;
     	}
 
-        $terms = $this->_tokenizer->clauseExplode($clause, array(' ', '+', '-', '*', '/', '<', '>', '=', '>=', '<='));
+        $terms = $this->_tokenizer->clauseExplode($clause, array(' ', '+', '-', '*', '/', '<', '>', '=', '>=', '<=', '&', '|'));
 
         $str = '';
         foreach ($terms as $term) {
