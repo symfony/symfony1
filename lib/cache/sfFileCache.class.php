@@ -149,7 +149,7 @@ class sfFileCache extends sfCache
     {
       if (sfCache::ALL == $mode || !$this->isValid($file))
       {
-        $result = $result && @unlink($file);
+        $result = @unlink($file) && $result;
       }
     }
 
