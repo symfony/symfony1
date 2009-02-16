@@ -77,6 +77,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                     // subquery found
                     $q     = $this->query->createSubquery()->parseQuery($trimmed, false);
                     $value   = '(' . $q->getSql() . ')';
+                    $q->free();
                 } elseif (substr($trimmed_upper, 0, 4) == 'SQL:') {
                     // Change due to bug "(" XXX ")"
                     //$value = '(' . substr($trimmed, 4) . ')';

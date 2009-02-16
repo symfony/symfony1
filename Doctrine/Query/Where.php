@@ -153,6 +153,7 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 // subquery found
                 $q     = $this->query->createSubquery()->parseQuery($trimmed, false);
                 $sql   = $q->getSql();
+                $q->free();
                 $rightExpr = '(' . $sql . ')';
 
             // If custom sql for custom subquery
@@ -199,6 +200,9 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
         $sub = $this->_tokenizer->bracketTrim(substr($where, $pos));
 
-        return $operator . ' (' . $this->query->createSubquery()->parseQuery($sub, false)->getQuery() . ')';
+        $q = $this->query->createSubquery()->parseQuery($sub, false);
+        $sql = $q->getSql();
+        $q->free();
+        return $operator . ' (' . $sql . ')';
     }
 }

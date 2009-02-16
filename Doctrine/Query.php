@@ -848,6 +848,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             // parse subquery
             $q = $this->createSubquery()->parseDqlQuery($trimmed);
             $trimmed = $q->getSql();
+            $q->free();
         } else {
             // parse normal clause
             $trimmed = $this->parseClause($trimmed);
@@ -876,6 +877,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $subquery = $this->createSubquery();
 
             $sql = $subquery->parseDqlQuery($dql, false)->getQuery();
+            $subquery->free();
 
             reset($this->_queryComponents);
             $componentAlias = key($this->_queryComponents);
