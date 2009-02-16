@@ -578,12 +578,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * @param string The generated name
    */
   public function generateName($name)
-  {
-    if(in_array($name, array('sf_method', 'sf_format', 'sf_culture')))
-    {
-      return $name;
-    }
-    
+  {  
     $format = $this->getNameFormat();
 
     if ('[%s]' == substr($format, -4) && preg_match('/^(.+?)\[(.+)\]$/', $name, $match))
