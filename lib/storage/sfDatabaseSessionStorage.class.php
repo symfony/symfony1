@@ -100,19 +100,24 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     $database = $this->options['database'];
 
     // get the database and connection
-    if(get_class($database) == 'sfPropelDatabase')
+    $databaseClass = get_class($database);
+    if($databaseClass == 'sfPropelDatabase')
     {
-      $this->db = Propel::getConnection(); 
+      $this->db = Propel::getConnection();
+    }
+    elseif($databaseClass == 'sfDoctrineDatabase')
+    {
+      $this->db = $database->getConnection();
     }
     else
     {
-      $this->db = $database->getResource(); 
+      $this->db = $database->getResource();
     }
     $this->con = $database->getConnection();
-    
+
     if (is_null($this->db) && is_null($this->con))
     {
-      throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');
+      throw new sfDatabaseException('Database connection does not exist. Unable to open session.');
     }
 
     return true;
