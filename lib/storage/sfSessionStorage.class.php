@@ -180,5 +180,6 @@ class sfSessionStorage extends sfStorage
   public function shutdown()
   {
     // don't need a shutdown procedure because read/write do it in real-time
+    session_write_close();
   }
 }

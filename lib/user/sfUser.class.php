@@ -310,8 +310,6 @@ class sfUser implements ArrayAccess
 
     // write culture to the storage
     $this->storage->write(self::CULTURE_NAMESPACE, $this->culture);
-
-    session_write_close();
   }
 
   /**
