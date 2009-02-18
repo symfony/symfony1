@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Task_GenerateMigrationsModels
+ * Doctrine_Task_GenerateMigrationsDiff
  *
  * @package     Doctrine
  * @subpackage  Task
@@ -30,17 +30,29 @@
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
-class Doctrine_Task_GenerateMigrationsModels extends Doctrine_Task
+class Doctrine_Task_GenerateMigrationsDiff extends Doctrine_Task
 {
-    public $description          =   'Generate migration classes for an existing set of models',
-           $requiredArguments    =   array('migrations_path' => 'Specify the path to your migration classes folder.',
-                                           'models_path'     => 'Specify the path to your doctrine models folder.'),
-           $optionalArguments    =   array();
-    
+    public $description          =   'Generate migration classes from a generated difference between your models and yaml schema files',
+           $requiredArguments    =   array('migrations_path'  => 'Specify the path to your migration classes folder.',
+                                           'yaml_schema_path' => 'Specify the path to your yaml schema files folder.'),
+           $optionalArguments    =   array('models_path'      => 'Specify the path to your doctrine models folder.');
+
     public function execute()
     {   
-        Doctrine::generateMigrationsFromModels($this->getArgument('migrations_path'), $this->getArgument('models_path'));
-        
-        $this->notify('Generated migration classes successfully from models');
+        $migrationsPath = $this->getArgument('migrations_path');
+        $modelsPath = $this->getArgument('models_path');
+        $yamlSchemaPath = $this->getArgument('yaml_schema_path');
+
+        $migration = new Doctrine_Migration($migrationsPath);
+        $diff = new Doctrine_Migration_Diff($modelsPath, $yamlSchemaPath, $migration);
+        $changes = $diff->generateMigrationClasses();
+
+        $numChanges = count($changes, true) - count($changes);
+
+        if ( ! $numChanges) {
+            throw new Doctrine_Task_Exception('Could not generate migration classes from difference');
+        } else {
+            $this->notify('Generated migration classes successfully from difference');
+        }
     }
 }

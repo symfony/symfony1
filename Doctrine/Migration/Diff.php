@@ -244,25 +244,45 @@ class Doctrine_Migration_Diff
      */
     protected function _buildModelInformation(array $models)
     {
-        $fromPrefix = self::$_fromPrefix;
-        $toPrefix = self::$_toPrefix;
-
         $info = array();
         foreach ($models as $key => $model) {
             $table = Doctrine::getTable($model);
             if ($table->getTableName() !== $this->_migration->getTableName()) {
-                if (substr($model, 0, strlen($toPrefix)) === $toPrefix) {
-                    $name = substr($model, strlen($toPrefix), strlen($model));
-                } else if (substr($model, 0, strlen($fromPrefix)) === $fromPrefix) {
-                    $name = substr($model, strlen($fromPrefix), strlen($model));
-                } else {
-                    $name = $model;
-                }
-                $info[$name] = $table->getExportableFormat();
+                $info[$model] = $table->getExportableFormat();
             }
         }
 
+        $info = $this->_cleanModelInformation($info);
+
         return $info;
+    }
+
+    /**
+     * Clean the produced model information of any potential prefix text
+     *
+     * @param  mixed $info  Either array or string to clean of prefixes
+     * @return mixed $info  Cleaned value which is either an array or string
+     */
+    protected function _cleanModelInformation($info)
+    {
+        if (is_array($info)) {
+            foreach ($info as $key => $value) {
+                unset($info[$key]);
+                $key = $this->_cleanModelInformation($key);
+                $info[$key] = $this->_cleanModelInformation($value);
+            }
+            return $info;
+        } else {
+            $find = array(
+                self::$_toPrefix,
+                self::$_fromPrefix,
+                Doctrine_Inflector::tableize(self::$_toPrefix) . '_',
+                Doctrine_Inflector::tableize(self::$_fromPrefix) . '_',
+                Doctrine_Inflector::tableize(self::$_toPrefix),
+                Doctrine_Inflector::tableize(self::$_fromPrefix)
+            );
+            return str_replace($find, null, $info);
+        }
     }
 
     /**
