@@ -216,20 +216,20 @@ END;
             }
         }
 
-        if ( ! empty($changes['created_indexes'])) {
-            foreach ($changes['created_indexes'] as $tableName => $addedIndexes) {
-                foreach ($addedIndexes as $name => $index) {
-                    $up[] = $this->buildAddIndex($tableName, $name, $index);
-                    $down[] = $this->buildRemoveIndex($tableName, $name, $index);
-                }
-            }
-        }
-
         if ( ! empty($changes['created_foreign_keys'])) {
             foreach ($changes['created_foreign_keys'] as $tableName => $createdFks) {
                 foreach ($createdFks as $name => $foreignKey) {
                     $up[] = $this->buildCreateForeignKey($tableName, $foreignKey);
                     $down[] = $this->buildDropForeignKey($tableName, $foreignKey);
+                }
+            }
+        }
+
+        if ( ! empty($changes['created_indexes'])) {
+            foreach ($changes['created_indexes'] as $tableName => $addedIndexes) {
+                foreach ($addedIndexes as $name => $index) {
+                    $up[] = $this->buildAddIndex($tableName, $name, $index);
+                    $down[] = $this->buildRemoveIndex($tableName, $name, $index);
                 }
             }
         }
