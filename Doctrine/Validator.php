@@ -95,7 +95,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
             $length = strlen(serialize($value));
         } else if ($type == 'decimal' || $type == 'float') {
             $e = explode('.', $value);
-            $length = strlen($e[0]);
+            $length = strlen($e[0]) + strlen($e[1]);
         } else {
             $length = self::getStringLength($value);
         }
