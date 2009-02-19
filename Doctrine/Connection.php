@@ -1511,10 +1511,10 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $pdoDsn = $info['scheme'] . ':';
         
         if ($info['unix_socket']) {
-            $pdoDsn = 'unix_socket=' . $info['unix_socket'] . ';';
+            $pdoDsn .= 'unix_socket=' . $info['unix_socket'] . ';';
         }
 
- 	    $pdoDsn = 'host=' . $info['host'];
+ 	    $pdoDsn .= 'host=' . $info['host'];
 
  	    if ($info['port']) {
  	        $pdoDsn .= ';port=' . $info['port'];
