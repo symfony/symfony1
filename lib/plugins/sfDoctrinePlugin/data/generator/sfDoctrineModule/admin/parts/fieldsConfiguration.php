@@ -18,13 +18,13 @@
 
   public function getEditTitle()
   {
-    return $this->escapeString('<?php echo isset($this->config['edit']['title']) ? $this->config['edit']['title'] : 'Edit '.sfInflector::humanize($this->getModuleName())) ?>';
+    return '<?php echo $this->escapeString(isset($this->config['edit']['title']) ? $this->config['edit']['title'] : 'Edit '.sfInflector::humanize($this->getModuleName())) ?>';
 <?php unset($this->config['edit']['title']) ?>
   }
 
   public function getNewTitle()
   {
-    return $this->escapeString('<?php echo isset($this->config['new']['title']) ? $this->config['new']['title'] : 'New '.sfInflector::humanize($this->getModuleName())) ?>';
+    return '<?php echo $this->escapeString(isset($this->config['new']['title']) ? $this->config['new']['title'] : 'New '.sfInflector::humanize($this->getModuleName())) ?>';
 <?php unset($this->config['new']['title']) ?>
   }
 
