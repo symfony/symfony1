@@ -55,14 +55,20 @@ class Doctrine_Validator_Email
             }
         }
 
+        $e = explode('.', $value);
+        $tld = end($e);
+        if (preg_match("/[^a-zA-Z]/", $tld)) {
+            return false;
+        }
+
         $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
         $dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
         $atom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+';
         $quotedPair = '\\x5c[\\x00-\\x7f]';
         $domainLiteral = "\\x5b($dtext|$quotedPair)*\\x5d";
         $quotedString = "\\x22($qtext|$quotedPair)*\\x22";
-        $domain_ref = $atom;
-        $subDomain = "($domain_ref|$domainLiteral)";
+        $domainRef = $atom;
+        $subDomain = "($domainRef|$domainLiteral)";
         $word = "($atom|$quotedString)";
         $domain = "$subDomain(\\x2e$subDomain)+";
         /*
