@@ -381,10 +381,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;
-
-              $classTable = Doctrine_Inflector::tableize($table);
-
-              $definition['className'] = Doctrine_Inflector::classify($classTable);
+              $definition['className'] = Doctrine_Inflector::classify($table);
               $definition['columns'] = $connection->import->listTableColumns($table);
 
               try {
@@ -393,8 +390,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
                   $classes = array();
                   foreach ($relations as $relation) {
                       $table = $relation['table'];
-                      $relClassTable = Doctrine_Inflector::tableize($table);
-                      $class = Doctrine_Inflector::classify($relClassTable);
+                      $class = Doctrine_Inflector::classify($table);
                       if (in_array($class, $classes)) {
                           $alias = $class . '_' . (count($classes) + 1);
                       } else {
