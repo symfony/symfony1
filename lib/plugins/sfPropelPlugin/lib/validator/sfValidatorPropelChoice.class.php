@@ -55,7 +55,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
         $value = array($value);
       }
 
-      $criteria->add($this->getColumn(), $value, Criteria::IN);
+      $criteria->addAnd($this->getColumn(), $value, Criteria::IN);
 
       $objects = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelect'), $criteria, $this->getOption('connection'));
 
@@ -66,7 +66,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
     }
     else
     {
-      $criteria->add($this->getColumn(), $value);
+      $criteria->addAnd($this->getColumn(), $value);
 
       $object = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelectOne'), $criteria, $this->getOption('connection'));
 

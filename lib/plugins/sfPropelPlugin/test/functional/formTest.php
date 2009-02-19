@@ -189,3 +189,41 @@ $b->
   checkResponseElement('#article_category_id option[selected="selected"]', 1)->
   checkResponseElement('input[value="Category foo"]')
 ;
+
+// sfValidatorPropelChoice
+
+// submit a form with an impossible choice validator
+$b->
+  get('/choice/article')->
+  with('request')->begin()->
+    isParameter('module', 'choice')->
+    isParameter('action', 'article')->
+  end()->
+  with('response')->begin()->
+    isStatusCode(200)->
+  end()->
+  click('submit', array('article' => array('title' => 'foobar', 'category_id' => 1, 'author_article_list' => array(1)), 'impossible_validator' => 1))->
+  with('form')->begin()->
+    hasErrors(1)->
+    isError('category_id', 'invalid')->
+  end()
+;
+
+// sfValidatorPropelChoiceMany
+
+// submit a form with an impossible choice validator
+$b->
+  get('/choice/article')->
+  with('request')->begin()->
+    isParameter('module', 'choice')->
+    isParameter('action', 'article')->
+  end()->
+  with('response')->begin()->
+    isStatusCode(200)->
+  end()->
+  click('submit', array('article' => array('title' => 'foobar', 'category_id' => 1, 'author_article_list' => array(1)), 'impossible_validator_many' => 1))->
+  with('form')->begin()->
+    hasErrors(1)->
+    isError('author_article_list', 'invalid')->
+  end()
+;
