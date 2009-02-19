@@ -802,6 +802,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function addIndex($index, array $definition)
     {
+        if (isset($definition['fields'])) {
+            foreach ((array) $definition['fields'] as $key => $field) {
+                $definition['fields'][$key] = $this->getColumnName($field);
+            }
+        }
         $this->_options['indexes'][$index] = $definition;
     }
 
