@@ -440,4 +440,9 @@ EOF;
   {
     return str_replace(array("\n", 'array ('), array('', 'array('), var_export($variable, true));
   }
+
+  public function escapeString($string)
+  {
+    return str_replace("'", "\\'", $string);
+  }
 }
