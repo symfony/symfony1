@@ -1453,13 +1453,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Close the temporary connection used to issue the drop database command
         $this->getManager()->closeConnection($tmpConnection);
 
-        // Re-create Doctrine or PDO style dsn
-        if ($info['unix_socket']) {
-            $dsn = array($info['scheme'] . ':unix_socket=' . $info['unix_socket'] . ';dbname=' . $info['dbname'], $this->getOption('username'), $this->getOption('password'));
-        } else {
-            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-        }
-
         if (isset($e)) {
             return $e;
         } else {
@@ -1494,13 +1487,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Close the temporary connection used to issue the drop database command
         $this->getManager()->closeConnection($tmpConnection);
 
-        // Re-create Doctrine or PDO style dsn
-        if ($info['unix_socket']) {
-            $dsn = array($info['scheme'] . ':unix_socket=' . $info['unix_socket'] . ';dbname=' . $info['dbname'], $this->getOption('username'), $this->getOption('password'));
-        } else {
-            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-        }
-
         if (isset($e)) {
             return $e;
         } else {
@@ -1522,11 +1508,17 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function getTmpConnection($info)
     {
+        $pdoDsn = $info['scheme'] . ':';
+        
         if ($info['unix_socket']) {
-            $pdoDsn = $info['scheme'] . ':unix_socket=' . $info['unix_socket'];
-        } else {
- 	        $pdoDsn = $info['scheme'] . ':host=' . $info['host'];
+            $pdoDsn = 'unix_socket=' . $info['unix_socket'] . ';';
         }
+
+ 	    $pdoDsn = 'host=' . $info['host'];
+
+ 	    if ($info['port']) {
+ 	        $pdoDsn .= ';port=' . $info['port'];
+ 	    }
 
         if (isset($this->export->tmpConnectionDatabase) && $this->export->tmpConnectionDatabase) {
             $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
