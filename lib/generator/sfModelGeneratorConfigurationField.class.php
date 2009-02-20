@@ -24,6 +24,12 @@ class sfModelGeneratorConfigurationField
   {
     $this->name = $name;
     $this->config = $config;
+
+    if (isset($this->config['flag']))
+    {
+      $this->setFlag($this->config['flag']);
+      unset($this->config['flag']);
+    }
   }
 
   /**
