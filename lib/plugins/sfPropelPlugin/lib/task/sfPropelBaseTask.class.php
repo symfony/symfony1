@@ -310,7 +310,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       if (count(sfPhingListener::getErrors()))
       {
-        $messages[] = '  Read the logs to fix them';
+        $messages[] = '  If the exception message is not clear enough, read the output of the task for more information';
       }
 
       $this->logBlock($messages, 'ERROR');
