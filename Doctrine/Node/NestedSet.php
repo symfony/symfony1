@@ -830,6 +830,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $this->setRootValue($newRootId);
             $this->record['level'] = 0;
             
+            $this->record->save();
+            
             $conn->commit();
             
             return true;
