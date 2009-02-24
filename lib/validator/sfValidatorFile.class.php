@@ -129,7 +129,7 @@ class sfValidatorFile extends sfValidatorBase
       case UPLOAD_ERR_NO_TMP_DIR:
         throw new sfValidatorError($this, 'no_tmp_dir');
       case UPLOAD_ERR_CANT_WRITE:
-        throw new sfValidatorError($this, 'no_cant_write');
+        throw new sfValidatorError($this, 'cant_write');
       case UPLOAD_ERR_EXTENSION:
         throw new sfValidatorError($this, 'extension');
     }
