@@ -168,7 +168,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     {
         if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception(
-                sprintf('Invalid row key specified: %s, referred to in %s', $rowkey, $referringRowKey)
+                sprintf('Invalid row key specified: %s, referred to in %s', $rowKey, $referringRowKey)
             );
         }
 
