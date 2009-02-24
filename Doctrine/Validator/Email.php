@@ -44,19 +44,18 @@ class Doctrine_Validator_Email
         if (empty($value)) {
             return true;
         }
-        
+
         if (isset($this->args) && (! isset($this->args['check_mx']) || $this->args['check_mx'] == true)) {
             $parts = explode('@', $value);
-        
-            if (isset($parts[1]) && function_exists('checkdnsrr')) {
-                if ( ! checkdnsrr($parts[1], 'MX')) {
-                    return false;
-                }
+
+            if (isset($parts[1]) && ! $this->_checkMX($parts[1])) {
+                return false;
             }
         }
 
         $e = explode('.', $value);
         $tld = end($e);
+
         if (preg_match("/[^a-zA-Z]/", $tld)) {
             return false;
         }
@@ -71,6 +70,7 @@ class Doctrine_Validator_Email
         $subDomain = "($domainRef|$domainLiteral)";
         $word = "($atom|$quotedString)";
         $domain = "$subDomain(\\x2e$subDomain)+";
+        
         /*
           following pseudocode to allow strict checking - ask pookey about this if you're puzzled
 
@@ -78,9 +78,40 @@ class Doctrine_Validator_Email
               $domain = "$sub_domain(\\x2e$sub_domain)*";
           }
         */
+        
         $localPart = "$word(\\x2e$word)*";
         $addrSpec = "$localPart\\x40$domain";
-
+        
         return (bool) preg_match("!^$addrSpec$!D", $value);
+    }
+    
+    /**
+     * Check DNA Records for MX type
+     *
+     * @param string $host Host name
+     * @return boolean
+     */
+    private function _checkMX($host)
+    {
+        // We have different behavior here depending of OS and PHP version
+        if (strtolower(substr(PHP_OS, 0, 3)) == 'win' && version_compare(PHP_VERSION, '5.3.0', '<')) {
+            @exec('nslookup -type=MX '.escapeshellcmd($host) . ' 2>&1', $output);
+            
+            if (empty($output)) {
+                throw new Doctrine_Exception('Unable to execute DNS lookup. Are you sure PHP can call exec()?');
+            }    
+
+            foreach ($output as $line) {
+                if (preg_match('/^'.$host.'/', $line)) { 
+                    return true; 
+                }
+            }
+            
+            return false;
+        } else if (function_exists('checkdnsrr')) {
+            return checkdnsrr($parts[1], 'MX');
+        }
+        
+        throw new Doctrine_Exception('Could not retrieve DNS record information. Remove check_mx = true to prevent this warning');
     }
 }
