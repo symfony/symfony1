@@ -954,7 +954,7 @@ class sfPropelDatabaseSchema
       }
 
       // foreign-keys
-      $database[$table_name]['_foreign_keys'] = array();
+      $database[$table_name]['_foreignKeys'] = array();
       foreach ($table->xpath('foreign-key') as $foreign_key)
       {
         $foreign_key_table = array();
@@ -962,7 +962,7 @@ class sfPropelDatabaseSchema
         // foreign key attributes
         if (isset($foreign_key['foreignTable']))
         {
-          $foreign_key_table['foreign_table'] = (string) $foreign_key['foreignTable'];
+          $foreign_key_table['foreignTable'] = (string) $foreign_key['foreignTable'];
         }
         else
         {
@@ -970,11 +970,11 @@ class sfPropelDatabaseSchema
         }
         if (isset($foreign_key['onDelete']))
         {
-          $foreign_key_table['on_delete'] = (string) $foreign_key['onDelete'];
+          $foreign_key_table['onDelete'] = (string) $foreign_key['onDelete'];
         }
         if (isset($foreign_key['onUpdate']))
         {
-          $foreign_key_table['on_update'] = (string) $foreign_key['onUpdate'];
+          $foreign_key_table['onUpdate'] = (string) $foreign_key['onUpdate'];
         }
 
         // foreign key references
@@ -991,15 +991,15 @@ class sfPropelDatabaseSchema
 
         if (isset($foreign_key['name']))
         {
-          $database[$table_name]['_foreign_keys'][(string)$foreign_key['name']] = $foreign_key_table;
+          $database[$table_name]['_foreignKeys'][(string)$foreign_key['name']] = $foreign_key_table;
         }
         else
         {
-          $database[$table_name]['_foreign_keys'][] = $foreign_key_table;
+          $database[$table_name]['_foreignKeys'][] = $foreign_key_table;
         }
 
       }
-      $this->removeEmptyKey($database[$table_name], '_foreign_keys');
+      $this->removeEmptyKey($database[$table_name], '_foreignKeys');
 
       // indexes
       $database[$table_name]['_indexes'] = array();
@@ -1053,9 +1053,9 @@ class sfPropelDatabaseSchema
   {
     foreach ($this->getTables() as $table => $columns)
     {
-      if (isset($this->database[$table]['_foreign_keys']))
+      if (isset($this->database[$table]['_foreignKeys']))
       {
-        $foreign_keys = $this->database[$table]['_foreign_keys'];
+        $foreign_keys = $this->database[$table]['_foreignKeys'];
         foreach ($foreign_keys as $foreign_key_name => $foreign_key_attributes)
         {
           // Only single foreign keys can be simplified
@@ -1064,22 +1064,22 @@ class sfPropelDatabaseSchema
             $reference = $foreign_key_attributes['references'][0];
 
             // set simple foreign key
-            $this->database[$table][$reference['local']]['foreignTable'] = $foreign_key_attributes['foreign_table'];
+            $this->database[$table][$reference['local']]['foreignTable'] = $foreign_key_attributes['foreignTable'];
             $this->database[$table][$reference['local']]['foreignReference'] = $reference['foreign'];
-            if (isset($foreign_key_attributes['on_delete']))
+            if (isset($foreign_key_attributes['onDelete']))
             {
-              $this->database[$table][$reference['local']]['onDelete'] = $foreign_key_attributes['on_delete'];
+              $this->database[$table][$reference['local']]['onDelete'] = $foreign_key_attributes['onDelete'];
             }
-            if (isset($foreign_key_attributes['on_update']))
+            if (isset($foreign_key_attributes['onUpdate']))
             {
-              $this->database[$table][$reference['local']]['onUpdate'] = $foreign_key_attributes['on_update'];
+              $this->database[$table][$reference['local']]['onUpdate'] = $foreign_key_attributes['onUpdate'];
             }
 
             // remove complex foreign key
-            unset($this->database[$table]['_foreign_keys'][$foreign_key_name]);
+            unset($this->database[$table]['_foreignKeys'][$foreign_key_name]);
           }
 
-          $this->removeEmptyKey($this->database[$table], '_foreign_keys');
+          $this->removeEmptyKey($this->database[$table], '_foreignKeys');
         }
       }
     }
