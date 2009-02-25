@@ -95,6 +95,8 @@ class Doctrine_Validator_Email
     {
         // We have different behavior here depending of OS and PHP version
         if (strtolower(substr(PHP_OS, 0, 3)) == 'win' && version_compare(PHP_VERSION, '5.3.0', '<')) {
+            $output = array();
+            
             @exec('nslookup -type=MX '.escapeshellcmd($host) . ' 2>&1', $output);
             
             if (empty($output)) {
@@ -109,7 +111,7 @@ class Doctrine_Validator_Email
             
             return false;
         } else if (function_exists('checkdnsrr')) {
-            return checkdnsrr($parts[1], 'MX');
+            return checkdnsrr($host, 'MX');
         }
         
         throw new Doctrine_Exception('Could not retrieve DNS record information. Remove check_mx = true to prevent this warning');
