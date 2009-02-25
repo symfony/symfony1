@@ -198,7 +198,7 @@ class sfWebDebug
         <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($this->getPriority($this->logger->getHighestPriority())).'">
           <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->options['image_root_path'].'/sf.png" alt="Debug toolbar" /></a>
 
-          <ul id="sfWebDebugDetails" class="sf_web_debug_menu">
+          <ul id="sfWebDebugDetails" class="sfWebDebugMenu">
             '.implode("\n", $titles).'
             <li class="last">
               <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" alt="Close" /></a>
@@ -443,7 +443,7 @@ EOF;
   vertical-align: middle;
 }
 
-#sfWebDebugBar .sf_web_debug_menu
+#sfWebDebugBar .sfWebDebugMenu
 {
   padding: 5px;
   padding-left: 0;
@@ -451,7 +451,7 @@ EOF;
   margin: 0;
 }
 
-#sfWebDebugBar .sf_web_debug_menu li
+#sfWebDebugBar .sfWebDebugMenu li
 {
   display: inline;
   list-style: none;
@@ -459,7 +459,7 @@ EOF;
   padding: 0 6px;
 }
 
-#sfWebDebugBar .sf_web_debug_menu li.last
+#sfWebDebugBar .sfWebDebugMenu li.last
 {
   margin: 0;
   padding: 0;
