@@ -86,7 +86,12 @@ EOF;
     {
       $buildAllReloadOptions[] = '--no-confirmation';
     }
-    $buildAllReload->run(array(), $buildAllReloadOptions);
+    $ret = $buildAllReload->run(array(), $buildAllReloadOptions);
+
+    if ($ret)
+    {
+      return $ret;
+    }
 
     $this->logSection('doctrine', 'running test suite');
     

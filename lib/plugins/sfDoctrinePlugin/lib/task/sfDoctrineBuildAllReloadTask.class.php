@@ -74,8 +74,13 @@ EOF;
     {
       $dropDbOptions[] = '--application=' . $options['application'];
     }
-    $dropDb->run(array(), $dropDbOptions);
-    
+    $ret = $dropDb->run(array(), $dropDbOptions);
+
+    if ($ret)
+    {
+      return $ret;
+    }
+
     $buildAllLoad = new sfDoctrineBuildAllLoadTask($this->dispatcher, $this->formatter);
     $buildAllLoad->setCommandApplication($this->commandApplication);
 
