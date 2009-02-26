@@ -10,7 +10,6 @@
 
 // setup expected test environment (per check_configuration.php)
 ini_set('magic_quotes_runtime', 'off');
-ini_set('register_globals', 'off');
 ini_set('session.auto_start', 'off');
 ini_set('arg_separator.output', '&amp;');
 ini_set('allow_url_fopen', 'on');

@@ -48,7 +48,6 @@ class sfProjectConfiguration
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
 
     ini_set('magic_quotes_runtime', 'off');
-    ini_set('register_globals', 'off');
 
     sfConfig::set('sf_symfony_lib_dir', $this->symfonyLibDir);
 
