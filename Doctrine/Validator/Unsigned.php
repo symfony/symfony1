@@ -52,14 +52,7 @@ class Doctrine_Validator_Unsigned
             return false;
         }
 
-        if(strpos($value, '.') === false)
-        {
-            $number = (int) $value;
-        } else {
-            $number = (float) $value;
-        }
-
-        if ((string) $number == $value && $number >= 0)
+        if ((double) $value > 0)
         {
             return true;
         }
