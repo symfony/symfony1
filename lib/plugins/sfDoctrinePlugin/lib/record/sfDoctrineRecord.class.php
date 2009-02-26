@@ -174,8 +174,10 @@ abstract class sfDoctrineRecord extends Doctrine_Record
           if ($table->hasField($underScored))
           {
             $entityName = $underScored;
-          } else {
+          } else if ($table->hasField(strtolower($name))) {
             $entityName = strtolower($name);
+          } else {
+            $entityName = $underScored;
           }
         }
 

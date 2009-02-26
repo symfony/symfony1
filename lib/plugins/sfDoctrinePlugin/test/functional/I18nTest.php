@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $article = new Article();
 $article->title = 'test';
@@ -24,6 +24,10 @@ $t->is($article->Translation['fr']->title, 'fr test');
 $t->is($article->getTitle(), $article->title);
 $article->setTitle('test');
 $t->is($article->getTitle(), 'test');
+
+$article->setTestColumn('test');
+$t->is($article->getTestColumn(), 'test');
+$t->is($article->Translation['fr']['test_column'], 'test');
 
 $article->free(true);
 
@@ -81,12 +85,14 @@ $values = array(
   array(
     'title' => 'english title',
     'body' => 'english body',
+    'test_column' => '',
     'slug' => '',
   ),
   'fr' => 
   array(
     'title' => 'french title',
     'body' => 'french body',
+    'test_column' => '',
     'slug' => '',
   ),
   'id' => null,
@@ -111,6 +117,7 @@ $expected = array(
       'id' => $article->id,
       'title' => 'english title',
       'body' => 'english body',
+      'test_column' => '',
       'lang' => 'en',
       'slug' => 'english-title',
     ),
@@ -119,6 +126,7 @@ $expected = array(
       'id' => $article->id,
       'title' => 'french title',
       'body' => 'french body',
+      'test_column' => '',
       'lang' => 'fr',
       'slug' => 'french-title',
     ),
@@ -145,6 +153,7 @@ $expected = array(
     'id' => $article->id,
     'title' => 'english title',
     'body' => 'english body',
+    'test_column' => '',
     'lang' => 'en',
     'slug' => 'english-title',
   ),
@@ -153,6 +162,7 @@ $expected = array(
     'id' => $article->id,
     'title' => 'french title',
     'body' => 'french body',
+    'test_column' => '',
     'lang' => 'fr',
     'slug' => 'french-title',
   ),
@@ -164,7 +174,6 @@ $expected = array(
 );
 
 $t->is($articleForm->getDefaults(), $expected);
-
 
 $article = new Article();
 sfContext::getInstance()->getUser()->setCulture('en');
