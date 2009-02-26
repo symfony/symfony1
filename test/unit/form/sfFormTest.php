@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(137, new lime_output_color());
+$t = new lime_test(138, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -805,6 +805,13 @@ class MyWidget extends sfWidgetForm
     return array('/path/to/a/'.$this->getOption('name').'.css' => 'all');
   }
 }
+
+$f1 = new TestForm1();
+$f1->getWidgetSchema()->moveField('a', 'last');
+$f2 = new TestForm2();
+$f2->mergeForm($f1);
+
+$t->is_deeply(array_keys($f2->getWidgetSchema()->getFields()), array('c', 'd', 'b', 'a'), 'mergeForm() merges fields in the correct order');
 
 // ->getJavaScripts() ->getStylesheets()
 $t->diag('->getJavaScripts() ->getStylesheets()');

@@ -466,9 +466,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $this->defaults = array_merge($this->defaults, $form->getDefaults());
 
-    foreach ($form->getWidgetSchema()->getFields() as $field => $widget)
+    foreach ($form->getWidgetSchema()->getPositions() as $field)
     {
-      $this->widgetSchema[$field] = $widget;
+      $this->widgetSchema[$field] = $form->getWidget($field);
     }
 
     foreach ($form->getValidatorSchema()->getFields() as $field => $validator)
