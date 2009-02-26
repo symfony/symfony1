@@ -326,7 +326,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     }
     else if ($column->isForeignKey())
     {
-      $widgetSubclass = 'DoctrineSelect';
+      $widgetSubclass = 'DoctrineChoice';
     }
 
     return sprintf('sfWidgetForm%s', $widgetSubclass);
