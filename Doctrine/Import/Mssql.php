@@ -153,7 +153,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
      */
     public function listTables($database = null)
     {
-        $sql = "SELECT name FROM sysobjects WHERE type = 'U' AND name <> 'dtproperties' ORDER BY name";
+        $sql = "SELECT name FROM sysobjects WHERE type = 'U' AND name <> 'dtproperties' AND name <> 'sysdiagrams' ORDER BY name";
 
         return $this->conn->fetchColumn($sql);
     }
