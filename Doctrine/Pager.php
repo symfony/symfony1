@@ -105,7 +105,7 @@ class Doctrine_Pager
     protected function _initialize($params = array())
     {
         // retrieve the number of items found
-        $countQuery = clone $this->getCountQuery();
+        $countQuery = $this->getCountQuery();
         $count = $countQuery->count($this->getCountQueryParams($params));
 
         $this->_setNumResults($count);

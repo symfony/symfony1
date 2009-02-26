@@ -998,7 +998,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      *
      * @return string   the query sql from part
      */
-    protected function _buildSqlFromPart()
+    protected function _buildSqlFromPart($ignorePending = false)
     {
         $q = '';
         
@@ -1006,7 +1006,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $e = explode(' ', $part);
             
             if ($k === 0) {
-                if ($this->_type == self::SELECT) {
+                if ( ! $ignorePending && $this->_type == self::SELECT) {
                     // We may still have pending conditions
                     $alias = count($e) > 1 
                         ? $this->getComponentAlias($e[1]) 
@@ -1047,7 +1047,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
                 }
 
-                if (isset($this->_pendingJoinConditions[$k])) {
+                if ( ! $ignorePending && isset($this->_pendingJoinConditions[$k])) {
                     if (strpos($part, ' ON ') !== false) {
                         $part .= ' AND ';
                     } else {
@@ -1089,7 +1089,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     
             $part = $parser->parse($this->_pendingJoinConditions[$alias]);
 
-            unset($this->_pendingJoinConditions[$alias]);
+            // FIX #1860 and #1876: Cannot unset them, otherwise query cannot be reused later
+            //unset($this->_pendingJoinConditions[$alias]);
         }
         
         return $part;
@@ -1926,7 +1927,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $q = 'SELECT COUNT(*) AS ' . $this->_conn->quoteIdentifier('num_results') . ' FROM ';
 
         // Build the from clause
-        $from = $this->_buildSqlFromPart();
+        $from = $this->_buildSqlFromPart(true);
 
         // Append column aggregation inheritance (if needed)
         $string = $this->getInheritanceCondition($rootAlias);
