@@ -174,10 +174,10 @@ class sfFormField
   {
     if (is_null($this->parent))
     {
-      throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
+      throw new LogicException(sprintf('Unable to render the help for "%s".', $this->name));
     }
 
-    return $this->parent->getWidget()->getHelp($this->name);
+    return $this->parent->getWidget()->getFormFormatter()->formatHelp($this->parent->getWidget()->getHelp($this->name));
   }
 
   /**
