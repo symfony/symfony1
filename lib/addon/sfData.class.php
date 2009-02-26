@@ -99,7 +99,7 @@ abstract class sfData
   {
     if (is_null($element))
     {
-      $directory_or_file = sfConfig::get('sf_data_dir').'/fixtures';
+      $element = sfConfig::get('sf_data_dir').'/fixtures';
     }
 
     $files = array();
@@ -116,7 +116,7 @@ abstract class sfData
     }
     else if (is_dir($element))
     {
-      $files = sfFinder::type('file')->name('*.yml')->in($element);
+      $files = sfFinder::type('file')->name('*.yml')->sort_by_name()->in($element);
     }
     else
     {
