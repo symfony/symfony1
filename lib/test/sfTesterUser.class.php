@@ -105,7 +105,7 @@ class sfTesterUser extends sfTester
    */
   public function hasCredential($credentials, $boolean = true, $useAnd = true)
   {
-    $this->tester->is($this->user->hasCredential($credentials, $useAnd), $boolean, sprintf('user has %sthe right credentials', $boolean ? '' : 'not '));
+    $this->tester->is($this->user->hasCredential($credentials, $useAnd), $boolean, sprintf('user has %s the right credentials', $boolean ? '' : 'not '));
 
     return $this->getObjectToReturn();
   }
