@@ -1334,10 +1334,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
             foreach ($this->_sqlParts['orderby'] as $part) {
                 // Remove identifier quoting if it exists
-                $callback = create_function('$e', 'return trim($e, \'[]`"\');');
-                $part = trim(implode('.', array_map($callback, explode('.', $part))));
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
-                $part = trim($e[0]);
+                $part_original = trim($e[0]);
+                $callback = create_function('$e', 'return trim($e, \'[]`"\');');
+                $part = trim(implode('.', array_map($callback, explode('.', $part_original))));
 
                 if (strpos($part, '.') === false) {
                     continue;
@@ -1350,7 +1350,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
                 // don't add primarykey column (its already in the select clause)
                 if ($part !== $primaryKey) {
-                    $subquery .= ', ' . $part;
+                    $subquery .= ', ' . $part_original;
                 }
             }
         }
