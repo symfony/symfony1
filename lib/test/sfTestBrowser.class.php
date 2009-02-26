@@ -45,6 +45,10 @@ class sfTestBrowser extends sfTestFunctional
       {
         $lime = new lime_test(null, isset($options['output']) ? $options['output'] : new lime_output_color());
       }
+      else
+      {
+        $lime = null;
+      }
 
       parent::__construct($browser, $lime);
     }
