@@ -484,7 +484,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     $max = 0;
     foreach ($this->getColumns() as $column)
     {
-      if (($m = strlen($column->getName())) > $max)
+      if (($m = strlen($column->getFieldName())) > $max)
       {
         $max = $m;
       }

@@ -17,7 +17,7 @@ class Base<?php echo $this->table->getOption('name') ?>FormFilter extends BaseFo
     $this->setWidgets(array(
 <?php foreach ($this->getColumns() as $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
-      '<?php echo $column->getFieldName() ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
+      '<?php echo $column->getFieldName() ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getFieldName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
       '<?php echo $this->underscore($relation['alias']) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($relation['alias']).'_list')) ?> => new sfWidgetFormDoctrineChoiceMany(array('model' => '<?php echo $relation['table']->getOption('name') ?>')),
@@ -27,7 +27,7 @@ class Base<?php echo $this->table->getOption('name') ?>FormFilter extends BaseFo
     $this->setValidators(array(
 <?php foreach ($this->getColumns() as $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
-      '<?php echo $column->getFieldName() ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => <?php echo $this->getValidatorForColumn($column) ?>,
+      '<?php echo $column->getFieldName() ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getFieldName())) ?> => <?php echo $this->getValidatorForColumn($column) ?>,
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
       '<?php echo $this->underscore($relation['alias']) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($relation['alias']).'_list')) ?> => new sfValidatorDoctrineChoiceMany(array('model' => '<?php echo $relation['table']->getOption('name') ?>', 'required' => false)),
