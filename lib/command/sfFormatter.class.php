@@ -19,10 +19,15 @@
 class sfFormatter
 {
   protected
-    $size = 65;
+    $size = null;
 
-  function __construct($maxLineSize = 65)
+  function __construct($maxLineSize = null)
   {
+    if (is_null($maxLineSize))
+    {
+      $maxLineSize = ctype_digit($cols = trim(shell_exec('tput cols'))) ? $cols : 65;
+    }
+
     $this->size = $maxLineSize;
   }
 
