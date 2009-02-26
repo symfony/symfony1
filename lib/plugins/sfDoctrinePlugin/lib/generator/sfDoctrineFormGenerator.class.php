@@ -456,7 +456,6 @@ class sfDoctrineFormGenerator extends sfGenerator
           }
           if (isset($column['regexp']))
           {
-            $options = array();
             $options[] = sprintf('\'pattern\' => \'%s\'', $column['regexp']);
           }
           break;
