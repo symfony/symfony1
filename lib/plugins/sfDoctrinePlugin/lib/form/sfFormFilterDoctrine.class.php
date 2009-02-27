@@ -130,8 +130,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
   {
     $values = $this->processValues($values);
 
-    $query = Doctrine_Query::create()
-      ->from($this->getModelName() . ' r');
+    $query = Doctrine::getTable($this->getModelName())->createQuery('r');
 
     if ($this->tableMethodName)
     {
