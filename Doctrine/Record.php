@@ -1242,8 +1242,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     protected function _get($fieldName, $load = true)
     {
-        $fieldName = (string) $fieldName;
-
         $value = self::$_null;
 
         if (array_key_exists($fieldName, $this->_values)) {
