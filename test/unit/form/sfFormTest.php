@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(139, new lime_output_color());
+$t = new lime_test(140, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -795,6 +795,14 @@ $t->ok(array_key_exists('d', $errorSchema->getErrors()), 'mergeForm() merges err
 
 $f1 = new TestForm1();
 $f1->getWidgetSchema()->moveField('a', 'last');
+
+// is moved field well positioned when accessed with iterator interface? (#5551)
+foreach($f1 as $f1name => $f1field)
+{
+  $t->is ($f1name, 'b', 'iterating on form takes in account ->moveField() operations.');
+  break;
+}
+
 $f2 = new TestForm2();
 $f2->mergeForm($f1);
 
