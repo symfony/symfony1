@@ -274,7 +274,7 @@ abstract class sfRouting
       }
     }
 
-    if ($absolute && isset($this->options['context']['host']))
+    if ($absolute && isset($this->options['context']['host']) && 0 !== strpos($url, 'http'))
     {
       $url = 'http'.(isset($this->options['context']['is_secure']) && $this->options['context']['is_secure'] ? 's' : '').'://'.$this->options['context']['host'].$url;
     }

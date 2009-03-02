@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,17 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(121, new lime_output_color());
+$t = new lime_test(123, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
+  public function initialize(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
+  {
+    parent::initialize($dispatcher, $cache, $options);
+
+    $this->options['context']['host'] = 'localhost';
+  }
+
   public function parse($url)
   {
     $parameters = parent::parse($url);
@@ -25,6 +32,16 @@ class sfPatternRoutingTest extends sfPatternRouting
   public function getCurrentRouteName()
   {
     return $this->current_route_name;
+  }
+}
+
+class sfAlwaysAbsoluteRoute extends sfRoute
+{
+  public function generate($params, $context = array(), $absolute = false)
+  {
+    $url = parent::generate($params, $context, $absolute);
+
+    return 'http://'.$context['host'].$url;
   }
 }
 
@@ -537,3 +554,8 @@ $t->is($r->parse($url), $params, 'parse /customer/:param1/:action/* route');
 $r->clearRoutes();
 $r->connect('test', new sfRoute('/customer/:id/:id_name', array('module' => 'default')));
 $t->is($r->generate('', array('id' => 2, 'id_name' => 'fabien')), '/customer/2/fabien', '->generate() first replaces the longest variable names');
+
+$r->clearRoutes();
+$r->connect('default', new sfAlwaysAbsoluteRoute('/:module/:action'));
+$t->is($r->generate('', array('module' => 'foo', 'action' => 'bar')), 'http://localhost/foo/bar', '->generate() allows route to generate absolute urls');
+$t->is($r->generate('', array('module' => 'foo', 'action' => 'bar'), true), 'http://localhost/foo/bar', '->generate() does not double-absolutize urls');
