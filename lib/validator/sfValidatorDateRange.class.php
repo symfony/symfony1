@@ -25,6 +25,8 @@ class sfValidatorDateRange extends sfValidatorBase
    *
    *  * from_date:   The from date validator (required)
    *  * to_date:     The to date validator (required)
+   *  * from_field:  The name of the "from" date field (optional, default: from)
+   *  * to_field:    The name of the "to" date field (optional, default: to)
    *
    * @param array $options    An array of options
    * @param array $messages   An array of error messages
@@ -37,6 +39,8 @@ class sfValidatorDateRange extends sfValidatorBase
 
     $this->addRequiredOption('from_date');
     $this->addRequiredOption('to_date');
+    $this->addOption('from_field', 'from');
+    $this->addOption('to_field', 'to');
   }
 
   /**
@@ -44,12 +48,15 @@ class sfValidatorDateRange extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $value['from'] = $this->getOption('from_date')->clean(isset($value['from']) ? $value['from'] : null);
-    $value['to']   = $this->getOption('to_date')->clean(isset($value['to']) ? $value['to'] : null);
+    $fromField = $this->getOption('from_field');
+    $toField   = $this->getOption('to_field');
 
-    if ($value['from'] && $value['to'])
+    $value[$fromField] = $this->getOption('from_date')->clean(isset($value[$fromField]) ? $value[$fromField] : null);
+    $value[$toField]   = $this->getOption('to_date')->clean(isset($value[$toField]) ? $value[$toField] : null);
+
+    if ($value[$fromField] && $value[$toField])
     {
-      $v = new sfValidatorSchemaCompare('from', sfValidatorSchemaCompare::LESS_THAN_EQUAL, 'to', array('throw_global_error' => true), array('invalid' => $this->getMessage('invalid')));
+      $v = new sfValidatorSchemaCompare($fromField, sfValidatorSchemaCompare::LESS_THAN_EQUAL, $toField, array('throw_global_error' => true), array('invalid' => $this->getMessage('invalid')));
       $v->clean($value);
     }
 

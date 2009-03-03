@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 try
 {
@@ -46,3 +46,26 @@ catch (sfValidatorError $e)
   $t->pass('->clean() throws a sfValidatorError if the from date is after the to date');
   $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
+
+// custom field names
+$t->diag('Custom field names options');
+
+$v = new sfValidatorDateRange(array(
+  'from_date'  => new sfValidatorDate(array('required' => true)),
+  'to_date'    => new sfValidatorDate(array('required' => true)),
+  'from_field' => 'custom_from',
+  'to_field'   => 'custom_to',
+));
+
+try
+{
+  $v->clean(array('from' => '2008-01-01', 'to' => '1998-01-01'));
+  $t->fail('->clean() take into account custom fields');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() take into account custom fields');
+}
+
+$values = $v->clean(array('custom_from' => '2008-01-01', 'custom_to' => '2009-01-01'));
+$t->is($values, array('custom_from' => '2008-01-01', 'custom_to' => '2009-01-01'), '->clean() returns the from and to values for custom field names');
