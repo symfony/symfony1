@@ -52,7 +52,7 @@ class Doctrine_Validator_Unsigned
             return false;
         }
 
-        if ((double) $value > 0)
+        if ((double) $value >= 0)
         {
             return true;
         }
