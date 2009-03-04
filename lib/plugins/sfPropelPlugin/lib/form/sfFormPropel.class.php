@@ -232,7 +232,7 @@ abstract class sfFormPropel extends sfForm
 
     foreach ($forms as $name => $form)
     {
-      if (!is_array($values[$name]))
+      if (!isset($values[$name]) || !is_array($values[$name]))
       {
         continue;
       }
