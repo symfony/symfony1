@@ -179,7 +179,7 @@ class lime_test
     $type = is_object($var) ? get_class($var) : gettype($var);
     if (!$result = $this->ok($type == $class, $message))
     {
-      $this->output->diag(sprintf("      isa_ok isn't a '%s' it's a '%s'", $class, $type));
+      $this->output->diag(sprintf("      variable isn't a '%s' it's a '%s'", $class, $type));
     }
 
     return $result;
