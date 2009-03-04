@@ -149,14 +149,17 @@ class Doctrine_Migration_Diff
         foreach ($to as $className => $info) {
             // If the from doesn't have this class then it is a new table
             if ( ! isset($from[$className])) {
+                $names = array('type', 'charset', 'collate', 'indexes', 'foreignKeys', 'primary');
+                $options = array();
+                foreach ($names as $name) {
+                    if (isset($info['options'][$name]) && $info['options'][$name]) {
+                        $options[$name] = $info['options'][$name];
+                    }
+                }
+
                 $table = array('tableName' => $info['tableName'],
                                'columns'   => $info['columns'],
-                               'options'   => array('type'        => $info['options']['type'],
-                                                    'charset'     => $info['options']['charset'],
-                                                    'collate'     => $info['options']['collate'],
-                                                    'indexes'     => $info['options']['indexes'],
-                                                    'foreignKeys' => $info['options']['foreignKeys'],
-                                                    'primary'     => $info['options']['primary']));
+                               'options'   => $options);
                 $this->_changes['created_tables'][$info['tableName']] = $table;
             }
             // Check for new and changed columns
@@ -233,6 +236,7 @@ class Doctrine_Migration_Diff
                 }
             }
         }
+
         return $this->_changes;
     }
 
