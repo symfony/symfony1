@@ -1766,7 +1766,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $value = null;
             }
 
-            $a[$column] = $value;
+            $a[$column] = $this->get($column);
         }
 
         if ($this->_table->getIdentifierType() ==  Doctrine::IDENTIFIER_AUTOINC) {
