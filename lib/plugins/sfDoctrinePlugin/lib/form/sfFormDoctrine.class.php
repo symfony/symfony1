@@ -206,12 +206,25 @@ abstract class sfFormDoctrine extends sfForm
 
     $values = $this->processValues($values);
 
-    $this->object->fromArray($values);
+    $this->doUpdateObject($values);
 
     // embedded forms
     $this->updateObjectEmbeddedForms($values);
 
     return $this->object;
+  }
+
+  /**
+   * Updates the values of the object with the cleaned up values.
+   *
+   * If you want to add some logic before updating or update other associated
+   * objects, this is the method to override.
+   *
+   * @param array $values An array of values
+   */
+  protected function doUpdateObject($values)
+  {
+    $this->object->fromArray($values);
   }
 
   /**
