@@ -414,7 +414,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
           foreach ($definitions as $className => $definition) {
               $relClasses = array();
               foreach ($definition['relations'] as $alias => $relation) {
-                  if (in_array($className, $relClasses) || isset($definitions[$relation['class']]['relations'][$className])) {
+                  if (in_array($relation['class'], $relClasses) || isset($definitions[$relation['class']]['relations'][$className])) {
                       $alias = $className . '_' . (count($relClasses) + 1);
                   } else {
                       $alias = $className;
