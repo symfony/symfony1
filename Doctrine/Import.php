@@ -419,7 +419,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
                   } else {
                       $alias = $className;
                   }
-                  $relClasses[] = $className;
+                  $relClasses[] = $relation['class'];
                   $definitions[$relation['class']]['relations'][$alias] = array(
                     'type' => Doctrine_Relation::MANY,
                     'alias' => $alias,
