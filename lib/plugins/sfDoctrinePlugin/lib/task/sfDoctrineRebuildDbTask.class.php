@@ -52,10 +52,10 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $baseOptions = array(
+    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
       '--application='.$this->configuration->getApplication(),
       '--env='.$options['env'],
-    );
+    ) : array();
 
     $dropDbOptions = $baseOptions;
     if (isset($options['no-confirmation']) && $options['no-confirmation'])

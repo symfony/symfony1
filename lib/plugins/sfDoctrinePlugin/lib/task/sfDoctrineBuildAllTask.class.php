@@ -65,10 +65,10 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $baseOptions = array(
+    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
       '--application='.$this->configuration->getApplication(),
       '--env='.$options['env'],
-    );
+    ) : array();
 
     $buildDb = new sfDoctrineBuildDbTask($this->dispatcher, $this->formatter);
     $buildDb->setCommandApplication($this->commandApplication);
