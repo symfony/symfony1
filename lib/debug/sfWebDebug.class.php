@@ -418,6 +418,7 @@ EOF;
 #sfWebDebug img
 {
   border: 0;
+  display: inline;
 }
 
 #sfWebDebugBar
