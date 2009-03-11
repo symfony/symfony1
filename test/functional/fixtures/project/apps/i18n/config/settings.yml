@@ -95,6 +95,5 @@ all:
 #    web_debug_web_dir: /sf/sf_web_debug
 #
 #    check_lock:            off
-#    check_symfony_version: off
 #
 #    use_process_cache:     on
