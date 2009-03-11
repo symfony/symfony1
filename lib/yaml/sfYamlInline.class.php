@@ -213,7 +213,7 @@ class sfYamlInline
     if ('"' == $delimiter)
     {
       // evaluate the string
-      $buffer = str_replace('\\n', "\n", $buffer);
+      $buffer = str_replace(array('\\n', '\\r'), array("\n", "\r"), $buffer);
     }
 
     return $buffer;
