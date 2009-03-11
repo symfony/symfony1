@@ -552,7 +552,7 @@ abstract class sfTestFunctionalBase
       return false;
     }
 
-    $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
+    $msg = sprintf('PHP sent a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
     switch ($errno)
     {
       case E_WARNING:
