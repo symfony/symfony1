@@ -57,7 +57,8 @@ The following methods and functions have been removed in symfony 1.3:
   * `sfApplicationConfiguration::checkSymfonyVersion()`: see below for the
     explanation (`check_symfony_version` setting)
 
-The following settings have been removed from symfony 1.3:
+The following settings (managed in the `settings.yml` configuration file) have
+been removed from symfony 1.3:
 
   * `check_symfony_version`: This setting was introduced years ago to allow
     automatic cache cleaning in case of a change of the symfony version. It
@@ -67,3 +68,8 @@ The following settings have been removed from symfony 1.3:
     project), the settings does not make sense anymore. Moreover, when the
     setting is set to `on`, the check adds a small overhead to each request,
     as we need to get the content of a file.
+
+  * `max_forwards`: This settings controls the number of forwards allowed
+    before symfony throws an exception. Making it configurable has no value.
+    If you need more than 5 forwards, you have both a conception problem and a
+    performance one.

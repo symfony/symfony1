@@ -60,7 +60,6 @@ default:
 
     # Miscellaneous
     strip_comments:         on         # Remove comments in core framework classes as defined in the core_compile.yml
-    max_forwards:           5
 
     # Logging
     logging_enabled:        on

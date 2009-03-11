@@ -24,7 +24,6 @@ abstract class sfController
     $context           = null,
     $dispatcher        = null,
     $controllerClasses = array(),
-    $maxForwards       = 5,
     $renderMode        = sfView::RENDER_CLIENT;
 
   /**
@@ -46,9 +45,6 @@ abstract class sfController
   {
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
-
-    // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards');
   }
 
   /**
@@ -182,10 +178,10 @@ abstract class sfController
     $moduleName = preg_replace('/[^a-z0-9_]+/i', '', $moduleName);
     $actionName = preg_replace('/[^a-z0-9_]+/i', '', $actionName);
 
-    if ($this->getActionStack()->getSize() >= $this->maxForwards)
+    if ($this->getActionStack()->getSize() >= 5)
     {
       // let's kill this party before it turns into cpu cycle hell
-      throw new sfForwardException(sprintf('Too many forwards have been detected for this request (> %d).', $this->maxForwards));
+      throw new sfForwardException('Too many forwards have been detected for this request.');
     }
 
     // check for a module generator config file

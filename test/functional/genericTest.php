@@ -107,7 +107,7 @@ $b->
   checkResponseElement('body', '/Login Required/i')
 ;
 
-// settings.yml: max_forwards
+// Max forwards
 $b->
   get('/configSettingsMaxForwards/selfForward')->
   isStatusCode(500)->
