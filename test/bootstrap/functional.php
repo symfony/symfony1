@@ -34,15 +34,15 @@ function sf_functional_test_shutdown()
   sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
   sfToolkit::clearDirectory(sfConfig::get('sf_log_dir'));
 
-  $sf_root_dir = sfToolkit::getTmpDir().'/sf_test_project';
+  $sf_root_dir = sys_get_temp_dir().'/sf_test_project';
   if(is_dir($sf_root_dir))
   {
     sfToolkit::clearDirectory($sf_root_dir);
     @rmdir($sf_root_dir);
   }
 
-  $sessions = glob(sfToolkit::getTmpDir().'/sessions*');
-  $tmp_files = glob(sfToolkit::getTmpDir().'/sf*');
+  $sessions = glob(sys_get_temp_dir().'/sessions*');
+  $tmp_files = glob(sys_get_temp_dir().'/sf*');
   $files = array_merge(empty($sessions) ? array() : $sessions, empty($tmp_files) ? array() : $tmp_files);
   foreach ($files as $file)
   {

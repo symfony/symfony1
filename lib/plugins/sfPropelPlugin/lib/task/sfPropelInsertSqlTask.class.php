@@ -103,7 +103,7 @@ EOF;
       $sqls[$connection][] = $file;
     }
 
-    $this->tmpDir = sfToolkit::getTmpDir().'/propel_insert_sql_'.rand(11111, 99999);
+    $this->tmpDir = sys_get_temp_dir().'/propel_insert_sql_'.rand(11111, 99999);
     mkdir($this->tmpDir, 0777, true);
     foreach ($sqls as $connection => $files)
     {

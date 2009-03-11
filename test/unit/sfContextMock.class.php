@@ -31,7 +31,7 @@ class sfContext
     {
       self::$instance = new sfContext();
 
-      self::$instance->sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+      self::$instance->sessionPath = sys_get_temp_dir().'/sessions_'.rand(11111, 99999);
       self::$instance->storage = new sfSessionTestStorage(array('session_path' => self::$instance->sessionPath));
 
       self::$instance->dispatcher = new sfEventDispatcher();

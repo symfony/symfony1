@@ -23,7 +23,7 @@ class MySessionStorage extends sfSessionTestStorage
 }
 
 $dispatcher = new sfEventDispatcher();
-$sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+$sessionPath = sys_get_temp_dir().'/sessions_'.rand(11111, 99999);
 $storage = new MySessionStorage(array('session_path' => $sessionPath));
 
 $user = new sfBasicSecurityUser($dispatcher, $storage);

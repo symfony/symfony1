@@ -24,7 +24,7 @@ class TestConfiguration extends sfApplicationConfiguration
   }
 }
 
-$configuration = new TestConfiguration('test', true, sfConfig::get('sf_test_cache_dir', sfToolkit::getTmpDir()));
+$configuration = new TestConfiguration('test', true, sfConfig::get('sf_test_cache_dir', sys_get_temp_dir()));
 $dispatcher = $configuration->getEventDispatcher();
 $cache = new sfNoCache();
 

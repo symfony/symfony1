@@ -17,7 +17,7 @@ class sf_test_project
   {
     $this->t = $t;
 
-    $this->tmp_dir = sfToolkit::getTmpDir().DS.'sf_test_project';
+    $this->tmp_dir = sys_get_temp_dir().DS.'sf_test_project';
 
     if (is_dir($this->tmp_dir))
     {

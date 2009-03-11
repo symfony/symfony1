@@ -15,7 +15,7 @@ $t = new lime_test(32, new lime_output_color());
 $_SERVER['session_id'] = 'test';
 
 $dispatcher = new sfEventDispatcher();
-$sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+$sessionPath = sys_get_temp_dir().'/sessions_'.rand(11111, 99999);
 $storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
 
 $user = new sfUser($dispatcher, $storage);

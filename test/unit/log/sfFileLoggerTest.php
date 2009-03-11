@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(7, new lime_output_color());
 
 require_once(dirname(__FILE__).'/../../../lib/util/sfToolkit.class.php');
-$file = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'sf_log_file.txt';
+$file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'sf_log_file.txt';
 if (file_exists($file))
 {
   unlink($file);
