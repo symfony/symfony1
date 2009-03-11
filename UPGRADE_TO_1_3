@@ -43,10 +43,27 @@ To upgrade a project:
 The remaining sections explain the main changes made in symfony 1.3 that need
 some kind of upgrade (automatic or not).
 
-Deprecated methods and functions
---------------------------------
+Deprecated/Removed settings, methods and functions
+--------------------------------------------------
 
-The following methods have been deprecated in symfony 1.3 and will be removed
-in symfony 1.4:
+The following methods and functions have been deprecated in symfony 1.3 and
+will be removed in symfony 1.4:
 
-  * `sfToolkit::getTmpDir()`: You can replace all occurrences of this method by `sys_get_temp_dir()`
+  * `sfToolkit::getTmpDir()`: You can replace all occurrences of this method
+    by `sys_get_temp_dir()`
+
+The following methods and functions have been removed in symfony 1.3:
+
+  * `sfApplicationConfiguration::checkSymfonyVersion()`: see below for the
+    explanation (`check_symfony_version` setting)
+
+The following settings have been removed from symfony 1.3:
+
+  * `check_symfony_version`: This setting was introduced years ago to allow
+    automatic cache cleaning in case of a change of the symfony version. It
+    was mainly useful for shared hosting configuration where the symfony
+    version is shared amongst all customers. As this is bad practice since
+    symfony 1.1 (you need to embed the symfony version in each of your
+    project), the settings does not make sense anymore. Moreover, when the
+    setting is set to `on`, the check adds a small overhead to each request,
+    as we need to get the content of a file.

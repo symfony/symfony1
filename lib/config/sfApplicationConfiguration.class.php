@@ -54,11 +54,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $this->checkLock();
     }
 
-    if (sfConfig::get('sf_check_symfony_version'))
-    {
-      $this->checkSymfonyVersion();
-    }
-
     $this->initialize();
 
     // store current sfConfig values
@@ -247,21 +242,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       }
 
       die(1);
-    }
-  }
-
-  /**
-   * Checks symfony version and clears cache if recent update.
-   *
-   * @return void
-   */
-  public function checkSymfonyVersion()
-  {
-    // recent symfony update?
-    if (SYMFONY_VERSION != @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION'))
-    {
-      // clear cache
-      sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));
     }
   }
 
