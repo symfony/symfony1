@@ -76,8 +76,6 @@ all:
 #
 #    enabled_modules:        [default]
 #
-#    strip_comments:         on
-#
 #    etag:                   on
 #
 #    validation_error_prefix:    ' &darr;&nbsp;'

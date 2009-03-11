@@ -73,3 +73,11 @@ been removed from symfony 1.3:
     before symfony throws an exception. Making it configurable has no value.
     If you need more than 5 forwards, you have both a conception problem and a
     performance one.
+
+  * `strip_comments`: The `strip_comments` was introduced to be able to
+    disable the comment stripping because of some bugs in the tokenizer of
+    some PHP 5.0.X versions. It was also used later on to avoid large memory
+    consumption when the Tokenizer extension was not compiled with PHP. The
+    first problem is not relevant anymore as the minimum version of PHP needed
+    is 5.2 and the second one has already been fixed by removing the regular
+    expression that simulated the comment stripping.

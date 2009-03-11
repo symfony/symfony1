@@ -78,8 +78,6 @@ all:
 #
 #    enabled_modules:        [default]
 #
-#    strip_comments:         on
-#
 #    etag:                   on
 #
 #    autoloading_functions: ~

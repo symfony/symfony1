@@ -180,7 +180,7 @@ class sfToolkit
    */
   public static function stripComments($source)
   {
-    if (!sfConfig::get('sf_strip_comments', true) || !function_exists('token_get_all'))
+    if (!function_exists('token_get_all'))
     {
       return $source;
     }

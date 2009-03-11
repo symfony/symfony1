@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(113, new lime_output_color());
+$t = new lime_test(112, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -114,10 +114,6 @@ EOF;
 $stripped_php = '<?php $i = 1; ';
 
 $t->is(preg_replace('/\s*(\r?\n)+/', ' ', sfToolkit::stripComments($php)), $stripped_php, '::stripComments() strip all comments from a php string');
-sfConfig::set('sf_strip_comments', false);
-$t->is(sfToolkit::stripComments($php), $php, '::stripComments() do nothing if "sf_strip_comments" is false');
-
-sfConfig::set('sf_strip_comments', true);
 
 $php = <<<EOF
 <?php

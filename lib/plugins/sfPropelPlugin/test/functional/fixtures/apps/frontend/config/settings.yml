@@ -78,7 +78,6 @@ all:
 #    charset:                utf-8
 #
 #    # Miscellaneous
-#    strip_comments:         on         # Remove comments in core framework classes as defined in the core_compile.yml
 #    path_info_array:        SERVER
 #    path_info_key:          PATH_INFO
 #    url_format:             PATH
