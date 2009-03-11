@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(114, new lime_output_color());
+$t = new lime_test(118, new lime_output_color());
 
 // ::load()
 $t->diag('::load()');
@@ -32,6 +32,7 @@ $testsForLoad = array(
   '"foo\r\nbar"' => "foo\r\nbar",
   "'foo#bar'" => 'foo#bar',
   "'foo # bar'" => 'foo # bar',
+  "'#cfcfcf'" => '#cfcfcf',
 
   '2007-10-30' => mktime(0, 0, 0, 10, 30, 2007),
   '2007-10-30T02:59:43Z' => gmmktime(2, 59, 43, 10, 30, 2007),
@@ -85,8 +86,9 @@ $testsForDump = array(
   '.Inf' => -log(0),
   '-.Inf' => log(0),
   '"foo\r\nbar"' => "foo\r\nbar",
-  'foo#bar' => 'foo#bar',
+  "'foo#bar'" => 'foo#bar',
   "'foo # bar'" => 'foo # bar',
+  "'#cfcfcf'" => '#cfcfcf',
 
   "'a \"string\" with ''quoted strings inside'''" => 'a "string" with \'quoted strings inside\'',
 
