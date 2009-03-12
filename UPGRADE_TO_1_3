@@ -81,3 +81,31 @@ been removed from symfony 1.3:
     first problem is not relevant anymore as the minimum version of PHP needed
     is 5.2 and the second one has already been fixed by removing the regular
     expression that simulated the comment stripping.
+
+Autoloading
+-----------
+
+As of symfony 1.3, the files under the `lib/vendor/` directory are not
+autoloaded anymore by default. If you want to autoload some `lib/vendor/`
+sub-directories, add a new entry in the application `autoload.yml`
+configuration file:
+
+    [yml]
+    autoload:
+      vendor_some_lib:
+        name:      vendor_some_lib
+        path:      %SF_LIB_DIR%/vendor/some_lib_dir
+        recursive: on
+
+The automatic autoloading of the `lib/vendor/` directory was problematic for
+several reasons:
+
+  * If you put a library under the `lib/vendor/` directory that already has an
+    autoload mechanism, symfony will re-parse the files and add a bunch of
+    unneeded information in the cache
+    (see #5893 - http://trac.symfony-project.org/ticket/5893).
+
+  * If your symfony directory is not exactly named `lib/vendor/symfony/`, the
+    project autoloader will re-parse the whole symfony directory and some
+    problems might occur
+    (see #6064 - http://trac.symfony-project.org/ticket/6064).

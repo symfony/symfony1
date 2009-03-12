@@ -4,7 +4,7 @@ autoload:
     name:           project
     path:           %SF_LIB_DIR%
     recursive:      on
-    exclude:        [model, symfony]
+    exclude:        [model, vendor]
 
   project_model:
     name:           project model
