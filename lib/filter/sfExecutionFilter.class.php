@@ -10,7 +10,7 @@
  */
 
 /**
- * sfValidationExecutionFilter is the last filter registered for each filter chain. This
+ * sfExecutionFilter is the last filter registered for each filter chain. This
  * filter does all action and view execution.
  *
  * @package    symfony
