@@ -502,8 +502,8 @@ class sfWebRequest extends sfRequest
   /**
    * Gets a cookie value.
    *
-   * @param  string $name     Cookie name
-   * @param  string $default  Default value returned when no cookie with given name is found
+   * @param  string $name          Cookie name
+   * @param  string $defaultValue  Default value returned when no cookie with given name is found
    *
    * @return mixed
    */
