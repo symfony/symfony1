@@ -24,7 +24,7 @@ class sfWidgetFormI18nSelectCurrency extends sfWidgetFormSelect
    * Available options:
    *
    *  * culture:    The culture to use for internationalized strings (required)
-   *  * currencies: An array of currency codes to use (ISO 639-1)
+   *  * currencies: An array of currency codes to use (ISO 4217)
    *  * add_empty:  Whether to add a first empty value or not (false by default)
    *                If the option is not a Boolean, the value will be used as the text value
    *
