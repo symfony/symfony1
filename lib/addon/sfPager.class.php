@@ -85,7 +85,7 @@ abstract class sfPager
       $links[] = $i++;
     }
 
-    $this->currentMaxLink = $links[count($links) - 1];
+    $this->currentMaxLink = count($links) ? $links[count($links) - 1] : 1;
 
     return $links;
   }
