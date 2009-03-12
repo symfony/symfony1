@@ -79,6 +79,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     $this->addOption('filter_extra_fields', true);
 
     $this->addMessage('extra_fields', 'Unexpected extra form field named "%field%".');
+    $this->addMessage('post_max_size', 'The form submission cannot be processed. It probably means that you have uploaded a file that is too big.');
   }
 
   /**
@@ -107,6 +108,14 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     $clean  = array();
     $unused = array_keys($this->fields);
     $errorSchema = new sfValidatorErrorSchema($this);
+
+    // check that post_max_size has not been reached
+    if (isset($_SERVER['CONTENT_LENGTH']) && (int) $_SERVER['CONTENT_LENGTH'] > $this->getBytes(ini_get('post_max_size')))
+    {
+      $errorSchema->addError(new sfValidatorError($this, 'post_max_size'));
+
+      throw $errorSchema;
+    }
 
     // pre validator
     try
@@ -361,5 +370,22 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     {
       $this->postValidator = clone $this->postValidator;
     }
+  }
+
+  protected function getBytes($value)
+  {
+    $value = trim($value);
+    switch (strtolower($value[strlen($value) - 1]))
+    {
+      // The 'G' modifier is available since PHP 5.1.0
+      case 'g':
+        $value *= 1024;
+      case 'm':
+        $value *= 1024;
+      case 'k':
+        $value *= 1024;
+    }
+
+    return $value;
   }
 }
