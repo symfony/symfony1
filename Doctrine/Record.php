@@ -1646,7 +1646,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $modified = $last ? $this->_lastModified:$this->_modified;
         foreach ($modified as $fieldName) {
             if ($old) {
-                $a[$fieldName] = $this->_oldValues[$fieldName];
+                $a[$fieldName] = isset($this->_oldValues[$fieldName]) 
+                    ? $this->_oldValues[$fieldName] 
+                    : $this->getTable()->getDefaultValueOf($fieldName);
             } else {
                 $a[$fieldName] = $this->_data[$fieldName];
             }
