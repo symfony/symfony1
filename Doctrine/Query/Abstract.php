@@ -1108,7 +1108,7 @@ abstract class Doctrine_Query_Abstract
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
 
-        if ($this->_resultCache && $this->_type == self::SELECT) {
+        if ($this->_resultCache !== false && $this->_type == self::SELECT && ($this->_resultCache || $this->_conn->getAttribute(Doctrine::ATTR_RESULT_CACHE))) {
             $cacheDriver = $this->getResultCacheDriver();
             $hash = $this->calculateResultCacheHash($params);
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
