@@ -328,7 +328,7 @@ class sfCommandManager
   {
     if (false !== strpos($argument, '='))
     {
-      list($name, $value) = explode('=', $argument);
+      list($name, $value) = explode('=', $argument, 2);
 
       if (!$this->optionSet->hasOption($name))
       {
