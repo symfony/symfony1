@@ -213,7 +213,7 @@ abstract class sfValidatorBase
   /**
    * Returns all options.
    *
-   * @return array An array if options
+   * @return array An array of options
    */
   public function getOptions()
   {
@@ -223,7 +223,7 @@ abstract class sfValidatorBase
   /**
    * Changes all options.
    *
-   * @param array $values  An array if options
+   * @param array $values  An array of options
    */
   public function setOptions($values)
   {
