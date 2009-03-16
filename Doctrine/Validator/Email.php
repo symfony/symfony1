@@ -48,7 +48,7 @@ class Doctrine_Validator_Email
         if (isset($this->args) && (! isset($this->args['check_mx']) || $this->args['check_mx'] == true)) {
             $parts = explode('@', $value);
 
-            if (isset($parts[1]) && ! $this->_checkMX($parts[1])) {
+            if (isset($parts[1]) && $parts[1] && ! $this->_checkMX($parts[1])) {
                 return false;
             }
         }
