@@ -713,9 +713,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @param array $data
      * @return boolean
      */
-    public function hydrate(array $data)
+    public function hydrate(array $data, $overwriteLocalChanges = true)
     {
-        if ($this->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE)) {
+        if ($overwriteLocalChanges) {
             $this->_values = array_merge($this->_values, $this->cleanData($data));
             $this->_data = array_merge($this->_data, $data);
         } else {
@@ -723,10 +723,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->_data = array_merge($data, $this->_data);
         }
 
-        if (count($this->_values) < $this->_table->getColumnCount()) {
+        if ( ! $this->isModified() && count($this->_values) < $this->_table->getColumnCount()) {
             $this->_state = self::STATE_PROXY;
         }
-        $this->prepareIdentifiers(true);
     }
 
     /**

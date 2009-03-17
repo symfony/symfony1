@@ -1550,13 +1550,16 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $id = implode(' ', $id);
 
             if (isset($this->_identityMap[$id])) {
-                //NOTE: This is still flawed as modifications are overridden in hydrate()
                 $record = $this->_identityMap[$id];
-                $record->hydrate($this->_data);
-                if ($record->state() == Doctrine_Record::STATE_PROXY) {
-                    if (count($this->_data) >= $this->getColumnCount()) {
-                        $record->state(Doctrine_Record::STATE_CLEAN);
+                if ($record->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE)) {
+                    $record->hydrate($this->_data);
+                    if ($record->state() == Doctrine_Record::STATE_PROXY) {
+                        if (count($this->_data) >= $this->getColumnCount()) {
+                            $record->state(Doctrine_Record::STATE_CLEAN);
+                        }
                     }
+                } else {
+                    $record->hydrate($this->_data, false);
                 }
             } else {
                 $recordName = $this->getComponentName();
