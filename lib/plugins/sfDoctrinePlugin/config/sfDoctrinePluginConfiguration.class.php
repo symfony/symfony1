@@ -18,10 +18,51 @@
  */
 class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 {
+  /**
+   * @see sfPluginConfiguration
+   */
   public function initialize()
   {
-    require_once dirname(__FILE__) . '/config.php';
+    sfConfig::set('sf_orm', 'doctrine');
 
-    return true;
+    if (!sfConfig::get('sf_admin_module_web_dir'))
+    {
+      sfConfig::set('sf_admin_module_web_dir', '/sfDoctrinePlugin');
+    }
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      require_once dirname(__FILE__).'/../lib/debug/sfWebDebugPanelDoctrine.class.php';
+
+      $this->dispatcher->connect('debug.web.load_panels', array('sfWebDebugPanelDoctrine', 'listenToAddPanelEvent'));
+    }
+
+    if (!sfConfig::has('sf_doctrine_dir'))
+    {
+      // for BC
+      if (sfConfig::has('sfDoctrinePlugin_doctrine_lib_path'))
+      {
+        sfConfig::set('sf_doctrine_dir', realpath(dirname(sfConfig::get('sfDoctrinePlugin_doctrine_lib_path'))));
+      }
+      else
+      {
+        sfConfig::set('sf_doctrine_dir', realpath(dirname(__FILE__).'/../lib/vendor/doctrine'));
+      }
+    }
+
+    require_once sfConfig::get('sf_doctrine_dir').'/Doctrine.php';
+    spl_autoload_register(array('Doctrine', 'autoload'));
+
+    $manager = Doctrine_Manager::getInstance();
+    $manager->setAttribute('export', 'all');
+    $manager->setAttribute('validate', 'all');
+    $manager->setAttribute('recursive_merge_fixtures', true);
+    $manager->setAttribute('auto_accessor_override', true);
+    $manager->setAttribute('autoload_table_classes', true);
+
+    if (method_exists($this->configuration, 'configureDoctrine'))
+    {
+      $this->configuration->configureDoctrine($manager);
+    }
   }
 }
