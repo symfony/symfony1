@@ -23,7 +23,7 @@
   white-space: nowrap;
 }
 
-#sf_admin_container td, th
+#sf_admin_container td, #sf_admin_container th
 {
   border: 0;
   border-bottom: 1px solid #ddd;
