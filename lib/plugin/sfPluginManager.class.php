@@ -338,7 +338,7 @@ class sfPluginManager
         {
           try
           {
-            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel']));
+            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel'], 'install_deps' => true));
           }
           catch (sfException $e)
           {
