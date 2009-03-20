@@ -80,6 +80,10 @@ EOF;
     {
       $buildAllOptions[] = '--no-confirmation';
     }
+    if (isset($options['application']) && $options['application'])
+    {
+      $buildAllOptions[] = '--application=' . $options['application'];
+    }
     $ret = $buildAll->run(array(), $buildAllOptions);
 
     if (0 == $ret)
