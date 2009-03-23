@@ -329,29 +329,20 @@ class sfConfigCache
    */
   protected function writeCacheFile($config, $cache, $data)
   {
-    $current_umask = umask(0000);
     if (!is_dir(dirname($cache)))
     {
+      $current_umask = umask(0000);
       if (false === @mkdir(dirname($cache), 0777, true))
       {
         throw new sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', dirname($cache), $config));
       }
+      umask($current_umask);
     }
 
-    $tmpFileName = $cache.'.'.getmypid();
-
-    if (!$fp = @fopen($tmpFileName, 'wb'))
+    if (false === @file_put_contents($cache, $data))
     {
-      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $tmpFileName, $config));
+      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $cache, $config));
     }
-
-    @fwrite($fp, $data);
-    @fclose($fp);
-
-    chmod($tmpFile, 0666);
-    @unlink($cache);
-    rename($tmpFile, $cache);
-    umask($current_umask);
   }
 
   /**
