@@ -141,13 +141,6 @@ class sfAutoload
     return self::loadClass($class);
   }
 
-  public function autoloadAgain($class)
-  {
-    self::reloadClasses(true);
-
-    return self::loadClass($class);
-  }
-
   /**
    * Tries to load a class that has been specified in autoload.yml.
    *
