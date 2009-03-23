@@ -23,3 +23,33 @@ this method.
 
 This method will be removed in the symfony 1.4.
 
+Validators
+----------
+
+### Default Error Messages
+
+You can now define default error messages globally by using the
+`sfForm::setDefaultMessage()` method:
+
+    [php]
+    sfForm::setDefaultMessage('required', 'This field is required.');
+
+The previous code will override the default 'Required.' message for all
+validators.
+
+>**NOTE**
+>The `setRequiredMessage()` and `setInvalidMessage()` methods are
+>deprecated and call the new `setDefaultMessage()` method.
+
+When symfony displays an error, the error message to use is determined as
+follows:
+
+  * Symfony looks for a message passed when the validator was created (via the
+    second argument of the validator constructor);
+
+  * If it is not defined, it looks for a default message defined with
+    the `setDefaultMessage()` method;
+
+  * If it is not defined, it falls back to the default message defined by the
+    validator itself (when the message has been added with the `addMessage()`
+    method).

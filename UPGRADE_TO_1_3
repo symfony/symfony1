@@ -52,6 +52,12 @@ will be removed in symfony 1.4:
   * `sfToolkit::getTmpDir()`: You can replace all occurrences of this method
     by `sys_get_temp_dir()`
 
+  * `sfForm::setInvalidMessage()`: You can replace it by a call to the new
+    `sfForm::setDefaultMessage()` method
+
+  * `sfForm::setRequiredMessage()`: You can replace it by a call to the new
+    `sfForm::setDefaultMessage()` method
+
 The following methods and functions have been removed in symfony 1.3:
 
   * `sfApplicationConfiguration::checkSymfonyVersion()`: see below for the

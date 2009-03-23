@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(44, new lime_output_color());
+$t = new lime_test(47, new lime_output_color());
 
 class ValidatorIdentity extends sfValidatorBase
 {
@@ -231,11 +231,16 @@ $v = new ValidatorIdentity();
 $v->setMessage('required', 'This is required.');
 $t->is($v->asString(), 'ValidatorIdentity({}, { required: \'This is required.\' })', '->asString() returns a string representation of the validator');
 
-// setRequiredMessage() setInvalidMessage()
-$t->diag('setRequiredMessage() setInvalidMessage()');
-ValidatorIdentity::setRequiredMessage('this is required by default');
-ValidatorIdentity::setInvalidMessage('this is invalid by default');
+// ::setDefaultMessage()
+$t->diag('::setDefaultMessage()');
+ValidatorIdentity::setDefaultMessage('required', 'This field is required.');
+ValidatorIdentity::setDefaultMessage('invalid', 'This field is invalid.');
+ValidatorIdentity::setDefaultMessage('foo', 'Foo bar.');
 $v = new ValidatorIdentity();
-$defaultMessages = $v->getDefaultMessages();
-$t->is($defaultMessages['required'], 'this is required by default', 'setRequiredMessage() sets the default required message');
-$t->is($defaultMessages['invalid'], 'this is invalid by default', 'setInvalidMessage() sets the default required message');
+$t->is($v->getMessage('required'), 'This field is required.', '::setDefaultMessage() sets the default message for an error');
+$t->is($v->getMessage('invalid'), 'This field is invalid.', '::setDefaultMessage() sets the default message for an error');
+$t->is($v->getMessage('foo'), 'Foo bar.', '::setDefaultMessage() sets the default message for an error');
+
+$v = new ValidatorIdentity(array(), array('required' => 'Yep, this is required!', 'foo' => 'Yep, this is a foo error!'));
+$t->is($v->getMessage('required'), 'Yep, this is required!', '::setDefaultMessage() is ignored if the validator explicitly overrides the message');
+$t->is($v->getMessage('foo'), 'Yep, this is a foo error!', '::setDefaultMessage() is ignored if the validator explicitly overrides the message');
