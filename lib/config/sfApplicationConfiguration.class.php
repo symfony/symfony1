@@ -103,13 +103,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $configCache->import('config/core_compile.yml', false);
     }
 
-    // register autoloaders
     $this->dispatcher->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
     sfAutoload::getInstance()->register();
-    if ($this->isDebug())
-    {
-      spl_autoload_register(array($this, 'autoloadAgain'));
-    }
 
     // load base settings
     include($configCache->checkConfig('config/settings.yml'));
@@ -142,6 +137,14 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
 
     // initialize plugin configuration objects
     $this->initializePlugins();
+
+    // Disabled by default in symfony 1.1 because it causes problems with Doctrine.
+    // If you want to enable it in your application, just copy the spl_autoload_register() line
+    // in your configuration class.
+    if (0 && $this->isDebug())
+    {
+      spl_autoload_register(array(sfAutoload::getInstance(), 'autoloadAgain'));
+    }
 
     // compress output
     if (!self::$coreLoaded)
@@ -186,14 +189,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     return $config;
-  }
-
-  /**
-   * Reloads autoloader and tries again.
-   */
-  public function autoloadAgain($class)
-  {
-    return sfAutoload::getInstance()->autoloadAgain($class);
   }
 
   /**
