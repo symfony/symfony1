@@ -53,3 +53,13 @@ follows:
   * If it is not defined, it falls back to the default message defined by the
     validator itself (when the message has been added with the `addMessage()`
     method).
+
+Autoloaders
+-----------
+
+### sfAutoloadAgain (EXPERIMENTAL)
+
+A special autoloader has been added that is just for use in debug mode. The
+new `sfAutoloadAgain` class will reload the standard symfony autoloader and
+search the filesystem for the class in question. The net effect is that you no
+longer have to run `symfony cc` after adding a new class to a project.

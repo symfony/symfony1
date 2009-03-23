@@ -160,6 +160,7 @@ class sfCoreAutoload
   'sfdata' => 'addon/sfData',
   'sfpager' => 'addon/sfPager',
   'sfautoload' => 'autoload/sfAutoload',
+  'sfautoloadagain' => 'autoload/sfAutoloadAgain',
   'sfcoreautoload' => 'autoload/sfCoreAutoload',
   'sfsimpleautoload' => 'autoload/sfSimpleAutoload',
   'sfapccache' => 'cache/sfAPCCache',

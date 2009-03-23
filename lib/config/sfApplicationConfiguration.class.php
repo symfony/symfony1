@@ -103,8 +103,13 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $configCache->import('config/core_compile.yml', false);
     }
 
+    // autoloader(s)
     $this->dispatcher->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
     sfAutoload::getInstance()->register();
+    if ($this->isDebug())
+    {
+      sfAutoloadAgain::getInstance()->register();
+    }
 
     // load base settings
     include($configCache->checkConfig('config/settings.yml'));
