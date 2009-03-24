@@ -142,8 +142,8 @@ class sfWebDebugLogger extends sfVarLogger
     }
 
     $webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
-      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot().'/' : '').sfConfig::get('sf_web_debug_web_dir').'/images')
-    );
+      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot() : '').sfConfig::get('sf_web_debug_web_dir').'/images',
+    ));
 
     return $webDebug->injectToolbar($content);
   }
