@@ -42,7 +42,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      *
      * @param array $_options      an array of options
      */
-    public function __construct($options) 
+    public function __construct($options = array()) 
     {
         $this->_options = $options;
     }
@@ -76,5 +76,17 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         }
 
         return $this->_options[$option];
+    }
+
+
+    /**
+     * Get the hash key passing its suffix
+     *
+     * @param string $id  The hash key suffix
+     * @return string     Hash key to be used by drivers
+     */
+    protected function _getKey($id)
+    {
+        return (isset($this->_options['prefix']) ? $this->_options['prefix'] : '') . $id;
     }
 }

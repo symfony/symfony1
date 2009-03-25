@@ -38,7 +38,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      *
      * @param array $_options      an array of options
      */
-    public function __construct($options) 
+    public function __construct($options = array()) 
     {
         if ( ! isset($options['connection']) || 
              ! ($options['connection'] instanceof Doctrine_Connection)) {
@@ -82,7 +82,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
             $sql .= ' AND (expire=0 OR expire > ' . time() . ')';
         }
 
-        $result = $this->getConnection()->fetchAssoc($sql, array($id));
+        $result = $this->getConnection()->fetchAssoc($sql, array($this->_getKey($id)));
         
         if ( ! isset($result[0])) {
             return false;
@@ -102,7 +102,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
         $sql = 'SELECT expire FROM ' . $this->_options['tableName']
              . ' WHERE id = ? AND (expire=0 OR expire > ' . time() . ')';
 
-        return $this->getConnection()->fetchOne($sql, array($id));
+        return $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
     }
 
     /**
@@ -126,7 +126,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
             $expire = 0;
         }
         
-        $params = array($id, serialize($data), $expire);
+        $params = array($this->_getKey($id), serialize($data), $expire);
 
         return (bool) $this->getConnection()->exec($sql, $params);
     }
@@ -141,7 +141,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     {
         $sql = 'DELETE FROM ' . $this->_options['tableName'] . ' WHERE id = ?';
 
-        return (bool) $this->getConnection()->exec($sql, array($id));
+        return (bool) $this->getConnection()->exec($sql, array($this->_getKey($id)));
     }
 
     /**

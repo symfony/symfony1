@@ -54,7 +54,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        $results = apc_fetch($id);
+        $results = apc_fetch($this->_getKey($id));
         $results = (array) $results;
         return $results[0];
     }
@@ -67,7 +67,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function contains($id) 
     {
-        return apc_fetch($id) === false ? false : true;
+        return apc_fetch($this->_getKey($id)) === false ? false : true;
     }
 
     /**
@@ -82,7 +82,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function save($id, $data, $lifeTime = false)
     {
-        return (bool) apc_store($id, $data, $lifeTime);
+        return (bool) apc_store($this->_getKey($id), $data, $lifeTime);
     }
 
     /**
@@ -93,6 +93,6 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function delete($id) 
     {
-        return apc_delete($id);
+        return apc_delete($this->_getKey($id));
     }
 }

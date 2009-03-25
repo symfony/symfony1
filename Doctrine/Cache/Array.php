@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Cache_Array implements Countable, Doctrine_Cache_Interface
+class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
 {
     /**
      * @var array $data         an array of cached data
@@ -62,7 +62,7 @@ class Doctrine_Cache_Array implements Countable, Doctrine_Cache_Interface
      */
     public function contains($id)
     {
-        return isset($this->data[$id]);
+        return isset($this->data[$this->_getKey($id)]);
     }
 
     /**
@@ -77,7 +77,7 @@ class Doctrine_Cache_Array implements Countable, Doctrine_Cache_Interface
      */
     public function save($id, $data, $lifeTime = false)
     {
-        $this->data[$id] = $data;
+        $this->data[$this->_getKey($id)] = $data;
     }
 
     /**
@@ -88,7 +88,7 @@ class Doctrine_Cache_Array implements Countable, Doctrine_Cache_Interface
      */
     public function delete($id)
     {
-        unset($this->data[$id]);
+        unset($this->data[$this->_getKey($id)]);
     }
 
     /**

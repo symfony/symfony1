@@ -80,7 +80,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        return $this->_memcache->get($id);
+        return $this->_memcache->get($this->_getKey($id));
     }
 
     /**
@@ -91,7 +91,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      */
     public function contains($id) 
     {
-        return (bool) $this->_memcache->get($id);
+        return (bool) $this->_memcache->get($this->_getKey($id));
     }
 
     /**
@@ -112,7 +112,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             $flag = 0;
         }
 
-        $result = $this->_memcache->set($id, $data, $flag, $lifeTime);
+        $result = $this->_memcache->set($this->_getKey($id), $data, $flag, $lifeTime);
     }
 
     /**
@@ -123,6 +123,6 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      */
     public function delete($id) 
     {
-        return $this->_memcache->delete($id);
+        return $this->_memcache->delete($this->_getKey($id));
     }
 }
