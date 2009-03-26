@@ -1693,7 +1693,7 @@ abstract class Doctrine_Query_Abstract
      * @param string $update        Query UPDATE part
      * @return Doctrine_Query
      */
-    public function set($key, $value, $params = null)
+    public function set($key, $value = null, $params = null)
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
