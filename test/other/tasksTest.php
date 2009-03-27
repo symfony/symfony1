@@ -65,7 +65,7 @@ class sf_test_project
   }
 }
 
-$t = new lime_test(36, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 if (!extension_loaded('SQLite'))
 {
@@ -97,6 +97,7 @@ $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'foo'), '"gene
 copy(dirname(__FILE__).'/fixtures/propel/schema.yml', $c->tmp_dir.DS.'config'.DS.'schema.yml');
 copy(dirname(__FILE__).'/fixtures/propel/databases.yml', $c->tmp_dir.DS.'config'.DS.'databases.yml');
 copy(dirname(__FILE__).'/fixtures/propel/propel.ini', $c->tmp_dir.DS.'config'.DS.'propel.ini');
+copy(dirname(__FILE__).'/fixtures/factories.yml', $c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'config'.DS.'factories.yml');
 
 // update propel configuration paths
 file_put_contents($c->tmp_dir.DS.'config'.DS.'propel.ini', str_replace('%SF_ROOT_DIR%', $c->tmp_dir, str_replace('%SF_DATA_DIR%', $c->tmp_dir.'/data', file_get_contents($c->tmp_dir.DS.'config'.DS.'propel.ini'))));
@@ -143,5 +144,7 @@ $t->like(file_get_contents($c->tmp_dir.DS.'config'.DS.'ProjectConfiguration.clas
 
 $content = $c->execute_command('project:unfreeze');
 $t->unlike(file_get_contents($c->tmp_dir.DS.'config'.DS.'ProjectConfiguration.class.php'), '/dirname\(__FILE__\)/', '"project:unfreeze" unfreezes symfony lib and data dir');
+
+$content = $c->execute_command('cache:clear');
 
 $c->shutdown();

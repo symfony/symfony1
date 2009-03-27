@@ -206,8 +206,11 @@ EOF;
 
   public function cleanCacheFromFactoryConfig($class, $parameters = array())
   {
-    $cache = new $class($parameters);
-    $cache->clean();
+    if ($class)
+    {
+      $cache = new $class($parameters);
+      $cache->clean();
+    }
   }
 
   protected function lock($app, $env)
