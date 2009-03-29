@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(18, new lime_output_color());
+$t = new lime_test(19, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -177,3 +177,7 @@ $t->like($response->getHttpHeader('Location'), '~http\://localhost/index.php/\?m
 // ->genUrl()
 $t->diag('->genUrl()');
 $t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('action' => 'action', 'module' => 'module', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');
+
+$lastError = error_get_last();
+$controller->genUrl('');
+$t->is_deeply(error_get_last(), $lastError, '->genUrl() accepts an empty string');

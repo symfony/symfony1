@@ -37,7 +37,7 @@ abstract class sfWebController extends sfController
     }
 
     // relative URL?
-    if (is_string($parameters) && '/' == $parameters[0])
+    if (is_string($parameters) && 0 === strpos($parameters, '/'))
     {
       return $parameters;
     }
