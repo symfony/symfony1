@@ -349,7 +349,12 @@ class sfConfigCache
     @fclose($fp);
 
     chmod($tmpFile, 0666);
-    @unlink($cache);
+    // windows needs unlink before rename. unlink needs file_exists check. otherwise warnings occur
+    // this is not atomic as it should be, but PHP has no better support for it
+    if (file_exists($cache))
+    {
+      unlink($cache);
+    }
     rename($tmpFile, $cache);
     umask($current_umask);
   }
