@@ -3,14 +3,14 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(123, new lime_output_color());
+$t = new lime_test(130, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -33,6 +33,11 @@ class sfPatternRoutingTest extends sfPatternRouting
   {
     return $this->current_route_name;
   }
+
+  public function isRouteLoaded($name)
+  {
+    return isset($this->routes[$name]) && is_object($this->routes[$name]);
+  }
 }
 
 class sfAlwaysAbsoluteRoute extends sfRoute
@@ -42,6 +47,23 @@ class sfAlwaysAbsoluteRoute extends sfRoute
     $url = parent::generate($params, $context, $absolute);
 
     return 'http://'.$context['host'].$url;
+  }
+}
+
+class sfLocalmemCache extends sfNoCache
+{
+  protected
+    $cache = array();
+
+  public function get($key, $default = null)
+  {
+    return array_key_exists($key, $this->cache) ? $this->cache[$key] : $default;
+  }
+
+  public function set($key, $value, $lifetime = null)
+  {
+    $this->cache[$key] = $value;
+    return true;
   }
 }
 
@@ -175,16 +197,16 @@ $t->is($r->parse($url), $params, '->parse() does not take query string into acco
 $t->diag('default values');
 $r->clearRoutes();
 $r->connect('test', new sfRoute('/:module/:action', array('module' => 'default', 'action' => 'index')));
-$t->is($r->generate('', array('module' => 'default')), '/default/index', 
+$t->is($r->generate('', array('module' => 'default')), '/default/index',
     '->generate() creates URL for route with missing parameter if parameter is set in the default values');
-$t->is($r->parse('/default'), array('module' => 'default', 'action' => 'index'), 
+$t->is($r->parse('/default'), array('module' => 'default', 'action' => 'index'),
     '->parse()    finds route for URL   with missing parameter if parameter is set in the default values');
 
 $r->clearRoutes();
 $r->connect('test', new sfRoute('/:module/:action/:foo', array('module' => 'default', 'action' => 'index', 'foo' => 'bar')));
-$t->is($r->generate('', array('module' => 'default')), '/default/index/bar', 
+$t->is($r->generate('', array('module' => 'default')), '/default/index/bar',
     '->generate() creates URL for route with more than one missing parameter if default values are set');
-$t->is($r->parse('/default'), array('module' => 'default', 'action' => 'index', 'foo' => 'bar'), 
+$t->is($r->parse('/default'), array('module' => 'default', 'action' => 'index', 'foo' => 'bar'),
     '->parse()    finds route for URL   with more than one missing parameter if default values are set');
 
 $r->clearRoutes();
@@ -464,6 +486,49 @@ $r->parse('/foo/bar/bar/foo/a/b');
 $t->is($r->getCurrentInternalUri(), 'foo/bar?a=b&bar=foo', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $r->parse('/module/action/2');
 $t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+
+// Lazy routes config cache
+$t->diag('Lazy Routes Config Cache');
+$dispatcher = new sfEventDispatcher();
+$dispatcher->connect('routing.load_configuration', 'configureRouting');
+function configureRouting($event)
+{
+    $event->getSubject()->connect('first',  new sfRoute('/first'));
+    $event->getSubject()->connect('second', new sfRoute('/', array()));
+}
+$cache = new sfLocalmemCache();
+//
+// cache-in
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached->parse('/first');
+$t->isnt($rCached->findRoute('/first'), false, '->findRoute() finds the route with lazy config cache activated');
+$t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
+//
+// cache-hit
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached->parse('/first');
+$t->isnt($rCached->findRoute('/first'), false, '->findRoute() finds the route with lazy config cache activated');
+$t->is($rCached->isRouteLoaded('second'), false, 'The second route is not loaded');
+$t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
+$t->is($rCached->isRouteLoaded('second'), true, 'The last route is loaded after a full routes scan');
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$routes = $rCached->getRoutes();
+try
+{
+  foreach ($routes as $route)
+  {
+    if (is_string($route))
+    {
+      throw new Exception();
+    }
+  }
+  $t->pass('->getRoutes() does not return lazy routes');
+}
+catch (Exception $e)
+{
+  $t->fail('->getRoutes() does not return lazy routes');
+}
+
 
 // these tests are against r7363
 $t->is($r->getCurrentInternalUri(false), 'foo/bar?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
