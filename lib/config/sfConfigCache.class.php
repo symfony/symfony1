@@ -338,7 +338,7 @@ class sfConfigCache
       }
     }
 
-    $tmpFile = $cache.'.'.getmypid();
+    $tmpFile = tempnam(dirname($cache), basename($cache));
 
     if (!$fp = @fopen($tmpFile, 'wb'))
     {
