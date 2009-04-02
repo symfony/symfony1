@@ -359,26 +359,37 @@ class sfViewCacheManager
   /**
    * Returns true if the current content is cacheable.
    *
-   * @param  string $internalUri  Internal uniform resource identifier
+   * If no $actionName parameter is provided the first parameter is assumed to
+   * be an internal URI which is then parsed for $moduleName and $actionName
+   * values.
+   *
+   * @param  string $moduleName Module name or internal URI if no $actionName parameter is provided.
+   * @param  string $actionName
    *
    * @return bool true, if the content is cacheable otherwise false
    */
-  public function isCacheable($internalUri)
+  public function isCacheable($moduleName, $actionName = null)
   {
     if (count($_GET) || count($_POST))
     {
       return false;
     }
 
-    list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
+    if (is_null($actionName))
+    {
+      list(, $params) = $this->controller->convertUrlStringToParameters($moduleName);
 
-    if (isset($this->cacheConfig[$params['module']][$params['action']]))
-    {
-      return ($this->cacheConfig[$params['module']][$params['action']]['lifeTime'] > 0);
+      $moduleName = $params['module'];
+      $actionName = $params['action'];
     }
-    else if (isset($this->cacheConfig[$params['module']]['DEFAULT']))
+
+    if (isset($this->cacheConfig[$moduleName][$actionName]))
     {
-      return ($this->cacheConfig[$params['module']]['DEFAULT']['lifeTime'] > 0);
+      return $this->cacheConfig[$moduleName][$actionName]['lifeTime'] > 0;
+    }
+    else if (isset($this->cacheConfig[$moduleName]['DEFAULT']))
+    {
+      return $this->cacheConfig[$moduleName]['DEFAULT']['lifeTime'] > 0;
     }
 
     return false;
@@ -611,7 +622,34 @@ class sfViewCacheManager
    */
   public function computeCacheKey(array $parameters)
   {
-    return isset($parameters['sf_cache_key']) ? $parameters['sf_cache_key'] : md5(serialize($parameters));
+    if (isset($parameters['sf_cache_key']))
+    {
+      return $parameters['sf_cache_key'];
+    }
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Generate cache key')));
+    }
+
+    return md5(serialize($parameters));
+  }
+
+  /**
+   * Checks that the supplied parameters include a cache key.
+   * 
+   * If no 'sf_cache_key' parameter is present one is added to the array as
+   * it is passed by reference.
+   * 
+   * @param  array  $parameters An array of parameters
+   * 
+   * @return string The cache key
+   */
+  public function checkCacheKey(array & $parameters)
+  {
+    $parameters['sf_cache_key'] = $this->computeCacheKey($parameters);
+
+    return $parameters['sf_cache_key'];
   }
 
   /**

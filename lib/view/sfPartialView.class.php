@@ -19,7 +19,25 @@
 class sfPartialView extends sfPHPView
 {
   protected
+    $viewCache   = null,
+    $isCacheable = false,
+    $cacheKey    = null,
     $partialVars = array();
+
+  /**
+   * Constructor.
+   * 
+   * @see sfView
+   */
+  public function initialize($context, $moduleName, $actionName, $viewName)
+  {
+    $ret = parent::initialize($context, $moduleName, $actionName, $viewName);
+
+    $this->viewCache = $this->context->getViewCacheManager();
+    $this->isCacheable = sfConfig::get('sf_cache') && $this->viewCache->isCacheable($this->moduleName, $this->actionName);
+
+    return $ret;
+  }
 
   /**
    * Executes any presentation logic for this view.
@@ -70,7 +88,7 @@ class sfPartialView extends sfPHPView
     {
       return $retval;
     }
-    else if (sfConfig::get('sf_cache'))
+    else if ($this->isCacheable)
     {
       $mainResponse = $this->context->getResponse();
       $responseClass = get_class($mainResponse);
@@ -85,8 +103,9 @@ class sfPartialView extends sfPHPView
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 
-    if (sfConfig::get('sf_cache'))
+    if ($this->isCacheable)
     {
+      $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
       $retval = $this->viewCache->setPartialCache($this->moduleName, $this->actionName, $this->cacheKey, $retval);
       $this->context->setResponse($mainResponse);
       $mainResponse->merge($response);
@@ -102,15 +121,14 @@ class sfPartialView extends sfPHPView
 
   public function getCache()
   {
-    if (!sfConfig::get('sf_cache'))
+    if (!$this->isCacheable)
     {
       return null;
     }
 
-    $this->viewCache = $this->context->getViewCacheManager();
     $this->viewCache->registerConfiguration($this->moduleName);
 
-    $this->cacheKey = $this->viewCache->computeCacheKey($this->partialVars);
+    $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
     if ($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey))
     {
       return $retval;
