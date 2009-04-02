@@ -396,12 +396,12 @@ class sfPatternRouting extends sfRouting
         throw new sfConfigurationException(sprintf('The route "%s" does not exist.', $name));
       }
 
+      $route = $this->routes[$name];
+
       if (false === $route)
       {
         $route = $this->loadRoute($name);
       }
-
-      $route = $this->routes[$name];
     }
     else
     {

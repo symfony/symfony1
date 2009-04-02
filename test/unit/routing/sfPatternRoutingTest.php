@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(130, new lime_output_color());
+$t = new lime_test(131, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -511,6 +511,8 @@ $t->isnt($rCached->findRoute('/first'), false, '->findRoute() finds the route wi
 $t->is($rCached->isRouteLoaded('second'), false, 'The second route is not loaded');
 $t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
 $t->is($rCached->isRouteLoaded('second'), true, 'The last route is loaded after a full routes scan');
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$t->is($rCached->generate('second'), '/', '->generate() works on a lazy route');
 $rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
 $routes = $rCached->getRoutes();
 try
