@@ -97,7 +97,7 @@ class sfDoctrineGenerator extends sfModelGenerator
    */
   public function getColumnGetter($column, $developed = false, $prefix = '')
   {
-    $getter = 'get'.sfinflector::camelize($column);
+    $getter = 'get'.sfInflector::camelize($column);
     if ($developed)
     {
       $getter = sprintf('$%s%s->%s()', $prefix, $this->getSingularName(), $getter);
