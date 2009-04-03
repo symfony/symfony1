@@ -39,6 +39,7 @@ class sfPatternRouting extends sfRouting
    *  * variable_regex:                   A regex that match a valid variable name ([\w\d_]+ by default)
    *  * generate_shortest_url:            Whether to generate the shortest URL possible (true by default)
    *  * extra_parameters_as_query_string: Whether to generate extra parameters as a query string
+   *  * lazy_routes_deserialize:          Use lazy route deserialization optim: not all routes are deserialized upfront but on demand
    *
    * @see sfRouting
    */
@@ -52,6 +53,7 @@ class sfPatternRouting extends sfRouting
       'suffix'                           => '',
       'generate_shortest_url'            => true,
       'extra_parameters_as_query_string' => true,
+      'lazy_routes_deserialize'          => false,
     ), $options);
 
     // for BC
@@ -89,20 +91,26 @@ class sfPatternRouting extends sfRouting
 
       if (!is_null($this->cache))
       {
-        $lazyMap = array();
-
-        foreach ($this->routes as $name => $route)
+        if (!$this->options['lazy_routes_deserialize'])
         {
-          if (is_string($route))
+          $this->cache->set('symfony.routing.configuration', serialize($this->routes));
+        }
+        else
+        {
+          $lazyMap = array();
+
+          foreach ($this->routes as $name => $route)
           {
-            $route = $this->loadRoute($name);
+            if (is_string($route))
+            {
+              $route = $this->loadRoute($name);
+            }
+
+            $lazyMap[$name] = serialize($route);
           }
 
-          $lazyMap[$name] = serialize($route);
+          $this->cache->set('symfony.routing.configuration', serialize($lazyMap));
         }
-
-        // cache a lazy map with only names and false as values
-        $this->cache->set('symfony.routing.configuration', serialize($lazyMap));
       }
     }
   }

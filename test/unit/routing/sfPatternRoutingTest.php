@@ -499,21 +499,21 @@ function configureRouting($event)
 $cache = new sfLocalmemCache();
 //
 // cache-in
-$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, array_merge($options, array('lazy_routes_deserialize' => true)));
 $rCached->parse('/first');
 $t->isnt($rCached->findRoute('/first'), false, '->findRoute() finds the route with lazy config cache activated');
 $t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
 //
 // cache-hit
-$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, array_merge($options, array('lazy_routes_deserialize' => true)));
 $rCached->parse('/first');
 $t->isnt($rCached->findRoute('/first'), false, '->findRoute() finds the route with lazy config cache activated');
 $t->is($rCached->isRouteLoaded('second'), false, 'The second route is not loaded');
 $t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
 $t->is($rCached->isRouteLoaded('second'), true, 'The last route is loaded after a full routes scan');
-$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, array_merge($options, array('lazy_routes_deserialize' => true)));
 $t->is($rCached->generate('second'), '/', '->generate() works on a lazy route');
-$rCached = new sfPatternRoutingTest($dispatcher, $cache, $options);
+$rCached = new sfPatternRoutingTest($dispatcher, $cache, array_merge($options, array('lazy_routes_deserialize' => true)));
 $routes = $rCached->getRoutes();
 try
 {
