@@ -519,7 +519,7 @@ try
 {
   foreach ($routes as $route)
   {
-    if (is_string($route))
+    if (!is_object($route))
     {
       throw new Exception();
     }

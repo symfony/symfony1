@@ -89,17 +89,20 @@ class sfPatternRouting extends sfRouting
 
       if (!is_null($this->cache))
       {
+        $lazyMap = array();
+
         foreach ($this->routes as $name => $route)
         {
-          if (false === $route)
+          if (is_string($route))
           {
             $route = $this->loadRoute($name);
           }
-          $this->cache->set('symfony.routing.route.' . $name, serialize($route));
+
+          $lazyMap[$name] = serialize($route);
         }
 
         // cache a lazy map with only names and false as values
-        $this->cache->set('symfony.routing.configuration', serialize(array_fill_keys(array_keys($this->routes), false)));
+        $this->cache->set('symfony.routing.configuration', serialize($lazyMap));
       }
     }
   }
@@ -113,13 +116,13 @@ class sfPatternRouting extends sfRouting
    */
   protected function loadRoute($name)
   {
-    if (false === $this->routes[$name])
+    if (is_string($route = $this->routes[$name]))
     {
-      return $this->routes[$name] = unserialize($this->cache->get('symfony.routing.route.' . $name));
+      return $this->routes[$name] = unserialize($route);
     }
     else
     {
-      return $this->routes[$name];
+      return $route;
     }
   }
 
@@ -130,14 +133,17 @@ class sfPatternRouting extends sfRouting
    */
   protected function loadRoutes()
   {
-    if (!$this->routesFullyLoaded)
+    if ($this->routesFullyLoaded)
     {
       return;
     }
 
-    foreach (array_keys($this->routes, false) as $name)
+    foreach ($this->routes as $name => $route)
     {
-      $this->loadRoute($name);
+      if (is_string($route))
+      {
+        $this->loadRoute($name);
+      }
     }
 
     $this->routesFullyLoaded = true;
@@ -347,7 +353,7 @@ class sfPatternRouting extends sfRouting
     parent::setDefaultParameter($key, $value);
     foreach ($this->routes as $name => $route)
     {
-      if (false === $route)
+      if (is_string($route))
       {
         $route = $this->loadRoute($name);
       }
@@ -365,7 +371,7 @@ class sfPatternRouting extends sfRouting
     parent::setDefaultParameters($parameters);
     foreach ($this->routes as $name => $route)
     {
-      if (false === $route)
+      if (is_string($route))
       {
         $route = $this->loadRoute($name);
       }
@@ -398,7 +404,7 @@ class sfPatternRouting extends sfRouting
 
       $route = $this->routes[$name];
 
-      if (false === $route)
+      if (is_string($route))
       {
         $route = $this->loadRoute($name);
       }
@@ -444,7 +450,7 @@ class sfPatternRouting extends sfRouting
 
     $route = $this->routes[$info['name']];
 
-    if (false === $route)
+    if (is_string($route))
     {
       $route = $this->loadRoute($info['name']);
     }
@@ -540,7 +546,7 @@ class sfPatternRouting extends sfRouting
   {
     foreach ($this->routes as $name => $route)
     {
-      if (false === $route)
+      if (is_string($route))
       {
         $route = $this->loadRoute($name);
       }
@@ -560,7 +566,7 @@ class sfPatternRouting extends sfRouting
   {
     foreach ($this->routes as $name => $route)
     {
-      if (false === $route)
+      if (is_string($route))
       {
         $route = $this->loadRoute($name);
       }
