@@ -97,22 +97,13 @@ class sfDoctrineGenerator extends sfModelGenerator
    */
   public function getColumnGetter($column, $developed = false, $prefix = '')
   {
-    $obj = $this->table->getRecord();
-
-    try {
-      $column = $this->table->getFieldName($column);
-      $obj->get($column);
-    // Not a real column
-    } catch (Exception $e) {
-      $column = sfInflector::camelize($column);
-    }
-
+    $getter = 'get'.sfinflector::camelize($column);
     if ($developed)
     {
-      return sprintf("$%s%s['%s']", $prefix, $this->getSingularName(), $column);
+      $getter = sprintf('$%s%s->%s()', $prefix, $this->getSingularName(), $getter);
     }
 
-    return 'get' . $column;
+    return $getter;
   }
 
   /**
