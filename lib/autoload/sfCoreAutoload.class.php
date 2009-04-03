@@ -94,14 +94,14 @@ class sfCoreAutoload
    */
   public function autoload($class)
   {
-    $class = strtolower($class);
+    $klass = strtolower($class);
 
-    if (!isset($this->classes[$class]))
+    if (!isset($this->classes[$klass]))
     {
       return false;
     }
 
-    require $this->baseDir.$this->classes[$class][0].'/'.$class.'.'.$this->classes[$class][1];
+    require $this->baseDir.$this->classes[$klass][0].'/'.$class.'.'.$this->classes[$klass][1];
 
     return true;
   }
