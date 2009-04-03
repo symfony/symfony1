@@ -125,7 +125,7 @@ class sfWebDebugLogger extends sfVarLogger
 
     // don't add debug toolbar:
     // * for XHR requests
-    // * if 304
+    // * if response status code is in the 3xx range
     // * if not rendering to the client
     // * if HTTP headers only
     $response = $event->getSubject();
@@ -133,7 +133,7 @@ class sfWebDebugLogger extends sfVarLogger
     if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
       $request->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
-      $response->getStatusCode() == 304 ||
+      '3' == substr($response->getStatusCode(), 0, 1) ||
       $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
       $response->isHeaderOnly()
     )
