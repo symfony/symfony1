@@ -45,7 +45,7 @@ require_once(dirname(__FILE__).'/../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../lib/addon/sfPropelDatabaseSchema.class.php');
 require_once(dirname(__FILE__).'/../../../../util/sfInflector.class.php');
 require_once(dirname(__FILE__).'/../../../../util/sfToolkit.class.php');
-require_once(dirname(__FILE__).'/../../../../yaml/sfYaml.class.php');
+require_once(dirname(__FILE__).'/../../../../yaml/sfYaml.php');
 
 $t = new my_lime_test(377, new lime_output_color());
 
