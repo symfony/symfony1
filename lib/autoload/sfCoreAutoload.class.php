@@ -161,11 +161,8 @@ class sfCoreAutoload
       $file  = str_replace(DIRECTORY_SEPARATOR, '/', $file);
       $class = basename($file, false === strpos($file, '.class.php') ? '.php' : '.class.php');
 
-      if (
-        false !== stripos(file_get_contents($file), 'class '.$class)
-        ||
-        false !== stripos(file_get_contents($file), 'interface '.$class)
-      )
+      $contents = file_get_contents($file);
+      if (false !== stripos($contents, 'class '.$class) || false !== stripos($contents, 'interface '.$class))
       {
         $classes .= sprintf("    '%s' => '%s',\n", strtolower($class), substr(str_replace($libDir, '', $file), 1));
       }
