@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(131, new lime_output_color());
+$t = new lime_test(133, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -31,7 +31,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 
   public function getCurrentRouteName()
   {
-    return $this->current_route_name;
+    return $this->currentRouteName;
   }
 
   public function isRouteLoaded($name)
@@ -554,6 +554,14 @@ $t->is($parameters,
        '->findRoute() returns information about matching route');
 $t->is($rCached->getCurrentInternalUri(), 'default/index', '->findRoute() does not change the internal URI of sfPatternRouting');
 $t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
+
+// current internal uri is reset after negative match
+$r->clearRoutes();
+$r->connect('test', new sfRoute('/test', array('bar' => 'foo')));
+$r->parse('/test');
+$r->parse('/notfound');
+$t->is($r->getCurrentInternalUri(), null, '->getCurrentInternalUri() reseted after negative match');
+$t->is($r->getCurrentRouteName(), null, '->getCurrentRouteName() reseted after negative match');
 
 // defaults
 $t->diag('defaults');

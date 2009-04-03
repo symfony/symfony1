@@ -437,6 +437,9 @@ class sfPatternRouting extends sfRouting
   {
     if (false === $info = $this->findRoute($url))
     {
+      $this->currentRouteName = null;
+      $this->currentInternalUri = array();
+
       return false;
     }
 
