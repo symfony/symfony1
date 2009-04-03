@@ -191,7 +191,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     if (!$label && false !== $label)
     {
-      $label = str_replace('_', ' ', ucfirst($name));
+      $label = str_replace('_', ' ', ucfirst('_id' == substr($name, -3) ? substr($name, 0, -3) : $name));
     }
 
     return $this->translate($label);

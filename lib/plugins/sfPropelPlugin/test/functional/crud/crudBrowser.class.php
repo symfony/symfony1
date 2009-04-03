@@ -156,10 +156,10 @@ class CrudBrowser extends sfTestBrowser
         checkElement('table tbody th:nth(1)', 'Body')->
         checkElement('table tbody th:nth(2)', 'Online')->
         checkElement('table tbody th:nth(3)', 'Excerpt')->
-        checkElement('table tbody th:nth(4)', 'Category id')->
+        checkElement('table tbody th:nth(4)', 'Category')->
         checkElement('table tbody th:nth(5)', 'Created at')->
         checkElement('table tbody th:nth(6)', 'End date')->
-        checkElement('table tbody th:nth(7)', 'Book id')->
+        checkElement('table tbody th:nth(7)', 'Book')->
         checkElement('table tbody th:nth(8)', 'Author article list')->
         checkElement('table tbody td select[id="article_category_id"][name="article[category_id]"] option', 2)->
         checkElement('table tbody td select[id="article_book_id"][name="article[book_id]"] option', 2)->

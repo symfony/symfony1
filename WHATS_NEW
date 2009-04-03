@@ -13,6 +13,18 @@ found in the symfony distribution.
 You will have there all the information needed to safely upgrade
 your projects to symfony 1.3.
 
+Widgets
+-------
+
+Default Labels
+--------------
+
+When a label is auto-generated from the field name, `_id` suffixes are now
+removed:
+
+  * `first_name` => First name (as before)
+  * `author_id` => Author (was "Author id" before)
+
 sfToolkit
 ---------
 

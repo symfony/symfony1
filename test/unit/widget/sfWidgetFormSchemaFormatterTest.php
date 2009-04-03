@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(27, new lime_output_color());
+$t = new lime_test(28, new lime_output_color());
 
 class MyFormatter extends sfWidgetFormSchemaFormatter
 {
@@ -122,11 +122,13 @@ $t->is($f->translate('label'), '[label]', 'translate() call i18n callable as exp
 $t->diag('->generateLabel() ->generateLabelName() ->setLabel() ->setLabels()');
 MyFormatter::dropTranslationCallable();
 $w = new sfWidgetFormSchema(array(
+  'author_id'  => new sfWidgetFormInput(),
   'first_name' => new sfWidgetFormInput(),
   'last_name'  => new sfWidgetFormInput(),
 ));
 $f = new MyFormatter($w);
 $t->is($f->generateLabelName('first_name'), 'First name', '->generateLabelName() generates a label value from a label name');
+$t->is($f->generateLabelName('author_id'), 'Author', '->generateLabelName() removes _id from auto-generated labels');
 
 $w->setLabels(array('first_name' => 'The first name'));
 $t->is($f->generateLabelName('first_name'), 'The first name', '->setLabels() changes all current labels');
