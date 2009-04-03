@@ -146,7 +146,7 @@ class sfPropelManyToMany
       $localColumn = self::getColumn(get_class($object), $middleClass, $relatedColumn);
       $remoteColumn = self::getRelatedColumn(get_class($object), $middleClass, $relatedColumn);
       $c = new Criteria();
-      $c->add(constant(constant($middleClass.'::PEER').'::'.$localColumn->getColumnName()), $object->getId());
+      $c->add(constant(constant($middleClass.'::PEER').'::'.$localColumn->getName()), $object->getId());
       $relatedMethod = 'get'.$relatedClass.'RelatedBy'.$remoteColumn->getPhpName();
       $rels = call_user_func(array(constant($middleClass.'::PEER'), 'doSelectJoin'.$relatedClass.'RelatedBy'.$remoteColumn->getPhpName()), $c);
     }

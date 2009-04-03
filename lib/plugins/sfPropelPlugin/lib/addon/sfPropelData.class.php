@@ -355,7 +355,7 @@ class sfPropelData extends sfData
       $fixColumn = null;
       foreach ($tableMap->getColumns() as $column)
       {
-        $col = strtolower($column->getColumnName());
+        $col = strtolower($column->getName());
         if ($column->isForeignKey())
         {
           $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
@@ -407,7 +407,7 @@ class sfPropelData extends sfData
 
             foreach ($tableMap->getColumns() as $column)
             {
-              $col = strtolower($column->getColumnName());
+              $col = strtolower($column->getName());
               $isPrimaryKey = $column->isPrimaryKey();
 
               if (is_null($row[$col]))
@@ -502,7 +502,7 @@ class sfPropelData extends sfData
   {
     $stmt = $this->con->prepare('SELECT * FROM :table WHERE :column :where');
     $stmt->bindValue(':table', constant(constant($tableName.'::PEER').'::TABLE_NAME'));
-    $stmt->bindValue(':column', strtolower($column->getColumnName()));
+    $stmt->bindValue(':column', strtolower($column->getName()));
     $stmt->bindValue(':where', is_null($in) ? 'IS NULL' : 'IN ('.$in.')');
 
     $stmt = $stmt->execute();

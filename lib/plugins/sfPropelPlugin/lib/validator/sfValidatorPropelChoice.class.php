@@ -99,7 +99,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
       {
         if ($column->isPrimaryKey())
         {
-          $columnName = strtolower($column->getColumnName());
+          $columnName = strtolower($column->getName());
           break;
         }
       }

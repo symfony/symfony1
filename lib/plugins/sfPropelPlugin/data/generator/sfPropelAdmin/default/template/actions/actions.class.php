@@ -227,7 +227,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class, $remote_column);
 <?php endif; ?>
       // Update many-to-many for "<?php echo $name ?>"
       $c = new Criteria();
-      $c->add(<?php echo constant($through_class.'::PEER') ?>::<?php echo strtoupper($column->getColumnName()) ?>, $<?php echo $this->getSingularName() ?>->getPrimaryKey());
+      $c->add(<?php echo constant($through_class.'::PEER') ?>::<?php echo strtoupper($column->getName()) ?>, $<?php echo $this->getSingularName() ?>->getPrimaryKey());
       <?php echo constant($through_class.'::PEER') ?>::doDelete($c);
 
       $ids = $this->getRequestParameter('associated_<?php echo $name ?>');

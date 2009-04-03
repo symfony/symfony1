@@ -344,7 +344,7 @@ class sfPropelFormGenerator extends sfGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), strtolower($column->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), strtolower($column->getName()));
     }
     else
     {
@@ -380,7 +380,7 @@ class sfPropelFormGenerator extends sfGenerator
     $max = 0;
     foreach ($this->table->getColumns() as $column)
     {
-      if (($m = strlen($column->getColumnName())) > $max)
+      if (($m = strlen($column->getName())) > $max)
       {
         $max = $m;
       }
@@ -409,7 +409,7 @@ class sfPropelFormGenerator extends sfGenerator
     {
       if ($column->isPrimaryKey())
       {
-        $pks[] = strtolower($column->getColumnName());
+        $pks[] = strtolower($column->getName());
       }
     }
 
@@ -462,7 +462,7 @@ class sfPropelFormGenerator extends sfGenerator
       $uniqueColumn = array();
       foreach ($unique as $column)
       {
-        $uniqueColumn[] = strtolower($this->table->getColumn($column)->getColumnName());
+        $uniqueColumn[] = strtolower($this->table->getColumn($column)->getName());
       }
 
       $uniqueColumns[] = $uniqueColumn;
