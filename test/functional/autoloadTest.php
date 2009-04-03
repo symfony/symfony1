@@ -26,8 +26,8 @@ $b->
 
 $t = $b->test();
 
-$t->is(class_exists('sfaction'), true, '"sfCoreAutoload" is case insensitive');
-$t->is(class_exists('sfpropel'), true, '"sfAutoload" is case insensitive');
+$autoload = sfAutoload::getInstance();
+$t->is($autoload->getClassPath('sfpropel'), sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/addon/sfPropel.class.php', '"sfAutoload" is case insensitive');
 
 $t->ok(class_exists('BaseExtendMe'), 'plugin lib directory added to autoload');
 $r = new ReflectionClass('ExtendMe');
