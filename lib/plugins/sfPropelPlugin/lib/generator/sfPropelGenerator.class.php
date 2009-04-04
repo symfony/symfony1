@@ -227,7 +227,7 @@ class sfPropelGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getTableMap()->getColumns() as $column)
     {
-      $name = sfInflector::underscore($column->getName());
+      $name = $this->translateColumnName($column);
       $names[] = $name;
       $fields[$name] = array_merge(array(
         'is_link'      => (Boolean) $column->isPrimaryKey(),
@@ -289,7 +289,7 @@ class sfPropelGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getTableMap()->getColumns() as $column)
     {
-      $name = sfInflector::underscore($column->getName());
+      $name = $this->translateColumnName($column);
       $names[] = $name;
       $fields[$name] = isset($this->config[$context]['fields'][$name]) ? $this->config[$context]['fields'][$name] : array();
     }
@@ -331,7 +331,7 @@ class sfPropelGenerator extends sfModelGenerator
     $names = array();
     foreach ($this->getTableMap()->getColumns() as $column)
     {
-      $names[] = sfInflector::underscore($column->getPhpName());
+      $names[] = $this->translateColumnName($column);
     }
 
     if ($withM2M)
@@ -343,5 +343,13 @@ class sfPropelGenerator extends sfModelGenerator
     }
 
     return $names;
+  }
+
+  public function translateColumnName($column, $related = false, $to = BasePeer::TYPE_FIELDNAME)
+  {
+    $peer = $related ? constant($column->getTable()->getDatabaseMap()->getTable($column->getRelatedTableName())->getPhpName().'::PEER') : constant($column->getTable()->getPhpName().'::PEER');
+    $field = $related ? $column->getRelatedName() : $column->getFullyQualifiedName();
+
+    return call_user_func(array($peer, 'translateFieldName'), $field, BasePeer::TYPE_COLNAME, $to);
   }
 }

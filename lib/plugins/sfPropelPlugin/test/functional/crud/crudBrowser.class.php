@@ -98,7 +98,7 @@ class CrudBrowser extends sfTestBrowser
       checkFormValues(array(
         'title'               => '',
         'body'                => '',
-        'online'              => false,
+        'Online'              => false,
         'category_id'         => 0,
         'end_date'            => array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''),
         'book_id'             => 0,
@@ -112,7 +112,7 @@ class CrudBrowser extends sfTestBrowser
       saveValues($options, array(
         'title'               => 'my real title',
         'body'                => 'my real body',
-        'online'              => true,
+        'Online'              => true,
         'category_id'         => 2,
         'end_date'            => array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''),
         'book_id'             => null,
@@ -171,7 +171,7 @@ class CrudBrowser extends sfTestBrowser
       'id'                  => 1009299,
       'title'               => '',
       'body'                => 'my body',
-      'online'              => true,
+      'Online'              => true,
       'excerpt'             => 'my excerpt',
       'category_id'         => null,
       'end_date'            => array('year' => 0, 'month' => 0, 'day' => 15, 'hour' => '10', 'minute' => '20'),
@@ -199,7 +199,7 @@ class CrudBrowser extends sfTestBrowser
         'id'                  => 3,
         'title'               => 'my title',
         'body'                => 'my body',
-        'online'              => false,
+        'Online'              => false,
         'category_id'         => 1,
         'end_date'            => array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => '10', 'minute' => '20'),
         'book_id'             => 1,
@@ -299,7 +299,7 @@ class CrudBrowser extends sfTestBrowser
 
       checkElement('table tbody td textarea[id="article_body"][name="article[body]"]', $values['body'])->
 
-      checkElement(sprintf('table tbody td input[id="article_online"][name="article[online]"][type="checkbox"]%s', $values['online'] ? '[checked="checked"]' : ''))->
+      checkElement(sprintf('table tbody td input[id="article_Online"][name="article[Online]"][type="checkbox"]%s', $values['Online'] ? '[checked="checked"]' : ''))->
 
       checkElement(sprintf('table tbody td select[id="article_category_id"][name="article[category_id]"] option[value="1"]%s', $values['category_id'] == 1 ? '[selected="selected"]' : ''), 'Category 1')->
       checkElement(sprintf('table tbody td select[id="article_category_id"][name="article[category_id]"] option[value="2"]%s', $values['category_id'] == 2 ? '[selected="selected"]' : ''), 'Category 2')->

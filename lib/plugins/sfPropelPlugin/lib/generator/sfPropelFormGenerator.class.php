@@ -340,11 +340,11 @@ class sfPropelFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($column->getRelatedColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), $this->translateColumnName($column, true));
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), strtolower($column->getName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), $this->translateColumnName($column));
     }
     else
     {
@@ -409,7 +409,7 @@ class sfPropelFormGenerator extends sfGenerator
     {
       if ($column->isPrimaryKey())
       {
-        $pks[] = strtolower($column->getName());
+        $pks[] = $this->translateColumnName($column);
       }
     }
 
@@ -462,13 +462,21 @@ class sfPropelFormGenerator extends sfGenerator
       $uniqueColumn = array();
       foreach ($unique as $column)
       {
-        $uniqueColumn[] = strtolower($this->table->getColumn($column)->getName());
+        $uniqueColumn[] = $this->translateColumnName($this->table->getColumn($column));
       }
 
       $uniqueColumns[] = $uniqueColumn;
     }
 
     return $uniqueColumns;
+  }
+
+  public function translateColumnName($column, $related = false, $to = BasePeer::TYPE_FIELDNAME)
+  {
+    $peer = $related ? constant($column->getTable()->getDatabaseMap()->getTable($column->getRelatedTableName())->getPhpName().'::PEER') : constant($column->getTable()->getPhpName().'::PEER');
+    $field = $related ? $column->getRelatedName() : $column->getFullyQualifiedName();
+
+    return call_user_func(array($peer, 'translateFieldName'), $field, BasePeer::TYPE_COLNAME, $to);
   }
 
   /**

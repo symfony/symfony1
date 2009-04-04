@@ -5,7 +5,7 @@
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
     <column name="title" type="varchar" size="255" required="true" />
     <column name="body" type="longvarchar" />
-    <column name="online" type="boolean" />
+    <column name="Online" type="boolean" />
     <column name="excerpt" type="varchar" />
     <column name="category_id" type="integer" required="true" />
     <foreign-key foreignTable="category">

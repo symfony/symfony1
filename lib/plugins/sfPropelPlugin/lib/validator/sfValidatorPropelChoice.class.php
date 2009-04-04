@@ -91,6 +91,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
     if ($this->getOption('column'))
     {
       $columnName = $this->getOption('column');
+      $from = BasePeer::TYPE_FIELDNAME;
     }
     else
     {
@@ -99,12 +100,13 @@ class sfValidatorPropelChoice extends sfValidatorBase
       {
         if ($column->isPrimaryKey())
         {
-          $columnName = strtolower($column->getName());
+          $columnName = $column->getPhpName();
           break;
         }
       }
+      $from = BasePeer::TYPE_PHPNAME;
     }
 
-    return call_user_func(array(constant($this->getOption('model').'::PEER'), 'translateFieldName'), $columnName, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
+    return call_user_func(array(constant($this->getOption('model').'::PEER'), 'translateFieldName'), $columnName, $from, BasePeer::TYPE_COLNAME);
   }
 }

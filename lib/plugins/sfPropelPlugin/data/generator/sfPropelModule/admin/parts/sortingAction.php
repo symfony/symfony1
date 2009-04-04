@@ -5,8 +5,7 @@
       return;
     }
 
-    // camelize lower case to be able to compare with BasePeer::TYPE_PHPNAME translate field name
-    $column = <?php echo constant($this->getModelClass().'::PEER') ?>::translateFieldName(sfInflector::camelize(strtolower($sort[0])), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_COLNAME);
+    $column = <?php echo constant($this->getModelClass().'::PEER') ?>::translateFieldName($sort[0], BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
     if ('asc' == $sort[1])
     {
       $criteria->addAscendingOrderByColumn($column);
