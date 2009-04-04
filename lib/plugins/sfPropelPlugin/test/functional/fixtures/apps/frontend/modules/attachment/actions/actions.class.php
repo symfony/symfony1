@@ -15,7 +15,7 @@ class attachmentActions extends sfActions
     $this->form = new AttachmentForm();
     unset($this->form['article_id']);
 
-    if ($request->isMethod('post'))
+    if ($request->isMethod(sfRequest::POST))
     {
       $this->form->bind($request->getParameter('attachment'), $request->getFiles('attachment'));
 
@@ -33,7 +33,7 @@ class attachmentActions extends sfActions
     $this->form = new ArticleForm(null, array('with_attachment' => true));
 
     if (
-      $request->isMethod('post')
+      $request->isMethod(sfRequest::POST)
       &&
       $this->form->bindAndSave($request->getParameter('article'), $request->getFiles('article'))
     )

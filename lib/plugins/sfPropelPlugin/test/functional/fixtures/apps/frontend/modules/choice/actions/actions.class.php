@@ -30,7 +30,7 @@ class choiceActions extends sfActions
       $this->form->getValidator('author_article_list')->setOption('criteria', $criteria);
     }
 
-    if ($request->isMethod('post'))
+    if ($request->isMethod(sfRequest::POST))
     {
       $this->form->bind($request->getParameter('article'));
 

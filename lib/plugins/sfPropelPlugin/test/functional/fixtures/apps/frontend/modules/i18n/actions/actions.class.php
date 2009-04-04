@@ -28,7 +28,7 @@ class i18nActions extends sfActions
   {
     $this->form = new MovieForm(MoviePeer::retrieveByPk($request->getParameter('id')));
 
-    if ($request->isMethod('post'))
+    if ($request->isMethod(sfRequest::POST))
     {
       $this->form->bind($request->getParameter('movie'));
 
