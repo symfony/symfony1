@@ -272,7 +272,7 @@ class myTestBrowser extends sfTestBrowser
 $b = new myTestBrowser();
 
 // non HTML cache
-$image = file_get_contents(dirname(__FILE__).'/fixtures/project/apps/cache/modules/cache/data/ok48.png');
+$image = file_get_contents(dirname(__FILE__).'/fixtures/apps/cache/modules/cache/data/ok48.png');
 sfConfig::set('sf_web_debug', true);
 $b->
   get('/cache/imageWithLayoutCacheWithLayout')->
