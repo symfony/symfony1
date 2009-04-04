@@ -184,6 +184,7 @@ class sfPatternRouting extends sfRouting
     {
       $this->loadRoutes();
     }
+
     return $this->routes;
   }
 
@@ -196,13 +197,6 @@ class sfPatternRouting extends sfRouting
     {
       $this->connect($name, $route);
     }
-
-    if (!$this->routesFullyLoaded)
-    {
-      $this->loadRoutes();
-    }
-
-    return $this->routes;
   }
 
   /**
@@ -249,13 +243,6 @@ class sfPatternRouting extends sfRouting
     $this->routes = array();
     $newroutes = $this->connect($name, $route);
     $this->routes = array_merge($newroutes, $routes);
-
-    if (!$this->routesFullyLoaded)
-    {
-      $this->loadRoutes();
-    }
-
-    return $this->routes;
   }
 
   /**
@@ -295,13 +282,6 @@ class sfPatternRouting extends sfRouting
     }
 
     $this->routes = $newroutes;
-
-    if (!$this->routesFullyLoaded)
-    {
-      $this->loadRoutes();
-    }
-
-    return $this->routes;
   }
 
   /**
@@ -335,13 +315,6 @@ class sfPatternRouting extends sfRouting
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect %s "%s" (%s)', get_class($route), $name, $route->getPattern()))));
       }
     }
-
-    if (!$this->routesFullyLoaded)
-    {
-      $this->loadRoutes();
-    }
-
-    return $this->routes;
   }
 
   public function configureRoute(sfRoute $route)

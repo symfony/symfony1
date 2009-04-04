@@ -115,3 +115,10 @@ several reasons:
     project autoloader will re-parse the whole symfony directory and some
     problems might occur
     (see #6064 - http://trac.symfony-project.org/ticket/6064).
+
+Routing
+-------
+
+The `sfPatternRouting::setRoutes()`, `sfPatternRouting::prependRoutes()`,
+`sfPatternRouting::insertRouteBefore()`, and `sfPatternRouting::connect()`
+methods do not return the routes as an array as they did in previous versions.
