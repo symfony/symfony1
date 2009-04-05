@@ -21,7 +21,7 @@ class ProjectConfiguration extends sfProjectConfiguration
   }
 }
 
-$configuration = new ProjectConfiguration(dirname(__FILE__).'/../../functional/fixtures/project');
+$configuration = new ProjectConfiguration(dirname(__FILE__).'/../../functional/fixtures');
 
 $t->diag('->setPlugins(), ->disablePlugins(), ->enableAllPluginsExcept()');
 foreach (array('setPlugins', 'disablePlugins', 'enableAllPluginsExcept') as $method)

@@ -33,7 +33,7 @@ class frontendConfiguration extends sfApplicationConfiguration
 */
 
 // use functional project configruration
-require_once realpath(dirname(__FILE__).'/../../functional/fixtures/project/config/ProjectConfiguration.class.php');
+require_once realpath(dirname(__FILE__).'/../../functional/fixtures/config/ProjectConfiguration.class.php');
 
 $frontend_context = sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration('frontend', 'test', true));
 $i18n_context = sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration('i18n', 'test', true));
