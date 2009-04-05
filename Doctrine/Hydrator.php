@@ -171,10 +171,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
 
                 // do we need to index by a custom field?
                 if ($field = $this->_getCustomIndexField($rootAlias)) {
-                    if (isset($result[$field])) {
-                        throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found non-unique key mapping named '$field'.");
-                    } else if ( ! isset($element[$field])) {
+                    if ( ! isset($element[$field])) {
                         throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found a non-existent key named '$field'.");
+                    } else if (isset($result[$element[$field]])) {
+                        throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found non-unique key mapping named '$field'.");
                     }
                     $result[$element[$field]] = $element;
                 } else {
@@ -239,10 +239,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                             $instances[$componentName]->postHydrate($event);
 
                             if ($field = $this->_getCustomIndexField($dqlAlias)) {
-                                if (isset($prev[$parent][$relationAlias][$element[$field]])) {
-                                    throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found non-unique key mapping named '$field'.");
-                                } else if ( ! isset($element[$field])) {
+                                if ( ! isset($element[$field])) {
                                     throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found a non-existent key named '$field'.");
+                                } else if (isset($prev[$parent][$relationAlias][$element[$field]])) {
+                                    throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found non-unique key mapping named '$field'.");
                                 }
                                 $prev[$parent][$relationAlias][$element[$field]] = $element;
                             } else {
