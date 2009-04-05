@@ -241,8 +241,8 @@ class sfPatternRouting extends sfRouting
   {
     $routes = $this->routes;
     $this->routes = array();
-    $newroutes = $this->connect($name, $route);
-    $this->routes = array_merge($newroutes, $routes);
+    $this->connect($name, $route);
+    $this->routes = array_merge($this->routes, $routes);
   }
 
   /**
@@ -276,7 +276,8 @@ class sfPatternRouting extends sfRouting
     {
       if ($key == $pivot)
       {
-        $newroutes = array_merge($newroutes, $this->connect($name, $route));
+        $this->connect($name, $route);
+        $newroutes = array_merge($newroutes, $this->routes);
       }
       $newroutes[$key] = $value;
     }
