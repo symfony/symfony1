@@ -42,8 +42,8 @@ class sfGenerateAppTask extends sfGeneratorBaseTask
     ));
 
     $this->addOptions(array(
-      new sfCommandOption('escaping-strategy', null, sfCommandOption::PARAMETER_REQUIRED, 'Output escaping strategy', false),
-      new sfCommandOption('csrf-secret', null, sfCommandOption::PARAMETER_REQUIRED, 'Secret to use for CSRF protection', false),
+      new sfCommandOption('escaping-strategy', null, sfCommandOption::PARAMETER_REQUIRED, 'Output escaping strategy', true),
+      new sfCommandOption('csrf-secret', null, sfCommandOption::PARAMETER_REQUIRED, 'Secret to use for CSRF protection', true),
     ));
 
     $this->aliases = array('init-app');
@@ -70,9 +70,13 @@ For the first application, the production environment script is named
 If an application with the same name already exists,
 it throws a [sfCommandException|COMMENT].
 
-You can enable output escaping (to prevent XSS) by using the [escaping-strategy|COMMENT] option:
+By default, the output escaping is enabled (to prevent XSS), and a random
+secret is also generated to prevent CSRF.
 
-  [./symfony generate:app frontend --escaping-strategy=on|INFO]
+You can disable output escaping by using the [escaping-strategy|COMMENT]
+option:
+
+  [./symfony generate:app frontend --escaping-strategy=off|INFO]
 
 You can enable session token in forms (to prevent CSRF) by defining
 a secret with the [csrf-secret|COMMENT] option:
@@ -112,6 +116,11 @@ EOF;
     if (!$firstApp)
     {
       $indexName = $app;
+    }
+
+    if (true === $options['csrf-secret'])
+    {
+      $options['csrf-secret'] = sha1(rand(111111111, 99999999).getmypid());
     }
 
     // Set no_script_name value in settings.yml for production environment
