@@ -46,20 +46,20 @@ class sfWebDebugLogger extends sfVarLogger
     {
       $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
     }
-    
+
     $this->registerErrorHandler();
 
     return parent::initialize($dispatcher, $options);
   }
-  
+
   /**
    * Registers logger with PHP error handler.
    */
   protected function registerErrorHandler()
-  {    
-    set_error_handler(array($this,'handlePhpError'));     
+  {
+    set_error_handler(array($this,'handlePhpError'));
   }
-  
+
   /**
    * PHP error handler send PHP errors to log.
    *
@@ -85,19 +85,19 @@ class sfWebDebugLogger extends sfVarLogger
     {
       case E_STRICT:
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::ERR, sprintf($message, 'Strict notice'))));
-      break;
+        break;
       case E_NOTICE:
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::ERR, sprintf($message, 'Notice'))));
-      break;
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::NOTICE, sprintf($message, 'Notice'))));
+        break;
       case E_WARNING:
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::ERR, sprintf($message, 'Warning'))));
-      break;
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::WARNING, sprintf($message, 'Warning'))));
+        break;
       case E_RECOVERABLE_ERROR:
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('priority' => sfLogger::ERR, sprintf($message, 'Error'))));
-      break;
+        break;
     }
 
-    return true; // prevent default error handling
+    return false; // do not prevent default error handling
   }
 
   /**
