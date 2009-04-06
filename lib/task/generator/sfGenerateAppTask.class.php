@@ -127,7 +127,7 @@ EOF;
     $finder = sfFinder::type('file')->name('settings.yml');
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
       'NO_SCRIPT_NAME'    => $firstApp ? 'on' : 'off',
-      'CSRF_SECRET'       => 'false' == $options['csrf-secret'] ? 'false' : sfYamlInline::dump($options['csrf-secret']),
+      'CSRF_SECRET'       => sfYamlInline::dump(sfYamlInline::parseScalar($options['csrf-secret'])),
       'ESCAPING_STRATEGY' => sfYamlInline::dump((boolean) sfYamlInline::parseScalar($options['escaping-strategy'])),
     ));
 
