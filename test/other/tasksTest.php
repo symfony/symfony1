@@ -65,7 +65,7 @@ class sf_test_project
   }
 }
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 if (!extension_loaded('SQLite'))
 {
@@ -81,12 +81,14 @@ $c->initialize($t);
 $content = $c->execute_command('generate:project myproject');
 $t->ok(file_exists($c->tmp_dir.DS.'symfony'), '"generate:project" installs the symfony CLI in root project directory');
 
-$content = $c->execute_command('generate:app frontend --escaping-strategy=on');
+$content = $c->execute_command('generate:app frontend');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "frontend" directory under "apps" directory');
-$t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/escaping_strategy: +true/', '"generate:app" switches escaping_strategy "on"');
+$t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/escaping_strategy: +true/', '"generate:app" switches escaping_strategy "on" by default');
+$t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/csrf_secret: +\w+/', '"generate:app" generates a csrf_token by default');
 
-$content = $c->execute_command('generate:app backend');
+$content = $c->execute_command('generate:app backend --escaping-strategy=off --csrf-secret=false');
 $t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/escaping_strategy: +false/', '"generate:app" switches escaping_strategy "off"');
+$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/csrf_secret: +false/', '"generate:app" switches csrf_token to "off"');
 
 // failing
 $content = $c->execute_command('generate:module wrongapp foo', 1);
