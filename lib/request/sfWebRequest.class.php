@@ -32,7 +32,8 @@ class sfWebRequest extends sfRequest
     $postParameters         = null,
     $requestParameters      = null,
     $formats                = array(),
-    $format                 = null;
+    $format                 = null,
+    $fileArrayFixed         = false;
 
   /**
    * Initializes this sfRequest.
@@ -705,9 +706,65 @@ class sfWebRequest extends sfRequest
    * @param  string $key  A key
    * @return array  An associative array of files
    */
-  static public function getFiles($key = null)
+  public function getFiles($key = null)
   {
-    return is_null($key) ? $_FILES : (isset($_FILES[$key]) ? $_FILES[$key] : array());
+    if (false === $this->fileArrayFixed)
+    {
+      $files = self::convertFileInformation($_FILES);
+      $this->fileArrayFixed = true;
+    }
+
+    return is_null($key) ? $files : (isset($files[$key]) ? $files[$key] : array());
+  }
+
+  /**
+   * Converts uploaded file array to a format following the $_GET and $POST naming convention.
+   *
+   * It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
+   *
+   * @param  array $taintedFiles An array representing uploaded file information
+   *
+   * @return array An array of re-ordered uploaded file information
+   */
+  static public function convertFileInformation(array $taintedFiles)
+  {
+    $files = array();
+    foreach ($taintedFiles as $key => $data)
+    {
+      $files[$key] = self::fixPhpFilesArray($data);
+    }
+
+    return $files;
+  }
+
+  static protected function fixPhpFilesArray($data)
+  {
+    $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
+    $keys = array_keys($data);
+    sort($keys);
+
+    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
+    {
+      return $data;
+    }
+
+    $files = $data;
+    foreach ($fileKeys as $k)
+    {
+      unset($files[$k]);
+    }
+    foreach (array_keys($data['name']) as $key)
+    {
+      $files[$key] = self::fixPhpFilesArray(array(
+        'error'    => $data['error'][$key],
+        'name'     => $data['name'][$key],
+        'type'     => $data['type'][$key],
+        'tmp_name' => $data['tmp_name'][$key],
+        'size'     => $data['size'][$key],
+      ));
+    }
+
+    return $files;
   }
 
   /**

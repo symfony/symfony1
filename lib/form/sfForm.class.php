@@ -1099,78 +1099,43 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   static public function convertFileInformation(array $taintedFiles)
   {
-    return self::pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', self::arrayToPaths($taintedFiles)));
-  }
-
-  /**
-   * Converts a string of paths separated by newlines into an array.
-   *
-   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
-   * @author Shaun Inman (www.shauninman.com)
-   *
-   * @param  string $str A string representing an array
-   *
-   * @return Array  An array
-   */
-  static public function pathsToArray($str)
-  {
-    $array = array();
-    $lines = explode("\n", trim($str));
-
-    if (!empty($lines[0]))
+    $files = array();
+    foreach ($taintedFiles as $key => $data)
     {
-      foreach ($lines as $line)
-      {
-        list($path, $value) = explode(' = ', $line);
-
-        $steps = explode('/', $path);
-        array_shift($steps);
-
-        $insertion =& $array;
-
-        foreach ($steps as $step)
-        {
-          if (!isset($insertion[$step]))
-          {
-            $insertion[$step] = array();
-          }
-          $insertion =& $insertion[$step];
-        }
-        $insertion = ctype_digit($value) ? (int) $value : $value;
-      }
+      $files[$key] = self::fixPhpFilesArray($data);
     }
 
-    return $array;
+    return $files;
   }
 
-  /**
-   * Converts an array into a string containing the path to each of its values separated by a newline.
-   *
-   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
-   * @author Shaun Inman (www.shauninman.com)
-   *
-   * @param  Array  $array  An array
-   * @param  string $prefix Prefix for internal use
-   *
-   * @return string A string representing the array
-   */
-  static public function arrayToPaths($array = array(), $prefix = '')
+  static protected function fixPhpFilesArray($data)
   {
-    $str = '';
+    $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
+    $keys = array_keys($data);
+    sort($keys);
 
-    foreach ($array as $key => $value)
+    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
     {
-      if (is_array($value))
-      {
-        $str .= self::arrayToPaths($value, $prefix.'/'.$key);
-      }
-      else
-      {
-        $str .= "$prefix/$key = $value\n";
-      }
+      return $data;
     }
 
-    return $str;
+    $files = $data;
+    foreach ($fileKeys as $k)
+    {
+      unset($files[$k]);
+    }
+    foreach (array_keys($data['name']) as $key)
+    {
+      $files[$key] = self::fixPhpFilesArray(array(
+        'error'    => $data['error'][$key],
+        'name'     => $data['name'][$key],
+        'type'     => $data['type'][$key],
+        'tmp_name' => $data['tmp_name'][$key],
+        'size'     => $data['size'][$key],
+      ));
+    }
+
+    return $files;
   }
 
   /**
