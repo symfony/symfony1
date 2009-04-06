@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -54,6 +54,11 @@ $output = 'foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox"
 <li><input name="foo[]" type="checkbox" value="bar" id="foo_bar" />&nbsp;<label for="foo_bar">foo</label></li></ul>
 bar <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>';
 $t->is($w->render('foo', array('foo', 'foobar')), $output, '->render() has support for groups');
+
+$w->setOption('choices', array('foo' => array('foo' => 'bar', 'bar' => 'foo')));
+$output = 'foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>
+<li><input name="foo[]" type="checkbox" value="bar" id="foo_bar" checked="checked" />&nbsp;<label for="foo_bar">foo</label></li></ul>';
+$t->is($w->render('foo', array('bar')), $output, '->render() accepts a single group');
 
 try
 {

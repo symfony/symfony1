@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -76,7 +76,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
     }
 
     // with groups?
-    if (count($choices) && is_array(next($choices)))
+    if (count($choices) && is_array(current($choices)))
     {
       $parts = array();
       foreach ($choices as $key => $option)
