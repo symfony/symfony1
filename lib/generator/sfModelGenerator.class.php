@@ -206,7 +206,7 @@ abstract class sfModelGenerator extends sfGenerator
 
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
-    return '[?php echo link_to(__(\''.$params['label'].'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$this->asPhp($params['params']).', \''.$this->getI18nCatalogue().'\') ?]';
+    return '[?php echo link_to(__(\''.$params['label'].'\', array(), \''.$this->getI18nCatalogue().'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$this->asPhp($params['params']).') ?]';
   }
 
   /**
