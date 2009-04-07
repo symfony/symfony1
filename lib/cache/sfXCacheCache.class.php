@@ -47,7 +47,16 @@ class sfXCacheCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    return xcache_isset($this->getOption('prefix').$key) ? substr(xcache_get($this->getOption('prefix').$key), 12) : $default;
+    
+    $set = $this->getBaseValue($key);
+    
+    if(!is_array($set) || !array_key_exists('data', $set))
+    {
+      
+      return $default;
+    }
+    
+    return $set['data'];
   }
 
   /**
@@ -65,7 +74,13 @@ class sfXCacheCache extends sfCache
   {
     $lifetime = $this->getLifetime($lifetime);
 
-    return xcache_set($this->getOption('prefix').$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
+    $set = array(
+      'timeout' => time() + $lifetime,
+      'data'    => $data,
+      'ctime'   => time()
+    );
+    
+    return xcache_set($this->getOption('prefix').$key, $set, $lifetime);
   }
 
   /**
@@ -104,17 +119,15 @@ class sfXCacheCache extends sfCache
    */
   public function getLastModified($key)
   {
-    if (!xcache_isset($this->getOption('prefix').$key))
+    $set = $this->getBaseValue($key);
+    
+    if(!is_array($set) || !array_key_exists('ctime', $set))
     {
+      
       return 0;
     }
-
-    if ($info = $this->getCacheInfo($key))
-    {
-      return $info['ctime'];
-    }
-
-    return 0;
+    
+    return $set['ctime'];
   }
 
   /**
@@ -122,9 +135,23 @@ class sfXCacheCache extends sfCache
    */
   public function getTimeout($key)
   {
-    return xcache_isset($this->getOption('prefix').$key) ? intval(substr(xcache_get($this->getOption('prefix').$key), 0, 12)) : 0;
+    
+    $set = $this->getBaseValue($key);
+    
+    if(!is_array($set) || !array_key_exists('timeout', $set))
+    {
+      
+      return 0;
+    }
+    
+    return $set['timeout'];
   }
-
+  
+  public function getBaseValue($key)
+  {
+    return xcache_isset($this->getOption('prefix').$key) ? xcache_get($this->getOption('prefix').$key) : null;
+  }
+  
   /**
    * @see sfCache
    */
@@ -150,29 +177,6 @@ class sfXCacheCache extends sfCache
         }
       }
     }
-  }
-
-  protected function getCacheInfo($key)
-  {
-    $this->checkAuth();
-
-    for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
-    {
-      $infos = xcache_list(XC_TYPE_VAR, $i);
-
-      if (is_array($infos['cache_list']))
-      {
-        foreach ($infos['cache_list'] as $info)
-        {
-          if ($this->getOption('prefix').$key == $info['name'])
-          {
-            return $info;
-          }
-        }
-      }
-    }
-
-    return null;
   }
 
   protected function checkAuth()
