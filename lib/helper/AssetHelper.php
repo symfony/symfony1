@@ -460,7 +460,7 @@ function include_metas()
  *    => <meta http-equiv="content-type" content="text/html; charset=utf-8" />
  * </code>
  *
- * <b>Note:</b> Modify the view.yml or use sfWebResponse::addMeta() to change, add or remove HTTP metas.
+ * <b>Note:</b> Modify the view.yml or use sfWebResponse::addHttpMeta() to change, add or remove HTTP metas.
  *
  * @return string XHTML compliant <meta> tag(s)
  * @see    include_metas
