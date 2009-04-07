@@ -131,7 +131,8 @@ class sfWidgetFormChoice extends sfWidgetForm
     if ($this->getOption('choices') instanceof sfCallable)
     {
       $callable = $this->getOption('choices')->getCallable();
-      if (is_array($callable))
+      $class = __CLASS__;
+      if (is_array($callable) && $callable[0] instanceof $class)
       {
         $callable[0] = $this;
         $this->setOption('choices', new sfCallable($callable));

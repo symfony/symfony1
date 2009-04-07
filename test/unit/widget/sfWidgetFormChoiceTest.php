@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 // ->getRenderer()
 $t->diag('->getRenderer()');
@@ -65,3 +65,15 @@ $w = new sfWidgetFormChoice(array('choices' => array()));
 $w->setOption('renderer_class', 'MyWidget');
 $t->is($w->getJavaScripts(), array('/path/to/a/file.js'), '->getJavaScripts() returns the stylesheets of the renderer widget');
 $t->is($w->getStylesheets(), array('/path/to/a/file.css' => 'all'), '->getStylesheets() returns the JavaScripts of the renderer widget');
+
+// __clone()
+$t->diag('__clone()');
+$w = new sfWidgetFormChoice(array('choices' => new sfCallable(array($w, 'foo'))));
+$w1 = clone $w;
+$callable = $w1->getOption('choices')->getCallable();
+$t->is(spl_object_hash($callable[0]), spl_object_hash($w1), '__clone() changes the choices is a callable and the object is an instance of the current object');
+
+$w = new sfWidgetFormChoice(array('choices' => new sfCallable(array($a = new stdClass(), 'foo'))));
+$w1 = clone $w;
+$callable = $w1->getOption('choices')->getCallable();
+$t->is(spl_object_hash($callable[0]), spl_object_hash($a), '__clone() changes nothing if the choices is a callable and the object is not an instance of the current object');

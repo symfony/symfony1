@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(9, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -76,3 +76,15 @@ $w = new sfWidgetFormSelectRadio(array('choices' => new sfCallable('choice_calla
 $dom->loadHTML($w->render('foo'));
 $css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('input[type="radio"]')->getNodes()), 3, '->render() accepts a sfCallable as a choices option');
+
+// __clone()
+$t->diag('__clone()');
+$w = new sfWidgetFormSelectRadio(array('choices' => new sfCallable(array($w, 'foo'))));
+$w1 = clone $w;
+$callable = $w1->getOption('choices')->getCallable();
+$t->is(spl_object_hash($callable[0]), spl_object_hash($w1), '__clone() changes the choices is a callable and the object is an instance of the current object');
+
+$w = new sfWidgetFormSelectRadio(array('choices' => new sfCallable(array($a = new stdClass(), 'foo'))));
+$w1 = clone $w;
+$callable = $w1->getOption('choices')->getCallable();
+$t->is(spl_object_hash($callable[0]), spl_object_hash($a), '__clone() changes nothing if the choices is a callable and the object is not an instance of the current object');
