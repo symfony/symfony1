@@ -16,9 +16,14 @@ How to upgrade?
 
 To upgrade a project:
 
+  * Check that all plugins used by your project are compatible with symfony
+    1.3
+
   * If you don't use a SCM tool, please make a backup of your project.
 
   * Upgrade symfony to 1.3
+
+  * Upgrade the plugins to their 1.3 version
 
   * Launch the `project:upgrade1.3` task from your project directory
     to perform an automatic upgrade:
