@@ -16,7 +16,6 @@ require_once 'PEAR.php';
 require_once 'PEAR/Config.php';
 require_once 'PEAR/Registry.php';
 require_once 'PEAR/Command.php';
-require_once 'PEAR/Remote.php';
 require_once 'PEAR/PackageFile/v2/rw.php';
 require_once 'PEAR/Dependency2.php';
 require_once 'PEAR/Installer.php';
