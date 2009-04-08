@@ -165,8 +165,9 @@ $t->is($scripts_en, $c_en->Scripts, '->getScripts() is equivalent to ->Scripts')
 $t->diag('->getTimeZones()');
 $time_zones_en = $c_en->getTimeZones();
 $time_zones_fr = $c_fr->getTimeZones();
-$t->is($time_zones_en['meta:Alaska']['ld'], 'Alaska Daylight Time', '->getTimeZones() returns a list of time zones in the language of the localized version');
-$t->is($time_zones_fr['meta:Alaska']['ld'], 'heure avancée de l’Alaska', '->getTimeZones() returns a list of time zones in the language of the localized version');
+
+$t->is($time_zones_en['America/Juneau']['ld'], 'Alaska Daylight Time', '->getTimeZones() returns a list of time zones in the language of the localized version');
+$t->is($time_zones_fr['America/Juneau']['ld'], 'heure avancée de l’Alaska', '->getTimeZones() returns a list of time zones in the language of the localized version');
 $t->is($time_zones_en, $c_en->TimeZones, '->getTimeZones() is equivalent to ->TimeZones');
 
 // ->validCulture()
