@@ -211,8 +211,6 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      * gets descendants for node (direct descendants only)
      *
      * @return mixed  The descendants of the node or FALSE if the node has no descendants.
-     * @todo Currently all descendants are fetched, no matter the depth. Maybe there is a better
-     *       solution with less overhead.      
      */
     public function getDescendants($depth = null, $includeNode = false)
     {
@@ -321,7 +319,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */     
     public function getNumberChildren()
     {
-        return count($this->getChildren());
+        $children = $this->getChildren();
+        return $children === false ? 0 : count($children);
     }
 
     /**
