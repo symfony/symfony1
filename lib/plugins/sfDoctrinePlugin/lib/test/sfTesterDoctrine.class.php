@@ -57,6 +57,13 @@ class sfTesterDoctrine extends sfTester
       foreach ($conditions as $column => $condition)
       {
         $column = Doctrine::getTable($model)->getFieldName($column);
+
+        if (is_null($condition))
+        {
+          $query->andWhere('a.'.$column.' IS NULL');
+          continue;
+        }
+
         $operator = '=';
         if ('!' == $condition[0])
         {
