@@ -58,7 +58,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
     $this->addRequiredOption('column');
     $this->addOption('primary_key', null);
     $this->addOption('connection', null);
-    $this->addOption('throw_global_error', true);
+    $this->addOption('throw_global_error', false);
 
     $this->setMessage('invalid', 'An object with the same "%column%" already exist.');
   }
