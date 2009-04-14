@@ -104,6 +104,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     {
       if (count($bindings[$i]))
       {
+        $bindings[$i] = array_reverse($bindings[$i]);
         foreach ($bindings[$i] as $search => $replace)
         {
           $logs[$i] = str_replace($search, $replace, $logs[$i]);
