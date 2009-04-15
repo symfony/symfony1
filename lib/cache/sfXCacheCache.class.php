@@ -179,6 +179,29 @@ class sfXCacheCache extends sfCache
     }
   }
 
+  public function getCacheInfo($key)
+  {
+    $this->checkAuth();
+
+    for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
+    {
+      $infos = xcache_list(XC_TYPE_VAR, $i);
+
+      if (is_array($infos['cache_list']))
+      {
+        foreach ($infos['cache_list'] as $info)
+        {
+          if ($this->getOption('prefix').$key == $info['name'])
+          {
+            return $info;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
   protected function checkAuth()
   {
     if (ini_get('xcache.admin.enable_auth'))
