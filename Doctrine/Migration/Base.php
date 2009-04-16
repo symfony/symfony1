@@ -161,7 +161,7 @@ abstract class Doctrine_Migration_Base
      */
     public function createConstraint($tableName, $constraintName, array $definition)
     {
-        $this->constraint('up', $constraintName, $definition);
+        $this->constraint('up', $tableName, $constraintName, $definition);
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class Doctrine_Migration_Base
      */
     public function dropConstraint($tableName, $constraintName)
     {
-        $this->constraint('down', $constraintName);
+        $this->constraint('down', $tableName, $constraintName, array());
     }
 
     /**
