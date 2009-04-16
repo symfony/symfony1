@@ -143,7 +143,7 @@ class sfWebRequest extends sfRequest
     $pathArray = $this->getPathInfoArray();
 
     // for IIS with rewrite module (IIFR, ISAPI Rewrite, ...)
-    if ('HTTP_X_REWRITE_URL' == sfConfig::get('sf_path_info_key'))
+    if ('HTTP_X_REWRITE_URL' == $this->options['path_info_key'])
     {
       $uri = isset($pathArray['HTTP_X_REWRITE_URL']) ? $pathArray['HTTP_X_REWRITE_URL'] : '';
     }
