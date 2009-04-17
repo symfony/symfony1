@@ -690,11 +690,21 @@ abstract class Doctrine_Query_Abstract
             $tableAlias .= '.';
         }
 
-        $field = key($map);
-        $value = current($map);
-        $identifier = $this->_conn->quoteIdentifier($tableAlias . $field);
+        // Fix for 2015: loop through whole inheritanceMap to add all   
+        // keyFields for inheritance (and not only the first) 
+        $retVal = ""; 
+        $count = 0; 
+         
+        foreach ($map as $field => $value) { 
+            if ($count++ > 0) {
+                $retVal .= ' AND ';
+            }
 
-        return $identifier . ' = ' . $this->_conn->quote($value);;
+            $identifier = $this->_conn->quoteIdentifier($tableAlias . $field); 
+            $retVal .= $identifier . ' = ' . $this->_conn->quote($value);
+        }
+
+        return $retVal;
     }
 
     /**

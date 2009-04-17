@@ -482,7 +482,20 @@ class Doctrine_Import_Schema
 
                 // Populate the parents subclasses
                 if ($definition['inheritance']['type'] == 'column_aggregation') {
-                    $array[$parent]['inheritance']['subclasses'][$definition['className']] = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']);
+                    // Fix for 2015: loop through superclasses' inheritance to the base-superclass to  
+                    // make sure we collect all keyFields needed (and not only the first) 
+                    $inheritanceFields = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']); 
+
+                    $superClass = $definition['inheritance']['extends']; 
+                    $multiInheritanceDef = $array[$superClass]; 
+
+                    while (count($multiInheritanceDef['inheritance']) > 0 && array_key_exists('extends', $multiInheritanceDef['inheritance'])) { 
+                        $superClass = $multiInheritanceDef['inheritance']['extends']; 
+                        $inheritanceFields[$multiInheritanceDef['inheritance']['keyField']] = $multiInheritanceDef['inheritance']['keyValue']; 
+                        $multiInheritanceDef = $array[$superClass]; 
+                    } 
+
+                    $array[$parent]['inheritance']['subclasses'][$definition['className']] = $inheritanceFields;
                 }
             }
         }
