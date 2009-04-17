@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(4, new lime_output_color());
 
 // ->__construct()
 $t->diag('->__construct()');
@@ -29,3 +29,7 @@ $collection = new sfObjectRouteCollection(array('name' => 'test_collection', 'mo
 $options = $collection->getOptions();
 $t->is($options['column'], 'id', '->__construct() defaults "column" option to "id"');
 $t->is_deeply($options['requirements'], array('id' => '\d+'), '->__construct() defaults "requirements" for column to "\d+"');
+
+$collection = new sfObjectRouteCollection(array('name' => 'test_collection', 'model' => 'TestModel', 'column' => 'slug'));
+$options = $collection->getOptions();
+$t->is_deeply($options['requirements'], array('slug' => null), '->__construct() does not set a default requirement for custom columns');
