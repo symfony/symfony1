@@ -384,7 +384,7 @@ class sfPropelData extends sfData
       $resultsSets = array();
       if ($hasParent)
       {
-        $resultsSets = $this->fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $fixColumn);
+        $resultsSets[] = $this->fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $fixColumn);
       }
       else
       {
@@ -500,28 +500,23 @@ class sfPropelData extends sfData
 
   protected function fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in = null)
   {
-    $stmt = $this->con->prepare('SELECT * FROM :table WHERE :column :where');
-    $stmt->bindValue(':table', constant(constant($tableName.'::PEER').'::TABLE_NAME'));
-    $stmt->bindValue(':column', strtolower($column->getName()));
-    $stmt->bindValue(':where', is_null($in) ? 'IS NULL' : 'IN ('.$in.')');
+    $sql = sprintf('SELECT * FROM %s WHERE %s %s',
+                   constant(constant($tableName.'::PEER').'::TABLE_NAME'),
+                   strtolower($column->getName()),
+                   is_null($in) ? 'IS NULL' : 'IN ('.$in.')');
+    $stmt = $this->con->prepare($sql);
 
-    $stmt = $stmt->execute();
+    $stmt->execute();
 
-    $first = null;
     $in = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
-      if(is_null($first))
-      {
-        $first = $row;
-      }
-
       $in[] = "'".$row[strtolower($column->getRelatedColumnName())]."'";
+      $resultsSets[] = $row;
     }
 
     if ($in = implode(', ', $in))
     {
-      $resultsSets[] = $first;
       $resultsSets = $this->fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in);
     }
 
