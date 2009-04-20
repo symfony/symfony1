@@ -119,7 +119,10 @@ class sfPatternRouting extends sfRouting
   {
     if (is_string($route = $this->routes[$name]))
     {
-      return $this->routes[$name] = unserialize($route);
+      $this->routes[$name] = unserialize($route);
+      $this->routes[$name]->setDefaultParameters($this->defaultParameters);
+
+      return $this->routes[$name];
     }
     else
     {
@@ -315,43 +318,6 @@ class sfPatternRouting extends sfRouting
   {
     $route->setDefaultParameters($this->defaultParameters);
     $route->setDefaultOptions($this->options);
-  }
-
-  /**
-   * Sets a default parameter.
-   *
-   * @param string $key    The key
-   * @param string $value  The value
-   */
-  public function setDefaultParameter($key, $value)
-  {
-    parent::setDefaultParameter($key, $value);
-    foreach ($this->routes as $name => $route)
-    {
-      if (is_string($route))
-      {
-        $route = $this->loadRoute($name);
-      }
-      $route->setDefaultParameters($this->defaultParameters);
-    }
-  }
-
-  /**
-   * Sets the default parameters for URL generation.
-   *
-   * @param array $parameters  An array of default parameters
-   */
-  public function setDefaultParameters($parameters)
-  {
-    parent::setDefaultParameters($parameters);
-    foreach ($this->routes as $name => $route)
-    {
-      if (is_string($route))
-      {
-        $route = $this->loadRoute($name);
-      }
-      $route->setDefaultParameters($this->defaultParameters);
-    }
   }
 
   /**
