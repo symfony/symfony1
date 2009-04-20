@@ -1692,7 +1692,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                             . ' '
                             . $this->_conn->quoteIdentifier($assocAlias);
 
-                    $queryPart .= ' ON ' . $this->_conn->quoteIdentifier($localAlias
+                    $queryPart .= ' ON (' . $this->_conn->quoteIdentifier($localAlias
                                 . '.'
                                 . $localTable->getColumnName($localTable->getIdentifier())) // what about composite keys?
                                 . ' = '
@@ -1707,6 +1707,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                                     . ' = '
                                     . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeignRefColumnName());
                     }
+
+                    $queryPart .= ')';
 
                     $this->_sqlParts['from'][] = $queryPart;
 
