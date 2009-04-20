@@ -40,7 +40,7 @@ class Doctrine_Validator_Date
      */
     public function validate($value)
     {
-        if ($value === null) {
+        if (is_null($value)) {
             return true;
         }
         $e = explode('-', $value);

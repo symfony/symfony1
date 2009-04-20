@@ -41,6 +41,9 @@ class Doctrine_Validator_Regexp
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         if ( ! isset($this->args)) {
            return true;
         }

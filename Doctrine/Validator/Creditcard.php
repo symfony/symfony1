@@ -41,6 +41,9 @@ class Doctrine_Validator_Creditcard
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         $cardType = "";
         $card_regexes = array(
             "/^4\d{12}(\d\d\d){0,1}$/"      => 'visa',

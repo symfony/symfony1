@@ -43,11 +43,9 @@ class Doctrine_Validator_Unsigned
      */
     public function validate($value)
     {
-        if(is_null($value) || $value == '')
-        {
+        if (is_null($value) || $value == '') {
             return true;
         }
-
         if (preg_match('/[^0-9\-\.]/', $value)) {
             return false;
         }

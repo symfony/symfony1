@@ -40,6 +40,9 @@ class Doctrine_Validator_Ip
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         return (bool) ip2long(str_replace("\0", '', $value));
     }
 }

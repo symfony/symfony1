@@ -40,6 +40,10 @@ class Doctrine_Validator_Unique
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
+
         $table = $this->invoker->getTable();
         $conn = $table->getConnection();
         $pks = $table->getIdentifierColumnNames();

@@ -100,6 +100,9 @@ class Doctrine_Validator_Usstate
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         return isset(self::$states[$value]);
     }
 }

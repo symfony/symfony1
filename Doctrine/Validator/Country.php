@@ -295,6 +295,9 @@ class Doctrine_Validator_Country
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         $value = strtolower($value);
 
         return isset(self::$countries[$value]);
