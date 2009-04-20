@@ -85,9 +85,12 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
         $result = $this->getConnection()->fetchAssoc($sql, array($this->_getKey($id)));
         
         if ( ! isset($result[0])) {
+            if ($testCacheValidity) {
+                $this->delete($id);
+            }
             return false;
         }
-        
+
         return unserialize($result[0]['data']);
     }
 
