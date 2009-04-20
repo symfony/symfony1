@@ -242,7 +242,7 @@ class sfPearEnvironment
    */
   public function initializeConfiguration($pluginDir, $cacheDir)
   {
-    $this->config = PEAR_Config::singleton();
+    $this->config = $GLOBALS['_PEAR_Config_instance'] = new sfPearConfig();
 
     // change the configuration for use
     $this->config->set('php_dir',  $pluginDir);
