@@ -62,7 +62,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $name = $record->getTable()->getFieldName($this->_options['name']);
 
         if ( ! $record->$name) {
-            $record->$name = $this->buildSlug($record);
+            $record->$name = $this->buildSlugFromFields($record);
         }
     }
 
@@ -79,10 +79,16 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             $record = $event->getInvoker();
             $name = $record->getTable()->getFieldName($this->_options['name']);
 
-            if ( ! $record->$name ||
-            (false !== $this->_options['canUpdate'] &&
-            array_key_exists($name, $record->getModified()))) {
-                $record->$name = $this->buildSlug($record);
+            if ( ! $record->$name || (
+                false !== $this->_options['canUpdate'] && 
+                ! array_key_exists($name, $record->getModified())
+            )) {
+                $record->$name = $this->buildSlugFromFields($record);
+            } else if ( ! empty($record->$name) && 
+                false !== $this->_options['canUpdate'] && 
+                array_key_exists($name, $record->getModified()
+            )) {
+                $record->$name = $this->buildSlugFromSlugField($record);
             }
         }
     }
@@ -93,7 +99,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
      * @param Doctrine_Record $record 
      * @return string $slug
      */
-    protected function buildSlug($record)
+    protected function buildSlugFromFields($record)
     {
         if (empty($this->_options['fields'])) {
             if (method_exists($record, 'getUniqueSlug')) {
@@ -102,38 +108,51 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
                 $value = (string) $record;
             }
         } else {
+            $value = '';
+
+            foreach ($this->_options['fields'] as $field) {
+                $value .= $record->$field . ' ';
+            }
+
             if ($this->_options['unique'] === true) {   
-                $value = $this->getUniqueSlug($record);
-            } else {  
-                $value = '';
-                foreach ($this->_options['fields'] as $field) {
-                    $value .= $record->$field . ' ';
-                } 
+                return $this->getUniqueSlug($record, $value);
             }
         }
 
-        $value =  call_user_func_array($this->_options['builder'], array($value, $record));
-
-        return $value;
+        return call_user_func_array($this->_options['builder'], array($value, $record));
     }
+
+    /**
+     * Generate the slug for a given Doctrine_Record slug field
+     *
+     * @param Doctrine_Record $record 
+     * @return string $slug
+     */
+    protected function buildSlugFromSlugField($record)
+    {
+        $name = $record->getTable()->getFieldName($this->_options['name']);
+        $value = $record->$name;
+
+        if ($this->_options['unique'] === true) {   
+            return $this->getUniqueSlug($record, $value);
+        }
+
+        return call_user_func_array($this->_options['builder'], array($value, $record));
+    }
+
 
     /**
      * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by 
      * incrementing the values with a postfix if the slug is not unique
      *
      * @param Doctrine_Record $record 
+     * @param string $slugFromFields
      * @return string $slug
      */
-    public function getUniqueSlug($record)
+    public function getUniqueSlug($record, $slugFromFields) 
     {
         $name = $record->getTable()->getFieldName($this->_options['name']);
-        $slugFromFields = '';
-        foreach ($this->_options['fields'] as $field) {
-            $slugFromFields .= $record->$field . ' ';
-        }
-
-        $proposal = $record->$name ? $record->$name : $slugFromFields;
-        $proposal =  call_user_func_array($this->_options['builder'], array($proposal, $record));
+		$proposal =  call_user_func_array($this->_options['builder'], array($slugFromFields, $record));
         $slug = $proposal;
 
         $whereString = 'r.' . $name . ' LIKE ?';
