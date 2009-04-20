@@ -502,6 +502,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             case 'interval':
             case '_varchar':
                 $fixed = false;
+            case 'tsvector':
             case 'unknown':
             case 'char':
             case 'bpchar':
@@ -524,6 +525,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 break;
             case 'datetime':
             case 'timestamp':
+            case 'timetz':
             case 'timestamptz':
                 $type[] = 'timestamp';
                 $length = null;
