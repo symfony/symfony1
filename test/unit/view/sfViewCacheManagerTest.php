@@ -13,6 +13,13 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(33, new lime_output_color());
 
+class myViewCacheManager extends sfViewCacheManager
+{
+  public function registerConfiguration($moduleName)
+  {
+  }
+}
+
 class myController extends sfWebController
 {
 }
@@ -106,7 +113,7 @@ $r->connect('default', new sfRoute('/:module/:action/*'));
 
 // ->initialize()
 $t->diag('->initialize()');
-$m = new sfViewCacheManager($context, $cache = new myCache());
+$m = new myViewCacheManager($context, $cache = new myCache());
 $t->is($m->getCache(), $cache, '->initialize() takes a sfCache object as its second argument');
 
 // ->generateCacheKey()
@@ -242,7 +249,7 @@ $t->is($m->has('module/action?key2=value1'), true, '->remove() accepts wildcards
 function get_cache_manager($context)
 {
   myCache::clear();
-  $m = new sfViewCacheManager($context, new myCache());
+  $m = new myViewCacheManager($context, new myCache());
 
   return $m;
 }

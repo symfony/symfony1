@@ -138,8 +138,6 @@ class sfPartialView extends sfPHPView
       return null;
     }
 
-    $this->viewCache->registerConfiguration($this->moduleName);
-
     $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
     if ($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey))
     {

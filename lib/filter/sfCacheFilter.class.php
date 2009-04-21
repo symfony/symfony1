@@ -70,9 +70,6 @@ class sfCacheFilter extends sfFilter
 
   public function executeBeforeExecution()
   {
-    // register our cache configuration
-    $this->cacheManager->registerConfiguration($this->context->getModuleName());
-
     $uri = $this->routing->getCurrentInternalUri();
 
     if (is_null($uri))
