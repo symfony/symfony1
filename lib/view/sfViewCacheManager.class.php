@@ -185,9 +185,9 @@ class sfViewCacheManager
     {
       $request = $this->context->getRequest();
       $hostName = $request->getHost();
-      $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
-      $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
     }
+    $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
+    $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
 
     $cacheKey = sprintf('/%s/%s/%s', $hostName, $vary, $cacheKey);
 
