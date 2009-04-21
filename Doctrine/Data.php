@@ -263,8 +263,16 @@ class Doctrine_Data
             $models = Doctrine::getLoadedModels();
         }
 
+        $connections = array();
         foreach ($models as $model) {
-            Doctrine::getTable($model)->createQuery()->delete()->execute();
+          $connections[Doctrine::getTable($model)->getConnection()->getName()][] = $model;
+        }
+
+        foreach ($connections as $connection => $models) {
+            $models = Doctrine_Manager::getInstance()->getConnection($connection)->unitOfWork->buildFlushTree($models);
+            foreach ($models as $model) {
+                Doctrine::getTable($model)->createQuery()->delete()->execute();
+            }
         }
     }
 }
