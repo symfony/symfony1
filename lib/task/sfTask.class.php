@@ -262,7 +262,7 @@ abstract class sfTask
 
       if ($argument->isArray())
       {
-        $arguments[] = '... [nameN]';
+        $arguments[] = sprintf('... [%sN]', $argument->getName());
       }
     }
 
