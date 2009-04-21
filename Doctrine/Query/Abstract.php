@@ -1287,6 +1287,10 @@ abstract class Doctrine_Query_Abstract
         foreach ($cachedComponents as $alias => $components) {
             $e = explode('.', $components['name']);
             if (count($e) === 1) {
+                $manager = Doctrine_Manager::getInstance(); 
+                if ($manager->hasConnectionForComponent($e[0])) { 
+                    $this->_conn = $manager->getConnectionForComponent($e[0]); 
+                }
                 $queryComponents[$alias]['table'] = $this->_conn->getTable($e[0]);
             } else {
                 $queryComponents[$alias]['parent'] = $e[0];
