@@ -79,19 +79,30 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
              . ' WHERE id = ?';
 
         if ($testCacheValidity) {
-            $sql .= ' AND (expire=0 OR expire > ' . time() . ')';
+            $sql .= " AND (expire is null OR expire > '" . date('Y-m-d H:i:s') . "')";
         }
 
-        $result = $this->getConnection()->fetchAssoc($sql, array($this->_getKey($id)));
-        
+        $result = $this->getConnection()->execute($sql, array($this->_getKey($id)))->fetchAll(Doctrine::FETCH_NUM);
+
         if ( ! isset($result[0])) {
-            if ($testCacheValidity) {
-                $this->delete($id);
-            }
             return false;
         }
 
-        return unserialize($result[0]['data']);
+        return unserialize($this->_hex2bin($result[0][0]));
+    }
+
+    protected function _hex2bin($hex)
+    {
+      if ( ! is_string($hex)) {
+          return null;
+      }
+  
+      $bin = '';
+      for ($a = 0; $a < strlen($hex); $a += 2) {
+          $bin .= chr(hexdec($hex{$a} . $hex{($a + 1)}));
+      }
+
+      return $bin;
     }
 
     /**
@@ -102,10 +113,15 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      */
     public function contains($id) 
     {
-        $sql = 'SELECT expire FROM ' . $this->_options['tableName']
-             . ' WHERE id = ? AND (expire=0 OR expire > ' . time() . ')';
+        $sql = 'SELECT id, expire FROM ' . $this->_options['tableName']
+             . ' WHERE id = ?';
 
-        return $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
+        $result = $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
+
+        if(isset($result[0] )){
+        	return time();
+        }
+        return false;
     }
 
     /**
@@ -120,18 +136,34 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      */
     public function save($id, $data, $lifeTime = false)
     {
-        $sql = 'INSERT INTO ' . $this->_options['tableName']
-             . ' (id, data, expire) VALUES (?, ?, ?)';
-        
-        if ($lifeTime) {
-            $expire = time() + $lifeTime;
-        } else {
-            $expire = 0;
-        }
-        
-        $params = array($this->_getKey($id), serialize($data), $expire);
+    	if ($this->contains($id)) {
+    		//record is in database, do update
+    		$sql = 'UPDATE ' . $this->_options['tableName']
+    			   . ' SET data = ?, expire=? '
+             . ' WHERE id = ?';
 
-        return (bool) $this->getConnection()->exec($sql, $params);
+        if ($lifeTime) {
+            $expire = date('Y-m-d H:i:s',time() + $lifeTime);
+        } else {
+            $expire = NULL;
+        }
+
+        $params = array(bin2hex(serialize($data)), $expire, $this->_getKey($id));
+    	} else {
+    		//record is not in database, do insert
+    		 $sql = 'INSERT INTO ' . $this->_options['tableName']
+             . ' (id, data, expire) VALUES (?, ?, ?)';
+
+          if ($lifeTime) {
+              $expire = date('Y-m-d H:i:s', time() + $lifeTime);
+          } else {
+              $expire = NULL;
+          }
+
+          $params = array($this->_getKey($id), bin2hex(serialize($data)), $expire);
+      }
+
+      return (bool) $this->getConnection()->exec($sql, $params);
     }
 
     /**
