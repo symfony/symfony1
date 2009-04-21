@@ -100,7 +100,7 @@ class Doctrine_Transaction_Oracle extends Doctrine_Transaction
                 throw new Doctrine_Transaction_Exception('Isolation level ' . $isolation . ' is not supported.');
         }
 
-        $query = 'ALTER SESSION ISOLATION LEVEL ' . $isolation;
+        $query = 'ALTER SESSION SET ISOLATION_LEVEL = ' . $isolation;
         return $this->conn->execute($query);
     }
 }
