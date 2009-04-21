@@ -105,7 +105,7 @@ class sfXCacheCache extends sfCache
 
     for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
     {
-      if (!xcache_clear_cache(XC_TYPE_VAR, $i))
+      if (false === xcache_clear_cache(XC_TYPE_VAR, $i))
       {
         return false;
       }
