@@ -39,6 +39,13 @@ removed:
   * `first_name` => First name (as before)
   * `author_id` => Author (was "Author id" before)
 
+### `sfValidatorSchemaCompare`
+
+The `sfValidatorSchemaCompare` class has two new comparators:
+
+ * `IDENTICAL`, which is equivalent to `===`;
+ * `NOT_IDENTICAL`, which is equivalent to `!==`;
+
 sfToolkit
 ---------
 
