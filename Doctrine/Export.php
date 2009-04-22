@@ -1138,7 +1138,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If create index statement
-                 if (preg_grep("/CREATE ?.* INDEX/", array($query))) {
+                 if (preg_grep("/CREATE ([^ ]* )?INDEX/", array($query))) {
                      $connections[$connectionName]['create_indexes'][] =  $query;
 
                      unset($sql[$key]);

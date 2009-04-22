@@ -104,7 +104,19 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
     {
         $name  = $this->conn->formatter->getIndexName($name);
         $name  = $this->conn->quoteIdentifier($name);
-        $query = 'CREATE INDEX ' . $name . ' ON ' . $table;
+        $type   = '';
+        if (isset($definition['type'])) {
+            switch (strtolower($definition['type'])) {
+                case 'unique':
+                    $type = strtoupper($definition['type']) . ' ';
+                break;
+                default:
+                    throw new Doctrine_Export_Exception(
+                        'Unknown type ' . $definition['type'] . ' for index ' . $name . ' in table ' . $table
+                    );
+            }
+        }
+        $query = 'CREATE ' . $type . 'INDEX ' . $name . ' ON ' . $table;
         $query .= ' (' . $this->getIndexFieldDeclarationList($definition['fields']) . ')';
 
         return $query;
