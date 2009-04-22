@@ -1013,7 +1013,7 @@ abstract class Doctrine_Query_Abstract
         $dql = $this->getDql();
         $params = $this->getParams($params);
         $conn = $this->getConnection();
-        $hash = md5($conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
+        $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
         return $hash;
     }
 
