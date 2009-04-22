@@ -140,6 +140,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             break;
             case 'tinyint':
             case 'smallint':
+            case 'bigint':
             case 'int':
                 $type[0] = 'integer';
                 if ($length == 1) {
