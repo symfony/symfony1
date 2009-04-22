@@ -128,6 +128,7 @@ class Doctrine_Relation_Parser
     public function bind($name, $options = array())
     {
         $e    = explode(' as ', $name);
+        $e    = array_map('trim', $e);
         $name = $e[0];
         $alias = isset($e[1]) ? $e[1] : $name;
 
