@@ -1949,7 +1949,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $groupby = ( ! empty($groupby)) ? ' GROUP BY ' . implode(', ', $groupby) : '';
 
         // Build the having clause
-        $having = ( ! empty($having)) ? ' HAVING ' . implode(', ', $having) : '';
+        $having = ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having) : '';
 
         // Building the from clause and finishing query
         if (count($this->_queryComponents) == 1 && empty($having)) {
