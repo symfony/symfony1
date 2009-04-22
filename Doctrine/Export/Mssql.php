@@ -61,7 +61,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
     public function dropDatabase($name)
     {
         $name = $this->conn->quoteIdentifier($name, true);
-        return $this->conn->standaloneQuery('DROP DATABASE ' . $name, null, true);
+        return $this->conn->standaloneQuery('DROP DATABASE ' . $name, array(), true);
     }
 
     /**
