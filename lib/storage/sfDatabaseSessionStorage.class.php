@@ -199,5 +199,6 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    */
   public function shutdown()
   {
+    parent::shutdown();
   }
 }
