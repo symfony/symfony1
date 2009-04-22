@@ -26,4 +26,4 @@ $uniqueTestForm->save();
 $uniqueTestForm = new UniqueTestForm();
 $uniqueTestForm->bind($data);
 $t->is($uniqueTestForm->isValid(), false);
-$t->is((string) $uniqueTestForm->getErrorSchema(), 'An object with the same "unique_test1" already exist. An object with the same "unique_test1, unique_test2" already exist.');
+$t->is((string) $uniqueTestForm->getErrorSchema(), 'unique_test1 [An object with the same "unique_test1" already exist. An object with the same "unique_test1, unique_test2" already exist.]');

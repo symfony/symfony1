@@ -146,7 +146,7 @@ class AdminGenBrowser extends sfTestBrowser
       with('form')->begin();
     $tester->hasErrors();
     $form = $tester->getForm();
-    $this->test()->is((string) $form->getErrorSchema(), 'An object with the same "username" already exist.', 'Check username gives unique error');
+    $this->test()->is((string) $form->getErrorSchema(), 'username [An object with the same "username" already exist.]', 'Check username gives unique error');
     $tester->end();
   }
 
