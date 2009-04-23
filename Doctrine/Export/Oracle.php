@@ -96,6 +96,7 @@ class Doctrine_Export_Oracle extends Doctrine_Export
     public function _makeAutoincrement($name, $table, $start = 1)
     {
         $sql   = array();
+        $table = strtoupper($table);
         $indexName  = $table . '_AI_PK';
         $definition = array(
             'primary' => true,
