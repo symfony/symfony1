@@ -1074,6 +1074,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             
             foreach ($data as $field => $value) {
                if ( ! isset($this->_data[$field]) || $this->_data[$field] === self::$_null) {
+                   // Ticket #2031: null value was causing removal of field during load
+                   if ($value === null) { 
+                       $value = self::$_null; 
+                   }
+
                    $this->_data[$field] = $value;
                }
             }
