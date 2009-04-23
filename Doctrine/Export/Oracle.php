@@ -203,7 +203,7 @@ END;';
     public function getAdvancedForeignKeyOptions(array $definition)
     {
         $query = '';
-        if (isset($definition['onDelete'])) {
+        if (isset($definition['onDelete']) && strtoupper(trim($definition['onDelete'])) != 'NO ACTION') {
             $query .= ' ON DELETE ' . $definition['onDelete'];
         }
         if (isset($definition['deferrable'])) {
