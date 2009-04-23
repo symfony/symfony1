@@ -226,7 +226,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * _addPendingJoinCondition
+     * addPendingJoinCondition
      *
      * @param string $componentAlias    component alias
      * @param string $joinCondition     dql join condition
@@ -234,7 +234,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     public function addPendingJoinCondition($componentAlias, $joinCondition)
     {
-        $this->_pendingJoinConditions[$componentAlias] = $joinCondition;
+        if ( ! isset($this->_pendingJoinConditions[$componentAlias])) {
+            $this->_pendingJoinConditions[$componentAlias] = array();
+        }
+
+        $this->_pendingJoinConditions[$componentAlias][] = $joinCondition;
     }
 
     /**
@@ -1074,26 +1078,28 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     
     /**
      * Processes the pending join conditions, used for dynamically add conditions 
-     * to root component/joined components without interferring in the main dql
-     * processment.
+     * to root component/joined components without interfering in the main dql
+     * handling.
      * 
      * @param string $alias Component Alias
      * @return Processed pending conditions
      */
     protected function _processPendingJoinConditions($alias)
     {
-        $part = '';
+        $parts = array();
         
         if ($alias !== null && isset($this->_pendingJoinConditions[$alias])) {
             $parser = new Doctrine_Query_JoinCondition($this, $this->_tokenizer);
-                    
-            $part = $parser->parse($this->_pendingJoinConditions[$alias]);
+
+            foreach ($this->_pendingJoinConditions[$alias] as $joinCondition) {
+                $parts[] = $parser->parse($joinCondition);
+            }
 
             // FIX #1860 and #1876: Cannot unset them, otherwise query cannot be reused later
             //unset($this->_pendingJoinConditions[$alias]);
         }
         
-        return $part;
+        return (count($parts) > 0 ? '(' . implode(') AND (', $parts) . ')' : '');
     }
 
     /**
@@ -1725,7 +1731,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $this->_sqlParts['from'][$componentAlias] = $queryPart;
                 
                 if ( ! empty($joinCondition)) {
-                    $this->_pendingJoinConditions[$componentAlias] = $joinCondition;
+                    $this->addPendingJoinCondition($componentAlias, $joinCondition);
                 }
             }
             
