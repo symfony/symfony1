@@ -397,11 +397,14 @@ class sfModelGeneratorConfiguration
       $display = $this->getFormDisplay();
     }
 
-    foreach ($form->getWidgetSchema()->getFields() as $fieldName => $field)
+    if (!empty($display))
     {
-      if (!($field->isHidden() || in_array($fieldName, $display)))
+      foreach ($form->getWidgetSchema()->getFields() as $fieldName => $field)
       {
-        unset($form[$fieldName]);
+        if (!($field->isHidden() || in_array($fieldName, $display)))
+        {
+          unset($form[$fieldName]);
+        }
       }
     }
 
