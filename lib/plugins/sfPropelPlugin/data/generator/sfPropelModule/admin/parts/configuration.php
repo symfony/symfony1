@@ -14,11 +14,17 @@ class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorConfiguration ex
 
 <?php include dirname(__FILE__).'/fieldsConfiguration.php' ?>
 
+  /**
+   * getForm - returns the edit form object.
+   *
+   * @param  mixed $object
+   * @return sfForm
+   */
   public function getForm($object = null)
   {
     $class = $this->getFormClass();
 
-    return new $class($object, $this->getFormOptions());
+    return $this->fixUnusedFields(new $class($object, $this->getFormOptions()));
   }
 
   /**
