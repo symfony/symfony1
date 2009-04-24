@@ -8,7 +8,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfModelGeneratorConfiguration
+abstract class sfModelGeneratorConfiguration
 {
   protected
     $configuration = array();
@@ -381,6 +381,56 @@ class sfModelGeneratorConfiguration
     }
 
     return $default;
+  }
+
+  /**
+   * getFormDisplay - return default field list if new/edit context do not override them.
+   *
+   * @return array
+   */
+  abstract public function getFormDisplay();
+
+  /**
+   * getNewDisplay - return field list for "new" context.
+   *
+   * @return array
+   */
+  abstract public function getNewDisplay();
+
+  /**
+   * getEditDisplay - return field list for "edit" context.
+   *
+   * @return array
+   */
+  abstract public function getEditDisplay();
+
+  /**
+   * getForm - returns the edit form object.
+   *
+   * @param  mixed $object
+   * @return sfForm
+   */
+  public function getForm($object = null)
+  {
+    $class = $this->getFormClass();
+
+    return $this->fixUnusedFields(new $class($object, $this->getFormOptions()));
+  }
+
+  public function getFormOptions()
+  {
+    return array();
+  }
+
+  /**
+   * getConnection - return the orm connection string. Depends on which
+   * concrete implementation is currently used, but null means default.
+   *
+   * @return mixed
+   */
+  public function getConnection()
+  {
+    return null;
   }
 
   /**
