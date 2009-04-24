@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(138, new lime_output_color());
+$t = new lime_test(140, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -504,6 +504,27 @@ for ($i = 0; $i < 2; $i++)
 }
 
 $t->is($w['authors'][0]->generateName('first_name'), 'article[authors][0][first_name]', '->embedFormForEach() changes the name format to reflect the embedding');
+
+// bind too many values for embedded forms
+$t->diag('bind too many values for embedded forms');
+$list = new FormTest();
+$list->setWidgets(array('title' => new sfWidgetFormInput()));
+$list->setValidators(array('title' => new sfValidatorString()));
+$list->embedFormForEach('items', clone $list, 2);
+$list->bind(array(
+  'title' => 'list title',
+  'items' => array(
+    array('title' => 'item 1'),
+    array('title' => 'item 2'),
+    array('title' => 'extra item'),
+  ),
+));
+
+$t->isa_ok($list['items'][0]->getError(), 'sfValidatorErrorSchema', '"sfFormFieldSchema" is given an error schema when an extra embedded form is bound');
+
+// does this trigger a fatal error?
+$list['items']->render();
+$t->pass('"sfFormFieldSchema" renders when an extra embedded form is bound');
 
 // ->getEmbeddedForms()
 $t->diag('->getEmbeddedForms()');

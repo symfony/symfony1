@@ -67,9 +67,23 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
-      $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
+      $error = isset($this->error[$name]) ? $this->error[$name] : null;
 
-      $this->fields[$name] = new $class($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, isset($this->error[$name]) ? $this->error[$name] : null);
+      if ($widget instanceof sfWidgetFormSchema)
+      {
+        $class = 'sfFormFieldSchema';
+
+        if ($error && !$error instanceof sfValidatorErrorSchema)
+        {
+          $error = new sfValidatorErrorSchema($error->getValidator(), array($error));
+        }
+      }
+      else
+      {
+        $class = 'sfFormField';
+      }
+
+      $this->fields[$name] = new $class($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, $error);
     }
 
     return $this->fields[$name];
