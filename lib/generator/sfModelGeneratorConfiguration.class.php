@@ -405,16 +405,21 @@ abstract class sfModelGeneratorConfiguration
   abstract public function getEditDisplay();
 
   /**
-   * getForm - returns the edit form object.
+   * Gets a new form object.
    *
    * @param  mixed $object
+   *
    * @return sfForm
    */
   public function getForm($object = null)
   {
     $class = $this->getFormClass();
 
-    return $this->fixUnusedFields(new $class($object, $this->getFormOptions()));
+    $form = new $class($object, $this->getFormOptions());
+
+    $this->fixFormFields($form);
+
+    return $form;
   }
 
   public function getFormOptions()
@@ -434,34 +439,33 @@ abstract class sfModelGeneratorConfiguration
   }
 
   /**
-   * fixUnusedFields - removes the form fields that are not displayed on the
-   * edit/new form page, to avoid data injection while saving the object.
+   * Removes visible fields not included for display.
    *
-   * @param  sfForm $form
-   * @return sfForm
+   * @param sfForm $form
    */
-  protected function fixUnusedFields(sfForm $form)
+  protected function fixFormFields(sfForm $form)
   {
-    // do nothing, pending resolution of regression having to do with not flattening the display parameter
-    return $form;
-
-    if (!$display = $form->getObject()->isNew() ? $this->getNewDisplay() : $this->getEditDisplay())
+    $method = sprintf('get%sDisplay', $form->isNew() ? 'New' : 'Edit');
+    if (!$display = $this->$method())
     {
       $display = $this->getFormDisplay();
     }
 
-    if (!empty($display))
+    if ($display)
     {
-      foreach ($form->getWidgetSchema()->getFields() as $fieldName => $field)
+      if (is_array(current($display)))
       {
-        if (!($field->isHidden() || in_array($fieldName, $display)))
+        $display = call_user_func_array('array_merge', array_values($display));
+      }
+
+      foreach ($form as $name => $field)
+      {
+        if (!$field->isHidden() && !in_array($name, $display))
         {
-          unset($form[$fieldName]);
+          unset($form[$name]);
         }
       }
     }
-
-    return $form;
   }
 
   protected function fixActionParameters($action, $parameters)
