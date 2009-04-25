@@ -191,7 +191,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
      */
     public function beginTransaction()
     {
-       $this->_executeMode = OCI_DEFAULT;
+       $this->executeMode = OCI_DEFAULT;
        return true;
     }
 

@@ -96,7 +96,10 @@ class Doctrine_Export_Oracle extends Doctrine_Export
     public function _makeAutoincrement($name, $table, $start = 1)
     {
         $sql   = array();
-        $table = strtoupper($table);
+
+        if ( ! $this->conn->getAttribute(Doctrine::ATTR_QUOTE_IDENTIFIER)) {
+        	$table = strtoupper($table);
+        }
         $indexName  = $table . '_AI_PK';
         $definition = array(
             'primary' => true,
@@ -139,7 +142,7 @@ BEGIN
    ELSE
       SELECT NVL(Last_Number, 0) INTO last_Sequence
         FROM User_Sequences
-       WHERE UPPER(Sequence_Name) = UPPER(\'' . $sequenceName . '\');
+       WHERE Sequence_Name = \'' . $sequenceName . '\';
       SELECT :NEW.' . $name . ' INTO last_InsertID FROM DUAL;
       WHILE (last_InsertID > last_Sequence) LOOP
          SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO last_Sequence FROM DUAL;
