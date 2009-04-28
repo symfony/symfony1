@@ -245,55 +245,34 @@ EOF;
 
     // Merge the current view's stylesheets with the app's default stylesheets
     $stylesheets = $this->mergeConfigValue('stylesheets', $viewName);
-    $tmp = array();
-    foreach ((array) $stylesheets as $css)
-    {
-      $position = '';
-      if (is_array($css))
-      {
-        $key = key($css);
-        $options = $css[$key];
-        if (isset($options['position']))
-        {
-          $position = $options['position'];
-          unset($options['position']);
-        }
-      }
-      else
-      {
-        $key = $css;
-        $options = array();
-      }
-
-      if ('-*' == $key)
-      {
-        $tmp = array();
-      }
-      else if ('-' == $key[0])
-      {
-        unset($tmp[substr($key, 1)]);
-      }
-      else
-      {
-        $tmp[$key] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
-      }
-    }
-
-    $data = array_merge($data, array_values($tmp));
-
+    $data = array_merge($data, $this->addAssets('Stylesheet', $stylesheets));
+    
     $omit = array();
     $delete_all = false;
 
     // Merge the current view's javascripts with the app's default javascripts
     $javascripts = $this->mergeConfigValue('javascripts', $viewName);
+    $data = array_merge($data, $this->addAssets('Javascript', $javascripts));
+
+    return implode("\n", $data)."\n";
+  }
+
+  /**
+   * Creates a list of add$Type PHP statements for the given type and config.
+   *
+   * @param string $type of asset. Requires an sfWebResponse->add$Type(string, string, array) method
+   *
+   * @return array ist of add$Type PHP statements
+   */
+  private function addAssets($type, $assets){
     $tmp = array();
-    foreach ((array) $javascripts as $js)
+    foreach ((array) $assets as $asset)
     {
       $position = '';
-      if (is_array($js))
+      if (is_array($asset))
       {
-        $key = key($js);
-        $options = $js[$key];
+        $key = key($asset);
+        $options = $asset[$key];
         if (isset($options['position']))
         {
           $position = $options['position'];
@@ -302,7 +281,7 @@ EOF;
       }
       else
       {
-        $key = $js;
+        $key = $asset;
         $options = array();
       }
 
@@ -316,13 +295,10 @@ EOF;
       }
       else
       {
-        $tmp[$key] = sprintf("  \$response->addJavascript('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
+        $tmp[$key] = sprintf("  \$response->add%s('%s', '%s', %s);", $type, $key, $position, str_replace("\n", '', var_export($options, true)));
       }
     }
-
-    $data = array_merge($data, array_values($tmp));
-
-    return implode("\n", $data)."\n";
+    return array_values($tmp);
   }
 
   /**
