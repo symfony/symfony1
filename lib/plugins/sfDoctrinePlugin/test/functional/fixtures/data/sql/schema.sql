@@ -8,5 +8,5 @@ CREATE TABLE unique_test (id INTEGER PRIMARY KEY AUTOINCREMENT, unique_test1 VAR
 CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(255) UNIQUE, password VARCHAR(255), test VARCHAR(255));
 CREATE TABLE user_group (user_id INTEGER, group_id INTEGER, PRIMARY KEY(user_id, group_id));
 CREATE TABLE user_permission (user_id INTEGER, permission_id INTEGER, PRIMARY KEY(user_id, permission_id));
-CREATE INDEX unique_test_idx ON unique_test (unique_test1, unique_test2);
+CREATE UNIQUE INDEX unique_test_idx ON unique_test (unique_test1, unique_test2);
 CREATE TABLE subscription (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), status VARCHAR(255));
