@@ -10,7 +10,7 @@
 
 $app = 'backend';
 $fixtures = 'fixtures/fixtures.yml';
-if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
+if (!include(dirname(__FILE__).'/../../bootstrap/functional.php'))
 {
   return;
 }
@@ -19,9 +19,8 @@ include(dirname(__FILE__).'/backendTestBrowser.class.php');
 
 $b = new backendTestBrowser();
 
-// max per page
+// edit fields
 $b->
-  checkListCustomization('max per page customization', array('max_per_page' => 1))->
-  checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', true)->
-  checkResponseElement('body table tbody tr', 1)
+  checkEditCustomization('edit field name customization', array('fields' => array('body' => array('name' => 'My Body'))))->
+  checkResponseElement('label[for="article_body"]', 'My Body:')
 ;

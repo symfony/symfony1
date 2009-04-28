@@ -10,7 +10,7 @@
 
 $app = 'backend';
 $fixtures = 'fixtures/fixtures.yml';
-if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
+if (!include(dirname(__FILE__).'/../../bootstrap/functional.php'))
 {
   return;
 }
