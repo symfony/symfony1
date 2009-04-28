@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-$app = 'backend';
+$app = 'backend_compat';
 $fixtures = 'fixtures/fixtures.yml';
 if (!include(dirname(__FILE__).'/../../bootstrap/functional.php'))
 {
