@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 class myViewConfigHandler extends sfViewConfigHandler
 {
@@ -43,11 +43,33 @@ $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'ad
 
 $handler->setConfiguration(array(
   'myView' => array(
+    'stylesheets' => array(array('foobar' => array('position' => 'last'))),
+  ),
+));
+$content = <<<EOF
+  \$response->addStylesheet('foobar', 'last', array ());
+
+EOF;
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds stylesheets to the response');
+
+$handler->setConfiguration(array(
+  'myView' => array(
     'javascripts' => array('foobar'),
   ),
 ));
 $content = <<<EOF
   \$response->addJavascript('foobar', '', array ());
+
+EOF;
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds JavaScript to the response');
+
+$handler->setConfiguration(array(
+  'myView' => array(
+    'javascripts' => array(array('foobar' => array('position' => 'last'))),
+  ),
+));
+$content = <<<EOF
+  \$response->addJavascript('foobar', 'last', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds JavaScript to the response');
