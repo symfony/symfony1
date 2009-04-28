@@ -238,23 +238,15 @@ EOF;
    */
   protected function addHtmlAsset($viewName = '')
   {
-    $data = array();
-    $omit = array();
-    $delete = array();
-    $delete_all = false;
-
     // Merge the current view's stylesheets with the app's default stylesheets
     $stylesheets = $this->mergeConfigValue('stylesheets', $viewName);
-    $data = array_merge($data, $this->addAssets('Stylesheet', $stylesheets));
-    
-    $omit = array();
-    $delete_all = false;
+    $css = $this->addAssets('Stylesheet', $stylesheets);
 
     // Merge the current view's javascripts with the app's default javascripts
     $javascripts = $this->mergeConfigValue('javascripts', $viewName);
-    $data = array_merge($data, $this->addAssets('Javascript', $javascripts));
+    $js = $this->addAssets('Javascript', $javascripts);
 
-    return implode("\n", $data)."\n";
+    return implode("\n", array_merge($css, $js))."\n";
   }
 
   /**
