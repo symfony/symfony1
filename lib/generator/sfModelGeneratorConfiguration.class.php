@@ -445,27 +445,24 @@ abstract class sfModelGeneratorConfiguration
    */
   protected function fixFormFields(sfForm $form)
   {
-    $method = sprintf('get%sDisplay', $form->isNew() ? 'New' : 'Edit');
-    if (!$display = $this->$method())
-    {
-      $display = $this->getFormDisplay();
-    }
+    $fieldsets = $this->getFormFields($form, $form->isNew() ? 'new' : 'edit');
 
-    if ($display)
-    {
-      if (is_array(current($display)))
-      {
-        $display = call_user_func_array('array_merge', array_values($display));
-      }
+    // flatten fields and collect names
+    $fields = call_user_func_array('array_merge', array_values($fieldsets));
+    $names = array_map(array($this, 'mapFieldName'), $fields);
 
-      foreach ($form as $name => $field)
+    foreach ($form as $name => $field)
+    {
+      if (!$field->isHidden() && !in_array($name, $names))
       {
-        if (!$field->isHidden() && !in_array($name, $display))
-        {
-          unset($form[$name]);
-        }
+        unset($form[$name]);
       }
     }
+  }
+
+  protected function mapFieldName(sfModelGeneratorConfigurationField $field)
+  {
+    return $field->getName();
   }
 
   protected function fixActionParameters($action, $parameters)
