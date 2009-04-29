@@ -25,6 +25,9 @@ class sfException extends Exception
   protected
     $wrappedException = null;
 
+  static protected
+    $lastException = null;
+
   /**
    * Wraps an Exception.
    *
@@ -36,18 +39,31 @@ class sfException extends Exception
   {
     $exception = new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
     $exception->setWrappedException($e);
+    self::$lastException = $e;
 
     return $exception;
   }
 
   /**
-   * Changes the wrapped exception.
+   * Sets the wrapped exception.
    *
    * @param Exception $e An Exception instance
    */
   public function setWrappedException(Exception $e)
   {
     $this->wrappedException = $e;
+
+    self::$lastException = $e;
+  }
+
+  /**
+   * Gets the last wrapped exception.
+   *
+   * @return Exception An Exception instance
+   */
+  static public function getLastException()
+  {
+    return self::$lastException;
   }
 
   /**
@@ -55,7 +71,12 @@ class sfException extends Exception
    */
   public function printStackTrace()
   {
-    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
+    if (is_null($this->wrappedException))
+    {
+      $this->setWrappedException($this);
+    }
+
+    $exception = $this->wrappedException;
 
     if (!sfConfig::get('sf_test'))
     {

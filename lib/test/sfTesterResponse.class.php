@@ -282,10 +282,21 @@ class sfTesterResponse extends sfTester
 
   /**
    * Outputs some debug information about the current response.
+   *
+   * @param string $realOutput Whether to display the actual content of the response when an error occurred
+   *                           or the exception message and the stack trace to ease debugging
    */
-  public function debug()
+  public function debug($realOutput = false)
   {
     print $this->tester->error('Response debug');
+
+    if (!$realOutput && !is_null(sfException::getLastException()))
+    {
+      // print the exception and the stack trace instead of the "normal" output
+      $this->tester->comment('WARNING');
+      $this->tester->comment('An error occurred when processing this request.');
+      $this->tester->comment('The real response content has been replaced with the exception message to ease debugging.');
+    }
 
     printf("HTTP/1.X %s\n", $this->response->getStatusCode());
 
@@ -308,7 +319,15 @@ class sfTesterResponse extends sfTester
     }
 
     echo "\n";
-    echo $this->response->getContent();
+    if (!$realOutput && !is_null($exception = sfException::getLastException()))
+    {
+      echo $exception;
+    }
+    else
+    {
+      echo $this->response->getContent();
+    }
+    echo "\n";
 
     exit(1);
   }
