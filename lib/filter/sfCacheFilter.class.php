@@ -129,7 +129,7 @@ class sfCacheFilter extends sfFilter
   /**
    * Sets cache expiration headers.
    *
-   * @param string An internal URI
+   * @param string $uri An internal URI
    */
   protected function setCacheExpiration($uri)
   {
@@ -157,7 +157,7 @@ class sfCacheFilter extends sfFilter
   /**
    * Sets cache validation headers.
    *
-   * @param string An internal URI
+   * @param string $uri An internal URI
    */
 
   protected function setCacheValidation($uri)

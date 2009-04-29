@@ -50,7 +50,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 
   /**
    * @param  string $name        The element name
-   * @param  string $value       The value displayed in this widget
+   * @param  string $values      The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
    * @param  array  $errors      An array of errors for the field
    *

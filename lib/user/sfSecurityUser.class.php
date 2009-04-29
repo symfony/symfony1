@@ -23,7 +23,7 @@ interface sfSecurityUser
   /**
    * Add a credential to this user.
    *
-   * @param mixed Credential data.
+   * @param mixed $credential Credential data.
    */
   public function addCredential($credential);
 

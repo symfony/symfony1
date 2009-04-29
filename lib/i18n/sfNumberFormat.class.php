@@ -241,7 +241,7 @@ class sfNumberFormat
   /**
    * Formats the decimal places.
    *
-   * @param string $decimal the decimal number in string form.
+   * @param string $string the decimal number in string form.
    * @return string formatted decimal places.
    */
   protected function formatDecimal($string)

@@ -35,7 +35,7 @@ abstract class sfMessageSource_Database extends sfMessageSource
    *
    * This function comes from PEAR's DB package.
    *
-   * @param string $dns DSN format, similar to PEAR's DB
+   * @param string $dsn DSN format, similar to PEAR's DB
    * @return array DSN information. 
    */
   protected function parseDSN($dsn)

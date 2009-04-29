@@ -108,7 +108,6 @@ abstract class sfBrowserBase
    * Sets a cookie.
    *
    * @param  string  $name     The cookie name
-   * @param  string  $name     HTTP header name
    * @param  string  $value    Value for the cookie
    * @param  string  $expire   Cookie expiration period
    * @param  string  $path     Path

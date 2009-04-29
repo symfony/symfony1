@@ -84,7 +84,7 @@ abstract class sfStorage
   /**
    * Regenerates id that represents this storage.
    *
-   * @param  boolean destroy Destroy session when regenerating?
+   * @param  boolean $destroy Destroy session when regenerating?
    *
    * @return boolean True if session regenerated, false if error
    *

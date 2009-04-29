@@ -219,8 +219,8 @@ class sfMemcacheCache extends sfCache
   /**
    * Stores metadata about a key in the cache.
    *
-   * @param  string $key A cache key
-   * @param  string $key The lifetime
+   * @param  string $key      A cache key
+   * @param  string $lifetime The lifetime
    */
   protected function setMetadata($key, $lifetime)
   {

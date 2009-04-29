@@ -230,7 +230,7 @@ abstract class sfRouting
   /**
    * Listens to the user.change_culture event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    *
    */
   public function listenToChangeCultureEvent(sfEvent $event)

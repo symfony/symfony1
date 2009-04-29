@@ -239,7 +239,7 @@ abstract class sfModelGeneratorConfiguration
    * If no filter.display parameter is passed in the configuration,
    * all the fields from the form are returned (dynamically).
    *
-   * @param array An array of fields
+   * @param sfForm $form The form with the fields
    */
   public function getFormFilterFields(sfForm $form)
   {
@@ -286,7 +286,8 @@ abstract class sfModelGeneratorConfiguration
    * If no form.display parameter is passed in the configuration,
    * all the fields from the form are returned (dynamically).
    *
-   * @param array An array of fields
+   * @param sfForm $form    The form with the fields
+   * @param string $context The display context
    */
   public function getFormFields(sfForm $form, $context)
   {

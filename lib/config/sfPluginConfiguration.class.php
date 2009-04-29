@@ -133,7 +133,8 @@ abstract class sfPluginConfiguration
   /**
    * Filters sfAutoload configuration values.
    * 
-   * @param   array $config
+   * @param sfEvent $event  
+   * @param array   $config 
    * 
    * @return  array
    */

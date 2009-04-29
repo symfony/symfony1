@@ -52,7 +52,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   /**
    * Removes a credential.
    *
-   * @param  mixed credential
+   * @param  mixed $credential credential
    */
   public function removeCredential($credential)
   {

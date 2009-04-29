@@ -323,7 +323,7 @@ class sfI18N
   /**
    * Returns the hour, minute from a date formatted with a given culture.
    *
-   * @param  string  $date    The formatted date as string
+   * @param  string  $time    The formatted date as string
    * @param  string  $culture The culture
    *
    * @return array   An array with the hour and minute

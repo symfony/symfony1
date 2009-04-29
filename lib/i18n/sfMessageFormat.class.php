@@ -93,7 +93,7 @@ class sfMessageFormat
    * from the supplied message source.
    *
    * @param sfMessageSource $source   the source of translation messages.
-   * @param string charset  $charset  for the message output.
+   * @param string          $charset  for the message output.
    */
   function __construct(sfIMessageSource $source, $charset = 'UTF-8')
   {

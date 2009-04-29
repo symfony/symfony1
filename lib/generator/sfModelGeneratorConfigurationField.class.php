@@ -148,7 +148,7 @@ class sfModelGeneratorConfigurationField
   /**
    * Sets the list renderer for the field.
    *
-   * @param mixed A PHP callable
+   * @param mixed $renderer A PHP callable
    */
   public function setRenderer($renderer)
   {
@@ -168,7 +168,7 @@ class sfModelGeneratorConfigurationField
   /**
    * Sets the list renderer arguments for the field.
    *
-   * @param array An array of arguments to pass to the renderer
+   * @param array $arguments An array of arguments to pass to the renderer
    */
   public function setRendererArguments(array $arguments)
   {
@@ -204,7 +204,7 @@ class sfModelGeneratorConfigurationField
    *
    * The flag can be =, _, or ~.
    *
-   * @param string The flag
+   * @param string $flag The flag
    */
   public function setFlag($flag)
   {

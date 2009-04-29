@@ -259,7 +259,7 @@ abstract class sfController
    * Retrieves an sfAction implementation instance.
    *
    * @param  string  $moduleName  A module name
-   * @param  string  $actionname  An action name
+   * @param  string  $actionName  An action name
    *
    * @return sfAction An sfAction implementation instance, if the action exists, otherwise null
    */

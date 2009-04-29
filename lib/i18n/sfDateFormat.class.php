@@ -78,7 +78,7 @@ class sfDateFormat
   /**
    * Initializes a new sfDateFormat.
    *
-   * @param mixed $forrmatInfo either, null, a sfCultureInfo instance, a DateTimeFormatInfo instance, or a locale.
+   * @param mixed $formatInfo either, null, a sfCultureInfo instance, a DateTimeFormatInfo instance, or a locale.
    * @return sfDateFormat instance
    */
   function __construct($formatInfo = null)
@@ -439,7 +439,7 @@ class sfDateFormat
    * "yy" will return the last two digits of year.
    * "yyyy" will return the full integer year.
    *
-   * @param array  $dat     getdate format.
+   * @param array  $date    getdate format.
    * @param string $pattern a pattern.
    * @return string year
    */

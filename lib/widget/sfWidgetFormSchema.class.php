@@ -84,8 +84,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the default value for a field.
    *
-   * @param string The field name
-   * @param string The default value (required - the default value is here because PHP do not allow signature changes with inheritance)
+   * @param string $name  The field name
+   * @param string $value The default value (required - the default value is here because PHP do not allow signature changes with inheritance)
    */
   public function setDefault($name, $value = null)
   {
@@ -95,7 +95,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Gets the default value of a field.
    *
-   * @param  string The field name (required - the default value is here because PHP do not allow signature changes with inheritance)
+   * @param  string $name The field name (required - the default value is here because PHP do not allow signature changes with inheritance)
    *
    * @return string The default value
    */
@@ -107,7 +107,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the default values for the widget.
    *
-   * @param array The default values for the widget
+   * @param array $values The default values for the widget
    */
   public function setDefaults($values)
   {
@@ -445,7 +445,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * @param  string  $name        The field name
    * @param  string  $value       The field value
    * @param  array   $attributes  An array of HTML attributes to be merged with the current HTML attributes
-   * @param  array   $attributes  An array of errors for the field
+   * @param  array   $errors      An array of errors for the field
    *
    * @return string  An HTML string representing the rendered widget
    */
@@ -677,7 +677,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Removes a field by name (implements the ArrayAccess interface).
    *
-   * @param string
+   * @param string $name
    */
   public function offsetUnset($name)
   {
@@ -715,7 +715,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the positions of the fields.
    *
-   * @param array An ordered array of field names
+   * @param array $positions An ordered array of field names
    *
    * @see getPositions()
    */
@@ -740,9 +740,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *  * sfWidgetFormSchema::LAST
    *  * sfWidgetFormSchema::FIRST
    *
-   * @param string   The field name to move
-   * @param constant The action (see above for all possible actions)
-   * @param string   The field name used for AFTER and BEFORE actions
+   * @param string   $field  The field name to move
+   * @param constant $action The action (see above for all possible actions)
+   * @param string   $pivot  The field name used for AFTER and BEFORE actions
    */
   public function moveField($field, $action, $pivot = null)
   {

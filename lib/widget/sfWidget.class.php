@@ -139,7 +139,7 @@ abstract class sfWidget
   /**
    * Gets an option value.
    *
-   * @param  string The option name
+   * @param  string $name The option name
    *
    * @return mixed  The option value
    */

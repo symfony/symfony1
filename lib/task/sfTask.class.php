@@ -329,8 +329,8 @@ abstract class sfTask
   /**
    * Logs a message as a block of text.
    *
-   * @param string|array $message The message to display in the block
-   * @param string       $style   The style to use
+   * @param string|array $messages The message to display in the block
+   * @param string       $style    The style to use
    */
   public function logBlock($messages, $style)
   {

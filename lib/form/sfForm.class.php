@@ -49,7 +49,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param array  $defaults    An array of field default values
    * @param array  $options     An array of options
-   * @param string $CRFSSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param string $CSRFSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    */
   public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
   {

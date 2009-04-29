@@ -104,7 +104,7 @@ class sfWebDebugLogger extends sfVarLogger
    * Listens to the response.filter_content event.
    *
    * @param  sfEvent $event   The sfEvent instance
-   * @param  string  $context The response content
+   * @param  string  $content The response content
    *
    * @return string  The filtered response content
    */

@@ -34,7 +34,7 @@ abstract class sfUpgrade extends sfBaseTask
   /**
    * Returns a finder that exclude upgrade scripts from being upgraded!
    *
-   * @param  string   String directory or file or any (for both file and directory)
+   * @param  string $type String directory or file or any (for both file and directory)
    *
    * @return sfFinder A sfFinder instance
    */

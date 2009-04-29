@@ -341,7 +341,7 @@ class sfMessageSource_SQLite extends sfMessageSource_Database
   /**
    * Deletes a particular message from the specified catalogue.
    *
-   * @param string  $source     the source message to delete.
+   * @param string  $message    the source message to delete.
    * @param string  $catalogue  the catalogue to delete from.
    * @return boolean true if deleted, false otherwise. 
    */

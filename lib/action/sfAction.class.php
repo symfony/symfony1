@@ -313,7 +313,7 @@ abstract class sfAction extends sfComponent
    * available in the component.
    *
    * @param  string  $moduleName    module name
-   * @param  string  $componentNae  component name
+   * @param  string  $componentName  component name
    * @param  array   $vars          vars
    *
    * @return string  The component rendered content
@@ -335,7 +335,7 @@ abstract class sfAction extends sfComponent
    * <code>return $this->renderComponent('foo', 'bar')</code>
    *
    * @param  string  $moduleName    module name
-   * @param  string  $componentNae  component name
+   * @param  string  $componentName  component name
    * @param  array   $vars          vars
    *
    * @return sfView::NONE

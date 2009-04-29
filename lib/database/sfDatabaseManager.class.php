@@ -82,7 +82,7 @@ class sfDatabaseManager
    * Sets a database connection.
    *
    * @param string     $name        The database name
-   * @param sfDatabase $sfDatabase  A sfDatabase instance
+   * @param sfDatabase $database  A sfDatabase instance
    */
   public function setDatabase($name, sfDatabase $database)
   {

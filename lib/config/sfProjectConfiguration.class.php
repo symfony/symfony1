@@ -292,7 +292,7 @@ class sfProjectConfiguration
   /**
    * Sets the enabled plugins.
    *
-   * @param array An array of plugin names
+   * @param array $plugins An array of plugin names
    * 
    * @throws LogicException If plugins have already been loaded
    */
@@ -311,7 +311,7 @@ class sfProjectConfiguration
   /**
    * Enables a plugin or a list of plugins.
    *
-   * @param array|string A plugin name or a plugin list
+   * @param array|string $plugins A plugin name or a plugin list
    */
   public function enablePlugins($plugins)
   {
@@ -321,7 +321,7 @@ class sfProjectConfiguration
   /**
    * Disables a plugin.
    *
-   * @param array|string A plugin name or a plugin list
+   * @param array|string $plugins A plugin name or a plugin list
    * 
    * @throws LogicException If plugins have already been loaded
    */
@@ -355,7 +355,7 @@ class sfProjectConfiguration
   /**
    * Enabled all installed plugins except the one given as argument.
    *
-   * @param array|string A plugin name or a plugin list
+   * @param array|string $plugins A plugin name or a plugin list
    * 
    * @throws LogicException If plugins have already been loaded
    */
