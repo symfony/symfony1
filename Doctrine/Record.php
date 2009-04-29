@@ -1911,10 +1911,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
         }
 
-        // eliminate relationships missing in the $array
+        // Eliminate relationships missing in the $array
         foreach ($this->_references as $name => $relation) {
-            
-            if ( ! isset($array[$name])) {
+	        $rel = $this->getTable()->getRelation($name);
+	
+			if ( ! isset($array[$name]) && ( ! $rel->isOneToOne()) || ($rel->isOneToOne() && ! isset($array[$rel->getLocalFieldName()]))) {
                 unset($this->$name);
             }
         }
