@@ -96,7 +96,7 @@ class sfYaml
 /**
  * Wraps echo to automatically provide a newline.
  *
- * @param string The string to echo with new line
+ * @param string $string The string to echo with new line
  */
 function echoln($string)
 {
