@@ -106,3 +106,17 @@ Tests
 When a request generates an exception, the `debug()` method of the response
 tester now outputs a readable text representation of the exception, instead of
 the normal HTML output. It makes debugging much more easier.
+
+Tasks
+-----
+
+### `askAndValidate()`
+
+There is a new `sfTask::askAndValidate()` method to ask a question to the user
+and validates its input:
+
+    [php]
+    $anwser = $this->askAndValidate('What is you email?', new sfValidatorEmail());
+
+The method also accepts an array of options (see the API doc for more
+information).
