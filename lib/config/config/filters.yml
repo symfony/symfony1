@@ -17,9 +17,6 @@ cache:
   param:
     condition: %SF_CACHE%
 
-common:
-  class: sfCommonFilter
-
 # execution filter must be the last registered filter
 execution:
   class:  sfExecutionFilter

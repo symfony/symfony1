@@ -8,7 +8,6 @@
 - %SF_SYMFONY_LIB_DIR%/controller/sfController.class.php
 - %SF_SYMFONY_LIB_DIR%/database/sfDatabaseManager.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfFilter.class.php
-- %SF_SYMFONY_LIB_DIR%/filter/sfCommonFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfExecutionFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfRenderingFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfFilterChain.class.php

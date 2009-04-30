@@ -5,8 +5,9 @@
 <?php include_http_metas() ?>
 <?php include_metas() ?>
 <?php include_title() ?>
-
 <?php use_stylesheet('/sf/sf_default/css/screen.css', 'last') ?>
+<?php include_stylesheets() ?>
+<?php include_javascripts() ?>
 
 <link rel="shortcut icon" href="/favicon.ico" />
 

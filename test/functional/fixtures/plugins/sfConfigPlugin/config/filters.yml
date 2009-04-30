@@ -4,5 +4,4 @@ security:  ~
 # generally, you will want to insert your own filters here
 
 cache:     ~
-common:    ~
 execution: ~
