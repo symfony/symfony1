@@ -16,7 +16,7 @@ try
   $dispatcher = new sfEventDispatcher();
   $logger = new sfCommandLogger($dispatcher);
 
-  $application = new sfSymfonyCommandApplication($dispatcher, new sfAnsiColorFormatter(), array('symfony_lib_dir' => realpath(dirname(__FILE__).'/..')));
+  $application = new sfSymfonyCommandApplication($dispatcher, null, array('symfony_lib_dir' => realpath(dirname(__FILE__).'/..')));
   $statusCode = $application->run();
 }
 catch (Exception $e)

@@ -32,15 +32,24 @@ class sfFormatter
   }
 
   /**
+   * Sets a new style.
+   *
+   * @param string $name    The style name
+   * @param array  $options An array of options
+   */
+  public function setStyle($name, $options = array())
+  {
+  }
+
+  /**
    * Formats a text according to the given parameters.
    *
    * @param  string $text         The test to style
    * @param  mixed  $parameters   An array of parameters
-   * @param  stream $stream       A stream (default to STDOUT)
    *
    * @return string The formatted text
    */
-  public function format($text = '', $parameters = array(), $stream = STDOUT)
+  public function format($text = '', $parameters = array())
   {
     return $text;
   }

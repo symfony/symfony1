@@ -197,3 +197,11 @@ How to upgrade?
     have a `<head>` tag though; and you need to manually upgrade any other
     layout, or any page that does not have a layout but still relies on
     JavaScripts files and/or stylesheets).
+
+Tasks
+-----
+
+### Formatters
+
+The `sfFormatter::format()` third argument has been removed.
+

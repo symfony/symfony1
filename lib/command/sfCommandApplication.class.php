@@ -39,11 +39,11 @@ abstract class sfCommandApplication
    * @param sfFormatter       $formatter    A sfFormatter instance
    * @param array             $options      An array of options
    */
-  public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter, $options = array())
+  public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter = null, $options = array())
   {
     $this->dispatcher = $dispatcher;
-    $this->formatter  = $formatter;
-    $this->options    = $options;
+    $this->formatter = is_null($formatter) ? $this->guessBestFormatter(STDOUT) : $formatter;
+    $this->options = $options;
 
     $this->fixCgi();
 
@@ -72,11 +72,21 @@ abstract class sfCommandApplication
   /**
    * Returns the formatter instance.
    *
-   * @return object The formatter instance
+   * @return sfFormatter The formatter instance
    */
   public function getFormatter()
   {
     return $this->formatter;
+  }
+
+  /**
+   * Sets the formatter instance.
+   *
+   * @param sfFormatter The formatter instance
+   */
+  public function setFormatter(sfFormatter $formatter)
+  {
+    $this->formatter = $formatter;
   }
 
   /**
@@ -582,5 +592,34 @@ abstract class sfCommandApplication
     }
 
     return $abbrevs;
+  }
+
+  /**
+   * Returns true if the stream supports colorization.
+   *
+   * Colorization is disabled if not supported by the stream:
+   *
+   *  -  windows
+   *  -  non tty consoles
+   *
+   * @param  mixed  $stream  A stream
+   *
+   * @return Boolean true if the stream supports colorization, false otherwise
+   */
+  protected function isStreamSupportsColors($stream)
+  {
+    return DIRECTORY_SEPARATOR != '\\' && function_exists('posix_isatty') && @posix_isatty($stream);
+  }
+
+  /**
+   * Guesses the best formatter for the stream.
+   *
+   * @param  mixed       $stream  A stream
+   *
+   * @return sfFormatter A formatter instance
+   */
+  protected function guessBestFormatter($stream)
+  {
+    return $this->isStreamSupportsColors($stream) ? new sfAnsiColorFormatter() : new sfFormatter();
   }
 }

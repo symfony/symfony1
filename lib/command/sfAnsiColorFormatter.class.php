@@ -45,17 +45,11 @@ class sfAnsiColorFormatter extends sfFormatter
    *
    * @param  string   $text       The test to style
    * @param  mixed    $parameters An array of options or a style name
-   * @param  resource $stream     The stream to format for
    *
    * @return string The styled text
    */
-  public function format($text = '', $parameters = array(), $stream = STDOUT)
+  public function format($text = '', $parameters = array())
   {
-    if (!$this->supportsColors($stream))
-    {
-      return $text;
-    }
-
     if (!is_array($parameters) && 'NONE' == $parameters)
     {
       return $text;
@@ -126,22 +120,5 @@ class sfAnsiColorFormatter extends sfFormatter
     $subsize = floor(($size - 3) / 2);
 
     return substr($text, 0, $subsize).$this->format('...', 'INFO').substr($text, -$subsize);
-  }
-
-  /**
-   * Returns true if the stream supports colorization.
-   *
-   * Colorization is disabled if not supported by the stream:
-   *
-   *  -  windows
-   *  -  non tty consoles
-   *
-   * @param  mixed  $stream  A stream
-   *
-   * @return Boolean true if the stream supports colorization, false otherwise
-   */
-  public function supportsColors($stream)
-  {
-    return DIRECTORY_SEPARATOR != '\\' && function_exists('posix_isatty') && @posix_isatty($stream);
   }
 }
