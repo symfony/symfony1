@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Connection_Oracle extends Doctrine_Connection
+class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
 {
     /**
      * @var string $driverName                  the name of this connection driver

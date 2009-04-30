@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Connection_Db2 extends Doctrine_Connection
+class Doctrine_Connection_Db2 extends Doctrine_Connection_Common
 {
     /**
      * Adds an driver-specific LIMIT clause to the query
