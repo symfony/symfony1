@@ -120,3 +120,12 @@ and validates its input:
 
 The method also accepts an array of options (see the API doc for more
 information).
+
+Exceptions
+----------
+
+### Autoloading
+
+When an exception is thrown during autoloading, symfony now catch them and
+outputs an error to the user. That should solve most "White screen of death"
+pages.
