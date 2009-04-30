@@ -129,3 +129,12 @@ Exceptions
 When an exception is thrown during autoloading, symfony now catch them and
 outputs an error to the user. That should solve most "White screen of death"
 pages.
+
+Propel
+------
+
+### `propel:insert-sql`
+
+Before `propel:insert-sql` removes all data from a database, it asks for a
+confirmation. As this task can remove data from several databases, it now also
+displays the name of the connections of the related databases.
