@@ -339,20 +339,26 @@ abstract class sfTask
       $messages = array($messages);
     }
 
+    $style = str_replace('_LARGE', '', $style, $count);
+    $large = (Boolean) $count;
+
     $len = 0;
     $lines = array();
     foreach ($messages as $message)
     {
-      $lines[] = sprintf('  %s  ', $message);
-      $len = max($this->strlen($message) + 4, $len);
+      $lines[] = sprintf($large ? '  %s  ' : ' %s ', $message);
+      $len = max($this->strlen($message) + ($large ? 4 : 2), $len);
     }
 
-    $messages = array(str_repeat(' ', $len));
+    $messages = $large ? array(str_repeat(' ', $len)) : array();
     foreach ($lines as $line)
     {
       $messages[] = $line.str_repeat(' ', $len - $this->strlen($line));
     }
-    $messages[] = str_repeat(' ', $len);
+    if ($large)
+    {
+      $messages[] = str_repeat(' ', $len);
+    }
 
     foreach ($messages as $message)
     {
@@ -365,10 +371,11 @@ abstract class sfTask
    *
    * @param string|array $question The question to ask
    * @param string       $style    The style to use (QUESTION by default)
+   * @param string       $default  The default answer if none is given by the user
    *
    * @param string       The user answer
    */
-  public function ask($question, $style = 'QUESTION')
+  public function ask($question, $style = 'QUESTION', $default = null)
   {
     if (false === $style)
     {
@@ -379,7 +386,9 @@ abstract class sfTask
       $this->logBlock($question, is_null($style) ? 'QUESTION' : $style);
     }
 
-    return trim(fgets(STDIN));
+    $ret = trim(fgets(STDIN));
+
+    return $ret ? $ret : $default;
   }
 
   /**
@@ -409,6 +418,69 @@ abstract class sfTask
     {
       return !$answer || 'y' == strtolower($answer[0]);
     }
+  }
+
+  /**
+   * Asks for a value and validates the response.
+   *
+   * Available options:
+   *
+   *  * value:    A value to try against the validator before asking the user
+   *  * attempts: Max number of times to ask before giving up (false by default, which means infinite)
+   *  * style:    Style for question output (QUESTION by default)
+   *
+   * @param   string|array    $question
+   * @param   sfValidatorBase $validator
+   * @param   array           $options
+   *
+   * @return  mixed
+   */
+  public function askAndValidate($question, sfValidatorBase $validator, array $options = array())
+  {
+    if (!is_array($question))
+    {
+      $question = array($question);
+    }
+
+    $options = array_merge(array(
+      'value'    => null,
+      'attempts' => false,
+      'style'    => 'QUESTION',
+    ), $options);
+
+    // does the provided value passes the validator?
+    if ($options['value'])
+    {
+      try
+      {
+        return $validator->clean($options['value']);
+      }
+      catch (sfValidatorError $error)
+      {
+      }
+    }
+
+    // no, ask the user for a valid user
+    $error = null;
+    while (false === $options['attempts'] || $options['attempts']--)
+    {
+      if (!is_null($error))
+      {
+        $this->logBlock($error->getMessage(), 'ERROR');
+      }
+
+      $value = $this->ask($question, null, $options['style']);
+
+      try
+      {
+        return $validator->clean($value);
+      }
+      catch (sfValidatorError $error)
+      {
+      }
+    }
+
+    throw $error;
   }
 
   /**

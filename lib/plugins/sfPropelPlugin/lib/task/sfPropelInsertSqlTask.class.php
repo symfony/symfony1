@@ -71,7 +71,7 @@ EOF;
     if (
       !$options['no-confirmation']
       &&
-      !$this->askConfirmation(array('This command will remove all data in your database.', 'Are you sure you want to proceed? (y/N)'), null, false)
+      !$this->askConfirmation(array('This command will remove all data in your database.', 'Are you sure you want to proceed? (y/N)'), 'QUESTION_LARGE', false)
     )
     {
       $this->logSection('propel', 'Task aborted.');
