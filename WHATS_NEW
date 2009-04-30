@@ -56,6 +56,31 @@ this method.
 
 This method will be removed in the symfony 1.4.
 
+Forms
+-----
+
+### `sfForm::useFields()`
+
+The new `sfForm::useFields()` method removes all fields from a form except the
+ones given as an argument. It is sometimes easier to explicitly give the
+fields you want to keep in a form, instead of unsetting all unneeded fields.
+For instance, when adding new fields to a base form, they won't automagically
+appears in your form until explicitly added (think of a model form where you
+add a new column to the related table).
+
+    [php]
+    class ArticleForm extends BaseArticleForm
+    {
+      public function configure()
+      {
+        $this->useFields(array('title', 'content'));
+      }
+    }
+
+By default, the array of fields is also used to change the fields order. You
+can pass `false` as the second argument to `useFields()` to disable the
+automatic reordering.
+
 Validators
 ----------
 
@@ -91,7 +116,7 @@ follows:
 Autoloaders
 -----------
 
-### sfAutoloadAgain (EXPERIMENTAL)
+### `sfAutoloadAgain` (EXPERIMENTAL)
 
 A special autoloader has been added that is just for use in debug mode. The
 new `sfAutoloadAgain` class will reload the standard symfony autoloader and
@@ -110,7 +135,7 @@ the normal HTML output. It makes debugging much more easier.
 Tasks
 -----
 
-### `askAndValidate()`
+### `sfTask::askAndValidate()`
 
 There is a new `sfTask::askAndValidate()` method to ask a question to the user
 and validates its input:

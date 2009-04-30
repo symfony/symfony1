@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(140, new lime_output_color());
+$t = new lime_test(143, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -232,6 +232,31 @@ foreach ($f as $name => $value)
 $t->is(isset($values['first_name']), true, '"sfForm" implements the Iterator interface');
 $t->is(isset($values['last_name']), true, '"sfForm" implements the Iterator interface');
 $t->is_deeply(array_keys($values), array('first_name', 'last_name', 'image'), '"sfForm" implements the Iterator interface');
+
+// ->useFields()
+$t->diag('->useFields()');
+$f = new FormTest();
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+  'email'      => new sfWidgetFormInput(),
+)));
+$f->useFields(array('first_name', 'last_name'));
+$t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'last_name'), '->useFields() removes all fields except the ones given as an argument');
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+  'email'      => new sfWidgetFormInput(),
+)));
+$f->useFields(array('email', 'first_name'));
+$t->is($f->getWidgetSchema()->getPositions(), array('email', 'first_name'), '->useFields() reorders the fields');
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+  'email'      => new sfWidgetFormInput(),
+)));
+$f->useFields(array('email', 'first_name'), false);
+$t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'email'), '->useFields() does not reorder the fields if the second argument is false');
 
 // ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');

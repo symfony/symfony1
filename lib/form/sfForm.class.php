@@ -1012,6 +1012,28 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Removes all fields from the form except the ones given as an argument.
+   *
+   * @param array   $fields  An array of field names
+   * @param Boolean $ordered Whether to use the array of field names to reorder the fields
+   */
+  public function useFields(array $fields = array(), $ordered = true)
+  {
+    foreach ($this->widgetSchema->getPositions() as $field)
+    {
+      if (!in_array($field, $fields))
+      {
+        $this->offsetUnset($field);
+      }
+    }
+
+    if ($ordered)
+    {
+      $this->widgetSchema->setPositions($fields);
+    }
+  }
+
+  /**
    * Returns a form field for the main widget schema.
    *
    * @return sfFormFieldSchema A sfFormFieldSchema instance
