@@ -48,8 +48,8 @@ To upgrade a project:
 The remaining sections explain the main changes made in symfony 1.3 that need
 some kind of upgrade (automatic or not).
 
-Deprecated/Removed settings, methods and functions
---------------------------------------------------
+Deprecated/Removed settings, classes, methods, functions, and tasks
+-------------------------------------------------------------------
 
 Symfony 1.3 is the last version for which the sfCompat10Plugin plugin is
 included. The plugin will be removed in symfony 1.4.
@@ -100,6 +100,17 @@ The following classes have been removed in symfony 1.3:
 
   * `sfCommonFilter`: see the "Removal of the common filter" section for more
     information about the consequences and how to migrate your code.
+
+The following tasks have been removed in symfony 1.3:
+
+  * `project:freeze` and `project:unfreeze`: These tasks used to embed the
+    symfony version used by a project inside the project itself. They are not
+    needed anymore as the best practice has been to embed symfony in the
+    project for a very long time now. Moreover, switching from one version of
+    symfony to another is really simple now as you only need to change the
+    path in the `ProjectConfiguration` class. Embedding by hand symfony is
+    also very simple as you just need to copy the whole symfony directory
+    somewhere in your project (`lib/vendor/symfony/` is the recommended one).
 
 Autoloading
 -----------
