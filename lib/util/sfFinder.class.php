@@ -86,7 +86,7 @@ class sfFinder
    */
   public static function type($name)
   {
-    $finder = new sfFinder();
+    $finder = new self();
     return $finder->setType($name);
   }
 
