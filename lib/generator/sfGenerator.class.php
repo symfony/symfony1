@@ -57,8 +57,8 @@ abstract class sfGenerator
   /**
    * Generates PHP files for a given module name.
    *
-   * @param string $generatedModuleName   The name of module name to generate
-   * @param array  $files                 A list of template files to generate
+   * @param string $generatedModuleName The name of module name to generate
+   * @param array  $files               A list of template files to generate
    */
   protected function generatePhpFiles($generatedModuleName, $files = array())
   {
@@ -71,7 +71,7 @@ abstract class sfGenerator
   /**
    * Evaluates a template file.
    *
-   * @param string $templateFile  The template file path
+   * @param string $templateFile The template file path
    *
    * @return string The evaluated template
    */

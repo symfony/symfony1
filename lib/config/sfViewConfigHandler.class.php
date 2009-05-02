@@ -154,7 +154,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a layout statement statement to the data.
    *
-   * @param  string $viewName The view name
+   * @param string $viewName The view name
    *
    * @return string The PHP statement
    */
@@ -208,7 +208,7 @@ EOF;
   /**
    * Adds http metas and metas statements to the data.
    *
-   * @param string $viewName  The view name
+   * @param string $viewName The view name
    *
    * @return string The PHP statement
    */

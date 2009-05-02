@@ -26,11 +26,11 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Constructor.
    *
-   * @param sfWidgetFormSchema $widget  A sfWidget instance
-   * @param sfFormField        $parent  The sfFormField parent instance (null for the root widget)
-   * @param string             $name    The field name
-   * @param string             $value   The field value
-   * @param sfValidatorError   $error   A sfValidatorError instance
+   * @param sfWidgetFormSchema $widget A sfWidget instance
+   * @param sfFormField        $parent The sfFormField parent instance (null for the root widget)
+   * @param string             $name   The field name
+   * @param string             $value  The field value
+   * @param sfValidatorError   $error  A sfValidatorError instance
    */
   public function __construct(sfWidgetFormSchema $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
@@ -42,7 +42,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns true if the bound field exists (implements the ArrayAccess interface).
    *
-   * @param  string  $name  The name of the bound field
+   * @param string $name The name of the bound field
    *
    * @return Boolean true if the widget exists, false otherwise
    */
@@ -54,7 +54,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns the form field associated with the name (implements the ArrayAccess interface).
    *
-   * @param  string $name The offset of the value to get
+   * @param string $name The offset of the value to get
    *
    * @return sfFormField A form field instance
    */

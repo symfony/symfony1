@@ -105,7 +105,7 @@ class sfCommandArgumentSet
   /**
    * Returns an argument by name.
    *
-   * @param  string $name The argument name
+   * @param string $name The argument name
    *
    * @return sfCommandArgument A sfCommandArgument object
    */
@@ -122,7 +122,7 @@ class sfCommandArgumentSet
   /**
    * Returns true if an argument object exists by name.
    *
-   * @param  string  $name  The argument name
+   * @param string $name The argument name
    *
    * @return Boolean true if the argument object exists, false otherwise
    */

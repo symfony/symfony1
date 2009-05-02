@@ -129,9 +129,9 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a filter statement to the data.
    *
-   * @param string $category    The category name
-   * @param string $class       The filter class name
-   * @param array  $parameters  Filter default parameters
+   * @param string $category   The category name
+   * @param string $class      The filter class name
+   * @param array  $parameters Filter default parameters
    *
    * @return string The PHP statement
    */

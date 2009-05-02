@@ -39,7 +39,7 @@ class sfGeneratorManager
   /**
    * Initializes the sfGeneratorManager instance.
    *
-   * @param      sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
    * @deprecated
    */
   public function initialize(sfProjectConfiguration $configuration)
@@ -114,8 +114,8 @@ class sfGeneratorManager
   /**
    * Generates classes and templates for a given generator class.
    *
-   * @param string $generatorClass    The generator class name
-   * @param array  $param             An array of parameters
+   * @param string $generatorClass The generator class name
+   * @param array  $param          An array of parameters
    *
    * @return string The cache for the configuration file
    */

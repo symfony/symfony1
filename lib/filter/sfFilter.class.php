@@ -123,7 +123,7 @@ abstract class sfFilter
    *
    * <code>$this->getParameterHolder()->has()</code>
    *
-   * @param string $name  The key name
+   * @param string $name The key name
    *
    * @return boolean true if the given key exists, false otherwise
    *

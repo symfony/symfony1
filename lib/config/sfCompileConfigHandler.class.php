@@ -66,7 +66,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
                                                      '/^\s*\?>/m'       => ''));
 
       // replace windows and mac format with unix format
-      $contents = str_replace("\r",  "\n", $contents);
+      $contents = str_replace("\r", "\n", $contents);
 
       // replace multiple new lines with a single newline
       $contents = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $contents);

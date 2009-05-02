@@ -27,9 +27,9 @@ abstract class sfPluginConfiguration
   /**
    * Constructor.
    * 
-   * @param sfProjectConfiguration  $configuration
-   * @param string                  $rootDir        The plugin root directory
-   * @param string                  $name           The plugin name
+   * @param sfProjectConfiguration $configuration The project configuration
+   * @param string                 $rootDir       The plugin root directory
+   * @param string                 $name          The plugin name
    */
   public function __construct(sfProjectConfiguration $configuration, $rootDir = null, $name = null)
   {
@@ -136,7 +136,7 @@ abstract class sfPluginConfiguration
    * @param sfEvent $event  
    * @param array   $config 
    * 
-   * @return  array
+   * @return array
    */
   public function filterAutoloadConfig(sfEvent $event, array $config)
   {

@@ -44,7 +44,7 @@ class sfDatabaseManager
   /**
    * Initializes this sfDatabaseManager object
    *
-   * @param  sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -81,8 +81,8 @@ class sfDatabaseManager
   /**
    * Sets a database connection.
    *
-   * @param string     $name        The database name
-   * @param sfDatabase $database  A sfDatabase instance
+   * @param string     $name     The database name
+   * @param sfDatabase $database A sfDatabase instance
    */
   public function setDatabase($name, sfDatabase $database)
   {
@@ -92,7 +92,7 @@ class sfDatabaseManager
   /**
    * Retrieves the database connection associated with this sfDatabase implementation.
    *
-   * @param string $name  A database name
+   * @param string $name A database name
    *
    * @return mixed A Database instance
    *

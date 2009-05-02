@@ -39,8 +39,8 @@ class sfLoader
   /**
    * Loads helpers.
    *
-   * @param array  $helpers     An array of helpers to load
-   * @param string $moduleName  A module name (optional)
+   * @param array  $helpers    An array of helpers to load
+   * @param string $moduleName A module name (optional)
    *
    * @throws sfViewException
    */

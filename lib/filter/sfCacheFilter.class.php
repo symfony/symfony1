@@ -28,8 +28,8 @@ class sfCacheFilter extends sfFilter
   /**
    * Initializes this Filter.
    *
-   * @param sfContext $context      The current application context
-   * @param array     $parameters   An associative array of initialization parameters
+   * @param sfContext $context    The current application context
+   * @param array     $parameters An associative array of initialization parameters
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *

@@ -88,8 +88,8 @@ abstract class sfData
    *
    * The returned array of files is sorted by alphabetical order.
    *
-   * @param  string|array $element A directory or file name or an array of directories and/or file names
-   *                               If null, then defaults to 'sf_data_dir'/fixtures
+   * @param string|array $element A directory or file name or an array of directories and/or file names
+   *                              If null, then defaults to 'sf_data_dir'/fixtures
    *
    * @return array A list of *.yml files
    *

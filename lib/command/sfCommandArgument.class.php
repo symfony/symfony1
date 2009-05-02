@@ -32,10 +32,10 @@ class sfCommandArgument
   /**
    * Constructor.
    *
-   * @param string  $name     The argument name
-   * @param integer $mode     The argument mode: self::REQUIRED or self::OPTIONAL
-   * @param string  $help     A help text
-   * @param mixed   $default  The default value (for self::OPTIONAL mode only)
+   * @param string  $name    The argument name
+   * @param integer $mode    The argument mode: self::REQUIRED or self::OPTIONAL
+   * @param string  $help    A help text
+   * @param mixed   $default The default value (for self::OPTIONAL mode only)
    */
   public function __construct($name, $mode = null, $help = '', $default = null)
   {

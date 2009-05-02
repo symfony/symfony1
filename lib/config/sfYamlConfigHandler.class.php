@@ -25,7 +25,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   /**
    * Parses an array of YAMLs files and merges them in one configuration array.
    *
-   * @param  array $configFiles An array of configuration file paths
+   * @param array $configFiles An array of configuration file paths
    *
    * @return array A merged configuration array
    */
@@ -73,8 +73,8 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   /**
    * Merges configuration values for a given key and category.
    *
-   * @param string $keyName   The key name
-   * @param string $category  The category name
+   * @param string $keyName  The key name
+   * @param string $category The category name
    *
    * @return string The value associated with this key name and category
    */
@@ -98,9 +98,9 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   /**
    * Gets a configuration value for a given key and category.
    *
-   * @param string $keyName       The key name
-   * @param string $category      The category name
-   * @param string $defaultValue  The default value
+   * @param string $keyName      The key name
+   * @param string $category     The category name
+   * @param string $defaultValue The default value
    *
    * @return string The value associated with this key name and category
    */

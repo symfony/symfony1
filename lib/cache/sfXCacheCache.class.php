@@ -50,7 +50,7 @@ class sfXCacheCache extends sfCache
     
     $set = $this->getBaseValue($key);
     
-    if(!is_array($set) || !array_key_exists('data', $set))
+    if (!is_array($set) || !array_key_exists('data', $set))
     {
       
       return $default;
@@ -121,7 +121,7 @@ class sfXCacheCache extends sfCache
   {
     $set = $this->getBaseValue($key);
     
-    if(!is_array($set) || !array_key_exists('ctime', $set))
+    if (!is_array($set) || !array_key_exists('ctime', $set))
     {
       
       return 0;
@@ -138,7 +138,7 @@ class sfXCacheCache extends sfCache
     
     $set = $this->getBaseValue($key);
     
-    if(!is_array($set) || !array_key_exists('timeout', $set))
+    if (!is_array($set) || !array_key_exists('timeout', $set))
     {
       
       return 0;

@@ -67,7 +67,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   /**
    * Returns a single addCache statement.
    *
-   * @param string $actionName  The action name
+   * @param string $actionName The action name
    *
    * @return string PHP code for the addCache statement
    */

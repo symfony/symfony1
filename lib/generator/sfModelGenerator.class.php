@@ -181,9 +181,9 @@ abstract class sfModelGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string  $column     The column name
-   * @param boolean $developed  true if you want developped method names, false otherwise
-   * @param string  $prefix     The prefix value
+   * @param string  $column    The column name
+   * @param boolean $developed true if you want developped method names, false otherwise
+   * @param string  $prefix    The prefix value
    *
    * @return string PHP code
    */
@@ -194,9 +194,9 @@ abstract class sfModelGenerator extends sfGenerator
   /**
    * Returns HTML code for an action link.
    *
-   * @param string  $actionName   The action name
-   * @param array   $params       The parameters
-   * @param boolean $pk_link      Whether to add a primary key link or not
+   * @param string  $actionName The action name
+   * @param array   $params     The parameters
+   * @param boolean $pk_link    Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -212,8 +212,8 @@ abstract class sfModelGenerator extends sfGenerator
   /**
    * Wraps content with a credential condition.
    *
-   * @param string  $content  The content
-   * @param array   $params   The parameters
+   * @param string $content The content
+   * @param array  $params  The parameters
    *
    * @return string HTML code
    */

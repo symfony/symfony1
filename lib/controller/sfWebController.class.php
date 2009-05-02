@@ -167,10 +167,10 @@ abstract class sfWebController extends sfController
   /**
    * Redirects the request to another URL.
    *
-   * @param string $url         An existing URL
-   * @param int    $delay       A delay in seconds before redirecting. This is only needed on
-   *                            browsers that do not support HTTP headers
-   * @param int    $statusCode  The status code
+   * @param string $url        An existing URL
+   * @param int    $delay      A delay in seconds before redirecting. This is only needed on
+   *                           browsers that do not support HTTP headers
+   * @param int    $statusCode The status code
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {

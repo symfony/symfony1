@@ -113,7 +113,7 @@ class sfMySQLDatabase extends sfDatabase
     }
 
     // set encoding if specified
-    if($encoding)
+    if ($encoding)
     {
       @mysql_query("SET NAMES '".$encoding."'", $this->connection);
     }
@@ -126,7 +126,7 @@ class sfMySQLDatabase extends sfDatabase
   /**
    * Returns the appropriate connect method.
    * 
-   * @param  bool $persistent wether persistent connections are use or not
+   * @param bool $persistent wether persistent connections are use or not
    * @return string name of connect method.
    */
   protected function getConnectMethod($persistent)
@@ -137,7 +137,7 @@ class sfMySQLDatabase extends sfDatabase
   /**
    * Selects the database to be used in this connection
    * 
-   * @param  string $database Name of database to be connected
+   * @param string $database Name of database to be connected
    *
    * @return bool true if this was successful
    */

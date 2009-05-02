@@ -64,8 +64,8 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
   /**
    * Converts an array to HTML.
    *
-   * @param string $id      The identifier to use
-   * @param array  $values  The array of values
+   * @param string $id     The identifier to use
+   * @param array  $values The array of values
    *
    * @return string An HTML string
    */
