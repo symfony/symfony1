@@ -56,7 +56,13 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         // RawSql expects to be plain SQL + syntax for SELECT part. It is used as is in query execution.
         $this->useQueryCache(false);
     }
-    
+
+    protected function clear()
+    {
+        $this->_preQuery = false;
+        $this->_pendingJoinConditions = array();
+    }
+
     /**
      * @deprecated
      */

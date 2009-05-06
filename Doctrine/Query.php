@@ -188,6 +188,14 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         return new Doctrine_Query($conn);
     }
 
+    protected function clear()
+    {
+        parent::clear();
+
+        $this->_preQuery = false;
+        $this->_pendingJoinConditions = array();
+    }
+
     /**
      * Resets the query to the state just after it has been instantiated.
      */
