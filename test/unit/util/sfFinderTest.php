@@ -20,7 +20,7 @@ class my_lime_test extends lime_test
     return $this->is($a, $b, $message);
   }
 }
-$t = new my_lime_test(37, new lime_output_color());
+$t = new my_lime_test(38, new lime_output_color());
 
 require_once($_test_dir.'/../lib/util/sfFinder.class.php');
 
@@ -30,6 +30,7 @@ $phpFiles = array(
   'dir1/file12.php',
 );
 $txtFiles = array(
+  'FILE5.txt',
   'file2.txt',
 );
 $regexpFiles = array(
@@ -37,7 +38,15 @@ $regexpFiles = array(
   'dir1/dir2/file22',
   'dir1/dir2/file23',
   'dir1/dir2/file24',
-  'file2.txt'
+  'file2.txt',
+);
+$regexpWithModifierFiles = array(
+  'dir1/dir2/file21.php',
+  'dir1/dir2/file22',
+  'dir1/dir2/file23',
+  'dir1/dir2/file24',
+  'FILE5.txt',
+  'file2.txt',
 );
 $allFiles = array(
   'dir1/dir2/dir3/file31',
@@ -50,6 +59,7 @@ $allFiles = array(
   'dir1/file12.php',
   'dir1/file13',
   'file1',
+  'FILE5.txt',
   'file2.txt',
 );
 $minDepth1Files = array(
@@ -72,6 +82,7 @@ $maxDepth2Files = array(
   'dir1/file12.php',
   'dir1/file13',
   'file1',
+  'FILE5.txt',
   'file2.txt',
 );
 $anyWithoutDir2 = array(
@@ -81,6 +92,7 @@ $anyWithoutDir2 = array(
   'dir1/file12.php',
   'dir1/file13',
   'file1',
+  'FILE5.txt',
   'file2.txt',
 );
 
@@ -119,6 +131,10 @@ $t->arrays_are_equal($finder->in($fixtureDir), $phpFiles, '->name() can take a g
 $t->diag('->name() regexp support');
 $finder = sfFinder::type('file')->name('/^file2.*$/')->relative();
 $t->arrays_are_equal($finder->in($fixtureDir), $regexpFiles, '->name() can take a regexp as an argument');
+
+$t->diag('->name() regexp support with modifier');
+$finder = sfFinder::type('file')->name('/^file(2|5).*$/i')->relative();
+$t->arrays_are_equal($finder->in($fixtureDir), $regexpWithModifierFiles, '->name() can take a regexp with a modifier as an argument');
 
 $t->diag('->name() array / args / chaining');
 $finder = sfFinder::type('file')->name(array('*.php', '*.txt'))->relative();

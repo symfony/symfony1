@@ -113,7 +113,7 @@ class sfFinder
    */
   protected function to_regex($str)
   {
-    if ($str{0} == '/' && $str{strlen($str) - 1} == '/')
+    if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $str))
     {
       return $str;
     }
