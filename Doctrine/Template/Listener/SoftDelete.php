@@ -104,7 +104,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                 $query->addWhere($field . ' IS NULL');
             } else if ($this->_options['type'] == 'boolean') {
                 $query->set($field, '?', array('true'));
-                $query->addWhere($field . ' = 0');
+                $query->addWhere(
+                    $field . ' = ' . $query->getConnection()->convertBooleans(false)
+                );
             }
         }
     }
@@ -129,7 +131,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             if ($this->_options['type'] == 'timestamp') {
                 $query->addPendingJoinCondition($params['alias'], $field . ' IS NULL');
             } else if ($this->_options['type'] == 'boolean') {
-                $query->addPendingJoinCondition($params['alias'], $field . ' = 0');
+                $query->addPendingJoinCondition(
+                    $params['alias'], $field . ' = ' . $query->getConnection()->convertBooleans(false)
+                );
             }
         }
     }
