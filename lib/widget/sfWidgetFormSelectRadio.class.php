@@ -104,7 +104,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
         $baseAttributes['checked'] = 'checked';
       }
 
-      $inputs[] = array(
+      $inputs[$id] = array(
         'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
         'label' => $this->renderContentTag('label', $option, array('for' => $id)),
       );
