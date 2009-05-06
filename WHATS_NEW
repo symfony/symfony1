@@ -39,6 +39,14 @@ removed:
   * `first_name` => First name (as before)
   * `author_id` => Author (was "Author id" before)
 
+Validators
+----------
+
+### `sfValidatorRegex`
+
+The `sfValidatorRegex` has a new `must_match` option. If set to `false`, the
+regex must not match for the validator to pass.
+
 ### `sfValidatorSchemaCompare`
 
 The `sfValidatorSchemaCompare` class has two new comparators:

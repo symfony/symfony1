@@ -23,7 +23,8 @@ class sfValidatorRegex extends sfValidatorString
    *
    * Available options:
    *
-   *  * pattern: A regex pattern compatible with PCRE (required)
+   *  * pattern:    A regex pattern compatible with PCRE (required)
+   *  * must_match: Whether the regex must match or not (true by default)
    *
    * @param array $options   An array of options
    * @param array $messages  An array of error messages
@@ -35,6 +36,7 @@ class sfValidatorRegex extends sfValidatorString
     parent::configure($options, $messages);
 
     $this->addRequiredOption('pattern');
+    $this->addOption('must_match', true);
   }
 
   /**
@@ -44,7 +46,11 @@ class sfValidatorRegex extends sfValidatorString
   {
     $clean = parent::doClean($value);
 
-    if (!preg_match($this->getOption('pattern'), $clean))
+    if (
+      ($this->getOption('must_match') && !preg_match($this->getOption('pattern'), $clean))
+      ||
+      (!$this->getOption('must_match') && preg_match($this->getOption('pattern'), $clean))
+    )
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
