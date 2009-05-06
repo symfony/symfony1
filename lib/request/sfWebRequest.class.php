@@ -33,7 +33,7 @@ class sfWebRequest extends sfRequest
     $requestParameters      = null,
     $formats                = array(),
     $format                 = null,
-    $fileArrayFixed         = false;
+    $fixedFileArray         = false;
 
   /**
    * Initializes this sfRequest.
@@ -708,13 +708,12 @@ class sfWebRequest extends sfRequest
    */
   public function getFiles($key = null)
   {
-    if (false === $this->fileArrayFixed)
+    if (false === $this->fixedFileArray)
     {
-      $files = self::convertFileInformation($_FILES);
-      $this->fileArrayFixed = true;
+      $this->fixedFileArray = self::convertFileInformation($_FILES);
     }
 
-    return is_null($key) ? $files : (isset($files[$key]) ? $files[$key] : array());
+    return is_null($key) ? $this->fixedFileArray : (isset($this->fixedFileArray[$key]) ? $this->fixedFileArray[$key] : array());
   }
 
   /**
