@@ -296,6 +296,7 @@ class Doctrine_Query_Tokenizer
                     }
                 } else {
                     if ( ! (substr_count($term[$i], "'") & 1) &&
+                           (substr_count($term[$i], "\\\'") & 1) &&
                          ! (substr_count($term[$i], "\"") & 1)) {
                         $i++;
                     }
