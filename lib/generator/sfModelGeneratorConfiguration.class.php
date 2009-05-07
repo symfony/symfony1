@@ -304,7 +304,7 @@ abstract class sfModelGeneratorConfiguration
       $fields = array();
 
       // with fieldsets?
-      if (!is_array(current($fieldsets)))
+      if (!is_array(reset($fieldsets)))
       {
         $fieldsets = array('NONE' => $fieldsets);
       }
