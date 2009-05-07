@@ -348,7 +348,7 @@ class sfPluginManager
           continue;
         }
 
-        throw new sfPluginDependencyException(sprintf('Unable to install plugin "%s" (version %s) because it depends on plugin "%s" which is not installed.', $plugin, $version, $dependency['name']));
+        throw new sfPluginDependencyException(sprintf('Unable to install plugin "%s" (version %s) because it depends on plugin "%s" which is not installed (install dependencies by hand or use the --install_deps option for automatic installation).', $plugin, $version, $dependency['name']));
       }
     }
   }
