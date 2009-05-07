@@ -103,9 +103,10 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      *
      * @param   Doctrine_Record $record
      * @param   integer         $version
+     * @param   integer         $hydrationMode
      * @return  array           An array with version information
      */
-    public function getVersion(Doctrine_Record $record, $version)
+    public function getVersion(Doctrine_Record $record, $version, $hydrationMode = Doctrine::HYDRATE_ARRAY)
     {
         $className = $this->_options['className'];
 
@@ -123,7 +124,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         $q->from($className)->where($where);
 
-        return $q->execute($values, Doctrine::HYDRATE_ARRAY);
+        return $q->execute($values, $hydrationMode);
     }
 
     /**
