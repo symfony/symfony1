@@ -79,7 +79,7 @@ abstract class sfPager
     $limit = ($check > 0) ? $check : 1;
     $begin = ($tmp > 0) ? (($tmp > $limit) ? $limit : $tmp) : 1;
 
-    $i = $begin;
+    $i = (int) $begin;
     while (($i < $begin + $nb_links) && ($i <= $this->lastPage))
     {
       $links[] = $i++;
