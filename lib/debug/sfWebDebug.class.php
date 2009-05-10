@@ -417,6 +417,8 @@ EOF;
 
 #sfWebDebug img
 {
+  float: none;
+  margin: 0;
   border: 0;
   display: inline;
 }
