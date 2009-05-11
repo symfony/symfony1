@@ -603,6 +603,11 @@ class lime_harness extends lime_registration
     return $this->stats['_failed_tests'] ? false : true;
   }
 
+  public function get_failed_files()
+  {
+    return isset($this->stats['_failed_files']) ? $this->stats['_failed_files'] : array();
+  }
+
   private function process_test_output($lines)
   {
     foreach (explode("\n", $lines) as $text)
