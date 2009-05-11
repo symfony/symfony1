@@ -330,7 +330,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
    *  }
    *
    *  # Returning view
-   *  <php echo update_element_function('cart', array(
+   *  <?php echo update_element_function('cart', array(
    *      'action'   => 'update',
    *      'position' => 'bottom',
    *      'content'  => '<p>New Product: '.$product->getName().'</p>',
@@ -557,7 +557,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
    * serialized sortable element as parameters.
    *
    * Example:
-   *   <php echo sortable_element($my_list, array(
+   *   <?php echo sortable_element($my_list, array(
    *      'url' => '@order',
    *   )) ?>
    *
