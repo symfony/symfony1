@@ -246,6 +246,32 @@ class sfTesterResponse extends sfTester
   }
 
   /**
+   * Tests the response content against a regex.
+   *
+   * @param string Regex
+   *
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function matches($regex)
+  {
+    if (!preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $regex, $match))
+    {
+      throw new InvalidArgumentException(sprintf('"%s" is not a valid regular expression.', $regex));
+    }
+
+    if ($match[1] == '!')
+    {
+      $this->tester->unlike($this->response->getContent(), substr($regex, 1), sprintf('response content does not match regex "%s"', substr($regex, 1)));
+    }
+    else
+    {
+      $this->tester->like($this->response->getContent(), $regex, sprintf('response content matches regex "%s"', $regex));
+    }
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
    * Tests the status code.
    *
    * @param string $statusCode Status code to check, default 200

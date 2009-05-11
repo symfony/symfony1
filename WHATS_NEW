@@ -140,6 +140,18 @@ When a request generates an exception, the `debug()` method of the response
 tester now outputs a readable text representation of the exception, instead of
 the normal HTML output. It makes debugging much more easier.
 
+`sfTesterResponse` has a new `matches()` method that runs a regex on the whole
+response content. It is of great help on non XML-like responses, where
+`checkElement()` is not useable. It also replaces the less-powerful
+`contains()` method:
+
+    [php]
+    $browser->with('response')->begin()->
+      matches('/I have \d+ apples/')->    // it takes a regex as an argument
+      matches('!/I have \d+ apples/')->   // a ! at the beginning means that the regex must not match
+      matches('!/I have \d+ apples/i')->  // you can also add regex modifiers
+    end();
+
 Tasks
 -----
 

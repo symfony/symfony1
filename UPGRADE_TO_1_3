@@ -66,6 +66,15 @@ will be removed in symfony 1.4:
   * `sfForm::setRequiredMessage()`: You can replace it by a call to the new
     `sfForm::setDefaultMessage()` method
 
+  * `sfTesterResponse::contains()`: You can use the more powerful `matches()`
+    method
+
+  * `sfTestFunctionalBase` following methods: `isRedirected()`,
+    `isStatusCode()`, `responseContains()`, `isRequestParameter()`,
+    `isResponseHeader()`, `isUserCulture()`, `isRequestFormat()`, and
+    `checkResponseElement()`: These methods have been deprecated since 1.2,
+    and replaced with the tester classes.
+
 The following methods and functions have been removed in symfony 1.3:
 
   * `sfApplicationConfiguration::checkSymfonyVersion()`: see below for the
@@ -91,10 +100,10 @@ been removed from symfony 1.3:
   * `sf_lazy_cache_key`: Introduced as a big performance improvement in
     symfony 1.2.6, this setting allowed you to turn on a lazy cache key
     generation for the view cache. While we think doing it lazy was the best
-    idea, some people might have relied on `sfViewCacheManager#isCacheable`
-    being called even when the action itself wasn't cachable. As of symfony 1.3
-    the behaviour is the same as stting `sf_lazy_cache_key` to `true`.
-    
+    idea, some people might have relied on `sfViewCacheManager::isCacheable()`
+    being called even when the action itself wasn't cacheable. As of symfony
+    1.3, the behavior is the same as if `sf_lazy_cache_key` was set to `true`.
+
   * `strip_comments`: The `strip_comments` was introduced to be able to
     disable the comment stripping because of some bugs in the tokenizer of
     some PHP 5.0.X versions. It was also used later on to avoid large memory

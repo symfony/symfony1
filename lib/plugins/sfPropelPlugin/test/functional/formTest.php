@@ -29,7 +29,7 @@ $b->
   click('submit', array('attachment' => array('name' => $name, 'file' => $fileToUpload)))->
   isRedirected()->
   followRedirect()->
-  responseContains('ok')
+  with('response')->matches('/ok/')
 ;
 
 $b->test()->ok(file_exists($uploadedFile), 'file is uploaded');
@@ -64,7 +64,7 @@ $b->
   isRedirected()->
   followRedirect()->
 
-  with('response')->contains('ok')
+  with('response')->matches('/ok/')
 ;
 
 $b->test()->ok(file_exists($uploadedFile), 'file is uploaded');
@@ -89,7 +89,7 @@ $b->
   click('submit', array('category' => array('name' => 'foo')))->
   isRedirected()->
   followRedirect()->
-  responseContains('ok')
+  with('response')->matches('/ok/')
 ;
 
 // create another category with the same name
@@ -135,7 +135,7 @@ $b->
   click('submit')->
   isRedirected()->
   followRedirect()->
-  responseContains('ok')
+  with('response')->matches('/ok/')
 ;
 
 // create an article with a unique title-category_id
@@ -147,7 +147,7 @@ $b->
   click('submit', array('article' => array('title' => 'foo', 'category_id' => 1)))->
   isRedirected()->
   followRedirect()->
-  responseContains('ok')
+  with('response')->matches('/ok/')
 ;
 
 // create another article with the same title but a different category_id
@@ -159,7 +159,7 @@ $b->
   click('submit', array('article' => array('title' => 'foo', 'category_id' => 2)))->
   isRedirected()->
   followRedirect()->
-  responseContains('ok')
+  with('response')->matches('/ok/')
 ;
 
 // create another article with the same title and category_id as the first one
