@@ -66,6 +66,8 @@ abstract class sfTask
    *
    * @param sfCommandManager $commandManager  An sfCommandManager instance
    * @param mixed            $options         The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function runFromCLI(sfCommandManager $commandManager, $options = null)
   {
@@ -80,6 +82,8 @@ abstract class sfTask
    *
    * @param array $arguments  An array of arguments
    * @param array $options    An array of options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($arguments = array(), $options = array())
   {
@@ -486,8 +490,10 @@ abstract class sfTask
   /**
    * Executes the current task.
    *
-   * @param array $arguments  An array of arguments
-   * @param array $options    An array of options
+   * @param array    $arguments  An array of arguments
+   * @param array    $options    An array of options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
    abstract protected function execute($arguments = array(), $options = array());
 

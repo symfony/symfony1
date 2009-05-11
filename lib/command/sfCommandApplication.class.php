@@ -173,6 +173,8 @@ abstract class sfCommandApplication
    * Runs the current application.
    *
    * @param mixed $options The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($options = null)
   {
