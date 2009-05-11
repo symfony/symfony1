@@ -166,6 +166,19 @@ and validates its input:
 The method also accepts an array of options (see the API doc for more
 information).
 
+### `symfony:test`
+
+From time to time, developers need to run the symfony test suite to check that
+symfony works well on their specific platform. Until now, they had to know the
+`prove.php` script bundled with symfony to do that. As of symfony 1.3, there
+is a built-in task, `symfony:test` that launches the symfony core test suite
+from the command line, like any other task:
+
+    $ php symfony symfony:test
+
+If you were used to run `php test/bin/prove.php`, you should now run the
+equivalent `php data/bin/symfony symfony:test` command.
+
 Exceptions
 ----------
 

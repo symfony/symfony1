@@ -405,6 +405,8 @@ class sfCoreAutoload
     'sfcommandapplicationtask' => 'task/sfCommandApplicationTask.class.php',
     'sffilesystem' => 'task/sfFilesystem.class.php',
     'sftask' => 'task/sfTask.class.php',
+    'lime_symfony' => 'task/symfony/lime_symfony.php',
+    'sfsymfonytesttask' => 'task/symfony/sfSymfonyTestTask.class.php',
     'sftestalltask' => 'task/test/sfTestAllTask.class.php',
     'sftestcoveragetask' => 'task/test/sfTestCoverageTask.class.php',
     'sftestfunctionaltask' => 'task/test/sfTestFunctionalTask.class.php',

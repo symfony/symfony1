@@ -30,6 +30,8 @@ $files = sfFinder::type('file')->name('*Test.php')->in(array(
   $root_dir.'/lib/plugins/sfCompat10Plugin/test/functional',
   $root_dir.'/lib/plugins/sfPropelPlugin/test/unit',
   $root_dir.'/lib/plugins/sfPropelPlugin/test/functional',
+  $root_dir.'/lib/plugins/sfDoctrinePlugin/test/unit',
+  $root_dir.'/lib/plugins/sfDoctrinePlugin/test/functional',
   $root_dir.'/test/unit',
   $root_dir.'/test/functional',
   $root_dir.'/test/other',
