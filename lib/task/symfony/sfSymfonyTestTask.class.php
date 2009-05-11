@@ -25,6 +25,7 @@ class sfSymfonyTestTask extends sfTask
   {
     $this->addOptions(array(
       new sfCommandOption('update-autoloader', 'u', sfCommandOption::PARAMETER_NONE, 'Update the sfCoreAutoload class'),
+      new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
     ));
 
     $this->namespace = 'symfony';
@@ -46,6 +47,7 @@ EOF;
     require_once(dirname(__FILE__).'/../../vendor/lime/lime.php');
     require_once(dirname(__FILE__).'/lime_symfony.php');
 
+    // cleanup
     require_once(dirname(__FILE__).'/../../util/sfToolkit.class.php');
     if ($files = glob(sys_get_temp_dir().DIRECTORY_SEPARATOR.'/sf_autoload_unit_*'))
     {
@@ -55,29 +57,53 @@ EOF;
       }
     }
 
+    // update sfCoreAutoload
     if ($options['update-autoloader'])
     {
-      // update sfCoreAutoload
       require_once(dirname(__FILE__).'/../../autoload/sfCoreAutoload.class.php');
       sfCoreAutoload::make();
+    }
+
+    $status = false;
+    $statusFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.sprintf('/.test_symfony_%s_status', md5(dirname(__FILE__)));
+    if ($options['only-failed'])
+    {
+      if (file_exists($statusFile))
+      {
+        $status = unserialize(file_get_contents($statusFile));
+      }
     }
 
     $h = new lime_symfony(new lime_output_color());
     $h->base_dir = realpath(dirname(__FILE__).'/../../../test');
 
-    $h->register(sfFinder::type('file')->prune('fixtures')->name('*Test.php')->in(array_merge(
-      // unit tests
-      array($h->base_dir.'/unit'),
-      glob($h->base_dir.'/../lib/plugins/*/test/unit'),
+    if ($status)
+    {
+      foreach ($status as $file)
+      {
+        $h->register($file);
+      }
+    }
+    else
+    {
+      $h->register(sfFinder::type('file')->prune('fixtures')->name('*Test.php')->in(array_merge(
+        // unit tests
+        array($h->base_dir.'/unit'),
+        glob($h->base_dir.'/../lib/plugins/*/test/unit'),
 
-      // functional tests
-      array($h->base_dir.'/functional'),
-      glob($h->base_dir.'/../lib/plugins/*/test/functional'),
+        // functional tests
+        array($h->base_dir.'/functional'),
+        glob($h->base_dir.'/../lib/plugins/*/test/functional'),
 
-      // other tests
-      array($h->base_dir.'/other')
-    )));
+        // other tests
+        array($h->base_dir.'/other')
+      )));
+    }
 
-    return $h->run() ? 0 : 1;
+    $ret = $h->run() ? 0 : 1;
+
+    file_put_contents($statusFile, serialize($h->get_failed_files()));
+
+    return $ret;
   }
 }

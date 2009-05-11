@@ -23,6 +23,10 @@ class sfTestAllTask extends sfBaseTask
    */
   protected function configure()
   {
+    $this->addOptions(array(
+      new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
+    ));
+
     $this->aliases = array('test-all');
     $this->namespace = 'test';
     $this->name = 'all';
@@ -50,10 +54,34 @@ EOF;
     $h = new lime_harness(new lime_output_color());
     $h->base_dir = sfConfig::get('sf_test_dir');
 
-    // register all tests
-    $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
-    $h->register($finder->in($h->base_dir));
+    $status = false;
+    $statusFile = sfConfig::get('sf_cache_dir').'/.test_all_status';
+    if ($options['only-failed'])
+    {
+      if (file_exists($statusFile))
+      {
+        $status = unserialize(file_get_contents($statusFile));
+      }
+    }
 
-    return $h->run() ? 0 : 1;
+    if ($status)
+    {
+      foreach ($status as $file)
+      {
+        $h->register($file);
+      }
+    }
+    else
+    {
+      // register all tests
+      $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
+      $h->register($finder->in($h->base_dir));
+    }
+
+    $ret = $h->run() ? 0 : 1;
+
+    file_put_contents($statusFile, serialize($h->get_failed_files()));
+
+    return $ret;
   }
 }

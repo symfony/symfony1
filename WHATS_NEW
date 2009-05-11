@@ -134,6 +134,25 @@ longer have to run `symfony cc` after adding a new class to a project.
 Tests
 -----
 
+### Speed your Tests
+
+When you have a large suite of tests, it can be very time consuming to launch
+all tests every time you make a change, especially if some tests fail. That's
+because each time you fix a test, you should run the whole test suite again to
+ensure that you have not break something else. But as long as the failed tests
+are not fixed, there is no point in re-executing all other tests. As of
+symfony 1.3, the `test:all` and `symfony:test` tasks have a `--only-failed`
+(`-f` as a shortcut) option that forces the task to only re-execute tests that
+failed during the previous run:
+
+    $ php symfony test:all --only-failed
+
+Here is how it works: the first time, all tests are run as usual. But for
+subsequent test runs, only tests that failed last time are executed. As you
+fix your code, some tests will pass, and will be removed from subsequent runs.
+When all tests pass again, the full test suite is run... you can then rinse
+and repeat.
+
 ### Functional Tests
 
 When a request generates an exception, the `debug()` method of the response
