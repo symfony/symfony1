@@ -147,6 +147,9 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                     $type[] = 'boolean';
                 }
             break;
+            case 'date': 
+                $type[0] = 'date'; 
+            break;
             case 'datetime':
             case 'timestamp':
             case 'smalldatetime':
