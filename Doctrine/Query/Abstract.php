@@ -616,13 +616,17 @@ abstract class Doctrine_Query_Abstract
      */
     public function fixArrayParameterValues($params = array())
     {
-        foreach ($params as $i => $param) {
+        $i = 0;
+	
+        foreach ($params as $param) {
             if (is_array($param)) {
                 $c = count($param);
 
                 array_splice($params, $i, 1, $param);
                 
                 $i += $c;
+            } else {
+                $i++;
             }
         }
         
