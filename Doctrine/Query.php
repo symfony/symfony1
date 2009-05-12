@@ -1384,7 +1384,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             if (substr($part, 0, 9) === 'LEFT JOIN') {
                 $e = explode(' ', $part);
 
-                if (empty($this->_sqlParts['orderby']) && empty($this->_sqlParts['where'])) {
+                if (empty($this->_sqlParts['orderby']) && empty($this->_sqlParts['where']) && empty($this->_sqlParts['having'])) {
                     continue;
                 }
             }
