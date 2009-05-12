@@ -104,7 +104,8 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
     {
         $name  = $this->conn->formatter->getIndexName($name);
         $name  = $this->conn->quoteIdentifier($name);
-        $type   = '';
+        $type  = '';
+
         if (isset($definition['type'])) {
             switch (strtolower($definition['type'])) {
                 case 'unique':
@@ -116,6 +117,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                     );
             }
         }
+
         $query = 'CREATE ' . $type . 'INDEX ' . $name . ' ON ' . $table;
         $query .= ' (' . $this->getIndexFieldDeclarationList($definition['fields']) . ')';
 
