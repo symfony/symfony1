@@ -121,7 +121,12 @@ class sfValidatorFile extends sfValidatorBase
     switch ($value['error'])
     {
       case UPLOAD_ERR_INI_SIZE:
-        throw new sfValidatorError($this, 'max_size', array('max_size' => ini_get('upload_max_filesize'), 'size' => (int) $value['size']));
+        $max = ini_get('upload_max_filesize');
+        if ($this->getOption('max_size'))
+        {
+          $max = min($max, $this->getOption('max_size'));
+        }
+        throw new sfValidatorError($this, 'max_size', array('max_size' => $max, 'size' => (int) $value['size']));
       case UPLOAD_ERR_FORM_SIZE:
         throw new sfValidatorError($this, 'max_size', array('max_size' => 0, 'size' => (int) $value['size']));
       case UPLOAD_ERR_PARTIAL:
