@@ -1015,7 +1015,6 @@ abstract class Doctrine_Query_Abstract
     public function calculateResultCacheHash($params = array())
     {
         $dql = $this->getDql();
-        $params = $this->getParams($params);
         $conn = $this->getConnection();
         $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
         return $hash;
@@ -1124,7 +1123,7 @@ abstract class Doctrine_Query_Abstract
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
-            $hash = $this->calculateResultCacheHash($params);
+            $hash = $this->calculateResultCacheHash($dqlParams);
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
 
             if ($cached === false) {
