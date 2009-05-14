@@ -72,7 +72,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->renderRow(), $output, '->renderRow() renders a row');
+$t->is($f->renderRow(), fix_linebreaks($output), '->renderRow() renders a row');
 
 $output = <<<EOF
 <tr>
@@ -84,7 +84,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->renderRow(array('class' => 'foo', 'type' => 'password', 'id' => 'title')), $output, '->renderRow() can take an array of HTML attributes as its first argument');
+$t->is($f->renderRow(array('class' => 'foo', 'type' => 'password', 'id' => 'title')), fix_linebreaks($output), '->renderRow() can take an array of HTML attributes as its first argument');
 
 $output = <<<EOF
 <tr>
@@ -96,7 +96,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->renderRow(array(), 'My title'), $output, '->renderRow() can take a label name as its second argument');
+$t->is($f->renderRow(array(), 'My title'), fix_linebreaks($output), '->renderRow() can take a label name as its second argument');
 
 $output = <<<EOF
 <tr>
@@ -108,7 +108,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->renderRow(array(), null, 'help'), $output, '->renderRow() can take a help message as its third argument');
+$t->is($f->renderRow(array(), null, 'help'), fix_linebreaks($output), '->renderRow() can take a help message as its third argument');
 
 $output = <<<EOF
 <tr>
@@ -124,7 +124,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($child->renderRow(), $output, '->renderRow() renders a row when the widget has a parent');
+$t->is($child->renderRow(), fix_linebreaks($output), '->renderRow() renders a row when the widget has a parent');
 
 try
 {
@@ -180,7 +180,7 @@ $output = <<<EOF
   </ul>
 
 EOF;
-$t->is($f->renderError(), $output, '->renderError() renders errors as HTML');
+$t->is($f->renderError(), fix_linebreaks($output), '->renderError() renders errors as HTML');
 $t->is($child->renderError(), '', '->renderRow() renders errors as HTML when the widget has a parent');
 $output = <<<EOF
   <ul class="error_list">
@@ -188,7 +188,7 @@ $output = <<<EOF
   </ul>
 
 EOF;
-$t->is($child['name']->renderError(), $output, '->renderRow() renders errors as HTML when the widget has a parent');
+$t->is($child['name']->renderError(), fix_linebreaks($output), '->renderRow() renders errors as HTML when the widget has a parent');
 
 try
 {
@@ -219,4 +219,4 @@ $output = <<<EOF
   </ul>
 
 EOF;
-$t->is($child->renderError(), $output, '->renderError() renders global errors as expected (global errors, hidden field errors, non existent field errors)');
+$t->is($child->renderError(), fix_linebreaks($output), '->renderError() renders global errors as expected (global errors, hidden field errors, non existent field errors)');
