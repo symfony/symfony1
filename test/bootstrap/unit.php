@@ -62,7 +62,7 @@ function sf_unit_test_shutdown()
 }
 
 // Helper for cross platform testcases that validate output
-function fix_content($content)
+function fix_linebreaks($content)
 {
   return str_replace(array("\r\n", "\n", "\r"), "\n", $content);
 }

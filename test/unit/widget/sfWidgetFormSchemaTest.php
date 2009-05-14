@@ -338,7 +338,7 @@ $expected = <<<EOF
 
 EOF;
 $rendered = $w->render(null, array('first_name' => 'Fabien', 'last_name' => 'Potencier'), array('first_name' => array('class' => 'foo'), 'last_name' => array('class' => 'bar')), array('first_name' => 'Too short', 'Global error message', 'id' => 'Required'));
-$t->is($rendered, fix_content($expected), '->render() renders a schema to HTML');
+$t->is($rendered, fix_linebreaks($expected), '->render() renders a schema to HTML');
 
 $t->diag('Widget schema with only hidden fields');
 $w = new sfWidgetFormSchema(array('w1' => new sfWidgetFormInputHidden()));
@@ -364,7 +364,7 @@ $expected = <<<EOF
 </tr>
 
 EOF;
-$t->is(str_replace("\n", '', preg_replace('/^ +/m', '', $w->render(null))), str_replace("\n", '', preg_replace('/^ +/m', '', fix_content($expected))), '->render() is able to render widget schema that only contains hidden fields when the last field is a form');
+$t->is(str_replace("\n", '', preg_replace('/^ +/m', '', $w->render(null))), str_replace("\n", '', preg_replace('/^ +/m', '', fix_linebreaks($expected))), '->render() is able to render widget schema that only contains hidden fields when the last field is a form');
 
 // __clone()
 $t->diag('__clone()');

@@ -32,7 +32,7 @@ $output = <<<EOF
 </tr>
 </table>
 EOF;
-$t->is($w->render(null), fix_content($output), '->render() decorates the widget');
+$t->is($w->render(null), fix_linebreaks($output), '->render() decorates the widget');
 
 // implements ArrayAccess
 $t->diag('implements ArrayAccess');
