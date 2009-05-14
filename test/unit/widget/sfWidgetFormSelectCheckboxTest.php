@@ -34,31 +34,35 @@ $onChange = '<ul class="checkbox_list">'.
 $t->is($w->render('foo', array('foobar'), array('onChange' => 'alert(42)')), $onChange, '->render() renders a checkbox tag using extra attributes');
 
 $w = new sfWidgetFormSelectCheckbox(array('choices' => array('0' => 'bar', '1' => 'foo')));
-$output = '<ul class="checkbox_list">'.
-'<li><input name="myname[]" type="checkbox" value="0" id="myname_0" checked="checked" />&nbsp;<label for="myname_0">bar</label></li>'."\n".
-'<li><input name="myname[]" type="checkbox" value="1" id="myname_1" />&nbsp;<label for="myname_1">foo</label></li>'.
-'</ul>';
-$t->is($w->render('myname', array(false)), $output, '->render() considers false to be an integer 0');
+$output = <<< EOF
+<ul class="checkbox_list"><li><input name="myname[]" type="checkbox" value="0" id="myname_0" checked="checked" />&nbsp;<label for="myname_0">bar</label></li>
+<li><input name="myname[]" type="checkbox" value="1" id="myname_1" />&nbsp;<label for="myname_1">foo</label></li></ul>
+EOF;
+$t->is($w->render('myname', array(false)), fix_content($output), '->render() considers false to be an integer 0');
 
 $w = new sfWidgetFormSelectCheckbox(array('choices' => array('0' => 'bar', '1' => 'foo')));
-$output = '<ul class="checkbox_list">'.
-'<li><input name="myname[]" type="checkbox" value="0" id="myname_0" />&nbsp;<label for="myname_0">bar</label></li>'."\n".
-'<li><input name="myname[]" type="checkbox" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li>'.
-'</ul>';
-$t->is($w->render('myname', array(true)), $output, '->render() considers true to be an integer 1');
+$output = <<< EOF
+<ul class="checkbox_list"><li><input name="myname[]" type="checkbox" value="0" id="myname_0" />&nbsp;<label for="myname_0">bar</label></li>
+<li><input name="myname[]" type="checkbox" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li></ul>
+EOF;
+$t->is($w->render('myname', array(true)), fix_content($output), '->render() considers true to be an integer 1');
 
 // group support
 $t->diag('group support');
 $w = new sfWidgetFormSelectCheckbox(array('choices' => array('foo' => array('foo' => 'bar', 'bar' => 'foo'), 'bar' => array('foobar' => 'barfoo'))));
-$output = 'foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foo" id="foo_foo" checked="checked" />&nbsp;<label for="foo_foo">bar</label></li>
+$output = <<<EOF
+foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foo" id="foo_foo" checked="checked" />&nbsp;<label for="foo_foo">bar</label></li>
 <li><input name="foo[]" type="checkbox" value="bar" id="foo_bar" />&nbsp;<label for="foo_bar">foo</label></li></ul>
-bar <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>';
-$t->is($w->render('foo', array('foo', 'foobar')), $output, '->render() has support for groups');
+bar <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>
+EOF;
+$t->is($w->render('foo', array('foo', 'foobar')), fix_content($output), '->render() has support for groups');
 
 $w->setOption('choices', array('foo' => array('foo' => 'bar', 'bar' => 'foo')));
-$output = 'foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>
-<li><input name="foo[]" type="checkbox" value="bar" id="foo_bar" checked="checked" />&nbsp;<label for="foo_bar">foo</label></li></ul>';
-$t->is($w->render('foo', array('bar')), $output, '->render() accepts a single group');
+$output = <<<EOF
+foo <ul class="checkbox_list"><li><input name="foo[]" type="checkbox" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>
+<li><input name="foo[]" type="checkbox" value="bar" id="foo_bar" checked="checked" />&nbsp;<label for="foo_bar">foo</label></li></ul>
+EOF;
+$t->is($w->render('foo', array('bar')), fix_content($output), '->render() accepts a single group');
 
 try
 {

@@ -34,26 +34,28 @@ $onChange = '<ul class="radio_list">'.
 $t->is($w->render('foo', 'foobar', array('onChange' => 'alert(42)')), $onChange, '->render() renders a radio tag using extra attributes');
 
 $w = new sfWidgetFormSelectRadio(array('choices' => array('0' => 'bar', '1' => 'foo')));
-$output = '<ul class="radio_list">'.
-'<li><input name="myname" type="radio" value="0" id="myname_0" checked="checked" />&nbsp;<label for="myname_0">bar</label></li>'."\n".
-'<li><input name="myname" type="radio" value="1" id="myname_1" />&nbsp;<label for="myname_1">foo</label></li>'.
-'</ul>';
-$t->is($w->render('myname', false), $output, '->render() considers false to be an integer 0');
+$output = <<< EOF
+<ul class="radio_list"><li><input name="myname" type="radio" value="0" id="myname_0" checked="checked" />&nbsp;<label for="myname_0">bar</label></li>
+<li><input name="myname" type="radio" value="1" id="myname_1" />&nbsp;<label for="myname_1">foo</label></li></ul>
+EOF;
+$t->is($w->render('myname', false), fix_content($output), '->render() considers false to be an integer 0');
 
 $w = new sfWidgetFormSelectRadio(array('choices' => array('0' => 'bar', '1' => 'foo')));
-$output = '<ul class="radio_list">'.
-'<li><input name="myname" type="radio" value="0" id="myname_0" />&nbsp;<label for="myname_0">bar</label></li>'."\n".
-'<li><input name="myname" type="radio" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li>'.
-'</ul>';
-$t->is($w->render('myname', true), $output, '->render() considers true to be an integer 1');
+$output = <<< EOF
+<ul class="radio_list"><li><input name="myname" type="radio" value="0" id="myname_0" />&nbsp;<label for="myname_0">bar</label></li>
+<li><input name="myname" type="radio" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li></ul>
+EOF;
+$t->is($w->render('myname', true), fix_content($output), '->render() considers true to be an integer 1');
 
 // group support
 $t->diag('group support');
 $w = new sfWidgetFormSelectRadio(array('choices' => array('foo' => array('foo' => 'bar', 'bar' => 'foo'), 'bar' => array('foobar' => 'barfoo'))));
-$output = 'foo <ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" checked="checked" />&nbsp;<label for="foo_foo">bar</label></li>
+$output = <<<EOF
+foo <ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" checked="checked" />&nbsp;<label for="foo_foo">bar</label></li>
 <li><input name="foo" type="radio" value="bar" id="foo_bar" />&nbsp;<label for="foo_bar">foo</label></li></ul>
-bar <ul class="radio_list"><li><input name="foo" type="radio" value="foobar" id="foo_foobar" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>';
-$t->is($w->render('foo', 'foo'), $output, '->render() has support for groups');
+bar <ul class="radio_list"><li><input name="foo" type="radio" value="foobar" id="foo_foobar" />&nbsp;<label for="foo_foobar">barfoo</label></li></ul>
+EOF;
+$t->is($w->render('foo', 'foo'), fix_content($output), '->render() has support for groups');
 
 try
 {
