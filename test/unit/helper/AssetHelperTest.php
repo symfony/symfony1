@@ -230,18 +230,18 @@ class MyForm extends sfForm
 // get_javascripts_for_form() get_stylesheets_for_form()
 $t->diag('get_javascripts_for_form() get_stylesheets_for_form()');
 $form = new MyForm();
-$t->is(get_javascripts_for_form($form), <<<EOF
+$output = <<<EOF
 <script type="text/javascript" src="/path/to/a/foo.js"></script>
 <script type="text/javascript" src="/path/to/a/bar.js"></script>
 
-EOF
-, 'get_javascripts_for_form() returns script tags');
-$t->is(get_stylesheets_for_form($form), <<<EOF
+EOF;
+$t->is(get_javascripts_for_form($form), fix_linebreaks($output), 'get_javascripts_for_form() returns script tags');
+$output = <<<EOF
 <link rel="stylesheet" type="text/css" media="all" href="/path/to/a/foo.css" />
 <link rel="stylesheet" type="text/css" media="print" href="/path/to/a/bar.css" />
 
-EOF
-, 'get_stylesheets_for_form() returns link tags');
+EOF;
+$t->is(get_stylesheets_for_form($form), fix_linebreaks($output), 'get_stylesheets_for_form() returns link tags');
 
 // custom web paths
 $t->diag('Custom asset path handling');

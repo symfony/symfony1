@@ -19,4 +19,4 @@ $logger = new sfStreamLogger($dispatcher, array('stream' => $buffer));
 
 $logger->log('foo');
 rewind($buffer);
-$t->is(stream_get_contents($buffer), "foo\n", 'sfStreamLogger logs messages to a PHP stream');
+$t->is(fix_linebreaks(stream_get_contents($buffer)), "foo\n", 'sfStreamLogger logs messages to a PHP stream');

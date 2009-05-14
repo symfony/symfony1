@@ -360,7 +360,7 @@ $output = <<<EOF
   </ul>
 
 EOF;
-$t->is($f->renderGlobalErrors(), $output, '->renderGlobalErrors() renders global errors as an HTML list');
+$t->is($f->renderGlobalErrors(), fix_linebreaks($output), '->renderGlobalErrors() renders global errors as an HTML list');
 
 // ->render()
 $t->diag('->render()');
@@ -388,7 +388,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->__toString(), $output, '->__toString() renders the form as HTML');
+$t->is($f->__toString(), fix_linebreaks($output), '->__toString() renders the form as HTML');
 $output = <<<EOF
 <tr>
   <th><label for="first_name">First name</label></th>
@@ -400,7 +400,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
+$t->is($f->render(array('first_name' => array('class' => 'foo'))), fix_linebreaks($output), '->render() renders the form as HTML');
 $t->is((string) $f['id'], '<input type="hidden" name="id" value="3" id="id" />', '->offsetGet() returns a sfFormField');
 $t->is((string) $f['first_name'], '<input type="text" name="first_name" value="Fabien" id="first_name" />', '->offsetGet() returns a sfFormField');
 $t->is((string) $f['last_name'], '<input type="text" name="last_name" value="Potencier" id="last_name" />', '->offsetGet() returns a sfFormField');
@@ -422,7 +422,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->__toString(), $output, '->__toString() renders the form as HTML');
+$t->is($f->__toString(), fix_linebreaks($output), '->__toString() renders the form as HTML');
 $output = <<<EOF
 <tr>
   <th><label for="first_name">First name</label></th>
@@ -434,7 +434,7 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
+$t->is($f->render(array('first_name' => array('class' => 'foo'))), fix_linebreaks($output), '->render() renders the form as HTML');
 $t->is((string) $f['id'], '<input type="hidden" name="id" value="1" id="id" />', '->offsetGet() returns a sfFormField');
 $t->is((string) $f['first_name'], '<input type="text" name="first_name" value="Fabien" id="first_name" />', '->offsetGet() returns a sfFormField');
 $t->is((string) $f['last_name'], '<input type="text" name="last_name" value="Potencier" id="last_name" />', '->offsetGet() returns a sfFormField');
@@ -450,12 +450,12 @@ $output = <<<EOF
 </li>
 
 EOF;
-$t->is($f->renderUsing('list'), $output, 'renderUsing() renders the widget schema using the given form formatter');
+$t->is($f->renderUsing('list'), fix_linebreaks($output), 'renderUsing() renders the widget schema using the given form formatter');
 $t->is($f->getWidgetSchema()->getFormFormatterName(), 'table', 'renderUsing() does not persist form formatter name for the current form instance');
 
 $w = $f->getWidgetSchema();
 $w->addFormFormatter('custom', new sfWidgetFormSchemaFormatterList($w));
-$t->is($f->renderUsing('custom'), $output, 'renderUsing() renders a custom form formatter');
+$t->is($f->renderUsing('custom'), fix_linebreaks($output), 'renderUsing() renders a custom form formatter');
 
 try
 {
