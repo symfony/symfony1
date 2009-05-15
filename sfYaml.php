@@ -9,7 +9,7 @@
  */
 
 /**
- * sfYaml class.
+ * sfYaml offers convenience methods to load and dump YAML.
  *
  * @package    symfony
  * @subpackage yaml
@@ -19,7 +19,7 @@
 class sfYaml
 {
   /**
-   * Load YAML into a PHP array statically
+   * Load YAML into a PHP array.
    *
    * The load method, when supplied with a YAML stream (string or file),
    * will do its best to convert YAML in a file into a PHP array.
@@ -32,7 +32,9 @@ class sfYaml
    *
    * @param string $input Path of YAML file or string containing YAML
    *
-   * @return array
+   * @return array The YAML converted to a PHP array
+   *
+   * @throws InvalidArgumentException If the YAML is not valid
    */
   public static function load($input)
   {
@@ -74,14 +76,15 @@ class sfYaml
   }
 
   /**
-   * Dump YAML from PHP array statically
+   * Dump a PHP array to a YAML string.
    *
    * The dump method, when supplied with an array, will do its best
    * to convert the array into friendly YAML.
    *
-   * @param array $array PHP array
+   * @param array   $array PHP array
+   * @param integer $inline The level where you switch to inline YAML
    *
-   * @return string
+   * @return string A YAML string representing the original PHP array
    */
   public static function dump($array, $inline = 2)
   {

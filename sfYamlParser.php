@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/sfYamlInline.php');
 
 /**
- * sfYamlParser class.
+ * sfYamlParser parses YAML strings to convert them to PHP arrays.
  *
  * @package    symfony
  * @subpackage yaml
@@ -44,6 +44,8 @@ class sfYamlParser
    * @param  string $value A YAML string
    *
    * @return mixed  A PHP value
+   *
+   * @throws InvalidArgumentException If the YAML is not valid
    */
   public function parse($value)
   {
@@ -237,7 +239,7 @@ class sfYamlParser
   /**
    * Returns the current line indentation.
    *
-   * @returns integer The current line indentation
+   * @return integer The current line indentation
    */
   protected function getCurrentLineIndentation()
   {

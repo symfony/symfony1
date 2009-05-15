@@ -19,11 +19,11 @@
 class sfYamlInline
 {
   /**
-   * Load YAML into a PHP array.
+   * Convert a YAML string to a PHP array.
    *
-   * @param string $value YAML
+   * @param string $value A YAML string
    *
-   * @return array PHP array
+   * @return array A PHP array representing the YAML string
    */
   static public function load($value)
   {
@@ -46,11 +46,11 @@ class sfYamlInline
   }
 
   /**
-   * Dumps PHP array to YAML.
+   * Dumps a given PHP variable to a YAML string.
    *
-   * @param mixed $value PHP
+   * @param mixed $value The PHP variable to convert
    *
-   * @return string YAML
+   * @return string The YAML string representing the PHP array
    */
   static public function dump($value)
   {
@@ -90,11 +90,11 @@ class sfYamlInline
   }
 
   /**
-   * Dumps PHP array to YAML
+   * Dumps a PHP array to a YAML string.
    *
-   * @param array $value The array to dump
+   * @param array $value The PHP array to dump
    *
-   * @return string YAML
+   * @return string The YAML string representing the PHP array
    */
   static protected function dumpArray($value)
   {
@@ -125,15 +125,15 @@ class sfYamlInline
   }
 
   /**
-   * Parses scalar to yaml
+   * Parses a scalar to a YAML string.
    *
-   * @param scalar $scalar
-   * @param string $delimiters
-   * @param array  $stringDelimiter
+   * @param scalar  $scalar
+   * @param string  $delimiters
+   * @param array   $stringDelimiter
    * @param integer $i
    * @param boolean $evaluate
    *
-   * @return string YAML
+   * @return string A YAML string
    */
   static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
   {
@@ -176,12 +176,12 @@ class sfYamlInline
   }
 
   /**
-   * Parses quotes scalar
+   * Parses a quoted scalar to YAML.
    *
-   * @param string $scalar
+   * @param string  $scalar
    * @param integer $i
    *
-   * @return string YAML
+   * @return string A YAML string
    */
   static protected function parseQuotedScalar($scalar, &$i)
   {
@@ -220,12 +220,12 @@ class sfYamlInline
   }
 
   /**
-   * Parse sequence to yaml
+   * Parses a sequence to a YAML string.
    *
-   * @param string $sequence
+   * @param string  $sequence
    * @param integer $i
    *
-   * @return string YAML
+   * @return string A YAML string
    */
   static protected function parseSequence($sequence, &$i = 0)
   {
@@ -280,12 +280,12 @@ class sfYamlInline
   }
 
   /**
-   * Parses mapping.
+   * Parses a mapping to a YAML string.
    *
-   * @param string $mapping
+   * @param string  $mapping
    * @param integer $i
    *
-   * @return string YAML
+   * @return string A YAML string
    */
   static protected function parseMapping($mapping, &$i = 0)
   {
@@ -351,7 +351,7 @@ class sfYamlInline
    *
    * @param string $scalar
    *
-   * @return string YAML
+   * @return string A YAML string
    */
   static protected function evaluateScalar($scalar)
   {

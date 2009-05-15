@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/sfYamlInline.php');
 
 /**
- * sfYamlDumper class.
+ * sfYamlDumper dumps PHP variables to YAML strings.
  *
  * @package    symfony
  * @subpackage yaml
