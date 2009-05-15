@@ -89,6 +89,12 @@ By default, the array of fields is also used to change the fields order. You
 can pass `false` as the second argument to `useFields()` to disable the
 automatic reordering.
 
+### `sfForm(Doctrine|Propel)::doUpdateObject()`
+
+The Doctrine and Propel form classes now include an easy-to-overload
+`->doUpdateObject()` method. This method includes a mandatory `$values`
+parameter, whereas this argument is optional in `->updateObject()`.
+
 Validators
 ----------
 
@@ -124,6 +130,9 @@ follows:
 Autoloaders
 -----------
 
+All symfony autoloaders are now case-insensitive. PHP is case-insensitive, now
+so is symfony.
+
 ### `sfAutoloadAgain` (EXPERIMENTAL)
 
 A special autoloader has been added that is just for use in debug mode. The
@@ -134,7 +143,7 @@ longer have to run `symfony cc` after adding a new class to a project.
 Tests
 -----
 
-### Speed your Tests
+### Speed up Testing
 
 When you have a large suite of tests, it can be very time consuming to launch
 all tests every time you make a change, especially if some tests fail. That's
@@ -174,6 +183,10 @@ response content. It is of great help on non XML-like responses, where
 Tasks
 -----
 
+The symfony CLI now attempts to detect the width of your terminal window and
+formats lines to fit. If detection is not possible the CLI defaults to 78
+columns wide.
+
 ### `sfTask::askAndValidate()`
 
 There is a new `sfTask::askAndValidate()` method to ask a question to the user
@@ -204,7 +217,7 @@ Exceptions
 ### Autoloading
 
 When an exception is thrown during autoloading, symfony now catch them and
-outputs an error to the user. That should solve most "White screen of death"
+outputs an error to the user. That should solve some "White screen of death"
 pages.
 
 Propel
@@ -215,3 +228,35 @@ Propel
 Before `propel:insert-sql` removes all data from a database, it asks for a
 confirmation. As this task can remove data from several databases, it now also
 displays the name of the connections of the related databases.
+
+### `isPrimaryString` column attribute
+
+You can now include an `isPrimaryString` attribute in `schema.yml` and symfony
+will generate a `__toString()` method in the model class that returns the
+value of that column.
+
+    [yml]
+    classes:
+      Article:
+        columns:
+          id:     ~
+          title:  { type: varchar(255), isPrimaryString: true }
+          body:   { type: longvarchar }
+
+This configuration will result in the following method in `BaseArticle`:
+
+    [php]
+    public function __toString()
+    {
+      return $this->getTitle();
+    }
+
+Routing
+-------
+
+### Default Requirements
+
+The default `\d+` requirement is now only applied to a
+`sfObjectRouteCollection` when the `column` option is the default `id`. This
+means you no longer have to provide an alternate requirement when a
+non-numeric column is specified (i.e. `slug`).
