@@ -25,7 +25,7 @@ class sfFormatter
   {
     if (is_null($maxLineSize))
     {
-      $maxLineSize = ctype_digit($cols = trim(shell_exec('tput cols'))) ? $cols : 65;
+      $maxLineSize = ctype_digit($cols = trim(shell_exec('tput cols 2>&1'))) ? $cols : 78;
     }
 
     $this->size = $maxLineSize;
@@ -59,18 +59,25 @@ class sfFormatter
    *
    * @param string  $section  The section name
    * @param string  $text     The text message
-   * @param integer $size     The maximum size allowed for a line (65 by default)
+   * @param integer $size     The maximum size allowed for a line
    */
   public function formatSection($section, $text, $size = null)
   {
-    return sprintf(">> %-9s %s", $section, $this->excerpt($text, $size));
+    if (!$size)
+    {
+      $size = $this->size;
+    }
+
+    $section = sprintf('>> %-9s ', $section);
+
+    return $section.$this->excerpt($text, $size - strlen($section));
   }
 
   /**
    * Truncates a line.
    *
    * @param string  $text The text
-   * @param integer $size The maximum size of the returned string (65 by default)
+   * @param integer $size The maximum size of the returned string
    *
    * @return string The truncated string
    */

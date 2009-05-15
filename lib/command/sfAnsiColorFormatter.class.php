@@ -85,23 +85,27 @@ class sfAnsiColorFormatter extends sfFormatter
    *
    * @param string  $section  The section name
    * @param string  $text     The text message
-   * @param integer $size     The maximum size allowed for a line (65 by default)
-   * @param string  $style    The color scheme to apply to the section string (INFO, ERROR, or COMMAND)
+   * @param integer $size     The maximum size allowed for a line
+   * @param string  $style    The color scheme to apply to the section string (INFO, ERROR, COMMENT or QUESTION)
    */
   public function formatSection($section, $text, $size = null, $style = 'INFO')
   {
-    $style = !array_key_exists($style, $this->styles) ? 'INFO' : $style;
-    
+    if (is_null($size))
+    {
+      $size = $this->size;
+    }
+
+    $style = array_key_exists($style, $this->styles) ? $style : 'INFO';
     $width = 9 + strlen($this->format('', $style));
 
-    return sprintf(">> %-${width}s %s", $this->format($section, $style), $this->excerpt($text, $size));
+    return sprintf(">> %-{$width}s %s", $this->format($section, $style), $this->excerpt($text, $size - 4 - (strlen($section) > 9 ? strlen($section) : 9)));
   }
 
   /**
    * Truncates a line.
    *
    * @param string  $text The text
-   * @param integer $size The maximum size of the returned string (65 by default)
+   * @param integer $size The maximum size of the returned string
    *
    * @return string The truncated string
    */
