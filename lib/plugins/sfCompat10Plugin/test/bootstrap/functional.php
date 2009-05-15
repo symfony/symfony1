@@ -19,13 +19,25 @@ sfContext::createInstance($configuration);
 
 // remove all cache
 sf_functional_test_shutdown();
-
 register_shutdown_function('sf_functional_test_shutdown');
 
-function sf_functional_test_shutdown()
+function sf_functional_test_shutdown_cleanup()
 {
   sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
   sfToolkit::clearDirectory(sfConfig::get('sf_log_dir'));
+}
+
+function sf_functional_test_shutdown()
+{
+  // try/catch needed due to http://bugs.php.net/bug.php?id=33598
+  try
+  {
+    sf_functional_test_shutdown_cleanup();
+  }
+  catch (Exception $e)
+  {
+    echo $e.PHP_EOL;
+  }
 }
 
 return true;
