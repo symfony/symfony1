@@ -19,7 +19,7 @@
 class sfYaml
 {
   /**
-   * Load YAML into a PHP array.
+   * Loads YAML into a PHP array.
    *
    * The load method, when supplied with a YAML stream (string or file),
    * will do its best to convert YAML in a file into a PHP array.
@@ -76,7 +76,7 @@ class sfYaml
   }
 
   /**
-   * Dump a PHP array to a YAML string.
+   * Dumps a PHP array to a YAML string.
    *
    * The dump method, when supplied with an array, will do its best
    * to convert the array into friendly YAML.
