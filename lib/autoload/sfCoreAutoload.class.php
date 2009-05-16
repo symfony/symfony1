@@ -128,10 +128,10 @@ class sfCoreAutoload
    *
    * @return string The path to the symfony core lib directory
    */
-   public function getBaseDir()
-   {
-     return $this->baseDir;
-   }
+  public function getBaseDir()
+  {
+    return $this->baseDir;
+  }
 
   /**
    * Rebuilds the association array between class names and paths.
@@ -283,10 +283,12 @@ class sfCoreAutoload
     'sffilter' => 'filter/sfFilter.class.php',
     'sffilterchain' => 'filter/sfFilterChain.class.php',
     'sfrenderingfilter' => 'filter/sfRenderingFilter.class.php',
+    'sfformfilter' => 'form/addon/sfFormFilter.class.php',
+    'sfformobject' => 'form/addon/sfFormObject.class.php',
+    'sfformsymfony' => 'form/addon/sfFormSymfony.class.php',
     'sfform' => 'form/sfForm.class.php',
     'sfformfield' => 'form/sfFormField.class.php',
     'sfformfieldschema' => 'form/sfFormFieldSchema.class.php',
-    'sfformfilter' => 'form/sfFormFilter.class.php',
     'sfadmingenerator' => 'generator/sfAdminGenerator.class.php',
     'sfcrudgenerator' => 'generator/sfCrudGenerator.class.php',
     'sfgenerator' => 'generator/sfGenerator.class.php',
@@ -489,20 +491,12 @@ class sfCoreAutoload
     'sfwidgetforminputfileeditable' => 'widget/sfWidgetFormInputFileEditable.class.php',
     'sfwidgetforminputhidden' => 'widget/sfWidgetFormInputHidden.class.php',
     'sfwidgetforminputpassword' => 'widget/sfWidgetFormInputPassword.class.php',
-    'sfwidgetformlayout' => 'widget/sfWidgetFormLayout.class.php',
-    'sfwidgetformlayoutcolumns' => 'widget/sfWidgetFormLayoutColumns.class.php',
-    'sfwidgetformlayoutfieldset' => 'widget/sfWidgetFormLayoutFieldset.class.php',
-    'sfwidgetformlayouthtml' => 'widget/sfWidgetFormLayoutHTML.class.php',
     'sfwidgetformschema' => 'widget/sfWidgetFormSchema.class.php',
     'sfwidgetformschemadecorator' => 'widget/sfWidgetFormSchemaDecorator.class.php',
     'sfwidgetformschemaforeach' => 'widget/sfWidgetFormSchemaForEach.class.php',
     'sfwidgetformschemaformatter' => 'widget/sfWidgetFormSchemaFormatter.class.php',
-    'sfwidgetformschemaformatterdiv' => 'widget/sfWidgetFormSchemaFormatterDiv.class.php',
     'sfwidgetformschemaformatterlist' => 'widget/sfWidgetFormSchemaFormatterList.class.php',
     'sfwidgetformschemaformattertable' => 'widget/sfWidgetFormSchemaFormatterTable.class.php',
-    'sfwidgetformschemarenderer' => 'widget/sfWidgetFormSchemaRenderer.class.php',
-    'sfwidgetformschemarendererdefault' => 'widget/sfWidgetFormSchemaRendererDefault.class.php',
-    'sfwidgetformschemarendererlayout' => 'widget/sfWidgetFormSchemaRendererLayout.class.php',
     'sfwidgetformselect' => 'widget/sfWidgetFormSelect.class.php',
     'sfwidgetformselectcheckbox' => 'widget/sfWidgetFormSelectCheckbox.class.php',
     'sfwidgetformselectmany' => 'widget/sfWidgetFormSelectMany.class.php',

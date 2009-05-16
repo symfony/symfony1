@@ -12,12 +12,14 @@
 /**
  * sfFormPropel is the base class for forms based on Propel objects.
  *
+ * This class extends BaseForm, a class generated automatically with each new project.
+ *
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfFormPropel extends sfForm
+abstract class sfFormPropel extends sfFormObject
 {
   protected
     $isNew  = true,

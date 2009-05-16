@@ -20,13 +20,15 @@
 /**
  * sfFormDoctrine is the base class for forms based on Doctrine objects.
  *
+ * This class extends BaseForm, a class generated automatically with each new project.
+ *
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id: sfFormDoctrine.class.php 7845 2008-03-12 22:36:14Z fabien $
  */
-abstract class sfFormDoctrine extends sfForm
+abstract class sfFormDoctrine extends sfFormObject
 {
   protected
     $isNew  = true,

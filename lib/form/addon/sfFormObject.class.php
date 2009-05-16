@@ -9,13 +9,13 @@
  */
 
 /**
- * sfFormFilter represents a form that acts as a filter.
- *
+ * Base class for forms that deal with single object.
+ * 
  * @package    symfony
  * @subpackage form
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfFormFilter extends sfForm
+abstract class sfFormObject extends BaseForm
 {
 }
