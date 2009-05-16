@@ -26,7 +26,7 @@ class sfYaml
    *
    *  Usage:
    *  <code>
-   *   $array = sfYAML::Load('config.yml');
+   *   $array = sfYaml::Load('config.yml');
    *   print_r($array);
    *  </code>
    *
@@ -49,11 +49,11 @@ class sfYaml
       $retval = include($input);
       $content = ob_get_clean();
 
-      // if an array is returned by the config file assume it's in plain php form else in yaml
+      // if an array is returned by the config file assume it's in plain php form else in YAML
       $input = is_array($retval) ? $retval : $content;
     }
 
-    // if an array is returned by the config file assume it's in plain php form else in yaml
+    // if an array is returned by the config file assume it's in plain php form else in YAML
     if (is_array($input))
     {
       return $input;
