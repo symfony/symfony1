@@ -26,7 +26,7 @@ class sfYaml
    *
    *  Usage:
    *  <code>
-   *   $array = sfYaml::Load('config.yml');
+   *   $array = sfYaml::load('config.yml');
    *   print_r($array);
    *  </code>
    *
