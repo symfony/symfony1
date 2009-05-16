@@ -19,16 +19,16 @@ class lime_test
 {
   const EPSILON = 0.0000000001;
 
-  public $plan = null;
+  public $plan    = null;
   public $test_nb = 0;
-  public $failed = 0;
-  public $passed = 0;
+  public $failed  = 0;
+  public $passed  = 0;
   public $skipped = 0;
-  public $output = null;
+  public $output  = null;
 
   public function __construct($plan = null, $output_instance = null)
   {
-    $this->plan = $plan;
+    $this->plan   = $plan;
     $this->output = $output_instance ? $output_instance : new lime_output();
 
     null !== $this->plan and $this->output->echoln(sprintf("1..%d", $this->plan));
@@ -61,6 +61,14 @@ class lime_test
     flush();
   }
 
+  /**
+   * Tests a condition and passes if it is true
+   *
+   * @param mixed  $exp     condition to test
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function ok($exp, $message = '')
   {
     if ($result = (boolean) $exp)
@@ -90,6 +98,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Compares two values and passes if they are equal (==)
+   *
+   * @param mixed  $exp1    left value
+   * @param mixed  $exp2    right value
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function is($exp1, $exp2, $message = '')
   {
     if (is_object($exp1) || is_object($exp2))
@@ -113,6 +130,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Compares two values and passes if they are not equal
+   *
+   * @param mixed  $exp1    left value
+   * @param mixed  $exp2    right value
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function isnt($exp1, $exp2, $message = '')
   {
     if (!$result = $this->ok($exp1 != $exp2, $message))
@@ -123,6 +149,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Tests a string against a regular expression
+   *
+   * @param string $exp     value to test
+   * @param string $regex   the pattern to search for, as a string
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function like($exp, $regex, $message = '')
   {
     if (!$result = $this->ok(preg_match($regex, $exp), $message))
@@ -133,6 +168,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Checks that a string doesn't match a regular expression
+   *
+   * @param string $exp     value to test
+   * @param string $regex   the pattern to search for, as a string
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function unlike($exp, $regex, $message = '')
   {
     if (!$result = $this->ok(!preg_match($regex, $exp), $message))
@@ -143,6 +187,16 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Compares two arguments with an operator
+   *
+   * @param mixed  $exp1    left value
+   * @param string $op      operator
+   * @param mixed  $exp2    right value
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function cmp_ok($exp1, $op, $exp2, $message = '')
   {
     eval(sprintf("\$result = \$exp1 $op \$exp2;"));
@@ -154,6 +208,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Checks the availability of a method for an object or a class
+   *
+   * @param mixed        $object  an object instance or a class name
+   * @param string|array $methods one or more method names
+   * @param string       $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function can_ok($object, $methods, $message = '')
   {
     $result = true;
@@ -174,6 +237,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Checks the type of an argument
+   *
+   * @param mixed  $var     variable instance
+   * @param string $class   class or type name
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function isa_ok($var, $class, $message = '')
   {
     $type = is_object($var) ? get_class($var) : gettype($var);
@@ -185,6 +257,15 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Checks that two arrays have the same values
+   *
+   * @param mixed  $exp1    first variable
+   * @param mixed  $exp2    second variable
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function is_deeply($exp1, $exp2, $message = '')
   {
     if (!$result = $this->ok($this->test_is_deeply($exp1, $exp2), $message))
@@ -195,21 +276,50 @@ class lime_test
     return $result;
   }
 
+  /**
+   * Always passes--useful for testing exceptions
+   *
+   * @param string $message display output message
+   *
+   * @return true
+   */
   public function pass($message = '')
   {
     return $this->ok(true, $message);
   }
 
+  /**
+   * Always fails--useful for testing exceptions
+   *
+   * @param string $message display output message
+   *
+   * @return false
+   */
   public function fail($message = '')
   {
     return $this->ok(false, $message);
   }
 
+  /**
+   * Outputs a diag message but runs no test
+   *
+   * @param string $message display output message
+   *
+   * @return void
+   */
   public function diag($message)
   {
     $this->output->diag($message);
   }
 
+  /**
+   * Counts as $nb_tests tests--useful for conditional tests
+   *
+   * @param string  $message  display output message
+   * @param integer $nb_tests number of tests to skip
+   *
+   * @return void
+   */
   public function skip($message = '', $nb_tests = 1)
   {
     for ($i = 0; $i < $nb_tests; $i++)
@@ -219,12 +329,27 @@ class lime_test
     }
   }
 
+  /**
+   * Counts as a test--useful for tests yet to be written
+   *
+   * @param string $message display output message
+   *
+   * @return void
+   */
   public function todo($message = '')
   {
     ++$this->skipped and --$this->passed;
     $this->pass(sprintf("# TODO%s", $message ? ' '.$message : ''));
   }
 
+  /**
+   * Validates that a file exists and that it is properly included
+   *
+   * @param string $file    file path
+   * @param string $message display output message when the test passes
+   *
+   * @return boolean
+   */
   public function include_ok($file, $message = '')
   {
     if (!$result = $this->ok((@include($file)) == 1, $message))
@@ -419,13 +544,13 @@ class lime_colorizer
 }
 
 lime_colorizer::style('ERROR', array('bg' => 'red', 'fg' => 'white', 'bold' => true));
-lime_colorizer::style('INFO',  array('fg' => 'green', 'bold' => true));
+lime_colorizer::style('INFO', array('fg' => 'green', 'bold' => true));
 lime_colorizer::style('PARAMETER', array('fg' => 'cyan'));
-lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
+lime_colorizer::style('COMMENT', array('fg' => 'yellow'));
 
-lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
-lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
-lime_colorizer::style('INFO_BAR',  array('fg' => 'cyan', 'bold' => true));
+lime_colorizer::style('GREEN_BAR', array('fg' => 'white', 'bg' => 'green', 'bold' => true));
+lime_colorizer::style('RED_BAR', array('fg' => 'white', 'bg' => 'red', 'bold' => true));
+lime_colorizer::style('INFO_BAR', array('fg' => 'cyan', 'bold' => true));
 
 class lime_harness extends lime_registration
 {
