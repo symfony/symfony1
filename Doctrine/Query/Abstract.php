@@ -1016,6 +1016,7 @@ abstract class Doctrine_Query_Abstract
     {
         $dql = $this->getDql();
         $conn = $this->getConnection();
+        $params = $this->getFlattenedParams($params);
         $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $dql . var_export($params, true));
         return $hash;
     }
@@ -1123,7 +1124,7 @@ abstract class Doctrine_Query_Abstract
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
-            $hash = $this->calculateResultCacheHash($dqlParams);
+            $hash = $this->calculateResultCacheHash($params);
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
 
             if ($cached === false) {
