@@ -121,7 +121,11 @@ class sfNumberFormat
       $number = $number * 100;
     }
 
+    // avoid conversion with exponents
+    // see http://trac.symfony-project.org/ticket/5715
+    $precision = ini_set('precision', 14);
     $string = (string) $number;
+    ini_set('precision', $precision);
 
     $decimal = $this->formatDecimal($string);
     $integer = $this->formatInteger(abs($number));
