@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,6 +18,10 @@
  */
 class sfProjectPermissionsTask extends sfBaseTask
 {
+  protected
+    $current = null,
+    $failed  = array();
+
   /**
    * @see sfTask
    */
@@ -42,19 +46,77 @@ EOF;
   {
     if (file_exists(sfConfig::get('sf_upload_dir')))
     {
-      $this->getFilesystem()->chmod(sfConfig::get('sf_upload_dir'), 0777);
+      $this->chmod(sfConfig::get('sf_upload_dir'), 0777);
     }
-    $this->getFilesystem()->chmod(sfConfig::get('sf_cache_dir'), 0777);
-    $this->getFilesystem()->chmod(sfConfig::get('sf_log_dir'), 0777);
-    $this->getFilesystem()->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'symfony', 0777);
 
-    $dirs = array(sfConfig::get('sf_cache_dir'), sfConfig::get('sf_upload_dir'), sfConfig::get('sf_log_dir'));
+    $this->chmod(sfConfig::get('sf_cache_dir'), 0777);
+    $this->chmod(sfConfig::get('sf_log_dir'), 0777);
+    $this->chmod(sfConfig::get('sf_root_dir').'/symfony', 0777);
+
+    $dirs = array(
+      sfConfig::get('sf_cache_dir'),
+      sfConfig::get('sf_log_dir'),
+      sfConfig::get('sf_upload_dir'),
+    );
+
     $dirFinder = sfFinder::type('dir');
     $fileFinder = sfFinder::type('file');
+
     foreach ($dirs as $dir)
     {
-      $this->getFilesystem()->chmod($dirFinder->in($dir), 0777);
-      $this->getFilesystem()->chmod($fileFinder->in($dir), 0666);
+      $this->chmod($dirFinder->in($dir), 0777);
+      $this->chmod($fileFinder->in($dir), 0666);
     }
+
+    // note those files that failed
+    if (count($this->failed))
+    {
+      $this->log($this->formatter->format('Permissions on the following file(s) could not be fixed:', 'ERROR'));
+
+      foreach ($this->failed as $failed)
+      {
+        $this->log($this->formatter->format(sprintf(' - %s', $failed), 'ERROR'));
+      }
+    }
+  }
+
+  /**
+   * Chmod and capture any failures.
+   * 
+   * @param string  $file
+   * @param integer $mode
+   * @param integer $umask
+   * 
+   * @see sfFilesystem
+   */
+  protected function chmod($file, $mode, $umask = 0000)
+  {
+    if (is_array($file))
+    {
+      foreach ($file as $f)
+      {
+        $this->chmod($f, $mode, $umask);
+      }
+    }
+    else
+    {
+      set_error_handler(array($this, 'handleError'));
+
+      $this->current = $file;
+      @$this->getFilesystem()->chmod($file, $mode, $umask);
+      $this->current = null;
+
+      restore_error_handler();
+    }
+  }
+
+  /**
+   * Captures those chmod commands that fail.
+   * 
+   * @see http://www.php.net/set_error_handler
+   */
+  public function handleError($no, $string, $file, $line, $context)
+  {
+    $this->failed[] = $this->current;
   }
 }
