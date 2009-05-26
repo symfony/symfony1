@@ -33,13 +33,13 @@ $pager->setPage(2);
 $pager->init();
 
 $t->is($pager->getQuery()->getSql(), 'SELECT a.id AS a__id, a.name AS a__name FROM author a WHERE a.id > 0 LIMIT 25 OFFSET 25');
+$t->is($pager->getQuery()->count(), $total);
 
 $results = $pager->getResults();
 
 $t->is(gettype($results), 'object');
 $t->is(get_class($results), 'Doctrine_Collection');
 $t->is(count($results), $numPerPage);
-$t->is($pager->getQuery()->count(), $total);
 $t->is($pager->getCountQuery()->count(), $total);
 
 $pager = new sfDoctrinePager('Author', $numPerPage);
