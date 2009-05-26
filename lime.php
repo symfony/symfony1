@@ -725,7 +725,7 @@ class lime_harness extends lime_registration
       $this->output->green_bar(sprintf(' Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']));
     }
 
-    return $this->stats['_failed_tests'] ? false : true;
+    return $this->stats['_failed_files'] ? false : true;
   }
 
   public function get_failed_files()
