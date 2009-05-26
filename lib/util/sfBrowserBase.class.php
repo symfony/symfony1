@@ -678,8 +678,18 @@ abstract class sfBrowserBase
 
     $method = strtolower(isset($options['method']) ? $options['method'] : 'get');
 
-    // text link
-    if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item($position))
+    $query  = sprintf('//a[.="%s"]', $name);
+    $query .= sprintf('|//a/img[@alt="%s"]/ancestor::a', $name);
+    $query .= sprintf('|//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name);
+    $query .= sprintf('|//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name);
+    $list = $xpath->query($query);
+
+    if (!$item = $list->item($position))
+    {
+      throw new InvalidArgumentException(sprintf('Cannot find the "%s" link or button.', $name));
+    }
+
+    if ('a' == $item->nodeName)
     {
       if (in_array($method, array('post', 'put', 'delete')))
       {
@@ -688,49 +698,27 @@ abstract class sfBrowserBase
           $arguments['_with_csrf'] = true;
         }
 
-        return array($link->getAttribute('href'), $method, $arguments);
+        return array($item->getAttribute('href'), $method, $arguments);
       }
       else
       {
-        return array($link->getAttribute('href'), 'get', array());
-      }
-    }
-
-    // image link
-    if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item($position))
-    {
-      if (in_array($method, array('post', 'put', 'delete')))
-      {
-        return array($link->getAttribute('href'), $method, $arguments);
-      }
-      else
-      {
-        return array($link->getAttribute('href'), 'get', $arguments);
-      }
-    }
-
-    // form
-    if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item($position))
-    {
-      if (!$form = $xpath->query(sprintf('//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name))->item($position))
-      {
-        throw new InvalidArgumentException(sprintf('Cannot find the "%s" link or button.', $name));
+        return array($item->getAttribute('href'), 'get', $arguments);
       }
     }
 
     // form attributes
-    $url = $form->getAttribute('action');
+    $url = $item->getAttribute('action');
     if (!$url || '#' == $url)
     {
       $url = $this->stack[$this->stackPosition]['uri'];
     }
-    $method = strtolower(isset($options['method']) ? $options['method'] : ($form->getAttribute('method') ? $form->getAttribute('method') : 'get'));
+    $method = strtolower(isset($options['method']) ? $options['method'] : ($item->getAttribute('method') ? $item->getAttribute('method') : 'get'));
 
     // merge form default values and arguments
     $defaults = array();
     $arguments = sfToolkit::arrayDeepMerge($this->fields, $arguments);
 
-    foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
+    foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $item) as $element)
     {
       $elementName = $element->getAttribute('name');
       $nodeName    = $element->nodeName;

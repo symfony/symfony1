@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -115,6 +115,8 @@ $html = <<<EOF
     </form>
 
     <a href="/myotherlink">test link</a>
+    <a href="/submitlink">submit</a>
+    <a href="/submitimagelink"><img src="myimage.gif" alt="submit" /></a>
 
   </body>
 </html>
@@ -151,6 +153,12 @@ $t->is($uri, '/myotherlink', '->click() can take a third argument to tell the po
 
 list($method, $uri, $parameters) = $b->click('image link');
 $t->is($uri, '/myimagelink', '->click() clicks on image links');
+
+list($method, $uri, $parameters) = $b->click('submit', null, array('position' => 2));
+$t->is($uri, '/submitlink', '->click() clicks on submit link at position 2');
+
+list($method, $uri, $parameters) = $b->click('submit', null, array('position' => 3));
+$t->is($uri, '/submitimagelink', '->click() clicks on submit image link at position 3');
 
 list($method, $uri, $parameters) = $b->click('submit');
 $t->is($method, 'post', '->click() gets the form method');
@@ -286,7 +294,7 @@ $t->is(isset($files['myfile'])&&is_array($files['myfile']), true, 'file upload s
 $t->is(array_keys($files['myfile']), array('name','type','tmp_name','error','size'), 'file upload returns correctly formatted array');
 $t->is($files['myfile']['error'], UPLOAD_ERR_NO_FILE, 'unexistent file does not exists (UPLOAD_ERR_NO_FILE)');
 
-list($method, $uri, $parameters) = $b->click('submit', array('myfile'=>$existentFilename));
+list($method, $uri, $parameters) = $b->click('submit', array('myfile' => $existentFilename));
 $files = $b->getFiles();
 
 $t->is($files['myfile']['error'], UPLOAD_ERR_OK, 'existent file exists (UPLOAD_ERR_OK)');
