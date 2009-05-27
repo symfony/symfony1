@@ -390,6 +390,8 @@ class sfPropelData extends sfData
       {
         $stmt = $this->con->query('SELECT * FROM '.constant(constant($tableName.'::PEER').'::TABLE_NAME'));
         $resultsSets[] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        unset($stmt);
       }
 
       foreach ($resultsSets as $rows)
