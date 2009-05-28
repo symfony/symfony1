@@ -275,3 +275,16 @@ The default `\d+` requirement is now only applied to a
 `sfObjectRouteCollection` when the `column` option is the default `id`. This
 means you no longer have to provide an alternate requirement when a
 non-numeric column is specified (i.e. `slug`).
+
+CLI
+---
+
+### Output Colorization
+
+Symfony tries to guess if your console supports colors when you use the
+symfony CLI tool. But sometimes, symfony guesses wrong; for instance when you
+use Cygwin (because colorization is always turned off on the Windows
+platform).
+
+As of symfony 1.3, you can force the use of colors for the output by passing
+the global `--color` option.

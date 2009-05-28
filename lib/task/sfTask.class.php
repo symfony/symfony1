@@ -62,6 +62,26 @@ abstract class sfTask
   }
 
   /**
+   * Returns the formatter instance.
+   *
+   * @return sfFormatter The formatter instance
+   */
+  public function getFormatter()
+  {
+    return $this->formatter;
+  }
+
+  /**
+   * Sets the formatter instance.
+   *
+   * @param sfFormatter The formatter instance
+   */
+  public function setFormatter(sfFormatter $formatter)
+  {
+    $this->formatter = $formatter;
+  }
+
+  /**
    * Runs the task from the CLI.
    *
    * @param sfCommandManager $commandManager  An sfCommandManager instance

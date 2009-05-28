@@ -22,7 +22,6 @@ abstract class sfCommandApplication
     $commandManager = null,
     $trace          = false,
     $verbose        = true,
-    $dryrun         = false,
     $nowrite        = false,
     $name           = 'UNKNOWN',
     $version        = 'UNKNOWN',
@@ -46,6 +45,18 @@ abstract class sfCommandApplication
     $this->options = $options;
 
     $this->fixCgi();
+
+    $argumentSet = new sfCommandArgumentSet(array(
+      new sfCommandArgument('task', sfCommandArgument::REQUIRED, 'The task to execute'),
+    ));
+    $optionSet = new sfCommandOptionSet(array(
+      new sfCommandOption('--help',    '-H', sfCommandOption::PARAMETER_NONE, 'Display this help message.'),
+      new sfCommandOption('--quiet',   '-q', sfCommandOption::PARAMETER_NONE, 'Do not log messages to standard output.'),
+      new sfCommandOption('--trace',   '-t', sfCommandOption::PARAMETER_NONE, 'Turn on invoke/execute tracing, enable full backtrace.'),
+      new sfCommandOption('--version', '-V', sfCommandOption::PARAMETER_NONE, 'Display the program version.'),
+      new sfCommandOption('--color',   '',   sfCommandOption::PARAMETER_NONE, 'Forces ANSI color output.'),
+    ));
+    $this->commandManager = new sfCommandManager($argumentSet, $optionSet);
 
     $this->configure();
 
@@ -87,6 +98,11 @@ abstract class sfCommandApplication
   public function setFormatter(sfFormatter $formatter)
   {
     $this->formatter = $formatter;
+
+    foreach ($this->getTasks() as $task)
+    {
+      $task->setFormatter($formatter);
+    }
   }
 
   /**
@@ -260,16 +276,6 @@ abstract class sfCommandApplication
     return $this->trace;
   }
 
-  /*
-   * Returns whether the application must run in dry mode.
-   *
-   * @return Boolean true if the application must run in dry mode, false otherwise
-   */
-  public function isDryrun()
-  {
-    return $this->dryrun;
-  }
-
   /**
    * Outputs a help message for the current application.
    */
@@ -296,43 +302,38 @@ abstract class sfCommandApplication
    */
   protected function handleOptions($options = null)
   {
-    $argumentSet = new sfCommandArgumentSet(array(
-      new sfCommandArgument('task', sfCommandArgument::REQUIRED, 'The task to execute'),
-    ));
-    $optionSet = new sfCommandOptionSet(array(
-      new sfCommandOption('--help',    '-H', sfCommandOption::PARAMETER_NONE, 'Display this help message.'),
-      new sfCommandOption('--quiet',   '-q', sfCommandOption::PARAMETER_NONE, 'Do not log messages to standard output.'),
-      new sfCommandOption('--trace',   '-t', sfCommandOption::PARAMETER_NONE, 'Turn on invoke/execute tracing, enable full backtrace.'),
-      new sfCommandOption('--version', '-V', sfCommandOption::PARAMETER_NONE, 'Display the program version.'),
-    ));
-    $this->commandManager = new sfCommandManager($argumentSet, $optionSet);
     $this->commandManager->process($options);
-    foreach ($this->commandManager->getOptionValues() as $opt => $value)
-    {
-      if (false === $value)
-      {
-        continue;
-      }
+    $this->commandOptions = $options;
 
-      switch ($opt)
-      {
-        case 'help':
-          $this->help();
-          exit();
-        case 'quiet':
-          $this->verbose = false;
-          break;
-        case 'trace':
-          $this->trace = true;
-          $this->verbose = true;
-          break;
-        case 'version':
-          echo $this->getLongVersion();
-          exit(0);
-      }
+    // the order of option processing matters
+
+    if ($this->commandManager->getOptionSet()->hasOption('color') && false !== $this->commandManager->getOptionValue('color'))
+    {
+      $this->setFormatter(new sfAnsiColorFormatter());
     }
 
-    $this->commandOptions = $options;
+    if ($this->commandManager->getOptionSet()->hasOption('quiet') && false !== $this->commandManager->getOptionValue('quiet'))
+    {
+      $this->verbose = false;
+    }
+
+    if ($this->commandManager->getOptionSet()->hasOption('trace') && false !== $this->commandManager->getOptionValue('trace'))
+    {
+      $this->verbose = true;
+      $this->trace   = true;
+    }
+
+    if ($this->commandManager->getOptionSet()->hasOption('help') && false !== $this->commandManager->getOptionValue('help'))
+    {
+      $this->help();
+      exit(0);
+    }
+
+    if ($this->commandManager->getOptionSet()->hasOption('version') && false !== $this->commandManager->getOptionValue('version'))
+    {
+      echo $this->getLongVersion();
+      exit(0);
+    }
   }
 
   /**
