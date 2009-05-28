@@ -74,7 +74,7 @@ EOF;
     {
       require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php');
 
-      $h = new lime_harness(new lime_output_color());
+      $h = new lime_harness(new lime_output($options['color']));
       $h->base_dir = sfConfig::get('sf_test_dir').'/functional/'.$app;
 
       // register functional tests
