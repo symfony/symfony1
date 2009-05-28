@@ -414,53 +414,11 @@ class lime_test
 
 class lime_output
 {
-  public function diag()
-  {
-    $messages = func_get_args();
-    foreach ($messages as $message)
-    {
-      array_map(array($this, 'comment'), (array) $message);
-    }
-  }
-
-  public function comment($message)
-  {
-    echo "# $message\n";
-  }
-
-  public function info($message)
-  {
-    echo "> $message\n";
-  }
-
-  public function error($message)
-  {
-    echo "> $message\n";
-  }
-
-  public function echoln($message)
-  {
-    echo "$message\n";
-  }
-
-  public function green_bar($message)
-  {
-    echo "$message\n";
-  }
-
-  public function red_bar($message)
-  {
-    echo "$message\n";
-  }
-}
-
-class lime_output_color extends lime_output
-{
   public $colorizer = null;
 
-  public function __construct()
+  public function __construct($force_colors = false)
   {
-    $this->colorizer = new lime_colorizer();
+    $this->colorizer = new lime_colorizer($force_colors);
   }
 
   public function diag()
@@ -508,19 +466,30 @@ class lime_output_color extends lime_output
   }
 }
 
+class lime_output_color extends lime_output
+{
+}
+
 class lime_colorizer
 {
   static public $styles = array();
+
+  protected $force_colors = false;
+
+  public function __construct($force_colors = false)
+  {
+    $this->force_colors = $force_colors;
+  }
 
   public static function style($name, $options = array())
   {
     self::$styles[$name] = $options;
   }
 
-  public static function colorize($text = '', $parameters = array())
+  public function colorize($text = '', $parameters = array())
   {
     // disable colors if not supported (windows or non tty console)
-    if (DIRECTORY_SEPARATOR == '\\' || !function_exists('posix_isatty') || !@posix_isatty(STDOUT))
+    if (!$this->force_colors && (DIRECTORY_SEPARATOR == '\\' || !function_exists('posix_isatty') || !@posix_isatty(STDOUT)))
     {
       return $text;
     }
@@ -654,7 +623,7 @@ class lime_harness extends lime_registration
         $delta = $this->stats[$file]['plan'] - $this->stats[$file]['nb_tests'];
         if ($delta > 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->comment(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']))));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           $this->stats['_nb_tests'] += $delta;
@@ -665,7 +634,7 @@ class lime_harness extends lime_registration
         }
         else if ($delta < 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->comment(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']))));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           for ($i = 1; $i <= -$delta; $i++)
