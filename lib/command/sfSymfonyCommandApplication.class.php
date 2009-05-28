@@ -103,7 +103,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $dirs[] = sfConfig::get('sf_lib_dir').'/task';
 
     // require tasks
-    $finder = sfFinder::type('file')->name('*Task.class.php');
+    $finder = sfFinder::type('file')->sort_by_name()->name('*Task.class.php');
     foreach ($finder->in($dirs) as $task)
     {
       require_once $task;
