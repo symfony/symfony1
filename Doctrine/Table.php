@@ -92,9 +92,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     protected $_uniques = array();
 
     /**
-     * @var array $_fieldNames            an array of field names. used to look up field names
-     *                                    from column names.
-     *                                    keys are column names and values are field names
+     * @var array $_fieldNames            an array of field names, used to look up field names
+     *                                    from column names. Keys are column
+     *                                    names and values are field names.
+     *                                    Alias for columns are here.
      */
     protected $_fieldNames    = array();
 
@@ -223,6 +224,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @throws Doctrine_Connection_Exception    if there are no opened connections
      * @param string $name                      the name of the component
      * @param Doctrine_Connection $conn         the connection associated with this table
+     * @param boolean $initDefinition           whether to init the in-memory schema
      */
     public function __construct($name, Doctrine_Connection $conn, $initDefinition = false)
     {
@@ -265,9 +267,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
-     * construct
-     * Empty template method to provide concrete Table classes with the possibility
-     * to hook into the constructor procedure
+     * Construct template method.
+     * 
+     * This method provides concrete Table classes with the possibility
+     * to hook into the constructor procedure. It is called after the 
+     * Doctrine_Table construction process is finished.
      *
      * @return void
      */
@@ -388,7 +392,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Initializes the table identifier(s)/primary key(s)
+     * Initializes the primary key.
+     *
+     * Called in the construction process, builds the identifier definition
+     * copying in the schema the list of the fields which constitutes 
+     * the primary key.
      *
      * @return void
      */
@@ -496,6 +504,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
     /**
      * Gets the owner of a column.
+     *
      * The owner of a column is the name of the component in a hierarchy that
      * defines the column.
      *
@@ -512,11 +521,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Gets the record instance for this table. The Doctrine_Table instance always holds at least one
-     * instance of a model so that it can be reused for several things, but primarily it is first
-     * used to instantiate all the internal in memory meta data
+     * Gets the record instance for this table.
+     * 
+     * The Doctrine_Table instance always holds at least one
+     * instance of a model so that it can be reused for several things, 
+     * but primarily it is first used to instantiate all the internal
+     * in memory schema definition.
      *
-     * @return object  Empty instance of the record
+     * @return Doctrine_Record  Empty instance of the record
      */
     public function getRecordInstance()
     {
@@ -538,7 +550,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Checks whether a field is part of the table identifier/primary key field(s).
+     * Checks whether a field is in the primary key.
+     * 
+     * Checks if a field is part of the table identifier, which defines
+     * the one-column or multi-column primary key.
      *
      * @param string $fieldName  The field name
      * @return boolean           TRUE if the field is part of the table identifier/primary key field(s),
@@ -550,7 +565,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Checks whether a field identifier is of type autoincrement
+     * Checks whether a field identifier is of type autoincrement.
+     *
+     * This method checks if the primary key is a AUTOINCREMENT column or
+     * if the table uses a natural key.
      *
      * @return boolean TRUE  if the identifier is autoincrement
      *                 FALSE otherwise
@@ -595,8 +613,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * exports this table to database based on column and option definitions.
-     * Definition comes from a Doctrine_Record subclass.
+     * Exports this table to database based on the schema definition.
+     *
+     * This method create a physical table in the database, using the 
+     * definition that comes from the component Doctrine_Record instance.
      *
      * @throws Doctrine_Connection_Exception    if some error other than Doctrine::ERR_ALREADY_EXISTS
      *                                          occurred during the create table operation
@@ -609,11 +629,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getExportableFormat
-     * returns exportable presentation of this object
+     * Returns an exportable representation of this object.
+     * 
+     * This method produces a array representation of the table schema, where
+     * keys are tableName, columns (@see $_columns) and options. 
+     * The options subarray contains 'primary' and 'foreignKeys'.
      *
      * @param boolean $parseForeignKeys     whether to include foreign keys definition in the options 
-     * @return array                        keys are tableName, columns and options 
+     * @return array 
      */
     public function getExportableFormat($parseForeignKeys = true)
     {
@@ -698,8 +721,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getRelationParser
-     * return the relation parser associated with this table
+     * Retrieves the relation parser associated with this table.
      *
      * @return Doctrine_Relation_Parser     relation parser object
      */
@@ -709,10 +731,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * __get
-     * an alias for getOption
+     * Magic method for accessing to object properties.
+     * 
+     * This method is an alias for getOption.
+     * <code>
+     * foreach ($table->indexes as $name => $definition) {
+     *     // ...
+     * }
+     * </code>
      *
      * @param string $option
+     * @return mixed
      */
     public function __get($option)
     {
@@ -723,7 +752,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * __isset
+     * Magic method for testing object properties existence.
+     * 
+     * This method tests if an option exists.
+     * <code>
+     * if (isset($table->tableName)) {
+     *     // ...
+     * }
+     * </code>
      *
      * @param string $option
      */
@@ -733,8 +769,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getOptions
-     * returns all options of this table and the associated values
+     * Retrieves all options of this table and the associated values.
      *
      * @return array    all options and their values
      */
@@ -744,9 +779,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * setOptions
+     * Sets all the options.
      *
-     * @param string $options
+     * This method sets options of the table that are specified in the argument.
+     * It has no effect on other options.
+     *
+     * @param array $options    keys are option names
      * @return void
      */
     public function setOptions($options)
@@ -757,9 +795,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * adds a foreignKey to the table in-memory definition
+     * Adds a foreignKey to the table in-memory definition.
+     * 
+     * This method adds a foreign key to the schema definition.
+     * It does not add the key to the physical table in the db; @see export().
      *
-     * @param array $definition
+     * @param array $definition     definition of the foreign key
      * @return void
      */
     public function addForeignKey(array $definition)
@@ -768,7 +809,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * adds a check constraint to the table in-memory definition
+     * Adds a check constraint to the table in-memory definition.
+     * 
+     * This method adds a CHECK constraint to the schema definition.
+     * It does not add the constraint to the physical table in the 
+     * db; @see export().
      *
      * @param $definition
      * @param mixed $name   if string used as name for the constraint.
@@ -787,7 +832,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * adds an index to this table in-memory definition
+     * Adds an index to this table in-memory definition.
+     *
+     * This method adds an INDEX to the schema definition.
+     * It does not add the index to the physical table in the db; @see export().
      *
      * @param string $index         index name
      * @param array $definition     keys are type, fields
@@ -813,7 +861,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves an index definition
+     * Retrieves an index definition.
+     *
+     * This method returns a given index definition: @see addIndex().
      *
      * @param string $index         index name; @see addIndex()
      * @return array|boolean        array on success, FALSE on failure
@@ -828,8 +878,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * adds set of fields to be unique. Will automatically add unique
-     * index definition and validate the values on save
+     * Defines a n-uple of fields that must be unique for every record. 
+     *
+     * This method Will automatically add UNIQUE index definition 
+     * and validate the values on save. The UNIQUE index is not created in the
+     * database until you use @see export().
      *
      * @param array $fields     values are fieldnames
      * @return void
@@ -859,9 +912,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * tests if a relation exist in the table definition
+     * Tests if a relation exists.
+     * 
+     * This method queries the table definition to find out if a relation 
+     * is defined for this component. Alias defined with foreignAlias are not
+     * recognized as there's only one Doctrine_Relation object on the owning 
+     * side.
      *
-     * @param string $alias      the relation names
+     * @param string $alias      the relation alias to search for.
      * @return boolean           true if the relation exists. Otherwise false.
      */
     public function hasRelation($alias)
@@ -870,9 +928,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves a relation object
+     * Retrieves a relation object for this component.
      *
-     * @param string $alias      relation alias
+     * @param string $alias      relation alias; @see hasRelation()
      * @return Doctrine_Relation
      */
     public function getRelation($alias, $recursive = true)
@@ -881,7 +939,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves an array containing all relation objects defined on this table
+     * Retrieves all relation objects defined on this table.
      *
      * @return array
      */
@@ -891,8 +949,15 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * creates a new Doctrine_Query object and adds the component name
-     * of this table as the query 'from' part
+     * Creates a query on this table.
+     *
+     * This method returns a new Doctrine_Query object and adds the component 
+     * name of this table as the query 'from' part.
+     * <code>
+     * $table = Doctrine::getTable('User');
+     * $table->createQuery('myuser')
+     *       ->where('myuser.Phonenumber = ?', '5551234');
+     * </code>
      *
      * @param string $alias     name for component aliasing
      * @return Doctrine_Query
@@ -906,7 +971,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets the internal record repository
+     * Gets the internal record repository.
      *
      * @return Doctrine_Table_Repository
      */
@@ -916,9 +981,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * setOption
-     * sets an option and returns this object in order to
-     * allow flexible method chaining
+     * Sets an option for the table.
+     *
+     * This method sets an option and returns this object in order to
+     * allow flexible method chaining.
      *
      * @see Doctrine_Table::$_options   for available options
      * @param string $name              the name of the option to set
@@ -944,8 +1010,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns the value of given option
+     * Returns the value of a given option.
      *
+     * @see Doctrine_Table::$_options   for available options
      * @param string $name  the name of the option
      * @return mixed        the value of given option
      */
@@ -958,11 +1025,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getColumnName
+     * Returns a column name for a column alias.
      *
-     * returns a column name for column alias.
      * If the actual name for the alias cannot be found
-     * this method returns the given alias
+     * this method returns the given alias.
      *
      * @param string $alias         column alias
      * @return string               column name
@@ -981,10 +1047,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getColumnDefinition
+     * Retrieves a column definition from this table schema.
      *
      * @param string $columnName
-     * @return array    column definition; @see $_columns
+     * @return array              column definition; @see $_columns
      */
     public function getColumnDefinition($columnName)
     {
@@ -995,10 +1061,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getColumnAlias
+     * Returns a column alias for a column name.
      *
-     * returns a column alias for a column name
-     * if no alias can be found the column name is returned.
+     * If no alias can be found the column name is returned.
      *
      * @param string $columnName    column name
      * @return string               column alias
@@ -1018,14 +1083,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * setColumn
+     * Adds a column to the schema. 
      *
-     * @param string $name
-     * @param string $type
-     * @param integer $length
+     * This method does not alter the database table; @see export();
+     *
+     * @see $_columns;
+     * @param string $name      column physical name
+     * @param string $type      type of data
+     * @param integer $length   maximum length
      * @param mixed $options
-     * @param boolean $prepend   Whether to prepend or append the new column to the column list.
-     *                           By default the column gets appended.
+     * @param boolean $prepend  Whether to prepend or append the new column to the column list.
+     *                          By default the column gets appended.
      * @throws Doctrine_Table_Exception     if trying use wrongly typed parameter
      * @return void
      */
@@ -1144,7 +1212,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * finds out whether this table has default values for columns
+     * Finds out whether this table has default values for columns.
      *
      * @return boolean
      */
@@ -1154,7 +1222,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves the default value (if any) for a given column
+     * Retrieves the default value (if any) for a given column.
      *
      * @param string $fieldName     column name
      * @return mixed                default value as set in definition
@@ -1173,7 +1241,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns the definition of the identifier key
+     * Returns the definition of the identifier key.
      * @return mixed    can be array if a multi-column primary key is used.
      */
     public function getIdentifier()
@@ -1182,6 +1250,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
+     * Retrieves the type of primary key.
+     * 
+     * This method finds out if the primary key is multifield.
      * @see Doctrine_Identifier constants
      * @return integer
      */
@@ -1191,7 +1262,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * finds out whether the table definition has a given column
+     * Finds out whether the table definition contains a given column.
      * @param string $columnName
      * @return boolean
      */
@@ -1201,7 +1272,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * finds out whether the table definition has a given fields (column or alias)
+     * Finds out whether the table definition has a given field.
+     * 
+     * This method returns true if @see hasColumn() returns true or if an alias
+     * named $fieldName exists.
+     * @param string $fieldName
      * @return boolean
      */
     public function hasField($fieldName)
@@ -1210,7 +1285,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * sets the default connection for this table
+     * Sets the default connection for this table.
+     *
+     * This method assign the connection which this table will use
+     * to create queries.
      *
      * @params Doctrine_Connection      a connection object
      * @return Doctrine_Table           this object; fluent interface
@@ -1225,7 +1303,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns the connection associated with this table (if any)
+     * Returns the connection associated with this table (if any).
      *
      * @return Doctrine_Connection|null     the connection object
      */
@@ -1235,11 +1313,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * creates a new record of the model defined by this table
+     * Creates a new record.
+     *
+     * This method create a new instance of the model defined by this table.
+     * The class of this record is the subclass of Doctrine_Record defined by 
+     * this component. The record is not created in the database until you
+     * call @save().
      *
      * @param $array             an array where keys are field names and
      *                           values representing field values. Can contain
-     *                           also related components; @see Doctrine_Record::fromArray()
+     *                           also related components;
+     *                           @see Doctrine_Record::fromArray()
      * @return Doctrine_Record   the created record object
      */
     public function create(array $array = array())
@@ -1251,8 +1335,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
-     * adds a named query in the query registry
-     *
+     * Adds a named query in the query registry.
+     * 
+     * This methods register a query object with a name to use in the future.
+     * @see createNamedQuery()
      * @param $queryKey                       query key name to use for storage
      * @param string|Doctrine_Query $query    DQL string or object
      * @return void
@@ -1264,8 +1350,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
-     * creates a named query from one in the query registry
+     * Creates a named query from one in the query registry.
      *
+     * This method clones a new query object from a previously registered one.
+     *
+     * @see addNamedQuery()
      * @param string $queryKey  query key name
      * @return Doctrine_Query
 	 */
@@ -1284,7 +1373,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
 
     /**
-     * finds a record by its identifier
+     * Finds a record by its identifier.
+     *
+     * <code>
+     * $table->find(11);
+     * $table->find(11, Doctrine::HYDRATE_RECORD);
+     * $table->find('namedQueryForYearArchive', array(2009), Doctrine::HYDRATE_ARRAY);
+     * </code>
      *
      * @param mixed $name         Database Row ID or Query Name defined previously as a NamedQuery
      * @param mixed $params       This argument is the hydration mode (Doctrine::HYDRATE_ARRAY or 
@@ -1351,10 +1446,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns all the records stored in this table
+     * Retrieves all the records stored in this table.
      *
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @return Doctrine_Collection
+     * @return Doctrine_Collection|array
      */
     public function findAll($hydrationMode = null)
     {
@@ -1363,12 +1458,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * finds records with a given SQL where clause
+     * Finds records in this table with a given SQL where clause.
      *
      * @param string $dql               DQL WHERE clause to use
      * @param array $params             query parameters (a la PDO)
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @return Doctrine_Collection
+     * @return Doctrine_Collection|array
      *
      * @todo This actually takes DQL, not SQL, but it requires column names
      *       instead of field names. This should be fixed to use raw SQL instead.
@@ -1380,12 +1475,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * finds records with a given SQL where clause
+     * Finds records in this table with a given DQL where clause.
      *
      * @param string $dql               DQL WHERE clause
      * @param array $params             preparated statement parameters
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @return Doctrine_Collection
+     * @return Doctrine_Collection|array
      */
     public function findByDql($dql, $params = array(), $hydrationMode = null)
     {
@@ -1397,12 +1492,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
-     * find records basing on a field
+     * Find records basing on a field.
      *
      * @param string $column            field for the WHERE clause
      * @param string $value             prepared statement parameter
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @return Doctrine_Collection
+     * @return Doctrine_Collection|array
      */
     protected function findBy($fieldName, $value, $hydrationMode = null)
     {
@@ -1412,7 +1507,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * find the first record of the table, querying on a given field
+     * Finds the first record that satisfy the clause.
      *
      * @param string $column            field for the WHERE clause
      * @param string $value             prepared statement parameter
@@ -1428,8 +1523,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * fetches data using the provided queryKey and
-     * the associated query in the query registry
+     * Finds result of a named query.
+     * 
+     * This method fetches data using the provided $queryKey to choose a named
+     * query in the query registry.
      *
      * @param string $queryKey      the query key
      * @param array $params         prepared statement params (if any)
@@ -1443,8 +1540,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * fetches one record using the provided queryKey and
-     * the associated query in the query registry
+     * Fetches one record with a named query.
+     *
+     * This method uses the provided $queryKey to clone and execute
+     * the associated named query in the query registry.
      *
      * @param string $queryKey      the query key
      * @param array $params         prepared statement params (if any)
@@ -1458,8 +1557,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * clears the first level cache (identityMap).
-     * Ensure that records are reloaded from the db.
+     * Clears the first level cache (identityMap).
+     *
+     * This method ensures that records are reloaded from the db.
      *
      * @return void
      * @todo what about a more descriptive name? clearIdentityMap?
@@ -1470,8 +1570,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * addRecord
-     * adds a record to the first level cache (identity map)
+     * Adds a record to the first level cache (identity map).
+     *
+     * This method is used internally to cache records, ensuring that only one 
+     * object that represents a sql record exists in all scopes.
      *
      * @param Doctrine_Record $record       record to be added
      * @return boolean                      true if record was not present in the map
@@ -1491,7 +1593,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * removes a record from the identity map
+     * Removes a record from the identity map.
+     *
+     * This method deletes from the cache the given record; can be used to 
+     * force reloading of an object from database.
      *
      * @param Doctrine_Record $record   record to remove from cache
      * @return boolean                  true if the record was found and removed,
@@ -1510,8 +1615,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * first checks if record exists in identityMap, if not
-     * returns a new record
+     * Returns a new record.
+     *
+     * This method checks if a internal record exists in identityMap, if does 
+     * not exist it creates a new one.
      *
      * @return Doctrine_Record
      */
@@ -1570,7 +1677,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Get the classname to return. Most often this is just the options['name']
+     * Get the classname to return. Most often this is just the options['name'].
      *
      * Check the subclasses option and the inheritanceMap for each subclass to see
      * if all the maps in a subclass is met. If this is the case return that
@@ -1648,7 +1755,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * implements Countable interface
+     * Implements Countable interface.
      *
      * @return integer number of records in the table
      */
@@ -1668,7 +1775,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves the enum values for a given field
+     * Retrieves the enum values for a given field.
+     *
      * @param string $fieldName
      * @return array
      */
@@ -1683,8 +1791,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves an enum value
-     * if ATTR_USE_NATIVE_ENUM is set on the connection, index and value are the same thing
+     * Retrieves an enum value.
+     *
+     * This method finds a enum string value. If ATTR_USE_NATIVE_ENUM is set
+     * on the connection, index and value are the same thing.
      *
      * @param string $fieldName 
      * @param integer $index        numeric index of the enum
@@ -1707,7 +1817,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves an enum index
+     * Retrieves an enum index.
      * @see enumValue()
      *
      * @param string $fieldName
@@ -1726,7 +1836,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * validate a given field using table ATTR_VALIDATE rules
+     * Validates a given field using table ATTR_VALIDATE rules.
      * @see Doctrine::ATTR_VALIDATE
      *
      * @param string $fieldName
@@ -1797,7 +1907,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Validate all the unique sets of fields for the given Doctrine_Record instance.
+     * Validates all the unique indexes.
+     *
+     * This methods validates 'unique' sets of fields for the given Doctrine_Record instance.
      * Pushes error to the record error stack if they are generated.
      *
      * @param Doctrine_Record $record
@@ -1832,7 +1944,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves all columns of the table
+     * Retrieves all columns of the table.
+     *
      * @see $_columns;
      * @return array    keys are column names and values are definition
      */
@@ -1842,7 +1955,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * removes a field name from the table schema information
+     * Removes a field name from the table schema information.
      *
      * @param string $fieldName
      * @return boolean      true if the field is found and removed.
@@ -1861,7 +1974,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns an array containing all the column names.
+     * Returns an array containing all the column names.
      *
      * @return array numeric array
      */
@@ -1879,7 +1992,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns an array with all the identifier column names.
+     * Returns an array with all the identifier column names.
      *
      * @return array numeric array
      */
@@ -1889,7 +2002,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets the array of sets of unique fields
+     * Gets the array of unique fields sets.
      * @see $_uniques;
      *
      * @return array numeric array
@@ -1900,7 +2013,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns an array containing all the field names.
+     * Returns an array containing all the field names.
      *
      * @return array numeric array
      */
@@ -1910,7 +2023,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieved the definition of a field
+     * Retrieves the definition of a field.
+     * 
+     * This method retrieves the definition of the column, basing of $fieldName
+     * which can be a column name or a field name (alias).
      *
      * @param string $fieldName
      * @return mixed        array if present, false on failure
@@ -1922,7 +2038,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves the type of a field
+     * Retrieves the type of a field.
      *
      * @param string $fieldName
      * @return mixed        string if field is found, false on failure
@@ -1933,7 +2049,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves the type of a column
+     * Retrieves the type of a column.
      *
      * @param string $columnName
      * @return mixed        string if column is found, false otherwise.
@@ -1944,8 +2060,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * doctrine uses this function internally
-     * users are strongly discouraged to use this function
+     * Doctrine uses this function internally.
+     * Users are strongly discouraged to use this function.
      *
      * @access private
      * @param array $data               internal data
@@ -1957,8 +2073,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * returns internal data, used by Doctrine_Record instances
-     * when retrieving data from database
+     * Returns internal data.
+     *
+     * This method is used by Doctrine_Record instances
+     * when retrieving data from database.
      *
      * @return array
      */
@@ -1968,9 +2086,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * prepareValue
-     * this method performs special data preparation depending on
-     * the type of the given column
+     * Performs special data preparation.
+     *
+     * This method returns a representation of a field data, depending on
+     * the type of the given column.
      *
      * 1. It unserializes array and object typed columns
      * 2. Uncompresses gzip typed columns
@@ -2038,7 +2157,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets associated tree (NestedSet)
+     * Gets associated tree.
+     * This method returns the associated Tree object (if any exists). 
+     * Normally implemented by NestedSet behavior.
      *
      * @return Doctrine_Tree false if not a tree
      */
@@ -2058,7 +2179,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets the subclass of Doctrine_Record that belongs to this table
+     * Gets the subclass of Doctrine_Record that belongs to this table.
      *
      * @return string
      */
@@ -2068,7 +2189,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets the table name in the db
+     * Gets the table name in the db.
      *
      * @return string
      */
@@ -2078,7 +2199,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * sets the table name in the schema definition
+     * sets the table name in the schema definition.
      *
      * @param string $tableName
      * @return void
@@ -2089,7 +2210,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * determines if table acts as tree
+     * Determines if table acts as tree.
      *
      * @return boolean  if tree return true, otherwise returns false
      */
@@ -2099,7 +2220,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
-     * retrieves all templates (behaviors) attached to this table
+     * Retrieves all templates (behaviors) attached to this table.
      *
      * @return array     an array containing all templates
      */
@@ -2109,7 +2230,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * retrieves a particular template by class name.
+     * Retrieves a particular template by class name.
+     *
+     * This method retrieves a behavior/template object attached to the table.
      * For Doctrine_Template_* classes, the base name can be used.
      *
      * @param string $template              name of the behavior
@@ -2129,7 +2252,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Checks if the table has a given template
+     * Checks if the table has a given template.
      *
      * @param string $template  name of template; @see getTemplate()
      * @return boolean
@@ -2140,7 +2263,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Adds template to ths table
+     * Adds a template to this table.
      *
      * @param string $template          template name
      * @param Doctrine_Template $impl   behavior to attach
@@ -2154,7 +2277,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Gets all the generators for this table
+     * Gets all the generators for this table.
      *
      * @return array $generators
      */
@@ -2164,7 +2287,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Gets generator instance for a passed name
+     * Gets generator instance for a passed name.
      *
      * @param string $generator
      * @return Doctrine_Record_Generator $generator
@@ -2179,7 +2302,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Checks if a generator name exists
+     * Checks if a generator name exists.
      *
      * @param string $generator
      * @return void
@@ -2190,7 +2313,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Adds a generate to the table instance
+     * Adds a generate to the table instance.
      *
      * @param Doctrine_Record_Generator $generator
      * @param string $name
@@ -2207,7 +2330,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * binds query parts to given component.
+     * Binds query parts to this component.
      * @see bindQueryPart()
      *
      * @param array $queryParts         an array of pre-bound query parts
@@ -2221,7 +2344,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * binds given value to given query part
+     * Adds default query parts to the selects executed on this table.
+     * 
+     * This method binds given value to given query part.
      * Every query created by this table will have this part set by default.
      *
      * @param string $queryPart
@@ -2236,7 +2361,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * gets the names of all validators being applied on a field.
+     * Gets the names of all validators being applied on a field.
      *
      * @param string $fieldName
      * @return array                names of validators
@@ -2292,7 +2417,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * @retrieves a bound query part.
+     * Retrieves a bound query part.
      * @see bindQueryPart()
      *
      * @param string $queryPart     field interested
@@ -2335,7 +2460,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * generates a string representation of this object
+     * Generates a string representation of this object.
+     *
+     * This method is useful for debugging purposes, or it can be overriden in
+     * Doctrine_Record to provide a value when Record is casted to (string).
      *
      * @return string
      */
@@ -2345,10 +2473,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * Resolves the passed find by field name to the appropriate field name
+     * Resolves the passed find by field name inflecting the parameter. 
+     *
+     * This method resolves the appropriate field name
      * regardless of whether the user passes a column name, field name, or a Doctrine_Inflector::classified()
      * version of their column name. It will be inflected with Doctrine_Inflector::tableize() 
-     * to get the column or field name
+     * to get the column or field name.
      *
      * @param string $name 
      * @return string $fieldName
@@ -2366,9 +2496,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * __call
-     *
      * Adds support for magic finders.
+     * 
+     * This method add support for calling methods not defined in code, such as:
      * findByColumnName, findByRelationAlias
      * findById, findByContactId, etc.
      *
