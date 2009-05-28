@@ -188,6 +188,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         return new Doctrine_Query($conn);
     }
 
+    /**
+     * Clears all the sql parts.
+     */
     protected function clear()
     {
         parent::clear();
@@ -414,13 +417,26 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }*/
 
     /**
-     * getDqlPart
-     * returns a specific DQL query part.
+     * Retrieves a specific DQL query part.
      *
-     * @param string $queryPart     the name of the query part
-     * @return string   the DQL query part
-     * @todo Description: List which query parts exist or point to the method/property
-     *       where they are listed.
+     * @see Doctrine_Query_Abstract::$_dqlParts
+     * <code>
+     * var_dump($q->getDqlPart('where'));
+     * // array(2) { [0] => string(8) 'name = ?' [1] => string(8) 'date > ?' }
+     * </code>
+     * @param string $queryPart     the name of the query part; can be:
+     *     array from, containing strings;
+     *     array select, containg string;
+     *     boolean forUpdate;
+     *     array set;
+     *     array join;
+     *     array where;
+     *     array groupby;
+     *     array having;
+     *     array orderby, containing strings such as 'id ASC';
+     *     array limit, containing numerics;
+     *     array offset, containing numerics;
+     * @return mixed   array if multiple parts are possible for this name;
      */
     public function getDqlPart($queryPart)
     {
@@ -448,11 +464,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * processPendingFields
      * the fields in SELECT clause cannot be parsed until the components
      * in FROM clause are parsed, hence this method is called everytime a
-     * specific component is being parsed.
+     * specific component is being parsed. For instance, the wildcard '*'
+     * is expanded in the list of columns.
      *
      * @throws Doctrine_Query_Exception     if unknown component alias has been given
      * @param string $componentAlias        the alias of the component
-     * @return void
+     * @return string SQL code
      * @todo Description: What is a 'pending field' (and are there non-pending fields, too)?
      *       What is 'processed'? (Meaning: What information is gathered & stored away)
      */
@@ -528,13 +545,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * parseSelectField
+     * Parses a nested field
+     * <code>
+     * $q->parseSelectField('u.Phonenumber.value');
+     * </code>
      *
+     * @param string $field
      * @throws Doctrine_Query_Exception     if unknown component alias has been given
-     * @return void
+     * @return string   SQL fragment
      * @todo Description: Explain what this method does. Is there a relation to parseSelect()?
-     *       (It doesnt seem to get called from there...?). In what circumstances is this method
-     *       used?
+     *       This method is not used from any class or testcase in the Doctrine package.
+     *
      */
     public function parseSelectField($field)
     {
@@ -1577,6 +1598,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
     /**
      * @todo Describe & refactor... too long and nested.
+     * @param string $path          component alias
+     * @param boolean $loadFields   
      */
     public function load($path, $loadFields = true)
     {

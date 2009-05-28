@@ -49,6 +49,9 @@ abstract class Doctrine_Relation implements ArrayAccess
     
     // TRUE => mandatory, everything else is just a default value. this should be refactored
     // since TRUE can bot be used as a default value this way. All values should be default values.
+    /**
+     * @var array $definition   @see __construct()
+     */
     protected $definition = array('alias'       => true,
                                   'foreign'     => true,
                                   'local'       => true,

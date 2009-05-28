@@ -158,7 +158,7 @@ abstract class Doctrine_Query_Abstract
             );
 
     /**
-     * @var array $_dqlParts                an array containing all DQL query parts
+     * @var array $_dqlParts    an array containing all DQL query parts; @see Doctrine_Query::getDqlPart()
      */
     protected $_dqlParts = array(
                             'from'      => array(),
@@ -1882,8 +1882,7 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * clear
-     * resets all the variables
+     * Resets all the sql parts.
      *
      * @return void
      */
@@ -2189,6 +2188,11 @@ abstract class Doctrine_Query_Abstract
     /**
      * Adds a DQL part to the internal parts collection.
      *
+     * This method add the part specified to the array named by $queryPartName.
+     * Most part names support multiple parts addition.
+     *
+     * @see $_dqlParts;
+     * @see Doctrine_Query::getDqlPart()
      * @param string $queryPartName  The name of the query part.
      * @param string $queryPart      The actual query part to add.
      * @param boolean $append        Whether to append $queryPart to already existing

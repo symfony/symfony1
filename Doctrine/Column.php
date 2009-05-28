@@ -34,7 +34,7 @@
 class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Countable
 {
     /**
-     * @var array $definition
+     * @var array $_definition  @see getDefinition()
      */
     protected $_definition = array(
                                 'type'    => null,
@@ -42,7 +42,7 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
                                 );
 
     /**
-     * @var array $definition
+     * @var array $definition  @see getDefinition()
      */
     public function __construct(array $definition = array())
     {
@@ -50,6 +50,12 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     }
 
     /**
+     * Returns the definition of the column.
+     *
+     * Keys can be: 
+     *     string type,
+     *     integer length,
+     *     array values (only for enum fields, maps integer indexes to mixed values),
      * @return array
      */
     public function getDefinition()
