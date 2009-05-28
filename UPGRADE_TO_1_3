@@ -133,6 +133,10 @@ symfony 1.4:
 
   * All symfony 1.0 task aliases.
 
+The symfony CLI does not accept anymore the global `--dry-run` option as it
+was not used by any symfony built-in task. If one of your task relies on this
+option, you can just add it as a local option of your task class.
+
 Autoloading
 -----------
 

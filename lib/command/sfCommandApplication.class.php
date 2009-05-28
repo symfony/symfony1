@@ -300,7 +300,6 @@ abstract class sfCommandApplication
       new sfCommandArgument('task', sfCommandArgument::REQUIRED, 'The task to execute'),
     ));
     $optionSet = new sfCommandOptionSet(array(
-      new sfCommandOption('--dry-run', '-n', sfCommandOption::PARAMETER_NONE, 'Do a dry run without executing actions.'),
       new sfCommandOption('--help',    '-H', sfCommandOption::PARAMETER_NONE, 'Display this help message.'),
       new sfCommandOption('--quiet',   '-q', sfCommandOption::PARAMETER_NONE, 'Do not log messages to standard output.'),
       new sfCommandOption('--trace',   '-t', sfCommandOption::PARAMETER_NONE, 'Turn on invoke/execute tracing, enable full backtrace.'),
@@ -317,12 +316,6 @@ abstract class sfCommandApplication
 
       switch ($opt)
       {
-        case 'dry-run':
-          $this->verbose = true;
-          $this->nowrite = true;
-          $this->dryrun = true;
-          $this->trace = true;
-          break;
         case 'help':
           $this->help();
           exit();
