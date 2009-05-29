@@ -50,7 +50,7 @@ $t->is(get_class($w->getRenderer()), 'MyWidget', '->getRenderer() uses the rende
 
 // ->render()
 $t->diag('->render()');
-$w = new sfWidgetFormChoice(array('choices' => array()));
+$w = new sfWidgetFormChoice(array('choices' => array('foo' => 'bar')));
 $t->like($w->render('foo'), '/<select name="foo" id="foo">/', '->render() renders a select tag by default');
 $w->setOption('multiple', true);
 $t->like($w->render('foo'), '/<select name="foo\[\]" multiple="multiple" id="foo">/', '->render() adds a multiple attribute for multiple selects');
