@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(10, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -46,6 +46,9 @@ $output = <<< EOF
 <li><input name="myname" type="radio" value="1" id="myname_1" checked="checked" />&nbsp;<label for="myname_1">foo</label></li></ul>
 EOF;
 $t->is($w->render('myname', true), fix_linebreaks($output), '->render() considers true to be an integer 1');
+
+$w = new sfWidgetFormSelectRadio(array('choices' => array()));
+$t->is($w->render('myname', array()), '', '->render() returns an empty HTML string if no choices');
 
 // group support
 $t->diag('group support');

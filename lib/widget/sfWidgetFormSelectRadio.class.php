@@ -121,7 +121,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
       $rows[] = $this->renderContentTag('li', $input['input'].$this->getOption('label_separator').$input['label']);
     }
 
-    return $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => $this->getOption('class')));
+    return !$rows ? '' : $this->renderContentTag('ul', implode($this->getOption('separator'), $rows), array('class' => $this->getOption('class')));
   }
 
   public function __clone()

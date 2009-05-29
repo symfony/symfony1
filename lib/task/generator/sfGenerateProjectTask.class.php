@@ -39,6 +39,10 @@ class sfGenerateProjectTask extends sfGeneratorBaseTask
       new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The project name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('template', null, sfCommandOption::PARAMETER_REQUIRED, 'A template to execute after project creation', null),
+    ));
+
     $this->aliases = array('init-project');
     $this->namespace = 'generate';
     $this->name = 'project';
@@ -98,5 +102,18 @@ EOF;
     $publishAssets = new sfPluginPublishAssetsTask($this->dispatcher, $this->formatter);
     $publishAssets->setCommandApplication($this->commandApplication);
     $publishAssets->run(array(), array('--core-only'));
+
+    // run custom generation
+    if ($options['template'])
+    {
+      print $options['template'];
+
+// TODO:
+// $this->runTask('plugin:publish-asset', array(), array('--core-only' => true));
+// $this->runTask('plugin:install', array('sfGuardPlugin'), array());
+// $this->runTask('guard:add-user', array('fabien'), array());
+
+// remplacer l'installateur de plugin de PEAR sur un truc à nous utilisant notre API?
+    }
   }
 }
