@@ -69,7 +69,7 @@ $t = new lime_test(35, new lime_output_color());
 
 if (!extension_loaded('SQLite'))
 {
-  $t->skip('You need SQLite to run these tests', 33);
+  $t->skip('You need SQLite to run these tests', $t->plan);
 
   return;
 }
