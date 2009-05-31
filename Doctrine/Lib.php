@@ -33,11 +33,14 @@
 class Doctrine_Lib
 {
     /**
-     * getRecordStateAsString
+     * Generates a human readable representation of a record's state.
      *
-     * @param integer $state the state of record
+     * This method translates a Doctrine_Record state (integer constant) 
+     * in an english string.
      * @see Doctrine_Record::STATE_* constants
-     * @return string string representation of given state
+     *
+     * @param integer $state    the state of record
+     * @return string           description of given state
      */
     public static function getRecordStateAsString($state)
     {
@@ -61,9 +64,10 @@ class Doctrine_Lib
     }
 
     /**
-     * getRecordAsString
+     * Dumps a record.
      *
-     * returns a string representation of Doctrine_Record object
+     * This method returns an html representation of a given
+     * record, containing keys, state and data.
      *
      * @param Doctrine_Record $record
      * @return string
@@ -83,11 +87,13 @@ class Doctrine_Lib
     }
 
     /**
-     * getConnectionStateAsString
+     * Generates a human readable representation of a connection's state.
      *
-     * returns a given connection state as string
-     *
-     * @param integer $state State of the connection as a string
+     * This method translates a Doctrine_Connection state (integer constant)
+     * in a english description.
+     * @see Doctrine_Transaction::STATE_* constants
+     * @param integer $state    state of the connection as a string
+     * @return string
      */
     public static function getConnectionStateAsString($state)
     {
@@ -105,9 +111,10 @@ class Doctrine_Lib
     }
 
     /**
-     * getConnectionAsString
+     * Generates a string representation of a connection.
      *
-     * returns a string representation of Doctrine_Connection object
+     * This method returns an html dump of a connection, containing state, open
+     * transactions and loaded tables.
      *
      * @param Doctrine_Connection $connection
      * @return string
@@ -126,10 +133,10 @@ class Doctrine_Lib
     }
 
     /**
-     * getTableAsString
+     * Generates a string representation of a table.
      *
-     * returns a string representation of Doctrine_Table object
-     *
+     * This method returns an html dump of a table, containing component name
+     * and table physical name.
      * @param Doctrine_Table $table
      * @return string
      */
@@ -144,11 +151,14 @@ class Doctrine_Lib
     }
 
     /**
-     * formatSql 
+     * Generates a colored sql query. 
+     *
+     * This methods parses a plain text query and generates the html needed
+     * for visual formatting.
      * 
      * @todo: What about creating a config varialbe for the color?
-     * @param mixed $sql 
-     * @return string the formated sql
+     * @param string $sql   plain text query
+     * @return string       the formatted sql code
      */
     public static function formatSql($sql)
     {
@@ -173,9 +183,10 @@ class Doctrine_Lib
     }
 
     /**
-     * getCollectionAsString
+     * Generates a string representation of a collection.
      *
-     * returns a string representation of Doctrine_Collection object
+     * This method returns an html dump of a collection of records, containing 
+     * all data.
      *
      * @param Doctrine_Collection $collection
      * @return string
@@ -258,12 +269,15 @@ class Doctrine_Lib
     }
 
     /**
-     * makeDirectories
-     *
-     * Makes the directories for a path recursively
+     * Makes the directories for a path recursively.
+     * 
+     * This method creates a given path issuing mkdir commands for all folders
+     * that do not exist yet. Equivalent to 'mkdir -p'.
      *
      * @param string $path
-     * @return void
+     * @param integer $mode     an integer (octal) chmod parameter for the
+     *                          created directories
+     * @return boolean  true if succeeded
      */
     public static function makeDirectories($path, $mode = 0777)
     {
@@ -279,10 +293,13 @@ class Doctrine_Lib
     }
 
     /**
-     * removeDirectories
+     * Removes a non empty directory.
+     *
+     * This method recursively removes a directory and all its descendants.
+     * Equivalent to 'rm -rf'.
      *
      * @param string $folderPath
-     * @return void
+     * @return boolean  success of the operation
      */
     public static function removeDirectories($folderPath)
     {
@@ -308,6 +325,16 @@ class Doctrine_Lib
         }
     }
 
+    /**
+     * Copy all directory content in another one.
+     * 
+     * This method recursively copies all $source files and subdirs in $dest.
+     * If $source is a file, only it will be copied in $dest.
+     *
+     * @param string $source    a directory path
+     * @param string $dest      a directory path
+     * @return
+     */
     public static function copyDirectory($source, $dest)
     {
         // Simple copy for a file
@@ -341,9 +368,11 @@ class Doctrine_Lib
     }
 
     /**
-     * isValidClassName
-     *
-     * checks for valid class name (uses camel case and underscores)
+     * Checks for a valid class name for Doctrine coding standards.
+     * 
+     * This methods tests if $className is a valid class name for php syntax 
+     * and for Doctrine coding standards. $className must use camel case naming
+     * and underscores for directory separation.
      *
      * @param string $classname
      * @return boolean
