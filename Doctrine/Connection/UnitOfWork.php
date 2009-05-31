@@ -521,10 +521,15 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     }
 
     /**
-     * inserts a record into database
+     * Inserts a record into database.
      *
-     * @param Doctrine_Record $record   record to be inserted
-     * @return boolean
+     * This method inserts a transient record in the database, and adds it
+     * to the identity map of its correspondent table. It proxies to @see 
+     * processSingleInsert(), trigger insert hooks and validation of data
+     * if required.
+     *
+     * @param Doctrine_Record $record   
+     * @return boolean                  false if record is not valid
      */
     public function insert(Doctrine_Record $record)
     {
@@ -553,7 +558,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     }
 
     /**
-     * @todo DESCRIBE WHAT THIS METHOD DOES, PLEASE!
+     * Inserts a transient record in its table.
+     *
+     * This method inserts the data of a single record in its assigned table, 
+     * assigning to it the autoincrement primary key (if any is defined).
+     * 
+     * @param Doctrine_Record $record
+     * @return void
      */
     public function processSingleInsert(Doctrine_Record $record)
     {

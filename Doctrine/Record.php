@@ -1685,10 +1685,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * getPrepared
+     * Retrieves data prepared for a sql transaction.
      *
-     * returns an array of modified fields and values with data preparation
-     * adds column aggregation inheritance and converts Records into primary key values
+     * Returns an array of modified fields and values with data preparation;
+     * adds column aggregation inheritance and converts Records into primary 
+     * key values.
      *
      * @param array $array
      * @return array
