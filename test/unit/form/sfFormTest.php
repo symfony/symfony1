@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(143, new lime_output_color());
+$t = new lime_test(144, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -257,6 +257,14 @@ $f->setWidgetSchema(new sfWidgetFormSchema(array(
 )));
 $f->useFields(array('email', 'first_name'), false);
 $t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'email'), '->useFields() does not reorder the fields if the second argument is false');
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'id'         => new sfWidgetFormInputHidden(),
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+  'email'      => new sfWidgetFormInput(),
+)));
+$f->useFields(array('first_name', 'last_name'));
+$t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'last_name', 'id'), '->useFields() does not remove hidden fields');
 
 // ->bind() ->isValid() ->hasErrors() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');

@@ -73,7 +73,7 @@ The new `sfForm::useFields()` method removes all fields from a form except the
 ones given as an argument. It is sometimes easier to explicitly give the
 fields you want to keep in a form, instead of unsetting all unneeded fields.
 For instance, when adding new fields to a base form, they won't automagically
-appears in your form until explicitly added (think of a model form where you
+appear in your form until explicitly added (think of a model form where you
 add a new column to the related table).
 
     [php]
@@ -88,6 +88,8 @@ add a new column to the related table).
 By default, the array of fields is also used to change the fields order. You
 can pass `false` as the second argument to `useFields()` to disable the
 automatic reordering.
+
+`useFields()` will not remove hidden fields.
 
 ### `sfForm(Doctrine|Propel)::doUpdateObject()`
 

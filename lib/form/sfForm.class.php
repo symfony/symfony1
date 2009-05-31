@@ -1012,24 +1012,32 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
-   * Removes all fields from the form except the ones given as an argument.
+   * Removes all visible fields from the form except the ones given as an argument.
+   *
+   * Hidden fields are not affected.
    *
    * @param array   $fields  An array of field names
    * @param Boolean $ordered Whether to use the array of field names to reorder the fields
    */
   public function useFields(array $fields = array(), $ordered = true)
   {
-    foreach ($this->widgetSchema->getPositions() as $field)
+    $hidden = array();
+
+    foreach ($this as $name => $field)
     {
-      if (!in_array($field, $fields))
+      if ($field->isHidden())
       {
-        $this->offsetUnset($field);
+        $hidden[] = $name;
+      }
+      else if (!in_array($name, $fields))
+      {
+        unset($this[$name]);
       }
     }
 
     if ($ordered)
     {
-      $this->widgetSchema->setPositions($fields);
+      $this->widgetSchema->setPositions(array_merge($fields, $hidden));
     }
   }
 
