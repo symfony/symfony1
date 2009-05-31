@@ -897,9 +897,15 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * DESCRIBE WHAT THIS METHOD DOES, PLEASE!
-     * @param $args
-     * @param $type
+     * Adds a relation to the table.
+     *
+     * This method defines a relation on this table, that will be present on
+     * every record belonging to this component.
+     *
+     * @param array $args       first value is a string, name of related component;
+     *                          second value is array, options for the relation.
+     *                          @see Doctrine_Relation::_$definition
+     * @param integer $type     Doctrine_Relation::ONE or Doctrine_Relation::MANY
      * @return void
      * @todo Name proposal: addRelation
      */

@@ -1436,11 +1436,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * DESCRIBE WHAT THIS METHOD DOES, PLEASE!
-     * sets a related component in the object graph, populating the foreign keys accordingly.
+     * Places a related component in the object graph.
      *
-     * @param string $name                                  related component alias
-     * @param Doctrine_Record|Doctrine_Collection $value    object to link as a related component
+     * This method inserts a related component instance in this record 
+     * relations, populating the foreign keys accordingly.
+     *
+     * @param string $name                                  related component alias in the relation
+     * @param Doctrine_Record|Doctrine_Collection $value    object to be linked as a related component
      * @todo Refactor. What about composite keys?
      */
     public function coreSetRelated($name, $value)
