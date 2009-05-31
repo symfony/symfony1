@@ -120,25 +120,22 @@ class Doctrine_Query_Tokenizer
     }
 
     /**
-     * bracketExplode
+     * Explodes a sql expression respecting bracket placement.
      *
-     * example:
-     *
-     * parameters:
-     *      $str = (age < 20 AND age > 18) AND email LIKE 'John@example.com'
-     *      $d = ' AND '
-     *      $e1 = '('
-     *      $e2 = ')'
-     *
-     * would return an array:
-     *      array("(age < 20 AND age > 18)",
-     *            "email LIKE 'John@example.com'")
+     * This method transform a sql expression in an array of simple clauses,
+     * while observing the parentheses precedence.
+     * <code>
+     * $str = (age < 20 AND age > 18) AND email LIKE 'John@example.com'
+     * $clauses = $tokenizer->bracketExplode($str, ' AND ', '(', ')');
+     * // array("(age < 20 AND age > 18)",
+     * //       "email LIKE 'John@example.com'")
+     * </code>
      *
      * @param string $str
      * @param string $d         the delimeter which explodes the string
      * @param string $e1        the first bracket, usually '('
      * @param string $e2        the second bracket, usually ')'
-     *
+     * @return array
      */
     public function bracketExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {

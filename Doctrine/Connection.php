@@ -105,7 +105,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @var array $modules                      an array containing all modules
      *              transaction                 Doctrine_Transaction driver, handles savepoint and transaction isolation abstraction
      *
-     *              expression                  Doctrine_Expression driver, handles expression abstraction
+     *              expression                  Doctrine_Expression_Driver, handles expression abstraction
      *
      *              dataDict                    Doctrine_DataDict driver, handles datatype abstraction
      *
@@ -122,7 +122,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @see Doctrine_Connection::__get()
      * @see Doctrine_DataDict
-     * @see Doctrine_Expression
+     * @see Doctrine_Expression_Driver
      * @see Doctrine_Export
      * @see Doctrine_Transaction
      * @see Doctrine_Sequence
@@ -394,7 +394,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * lazy loads given module and returns it
      *
      * @see Doctrine_DataDict
-     * @see Doctrine_Expression
+     * @see Doctrine_Expression_Driver
      * @see Doctrine_Export
      * @see Doctrine_Transaction
      * @see Doctrine_Connection::$modules       all availible modules
@@ -625,11 +625,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * Updates table row(s) with specified data
+     * Updates table row(s) with specified data.
      *
      * @throws Doctrine_Connection_Exception    if something went wrong at the database level
-     * @param string $table     The table to insert data into
-     * @param array $values     An associateve array containing column-value pairs.
+     * @param Doctrine_Table $table     The table to insert data into
+     * @param array $values             An associative array containing column-value pairs.
+     *                                  Values can be strings or Doctrine_Expression instances.
      * @return mixed            boolean false if empty value array was given,
      *                          otherwise returns the number of affected rows
      */
@@ -662,8 +663,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     /**
      * Inserts a table row with specified data.
      *
-     * @param string $table     The table to insert data into.
-     * @param array $values     An associateve array containing column-value pairs.
+     * @param Doctrine_Table $table     The table to insert data into.
+     * @param array $values             An associative array containing column-value pairs.
+     *                                  Values can be strings or Doctrine_Expression instances.
      * @return mixed            boolean false if empty value array was given,
      *                          otherwise returns the number of affected rows
      */
