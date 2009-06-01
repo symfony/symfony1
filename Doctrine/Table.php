@@ -552,7 +552,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Checks whether a field is in the primary key.
      * 
-     * Checks if a field is part of the table identifier, which defines
+     * Checks if $fieldName is part of the table identifier, which defines
      * the one-column or multi-column primary key.
      *
      * @param string $fieldName  The field name
