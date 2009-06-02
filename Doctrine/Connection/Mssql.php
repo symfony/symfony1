@@ -209,8 +209,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                         $query .= ', '; 
                     } 
 
-                    $query .= $this->quoteIdentifier('outer_tbl') . '.' . $aliases[$i] . ' '; 
-                    $query .= (stripos($sorts[$i], 'asc') !== false) ? 'DESC' : 'ASC';
+                    $query .= $this->quoteIdentifier('outer_tbl') . '.' . $aliases[$i] . ' ' . $sorts[$i];
                 }
             }
         }
