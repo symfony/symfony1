@@ -2056,6 +2056,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     {
         $q = $this->getCountQuery();
         $params = $this->getCountQueryParams($params);
+        $params = $this->_conn->convertBooleans($params);
         $results = $this->getConnection()->fetchAll($q, $params);
 
         if (count($results) > 1) {
