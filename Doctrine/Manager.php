@@ -80,11 +80,13 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * setDefaultAttributes
-     * sets default attributes
+     * Sets default attributes values.
      *
-     * @todo I do not understand the flow here. Explain or refactor?
-     * @return boolean
+     * This method sets default values for all null attributes of this 
+     * instance. It is idempotent and can only be called one time. Subsequent 
+     * calls does not alter the attribute values.
+     *
+     * @return boolean      true if inizialization was executed
      */
     public function setDefaultAttributes()
     {

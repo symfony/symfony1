@@ -1865,7 +1865,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      *
      * @param string $name
      * @param string $componentAlias
-     * @todo DESCRIBE ME!
+     * @return Doctrine_Table
+     * @todo DESCRIBE ME! 
+     * @todo this method is called only in Doctrine_Query class. Shouldn't be private or protected?
      */
     public function loadRoot($name, $componentAlias)
     {
@@ -1900,6 +1902,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
     /**
      * @todo DESCRIBE ME!
+     * @param string $name              component class name
+     * @param string $componentAlias    alias of the component in the dql
+     * @return string                   query part
      */
     public function buildInheritanceJoinSql($name, $componentAlias)
     {
@@ -1943,9 +1948,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * Get count sql query for this Doctrine_Query instance
-     * Used in Doctrine_Query::count() for returning an integer for the number of records which will
-     * be returned when executed.
+     * Get count sql query for this Doctrine_Query instance.
+     *
+     * This method is used in Doctrine_Query::count() for returning an integer
+     * for the number of records which will be returned when executed.
      *
      * @return string $q
      */
@@ -2027,8 +2033,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * count
-     * fetches the count of the query
+     * Fetches the count of the query.
      *
      * This method executes the main query without all the
      * selected fields, ORDER BY part, LIMIT part and OFFSET part.
@@ -2068,10 +2073,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * query
-     * query the database with DQL (Doctrine Query Language)
+     * Queries the database with DQL (Doctrine Query Language).
      *
-     * @param string $query      DQL query
+     * This methods parses a Dql query and builds the query parts.
+     *
+     * @param string $query      Dql query
      * @param array $params      prepared statement parameters
      * @param int $hydrationMode Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @see Doctrine::FETCH_* constants
@@ -2100,7 +2106,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * __clone
+     * Magic method called after cloning process.
      *
      * @return void
      */
@@ -2136,8 +2142,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * Frees the resources used by the query object. It especially breaks a
      * cyclic reference between the query object and it's parsers. This enables
      * PHP's current GC to reclaim the memory.
-     * This method can therefore be used to reduce memory usage when creating a lot
-     * of query objects during a request.
+     * This method can therefore be used to reduce memory usage when creating 
+     * a lot of query objects during a request.
      *
      * @return Doctrine_Query   this object
      */
@@ -2149,10 +2155,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * serialize
-     * this method is automatically called when this Doctrine_Hydrate is serialized
-     *
-     * @return array    an array of serialized properties
+     * Currently query serialization is not implemented.
      */
     public function serialize()
     {
@@ -2160,11 +2163,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * unseralize
-     * this method is automatically called everytime a Doctrine_Hydrate object is unserialized
-     *
-     * @param string $serialized                Doctrine_Record as serialized string
-     * @return void
+     * Currently query serialization is not implemented.
      */
     public function unserialize($serialized)
     {
