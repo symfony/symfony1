@@ -193,8 +193,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     protected function clear()
     {
-        $this->_preQuery = false;
+        $this->_preQueried = false;
         $this->_pendingJoinConditions = array();
+        $this->_state = self::STATE_DIRTY;
     }
 
     /**
