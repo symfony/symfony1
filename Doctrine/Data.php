@@ -270,6 +270,7 @@ class Doctrine_Data
 
         foreach ($connections as $connection => $models) {
             $models = Doctrine_Manager::getInstance()->getConnection($connection)->unitOfWork->buildFlushTree($models);
+            $models = array_reverse($models);
             foreach ($models as $model) {
                 Doctrine::getTable($model)->createQuery()->delete()->execute();
             }
