@@ -103,7 +103,7 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
                 $query->set($field, '?', date('Y-m-d H:i:s', time()));
                 $query->addWhere($field . ' IS NULL');
             } else if ($this->_options['type'] == 'boolean') {
-                $query->set($field, '?', array('true'));
+                $query->set($field, $query->getConnection()->convertBooleans(true));
                 $query->addWhere(
                     $field . ' = ' . $query->getConnection()->convertBooleans(false)
                 );
