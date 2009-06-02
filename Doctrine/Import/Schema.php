@@ -234,6 +234,7 @@ class Doctrine_Import_Schema
      */
     public function importSchema($schema, $format = 'yml', $directory = null, $models = array())
     {
+        $schema = (array) $schema;
         $builder = new Doctrine_Import_Builder();
         $builder->setTargetPath($directory);
         $builder->setOptions($this->getOptions());
