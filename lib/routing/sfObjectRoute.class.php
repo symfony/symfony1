@@ -190,6 +190,11 @@ class sfObjectRoute extends sfRequestRoute
 
   protected function convertObjectToArray($object)
   {
+    if (!$this->compiled)
+    {
+      $this->compile();
+    }
+
     if (is_array($object))
     {
       if (!isset($object['sf_subject']))
