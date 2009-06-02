@@ -140,11 +140,11 @@ abstract class Doctrine_Migration_Base
      *
      * @param string $upDown            Whether to add the up(create) or down(drop) create change.
      * @param string $tableName         Name of the table.
-     * @param string $constraintname    Name of the constraint.
+     * @param string $constraintName    Name of the constraint.
      * @param array  $definition        Array for the constraint definition.
      * @return void
      */
-    public function constraint($upDown, $tableName, $constraintname, array $definition)
+    public function constraint($upDown, $tableName, $constraintName, array $definition)
     {
         $options = get_defined_vars();
         
