@@ -100,7 +100,7 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
             }
             if ($limit > 0) {
                 $max = $offset + $limit;
-                $column = $column === null ? '*' : $column;
+                $column = $column === null ? '*' : $this->quoteIdentifier($column);
                 if ($offset > 0) {
                     $min = $offset + 1;
                     $query = 'SELECT b.'.$column.' FROM ('.
