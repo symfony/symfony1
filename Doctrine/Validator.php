@@ -94,6 +94,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
         } else if ($type == 'array' || $type == 'object') {
             $length = strlen(serialize($value));
         } else if ($type == 'decimal' || $type == 'float') {
+            $value = abs($value);
             $e = explode('.', $value);
             $length = strlen($e[0]);
             if (isset($e[1])) {
