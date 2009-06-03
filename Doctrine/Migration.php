@@ -288,10 +288,11 @@ class Doctrine_Migration
      */
     public function migrate($to = null, $dryRun = false)
     {
+        $this->clearErrors();
         $this->_transaction('beginTransaction');
 
         try {
-            // If nothing specified then lets assume we are migrating from 
+            // If nothing specified then lets assume we are migrating from
             // the current version to the latest version
             if ($to === null) {
                 $to = $this->getLatestVersion();
@@ -328,10 +329,10 @@ class Doctrine_Migration
     }
 
     /**
-     * Run the migration process but rollback at the very end. Returns true or 
+     * Run the migration process but rollback at the very end. Returns true or
      * false for whether or not the migration can be ran
      *
-     * @param  string  $to 
+     * @param  string  $to
      * @return boolean $success
      */
     public function migrateDryRun($to = null)
@@ -357,6 +358,16 @@ class Doctrine_Migration
     public function getErrors()
     {
         return $this->_errors;
+    }
+
+    /**
+     * Clears the error exceptions
+     *
+     * @return void
+     */
+    public function clearErrors()
+    {
+        $this->_errors = array();
     }
 
     /**
@@ -422,7 +433,7 @@ class Doctrine_Migration
     /**
      * Do the actual migration process
      *
-     * @param  integer $to 
+     * @param  integer $to
      * @return integer $to
      * @throws Doctrine_Exception
      */
@@ -520,7 +531,7 @@ class Doctrine_Migration
     /**
      * Wrapper for performing transaction functions on all available connections
      *
-     * @param string $funcName 
+     * @param string $funcName
      * @return void
      */
     protected function _transaction($funcName)
