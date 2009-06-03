@@ -192,6 +192,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         }
 
         $similarSlugResult = $query->execute();
+        $query->free();
 
         // Change indexby back
         $record->getTable()->bindQueryPart('indexBy', $originalIndexBy);
