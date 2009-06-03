@@ -208,6 +208,14 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             $i++;
         }
 
+        // If slug is longer then the column length then we need to trim it
+        // and try to generate a unique slug again
+        $length = $record->getTable()->getFieldLength($this->_options['name']);
+        if (strlen($slug) > $length) {
+            $slug = substr($slug, 0, $length - (strlen($i) + 1));
+            $slug = $this->getUniqueSlug($record, $slug);
+        }
+
         return  $slug;
     }
 }
