@@ -1093,10 +1093,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $string = $this->getInheritanceCondition($componentAlias);
 
                 if ($string) {
-                    $q .= ' ' . $part . ' AND ' . $string;
-                } else {
-                    $q .= ' ' . $part;
+                    $part = $part . ' AND ' . $string;
                 }
+                $q .= ' ' . $part;
             }
 
             $this->_sqlParts['from'][$k] = $part;
