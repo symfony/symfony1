@@ -1,1 +1,1 @@
-a:3:{s:10:"Currencies";a:1:{s:3:"LUF";a:2:{i:0;s:1:"F";i:1;s:21:"Luxemburgischer Franc";}}s:7:"Version";s:4:"1.51";s:8:"calendar";a:1:{s:9:"gregorian";a:1:{s:16:"DateTimeElements";a:2:{i:0;i:2;i:1;i:4;}}}}
+a:2:{s:10:"Currencies";a:1:{s:3:"LUF";a:2:{i:0;s:1:"F";i:1;s:21:"Luxemburgischer Franc";}}s:7:"Version";s:4:"1.52";}

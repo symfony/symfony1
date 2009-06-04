@@ -1,1 +1,1 @@
-a:3:{s:9:"Countries";a:1:{s:2:"UM";s:16:"USA:s yttre öar";}s:7:"Version";s:4:"1.56";s:8:"calendar";a:1:{s:9:"gregorian";a:2:{s:16:"DateTimeElements";a:2:{i:0;i:2;i:1;i:4;}s:6:"fields";a:1:{s:9:"dayperiod";a:1:{s:2:"dn";s:10:"dagsperiod";}}}}}
+a:4:{s:9:"Countries";a:1:{s:2:"UM";s:16:"USA:s yttre öar";}s:8:"Variants";a:1:{i:1996;s:18:"1996 års stavning";}s:7:"Version";s:4:"1.58";s:8:"calendar";a:1:{s:9:"gregorian";a:1:{s:6:"fields";a:1:{s:9:"dayperiod";a:1:{s:2:"dn";s:10:"dagsperiod";}}}}}
