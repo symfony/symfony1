@@ -225,3 +225,11 @@ Tasks
 
 The `sfFormatter::format()` third argument has been removed.
 
+Escaping
+--------
+
+The `esc_js_no_entities()`, refered to by `ESC_JS_NO_ENTITIES` was updated to
+correctly handle non-ANSI characters. Before this change only characters with
+ANSI value `37` to `177` were not escaped. Now it will only escape backslashes
+´\´, quotes ´'´ & ´"´ and linebreaks ´\n´ & ´\r´.
+
