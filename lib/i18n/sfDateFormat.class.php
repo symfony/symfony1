@@ -437,8 +437,9 @@ class sfDateFormat
   /**
    * Gets the year.
    * "yy" will return the last two digits of year.
-   * "yyyy" will return the full integer year.
+   * "y" and "yyyy" will return the full integer year.
    *
+   * @see http://www.unicode.org/reports/tr35/tr35-12.html#Date_Field_Symbol_Table
    * @param array  $date    getdate format.
    * @param string $pattern a pattern.
    * @return string year
@@ -450,10 +451,11 @@ class sfDateFormat
     {
       case 'yy':
         return substr($year, 2);
+      case 'y':
       case 'yyyy':
         return $year;
       default: 
-        throw new sfException('The pattern for year is either "yy" or "yyyy".');
+        throw new sfException('The pattern for year is either "y", "yy" or "yyyy".');
     }
   }
 
