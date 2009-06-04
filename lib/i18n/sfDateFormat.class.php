@@ -437,9 +437,8 @@ class sfDateFormat
   /**
    * Gets the year.
    * "yy" will return the last two digits of year.
-   * "y" and "yyyy" will return the full integer year.
+   * "y", "yyy" and "yyyy" will return the full integer year.
    *
-   * @see http://www.unicode.org/reports/tr35/tr35-12.html#Date_Field_Symbol_Table
    * @param array  $date    getdate format.
    * @param string $pattern a pattern.
    * @return string year
@@ -452,19 +451,21 @@ class sfDateFormat
       case 'yy':
         return substr($year, 2);
       case 'y':
+      case 'yyy':
       case 'yyyy':
         return $year;
       default: 
-        throw new sfException('The pattern for year is either "y", "yy" or "yyyy".');
+        throw new sfException('The pattern for year is either "y", "yy", "yyyy" or "yyyy".');
     }
   }
 
   /**
    * Gets the month.
    * "M" will return integer 1 through 12
-   * "MM" will return the narrow month name, e.g. "J"
+   * "MM" will return integer 1 through 12 padded with 0 to two characters width
    * "MMM" will return the abrreviated month name, e.g. "Jan"
    * "MMMM" will return the month name, e.g. "January"
+   * "MMMMM" will return the narrow month name, e.g. "J"
    *
    * @param array   $date     getdate format.
    * @param string  $pattern  a pattern.
@@ -482,11 +483,12 @@ class sfDateFormat
         return str_pad($month, 2, '0', STR_PAD_LEFT);
       case 'MMM':
         return $this->formatInfo->AbbreviatedMonthNames[$month - 1];
-        break;
       case 'MMMM':
         return $this->formatInfo->MonthNames[$month - 1];
+      case 'MMM':
+        return $this->formatInfo->NarrowMonthNames[$month - 1];
       default:
-        throw new sfException('The pattern for month is "M", "MM", "MMM", or "MMMM".');
+        throw new sfException('The pattern for month is "M", "MM", "MMM", "MMMM", "MMMMM".');
     }
   }
 
@@ -691,12 +693,19 @@ class sfDateFormat
    */
   protected function getTimeZone($date, $pattern = 'z')
   {
-    if ($pattern != 'z')
+    //mapping to PHP pattern symbols
+    switch ($pattern)
     {
-      throw new sfException('The pattern for time zone is "z".');
+      case 'z':
+        $pattern = 'T';
+        break;
+      case 'Z':
+        $pattern = 'O';
+      default:
+        throw new sfException('The pattern for time zone is "z" or "Z".');
     }
 
-    return @date('T', @mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'], $date['year']));
+    return @date($pattern, @mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'], $date['year']));
   }
 
   /**
