@@ -290,3 +290,20 @@ platform).
 
 As of symfony 1.3, you can force the use of colors for the output by passing
 the global `--color` option.
+
+I18N
+----
+
+### Data update
+
+The data used for all I18N operations was updated from the `ICU project`.
+Symfony comes now with about 330 locale files, which is an increase of about 70
+compared to Symfony 1.2. Please note that the updated data might be slightly
+different from what has been in there before, so for example test cases checking
+for the tenth item in a language list might fail.
+
+### Sorting according to user locale
+
+All sorting on this locale dependend data is now also performed locale dependend.
+`sfCultureInfo->sortArray()` can be used for that.
+

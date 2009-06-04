@@ -334,7 +334,7 @@ function select_currency_tag($name, $selected = null, $options = array())
     }
   }
 
-  asort($currencies);
+  $c->sortArray($currencies);
 
   $option_tags = options_for_select($currencies, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);

@@ -736,7 +736,7 @@ class sfCultureInfo
       $allCountries = array_intersect_key($allCountries, array_flip($countries));
     }
 
-    asort($allCountries);
+    $this->sortArray($allCountries);
 
     return $allCountries;
   }
@@ -764,7 +764,7 @@ class sfCultureInfo
       $allCurrencies = array_intersect_key($allCurrencies, array_flip($currencies));
     }
 
-    asort($allCurrencies);
+    $this->sortArray($allCurrencies);
     if (!$full)
     {
       foreach ($allCurrencies as $key => $value)
@@ -798,7 +798,7 @@ class sfCultureInfo
       $allLanguages = array_intersect_key($allLanguages, array_flip($languages));
     }
 
-    asort($allLanguages);
+    $this->sortArray($allLanguages);
 
     return $allLanguages;
   }
@@ -841,7 +841,7 @@ class sfCultureInfo
    */
   public function sortArray(&$array)
   {
-    $oldLocale=setlocale(LC_COLLATE, "0");
+    $oldLocale = setlocale(LC_COLLATE, 0);
     setlocale(LC_COLLATE, $this->getName());
     asort($array, SORT_LOCALE_STRING);
     setlocale(LC_COLLATE, $oldLocale);
