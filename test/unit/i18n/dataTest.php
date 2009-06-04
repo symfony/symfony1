@@ -48,13 +48,13 @@ $t->diag('calendar');
 $c = $en['calendar']['gregorian'];
 
 $t->diag('calendar/DateTimePatterns');
-$t->is($c['DateTimePatterns'][0], 'h:mm:ss a v', '"calendar" contains date time patterns');
+$t->is($c['DateTimePatterns'][0], 'h:mm:ss a zzzz', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][1], 'h:mm:ss a z', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][2], 'h:mm:ss a', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][3], 'h:mm a', '"calendar" contains date time patterns');
-$t->is($c['DateTimePatterns'][4], 'EEEE, MMMM d, yyyy', '"calendar" contains date time patterns');
-$t->is($c['DateTimePatterns'][5], 'MMMM d, yyyy', '"calendar" contains date time patterns');
-$t->is($c['DateTimePatterns'][6], 'MMM d, yyyy', '"calendar" contains date time patterns');
+$t->is($c['DateTimePatterns'][4], 'EEEE, MMMM d, y', '"calendar" contains date time patterns');
+$t->is($c['DateTimePatterns'][5], 'MMMM d, y', '"calendar" contains date time patterns');
+$t->is($c['DateTimePatterns'][6], 'MMM d, y', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][7], 'M/d/yy', '"calendar" contains date time patterns');
 $t->is($c['DateTimePatterns'][8], '{1} {0}', '"calendar" contains date time patterns');
 
