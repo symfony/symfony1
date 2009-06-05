@@ -92,7 +92,7 @@ EOF;
       $loadData->setCommandApplication($this->commandApplication);
 
       $loadDataOptions = array('--env='.$options['env'], '--connection='.$options['connection']);
-      if (isset($this->options['application']))
+      if (isset($options['application']))
       {
         $loadDataOptions[] = '--application='.$options['application'];
       }
