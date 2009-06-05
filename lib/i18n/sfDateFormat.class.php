@@ -455,7 +455,7 @@ class sfDateFormat
       case 'yyyy':
         return $year;
       default: 
-        throw new sfException('The pattern for year is either "y", "yy", "yyyy" or "yyyy".');
+        throw new sfException('The pattern for year is either "y", "yy", "yyy" or "yyyy".');
     }
   }
 
@@ -485,7 +485,7 @@ class sfDateFormat
         return $this->formatInfo->AbbreviatedMonthNames[$month - 1];
       case 'MMMM':
         return $this->formatInfo->MonthNames[$month - 1];
-      case 'MMM':
+      case 'MMMMM':
         return $this->formatInfo->NarrowMonthNames[$month - 1];
       default:
         throw new sfException('The pattern for month is "M", "MM", "MMM", "MMMM", "MMMMM".');
