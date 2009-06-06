@@ -89,4 +89,16 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
     {
         return 'NEWID()';
     }
+
+    /**
+     * Returns the length of a text field
+     *
+     * @param string $column
+     *
+     * @return string
+     */
+    public function length($column)
+    {
+        return 'LEN (' . $column . ')';
+    }
 }
