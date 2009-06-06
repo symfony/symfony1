@@ -1638,28 +1638,40 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         }
 
         $generated = implode('_', $parts);
+        
         // If the final length is greater than 64 we need to create an abbreviated fk name
         if (strlen(sprintf($format, $generated)) > $maxLength) {
             $generated = '';
+
             foreach ($parts as $part) {
                 $generated .= $part[0];
             }
+
             $name = $generated;
         } else {
             $name = $generated;
         }
 
         $count = 1;
+
         while (in_array($name, $this->_usedNames[$type])) {
             $e = explode('_', $name);
             $end = end($e);
-            if (is_numeric($end))
-            {
+
+            if (is_numeric($end)) {
               unset($e[count($e) - 1]);
               $fkName = implode('_', $e);
             }
-            $name = $name . '_' . $count++;
+
+            $name = $name . '_' . $count;
+
+            if (strlen($name) > $maxLength) {
+                $name = substr($name, 0, $maxLength - strlen($count)) . '_' . $count;
+            }
+
+            $count++;
         }
+
         $this->_usedNames[$type][$key] = $name;
 
         return $name;
