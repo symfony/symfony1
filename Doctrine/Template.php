@@ -138,15 +138,16 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
      * getOption
      * returns the value of given option
      *
-     * @param string $name  the name of the option
-     * @return mixed        the value of given option
+     * @param string $name   the name of the option
+     * @param mixed $default default value if option is not found
+     * @return mixed         the value of given option
      */
-    public function getOption($name)
+    public function getOption($name, $default = null)
     {
         if (isset($this->_options[$name])) {
             return $this->_options[$name];
         }
-        return null;
+        return $default;
     }
 
     /**
