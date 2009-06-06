@@ -244,26 +244,23 @@ class Doctrine_Query_Tokenizer
      */
     public function sqlExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {
-        if ($d == ' ') {
-            $d = array(' ', '\s');
-        }
-        if (is_array($d)) {
-            $d = array_map('preg_quote', $d);
+        if (is_array($d) || $d == ' ') {
+            $d = array_map('preg_quote', (array) $d);
 
             if (in_array(' ', $d)) {
                 $d[] = '\s';
             }
 
             $split = '#(' . implode('|', $d) . ')#';
-
             $str = preg_split($split, $str);
             $d = stripslashes($d[0]);
         } else {
             $str = explode($d, $str);
         }
 
-        $i = 0;
+        $str = array_filter($str, create_function('$v', 'return ! empty($v);'));
         $term = array();
+        $i = 0;
 
         foreach ($str as $key => $val) {
             if (empty($term[$i])) {
