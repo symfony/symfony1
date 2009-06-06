@@ -146,4 +146,15 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
         $column = $this->getIdentifier($column);
         return 'DAY(' .  $column . ')';
     }
+
+    /**
+     * Returns soundex from dbms
+     *
+     * @param string $column
+     * @return string to get soundex from dbms
+     */
+    public function soundex($column)
+    {
+        return 'SOUNDEX(' . $column . ')';
+    }
 }
