@@ -1788,17 +1788,17 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $value = null;
             }
 
-            $column_value = $this->get($column); 
+            $columnValue = $this->get($column);
 
-            $a[$column] = ($column_value instanceof Doctrine_Record)
-                ? $column_value->toArray($deep, $prefixKey) : $column_value;
+            $a[$column] = ($columnValue instanceof Doctrine_Record)
+                ? $columnValue->toArray($deep, $prefixKey) : $columnValue;
         }
 
         if ($this->_table->getIdentifierType() ==  Doctrine::IDENTIFIER_AUTOINC) {
             $i      = $this->_table->getIdentifier();
             $a[$i]  = $this->getIncremented();
         }
-        
+
         if ($deep) {
             foreach ($this->_references as $key => $relation) {
                 if ( ! $relation instanceof Doctrine_Null) {
@@ -1809,10 +1809,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         // [FIX] Prevent mapped Doctrine_Records from being displayed fully
         foreach ($this->_values as $key => $value) {
-            $a[$key] = ($value instanceof Doctrine_Record) 
+            $a[$key] = ($value instanceof Doctrine_Record)
                 ? $value->toArray($deep, $prefixKey) : $value;
         }
-        
+
         $this->_state = $stateBeforeLock;
 
         return $a;
