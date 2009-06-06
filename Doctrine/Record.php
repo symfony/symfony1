@@ -1936,7 +1936,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         foreach ($this->_references as $name => $relation) {
 	        $rel = $this->getTable()->getRelation($name);
 	
-			if ( ! isset($array[$name]) && ( ! $rel->isOneToOne()) || ($rel->isOneToOne() && ! isset($array[$rel->getLocalFieldName()]))) {
+			if ( ! isset($array[$name]) && ( ! $rel->isOneToOne() || ! isset($array[$rel->getLocalFieldName()]))) {
                 unset($this->$name);
             }
         }
