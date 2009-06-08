@@ -36,7 +36,6 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
     {
         $condition = trim($condition);
         $e = $this->_tokenizer->sqlExplode($condition);
-        $e = array_filter($e, create_function('$v', 'return ! empty($v);'));
 
         if (($l = count($e)) > 2) {
             $leftExpr = $this->query->parseClause($e[0]);
