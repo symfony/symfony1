@@ -244,8 +244,11 @@ class Doctrine_Query_Tokenizer
      */
     public function sqlExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {
-        if (is_array($d) || $d == ' ') {
-            $d = array_map('preg_quote', (array) $d);
+        if ($d == ' ') {
+            $d = array(' ', '\s'); 
+        }
+        if (is_array($d)) {
+            $d = array_map('preg_quote', $d);
 
             if (in_array(' ', $d)) {
                 $d[] = '\s';
@@ -258,9 +261,8 @@ class Doctrine_Query_Tokenizer
             $str = explode($d, $str);
         }
         
-        $str = array_filter($str, create_function('$v', 'return strlen(trim($v)) != 0;'));
-        $term = array();
         $i = 0;
+        $term = array();
 
         foreach ($str as $key => $val) {
             if (empty($term[$i])) {
