@@ -228,6 +228,21 @@ from the command line, like any other task:
 If you were used to run `php test/bin/prove.php`, you should now run the
 equivalent `php data/bin/symfony symfony:test` command.
 
+### `project:deploy`
+
+The `project:deploy` task has been slightly improved. It now displays the
+progress of the files transfer in real-time, but only if the `-t` option is
+passed. If not, the task is silent, except for errors of course. Speaking of
+errors, if one occurs, the output is on a red background to easy problem
+identification.
+
+### `sfFileSystem::execute()`
+
+The `sfFileSystem::execute()` methods replaces the `sfFileSystem::sh()` method
+with more powerful features. It takes callbacks for real-time processing of
+the `stdout` and `stderr` outputs. It also returns both outputs as an array.
+You can find one example of its usage in the `sfProjectDeployTask` class.
+
 Exceptions
 ----------
 

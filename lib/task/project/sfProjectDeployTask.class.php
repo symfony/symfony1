@@ -18,6 +18,10 @@
  */
 class sfProjectDeployTask extends sfBaseTask
 {
+  protected
+    $outputBuffer = '',
+    $errorBuffer = '';
+
   /**
    * @see sfTask
    */
@@ -30,7 +34,7 @@ class sfProjectDeployTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('go', null, sfCommandOption::PARAMETER_NONE, 'Do the deployment'),
       new sfCommandOption('rsync-dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory where to look for rsync*.txt files', 'config'),
-      new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', '-azC --force --delete'),
+      new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', '-azC --force --delete --progress'),
     ));
 
     $this->aliases = array('sync');
@@ -156,7 +160,53 @@ EOF;
     }
 
     $dryRun = $options['go'] ? '' : '--dry-run';
+    $command = "rsync $dryRun $parameters -e $ssh ./ $user$host:$dir";
 
-    $this->log($this->getFilesystem()->sh("rsync --progress $dryRun $parameters -e $ssh ./ $user$host:$dir"));
+    $this->getFilesystem()->execute($command, $options['trace'] ? array($this, 'logOutput') : null, array($this, 'logErrors'));
+
+    $this->clearBuffers();
+  }
+
+  public function logOutput($output, $color = null)
+  {
+    if (false !== $pos = strpos($output, "\n"))
+    {
+      $this->outputBuffer .= substr($output, 0, $pos);
+      $this->log($this->outputBuffer);
+      $this->outputBuffer = substr($output, $pos + 1);
+    }
+    else
+    {
+      $this->outputBuffer .= $output;
+    }
+  }
+
+  public function logErrors($output)
+  {
+    if (false !== $pos = strpos($output, "\n"))
+    {
+      $this->errorBuffer .= substr($output, 0, $pos);
+      $this->log($this->formatter->format($this->errorBuffer, 'ERROR'));
+      $this->errorBuffer = substr($output, $pos + 1);
+    }
+    else
+    {
+      $this->errorBuffer .= $output;
+    }
+  }
+
+  protected function clearBuffers()
+  {
+    if ($this->outputBuffer)
+    {
+      $this->log($this->outputBuffer);
+      $this->outputBuffer = '';
+    }
+
+    if ($this->errorBuffer)
+    {
+      $this->log($this->formatter->format($this->errorBuffer, 'ERROR'));
+      $this->errorBuffer = '';
+    }
   }
 }
