@@ -593,14 +593,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 unset($options['default']);
             }
 
-            // These can be removed if they are empty. They all default to a false/0/null value anyways
-            $remove = array('fixed', 'primary', 'notnull', 'autoincrement', 'unsigned');
-            foreach ($remove as $key) {
-                if (isset($options[$key]) && empty($options[$key])) {
-                    unset($options[$key]);
-                }
-            }
-
             // Remove null and empty array values
             foreach ($options as $key => $value) {
                 if (is_null($value) || (is_array($value) && empty($value))) {

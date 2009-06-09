@@ -1193,7 +1193,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $options['length'] = $length;
 
         foreach ($defaultOptions as $key => $value) {
-            if ( ! isset($options[$key]) || ! $options[$key]) {
+            if ( ! array_key_exists($key, $options) || is_null($options[$key])) {
                 $options[$key] = $value;
             }
         }
