@@ -272,7 +272,8 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
         $className = $this->getOption('className');
 
-        if (class_exists($className)) {
+        $autoLoad = (bool) ($this->_options['generateFiles']);
+        if (class_exists($className, $autoLoad)) {
             return false;
         }
 
