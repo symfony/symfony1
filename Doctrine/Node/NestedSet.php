@@ -1064,7 +1064,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $resultLeft = $qLeft->execute();
         
         // shift right columns
-        $resultRight = $qRight->update($componentName)
+        $qRight = $qRight->update($componentName)
                 ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
                 ->where($componentName . '.rgt >= ?', $first);
 
