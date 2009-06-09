@@ -120,19 +120,25 @@ class Doctrine_Import_Oracle extends Doctrine_Import
      */
     public function listTableColumns($table)
     {
-        $sql    = "SELECT column_name, data_type, "
-                . "CASE WHEN data_type = 'NUMBER' THEN data_precision ELSE data_length END AS data_length, "
-                . "nullable, data_default, data_scale, data_precision FROM all_tab_columns "
-                . "WHERE table_name = '" . $table . "' ORDER BY column_id";
-
-        $result = $this->conn->fetchAssoc($sql);
+		$sql = <<<QEND
+SELECT tc.column_name, data_type,
+CASE WHEN data_type = 'NUMBER' THEN data_precision ELSE data_length END AS data_length,
+nullable, data_default, data_scale, data_precision, pk.primary
+FROM all_tab_columns tc
+LEFT JOIN (
+ select 'primary' primary, cc.table_name, cc.column_name from all_constraints cons
+ join all_cons_columns cc on cons.constraint_name = cc.constraint_name
+ where cons.constraint_type = 'P'
+) pk ON pk.column_name = tc.column_name and pk.table_name = tc.table_name
+WHERE tc.table_name = :tableName ORDER BY column_id
+QEND;
+        $result = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
 
         $descr = array();
 
         foreach($result as $val) {
             $val = array_change_key_case($val, CASE_LOWER);
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
-
 
             $descr[$val['column_name']] = array(
                'name'       => $val['column_name'],
@@ -144,6 +150,7 @@ class Doctrine_Import_Oracle extends Doctrine_Import
                'unsigned'   => $decl['unsigned'],
                'default'    => $val['data_default'],
                'length'     => $val['data_length'],
+               'primary'    => $val['primary'] ? true:false,
                'scale'      => isset($val['scale']) ? $val['scale']:null,
             );
         }
