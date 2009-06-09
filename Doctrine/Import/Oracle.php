@@ -187,9 +187,9 @@ QEND;
               . 'JOIN all_cons_columns lcc ON ac.r_constraint_name = lcc.constraint_name '
               . 'JOIN all_cons_columns rcc ON ac.constraint_name = rcc.constraint_name '
               . "WHERE ac.constraint_type = 'R'" 
-              . "AND ac.r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE constraint_type IN ('P', 'U') AND table_name ='$table')";
+              . "AND ac.r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE constraint_type IN ('P', 'U') AND table_name = :tableName)";
         
-        $results = $this->conn->fetchAssoc($sql);
+        $results = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
         foreach ($results as $result) 
         {
             $result = array_change_key_case($result, CASE_LOWER);
