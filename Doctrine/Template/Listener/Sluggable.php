@@ -188,7 +188,11 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 	        $softDelete = $record->getTable()->getTemplate('Doctrine_Template_SoftDelete');
 	
 	        // we have to consider both situations here
-            $query->addWhere('(r.' . $softDelete->getOption('name') . ' = true OR r.' . $softDelete->getOption('name') . ' IS NOT NULL OR r.' . $softDelete->getOption('name') . ' = false OR r.' . $softDelete->getOption('name') . ' IS NULL)');
+            if ($softDelete->getOption('type') == 'boolean') {
+                $query->addWhere('(r.' . $softDelete->getOption('name') . ' = true OR r.' . $softDelete->getOption('name') . ' = false');
+            } else {
+                $query->addWhere('(r.' . $softDelete->getOption('name') . ' IS NOT NULL OR r.' . $softDelete->getOption('name') . ' IS NULL)');
+            }
         }
 
         $similarSlugResult = $query->execute();
