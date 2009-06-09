@@ -89,6 +89,13 @@ class Doctrine_Import_Mssql extends Doctrine_Import
      */
     public function listTableColumns($table)
     {
+        $sql = 'EXEC sp_primary_keys_rowset @table_name = ' . $this->conn->quoteIdentifier($table, true);
+        $result = $this->conn->fetchAssoc($sql);
+        $primary = array();
+        foreach ($result as $key => $val) {
+            $primary[] = $val['COLUMN_NAME'];
+        }
+
         $sql     = 'EXEC sp_columns @table_name = ' . $this->conn->quoteIdentifier($table, true);
         $result  = $this->conn->fetchAssoc($sql);
         $columns = array();
@@ -113,6 +120,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
 
             $isIdentity = (bool) (strtoupper(trim($identity)) == 'IDENTITY');
             $isNullable = (bool) (strtoupper(trim($val['is_nullable'])) == 'NO');
+            $isPrimary = in_array($val['column_name'], $primary);
 
             $description  = array(
                 'name'          => $val['column_name'],
@@ -124,7 +132,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
                 'unsigned'      => $decl['unsigned'],
                 'notnull'       => $isIdentity ? true : $isNullable,
                 'default'       => $val['column_def'],
-                'primary'       => $isIdentity,
+                'primary'       => $isPrimary,
                 'autoincrement' => $isIdentity,
             );
 
