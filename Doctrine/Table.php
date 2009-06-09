@@ -2392,7 +2392,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     || $name == 'type'
                     || $name == 'length'
                     || $name == 'fixed'
-                    || $name == 'comment') {
+                    || $name == 'comment'
+                    || $name == 'extra') {
                 continue;
             }
             if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])
