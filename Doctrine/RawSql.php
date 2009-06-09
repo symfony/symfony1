@@ -438,4 +438,20 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
 
         return $this;
     }
+
+    /**
+     * calculateResultCacheHash
+     * calculate hash key for result cache
+     *
+     * @param array $params
+     * @return string    the hash
+     */
+    public function calculateResultCacheHash($params = array())
+    {
+        $sql = $this->getSql();
+        $conn = $this->getConnection();
+        $params = $this->getFlattenedParams($params);
+        $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $sql . var_export($params, true));
+        return $hash;
+    }
 }
