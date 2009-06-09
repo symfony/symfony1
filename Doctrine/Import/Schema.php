@@ -58,7 +58,7 @@ class Doctrine_Import_Schema
                                 'generateBaseClasses'   =>  true,
                                 'generateTableClasses'  =>  false,
                                 'generateAccessors'     =>  false,
-                                'baseClassesPrefix'     =>  'Base',
+                                'baseClassPrefix'       =>  'Base',
                                 'baseClassesDirectory'  =>  'generated',
                                 'baseClassName'         =>  'Doctrine_Record');
 
