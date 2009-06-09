@@ -46,7 +46,7 @@ abstract class Doctrine_Parser
     /**
      * dumpData
      *
-     * Override in the praser driver
+     * Override in the parser driver
      *
      * @param string $array 
      * @param string $path 

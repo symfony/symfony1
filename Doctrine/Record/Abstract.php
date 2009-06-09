@@ -289,11 +289,17 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
 
 
     /**
-     * actAs
-     * loads the given plugin
+     * Loads the given plugin.
      *
-     * @param mixed $tpl
-     * @param array $options
+     * This method loads a behavior in the record. It will add the behavior 
+     * also to the record table if it.
+     * It is tipically called in @see setUp().
+     *
+     * @param mixed $tpl        if an object, must be a subclass of Doctrine_Template. 
+     *                          If a string, Doctrine will try to instantiate an object of the classes Doctrine_Template_$tpl and subsequently $tpl, using also autoloading capabilities if defined.
+     * @param array $options    argument to pass to the template constructor if $tpl is a class name
+     * @throws Doctrine_Record_Exception    if $tpl is neither an instance of Doctrine_Template subclass or a valid class name, that could be instantiated.
+     * @return Doctrine_Record  this object; provides a fluent interface.
      */
     public function actAs($tpl, array $options = array())
     {
@@ -326,11 +332,12 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * check
-     * adds a check constraint
+     * Adds a check constraint.
      *
-     * @param mixed $constraint     either a SQL constraint portion or an array of CHECK constraints
-     * @param string $name          optional constraint name
+     * This method will add a CHECK constraint to the record table.
+     *
+     * @param mixed $constraint     either a SQL constraint portion or an array of CHECK constraints. If array, all values will be added as constraint
+     * @param string $name          optional constraint name. Not used if $constraint is an array.
      * @return Doctrine_Record      this object
      */
     public function check($constraint, $name = null)
