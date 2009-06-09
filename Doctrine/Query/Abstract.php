@@ -1349,8 +1349,12 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * addSelect
-     * adds fields to the SELECT part of the query
+     * Adds fields or aliased functions.
+     *
+     * This method adds fields or dbms functions to the SELECT query part.
+     * <code>
+     * $query->addSelect('COUNT(p.id) as num_phonenumbers');
+     * </code>
      *
      * @param string $select        Query SELECT part
      * @return Doctrine_Query
@@ -1401,12 +1405,8 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * addWhere
-     * adds conditions to the WHERE part of the query
-     *
-     * @param string $where         Query WHERE part
-     * @param mixed $params         an array of parameters or a simple scalar
-     * @return Doctrine_Query
+     * Alias for @see andWhere().
+     * @return Doctrine_Query   this object
      */
     public function addWhere($where, $params = array())
     {
@@ -1415,7 +1415,10 @@ abstract class Doctrine_Query_Abstract
 
 
     /**
-     * Adds conditions to the WHERE part of the query
+     * Adds conditions to the WHERE part of the query.
+     * <code>
+     * $q->andWhere('u.birthDate > ?', '1975-01-01');
+     * </code>
      *
      * @param string $where Query WHERE part
      * @param mixed $params An array of parameters or a simple scalar
@@ -1439,6 +1442,9 @@ abstract class Doctrine_Query_Abstract
 
     /**
      * Adds conditions to the WHERE part of the query
+     * <code>
+     * $q->orWhere('u.role = ?', 'admin');
+     * </code>
      *
      * @param string $where Query WHERE part
      * @param mixed $params An array of parameters or a simple scalar
@@ -1461,8 +1467,7 @@ abstract class Doctrine_Query_Abstract
 
 
     /**
-     * whereIn
-     * adds IN condition to the query WHERE part
+     * Adds IN condition to the query WHERE part. Alias to @see andWhereIn().
      *
      * @param string $expr          the operand of the IN
      * @param mixed $params         an array of parameters or a simple scalar
@@ -1477,11 +1482,14 @@ abstract class Doctrine_Query_Abstract
 
     /**
      * Adds IN condition to the query WHERE part
+     * <code>
+     * $q->whereIn('u.id', array(10, 23, 44));
+     * </code>
      *
-     * @param string $expr The operand of the IN
-     * @param mixed $params An array of parameters or a simple scalar
-     * @param boolean $not Whether or not to use NOT in front of IN
-     * @return Doctrine_Query
+     * @param string $expr      The operand of the IN
+     * @param mixed $params     An array of parameters or a simple scalar
+     * @param boolean $not      Whether or not to use NOT in front of IN. Defaults to false (simple IN clause)
+     * @return Doctrine_Query   this object.
      */
     public function andWhereIn($expr, $params = array(), $not = false)
     {
@@ -1499,7 +1507,12 @@ abstract class Doctrine_Query_Abstract
 
 
     /**
-     * Adds IN condition to the query WHERE part
+     * Adds IN condition to the query WHERE part, appending it with an OR operator.
+     * <code>
+     * $q->orWhereIn('u.id', array(10, 23))
+     *   ->orWhereIn('u.id', 44);
+     * // will select all record with id equal to 10, 23 or 44
+     * </code>
      *
      * @param string $expr The operand of the IN
      * @param mixed $params An array of parameters or a simple scalar
@@ -1551,12 +1564,15 @@ abstract class Doctrine_Query_Abstract
 
 
     /**
-     * whereNotIn
-     * adds NOT IN condition to the query WHERE part
+     * Adds NOT IN condition to the query WHERE part.
+     * <code>
+     * $q->whereNotIn('u.id', array(10, 20));
+     * // will exclude users with id 10 and 20 from the select
+     * </code>
      *
      * @param string $expr          the operand of the NOT IN
      * @param mixed $params         an array of parameters or a simple scalar
-     * @return Doctrine_Query
+     * @return Doctrine_Query       this object
      */
     public function whereNotIn($expr, $params = array())
     {
@@ -1566,6 +1582,7 @@ abstract class Doctrine_Query_Abstract
 
     /**
      * Adds NOT IN condition to the query WHERE part
+     * Alias for @see whereNotIn().
      *
      * @param string $expr The operand of the NOT IN
      * @param mixed $params An array of parameters or a simple scalar
@@ -1590,8 +1607,10 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * addGroupBy
-     * adds fields to the GROUP BY part of the query
+     * Adds fields to the GROUP BY part of the query.
+     * <code>
+     * $q->groupBy('u.id');
+     * </code>
      *
      * @param string $groupby       Query GROUP BY part
      * @return Doctrine_Query
@@ -1602,8 +1621,13 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * addHaving
-     * adds conditions to the HAVING part of the query
+     * Adds conditions to the HAVING part of the query.
+     *
+     * This methods add HAVING clauses. These clauses are used to narrow the 
+     * results by operating on aggregated values.
+     * <code>
+     * $q->having('num_phonenumbers > ?', 1);
+     * </code>
      *
      * @param string $having        Query HAVING part
      * @param mixed $params         an array of parameters or a simple scalar
@@ -1651,6 +1675,9 @@ abstract class Doctrine_Query_Abstract
     /**
      * distinct
      * Makes the query SELECT DISTINCT.
+     * <code>
+     * $q->distinct();
+     * </code>
      *
      * @param bool $flag            Whether or not the SELECT is DISTINCT (default true).
      * @return Doctrine_Query
@@ -1735,6 +1762,9 @@ abstract class Doctrine_Query_Abstract
     /**
      * from
      * sets the FROM part of the query
+     * <code>
+     * $q->from('User u');
+     * </code>
      *
      * @param string $from          Query FROM part
      * @return Doctrine_Query
@@ -1834,8 +1864,11 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * orderBy
-     * sets the ORDER BY part of the query
+     * Sets the ORDER BY part of the query.
+     * <code>
+     * $q->orderBy('u.name');
+     * $query->orderBy('u.birthDate DESC');
+     * </code>
      *
      * @param string $orderby      Query ORDER BY part
      * @return Doctrine_Query
