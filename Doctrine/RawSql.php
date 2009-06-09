@@ -236,7 +236,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
 
         // force-add all primary key fields
-        if ($this->_sqlParts['distinct'] != true) {
+        if ( ! isset($this->_sqlParts['distinct']) || $this->_sqlParts['distinct'] != true) {
             foreach ($this->getTableAliasMap() as $tableAlias => $componentAlias) {
                 $map = $this->_queryComponents[$componentAlias];
 
@@ -252,7 +252,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
 
         $q = 'SELECT ';
 
-        if ($this->_sqlParts['distinct'] == true) {
+        if (isset($this->_sqlParts['distinct']) && $this->_sqlParts['distinct'] == true) {
             $q .= 'DISTINCT ';
         }
 
