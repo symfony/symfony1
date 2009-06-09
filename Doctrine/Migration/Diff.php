@@ -300,9 +300,12 @@ class Doctrine_Migration_Diff
     protected function _generateModels($prefix, $item)
     {
         $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
-        $options = array('classPrefix' => $prefix);
+        $options = array(
+            'classPrefix' => $prefix,
+            'generateBaseClasses' => false
+        );
 
-        if ( is_string($item) && file_exists($item)) {
+        if (is_string($item) && file_exists($item)) {
             if (is_dir($item)) {
                 $files = glob($item . DIRECTORY_SEPARATOR . '*.*');
             } else {
