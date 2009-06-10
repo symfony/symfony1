@@ -38,7 +38,7 @@ interface Doctrine_Overloadable {
      *
      * @param string $m     the name of the method
      * @param array $a      method arguments
-     * @return mixed        anything
+     * @return mixed        return value of the method
      */
     public function __call($m, $a);
 }

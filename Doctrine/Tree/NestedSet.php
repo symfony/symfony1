@@ -114,7 +114,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     /**
      * returns root node
      *
-     * @return object $record        instance of Doctrine_Record
+     * @return Doctrine_Record
      * @deprecated Use fetchRoot()
      */
     public function findRoot($rootId = 1)
@@ -289,7 +289,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      *
      * @param object    $query    Doctrine_Query
      * @param integer   $root_id  id of destination root
-     * @return object   Doctrine_Query
+     * @return Doctrine_Query
      */
     public function returnQueryWithRootId($query, $rootId = 1)
     {

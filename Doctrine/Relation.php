@@ -235,7 +235,7 @@ abstract class Doctrine_Relation implements ArrayAccess
      * getTable
      * returns the foreign table object
      *
-     * @return object Doctrine_Table
+     * @return Doctrine_Table
      */
     final public function getTable()
     {
@@ -248,7 +248,7 @@ abstract class Doctrine_Relation implements ArrayAccess
      * getClass
      * returns the name of the related class
      *
-     * @return object Doctrine_Record
+     * @return string
      */
     final public function getClass()
     {

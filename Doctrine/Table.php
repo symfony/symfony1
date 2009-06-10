@@ -1248,7 +1248,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
     /**
      * Returns the definition of the identifier key.
-     * @return mixed    can be array if a multi-column primary key is used.
+     * @return string    can be array if a multi-column primary key is used.
      */
     public function getIdentifier()
     {
@@ -1828,7 +1828,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      *
      * @param string $fieldName
      * @param mixed $value          value of the enum considered
-     * @return mixed
+     * @return integer              can be string if native enums are used.
      */
     public function enumIndex($fieldName, $value)
     {
@@ -2035,7 +2035,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * which can be a column name or a field name (alias).
      *
      * @param string $fieldName
-     * @return mixed        array if present, false on failure
+     * @return array        false on failure
      */
     public function getDefinitionOf($fieldName)
     {
@@ -2047,7 +2047,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * Retrieves the type of a field.
      *
      * @param string $fieldName
-     * @return mixed        string if field is found, false on failure
+     * @return string        false on failure
      */
     public function getTypeOf($fieldName)
     {
@@ -2058,7 +2058,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * Retrieves the type of a column.
      *
      * @param string $columnName
-     * @return mixed        string if column is found, false otherwise.
+     * @return string        false if column is not found
      */
     public function getTypeOfColumn($columnName)
     {
@@ -2442,8 +2442,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * unshiftFilter
      *
-     * @param  object Doctrine_Record_Filter $filter
-     * @return object                                   this object (provides a fluent interface)
+     * @param  Doctrine_Record_Filter $filter
+     * @return Doctrine_Table                           this object (provides a fluent interface)
      */
     public function unshiftFilter(Doctrine_Record_Filter $filter)
     {

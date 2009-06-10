@@ -59,7 +59,7 @@ class Doctrine_Table_Repository implements Countable, IteratorAggregate
     /**
      * getTable
      *
-     * @return object Doctrine_Table
+     * @return Doctrine_Table
      */
     public function getTable()
     {

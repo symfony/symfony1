@@ -437,7 +437,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * Get the connection instance for the passed name
      *
      * @param string $name                  name of the connection, if empty numeric key is used
-     * @return object Doctrine_Connection
+     * @return Doctrine_Connection
      * @throws Doctrine_Manager_Exception   if trying to get a non-existent connection
      */
     public function getConnection($name)

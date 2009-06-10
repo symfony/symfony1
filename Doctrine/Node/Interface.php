@@ -63,14 +63,14 @@ interface Doctrine_Node_Interface {
     /**
      * gets record of prev sibling or empty record
      *
-     * @return object Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getPrevSibling();
 
     /**
      * gets record of next sibling or empty record
      *
-     * @return object Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getNextSibling();
 
@@ -84,14 +84,14 @@ interface Doctrine_Node_Interface {
     /**
      * gets record of first child or empty record
      *
-     * @return object Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getFirstChild();
 
     /**
      * gets record of last child or empty record
      *
-     * @return object Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getLastChild();
 
@@ -105,21 +105,21 @@ interface Doctrine_Node_Interface {
     /**
      * gets descendants for node (direct descendants only)
      *
-     * @return iterator                         iterator to traverse descendants from node
+     * @return Iterator                         iterator to traverse descendants from node
      */
     public function getDescendants();
 
     /**
      * gets record of parent or empty record
      *
-     * @return object Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getParent();
 
     /**
      * gets ancestors for node
      *
-     * @return object Doctrine_Collection
+     * @return Doctrine_Collection
      */
     public function getAncestors();
 

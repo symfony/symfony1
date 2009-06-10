@@ -342,7 +342,7 @@ class Doctrine_Event
      * Get the elapsed time (in microseconds) that the event ran.  If the event has
      * not yet ended, return false.
      *
-     * @return mixed
+     * @return integer
      */
     public function getElapsedSecs()
     {

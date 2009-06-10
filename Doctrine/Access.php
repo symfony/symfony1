@@ -159,8 +159,8 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     /**
      * Return the element with the specified offset
      *
-     * @param mixed $offset The offset to return
-     * @return mixed The value of the return object 
+     * @param mixed $offset     The offset to return
+     * @return mixed
      */
     public function get($offset)
     {

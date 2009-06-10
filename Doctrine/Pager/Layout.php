@@ -332,8 +332,8 @@ class Doctrine_Pager_Layout
      * @param $options    Optional parameters to be applied in template and url mask
      * @param $return     Optional parameter if you want to capture the output of this method call 
      *                    (Default value is false), instead of printing it
-     * @return mixed      If you would like to capture the output of Doctrine_Pager_Layout::display(),
-     *                    use the return  parameter. If this parameter is set to TRUE, this method 
+     * @return void       If you would like to capture the output of Doctrine_Pager_Layout::display(),
+     *                    use the $return  parameter. If this parameter is set to TRUE, this method 
      *                    will return its output, instead of printing it (which it does by default)
      */
     public function display($options = array(), $return = false)

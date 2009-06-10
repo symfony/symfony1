@@ -435,7 +435,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      *     array orderby, containing strings such as 'id ASC';
      *     array limit, containing numerics;
      *     array offset, containing numerics;
-     * @return mixed   array if multiple parts are possible for this name;
+     * @return array    
      */
     public function getDqlPart($queryPart)
     {

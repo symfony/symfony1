@@ -86,7 +86,7 @@ class Doctrine_Template_Searchable extends Doctrine_Template
      * 
      * @param string $string Keyword string to search for
      * @param Doctrine_Query $query Query object to alter. Adds where condition to limit the results using the search index
-     * @return mixed The Doctrine_Collection or array of ids and relevancy
+     * @return array    ids and relevancy
      */
     public function searchTableProxy($string, $query = null)
     {

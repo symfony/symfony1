@@ -215,7 +215,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Get the first record in the collection
      *
-     * @return mixed
+     * @return Doctrine_Record
      */
     public function getFirst()
     {
@@ -225,7 +225,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Get the last record in the collection
      *
-     * @return mixed
+     * @return Doctrine_Record
      */
     public function getLast()
     {
@@ -235,7 +235,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Get the last record in the collection
      *
-     * @return mixed
+     * @return Doctrine_Record
      */
     public function end()
     {
@@ -245,7 +245,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Get the current key
      *
-     * @return mixed
+     * @return Doctrine_Record
      */
     public function key()
     {
@@ -920,7 +920,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Get collection data iterator
      *
-     * @return object ArrayIterator
+     * @return Iterator
      */
     public function getIterator()
     {
@@ -941,7 +941,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Returns the relation object
      *
-     * @return object Doctrine_Relation
+     * @return Doctrine_Relation
      */
     public function getRelation()
     {

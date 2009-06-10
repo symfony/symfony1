@@ -158,7 +158,7 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
      *
      * @param mixed $input      parameter to be quoted
      * @param string $type
-     * @return mixed
+     * @return string
      */
     public function quote($input, $type = null)
     {

@@ -101,12 +101,16 @@ class Doctrine_Node implements IteratorAggregate
     }
 
     /**
-     * factory method to return node instance based upon chosen implementation
+     * Factory method for creating a Node.
+     *
+     * This is a factory method that returns node instance based upon chosen
+     * implementation.
      *
      * @param object $record                    instance of Doctrine_Record
-     * @param string $impName                   implementation (NestedSet, AdjacencyList, MaterializedPath)
+     * @param string $implName                  implementation (NestedSet, AdjacencyList, MaterializedPath)
      * @param array $options                    options
-     * @return object $options                  instance of Doctrine_Node
+     * @return Doctrine_Node
+     * @throws Doctrine_Node_Exception          if $implName is not a valid class
      */
     public static function factory(Doctrine_Record $record, $implName, $options = array())
     {
@@ -132,7 +136,7 @@ class Doctrine_Node implements IteratorAggregate
     /**
      * getter for record attribute
      *
-     * @return object                           instance of Doctrine_Record
+     * @return Doctrine_Record
      */
     public function getRecord()
     {

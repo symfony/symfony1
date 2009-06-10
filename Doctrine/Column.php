@@ -92,7 +92,7 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
      * set
      *
      * @param string $name
-     * @return mixed
+     * @return void
      */
     public function set($name, $value)
     {
@@ -113,11 +113,10 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     }
 
     /**
-     * enumValue
+     * Retrieves an enum value.
      *
-     * @param string $field
      * @param integer $index
-     * @return mixed
+     * @return string       integer ($index) if not present
      */
     public function enumValue($index)
     {

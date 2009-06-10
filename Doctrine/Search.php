@@ -78,7 +78,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
      * 
      * @param string $string Keyword string to search for
      * @param Doctrine_Query $query Query object to alter. Adds where condition to limit the results using the search index
-     * @return mixed The Doctrine_Collection or array of ids and relevancy
+     * @return array    ids and relevancy
      */
     public function search($string, $query = null)
     {

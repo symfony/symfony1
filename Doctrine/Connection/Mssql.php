@@ -221,7 +221,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
      * return version information about the server
      *
      * @param bool   $native  determines if the raw version string should be returned
-     * @return mixed array/string with version information or MDB2 error object
+     * @return array    version information
      */
     public function getServerVersion($native = false)
     {

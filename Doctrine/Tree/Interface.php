@@ -35,14 +35,14 @@ interface Doctrine_Tree_Interface {
     /**
      * creates root node from given record or from a new record
      *
-     * @param object $record                    instance of Doctrine_Record
+     * @param Doctrine_Record $record                    instance of Doctrine_Record
      */
     public function createRoot(Doctrine_Record $record = null);
 
     /**
      * returns root node
      *
-     * @return object $record                   instance of Doctrine_Record
+     * @return Doctrine_Record
      */
     public function findRoot($root_id = 1);
 
@@ -51,7 +51,7 @@ interface Doctrine_Tree_Interface {
      *
      * @param array $options                    options
      * @param integer $fetchmode  One of the Doctrine::HYDRATE_* constants.
-     * @return object $iterator                 instance of Doctrine_Node_<Implementation>_PreOrderIterator
+     * @return Iterator                 instance of Doctrine_Node_<Implementation>_PreOrderIterator
      */
     public function fetchTree($options = array(), $hydrationMode = null);
 

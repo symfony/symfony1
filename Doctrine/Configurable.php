@@ -318,7 +318,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      * addRecordListener
      *
      * @param Doctrine_EventListener_Interface|Doctrine_Overloadable $listener
-     * @return mixed        this object
+     * @return Doctrine_Configurable        this object
      */
     public function addRecordListener($listener, $name = null)
     {
@@ -370,7 +370,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      * addListener
      *
      * @param Doctrine_EventListener_Interface|Doctrine_Overloadable $listener
-     * @return mixed        this object
+     * @return Doctrine_Configurable    this object
      */
     public function addListener($listener, $name = null)
     {

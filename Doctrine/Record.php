@@ -1047,7 +1047,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param $name                         name of the property
      * @throws Doctrine_Record_Exception    if trying to get an unknown property
-     * @return mixed|null
+     * @return mixed
      */
     public function rawGet($fieldName)
     {
@@ -1949,9 +1949,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * exports instance to a chosen format
      *
-     * @param string $type  format type: xml, yml, json
+     * @param string $type  format type: array, xml, yml, json
      * @param string $deep  whether or not to export all relationships
-     * @return mixed
+     * @return string       representation as $type format. Array is $type is array
      */
     public function exportTo($type, $deep = true)
     {
@@ -2275,7 +2275,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * getter for node associated with this record
      *
-     * @return mixed if tree returns Doctrine_Node otherwise returns false
+     * @return Doctrine_Node    false if component is not a Tree
      */
     public function getNode()
     {

@@ -48,7 +48,7 @@ class Doctrine_Import_Firebird extends Doctrine_Import
      * list all fields in a tables in the current database
      *
      * @param string $table name of table that should be used in method
-     * @return mixed data array on success, a MDB2 error on failure
+     * @return array    can be a MDB2 error (on failure)
      * @access public
      */
     public function listTableColumns($table)

@@ -38,8 +38,7 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      *
      * @param object $db database object that is extended by this class
      * @param string $name name of the database that should be created
-     * @return mixed MDB2_OK on success, a MDB2 error on failure
-     * @access public
+     * @return boolean      success of operation
      */
     public function createDatabase($name)
     {
@@ -70,7 +69,7 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      *
      * @param object $this->conn database object that is extended by this class
      * @param string $name name of the database that should be dropped
-     * @return mixed MDB2_OK on success, a MDB2 error on failure
+     * @return boolean      success of operation
      * @access public
      */
     public function dropDatabase($name)
@@ -90,7 +89,7 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      * @param string $name  name of the PK field
      * @param string $table name of the table
      * @param string $start start value for the sequence
-     * @return mixed        MDB2_OK on success, a MDB2 error on failure
+     * @return string        Sql code
      * @access private
      */
     public function _makeAutoincrement($name, $table, $start = 1)

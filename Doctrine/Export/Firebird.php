@@ -205,8 +205,7 @@ class Doctrine_Export_Firebird extends Doctrine_Export
      * drop an existing table
      *
      * @param string $name name of the table that should be dropped
-     * @return mixed MDB2_OK on success, a MDB2 error on failure
-     * @access public
+     * @return void
      */
     public function dropTable($name)
     {

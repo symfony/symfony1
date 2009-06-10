@@ -631,8 +631,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @param Doctrine_Table $table     The table to insert data into
      * @param array $values             An associative array containing column-value pairs.
      *                                  Values can be strings or Doctrine_Expression instances.
-     * @return mixed            boolean false if empty value array was given,
-     *                          otherwise returns the number of affected rows
+     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
      */
     public function update(Doctrine_Table $table, array $fields, array $identifier)
     {
@@ -666,8 +665,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @param Doctrine_Table $table     The table to insert data into.
      * @param array $values             An associative array containing column-value pairs.
      *                                  Values can be strings or Doctrine_Expression instances.
-     * @return mixed            boolean false if empty value array was given,
-     *                          otherwise returns the number of affected rows
+     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
      */
     public function insert(Doctrine_Table $table, array $fields)
     {
@@ -779,7 +777,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @param mixed $input      parameter to be quoted
      * @param string $type
-     * @return mixed
+     * @return string
      */
     public function quote($input, $type = null)
     {
@@ -1112,7 +1110,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * returns a table object for given component name
      *
      * @param string $name              component name
-     * @return object Doctrine_Table
+     * @return Doctrine_Table
      */
     public function getTable($name)
     {
@@ -1433,7 +1431,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * Issue create database command for this instance of Doctrine_Connection
      *
-     * @return mixed Returns Doctrine_Exception or success string
+     * @return string       Doctrine_Exception catched in case of failure
      */
     public function createDatabase()
     {
@@ -1467,7 +1465,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * Issue drop database command for this instance of Doctrine_Connection
      *
-     * @return mixed Returns Doctrine_Exception or success string
+     * @return string       success string. Doctrine_Exception if operation failed
      */
     public function dropDatabase()
     {
