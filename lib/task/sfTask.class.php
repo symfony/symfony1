@@ -100,8 +100,8 @@ abstract class sfTask
   /**
    * Runs the task.
    *
-   * @param array $arguments  An array of arguments
-   * @param array $options    An array of options
+   * @param array|string $arguments  An array of arguments or a string representing the CLI arguments and options
+   * @param array        $options    An array of options
    *
    * @return integer 0 if everything went fine, or an error code
    */
@@ -118,7 +118,7 @@ abstract class sfTask
       }
     }
 
-    return $this->doRun($commandManager, implode(' ', array_merge($arguments, $options)));
+    return $this->doRun($commandManager, is_string($arguments) ? $arguments : implode(' ', array_merge($arguments, $options)));
   }
 
   /**

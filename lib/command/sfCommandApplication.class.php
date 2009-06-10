@@ -105,6 +105,11 @@ abstract class sfCommandApplication
     }
   }
 
+  public function clearTasks()
+  {
+    $this->tasks = array();
+  }
+
   /**
    * Registers an array of task objects.
    *
@@ -116,15 +121,7 @@ abstract class sfCommandApplication
   {
     if (is_null($tasks))
     {
-      $tasks = array();
-      foreach (get_declared_classes() as $class)
-      {
-        $r = new Reflectionclass($class);
-        if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
-        {
-          $tasks[] = new $class($this->dispatcher, $this->formatter);
-        }
-      }
+      $tasks = $this->autodiscoverTasks();
     }
 
     foreach ($tasks as $task)
@@ -156,6 +153,26 @@ abstract class sfCommandApplication
 
       $this->tasks[$alias] = $task;
     }
+  }
+
+  /**
+   * Autodiscovers task classes.
+   *
+   * @return array An array of tasks instances
+   */
+  public function autodiscoverTasks()
+  {
+    $tasks = array();
+    foreach (get_declared_classes() as $class)
+    {
+      $r = new Reflectionclass($class);
+      if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
+      {
+        $tasks[] = new $class($this->dispatcher, $this->formatter);
+      }
+    }
+
+    return $tasks;
   }
 
   /**
@@ -414,7 +431,7 @@ abstract class sfCommandApplication
    *
    * @return sfTask A sfTask object
    */
-  protected function getTaskToExecute($name)
+  public function getTaskToExecute($name)
   {
     // namespace
     if (false !== $pos = strpos($name, ':'))
