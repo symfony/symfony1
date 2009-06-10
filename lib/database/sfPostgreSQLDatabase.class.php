@@ -16,20 +16,10 @@
  *
  * # <b>database</b>   - [none]      - The database name.
  * # <b>host</b>       - [localhost] - The database host.
- * # <b>method</b>     - [normal]    - How to read connection parameters.
- *                                     Possible values are normal, server, and
- *                                     env. The normal method reads them from
- *                                     the specified values. server reads them
- *                                     from $_SERVER where the keys to retrieve
- *                                     the values are what you specify the value
- *                                     as in the settings. env reads them from
- *                                     $_ENV and works like $_SERVER.
+ * # <b>username</b>   - [none]      - The database username.
  * # <b>password</b>   - [none]      - The database password.
- * # <b>persistent</b> - [No]        - Indicates that the connection should be
- *                                     persistent.
- * # <b>port</b>       - [none]      - TCP/IP port on which PostgreSQL is
- *                                     listening.
- * # <b>username</b>       - [none]  - The database username.
+ * # <b>persistent</b> - [No]        - Indicates that the connection should be persistent.
+ * # <b>port</b>       - [none]      - TCP/IP port on which PostgreSQL is listening.
  *
  * @package    symfony
  * @subpackage database
@@ -46,45 +36,18 @@ class sfPostgreSQLDatabase extends sfDatabase
    */
   public function connect()
   {
-    // determine how to get our parameters
-    $method = $this->getParameter('method', 'normal');
+    $database = $this->getParameter('database');
+    $host     = $this->getParameter('host');
+    $password = $this->getParameter('password');
+    $port     = $this->getParameter('port');
+    $username = $this->getParameter('username');
 
-    // get parameters
-    switch ($method)
-    {
-      case 'normal':
-        // get parameters normally
-        $database = $this->getParameter('database');
-        $host     = $this->getParameter('host');
-        $password = $this->getParameter('password');
-        $port     = $this->getParameter('port');
-        $username = $this->getParameter('username');
-
-        // construct connection string
-        $string = ($database != null ? (' dbname='   .$database) : '').
-                  ($host != null     ? (' host='     .$host)     : '').
-                  ($password != null ? (' password=' .$password) : '').
-                  ($port != null     ? (' port='     .$port)     : '').
-                  ($username != null ? (' user='     .$username) : '');
-
-        break;
-
-      case 'server':
-        // construct a connection string from existing $_SERVER values
-        $string = $this->loadParameters($_SERVER);
-
-        break;
-
-      case 'env':
-        // construct a connection string from existing $_ENV values
-        $string = $this->loadParameters($_ENV);
-
-        break;
-
-      default:
-        // who knows what the user wants...
-        throw new sfDatabaseException(sprintf('Invalid PostgreSQLDatabase parameter retrieval method "%s".', $method));
-    }
+    // construct connection string
+    $string = ($database != null ? (' dbname='   .$database) : '').
+              ($host != null     ? (' host='     .$host)     : '').
+              ($password != null ? (' password=' .$password) : '').
+              ($port != null     ? (' port='     .$port)     : '').
+              ($username != null ? (' user='     .$username) : '');
 
     // let's see if we need a persistent connection
     $persistent = $this->getParameter('persistent', false);
@@ -102,29 +65,6 @@ class sfPostgreSQLDatabase extends sfDatabase
     // since we're not an abstraction layer, we copy the connection
     // to the resource
     $this->resource = $this->connection;
-  }
-
-  /**
-   * Loads connection parameters from an existing array.
-   *
-   * @return string A connection string
-   */
-  protected function loadParameters(&$array)
-  {
-    $database = $this->getParameter('database');
-    $host     = $this->getParameter('host');
-    $password = $this->getParameter('password');
-    $port     = $this->getParameter('port');
-    $username = $this->getParameter('username');
-
-    // construct connection string
-    $string = ($database != null ? (' dbname='  .$array[$database]) : '').
-              ($host != null     ? (' host='    .$array[$host])     : '').
-              ($password != null ? (' password='.$array[$password]) : '').
-              ($port != null     ? (' port='    .$array[$port])     : '').
-              ($username != null ? (' user='    .$array[$username]) : '');
-
-    return $string;
   }
 
   /**

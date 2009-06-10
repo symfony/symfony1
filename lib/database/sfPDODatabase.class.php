@@ -29,23 +29,10 @@ class sfPDODatabase extends sfDatabase
    */
   public function connect()
   {
-    // determine how to get our parameters
-    $method = $this->getParameter('method', 'dsn');
-
-    // get parameters
-    switch ($method)
+    if (!$dsn = $this->getParameter('dsn'))
     {
-      case 'dsn':
-
-        $dsn = $this->getParameter('dsn');
-
-        if ($dsn == null)
-        {
-          // missing required dsn parameter
-          throw new sfDatabaseException('Database configuration specifies method "dsn", but is missing dsn parameter.');
-        }
-
-        break;
+      // missing required dsn parameter
+      throw new sfDatabaseException('Database configuration is missing the "dsn" parameter.');
     }
 
     try
@@ -105,7 +92,7 @@ class sfPDODatabase extends sfDatabase
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
     if ($this->connection !== null)
     {
