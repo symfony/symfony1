@@ -246,6 +246,13 @@ class Doctrine_Inflector
         // Remove all non url friendly characters with the unaccent function
         $text = self::unaccent($text);
         
+        if (function_exists('mb_strtolower'))
+        {
+            $text = mb_strtolower($text);
+        } else {
+            $text = strtolower($text);
+        }
+        
         // Remove all none word characters
         $text = preg_replace('/\W/', ' ', $text);
         
