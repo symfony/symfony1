@@ -21,6 +21,11 @@ abstract class sfCommandApplicationTask extends sfTask
   protected
     $commandApplication = null;
 
+  /**
+   * Sets the command application instance for this task.
+   *
+   * @param sfCommandApplication $commandApplication A sfCommandApplication instance
+   */
   public function setCommandApplication(sfCommandApplication $commandApplication = null)
   {
     $this->commandApplication = $commandApplication;
