@@ -267,9 +267,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      * Convenience method to execute the query and return the first item
      * of the collection.
      *
-     * @param string $params Parameters
-     * @param int $hydrationMode Hydration mode
-     * @return mixed Array or Doctrine_Collection or false if no result.
+     * @param string $params        Query parameters
+     * @param int $hydrationMode    Hydration mode: see Doctrine::HYDRATE_* constants
+     * @return mixed                Array or Doctrine_Collection, depending on hydration mode. False if no result.
      */
     public function fetchOne($params = array(), $hydrationMode = null)
     {
