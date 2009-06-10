@@ -189,7 +189,12 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 	
 	        // we have to consider both situations here
             if ($softDelete->getOption('type') == 'boolean') {
-                $query->addWhere('(r.' . $softDelete->getOption('name') . ' = true OR r.' . $softDelete->getOption('name') . ' = false');
+                $conn = $query->getConnection();
+
+                $query->addWhere(
+                    '(r.' . $softDelete->getOption('name') . ' = ' . $conn->convertBooleans(true) .
+                    ' OR r.' . $softDelete->getOption('name') . ' = ' . $conn->convertBooleans(false) . ')'
+                );
             } else {
                 $query->addWhere('(r.' . $softDelete->getOption('name') . ' IS NOT NULL OR r.' . $softDelete->getOption('name') . ' IS NULL)');
             }
