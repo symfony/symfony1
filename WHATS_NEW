@@ -104,6 +104,19 @@ symfony-specific functionality. For instance, you can now call
 `$form->bindRequest($request)` from an action, as `sfFormSymfony` is aware of
 the `sfWebRequest` class.
 
+The new `sfFormSymfony` class also includes the event dispatcher, accessible
+from inside your form classes as `self::$dispatcher`. The following form
+events are now notified by symfony:
+
+  * `form.post_configure`:   This event is notified after every form is
+                             configured
+  * `form.filter_values`:    This event filters the merged, tainted parameters
+                             and files array just prior to binding
+  * `form.validation_error`: This event is notified whenever form validation
+                             fails
+  * `form.method_not_found`: This event is notified whenever an unknown method
+                             is called
+
 ### `BaseForm`
 
 Every new symfony 1.3 project includes a `BaseForm` class that you can use to

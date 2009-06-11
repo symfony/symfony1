@@ -10,7 +10,7 @@
 
 /**
  * Extends the form component with symfony-specific functionality.
- * 
+ *
  * @package    symfony
  * @subpackage form
  * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
@@ -18,9 +18,49 @@
  */
 class sfFormSymfony extends sfForm
 {
+  static protected
+    $dispatcher = null;
+
+  /**
+   * Constructor.
+   *
+   * Notifies the 'form.post_configure' event.
+   *
+   * @see sfForm
+   */
+  public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
+  {
+    parent::__construct($defaults, $options, $CSRFSecret);
+
+    if (self::$dispatcher)
+    {
+      self::$dispatcher->notify(new sfEvent($this, 'form.post_configure'));
+    }
+  }
+
+  /**
+   * Sets the event dispatcher to be used by all forms.
+   *
+   * @param sfEventDispatcher $dispatcher
+   */
+  static public function setEventDispatcher(sfEventDispatcher $dispatcher = null)
+  {
+    self::$dispatcher = $dispatcher;
+  }
+
+  /**
+   * Returns the event dispatcher.
+   *
+   * @return sfEventDispatcher
+   */
+  static public function getEventDispatcher()
+  {
+    return self::$dispatcher;
+  }
+
   /**
    * Smartly binds request files and parameters.
-   * 
+   *
    * @param sfWebRequest $request
    */
   public function bindRequest(sfWebRequest $request)
@@ -37,5 +77,54 @@ class sfFormSymfony extends sfForm
     {
       $this->bind($request->getPostParameters(), $request->getFiles());
     }
+  }
+
+  /**
+   * Notifies the 'form.filter_values' and 'form.validation_error' events.
+   *
+   * @see sfForm
+   */
+  protected function doBind(array $values)
+  {
+    if (self::$dispatcher)
+    {
+      $values = self::$dispatcher->filter(new sfEvent($this, 'form.filter_values'), $values)->getReturnValue();
+    }
+
+    try
+    {
+      parent::doBind($values);
+    }
+    catch (sfValidatorError $error)
+    {
+      if (self::$dispatcher)
+      {
+        self::$dispatcher->notify(new sfEvent($this, 'form.validation_error', array('error' => $error)));
+      }
+
+      throw $error;
+    }
+  }
+
+  /**
+   * Calls methods defined via sfEventDispatcher.
+   *
+   * @param string $method    The method name
+   * @param array  $arguments The method arguments
+   *
+   * @return mixed The returned value of the called method
+   */
+  public function __call($method, $arguments)
+  {
+    if (self::$dispatcher)
+    {
+      $event = self::$dispatcher->notifyUntil(new sfEvent($this, 'form.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+      if ($event->isProcessed())
+      {
+        return $event->getReturnValue();
+      }
+    }
+
+    throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
   }
 }

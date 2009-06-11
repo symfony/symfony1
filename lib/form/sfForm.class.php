@@ -11,7 +11,7 @@
 /**
  * sfForm represents a form.
  *
- * A forms is composed of a validator schema and a widget form schema.
+ * A form is composed of a validator schema and a widget form schema.
  *
  * sfForm also takes care of CSRF protection by default.
  *
@@ -223,7 +223,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     try
     {
-      $this->values = $this->validatorSchema->clean(self::deepArrayUnion($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
+      $this->doBind(self::deepArrayUnion($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
       $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
       // remove CSRF token
@@ -234,6 +234,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
       $this->values = array();
       $this->errorSchema = $e;
     }
+  }
+
+  /**
+   * Cleans and binds values to the current form.
+   *
+   * @param array $values A merged array of values and files
+   */
+  protected function doBind(array $values)
+  {
+    $this->values = $this->validatorSchema->clean($values);
   }
 
   /**
