@@ -21,7 +21,7 @@ class sfProjectConfiguration
   protected
     $rootDir               = null,
     $symfonyLibDir         = null,
-    $plugins               = array('sfPropelPlugin'),
+    $plugins               = array(),
     $pluginPaths           = array(),
     $overriddenPluginPaths = array(),
     $pluginConfigurations  = array(),
