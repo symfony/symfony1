@@ -249,6 +249,27 @@ passed. If not, the task is silent, except for errors of course. Speaking of
 errors, if one occurs, the output is on a red background to easy problem
 identification.
 
+### `generate:project`
+
+As of symfony 1.3, Doctrine is the default configured ORM when executing the
+`generate:project` task:
+
+    $ php /path/to/symfony generate:project foo
+
+To generate a project for Propel, use the `--orm` option:
+
+    $ php /path/to/symfony generate:project foo --orm=Propel
+
+The new `--installer` option allows you to pass a PHP script that can further
+customize the newly created project. The script is executed in the context of
+the task, and so can use any of its methods. The more useful ones are the
+following: `installDir()`, `runTask()`, `ask()`, `askConfirmation()`,
+`askAndValidate()`, and `reloadTasks()`.
+
+More information can be found in this
+[post](http://www.symfony-project.org/blog/2009/06/10/new-in-symfony-1-3-project-creation-customization)
+from the official symfony blog.
+
 ### `sfFileSystem::execute()`
 
 The `sfFileSystem::execute()` methods replaces the `sfFileSystem::sh()` method
