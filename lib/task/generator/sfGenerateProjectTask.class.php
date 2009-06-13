@@ -58,6 +58,16 @@ for a new project in the current directory:
 
 If the current directory already contains a symfony project,
 it throws a [sfCommandException|COMMENT].
+
+By default, the task configures Doctrine as the ORM. If you want to use
+Propel, use the [--orm|INFO] option:
+
+  [./symfony generate:project blog --orm=Propel|INFO]
+
+You can also pass the [--installer|INFO] option to further customize the
+project:
+
+  [./symfony generate:project blog --installer=./installer.php|INFO]
 EOF;
   }
 
