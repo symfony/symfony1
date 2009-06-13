@@ -165,7 +165,8 @@ abstract class sfCommandApplication
     $tasks = array();
     foreach (get_declared_classes() as $class)
     {
-      $r = new Reflectionclass($class);
+      $r = new ReflectionClass($class);
+
       if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
       {
         $tasks[] = new $class($this->dispatcher, $this->formatter);
