@@ -188,15 +188,20 @@ class sfToolkit
     $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
     $output = '';
 
-    foreach (token_get_all($source) as $token) {
+    foreach (token_get_all($source) as $token)
+    {
       // array
-      if (isset($token[1])) {
+      if (isset($token[1]))
+      {
         // no action on comments
-        if (!isset($ignore[$token[0]])) {
+        if (!isset($ignore[$token[0]]))
+        {
           // anything else -> output "as is"
           $output .= $token[1];
         }
-      } else {
+      }
+      else
+      {
         // simple 1-character token
         $output .= $token;
       }
