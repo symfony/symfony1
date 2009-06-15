@@ -160,18 +160,11 @@ class sfDoctrinePager extends sfPager implements Serializable
   /**
    * Get all the results for the pager instance
    *
-   * @param integer $fetchtype Doctrine::HYDRATE_* constants
-   * @return Doctrine_Collection
+   * @param integer $hydrationMode Doctrine::HYDRATE_* constants
+   * @return mixed Doctrine_Collection/array
    */
-  public function getResults($fetchtype = null)
+  public function getResults($hydrationMode = Doctrine::HYDRATE_RECORD)
   {
-    $p = $this->getQuery();
-
-    if ($fetchtype == 'array')
-    {
-      return $p->execute(array(), Doctrine::HYDRATE_ARRAY);
-    }
-
-    return $p->execute();
+    return $this->getQuery()->execute(array(), $hydrationMode);
   }
 }
