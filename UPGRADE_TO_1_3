@@ -138,6 +138,16 @@ symfony 1.4:
 
   * All symfony 1.0 task aliases.
 
+The following behaviors are deprecated in symfony 1.3, and will be removed in
+symfony 1.4:
+
+  * The `sfParameterHolder::get()`, `sfParameterHolder::has()`,
+    `sfParameterHolder::remove()`, `sfNamespacedParameterHolder::get()`,
+    `sfNamespacedParameterHolder::has()`, and
+    `sfNamespacedParameterHolder::remove()` methods support for the array
+    notation (`[]`) is deprecated and won't be available in symfony 1.4
+    (better for performance).
+
 The symfony CLI does not accept anymore the global `--dry-run` option as it
 was not used by any symfony built-in task. If one of your task relies on this
 option, you can just add it as a local option of your task class.
