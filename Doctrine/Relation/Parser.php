@@ -142,7 +142,7 @@ class Doctrine_Relation_Parser
         }
 
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
-        
+
         return $this->_pending[$alias];
     }
 
@@ -156,24 +156,24 @@ class Doctrine_Relation_Parser
         if (isset($this->_relations[$alias])) {
             return $this->_relations[$alias];
         }
-       
+
         if (isset($this->_pending[$alias])) {
             $def = $this->_pending[$alias];
             $identifierColumnNames = $this->_table->getIdentifierColumnNames();
             $idColumnName = array_pop($identifierColumnNames);
-            
+
             // check if reference class name exists
             // if it does we are dealing with association relation
             if (isset($def['refClass'])) {
                 $def = $this->completeAssocDefinition($def);
                 $localClasses = array_merge($this->_table->getOption('parents'), array($this->_table->getComponentName()));
-                
+
                 $backRefRelationName = isset($def['refClassRelationAlias']) ?
                         $def['refClassRelationAlias'] : $def['refClass'];
                 if ( ! isset($this->_pending[$backRefRelationName]) && ! isset($this->_relations[$backRefRelationName])) {
 
                     $parser = $def['refTable']->getRelationParser();
-                    
+
                     if ( ! $parser->hasRelation($this->_table->getComponentName())) {
                         $parser->bind($this->_table->getComponentName(),
                                       array('type'    => Doctrine_Relation::ONE,
@@ -209,11 +209,13 @@ class Doctrine_Relation_Parser
                 if (isset($def['localKey'])) {
                     $rel = new Doctrine_Relation_LocalKey($def);
 
-                    // Automatically index foreign keys which are not primary
+                    // Automatically index for foreign keys
                     $foreign = (array) $def['foreign'];
+
                     foreach ($foreign as $fk) {
-                        if ( ! $rel->getTable()->isIdentifier($fk)) {
-                            $rel->getTable()->addIndex($fk, array('fields' => array($fk)));
+                        // Check if its already not indexed (primary key)
+                        if ( ! $rel['table']->isIdentifier($rel['table']->getFieldName($fk))) {
+                            $rel['table']->addIndex($fk, array('fields' => array($fk)));
                         }
                     }
                 } else {
@@ -265,7 +267,7 @@ class Doctrine_Relation_Parser
 
         if (class_exists($template) && in_array('Doctrine_Template', class_parents($template))) {
             $impl = $this->_table->getImpl($template);
-            
+
             if ($impl === null) {
                 throw new Doctrine_Relation_Parser_Exception("Couldn't find concrete implementation for template " . $template);
             }
@@ -282,7 +284,7 @@ class Doctrine_Relation_Parser
      * @param array $def    definition array to be completed
      * @return array        completed definition array
      */
-    public function completeAssocDefinition($def) 
+    public function completeAssocDefinition($def)
     {
         $conn = $this->_table->getConnection();
         $def['table'] = $this->getImpl($def['class']);
@@ -296,7 +298,7 @@ class Doctrine_Relation_Parser
             if ( ! isset($def['foreign'])) {
                 // foreign key not set
                 // try to guess the foreign key
-    
+
                 $def['foreign'] = ($def['local'] === $id[0]) ? $id[1] : $id[0];
             }
             if ( ! isset($def['local'])) {
@@ -309,23 +311,23 @@ class Doctrine_Relation_Parser
             if ( ! isset($def['foreign'])) {
                 // foreign key not set
                 // try to guess the foreign key
-    
+
                 $columns = $this->getIdentifiers($def['table']);
-    
+
                 $def['foreign'] = $columns;
             }
             if ( ! isset($def['local'])) {
                 // local key not set
                 // try to guess the local key
                 $columns = $this->getIdentifiers($this->_table);
-    
+
                 $def['local'] = $columns;
             }
         }
         return $def;
     }
 
-    /** 
+    /**
      * getIdentifiers
      * gives a list of identifiers from given table
      *
@@ -338,7 +340,7 @@ class Doctrine_Relation_Parser
     {
         $componentNameToLower = strtolower($table->getComponentName());
         if (is_array($table->getIdentifier())) {
-            $columns = array();      
+            $columns = array();
             foreach ((array) $table->getIdentifierColumnNames() as $identColName) {
                 $columns[] = $componentNameToLower . '_' . $identColName;
             }
@@ -380,7 +382,7 @@ class Doctrine_Relation_Parser
                 break;
             }
         }
-        
+
         if ( ! $found) {
             throw new Doctrine_Relation_Exception("Couldn't find columns.");
         }
@@ -413,6 +415,8 @@ class Doctrine_Relation_Parser
         $foreignIdColumnName = array_pop($foreignIdentifierColumnNames);
 
         if (isset($def['local'])) {
+            $def['local'] = $def['localTable']->getColumnName($def['local']);
+
             if ( ! isset($def['foreign'])) {
                 // local key is set, but foreign key is not
                 // try to guess the foreign key
@@ -426,6 +430,8 @@ class Doctrine_Relation_Parser
                     $def['localKey'] = true;
                 }
             } else {
+                $def['foreign'] = $def['table']->getColumnName($def['foreign']);
+
                 if ($localIdentifierCount == 1) {
                     if ($def['local'] == $localIdColumnName && isset($def['owningSide'])
                             && $def['owningSide'] === true) {
@@ -441,6 +447,8 @@ class Doctrine_Relation_Parser
             }
         } else {
             if (isset($def['foreign'])) {
+                $def['foreign'] = $def['table']->getColumnName($def['foreign']);
+
                 // local key not set, but foreign key is set
                 // try to guess the local key
                 if ($def['foreign'] === $foreignIdColumnName) {
@@ -483,7 +491,7 @@ class Doctrine_Relation_Parser
                     $idColumnName = array_pop($identifierColumnNames);
                     $column = strtolower($table->getComponentName())
                             . '_' . $idColumnName;
-                
+
                     foreach ($localClasses as $class2) {
                         $table2 = $conn->getTable($class2);
                         if ($table2->hasColumn($column)) {
@@ -513,7 +521,7 @@ class Doctrine_Relation_Parser
                     unset($col['primary']);
 
                     $def['table']->setColumn($column, $type, $length, $col);
-                    
+
                     $columns[] = $column;
                 }
                 if (count($columns) > 1) {

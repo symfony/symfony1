@@ -372,7 +372,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     {
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
-
+            
             $local = $rel->getLocal();
             $foreign = $rel->getForeign();
 
@@ -387,7 +387,9 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     $id = array_values($obj->identifier());
 
                     if ( ! empty($id)) {
-                        foreach ((array) $rel->getLocal() as $k => $field) {
+                        foreach ((array) $rel->getLocal() as $k => $columnName) {
+                            $field = $record->getTable()->getFieldName($columnName);
+                            
                             if (isset($id[$k]) && $id[$k] && $record->getTable()->hasField($field)) {
                                 $record->set($field, $id[$k]);
                             }
