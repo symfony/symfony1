@@ -166,7 +166,13 @@ abstract class sfDoctrineRecord extends Doctrine_Record
         }
         else if ($table->hasField($fieldName = $table->getFieldName($name)))
         {
-          $entityName = strtolower($fieldName);
+          $entityNameLower = strtolower($fieldName);
+          if ($table->hasField($entityNameLower))
+          {
+            $entityName = $entityNameLower;
+          } else {
+            $entityName = $fieldName;
+          }
         }
         else
         {
@@ -177,7 +183,14 @@ abstract class sfDoctrineRecord extends Doctrine_Record
           } else if ($table->hasField(strtolower($name))) {
             $entityName = strtolower($name);
           } else {
-            $entityName = $underScored;
+            $camelCase = $table->getFieldName(sfInflector::camelize($name));
+            $camelCase = strtolower($camelCase[0]).substr($camelCase, 1, strlen($camelCase));
+            if ($table->hasField($camelCase))
+            {
+              $entityName = $camelCase;
+            } else {
+              $entityName = $underScored;
+            }
           }
         }
 

@@ -18,6 +18,10 @@ Article:
     Author:
       foreignAlias: Articles
 
+CamelCase:
+  columns:
+    testCamelCase: string(255)
+
 Author:
   columns:
     name: string(255)
