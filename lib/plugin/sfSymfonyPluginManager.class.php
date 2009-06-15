@@ -55,8 +55,9 @@ class sfSymfonyPluginManager extends sfPluginManager
     $this->registerSymfonyPackage();
 
     // register callbacks to manage web content
-    $this->dispatcher->connect('plugin.post_install',  array($this, 'ListenToPluginPostInstall'));
-    $this->dispatcher->connect('plugin.pre_uninstall', array($this, 'ListenToPluginPostUninstall'));
+    $this->dispatcher->connect('plugin.post_install',  array($this, 'listenToPluginPostInstall'));
+    $this->dispatcher->connect('plugin.pre_uninstall', array($this, 'listenToPluginPostUninstall'));
+    $this->dispatcher->connect('plugin.post_uninstall', array($this, 'listenToPluginPostUnintall'));
   }
 
   /**
@@ -103,14 +104,56 @@ class sfSymfonyPluginManager extends sfPluginManager
   }
 
   /**
+   * Enables a plugin in the ProjectConfiguration class.
+   *
+   * @param string $plugin The name of the plugin
+   */
+  public function enablePlugin($plugin)
+  {
+    if (!$this->environment->getOption('config_dir'))
+    {
+      throw new sfPluginException('You must provide a "config_dir" option.');
+    }
+
+    $manipulator = sfClassManipulator::fromFile($this->environment->getOption('config_dir').'/ProjectConfiguration.class.php');
+    $manipulator->wrapMethod('setup', '', sprintf('$this->enablePlugins(\'%s\');', $plugin));
+    $manipulator->save();
+  }
+
+  /**
+   * Disables a plugin in the ProjectConfiguration class.
+   *
+   * @param string $plugin The name of the plugin
+   */
+  protected function disablePlugin($plugin)
+  {
+    if (!$this->environment->getOption('config_dir'))
+    {
+      throw new sfPluginException('You must provide a "config_dir" option.');
+    }
+
+    $file = $this->environment->getOption('config_dir').'/ProjectConfiguration.class.php';
+    $source = file_get_contents($file);
+
+    $source = preg_replace(sprintf('# *\$this\->enablePlugins\(array\(([^\)]+), *\'%s\'([^\)]*)\)\)#', $plugin), '$this->enablePlugins(array($1$2))', $source);
+    $source = preg_replace(sprintf('# *\$this\->enablePlugins\(array\(\'%s\', *([^\)]*)\)\)#', $plugin), '$this->enablePlugins(array($1))', $source);
+    $source = preg_replace(sprintf('# *\$this\->enablePlugins\(\'%s\'\); *\n?#', $plugin), '', $source);
+    $source = preg_replace(sprintf('# *\$this\->enablePlugins\(array\(\'%s\'\)\); *\n?#', $plugin), '', $source);
+    $source = preg_replace(sprintf('# *\$this\->enablePlugins\(array\(\)\); *\n?#', $plugin), '', $source);
+
+    file_put_contents($file, $source);
+  }
+
+  /**
    * Listens to the plugin.post_install event.
    *
    * @param sfEvent $event An sfEvent instance
    */
-  public function ListenToPluginPostInstall($event)
+  public function listenToPluginPostInstall($event)
   {
-    $this->installWebContent($event['plugin'], 
-           isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
+    $this->installWebContent($event['plugin'], isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
+
+    $this->enablePlugin($event['plugin']);
   }
 
   /**
@@ -118,9 +161,14 @@ class sfSymfonyPluginManager extends sfPluginManager
    *
    * @param sfEvent $event An sfEvent instance
    */
-  public function ListenToPluginPostUninstall($event)
+  public function listenToPluginPostUninstall($event)
   {
     $this->uninstallWebContent($event['plugin']);
+  }
+
+  public function listenToPluginPostUnintall(sfEvent $event)
+  {
+    $this->disablePlugin($event['plugin']);
   }
 
   /**

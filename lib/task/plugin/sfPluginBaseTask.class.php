@@ -18,22 +18,4 @@
  */
 abstract class sfPluginBaseTask extends sfBaseTask
 {
-  private
-   $pluginManager = null;
-
-  public function getPluginManager()
-  {
-    if (is_null($this->pluginManager))
-    {
-      $environment = new sfPearEnvironment($this->dispatcher, array(
-        'plugin_dir' => sfConfig::get('sf_plugins_dir'),
-        'cache_dir'  => sfConfig::get('sf_cache_dir').'/.pear',
-        'web_dir'    => sfConfig::get('sf_web_dir'),
-      ));
-
-      $this->pluginManager = new sfSymfonyPluginManager($this->dispatcher, $environment);
-    }
-
-    return $this->pluginManager;
-  }
 }

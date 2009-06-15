@@ -19,7 +19,8 @@
 abstract class sfBaseTask extends sfCommandApplicationTask
 {
   protected
-    $configuration = null;
+    $configuration = null,
+    $pluginManager = null;
 
   /**
    * @see sfTask
@@ -203,5 +204,116 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     sfAutoload::getInstance()->reloadClasses();
 
     sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache')->reload();
+  }
+
+  /**
+   * Mirrors a directory structure inside the created project.
+   *
+   * @param string   $dir    The directory to mirror
+   * @param sfFinder $finder A sfFinder instance to use for the mirroring
+   */
+  protected function installDir($dir, $finder = null)
+  {
+    if (is_null($finder))
+    {
+      $finder = sfFinder::type('any')->discard('.sf');
+    }
+
+    $this->getFilesystem()->mirror($dir, sfConfig::get('sf_root_dir'), $finder);
+  }
+
+  /**
+   * Replaces tokens in files contained in a given directory.
+   *
+   * If you don't pass a directory, it will replace in the config/ and lib/ directory.
+   *
+   * You can define global tokens by defining the $this->tokens property.
+   *
+   * @param array $dirs   An array of directory where to do the replacement
+   * @param array $tokens An array of tokens to use
+   */
+  protected function replaceTokens($dirs = array(), $tokens = array())
+  {
+    if (!$dirs)
+    {
+      $dirs = array(sfConfig::get('sf_config_dir'), sfConfig::get('sf_lib_dir'));
+    }
+
+    $tokens = array_merge(isset($this->tokens) ? $this->tokens : array(), $tokens);
+
+    $this->getFilesystem()->replaceTokens(sfFinder::type('file')->prune('vendor')->in($dirs), '##', '##', $tokens);
+  }
+
+  /**
+   * Reloads tasks.
+   *
+   * Useful when you install plugins with tasks and if you want to use them with the runTask() method.
+   */
+  protected function reloadTasks()
+  {
+    if (is_null($this->commandApplication))
+    {
+      return;
+    }
+
+    $this->configuration = $this->createConfiguration(null, null);
+
+    $this->commandApplication->clearTasks();
+    $this->commandApplication->loadTasks($this->configuration);
+
+    $disabledPluginsRegex = sprintf('#^(%s)#', implode('|', array_diff($this->configuration->getAllPluginPaths(), $this->configuration->getPluginPaths())));
+    $tasks = array();
+    foreach (get_declared_classes() as $class)
+    {
+      $r = new Reflectionclass($class);
+      if ($r->isSubclassOf('sfTask') && !$r->isAbstract() && !preg_match($disabledPluginsRegex, $r->getFileName()))
+      {
+        $tasks[] = new $class($this->dispatcher, $this->formatter);
+      }
+    }
+
+    $this->commandApplication->registerTasks($tasks);
+  }
+
+  /**
+   * Enables a plugin in the ProjectConfiguration class.
+   *
+   * @param string $plugin The name of the plugin
+   */
+  protected function enablePlugin($plugin)
+  {
+    $this->getPluginManager()->enablePlugin($plugin);
+  }
+
+  /**
+   * Disables a plugin in the ProjectConfiguration class.
+   *
+   * @param string $plugin The name of the plugin
+   */
+  protected function disablePlugin($plugin)
+  {
+    $this->getPluginManager()->disablePlugin($plugin);
+  }
+
+  /**
+   * Returns a plugin manager instance.
+   *
+   * @return sfSymfonyPluginManager A sfSymfonyPluginManager instance
+   */
+  protected function getPluginManager()
+  {
+    if (is_null($this->pluginManager))
+    {
+      $environment = new sfPearEnvironment($this->dispatcher, array(
+        'plugin_dir' => sfConfig::get('sf_plugins_dir'),
+        'cache_dir'  => sfConfig::get('sf_cache_dir').'/.pear',
+        'web_dir'    => sfConfig::get('sf_web_dir'),
+        'config_dir' => sfConfig::get('sf_config_dir'),
+      ));
+
+      $this->pluginManager = new sfSymfonyPluginManager($this->dispatcher, $environment);
+    }
+
+    return $this->pluginManager;
   }
 }

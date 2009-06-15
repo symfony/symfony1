@@ -52,4 +52,26 @@ abstract class sfCommandApplicationTask extends sfTask
       parent::logSection($section, $message, $size, $style);
     }
   }
+
+  /**
+   * Executes another task in the context of the current one.
+   *
+   * @param  string  $name      The name of the task to execute
+   * @param  array   $arguments An array of arguments to pass to the task
+   * @param  array   $options   An array of options to pass to the task
+   *
+   * @return Boolean The returned value of the task run() method
+   */
+  protected function runTask($name, $arguments = array(), $options = array())
+  {
+    if (is_null($this->commandApplication))
+    {
+      throw new LogicException('No command application associated with this task yet.');
+    }
+
+    $task = $this->commandApplication->getTaskToExecute($name);
+    $task->setCommandApplication($this->commandApplication);
+
+    return $task->run($arguments, $options);
+  }
 }
