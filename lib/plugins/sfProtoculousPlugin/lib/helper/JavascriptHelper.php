@@ -348,7 +348,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
       case 'update':
         if (isset($options['position']) && $options['position'])
         {
-          $javascript_function = "\$('$element_id').insert('$content','".$options['position']."')";
+          $javascript_function = "\$('$element_id').insert({'".$options['position']."':'$content'})";
         }
         else
         {
