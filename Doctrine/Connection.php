@@ -1527,7 +1527,11 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $username = $this->getOption('username');
         $password = $this->getOption('password');
 
-        return $this->getManager()->openConnection(new PDO($pdoDsn, $username, $password), 'doctrine_tmp_connection', false);
+        $conn = $this->getManager()->openConnection(array($pdoDsn, $username, $password), 'doctrine_tmp_connection', false);
+        $conn->setOption('username', $username);
+        $conn->setOption('password', $password);
+
+        return $conn;
     }
 
     /**

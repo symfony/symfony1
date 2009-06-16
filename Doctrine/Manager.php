@@ -235,7 +235,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         // Decode adapter information
         if (is_array($adapter)) {
             foreach ($adapter as $key => $value) {
-                $adapter[$key]  = $value?urldecode($value):null;
+                $adapter[$key]  = $value ? urldecode($value):null;
             }
         }
 
@@ -313,7 +313,14 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                 $e2 = explode('=', $string);
 
                 if (isset($e2[0]) && isset($e2[1])) {
-                    list($key, $value) = $e2;
+                    if (count($e2) > 2)
+                    {
+                        $key = $e2[0];
+                        unset($e2[0]);
+                        $value = implode('=', $e2);
+                    } else {
+                        list($key, $value) = $e2;
+                    }
                     $parts[$key] = $value;
                 }
             }

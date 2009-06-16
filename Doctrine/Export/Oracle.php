@@ -42,25 +42,24 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      */
     public function createDatabase($name)
     {
-        if ( ! $this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE))
-            throw new Doctrine_Export_Exception('database creation is only supported if the "emulate_database" attribute is enabled');
+        if ($this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
+            $username   = $name;
+            $password   = $this->conn->dsn['password'] ? $this->conn->dsn['password'] : $name;
 
-        $username   = sprintf($this->conn->getAttribute(Doctrine::ATTR_DB_NAME_FORMAT), $name);
-        $password   = $this->conn->dsn['password'] ? $this->conn->dsn['password'] : $name;
+            $tablespace = $this->conn->options['default_tablespace']
+                        ? ' DEFAULT TABLESPACE '.$this->conn->options['default_tablespace'] : '';
 
-        $tablespace = $this->conn->getAttribute(Doctrine::ATTR_DB_NAME_FORMAT)
-                    ? ' DEFAULT TABLESPACE '.$this->conn->options['default_tablespace'] : '';
-
-        $query  = 'CREATE USER ' . $username . ' IDENTIFIED BY ' . $password . $tablespace;
-        $result = $this->conn->exec($query);
-
-        try {
-            $query = 'GRANT CREATE SESSION, CREATE TABLE, UNLIMITED TABLESPACE, CREATE SEQUENCE, CREATE TRIGGER TO ' . $username;
+            $query  = 'CREATE USER ' . $username . ' IDENTIFIED BY ' . $password . $tablespace;
             $result = $this->conn->exec($query);
-        } catch (Exception $e) {
-            $query = 'DROP USER '.$username.' CASCADE';
-            $result2 = $this->conn->exec($query);
+
+            try {
+                $query = 'GRANT CREATE SESSION, CREATE TABLE, UNLIMITED TABLESPACE, CREATE SEQUENCE, CREATE TRIGGER TO ' . $username;
+                $result = $this->conn->exec($query);
+            } catch (Exception $e) {
+                $this->dropDatabase($username);
+            }
         }
+
         return true;
     }
 
@@ -74,13 +73,28 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      */
     public function dropDatabase($name)
     {
-        if ( ! $this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE))
-            throw new Doctrine_Export_Exception('database dropping is only supported if the
-                                                       "emulate_database" option is enabled');
+        $sql[] = "BEGIN
+FOR I IN (select table_name from user_tables)
+LOOP 
+EXECUTE IMMEDIATE 'DROP TABLE '||I.table_name||' CASCADE CONSTRAINTS';
+END LOOP;
+END;";
 
-        $username = sprintf($this->conn->getAttribute(Doctrine::ATTR_DB_NAME_FORMAT), $name);
+        $sql[] = "BEGIN
+FOR I IN (SELECT SEQUENCE_NAME, SEQUENCE_OWNER FROM ALL_SEQUENCES WHERE SEQUENCE_OWNER <> 'SYS')
+LOOP 
+EXECUTE IMMEDIATE 'DROP SEQUENCE '||I.SEQUENCE_OWNER||'.'||I.SEQUENCE_NAME;
+END LOOP;
+END;";
 
-        return $this->conn->exec('DROP USER ' . $username . ' CASCADE');
+        foreach ($sql as $query) {
+            $this->conn->exec($query);
+        }
+
+        if ($this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
+            $username = $name;
+            $this->conn->exec('DROP USER ' . $username . ' CASCADE');
+        }
     }
 
     /**
@@ -135,7 +149,6 @@ DECLARE
    last_Sequence NUMBER;
    last_InsertID NUMBER;
 BEGIN
-   SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
    IF (:NEW.' . $name . ' IS NULL OR :NEW.'.$name.' = 0) THEN
       SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO :NEW.' . $name . ' FROM DUAL;
    ELSE

@@ -132,4 +132,9 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
         $column = $columnNames[0];
         return $this->_createLimitSubquery($query, $limit, $offset, $column);
     }
+
+    public function getTmpConnection($info)
+    {
+        return $this;
+    }
 }
