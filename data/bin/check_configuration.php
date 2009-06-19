@@ -99,6 +99,8 @@ check(!ini_get('magic_quotes_gpc'), 'php.ini has magic_quotes_gpc set to off', '
 check(!ini_get('register_globals'), 'php.ini has register_globals set to off', 'Set it to off in php.ini', false);
 check(!ini_get('session.auto_start'), 'php.ini has session.auto_start set to off', 'Set it to off in php.ini', false);
 
+check(version_compare(phpversion(), '5.2.9', '!='), 'PHP version is not 5.2.9', 'PHP 5.2.9 broke array_unique() and sfToolkit::arrayDeepMerge(). Use 5.2.10 instead [Ticket #6211]', false);
+
 if (!is_cli())
 {
   echo '</pre></body></html>';
