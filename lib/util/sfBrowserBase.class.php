@@ -82,7 +82,7 @@ abstract class sfBrowserBase
    * @param string $name   The variable name
    * @param mixed  $value  The value
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setVar($name, $value)
   {
@@ -115,7 +115,7 @@ abstract class sfBrowserBase
    * @param  bool    $secure   If secure
    * @param  bool    $httpOnly If uses only HTTP
    * 
-   * @return sfBrowser         This sfBrowser instance
+   * @return sfBrowserBase     This sfBrowserBase instance
    */
   public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
@@ -135,9 +135,9 @@ abstract class sfBrowserBase
   /**
    * Removes a cookie by name.
    *
-   * @param string $name The cookie name
+   * @param string $name   The cookie name
    *
-   * @return sfBrowser    This sfBrowser instance
+   * @return sfBrowserBase This sfBrowserBase instance
    */
   public function removeCookie($name)
   {
@@ -149,7 +149,7 @@ abstract class sfBrowserBase
   /**
    * Clears all cookies.
    *
-   * @return sfBrowser    This sfBrowser instance
+   * @return sfBrowserBase This sfBrowserBase instance
    */
   public function clearCookies()
   {
@@ -164,7 +164,7 @@ abstract class sfBrowserBase
    * @param string $username  The username
    * @param string $password  The password
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setAuth($username, $password)
   {
@@ -181,7 +181,7 @@ abstract class sfBrowserBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function get($uri, $parameters = array(), $changeStack = true)
   {
@@ -195,7 +195,7 @@ abstract class sfBrowserBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function post($uri, $parameters = array(), $changeStack = true)
   {
@@ -210,7 +210,7 @@ abstract class sfBrowserBase
    * @param array  $parameters   The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
@@ -379,7 +379,7 @@ abstract class sfBrowserBase
   /**
    * Go back in the browser history stack.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function back()
   {
@@ -395,7 +395,7 @@ abstract class sfBrowserBase
   /**
    * Go forward in the browser history stack.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function forward()
   {
@@ -411,7 +411,7 @@ abstract class sfBrowserBase
   /**
    * Reload the current browser.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function reload()
   {
@@ -517,7 +517,7 @@ abstract class sfBrowserBase
    *
    * @throws sfException If request was not a redirect
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function followRedirect()
   {
@@ -535,7 +535,7 @@ abstract class sfBrowserBase
    * @param string $name   The field name
    * @param string $value  The field value
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setField($name, $value)
   {
@@ -550,7 +550,7 @@ abstract class sfBrowserBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doSelect()
    */
@@ -566,7 +566,7 @@ abstract class sfBrowserBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doSelect()
    */
@@ -634,7 +634,7 @@ abstract class sfBrowserBase
    * @param array   $arguments  The arguments to pass to the link
    * @param array   $options    An array of options
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doClick()
    */
@@ -865,7 +865,7 @@ abstract class sfBrowserBase
   /**
    * Reset browser to original state
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function restart()
   {

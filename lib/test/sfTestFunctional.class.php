@@ -41,7 +41,7 @@ class sfTestFunctional extends sfTestFunctionalBase
    * @param  string $actionName  The action name
    * @param  mixed  $position    The position in the action stack (default to the last entry)
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctional The current sfTestFunctional instance
    */
   public function isForwardedTo($moduleName, $actionName, $position = 'last')
   {
@@ -73,7 +73,7 @@ class sfTestFunctional extends sfTestFunctionalBase
    * @param  boolean $boolean      Flag for checking the cache
    * @param  boolean $with_layout  If have or not layout
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctional The current sfTestFunctional instance
    */
   public function isCached($boolean, $with_layout = false)
   {
@@ -89,7 +89,7 @@ class sfTestFunctional extends sfTestFunctionalBase
    * @param  boolean $boolean      Flag for checking the cache
    * @param  boolean $with_layout  If have or not layout
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctional The current sfTestFunctional instance
    */
   public function isUriCached($uri, $boolean, $with_layout = false)
   {
