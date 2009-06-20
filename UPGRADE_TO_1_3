@@ -54,8 +54,8 @@ Deprecated/Removed settings, classes, methods, functions, and tasks
 Symfony 1.3 is the last version for which the sfCompat10Plugin plugin is
 included. The plugin will be removed in symfony 1.4.
 
-The following methods and functions have been deprecated in symfony 1.3 and
-will be removed in symfony 1.4:
+The following methods and functions have been deprecated in symfony 1.3 or
+before, and will be removed in symfony 1.4:
 
   * `sfToolkit::getTmpDir()`: You can replace all occurrences of this method
     by `sys_get_temp_dir()`
@@ -79,6 +79,31 @@ will be removed in symfony 1.4:
     calls to the new `sfFilesystem::execute()` method. Be warned that the
     returned value of this method is an array composed of the `stdout` output
     and the `stderr` output.
+
+  * `sfAction::getDefaultView()`, `sfAction::handleError()`,
+    `sfAction::validate()`: These methods have been deprecated in symfony 1.1,
+    and they was not really useful. As of symfony 1.1, they need the
+    `compat_10` setting set to `on` to work.
+
+  * `sfComponent::debugMessage()`: Use the `log_message()` helper instead.
+
+  * `sfApplicationConfiguration::loadPluginConfig()`: Use
+    `initializePlugins()` instead.
+
+  * `sfLoader::getHelperDirs()` and `sfLoader::loadHelpers()`: Use the same
+    methods from the `sfApplicationConfiguration` object. As all methods of
+    the class `sfLoader` are deprecated, the `sfLoader` class will be removed
+    in symfony 1.4.
+
+  * `sfController::sendEmail()`
+
+  * `sfGeneratorManager::initialize()`: It does nothing.
+
+  * `debug_message()`: Use the `log_message()` helper instead.
+
+  * `sfWebRequest::getMethodName()`: Use `getMethod()` instead.
+
+  * `sfDomCssSelector::getTexts()` and `sfDomCssSelector::getElements()`
 
 The following methods and functions have been removed in symfony 1.3:
 
