@@ -39,38 +39,34 @@
 class Doctrine_Import_Builder extends Doctrine_Builder
 {
     /**
-     * _path
-     *
-     * the path where imported files are being generated
+     * Path where to generated files
      *
      * @var string $_path
      */
     protected $_path = '';
 
     /**
-     * _packagesPrefix
+     * Class prefix for generated packages
      *
      * @var string
      */
     protected $_packagesPrefix = 'Package';
 
     /**
-     * _packagesPath
+     * Path to generate packages
      *
      * @var string
      */
     protected $_packagesPath = '';
 
     /**
-     * _packagesFolderName
+     * Name of folder to generate packages in
      *
      * @var string
      */
     protected $_packagesFolderName = 'packages';
 
     /**
-     * _suffix
-     *
      * File suffix to use when writing class definitions
      *
      * @var string $suffix
@@ -78,8 +74,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_suffix = '.php';
 
     /**
-     * _generateBaseClasses
-     *
      * Bool true/false for whether or not to generate base classes
      *
      * @var boolean $generateBaseClasses
@@ -87,8 +81,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_generateBaseClasses = true;
 
     /**
-     * _generateTableClasses
-     *
      * Bool true/false for whether or not to generate child table classes
      *
      * @var boolean $generateTableClasses
@@ -96,8 +88,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_generateTableClasses = false;
 
     /**
-     * _base
-     *
      * Prefix to use for generated base classes
      *
      * @var string
@@ -105,8 +95,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_baseClassPrefix = 'Base';
 
     /**
-     * _baseClassesDirectory
-     *
      * Directory to put the generate base classes in
      *
      * @var string $suffix
@@ -114,11 +102,18 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_baseClassesDirectory = 'generated';
 
     /**
-     * _baseClassName
+     * Base class name for generated classes
      *
      * @var string
      */
     protected $_baseClassName = 'Doctrine_Record';
+
+    /**
+     * Base table class name for generated classes
+     *
+     * @var string
+     */
+    protected $_baseTableClassName = 'Doctrine_Table';
 
     /**
      * Prefix to all generated classes
@@ -288,6 +283,16 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     public function setBaseClassName($className)
     {
         $this->_baseClassName = $className;
+    }
+
+    /**
+     * Set the base table class name to generate Doctrine_Table child classes with
+     *
+     * @return void
+     */
+    public function setBaseTableClassName($className)
+    {
+        $this->_baseTableClassName = $className;
     }
 
     /**
@@ -1028,13 +1033,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 unset($packageLevel['connection']);
 
                 $packageLevel['tableClassName'] = $packageLevel['className'] . 'Table';
-                $packageLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':'Doctrine_Table';
+                $packageLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':$this->_baseTableClassName;
 
                 $topLevel['tableClassName'] = $topLevel['topLevelClassName'] . 'Table';
                 $topLevel['inheritance']['tableExtends'] = $packageLevel['className'] . 'Table';
             } else {
                 $topLevel['tableClassName'] = $topLevel['className'] . 'Table';
-                $topLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':'Doctrine_Table';
+                $topLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':$this->_baseTableClassName;
             }
 
             $baseClass = $definition;
@@ -1055,21 +1060,30 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
     }
 
+    public function buildTableClassDefinition($className, $options = array())
+    {
+        $content  = '<?php' . PHP_EOL;
+        $content .= sprintf(self::$_tpl,
+            null,
+            false,
+            $className,
+            isset($options['extends']) ? $options['extends']:$this->_baseTableClassName,
+            null,
+            null,
+            null
+        );
+
+        return $content;
+    }
+
     /**
-     * writeTableDefinition
+     * writeTableClassDefinition
      *
      * @return void
      */
-    public function writeTableDefinition($className, $path, $options = array())
+    public function writeTableClassDefinition($className, $path, $options = array())
     {
-        $content  = '<?php' . PHP_EOL;
-        $content .= sprintf(self::$_tpl, null, false,
-                                       $className,
-                                       isset($options['extends']) ? $options['extends']:'Doctrine_Table',
-                                       null,
-                                       null,
-                                       null
-                                       );
+        $content = $this->buildTableClassDefinition($className, $options);
 
         Doctrine_Lib::makeDirectories($path);
 
@@ -1134,7 +1148,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             if ($this->generateTableClasses()) {
-                $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+                $this->writeTableClassDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
             }
         }
         // If is the package class then we need to make the path to the complete package
@@ -1146,7 +1160,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             if ($this->generateTableClasses()) {
-                $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+                $this->writeTableClassDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
             }
         }
         // If it is the base class of the doctrine record definition
