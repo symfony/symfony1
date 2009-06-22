@@ -529,15 +529,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        // If the body of the function has contents then we need to 
-        if ($code) {
-            // If the body of the function has contents and we are using inheritance
-            // then we need call the parent::setUp() before the body of the function
-            // Class table inheritance is the only one we shouldn't call parent::setUp() for
-            if ($code && isset($definition['inheritance']['type']) && $definition['inheritance']['type'] != 'class_table') {
-                $code = "parent::setUp();" . PHP_EOL . '    ' . $code;
-            }
-        }
+        $code = "parent::setUp();" . PHP_EOL . '    ' . $code;
 
         // If we have some code for the function then lets define it and return it
         if ($code) {
