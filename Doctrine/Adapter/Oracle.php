@@ -60,10 +60,13 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
      *
      * @var array
      */
-    protected $config = array('dbname'   => null,
-                              'username' => null,
-                              'password' => null,
-                              'charset'  => null);
+    protected $config = array(
+        'dbname'     => null,
+        'username'   => null,
+        'password'   => null,
+        'charset'    => null,
+        'persistent' => false
+    );
 
     /**
      * Doctrine Oracle adapter constructor
@@ -75,7 +78,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
      * or
      *
      * <code>
-     * Doctrine_Manager::connection(array('oracle:dbname=SID;charset=NLS_CHARACTERSET','usr', 'pass'),"doctrine_connection_name")
+     * Doctrine_Manager::connection(array('oracle:dbname=SID;charset=NLS_CHARACTERSET;persistent=true','usr', 'pass'),"doctrine_connection_name")
      * </code>
      *
      * @param string $name
@@ -88,16 +91,8 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
             $config = str_replace("oracle:","",$config);
             $parts = explode(";", $config);
             foreach($parts as $part) {
-                list($var, $value)=explode("=", $part);
-                switch($var)
-                {
-                    case 'dbname':
-                        $this->config['dbname'] = $value;
-                        break;
-                    case 'charset':
-                        $this->config['charset'] = $value;
-                        break;
-                }
+                list($var, $value) = explode("=", $part);
+                $this->config[$var] = $value;
             }
 
             $this->config['username'] = $username;
@@ -110,11 +105,24 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
             $this->config['username'] = $config['username'];
             $this->config['password'] = $config['password'];
             $this->config['dbname']   = $config['dbname'];
-            $this->config['charset']  = $config['charset'];
+
+            if (isset($config['charset'])) { 
+                $this->config['charset']  = $config['charset']; 
+            } 
+ 
+            if (isset($config['persistent'])) { 
+                $this->config['persistent']  = $config['persistent']; 
+            }
         }
 
-        $this->connection = @oci_connect($this->config['username'], $this->config['password'],
-                                             $this->config['dbname'], $this->config['charset']);
+
+        if ($this->config['persistent'] == 'true'){ 
+            $this->connection = @oci_pconnect($this->config['username'], $this->config['password'], 
+                $this->config['dbname'], $this->config['charset']); 
+        } else { 
+            $this->connection = @oci_new_connect($this->config['username'], $this->config['password'], 
+                $this->config['dbname'], $this->config['charset']); 
+        }
 
         if ($this->connection === false) {
             throw new Doctrine_Adapter_Exception(sprintf("Unable to Connect to :'%s' as '%s'", $this->config['dbname'], $this->config['username']));
@@ -283,5 +291,13 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
             $error = @oci_error();
         }
         return $error['message'];
+    }
+
+    public function __destruct() 
+    {  
+        if (is_resource($this->connection)) {  
+            @oci_rollback($this->connection);  
+            @oci_close($this->connection);  
+        } 
     }
 }
