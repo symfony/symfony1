@@ -64,14 +64,6 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
     }
 
     /**
-     * @deprecated
-     */
-    public function parseQueryPart($queryPartName, $queryPart, $append = false)
-    {
-        return $this->parseDqlQueryPart($queryPartName, $queryPart, $append);
-    }
-
-    /**
      * parseDqlQueryPart
      * parses given DQL query part. Overrides Doctrine_Query_Abstract::parseDqlQueryPart().
      * This implementation does no parsing at all, except of the SELECT portion of the query
@@ -110,7 +102,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     protected function _addDqlQueryPart($queryPartName, $queryPart, $append = false)
     {
-        return $this->parseQueryPart($queryPartName, $queryPart, $append);
+        return $this->parseDqlQueryPart($queryPartName, $queryPart, $append);
     }
     
     /**
@@ -118,7 +110,8 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      *
      * @param $queryPart sting The name of the querypart
      */
-    private function _parseSelectFields($queryPart){
+    private function _parseSelectFields($queryPart)
+    {
         preg_match_all('/{([^}{]*)}/U', $queryPart, $m);
         $this->fields = $m[1];
         $this->_sqlParts['select'] = array();
@@ -297,7 +290,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      *
      * @return string       the built sql query
      */
-	public function getCountQuery($params = array())
+	public function getCountSqlQuery($params = array())
     {
         //Doing COUNT( DISTINCT rootComponent.id )
         //This is not correct, if the result is not hydrated by doctrine, but it mimics the behaviour of Doctrine_Query::getCountQuery
@@ -347,9 +340,9 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     public function count($params = array())
     {
-        $q = $this->getCountQuery();
+        $sql = $this->getCountSqlQuery();
         $params = $this->getCountQueryParams($params);
-        $results = $this->getConnection()->fetchAll($q, $params);
+        $results = $this->getConnection()->fetchAll($sql, $params);
 
         if (count($results) > 1) {
             $count = count($results);

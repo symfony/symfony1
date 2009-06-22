@@ -148,7 +148,7 @@ class Doctrine_Parser_YamlSf_Inline
     else
     {
       // "normal" string
-      if (!$delimiters)
+      if ( !$delimiters)
       {
         $output = substr($scalar, $i);
         $i += strlen($output);
@@ -255,7 +255,7 @@ class Doctrine_Parser_YamlSf_Inline
           $isQuoted = in_array($sequence[$i], array('"', "'"));
           $value = self::parseScalar($sequence, array(',', ']'), array('"', "'"), $i);
 
-          if (!$isQuoted && false !== strpos($value, ': '))
+          if ( !$isQuoted && false !== strpos($value, ': '))
           {
             // embedded mapping?
             try

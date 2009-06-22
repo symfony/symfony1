@@ -744,6 +744,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             $this[$rowKey]->fromArray($row);
         }
     }
+
     public function synchronizeFromArray(array $array)
     {
         return $this->synchronizeWithArray($array);

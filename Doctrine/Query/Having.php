@@ -78,10 +78,10 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
                 $ref   = implode('.', $a);
                 $map   = $this->query->load($ref, false);
                 $field = $map['table']->getColumnName($field);
-                $value = $this->query->getConnection()->quoteIdentifier($this->query->getTableAlias($ref) . '.' . $field);
+                $value = $this->query->getConnection()->quoteIdentifier($this->query->getSqlTableAlias($ref) . '.' . $field);
             } else {
                 $field = end($a);
-                $value = $this->query->getAggregateAlias($field);
+                $value = $this->query->getSqlAggregateAlias($field);
             }
         }
         

@@ -140,7 +140,6 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         return call_user_func_array($this->_options['builder'], array($value, $record));
     }
 
-
     /**
      * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by 
      * incrementing the values with a postfix if the slug is not unique

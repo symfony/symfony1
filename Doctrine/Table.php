@@ -1081,6 +1081,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
         return $columnName;
     }
+
     public function setColumns(array $definitions)
     {
         foreach ($definitions as $name => $options) {
@@ -1376,7 +1377,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         return $queryRegistry->get($queryKey, $this->getComponentName());
     }
-
 
     /**
      * Finds a record by its identifier.

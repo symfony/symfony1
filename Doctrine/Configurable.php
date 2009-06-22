@@ -109,14 +109,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      *
      * <code>
      * $manager->setAttribute(Doctrine::ATTR_PORTABILITY, Doctrine::PORTABILITY_ALL);
-     *
-     * // or
-     *
-     * $manager->setAttribute('portability', Doctrine::PORTABILITY_ALL);
-     *
-     * // or
-     *
-     * $manager->setAttribute('portability', 'all');
      * </code>
      *
      * @param mixed $attribute              either a Doctrine::ATTR_* integer constant or a string
@@ -128,19 +120,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      */
     public function setAttribute($attribute, $value)
     {
-        if (is_string($attribute)) {
-            $stringAttribute = $attribute;
-            $attribute = $this->getAttributeFromString($attribute);
-            $this->_state = $attribute;
-        }
-
-        if (is_string($value) && isset($stringAttribute)) {
-            $value = $this->getAttributeValueFromString($stringAttribute, $value);
-        }
-
         switch ($attribute) {
-            case Doctrine::ATTR_FETCHMODE:
-                throw new Doctrine_Exception('Deprecated attribute. See http://www.phpdoctrine.org/documentation/manual?chapter=configuration');
             case Doctrine::ATTR_LISTENER:
                 $this->setEventListener($value);
                 break;
@@ -259,6 +239,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
         
         return $this->_params[$namespace][$name];
     }
+
     /**
      * setImpl
      * binds given class to given template name
@@ -426,19 +407,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      */
     public function getAttribute($attribute)
     {
-        if (is_string($attribute)) {
-            $upper = strtoupper($attribute);
-
-            $const = 'Doctrine::ATTR_' . $upper; 
-
-            if (defined($const)) {
-                $attribute = constant($const);
-                $this->_state = $attribute;
-            } else {
-                throw new Doctrine_Exception('Unknown attribute: "' . $attribute . '"');
-            }
-        }
-
         $attribute = (int) $attribute;
 
         if ($attribute < 0) {

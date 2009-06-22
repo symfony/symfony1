@@ -78,7 +78,6 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         return $this->_options[$option];
     }
 
-
     /**
      * Get the hash key passing its suffix
      *

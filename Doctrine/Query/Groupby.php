@@ -98,7 +98,7 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
                                     $componentAlias = $componentAlias . '.' . $def['owner'];
                                 }
 
-                                $tableAlias = $this->query->getTableAlias($componentAlias);
+                                $tableAlias = $this->query->getSqlTableAlias($componentAlias);
 
                                 // build sql expression
                                 $term[0] = $conn->quoteIdentifier($tableAlias) . '.' . $conn->quoteIdentifier($field);
@@ -143,7 +143,7 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
                                         $componentAlias = $componentAlias . '.' . $def['owner'];
                                     }
 
-                                    $tableAlias = $this->query->getTableAlias($componentAlias);
+                                    $tableAlias = $this->query->getSqlTableAlias($componentAlias);
                                     $conn = $this->query->getConnection();
 
                                     if ($this->query->getType() === Doctrine_Query::SELECT) {

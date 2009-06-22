@@ -71,10 +71,10 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
                 if (empty($reference)) {
                     $map = $this->query->getRootDeclaration();
-                    $alias = $this->query->getTableAlias($this->query->getRootAlias());
+                    $alias = $this->query->getSqlTableAlias($this->query->getRootAlias());
                 } else {
                     $map = $this->query->load($reference, false);
-                    $alias = $this->query->getTableAlias($reference);
+                    $alias = $this->query->getSqlTableAlias($reference);
                 }
             }
 
@@ -151,8 +151,9 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
                 substr($trimmed, 0, 6) == 'SELECT') {
 
                 // subquery found
-                $q     = $this->query->createSubquery()->parseQuery($trimmed, false);
-                $sql   = $q->getSql();
+                $q = $this->query->createSubquery()
+                    ->parseDqlQuery($trimmed, false);
+                $sql   = $q->getSqlQuery();
                 $q->free();
                 $rightExpr = '(' . $sql . ')';
 
@@ -200,8 +201,9 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
         $sub = $this->_tokenizer->bracketTrim(substr($where, $pos));
 
-        $q = $this->query->createSubquery()->parseQuery($sub, false);
-        $sql = $q->getSql();
+        $q = $this->query->createSubquery()
+            ->parseDqlQuery($sub, false);
+        $sql = $q->getSqlQuery();
         $q->free();
         return $operator . ' (' . $sql . ')';
     }

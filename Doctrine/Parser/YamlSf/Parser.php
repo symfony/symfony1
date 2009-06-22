@@ -78,7 +78,7 @@ class Doctrine_Parser_YamlSf_Parser
         }
 
         // array
-        if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
+        if ( !isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           $c = $this->getRealCurrentLineNb() + 1;
           $parser = new Doctrine_Parser_YamlSf_Parser($c);
@@ -106,7 +106,7 @@ class Doctrine_Parser_YamlSf_Parser
           if (isset($values['value']) && '*' === substr($values['value'], 0, 1))
           {
             $isInPlace = substr($values['value'], 1);
-            if (!array_key_exists($isInPlace, $this->refs))
+            if ( !array_key_exists($isInPlace, $this->refs))
             {
               throw new InvalidArgumentException(sprintf('Reference "%s" does not exist on line %s.', $isInPlace, $this->currentLine));
             }
@@ -123,7 +123,7 @@ class Doctrine_Parser_YamlSf_Parser
         }
 
         // hash
-        if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
+        if ( !isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           // if next line is less indented or equal, then it means that the current value is null
           if ($this->isNextLineIndented())
@@ -201,7 +201,7 @@ class Doctrine_Parser_YamlSf_Parser
 
     $newIndent = $this->getCurrentLineIndentation();
 
-    if (!$this->isCurrentLineEmpty() && 0 == $newIndent)
+    if ( !$this->isCurrentLineEmpty() && 0 == $newIndent)
     {
       throw new InvalidArgumentException(sprintf('Indentation problem at line %d (%s)', $this->getRealCurrentLineNb(), $this->currentLine));
     }
@@ -289,7 +289,7 @@ class Doctrine_Parser_YamlSf_Parser
         $value = substr($value, 1);
       }
 
-      if (!array_key_exists($value, $this->refs))
+      if ( !array_key_exists($value, $this->refs))
       {
         throw new InvalidArgumentException(sprintf('Reference "%s" does not exist (%s).', $value, $this->currentLine));
       }
@@ -331,12 +331,12 @@ class Doctrine_Parser_YamlSf_Parser
       $notEOF = $this->moveToNextLine();
     }
 
-    if (!$notEOF)
+    if ( !$notEOF)
     {
       return '';
     }
 
-    if (!preg_match('#^(?P<indent>'.($indentation ? str_repeat(' ', $indentation) : ' +').')(?P<text>.*)$#', $this->currentLine, $matches))
+    if ( !preg_match('#^(?P<indent>'.($indentation ? str_repeat(' ', $indentation) : ' +').')(?P<text>.*)$#', $this->currentLine, $matches))
     {
       $this->moveToPreviousLine();
 
@@ -466,7 +466,7 @@ class Doctrine_Parser_YamlSf_Parser
   {
     $value = str_replace(array("\r\n", "\r"), "\n", $value);
 
-    if (!preg_match("#\n$#", $value))
+    if ( !preg_match("#\n$#", $value))
     {
       $value .= "\n";
     }

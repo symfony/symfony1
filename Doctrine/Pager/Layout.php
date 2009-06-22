@@ -89,7 +89,6 @@ class Doctrine_Pager_Layout
         $this->setSeparatorTemplate('');
     }
 
-
     /**
      * getPager
      *
@@ -101,7 +100,6 @@ class Doctrine_Pager_Layout
     {
         return $this->_pager;
     }
-
 
     /**
      * _setPager
@@ -115,7 +113,6 @@ class Doctrine_Pager_Layout
     {
         $this->_pager = $pager;
     }
-
 
     /**
      * execute
@@ -131,7 +128,6 @@ class Doctrine_Pager_Layout
         return $this->getPager()->execute($params, $hydrationMode);
     }
 
-
     /**
      * getPagerRange
      *
@@ -143,7 +139,6 @@ class Doctrine_Pager_Layout
     {
         return $this->_pagerRange;
     }
-
 
     /**
      * _setPagerRange
@@ -159,7 +154,6 @@ class Doctrine_Pager_Layout
         $this->getPagerRange()->setPager($this->getPager());
     }
 
-
     /**
      * getUrlMask
      *
@@ -171,7 +165,6 @@ class Doctrine_Pager_Layout
     {
         return $this->_urlMask;
     }
-
 
     /**
      * _setUrlMask
@@ -199,7 +192,6 @@ class Doctrine_Pager_Layout
         return $this->_template;
     }
 
-
     /**
      * setTemplate
      *
@@ -214,7 +206,6 @@ class Doctrine_Pager_Layout
         $this->_template = $template;
     }
 
-
     /**
      * getSelectedTemplate
      *
@@ -226,7 +217,6 @@ class Doctrine_Pager_Layout
     {
         return $this->_selectedTemplate;
     }
-
 
     /**
      * setSelectedTemplate
@@ -241,7 +231,6 @@ class Doctrine_Pager_Layout
         $this->_selectedTemplate = $selectedTemplate;
     }
 
-
     /**
      * getSeparatorTemplate
      *
@@ -253,7 +242,6 @@ class Doctrine_Pager_Layout
     {
         return $this->_separatorTemplate;
     }
-
 
     /**
      * setSeparatorTemplate
@@ -267,7 +255,6 @@ class Doctrine_Pager_Layout
     {
         $this->_separatorTemplate = $separatorTemplate;
     }
-
 
     /**
      * addMaskReplacement
@@ -291,7 +278,6 @@ class Doctrine_Pager_Layout
             );
         }
     }
-
 
     /**
      * removeMaskReplacement
@@ -322,7 +308,6 @@ class Doctrine_Pager_Layout
         $this->_maskReplacements = null;
         $this->_maskReplacements = array();
     }
-
 
     /**
      * display
@@ -362,7 +347,6 @@ class Doctrine_Pager_Layout
         echo $str;
     }
 
-
     /**
      * processPage
      *
@@ -374,7 +358,7 @@ class Doctrine_Pager_Layout
     public function processPage($options = array())
     {
         // Check if at least basic options are defined
-        if (!isset($options['page_number'])) {
+        if ( !isset($options['page_number'])) {
             throw new Doctrine_Pager_Exception(
                 'Cannot process template of the given page. ' .
                 'Missing at least one of needed parameters: \'page\' or \'page_number\''
@@ -385,13 +369,12 @@ class Doctrine_Pager_Layout
         }
 
         // Assign "page" options index if not defined yet
-        if (!isset($this->_maskReplacements['page']) && !isset($options['page'])) {
+        if ( !isset($this->_maskReplacements['page']) && !isset($options['page'])) {
             $options['page'] = $options['page_number'];
         }
 
         return $this->_parseTemplate($options);
     }
-
 
     /**
      * Simply calls display, and returns the output.
@@ -400,7 +383,6 @@ class Doctrine_Pager_Layout
     {
       return $this->display(array(), true);
     }
-
 
     /**
      * _parseTemplate
@@ -417,7 +399,6 @@ class Doctrine_Pager_Layout
 
         return strtr($str, $replacements);
     }
-
 
     /**
      * _parseUrlTemplate
@@ -445,7 +426,6 @@ class Doctrine_Pager_Layout
         return $str;
     }
 
-
     /**
      * _parseUrl
      *
@@ -468,7 +448,6 @@ class Doctrine_Pager_Layout
         return $replacements;
     }
 
-
     /**
      * _parseUrl
      *
@@ -489,7 +468,6 @@ class Doctrine_Pager_Layout
 
         return strtr($str, $replacements);
     }
-
 
     /**
      * _parseMaskReplacements

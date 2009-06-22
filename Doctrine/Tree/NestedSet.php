@@ -112,17 +112,6 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     }
 
     /**
-     * returns root node
-     *
-     * @return Doctrine_Record
-     * @deprecated Use fetchRoot()
-     */
-    public function findRoot($rootId = 1)
-    {
-        return $this->fetchRoot($rootId);
-    }
-
-    /**
      * Fetches a/the root node.
      *
      * @param integer $rootId
@@ -239,49 +228,6 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
         $q = $this->getBaseQuery();
         $q = $q->addWhere($this->_baseAlias . '.lft = ?', 1);
         return $q->execute();
-    }
-
-    /**
-     * calculates the next available root id
-     *
-     * @return integer
-     * @deprecated THIS METHOD IS DEPRECATED. ROOT IDS ARE NO LONGER AUTOMATICALLY GENERATED.
-     *             ROOT ID MUST BE ASSIGNED MANUALLY OR USING THE DEFAULT BEHAVIOR WHERE
-     *             ROOT_ID = ID. SEE createRoot() FOR DETAILS.
-     */
-    public function getNextRootId()
-    {
-        return $this->getMaxRootId() + 1;
-    }
-
-    /**
-     * calculates the current max root id
-     *
-     * @return integer
-     * @deprecated THIS METHOD IS DEPRECATED. ROOT IDS ARE NO LONGER AUTOMATICALLY GENERATED.
-     *             ROOT ID MUST BE ASSIGNED MANUALLY OR USING THE DEFAULT BEHAVIOR WHERE
-     *             ROOT_ID = ID. SEE createRoot() FOR DETAILS.
-     */
-    public function getMaxRootId()
-    {
-        $component = $this->table->getComponentName();
-        $column = $this->getAttribute('rootColumnName');
-
-        // cannot get this dql to work, cannot retrieve result using $coll[0]->max
-        //$dql = "SELECT MAX(c.$column) FROM $component c";
-
-        $dql = 'SELECT c.' . $column . ' FROM ' . $component . ' c ORDER BY c.' . $column . ' DESC LIMIT 1';
-
-        $coll = $this->table->getConnection()->query($dql);
-
-        if ($coll->count() > 0) {
-            $max = $coll->getFirst()->get($column);
-            $max = ! is_null($max) ? $max : 0;
-        } else {
-            $max = 0;
-        }
-
-        return $max;
     }
 
     /**

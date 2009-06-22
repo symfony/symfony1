@@ -549,7 +549,7 @@ END;';
         
         if ( isset($definition['type']))
         {
-            if(strtolower($definition['type']) == 'unique') {
+            if (strtolower($definition['type']) == 'unique') {
                 $type = strtoupper($definition['type']);
             } else {
                 throw new Doctrine_Export_Exception(
@@ -561,7 +561,7 @@ END;';
             return null;
         }
         
-        if (!isset($definition['fields']) || !is_array($definition['fields'])) {
+        if ( !isset($definition['fields']) || !is_array($definition['fields'])) {
             throw new Doctrine_Export_Exception('No columns given for index '.$name);
         }
         

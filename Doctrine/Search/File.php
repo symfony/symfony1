@@ -53,10 +53,12 @@ class Doctrine_Search_File extends Doctrine_Search
 
         $this->initialize($table);
     }
+
     public function buildRelation()
     {
     	
-    }	
+    }
+
     /**
      * indexes given directory
      *

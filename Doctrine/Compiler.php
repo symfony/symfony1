@@ -52,8 +52,6 @@ class Doctrine_Compiler
         // If we have an array of specified drivers then lets determine which drivers we should exclude
         if ( ! empty($includedDrivers)) {
             $drivers = array('db2',
-                             'firebird',
-                             'informix',
                              'mssql',
                              'mysql',
                              'oracle',

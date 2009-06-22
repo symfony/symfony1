@@ -326,7 +326,6 @@ class Doctrine_Event
         $this->_invoker = $invoker;
     }
 
-
     /**
      * getParams
      * returns the parameters of the query

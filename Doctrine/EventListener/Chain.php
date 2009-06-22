@@ -298,24 +298,28 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
             $listener->onPreCollectionDelete($collection);
         }
     }
+
     public function postConnect(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
             $listener->postConnect($event);
         }
     }
+
     public function preConnect(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
             $listener->preConnect($event);
         }
     }
+
     public function preQuery(Doctrine_Event $event)
     { 
         foreach ($this->_listeners as $listener) {
             $listener->preQuery($event);
         }
     }
+
     public function postQuery(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -329,6 +333,7 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
             $listener->prePrepare($event);
         }
     }
+
     public function postPrepare(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -342,6 +347,7 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
             $listener->preExec($event);
         }
     }
+
     public function postExec(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -355,6 +361,7 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
             $listener->preError($event);
         }
     }
+
     public function postError(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -368,6 +375,7 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
             $listener->preFetch($event);
         }
     }
+
     public function postFetch(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {

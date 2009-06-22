@@ -58,7 +58,7 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 
                     $fieldName  = array_pop($e);
                     $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
-                    $aliasMap   = $this->query->getAliasDeclaration($reference);
+                    $aliasMap   = $this->query->getQueryComponent($reference);
 
                     if ($aliasMap['table']->hasField($fieldName)) {	
 	                    $columnName = $aliasMap['table']->getColumnName($fieldName);

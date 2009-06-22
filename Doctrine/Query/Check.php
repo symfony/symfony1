@@ -137,6 +137,7 @@ class Doctrine_Query_Check
 
         return implode(' ', $e);
     }
+
     public function parseFunction($dql) 
     {
         if (($pos = strpos($dql, '(')) !== false) {

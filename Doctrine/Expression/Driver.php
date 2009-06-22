@@ -36,6 +36,7 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     {
         return $column;
     }
+
     public function getIdentifiers($columns)
     {
         return $columns;

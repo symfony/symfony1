@@ -36,6 +36,7 @@ class Doctrine_File extends Doctrine_Record
     {
         $this->hasColumn('url', 'string', 255);
     }
+
     public function setUp()
     {
         $this->actAs('Searchable', array('className' => 'Doctrine_File_Index',
@@ -43,6 +44,7 @@ class Doctrine_File extends Doctrine_Record
         
         $this->index('url', array('fields' => array('url')));
     }
+
     public function get($name, $load = true)
     {
         if ($name === 'content') {

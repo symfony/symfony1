@@ -111,10 +111,10 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
      * @param string $time timestamp or interval to extract from
      * @return string
      */
-    public function date_part($text, $time) {
+    public function date_part($text, $time)
+    {
         return 'DATE_PART(' . $text . ', ' . $time . ')';
     }
-
 
     /**
      * PostgreSQLs TO_CHAR( <time>, <text> ) function.

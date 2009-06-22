@@ -70,10 +70,12 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
     {
         return $this->_conn;
     }
+
     public function getStatement()
     {
         return $this->_stmt;
     }
+
     public function getQuery()
     {
         return $this->_stmt->queryString;

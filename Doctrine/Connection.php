@@ -170,10 +170,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
                                         'Mysql',
                                         'Pgsql',
                                         'Oracle',
-                                        'Informix',
                                         'Mssql',
                                         'Sqlite',
-                                        'Firebird'
                                         );
     protected $_count = 0;
 
@@ -755,7 +753,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 		return $arr;
     }
 
-
     /**
      * convertBooleans
      * some drivers need the boolean values to be converted into integers
@@ -1309,18 +1306,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         return $this->dbh->errorInfo();
     }
-    
-    /**
-     * getCacheDriver
-     *
-     * @return Doctrine_Cache_Interface
-     * @deprecated Use getResultCacheDriver()
-     */
-    public function getCacheDriver()
-    {
-        return $this->getResultCacheDriver();
-    }
-    
+
     /**
      * getResultCacheDriver
      *

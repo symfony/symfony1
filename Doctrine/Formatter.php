@@ -151,7 +151,6 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
 		return $arr;
     }
 
-
     /**
      * quote
      * quotes given input parameter

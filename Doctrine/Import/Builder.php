@@ -755,7 +755,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         return "        \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
-
     /**
      * buildActAs: builds a complete actAs code. It supports hierarchy of plugins
      * @param array $actAs array of plugin definitions and options
@@ -782,13 +781,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     private function innerBuildActAs($actAs, $level = 0, $parent = null, array &$emittedActAs)
     {
         // rewrite special case of actAs: [Behavior] which gave [0] => Behavior
-        if(is_array($actAs) && isset($actAs[0]) && !is_array($actAs[0])) {
+        if (is_array($actAs) && isset($actAs[0]) && !is_array($actAs[0])) {
             $actAs = array_flip($actAs);
         }
 
         $build = '';
         $currentParent = $parent;
-        if(is_array($actAs)) {
+        if (is_array($actAs)) {
             foreach($actAs as $template => $options) {
                 if ($template == 'actAs') {
                     // found another actAs

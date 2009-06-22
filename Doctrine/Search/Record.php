@@ -40,6 +40,7 @@ class Doctrine_Search_Record extends Doctrine_Template
         // depending on the identifiers of the owner record this record 
         // has also one to many foreign key columns
     }
+
     public function setUp()
     {
         $this->hasOne('[Component]', array('onDelete' => 'CASCADE'));

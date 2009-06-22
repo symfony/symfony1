@@ -42,6 +42,7 @@ class Doctrine_Relation_Association extends Doctrine_Relation
     {
         return $this->definition['refTable'];
     }
+
     public function getAssociationTable()
     {
         return $this->definition['refTable'];

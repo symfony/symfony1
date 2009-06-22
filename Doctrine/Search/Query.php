@@ -177,6 +177,7 @@ class Doctrine_Search_Query
             return $return;
         }
     }
+
     public function isExpression($term)
     {
         if (strpos($term, '(') !== false) {
@@ -209,6 +210,7 @@ class Doctrine_Search_Query
         }
         return $where;
     }
+
     public function parseWord($word)
     {
         $this->_words[] = str_replace('*', '', $word);
@@ -234,11 +236,13 @@ class Doctrine_Search_Query
     {
         return $this->_words;
     }
+
     public function getParams()
     {
         return $this->_params;
     }
-    public function getSql()
+
+    public function getSqlQuery()
     {
         return $this->_sql;
     }

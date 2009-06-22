@@ -37,7 +37,6 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
      */
     private $_chunkLength;
 
-
     /**
      * _initialize
      *
@@ -54,7 +53,6 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
         }
     }
 
-
     /**
      * getChunkLength
      *
@@ -66,7 +64,6 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
     {
         return $this->_chunkLength;
     }
-
 
     /**
      * _setChunkLength
@@ -80,7 +77,6 @@ class Doctrine_Pager_Range_Jumping extends Doctrine_Pager_Range
     {
         $this->_chunkLength = $chunkLength;
     }
-
 
     /**
      * rangeAroundPage

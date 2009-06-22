@@ -41,11 +41,11 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     {
 
     }
+
     public function setUp()
     {
     	
     }	
-
 
     /**
      * getTable
@@ -137,10 +137,12 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     {
         $this->_table->setAttribute($attr, $value);
     }
+
     public function setTableName($tableName)
     {
         $this->_table->setTableName($tableName);
     }
+
     public function setInheritanceMap($map)
     {
         $this->_table->setOption('inheritanceMap', $map);
@@ -258,6 +260,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     {
         $this->_table->setColumn($name, $type, $length, $options);
     }
+
     public function hasColumns(array $definitions)
     {
         foreach ($definitions as $name => $options) {
@@ -286,7 +289,6 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
 
         $this->_table->addGenerator($generator, get_class($generator));
     }
-
 
     /**
      * Loads the given plugin.

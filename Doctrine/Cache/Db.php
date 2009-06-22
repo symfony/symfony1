@@ -118,7 +118,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
 
         $result = $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
 
-        if(isset($result[0] )){
+        if (isset($result[0] )) {
         	return time();
         }
         return false;

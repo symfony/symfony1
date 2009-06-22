@@ -88,14 +88,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
             $q->query($string, false);
 
             $newQuery = $query->copy();
-            $query->getSql();
+            $query->getSqlQuery();
             $key = (array) $this->getOption('table')->getIdentifier();
-            $newQuery->addWhere($query->getRootAlias() . '.'.current($key).' IN (SQL:' . $q->getSql() . ')', $q->getParams());
+            $newQuery->addWhere($query->getRootAlias() . '.'.current($key).' IN (SQL:' . $q->getSqlQuery() . ')', $q->getParams());
 
             return $newQuery;
         } else {
             $q->query($string);
-            return $this->_options['connection']->fetchAll($q->getSql(), $q->getParams());
+            return $this->_options['connection']->fetchAll($q->getSqlQuery(), $q->getParams());
         }
     }
     

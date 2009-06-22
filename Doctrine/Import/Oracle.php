@@ -199,6 +199,7 @@ QEND;
         }
         return $relations;
     }
+
     /**
      * lists tables
      *

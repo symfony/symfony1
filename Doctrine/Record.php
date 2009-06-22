@@ -317,6 +317,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         return $this->_oid;
     }
+
     public function oid()
     {
         return $this->_oid;
@@ -713,7 +714,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $data[$fieldName] = $tmp[$fieldName];
             } else if (array_key_exists($fieldName, $tmp)) {
                 $data[$fieldName] = self::$_null;
-            } else if (!isset($this->_data[$fieldName])) {
+            } else if ( !isset($this->_data[$fieldName])) {
                 $data[$fieldName] = self::$_null;
             }
             unset($tmp[$fieldName]);
@@ -2096,7 +2097,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     foreach ($value as $record) {
                         $ret->{$key}[] = $record->copy($deep);
                     }
-                } else if($value instanceof Doctrine_Record) {
+                } else if ($value instanceof Doctrine_Record) {
                     $ret->set($key, $value->copy($deep));
                 }
             }

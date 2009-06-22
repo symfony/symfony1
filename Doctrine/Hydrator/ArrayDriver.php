@@ -37,20 +37,17 @@ class Doctrine_Hydrator_ArrayDriver
     {
         return array();
     }
+
     public function getElement(array $data, $component)
     {
         return $data;
     }
-    /*
-    public function isIdentifiable(array $data, Doctrine_Table $table)
-    {
-        return ( ! empty($data));
-    }
-    */
+
     public function registerCollection($coll)
     {
 
     }
+
     public function initRelated(array &$data, $name)
     {
         if ( ! isset($data[$name])) {
@@ -58,10 +55,12 @@ class Doctrine_Hydrator_ArrayDriver
         }
         return true;
     }
+
     public function getNullPointer() 
     {
         return null;    
     }
+
     public function getLastKey(&$data)
     {
         end($data);

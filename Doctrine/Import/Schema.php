@@ -307,7 +307,7 @@ class Doctrine_Import_Schema
         // Apply the globals to each table if it does not have a custom value set already
         foreach ($array as $className => $table) {
             foreach ($globals as $key => $value) {
-                if (!isset($array[$className][$key])) {
+                if ( !isset($array[$className][$key])) {
                     $array[$className][$key] = $value;
                 }
             }
@@ -648,7 +648,7 @@ class Doctrine_Import_Schema
                     $newRelation['refClass'] = $relation['refClass'];
                     $newRelation['type'] = isset($relation['foreignType']) ? $relation['foreignType']:$relation['type'];
                 } else {                
-                    if(isset($relation['foreignType'])) {
+                    if (isset($relation['foreignType'])) {
                         $newRelation['type'] = $relation['foreignType'];
                     } else {
                         $newRelation['type'] = $relation['type'] === Doctrine_Relation::ONE ? Doctrine_Relation::MANY:Doctrine_Relation::ONE;

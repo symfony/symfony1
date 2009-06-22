@@ -66,7 +66,7 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     public function doParsing()
     {
-        $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute('recursive_merge_fixtures');
+        $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute(Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES);
         $mergeFunction = $recursiveMerge === true ? 'array_merge_recursive':'array_merge';
         $directory = $this->getDirectory();
 
@@ -80,7 +80,7 @@ class Doctrine_Data_Import extends Doctrine_Data
                 if (end($e) == 'yml') {
                     $array = $mergeFunction($array, Doctrine_Parser::load($dir, $this->getFormat()));
                 // If they specified a directory
-                } else if(is_dir($dir)) {
+                } else if (is_dir($dir)) {
                     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                             RecursiveIteratorIterator::LEAVES_ONLY);
 
@@ -359,7 +359,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             // remove this nested set from _importedObjects so it's not processed in the save routine for normal objects
             unset($this->_importedObjects[$rowKey]);
 
-            if( ! $parent) {
+            if ( ! $parent) {
                 $record->save(); // save, so that createRoot can do: root id = id
                 Doctrine::getTable($model)->getTree()->createRoot($record);
             } else {

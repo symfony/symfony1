@@ -264,8 +264,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                          'mssql'    => 'Doctrine_Connection_Mssql',
                          'dblib'    => 'Doctrine_Connection_Mssql',
                          'odbc'     => 'Doctrine_Connection_Mssql', 
-                         'firebird' => 'Doctrine_Connection_Firebird',
-                         'informix' => 'Doctrine_Connection_Informix',
                          'mock'     => 'Doctrine_Connection_Mock');
 
         if ( ! isset($drivers[$driverName])) {
@@ -410,10 +408,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                 break;
 
             case 'mysql':
-            case 'informix':
             case 'oci8':
             case 'oci':
-            case 'firebird':
             case 'pgsql':
             case 'odbc':
             case 'mock':
