@@ -101,18 +101,6 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
             // after-event listener found
             $a[0]->end();
         }
-        /**
-         * If filtering by query type is enabled, only keep the query if
-         * it was one of the allowed types.
-         */
-         /**
-        if ( ! is_null($this->filterTypes)) {
-            if ( ! ($a[0]->getQueryType() & $this->_filterTypes)) {
-
-            }
-        }
-        */
-
     }
 
     /**
