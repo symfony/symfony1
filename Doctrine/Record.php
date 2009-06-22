@@ -1012,14 +1012,49 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * clearRelated
-     * unsets all the relationships this object has
+     * Clear a related reference or all references
      *
-     * (references to related objects still remain on Table objects)
+     * @param string $name The relationship reference to clear
+     * @return void
      */
-    public function clearRelated()
+    public function clearRelated($name = null)
     {
-        $this->_references = array();
+        if (is_null($name)) {
+            $this->_references = array();
+        } else {
+            unset($this->_references[$name]);
+        }
+    }
+
+    /**
+     * Check if a related relationship exists. Will lazily load the relationship
+     * in order to check. If the reference didn't already exist and it doesn't
+     * exist in the database, the related reference will be cleared immediately.
+     *
+     * @param string $name 
+     * @return boolean Whether or not the related relationship exists
+     */
+    public function relatedExists($name)
+    {
+        $newReference = false;
+        if ( ! $this->hasReference($name)) {
+            $newReference = true;
+        }
+
+        $reference = $this->$name;
+        if ( ! $reference instanceof Doctrine_Record) {
+            throw new Doctrine_Record_Exception(
+                'You can only call relatedExists() on a relationship that '.
+                'returns an instance of Doctrine_Record'
+            );
+        }
+        $exists = $reference->exists();
+
+        if ($newReference) {
+            $this->clearRelated($name);
+        }
+
+        return $exists;
     }
 
     /**
