@@ -122,6 +122,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     protected $_classPrefix = null;
 
+    /** 
+     * Whether to use the class prefix for the filenames too 
+     * 
+     * @var boolean 
+     **/ 
+    protected $_classPrefixFiles = true;
+
     /**
      * The package name to use for the generated php docs
      *
@@ -179,34 +186,10 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         if ($path) {
             if ( ! $this->_packagesPath) {
-                $this->setPackagesPath($path . DIRECTORY_SEPARATOR . $this->_packagesFolderName);
+                $this->setOption('packagesPath', $path . DIRECTORY_SEPARATOR . $this->_packagesFolderName);
             }
 
             $this->_path = $path;
-        }
-    }
-
-    /**
-     * setPackagePath
-     *
-     * @param string $packagesPrefix
-     * @return void
-     */
-    public function setPackagesPrefix($packagesPrefix)
-    {
-        $this->_packagesPrefix = $packagesPrefix;
-    }
-
-    /**
-     * setPackagesPath
-     *
-     * @param string $packagesPath
-     * @return void
-     */
-    public function setPackagesPath($packagesPath)
-    {
-        if ($packagesPath) {
-            $this->_packagesPath = $packagesPath;
         }
     }
 
@@ -242,68 +225,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         return $this->_generateTableClasses;
-    }
-
-    /**
-     * setBaseClassPrefix
-     *
-     * @param string $prefix
-     * @return void
-     */
-    public function setBaseClassPrefix($prefix)
-    {
-        $this->_baseClassPrefix = $prefix;
-    }
-
-    /**
-     * getBaseClassPrefix
-     *
-     * @return void
-     */
-    public function getBaseClassPrefix()
-    {
-        return $this->_baseClassPrefix;
-    }
-
-    /**
-     * setBaseClassesDirectory
-     *
-     * @return void
-     */
-    public function setBaseClassesDirectory($baseClassesDirectory)
-    {
-        $this->_baseClassesDirectory = $baseClassesDirectory;
-    }
-
-    /**
-     * setBaseClassName
-     *
-     * @package default
-     */
-    public function setBaseClassName($className)
-    {
-        $this->_baseClassName = $className;
-    }
-
-    /**
-     * Set the base table class name to generate Doctrine_Table child classes with
-     *
-     * @return void
-     */
-    public function setBaseTableClassName($className)
-    {
-        $this->_baseTableClassName = $className;
-    }
-
-    /**
-     * setSuffix
-     *
-     * @param string $suffix
-     * @return void
-     */
-    public function setSuffix($suffix)
-    {
-        $this->_suffix = $suffix;
     }
 
     /**
@@ -1125,7 +1046,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $definitionCode = str_replace("'refClass' => '", "'refClass' => '$prefix", $definitionCode);
         }
 
-        $fileName = $definition['className'] . $this->_suffix;
+        if ($this->_classPrefixFiles) { 
+            $fileName = $definition['className'] . $this->_suffix; 
+        } else { 
+            $fileName = $originalClassName . $this->_suffix; 
+        }
 
         $packagesPath = $this->_packagesPath ? $this->_packagesPath:$this->_path;
 
