@@ -175,17 +175,21 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      */
     protected $_sql;
 
-
     /**
      * create
      * returns a new Doctrine_Query object
      *
-     * @param Doctrine_Connection $conn     optional connection parameter
+     * @param Doctrine_Connection $conn  optional connection parameter
+     * @param string $class              Query class to instantiate   
      * @return Doctrine_Query
      */
-    public static function create($conn = null)
+    public static function create($conn = null, $class = null)
     {
-        return new Doctrine_Query($conn);
+        if ( ! $class) {
+            $class = Doctrine_Manager::getInstance()
+                ->getAttribute(Doctrine::ATTR_QUERY_CLASS);
+        }
+        return new $class($conn);
     }
 
     /**

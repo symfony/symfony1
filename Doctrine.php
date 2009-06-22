@@ -203,6 +203,7 @@ final class Doctrine
     const ATTR_DEFAULT_IDENTIFIER_OPTIONS   = 169;
     const ATTR_DEFAULT_COLUMN_OPTIONS       = 170;
     const ATTR_HYDRATE_OVERWRITE            = 172;
+    const ATTR_QUERY_CLASS                  = 173;
 
     /**
      * LIMIT CONSTANTS

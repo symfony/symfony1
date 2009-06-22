@@ -973,7 +973,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         if ( ! empty($alias)) {
             $alias = ' ' . trim($alias);
         }
-        return Doctrine_Query::create($this->_conn)->from($this->getComponentName() . $alias);
+
+        $class = $this->getAttribute(Doctrine::ATTR_QUERY_CLASS);
+
+        return Doctrine_Query::create($this->_conn, $class)
+            ->from($this->getComponentName() . $alias);
     }
 
     /**
