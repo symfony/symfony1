@@ -676,7 +676,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @param boolean $deep
      */
-    public function toArray($deep = false, $prefixKey = false)
+    public function toArray($deep = true, $prefixKey = false)
     {
         $data = array();
         foreach ($this as $key => $record) {
@@ -757,7 +757,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      * @param string $deep 
      * @return void
      */
-    public function exportTo($type, $deep = false)
+    public function exportTo($type, $deep = true)
     {
         if ($type == 'array') {
             return $this->toArray($deep);

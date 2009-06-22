@@ -1970,12 +1970,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @param string $data  Data to be parsed and imported
      * @return void
      */
-    public function importFrom($type, $data)
+    public function importFrom($type, $data, $deep = true)
     {
         if ($type == 'array') {
-            return $this->fromArray($data);
+            return $this->fromArray($data, $deep);
         } else {
-            return $this->fromArray(Doctrine_Parser::load($data, $type));
+            return $this->fromArray(Doctrine_Parser::load($data, $type), $deep);
         }
     }
 
