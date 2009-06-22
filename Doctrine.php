@@ -484,6 +484,17 @@ final class Doctrine
     }
 
     /**
+     * Set the path to your core Doctrine libraries
+     *
+     * @param string $path The path to your Doctrine libraries
+     * @return void
+     */
+    public static function setPath($path)
+    {
+        self::$_path = $path;
+    }
+
+    /**
      * Get the root path to Doctrine
      *
      * @return string
