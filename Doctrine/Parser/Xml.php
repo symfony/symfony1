@@ -44,7 +44,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
      */
     public function dumpData($array, $path = null)
     {
-        $data = $this->arrayToXml($array);
+        $data = self::arrayToXml($array);
         
         return $this->doDump($data, $path);
     }
@@ -57,7 +57,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
      * @param  string $xml          SimpleXmlElement
      * @return string $asXml        String of xml built from array
      */
-    public function arrayToXml($array, $rootNodeName = 'data', $xml = null)
+    public static function arrayToXml($array, $rootNodeName = 'data', $xml = null)
     {
         if ($xml === null) {
             $xml = new SimpleXmlElement("<?xml version=\"1.0\" encoding=\"utf-8\"?><$rootNodeName/>");
@@ -68,7 +68,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
             if (is_array($value)) {
                 $node = $xml->addChild($key);
 
-                $this->arrayToXml($value, $rootNodeName, $node);
+                self::arrayToXml($value, $rootNodeName, $node);
             } else if (is_int($key)) {               
                 $xml->addChild($value, 'true');
             } else {
