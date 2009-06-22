@@ -1094,7 +1094,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             // Return compiled SQL
             return $this->_sql;
         }
-        
+        return $this->buildSqlQuery();
+    }
+
+    /**
+     * Build the SQL query from the DQL
+     *
+     * @return string $sql The generated SQL string
+     */
+    public function buildSqlQuery()
+    {
         // reset the state
         if ( ! $this->isSubquery()) {
             $this->_queryComponents = array();
