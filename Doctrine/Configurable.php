@@ -56,54 +56,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     protected $_params = array();
 
     /**
-     * getAttributeFromString
-     *
-     * Will accept the name of an attribute and return the attribute value
-     * Example: ->getAttributeFromString('portability') will be converted to Doctrine::ATTR_PORTABILITY
-     * and returned
-     *
-     * @param string $stringAttributeName 
-     * @return void
-     */
-    public function getAttributeFromString($stringAttributeName)
-    {
-      if (is_string($stringAttributeName)) {
-          $upper = strtoupper($stringAttributeName);
-
-          $const = 'Doctrine::ATTR_' . $upper; 
-
-          if (defined($const)) {
-              return constant($const);
-          } else {
-              throw new Doctrine_Exception('Unknown attribute: "' . $stringAttributeName . '"');
-          }
-      } else {
-        return false;
-      }
-    }
-
-    /**
-     * getAttributeValueFromString
-     *
-     * Will get the value for an attribute by the string name
-     * Example: ->getAttributeFromString('portability', 'all') will return Doctrine::PORTABILITY_ALL
-     *
-     * @param string $stringAttributeName 
-     * @param string $stringAttributeValueName 
-     * @return void
-     */
-    public function getAttributeValueFromString($stringAttributeName, $stringAttributeValueName)
-    {
-        $const = 'Doctrine::' . strtoupper($stringAttributeName) . '_' . strtoupper($stringAttributeValueName);
-
-        if (defined($const)) {
-            return constant($const);
-        } else {
-            throw new Doctrine_Exception('Unknown attribute value: "' . $const . '"');
-        }
-    }
-
-    /**
      * setAttribute
      * sets a given attribute
      *
