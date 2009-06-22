@@ -948,4 +948,22 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     {
         return $this->relation;
     }
+
+    /** 
+     * checks if one of the containing records is modified 
+     * returns true if modified, false otherwise 
+     *  
+     * @return boolean  
+     */ 
+    final public function isModified() { 
+        $dirty = (count($this->getInsertDiff()) > 0 || count($this->getDeleteDiff()) > 0); 
+        if ( ! $dirty) {  
+            foreach($this as $record) { 
+                if ($dirty = $record->isModified()) {
+                    break;
+                } 
+            } 
+        } 
+        return $dirty; 
+    }
 }

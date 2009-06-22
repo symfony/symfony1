@@ -169,6 +169,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS;
             case Doctrine::ATTR_HYDRATE_OVERWRITE;
             case Doctrine::ATTR_QUERY_CLASS;
+            case Doctrine::ATTR_CASCADE_SAVES;
 
                 break;
             case Doctrine::ATTR_SEQCOL_NAME:

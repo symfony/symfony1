@@ -204,6 +204,7 @@ final class Doctrine
     const ATTR_DEFAULT_COLUMN_OPTIONS       = 170;
     const ATTR_HYDRATE_OVERWRITE            = 172;
     const ATTR_QUERY_CLASS                  = 173;
+    const ATTR_CASCADE_SAVES                = 174;
 
     /**
      * LIMIT CONSTANTS
