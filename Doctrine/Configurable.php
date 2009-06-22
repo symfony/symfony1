@@ -93,37 +93,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
                     }
                 }
                 break;
-            case Doctrine::ATTR_VALIDATE:
-            case Doctrine::ATTR_QUERY_LIMIT:
-            case Doctrine::ATTR_QUOTE_IDENTIFIER:
-            case Doctrine::ATTR_PORTABILITY:
-            case Doctrine::ATTR_DEFAULT_TABLE_TYPE:
-            case Doctrine::ATTR_EMULATE_DATABASE:
-            case Doctrine::ATTR_USE_NATIVE_ENUM:
-            case Doctrine::ATTR_DEFAULT_SEQUENCE:
-            case Doctrine::ATTR_EXPORT:
-            case Doctrine::ATTR_DECIMAL_PLACES:
-            case Doctrine::ATTR_LOAD_REFERENCES:
-            case Doctrine::ATTR_RECORD_LISTENER:
-            case Doctrine::ATTR_THROW_EXCEPTIONS:
-            case Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE:
-            case Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES:
-            case Doctrine::ATTR_MODEL_LOADING:
-            case Doctrine::ATTR_RESULT_CACHE_LIFESPAN:
-            case Doctrine::ATTR_QUERY_CACHE_LIFESPAN:
-            case Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES;
-            case Doctrine::ATTR_USE_DQL_CALLBACKS;
-            case Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE;
-            case Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS;
-            case Doctrine::ATTR_DEFAULT_TABLE_CHARSET;
-            case Doctrine::ATTR_DEFAULT_TABLE_COLLATE;
-            case Doctrine::ATTR_DEFAULT_IDENTIFIER_OPTIONS;
-            case Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS;
-            case Doctrine::ATTR_HYDRATE_OVERWRITE;
-            case Doctrine::ATTR_QUERY_CLASS;
-            case Doctrine::ATTR_CASCADE_SAVES;
-
-                break;
             case Doctrine::ATTR_SEQCOL_NAME:
                 if ( ! is_string($value)) {
                     throw new Doctrine_Exception('Sequence column name attribute only accepts string values');
@@ -142,8 +111,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
                                                . 'at table level (only at connection or global level).');
                 }
                 break;
-            default:
-                throw new Doctrine_Exception("Unknown attribute.");
         }
 
         $this->attributes[$attribute] = $value;
@@ -361,12 +328,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
      */
     public function getAttribute($attribute)
     {
-        $attribute = (int) $attribute;
-
-        if ($attribute < 0) {
-            throw new Doctrine_Exception('Unknown attribute.');
-        }
-
         if (isset($this->attributes[$attribute])) {
             return $this->attributes[$attribute];
         }
