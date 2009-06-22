@@ -250,7 +250,8 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                 $length = null;
                 break;
             default:
-                throw new Doctrine_DataDict_Exception('unknown database attribute type: '.$dbType);
+                $type[] = 'string';
+                $length = null;
         }
 
         return array('type'     => $type,

@@ -438,7 +438,6 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
      */
     public function getPortableDeclaration(array $field)
     {
-
         $length = (isset($field['length'])) ? $field['length'] : null;
         if ($length == '-1' && isset($field['atttypmod'])) {
             $length = $field['atttypmod'] - 4;
@@ -574,7 +573,8 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $length = null;
                 break;
             default:
-                throw new Doctrine_DataDict_Exception('unknown database attribute type: '.$dbType);
+                $type[] = 'string';
+                $length = null;
         }
 
         return array('type'     => $type,

@@ -190,7 +190,8 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             case 'rowid':
             case 'urowid':
             default:
-                throw new Doctrine_DataDict_Exception('unknown database attribute type: ' . $dbType);
+                $type[] = 'string';
+                $length = null;
         }
 
         return array('type'     => $type,
