@@ -374,6 +374,11 @@ final class Doctrine
      */
     const VALIDATE_ALL              = 7;
 
+    /** 
+     * VALIDATE_USER
+     */ 
+    const VALIDATE_USER             = 8;
+
     /**
      * IDENTIFIER_AUTOINC
      *
