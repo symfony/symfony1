@@ -1509,7 +1509,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @return Doctrine_Collection|array
      */
-    protected function findBy($fieldName, $value, $hydrationMode = null)
+    public function findBy($fieldName, $value, $hydrationMode = null)
     {
         return $this->createQuery('dctrn_find')
             ->where('dctrn_find.' . $fieldName . ' = ?', array($value))
@@ -1524,7 +1524,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @param int $hydrationMode        Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
      * @return Doctrine_Record
      */
-    protected function findOneBy($fieldName, $value, $hydrationMode = null)
+    public function findOneBy($fieldName, $value, $hydrationMode = null)
     {
         return $this->createQuery('dctrn_find')
                     ->where('dctrn_find.' . $fieldName . ' = ?', array($value))
