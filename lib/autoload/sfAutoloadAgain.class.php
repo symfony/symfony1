@@ -56,7 +56,22 @@ class sfAutoloadAgain
   public function autoload($class)
   {
     $autoloads = spl_autoload_functions();
-    $position  = array_search(array(__CLASS__, 'autoload'), $autoloads, true);
+
+    // as of PHP 5.3.0, spl_autoload_functions() returns the object as the first element of the array instead of the class name
+    if (version_compare(PHP_VERSION, '5.3.0RC1', '>='))
+    {
+      foreach ($autoloads as $position => $autoload)
+      {
+        if ($this === $autoload[0])
+        {
+          break;
+        }
+      }
+    }
+    else
+    {
+      $position  = array_search(array(__CLASS__, 'autoload'), $autoloads, true);
+    }
 
     if (isset($autoloads[$position + 1]))
     {
