@@ -1500,7 +1500,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         return $parser->query($query, $params, $hydrationMode);
     }
-    
+
     /**
      * Find records basing on a field.
      *
@@ -1512,7 +1512,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function findBy($fieldName, $value, $hydrationMode = null)
     {
         return $this->createQuery('dctrn_find')
-            ->where('dctrn_find.' . $fieldName . ' = ?', array($value))
+            ->where($this->buildFindByWhere($fieldName), (array) $value)
             ->execute(array(), $hydrationMode);
     }
 
@@ -1527,9 +1527,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function findOneBy($fieldName, $value, $hydrationMode = null)
     {
         return $this->createQuery('dctrn_find')
-                    ->where('dctrn_find.' . $fieldName . ' = ?', array($value))
-                    ->limit(1)
-                    ->fetchOne(array(), $hydrationMode);
+            ->where($this->buildFindByWhere($fieldName), (array) $value)
+            ->limit(1)
+            ->fetchOne(array(), $hydrationMode);
     }
 
     /**
@@ -2483,6 +2483,29 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return Doctrine_Lib::getTableAsString($this);
     }
 
+    public function buildFindByWhere($fieldName)
+    {
+        $ands = array();
+        $e = explode('And', $fieldName);
+        foreach ($e as $k => $v) {
+            $and = '';
+            $e2 = explode('Or', $v);
+            $ors = array();
+            foreach ($e2 as $k2 => $v2) {
+                if ($v2 = $this->_resolveFindByFieldName($v2)) {
+                    $ors[] = 'dctrn_find.' . $v2 . ' = ?';
+                } else {
+                    throw new Doctrine_Table_Exception('Invalid field name to find by: ' . $v2);
+                }
+            }
+            $and .= implode(' OR ', $ors);
+            $and = count($ors) > 1 ? '(' . $and . ')':$and;
+            $ands[] = $and;
+        }
+        $where = implode(' AND ', $ands);
+        return $where;
+    }
+
     /**
      * Resolves the passed find by field name inflecting the parameter. 
      *
@@ -2533,7 +2556,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
 
             $fieldName = $this->_resolveFindByFieldName($by);
-            $hydrationMode = isset($arguments[1]) ? $arguments[1]:null;
+            $count = count(explode('Or', $by)) + (count(explode('And', $by)) - 1);
+            if (count($arguments) > $count)
+            {
+                $hydrationMode = end($arguments);
+                unset($arguments[count($arguments) - 1]);
+            } else {
+                $hydrationMode = null;
+            }
             if ($this->hasField($fieldName)) {
                 return $this->$method($fieldName, $arguments[0], $hydrationMode);
             } else if ($this->hasRelation($by)) {
@@ -2545,7 +2575,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
                 return $this->$method($relation['local'], $arguments[0], $hydrationMode);
             } else {
-                throw new Doctrine_Table_Exception('Cannot find by: ' . $by . '. Invalid column or relationship alias.');
+                return $this->$method($by, $arguments, $hydrationMode);
             }
         }
 
