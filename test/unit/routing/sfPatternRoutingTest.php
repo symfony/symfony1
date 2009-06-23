@@ -42,7 +42,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 
 class sfAlwaysAbsoluteRoute extends sfRoute
 {
-  public function generate($params, $context = array(), $absolute = false)
+  public function generate($params = array(), $context = array(), $absolute = false)
   {
     $url = parent::generate($params, $context, $absolute);
 
