@@ -590,7 +590,7 @@ class lime_harness extends lime_registration
     // sort the files to be able to predict the order
     sort($this->files);
 
-    $this->stats =array(
+    $this->stats = array(
       '_failed_files' => array(),
       '_failed_tests' => 0,
       '_nb_tests'     => 0,
@@ -599,7 +599,7 @@ class lime_harness extends lime_registration
     foreach ($this->files as $file)
     {
       $this->stats[$file] = array(
-        'plan'     =>   null,
+        'plan'     => null,
         'nb_tests' => 0,
         'failed'   => array(),
         'passed'   => array(),
@@ -610,7 +610,7 @@ class lime_harness extends lime_registration
 
       ob_start(array($this, 'process_test_output'));
       // see http://trac.symfony-project.org/ticket/5437 for the explanation on the weird "cd" thing
-      passthru(sprintf('cd & "%s" "%s" 2>&1', $this->php_cli, $file), $return);
+      passthru(sprintf('cd & %s %s 2>&1', escapeshellarg($this->php_cli), escapeshellarg($file)), $return);
       ob_end_clean();
 
       if ($return > 0)
@@ -792,7 +792,7 @@ EOF;
       file_put_contents($tmp_file, $tmp);
       ob_start();
       // see http://trac.symfony-project.org/ticket/5437 for the explanation on the weird "cd" thing
-      passthru(sprintf('cd & "%s" "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
+      passthru(sprintf('cd & %s %s 2>&1', escapeshellarg($this->harness->php_cli), escapeshellarg($tmp_file)), $return);
       $retval = ob_get_clean();
 
       if (0 != $return) // test exited without success
