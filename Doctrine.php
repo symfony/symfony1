@@ -351,6 +351,16 @@ final class Doctrine
     const HYDRATE_SINGLE_SCALAR     = 6;
 
     /**
+     * HYDRATE_NONE_ASSOC
+     */
+    const HYDRATE_NONE_ASSOC        = 7;
+
+    /**
+     * HYDRATE_NO_ALIAS_SCALAR
+     */
+    const HYDRATE_NO_ALIAS_SCALAR   = 8;
+
+    /**
      * VALIDATION CONSTANTS
      */
     const VALIDATE_NONE             = 0;

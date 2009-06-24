@@ -65,6 +65,17 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     protected $_validators = array();
 
     /**
+     * @var array                       Array of registered hydrators
+     */
+    protected $_hydrators = array(
+        Doctrine::HYDRATE_ARRAY           => 'Doctrine_Hydrator_ArrayDriver',
+        Doctrine::HYDRATE_RECORD          => 'Doctrine_Hydrator_RecordDriver',
+        Doctrine::HYDRATE_NONE            => 'Doctrine_Hydrator_NoneDriver',
+        Doctrine::HYDRATE_SCALAR          => 'Doctrine_Hydrator_ScalarDriver',
+        Doctrine::HYDRATE_SINGLE_SCALAR   => 'Doctrine_Hydrator_SingleScalarDriver'
+    );
+
+    /**
      * @var boolean                     Whether or not the validators from disk have been loaded
      */
     protected $_loadedValidatorsFromDisk = false;
@@ -711,5 +722,28 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                 $this->_validators[] = $validator;
             }
         }
+    }
+
+    /**
+     * Register a new driver for hydration
+     *
+     * @return void
+     */
+    public function registerHydrator($name, $class = null)
+    {
+        if (is_null($class)) {
+            $class = $name;
+        }
+        $this->_hydrators[$name] = $class;
+    }
+
+    /**
+     * Get all registered hydrators
+     *
+     * @return array $hydrators
+     */
+    public function getHydrators()
+    {
+        return $this->_hydrators;
     }
 }

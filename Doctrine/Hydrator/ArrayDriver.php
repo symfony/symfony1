@@ -20,8 +20,7 @@
  */
 
 /**
- * Doctrine_Hydrate_Array
- * defines an array fetching strategy for Doctrine_Hydrate
+ * Builds result sets in to the object graph using php arrays
  *
  * @package     Doctrine
  * @subpackage  Hydrate
@@ -31,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Hydrator_ArrayDriver
+class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_RecordDriver
 {
     public function getElementCollection($component)
     {
@@ -48,10 +47,10 @@ class Doctrine_Hydrator_ArrayDriver
 
     }
 
-    public function initRelated(array &$data, $name)
+    public function initRelated(&$record, $name)
     {
-        if ( ! isset($data[$name])) {
-            $data[$name] = array();
+        if ( ! isset($record[$name])) {
+            $record[$name] = array();
         }
         return true;
     }
@@ -61,10 +60,10 @@ class Doctrine_Hydrator_ArrayDriver
         return null;    
     }
 
-    public function getLastKey(&$data)
+    public function getLastKey(&$coll)
     {
-        end($data);
-        return key($data);
+        end($coll);
+        return key($coll);
     }
     
     /**
@@ -97,10 +96,5 @@ class Doctrine_Hydrator_ArrayDriver
                 $prev[$dqlAlias] =& $coll[key($coll)];
             }
         }
-    }
-
-    public function flush()
-    {
-        
     }
 }
