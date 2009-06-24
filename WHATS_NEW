@@ -210,6 +210,20 @@ response content. It is of great help on non XML-like responses, where
       matches('!/I have \d+ apples/i')->  // you can also add regex modifiers
     end();
 
+### JUnit Compatible XML Output
+
+The test tasks are now able to output a JUnit compatible XML file by using the
+`--xml` option:
+
+    $ php symfony test:all --xml=log.xml
+
+### Easy Debugging
+
+To ease the debugging when a test harness reports failed tests, you can now
+pass the `--trace` option to have a detailed output about the failures:
+
+    $ php symfony test:all -t
+
 Tasks
 -----
 

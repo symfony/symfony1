@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfTestAllTask extends sfBaseTask
+class sfTestAllTask extends sfTestBaseTask
 {
   /**
    * @see sfTask
@@ -25,6 +25,10 @@ class sfTestAllTask extends sfBaseTask
   {
     $this->addOptions(array(
       new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
+    ));
+
+    $this->addOptions(array(
+      new sfCommandOption('xml', null, sfCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
     ));
 
     $this->aliases = array('test-all');
@@ -39,8 +43,29 @@ The [test:all|INFO] task launches all unit and functional tests:
 
 The task launches all tests found in [test/|COMMENT].
 
-If one or more test fail, you can try to fix the problem by launching
-them by hand or with the [test:unit|COMMENT] and [test:functional|COMMENT] task.
+If some tests fail, you can use the [--trace|COMMENT] option to have more
+information about the failures:
+
+    [./symfony test:all -t|INFO]
+
+Or you can also try to fix the problem by launching them by hand or with the
+[test:unit|COMMENT] and [test:functional|COMMENT] task.
+
+Use the [--only-failed|COMMENT] option to force the task to only execute tests
+that failed during the previous run:
+
+    [./symfony test:all --only-failed|INFO]
+
+Here is how it works: the first time, all tests are run as usual. But for
+subsequent test runs, only tests that failed last time are executed. As you
+fix your code, some tests will pass, and will be removed from subsequent runs.
+When all tests pass again, the full test suite is run... you can then rinse
+and repeat.
+
+The task can output a JUnit compatible XML log file with the [--xml|COMMENT]
+options:
+
+  [./symfony test:all --xml=log.xml|INFO]
 EOF;
   }
 
@@ -81,6 +106,16 @@ EOF;
     $ret = $h->run() ? 0 : 1;
 
     file_put_contents($statusFile, serialize($h->get_failed_files()));
+
+    if ($options['trace'])
+    {
+      $this->outputHarnessTrace($h);
+    }
+
+    if ($options['xml'])
+    {
+      file_put_contents($options['xml'], $h->to_xml());
+    }
 
     return $ret;
   }

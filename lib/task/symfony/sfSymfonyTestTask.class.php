@@ -26,6 +26,7 @@ class sfSymfonyTestTask extends sfTask
     $this->addOptions(array(
       new sfCommandOption('update-autoloader', 'u', sfCommandOption::PARAMETER_NONE, 'Update the sfCoreAutoload class'),
       new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
+      new sfCommandOption('xml', null, sfCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
     ));
 
     $this->namespace = 'symfony';
@@ -104,6 +105,49 @@ EOF;
 
     file_put_contents($statusFile, serialize($h->get_failed_files()));
 
+    if ($options['trace'])
+    {
+      $this->outputHarnessTrace($h);
+    }
+
+    if ($options['xml'])
+    {
+      file_put_contents($options['xml'], $h->to_xml());
+    }
+
     return $ret;
+  }
+
+  // master is at sfTestBaseTask
+  /**
+   * @see sfTestBaseTask::outputHarnessTrace()
+   */
+  protected function outputHarnessTrace(lime_harness $h)
+  {
+    $xml = new SimpleXMLElement($h->to_xml());
+    foreach ($xml as $testsuite)
+    {
+      if ($testsuite['failures'])
+      {
+        $new = true;
+
+        foreach ($testsuite->testcase as $testcase)
+        {
+          foreach ($testcase->failure as $failure)
+          {
+            if ($new)
+            {
+              $this->log('');
+              $this->log($this->formatter->format($testsuite['file'], 'ERROR'));
+              $new = false;
+            }
+
+            $this->log($this->formatter->format(sprintf('  at %s line %s', $testcase['file'], $testcase['line']), 'COMMENT'));
+            $this->log($this->formatter->format('  '.$testcase['name'], 'INFO'));
+            $this->log($failure);
+          }
+        }
+      }
+    }
   }
 }

@@ -409,6 +409,7 @@ class sfCoreAutoload
     'lime_symfony' => 'task/symfony/lime_symfony.php',
     'sfsymfonytesttask' => 'task/symfony/sfSymfonyTestTask.class.php',
     'sftestalltask' => 'task/test/sfTestAllTask.class.php',
+    'sftestbasetask' => 'task/test/sfTestBaseTask.class.php',
     'sftestcoveragetask' => 'task/test/sfTestCoverageTask.class.php',
     'sftestfunctionaltask' => 'task/test/sfTestFunctionalTask.class.php',
     'sftestunittask' => 'task/test/sfTestUnitTask.class.php',

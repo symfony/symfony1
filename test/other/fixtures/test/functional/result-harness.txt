@@ -3,5 +3,5 @@ fooActionsTest.......................................................not ok
     Failed tests: 4
 Failed Test                     Stat  Total   Fail  List of Failed
 ------------------------------------------------------------------
-fooActionsTest                     0      1      1  4
+fooActionsTest                     0      4      1  4
 Failed 1/2 test scripts, 50.00% okay. 1/8 subtests failed, 87.50% okay.
