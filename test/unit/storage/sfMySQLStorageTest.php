@@ -18,7 +18,7 @@ $t = new lime_test($plan, new lime_output_color());
 if (!extension_loaded('mysql'))
 {
   $t->skip('Mysql extension must be loaded', $plan);
-  exit(0);
+  return;
 }
 
 // Configure your database with the settings below in order to run the test
@@ -31,7 +31,7 @@ $mysql_config = array(
 if (!isset($mysql_config))
 {
   $t->skip('Mysql credentials needed to run these tests', $plan);
-  exit(0);
+  return;
 }
 
 try
@@ -44,7 +44,7 @@ catch (sfDatabaseException $e)
 {
   $t->diag($e->getMessage());
   $t->skip('Unable to connect to MySQL database, skipping', $plan);
-  exit(0);
+  return;
 }
 
 // Creates test database

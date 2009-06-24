@@ -16,7 +16,7 @@ $t = new lime_test($tests = 15, new lime_output_color());
 if (!extension_loaded('SQLite'))
 {
   $t->skip('SQLite needed to run these tests', $tests);
-  exit(0);
+  return;
 }
 
 // initialize the storage

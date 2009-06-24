@@ -18,7 +18,7 @@ $t = new lime_test(40, new lime_output_color());
 if (!class_exists('PEAR'))
 {
   $t->skip('PEAR must be installed', 40); 
-  exit(0);
+  return;
 }
 
 require_once dirname(__FILE__).'/sfPearDownloaderTest.class.php';

@@ -17,7 +17,7 @@ $t = new lime_test($plan, new lime_output_color());
 if (!extension_loaded('SQLite')) 
 {
   $t->skip('SQLite extension not loaded, skipping tests', $plan);
-  exit(0);
+  return;
 }
 
 try
