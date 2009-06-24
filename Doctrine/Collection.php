@@ -109,6 +109,18 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         self::$null = $null;
     }
 
+    public static function create($table, $keyColumn = null, $class = null)
+    {
+        if (is_null($class)) {
+            if ( ! $table instanceof Doctrine_Table) {
+                $table = Doctrine::getTable($table);
+            }
+            $class = $table->getAttribute(Doctrine::ATTR_COLLECTION_CLASS);
+        }
+
+        return new $class($table, $keyColumn);
+    }
+
     /**
      * Get the table this collection belongs to
      *
@@ -580,7 +592,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
                 if ( ! $record->exists()) {
                     continue;
                 }
-                $sub = new Doctrine_Collection($table);
+                $sub = Doctrine_Collection::create($table);
 
                 foreach ($coll as $k => $related) {
                     if ($related[$foreign] == $record[$local]) {
@@ -600,7 +612,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
                 if ( ! $record->exists()) {
                     continue;
                 }
-                $sub = new Doctrine_Collection($table);
+                $sub = Doctrine_Collection::create($table);
                 foreach ($coll as $k => $related) {
                     if ($related->get($local) == $record[$identifier]) {
                         $sub->add($related->get($name));

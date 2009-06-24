@@ -121,6 +121,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS       => array(),
                         Doctrine::ATTR_HYDRATE_OVERWRITE            => true,
                         Doctrine::ATTR_QUERY_CLASS                  => 'Doctrine_Query',
+                        Doctrine::ATTR_COLLECTION_CLASS             => 'Doctrine_Collection',
                         Doctrine::ATTR_CASCADE_SAVES                => true,
                         ); 
             foreach ($attributes as $attribute => $value) {

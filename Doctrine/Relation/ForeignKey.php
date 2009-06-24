@@ -71,7 +71,7 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
             if ( ! $record->exists() || empty($id) || 
                  ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
                 
-                $related = new Doctrine_Collection($this->getTable());
+                $related = Doctrine_Collection::create($this->getTable());
             } else {
                 $query      = $this->getRelationDql(1);
                 $related    = $this->getTable()->getConnection()->query($query, $id);

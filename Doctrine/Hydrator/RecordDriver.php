@@ -40,7 +40,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
 
     public function getElementCollection($component)
     {
-        $coll = new Doctrine_Collection($component);
+        $coll = Doctrine_Collection::create($component);
         $this->_collections[] = $coll;
 
         return $coll;
@@ -57,7 +57,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     {
         if ( ! isset($this->_initializedRelations[$record->getOid()][$name])) {
             $relation = $record->getTable()->getRelation($name);
-            $coll = new Doctrine_Collection($relation->getTable()->getComponentName());
+            $coll = Doctrine_Collection::create($relation->getTable()->getComponentName());
             $coll->setReference($record, $relation);
             $record[$name] = $coll;
             $this->_initializedRelations[$record->getOid()][$name] = true;

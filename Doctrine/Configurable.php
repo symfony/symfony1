@@ -339,6 +339,19 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     }
 
     /**
+     * Unset an attribute from this levels attributes
+     *
+     * @param integer $attribute
+     * @return void
+     */
+    public function unsetAttribute($attribute)
+    {
+        if (isset($this->attributes[$attribute])) {
+            unset($this->attributes[$attribute]);
+        }
+    }
+
+    /**
      * getAttributes
      * returns all attributes as an array
      *

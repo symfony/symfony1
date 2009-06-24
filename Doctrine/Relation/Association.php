@@ -125,7 +125,7 @@ class Doctrine_Relation_Association extends Doctrine_Relation
     {
         $id = $record->getIncremented();
         if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
-            $coll = new Doctrine_Collection($this->getTable());
+            $coll = Doctrine_Collection::create($this->getTable());
         } else {
             $coll = $this->getTable()->getConnection()->query($this->getRelationDql(1), array($id));
         }
