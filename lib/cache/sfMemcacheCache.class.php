@@ -119,7 +119,12 @@ class sfMemcacheCache extends sfCache
       $this->setCacheInfo($key);
     }
 
-    return $this->memcache->set($this->getOption('prefix').$key, $data, false, $lifetime);
+    if (false !== $this->memcache->replace($this->getOption('prefix').$key, $data, false, time() + $lifetime))
+    {
+      return true;
+    }
+
+    return $this->memcache->set($this->getOption('prefix').$key, $data, false, time() + $lifetime);
   }
 
   /**
