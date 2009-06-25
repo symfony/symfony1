@@ -17,7 +17,7 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 
 sfConfig::set('sf_symfony_lib_dir', realpath($_test_dir.'/../lib'));
 
-$t = new lime_test($plan = 6, new lime_output_color());
+$t = new lime_test($plan = 6);
 
 if (!ini_get('apc.enable_cli'))
 {

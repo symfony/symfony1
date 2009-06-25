@@ -65,7 +65,7 @@ class sf_test_project
   }
 }
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(35);
 
 if (!extension_loaded('SQLite'))
 {

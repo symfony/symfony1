@@ -41,7 +41,7 @@ abstract class sfTestFunctionalBase
 
     if (is_null(self::$test))
     {
-      self::$test = !is_null($lime) ? $lime : new lime_test(null, new lime_output_color());
+      self::$test = !is_null($lime) ? $lime : new lime_test();
     }
 
     $this->setTesters(array_merge(array(

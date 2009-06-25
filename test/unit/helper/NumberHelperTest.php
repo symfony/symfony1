@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/NumberHelper.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(7);
 
 // format_number()
 $t->diag('format_number()');

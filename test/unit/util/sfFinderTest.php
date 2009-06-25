@@ -20,7 +20,7 @@ class my_lime_test extends lime_test
     return $this->is($a, $b, $message);
   }
 }
-$t = new my_lime_test(38, new lime_output_color());
+$t = new my_lime_test(38);
 
 require_once($_test_dir.'/../lib/util/sfFinder.class.php');
 

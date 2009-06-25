@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $plan = 60;
-$t = new lime_test($plan, new lime_output_color());
+$t = new lime_test($plan);
 
 try
 {

@@ -48,7 +48,7 @@ class ProjectConfiguration extends sfProjectConfiguration
 
 $configuration = new ProjectConfiguration(dirname(__FILE__).'/../../lib', new sfEventDispatcher());
 
-$t = new lime_test(96, new lime_output_color());
+$t = new lime_test(96);
 
 $context = sfContext::getInstance(array(
   'controller' => 'myController',

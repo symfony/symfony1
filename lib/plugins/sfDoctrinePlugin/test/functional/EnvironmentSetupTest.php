@@ -12,7 +12,7 @@ $app = 'frontend';
 $fixtures = 'fixtures/fixtures.yml';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(12);
 
 // Make sure Author records were populated properly
 $q = Doctrine_Query::create()

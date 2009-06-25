@@ -26,7 +26,7 @@ class fakeCache
 {
 }
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(1);
 
 // ->initialize()
 $t->diag('->initialize()');

@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(13);
 
 // test for ticket #4935
 $user = new User();

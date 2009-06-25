@@ -37,7 +37,7 @@ class myRequest
   }
 }
 
-$t = new lime_test(38, new lime_output_color());
+$t = new lime_test(38);
 
 $context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 

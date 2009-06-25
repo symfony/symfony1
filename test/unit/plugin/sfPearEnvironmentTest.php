@@ -12,7 +12,7 @@ error_reporting(error_reporting() & ~E_STRICT);
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(3);
 
 @include_once('PEAR.php');
 if (!class_exists('PEAR'))

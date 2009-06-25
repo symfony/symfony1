@@ -10,7 +10,7 @@
 
 include(dirname(__FILE__).'/../bootstrap/unit.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(23);
 
 $conn = Doctrine_Manager::connection(new Doctrine_Adapter_Mock('mysql'));
 

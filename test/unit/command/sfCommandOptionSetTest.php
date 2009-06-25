@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(20);
 
 $foo = new sfCommandOption('foo', 'f');
 $bar = new sfCommandOption('bar', 'b');

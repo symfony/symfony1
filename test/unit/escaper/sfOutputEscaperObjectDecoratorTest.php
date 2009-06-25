@@ -24,7 +24,7 @@ class sfException extends Exception
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(3);
 
 class OutputEscaperTest
 {

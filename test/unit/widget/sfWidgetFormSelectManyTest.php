@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(1);
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;

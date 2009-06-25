@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(11);
 
 $article = new Article();
 $article->title = 'test';

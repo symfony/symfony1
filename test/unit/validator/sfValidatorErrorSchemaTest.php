@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(33);
 
 $v1 = new sfValidatorString();
 $v2 = new sfValidatorString();

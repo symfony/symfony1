@@ -17,7 +17,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/FormHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/ObjectHelper.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(10);
 
 // object_textarea_tag()
 $t->diag('object_textarea_tag()');

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(21);
 
 define('ESC_SPECIALCHARS', 'esc_specialchars');
 function esc_specialchars($value)

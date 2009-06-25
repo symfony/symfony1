@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(92, new lime_output_color());
+$t = new lime_test(92);
 
 $t->diag('i18n data');
 $en = unserialize(file_get_contents(dirname(__FILE__).'/../../../lib/i18n/data/en.dat'));

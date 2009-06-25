@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../../lib/vendor/lime/lime.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/EscapingHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/escaper/sfOutputEscaperSafe.class.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(13);
 
 // ->getValue()
 $t->diag('->getValue()');

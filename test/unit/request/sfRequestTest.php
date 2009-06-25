@@ -22,7 +22,7 @@ class fakeRequest
 {
 }
 
-$t = new lime_test(36, new lime_output_color());
+$t = new lime_test(36);
 
 $dispatcher = new sfEventDispatcher();
 

@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/PartialHelper.php');
 
 // Fixme: make this test more beautiful and extend it
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(2);
 
 class MyTestPartialView extends sfPartialView
 {

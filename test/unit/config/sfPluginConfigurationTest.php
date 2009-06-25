@@ -15,7 +15,7 @@ $pluginRoot = $rootDir.'/plugins/sfAutoloadPlugin';
 
 require_once $pluginRoot.'/config/sfAutoloadPluginConfiguration.class.php';
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(2);
 
 class ProjectConfiguration extends sfProjectConfiguration
 {

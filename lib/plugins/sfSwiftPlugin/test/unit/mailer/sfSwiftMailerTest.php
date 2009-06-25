@@ -18,7 +18,7 @@
  */
 require_once(dirname(__FILE__) . '/../../../../../../test/bootstrap/unit.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(12);
 
 // autoloading for tests - normally handled via plugin configuration
 $autoload = sfSimpleAutoload::getInstance();

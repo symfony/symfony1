@@ -18,7 +18,7 @@ class myRequest extends sfRequest
   }
 }
 
-$t = new lime_test(15, new lime_output_color());
+$t = new lime_test(15);
 
 $dispatcher = new sfEventDispatcher();
 $dispatcher->connect('request.method_not_found', array('sfRequestCompat10', 'call'));

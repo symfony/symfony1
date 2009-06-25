@@ -21,7 +21,7 @@ require_once(dirname(__FILE__).'/../../../lib/config/sfConfig.class.php');
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(39);
 
 class OutputEscaperTestClass
 {

@@ -40,7 +40,7 @@ class sfTestMailer extends sfMailer
 
 $mailer = new sfTestMailer(array('culture' => 'en'));
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(4);
 
 $t->is($mailer->getOptions(), array('culture' => 'en'), '->getOptions() returns options for mailer');
 $t->is($mailer->getOption('culture'), 'en', '->getOption() returns an option given name');

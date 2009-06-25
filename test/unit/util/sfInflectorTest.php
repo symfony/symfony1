@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 require_once($_test_dir.'/../lib/util/sfInflector.class.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(7);
 
 // ::camelize()
 $t->diag('::camelize()');

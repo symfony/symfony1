@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../../bootstrap/functional.php');
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(1);
 
 class TestUserForm extends UserForm
 {

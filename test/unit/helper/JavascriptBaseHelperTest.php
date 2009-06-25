@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/JavascriptBaseHelper.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(7);
 
 // boolean_for_javascript()
 $t->diag('boolean_for_javascript()');

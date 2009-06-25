@@ -24,7 +24,7 @@ class sfException extends Exception
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(10);
 
 $a = array('<strong>escaped!</strong>', 1, null, array(2, '<strong>escaped!</strong>'));
 $escaped = sfOutputEscaper::escape('esc_entities', $a);
