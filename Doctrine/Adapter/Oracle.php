@@ -33,7 +33,8 @@
  * @version     $Revision$
  */
 
-class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
+class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
+{
     /**
      *    execution mode
      */
@@ -189,7 +190,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface{
      */
     public function lastInsertId()
     {
-        throw new Exception("unsupported");
+        throw new Doctrine_Adapter_Exception("unsupported");
     }
 
     /**

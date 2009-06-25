@@ -485,7 +485,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $class = 'Doctrine_Adapter_' . ucwords($e[0]);
 
             if (class_exists($class)) {
-                $this->dbh = new $class($this->options['dsn'], $this->options['username'], $this->options['password']);
+                $this->dbh = new $class($this->options['dsn'], $this->options['username'], $this->options['password'], $this->options);
             } else {
                 throw new Doctrine_Connection_Exception("Couldn't locate driver named " . $e[0]);          
             }

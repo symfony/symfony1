@@ -75,6 +75,21 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         Doctrine::HYDRATE_SINGLE_SCALAR   => 'Doctrine_Hydrator_SingleScalarDriver'
     );
 
+    protected $_connectionDrivers = array(
+        'db2'      => 'Doctrine_Connection_Db2',
+        'mysql'    => 'Doctrine_Connection_Mysql',
+        'mysqli'   => 'Doctrine_Connection_Mysql',
+        'sqlite'   => 'Doctrine_Connection_Sqlite',
+        'pgsql'    => 'Doctrine_Connection_Pgsql',
+        'oci'      => 'Doctrine_Connection_Oracle',
+        'oci8'     => 'Doctrine_Connection_Oracle',
+        'oracle'   => 'Doctrine_Connection_Oracle',
+        'mssql'    => 'Doctrine_Connection_Mssql',
+        'dblib'    => 'Doctrine_Connection_Mssql',
+        'odbc'     => 'Doctrine_Connection_Mssql', 
+        'mock'     => 'Doctrine_Connection_Mock'
+    );
+
     /**
      * @var boolean                     Whether or not the validators from disk have been loaded
      */
@@ -269,22 +284,11 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $this->_index++;
         }
 
-        $drivers = array('mysql'    => 'Doctrine_Connection_Mysql',
-                         'sqlite'   => 'Doctrine_Connection_Sqlite',
-                         'pgsql'    => 'Doctrine_Connection_Pgsql',
-                         'oci'      => 'Doctrine_Connection_Oracle',
-                         'oci8'     => 'Doctrine_Connection_Oracle',
-                         'oracle'   => 'Doctrine_Connection_Oracle',
-                         'mssql'    => 'Doctrine_Connection_Mssql',
-                         'dblib'    => 'Doctrine_Connection_Mssql',
-                         'odbc'     => 'Doctrine_Connection_Mssql', 
-                         'mock'     => 'Doctrine_Connection_Mock');
-
-        if ( ! isset($drivers[$driverName])) {
+        if ( ! isset($this->_connectionDrivers[$driverName])) {
             throw new Doctrine_Manager_Exception('Unknown driver ' . $driverName);
         }
 
-        $className = $drivers[$driverName];
+        $className = $this->_connectionDrivers[$driverName];
         $conn = new $className($this, $adapter);
         $conn->setName($name);
 
@@ -444,7 +448,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
 
                 break;
             default:
-                throw new Doctrine_Manager_Exception('Unknown driver '.$parts['scheme']);
+                $parts['dsn'] = $dsn;
         }
 
         return $parts;
@@ -729,11 +733,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      *
      * @return void
      */
-    public function registerHydrator($name, $class = null)
+    public function registerHydrator($name, $class)
     {
-        if (is_null($class)) {
-            $class = $name;
-        }
         $this->_hydrators[$name] = $class;
     }
 
@@ -745,5 +746,25 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     public function getHydrators()
     {
         return $this->_hydrators;
+    }
+
+    /**
+     * Register a custom connection driver
+     *
+     * @return void
+     */
+    public function registerConnectionDriver($name, $class)
+    {
+        $this->_connectionDrivers[$name] = $class;
+    }
+
+    /**
+     * Get all the available connection drivers
+     *
+     * @return array $connectionDrivers
+     */
+    public function getConnectionDrivers()
+    {
+        return $this->_connectionsDrivers;
     }
 }

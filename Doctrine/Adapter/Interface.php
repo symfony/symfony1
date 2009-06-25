@@ -42,4 +42,6 @@ interface Doctrine_Adapter_Interface
     public function rollBack();
     public function errorCode();
     public function errorInfo();
+    public function setAttribute($attribute, $value);
+    public function getAttribute($attribute);
 }
