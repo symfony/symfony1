@@ -224,6 +224,15 @@ pass the `--trace` option to have a detailed output about the failures:
 
     $ php symfony test:all -t
 
+### Lime Output Colorization
+
+As of symfony 1.3, lime does the right thing as far as colorization is
+concerned. It means, that you can almost always omit the second argument of
+the lime constructor of `lime_test`:
+
+    [php]
+    $t = new lime_test(1);
+
 Tasks
 -----
 
