@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_RecordDriver
+class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
 {
     public function getElementCollection($component)
     {
@@ -65,15 +65,7 @@ class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_RecordDriver
         end($coll);
         return key($coll);
     }
-    
-    /**
-     * sets the last element of given data array / collection
-     * as previous element
-     *
-     * @param boolean|integer $index
-     * @return void
-     * @todo Detailed documentation
-     */
+
     public function setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
     {
         if ($coll === null) {

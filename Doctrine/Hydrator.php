@@ -34,6 +34,9 @@
  */
 class Doctrine_Hydrator
 {
+    protected static
+      $_totalHydrationTime = 0;
+
     protected 
         $_rootAlias = null,
         $_hydrationMode = Doctrine::HYDRATE_RECORD,
@@ -98,6 +101,8 @@ class Doctrine_Hydrator
         $driverClass = $hydrators[$this->_hydrationMode];
         $driver = new $driverClass($this->_queryComponents, $tableAliases);
 
-        return $driver->hydrateResultSet($stmt);
+        $result = $driver->hydrateResultSet($stmt);
+
+        return $result;
     }
 }

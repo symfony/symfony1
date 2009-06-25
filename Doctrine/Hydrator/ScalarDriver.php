@@ -50,7 +50,7 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
         foreach ($data as $key => $value) {
             // Parse each column name only once. Cache the results.
             if ( ! isset($cache[$key])) {
-                if ($this->_isIgnoredName($key)) {
+                if ($key == 'DOCTRINE_ROWNUM') {
                     continue;
                 }
                 // cache general information like the column name <-> field name mapping

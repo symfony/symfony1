@@ -42,11 +42,6 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
         $this->_tableAliases = $tableAliases;
     }
 
-    public function flush()
-    {
-        
-    }
-
     /**
      * Checks whether a name is ignored. Used during result set parsing to skip
      * certain elements in the result set that do not have any meaning for the result.
@@ -58,17 +53,6 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     protected function _isIgnoredName($name)
     {
         return $name == 'DOCTRINE_ROWNUM';
-    }
-
-    /**
-     * Gets the custom field used for indexing for the specified component alias.
-     *
-     * @return string  The field name of the field used for indexing or NULL
-     *                 if the component does not use any custom field indices.
-     */
-    protected function _getCustomIndexField($alias)
-    {
-        return isset($this->_queryComponents[$alias]['map']) ? $this->_queryComponents[$alias]['map'] : null;
     }
 
     /**
