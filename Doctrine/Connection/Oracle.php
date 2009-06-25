@@ -60,10 +60,11 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
                           'pattern_escaping'     => true,
                           );
         
-        $this->properties['sql_file_delimiter']   = "\n/\n";
-        $this->properties['varchar2_max_length']  = 4000;
-        $this->properties['number_max_precision'] = 38;
+        $this->properties['sql_file_delimiter']    = "\n/\n";
+        $this->properties['varchar2_max_length']   = 4000;
+        $this->properties['number_max_precision']  = 38;
         $this->properties['max_identifier_length'] = 30;
+        $this->properties['chart_unit']            = "BYTE"; 
         
         parent::__construct($manager, $adapter);
     }
