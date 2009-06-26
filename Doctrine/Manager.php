@@ -90,6 +90,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         'mock'     => 'Doctrine_Connection_Mock'
     );
 
+    protected $_extensions = array();
+
     /**
      * @var boolean                     Whether or not the validators from disk have been loaded
      */
@@ -766,5 +768,30 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     public function getConnectionDrivers()
     {
         return $this->_connectionsDrivers;
+    }
+
+    /**
+     * Register a Doctrine extension for extensionsAutoload() method
+     *
+     * @param string $name 
+     * @param string $path 
+     * @return void
+     */
+    public function registerExtension($name, $path = null)
+    {
+        if (is_null($path)) {
+            $path = Doctrine::getExtensionsPath() . '/' . $name . '/lib';
+        }
+        $this->_extensions[$name] = $path;
+    }
+
+    /**
+     * Get all registered Doctrine extensions
+     *
+     * @return $extensions
+     */
+    public function getExtensions()
+    {
+        return $this->_extensions;
     }
 }

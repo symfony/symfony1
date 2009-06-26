@@ -443,6 +443,13 @@ final class Doctrine
     private static $_path;
 
     /**
+     * Path to the Doctrine extensions directory
+     *
+     * @var string $extensionsPath
+     */
+    private static $_extensionsPath;
+
+    /**
      * Debug bool true/false option
      *
      * @var boolean $_debug
@@ -522,6 +529,37 @@ final class Doctrine
         }
 
         return self::$_path;
+    }
+
+    /**
+     * Set the path to autoload extension classes from
+     *
+     * @param string $extensionsPath 
+     * @return void
+     */
+    public static function setExtensionsPath($extensionsPath)
+    {
+        self::$_extensionsPath = $extensionsPath;
+    }
+
+    /**
+     * Get the path to load extension classes from
+     *
+     * @return string $extensionsPath
+     */
+    public static function getExtensionsPath()
+    {
+        return self::$_extensionsPath;
+    }
+
+    /**
+     * Get all the loaded extension classes 
+     *
+     * @return array $extensionClasses
+     */
+    public static function getExtensionsClasses()
+    {
+        return Doctrine_Manager::getInstance()->getExtensionsClasses();
     }
 
     /**
@@ -998,7 +1036,7 @@ final class Doctrine
      * simple autoload function
      * returns true if the class was loaded, otherwise false
      *
-     * @param string $classname
+     * @param string $className
      * @return boolean
      */
     public static function autoload($className)
@@ -1015,12 +1053,47 @@ final class Doctrine
             return true;
         }
 
+        return false;
+    }
+
+    public static function modelsAutoload($className)
+    {
+        if (class_exists($className, false) || interface_exists($className, false)) {
+            return false;
+        }
+
         $loadedModels = self::$_loadedModelFiles;
 
         if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
             require $loadedModels[$className];
 
             return true;
+        }
+    }
+
+    /**
+     * Load classes from the Doctrine extensions directory/path
+     *
+     * @param string $className
+     * @return boolean
+     */
+    public static function extensionsAutoload($className)
+    {
+        if (class_exists($className, false) || interface_exists($className, false)) {
+            return false;
+        }
+
+        $extensions = Doctrine_Manager::getInstance()
+            ->getExtensions();
+
+        foreach ($extensions as $name => $path) {
+            $class = $path . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+
+            if (file_exists($class)) {
+                require $class;
+
+                return true;
+            }
         }
 
         return false;
