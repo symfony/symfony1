@@ -270,11 +270,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function getAttribute($attribute)
     {
-        if (is_string($attribute)) {
-            $stringAttribute = $attribute;
-            $attribute = $this->getAttributeFromString($attribute);
-        }
-
         if ($attribute >= 100) {
             if ( ! isset($this->attributes[$attribute])) {
                 return parent::getAttribute($attribute);
@@ -329,15 +324,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function setAttribute($attribute, $value)
     {
-        if (is_string($attribute)) {
-            $attributeString = $attribute;
-            $attribute = parent::getAttributeFromString($attribute);
-        }
-
-        if (is_string($value) && isset($attributeString)) {
-            $value = parent::getAttributeValueFromString($attributeString, $value);
-        }
-
         if ($attribute >= 100) {
             parent::setAttribute($attribute, $value);
         } else {
