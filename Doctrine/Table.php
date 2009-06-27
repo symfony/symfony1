@@ -677,6 +677,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $fk = $relation->toArray();
                 $fk['foreignTable'] = $relation->getTable()->getTableName();
 
+                // do not touch tables that have EXPORT_NONE attribute
+                if ($relation->getTable()->getAttribute(Doctrine::ATTR_EXPORT) === Doctrine::EXPORT_NONE) {
+                    continue;
+                }
+                
                 if ($relation->getTable() === $this && in_array($relation->getLocal(), $primary)) {
                     if ($relation->hasConstraint()) {
                         throw new Doctrine_Table_Exception("Badly constructed integrity constraints. Cannot define constraint of different fields in the same table.");

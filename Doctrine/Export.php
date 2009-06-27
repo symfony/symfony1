@@ -1246,6 +1246,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
                     $sql = array_merge($sql, (array) $query);
                 }
 
+                // Don't export the tables with attribute EXPORT_NONE'
+                if ($table->getAttribute(Doctrine::ATTR_EXPORT) === Doctrine::EXPORT_NONE) {
+                    continue;
+                }
+
                 $data = $table->getExportableFormat();
 
                 $query = $this->conn->export->createTableSql($data['tableName'], $data['columns'], $data['options']);
