@@ -61,12 +61,16 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
                           );
         
         $this->properties['sql_file_delimiter']    = "\n/\n";
-        $this->properties['varchar2_max_length']   = 4000;
         $this->properties['number_max_precision']  = 38;
         $this->properties['max_identifier_length'] = 30;
-        $this->properties['chart_unit']            = "BYTE"; 
-        
+
         parent::__construct($manager, $adapter);
+        
+        // moving properties to params to make them changeable by user
+        // VARCHAR2 allowed length is 4000 BYTE. For UTF8 strings is better to use 1000 CHAR 
+        $this->setParam('varchar2_max_length', 4000);
+        // Oracle's default unit for char data types is BYTE. For UTF8 string it is better to use CHAR
+        $this->setParam('char_unit', null);
     }
 
     /**
@@ -137,5 +141,58 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
     public function getTmpConnection($info)
     {
         return $this;
+    }
+
+
+    /**
+     * createDatabase
+     *
+     * Issue create database command for this instance of Doctrine_Connection
+     *
+     * @return string       Doctrine_Exception catched in case of failure
+     */
+    public function createDatabase()
+    {
+        if ( ! ($this->dbh instanceof Doctrine_Adapter_Oracle)) {
+            parent::createDatabase();
+        }
+
+        try {
+            // Issue create database command
+            $this->export->createDatabase($this->dbh->getUserName());
+        } catch (Exception $e) {}
+
+        if (isset($e)) {
+            return $e;
+        } else {
+            return 'Successfully created database for connection "' . $this->getName() . '" named "' . $this->dbh->getUserName() . '"';
+        }
+    }
+
+    /**
+     * dropDatabase
+     *
+     * Issue drop database command for this instance of Doctrine_Connection
+     *
+     * @return string       success string. Doctrine_Exception if operation failed
+     */
+    public function dropDatabase()
+    {
+        // it is not necessary to create temporary command when using oracle
+        if ( ! ($this->dbh instanceof Doctrine_Adapter_Oracle)) {
+            parent::dropDatabase();
+        }
+        
+        try {
+            $this->export->dropDatabase($this->dbh->getUserName());
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+        
+        if (isset($e)) {
+            return $e;
+        } else {
+            return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $this->dbh->getUserName() . '"';
+        }
     }
 }

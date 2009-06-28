@@ -59,7 +59,6 @@ class Doctrine_Export_Oracle extends Doctrine_Export
                 $this->dropDatabase($username);
             }
         }
-
         return true;
     }
 
@@ -73,23 +72,23 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      */
     public function dropDatabase($name)
     {
-        $sql[] = "BEGIN
-FOR I IN (select table_name from user_tables)
-LOOP 
-EXECUTE IMMEDIATE 'DROP TABLE '||I.table_name||' CASCADE CONSTRAINTS';
-END LOOP;
-END;";
+        $sql = <<<SQL
+BEGIN
+  -- user_tables contains also materialized views
+  FOR I IN (SELECT table_name FROM user_tables WHERE table_name NOT IN (SELECT mview_name FROM user_mviews))
+  LOOP 
+    EXECUTE IMMEDIATE 'DROP TABLE "'||I.table_name||'" CASCADE CONSTRAINTS';
+  END LOOP;
+  
+  FOR I IN (SELECT SEQUENCE_NAME FROM USER_SEQUENCES)
+  LOOP
+    EXECUTE IMMEDIATE 'DROP SEQUENCE "'||I.SEQUENCE_NAME||'"';
+  END LOOP;
+END;
 
-        $sql[] = "BEGIN
-FOR I IN (SELECT SEQUENCE_NAME, SEQUENCE_OWNER FROM ALL_SEQUENCES WHERE SEQUENCE_OWNER <> 'SYS')
-LOOP 
-EXECUTE IMMEDIATE 'DROP SEQUENCE '||I.SEQUENCE_OWNER||'.'||I.SEQUENCE_NAME;
-END LOOP;
-END;";
+SQL;
 
-        foreach ($sql as $query) {
-            $this->conn->exec($query);
-        }
+        $this->conn->exec($sql);
 
         if ($this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
             $username = $name;

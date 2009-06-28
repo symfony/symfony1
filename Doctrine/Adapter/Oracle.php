@@ -273,6 +273,16 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     {
         return $this->connection;
     }
+    
+    /**
+     * Returns current user name
+     * 
+     * @return string current user name
+     */
+    public function getUserName()
+    {
+       return $this->config['username']; 
+    }
 
     public function errorCode()
     {

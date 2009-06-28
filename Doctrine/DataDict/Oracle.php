@@ -70,10 +70,10 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
 
                 $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
                 
-                $unit = $this->conn->chart_unit;
-                $unit = ! is_null($unit) && in_array($unit, array('CHAR', 'BYTE')) ? ' '.$unit : '';
-                
-                if ($length && $length <= $this->conn->varchar2_max_length) {
+                $unit = $this->conn->getParam('char_unit');
+                $unit = ! is_null($unit) ? ' '.$unit : '';
+
+                if ($length && $length <= $this->conn->getParam('varchar2_max_length')) {
                     return $fixed ? 'CHAR('.$length.$unit.')' : 'VARCHAR2('.$length.$unit.')';
                 }
             case 'clob':
