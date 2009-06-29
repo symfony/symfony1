@@ -992,7 +992,13 @@ EOF;
             break;
         }
       }
+
       $total_lines = count($covered_lines) + count($missing_lines);
+      if (!$total_lines)
+      {
+        // probably means that the file is not covered at all!
+        $total_lines = count($this->get_php_lines(file_get_contents($file)));
+      }
 
       $output = $this->harness->output;
       $percent = $total_lines ? count($covered_lines) * 100 / $total_lines : 0;
