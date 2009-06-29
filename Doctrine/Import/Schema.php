@@ -491,8 +491,12 @@ class Doctrine_Import_Schema
                     $multiInheritanceDef = $array[$superClass]; 
 
                     while (count($multiInheritanceDef['inheritance']) > 0 && array_key_exists('extends', $multiInheritanceDef['inheritance']) && $multiInheritanceDef['inheritance']['type'] == 'column_aggregation') { 
-                        $superClass = $multiInheritanceDef['inheritance']['extends']; 
-                        $inheritanceFields[$multiInheritanceDef['inheritance']['keyField']] = $multiInheritanceDef['inheritance']['keyValue']; 
+                        $superClass = $multiInheritanceDef['inheritance']['extends'];
+                        
+                        // keep original keyField with it's keyValue
+                        if ( ! isset($inheritanceFields[$multiInheritanceDef['inheritance']['keyField']])) { 
+                            $inheritanceFields[$multiInheritanceDef['inheritance']['keyField']] = $multiInheritanceDef['inheritance']['keyValue'];
+                        } 
                         $multiInheritanceDef = $array[$superClass]; 
                     } 
 
