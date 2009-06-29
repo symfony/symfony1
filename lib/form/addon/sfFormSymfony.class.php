@@ -59,27 +59,6 @@ class sfFormSymfony extends sfForm
   }
 
   /**
-   * Smartly binds request files and parameters.
-   *
-   * @param sfWebRequest $request
-   */
-  public function bindRequest(sfWebRequest $request)
-  {
-    if ($name = $this->getName())
-    {
-      $this->bind($request->getParameter($name), $request->getFiles($name));
-    }
-    else if ($request->isMethod('get'))
-    {
-      $this->bind($request->getGetParameters());
-    }
-    else
-    {
-      $this->bind($request->getPostParameters(), $request->getFiles());
-    }
-  }
-
-  /**
    * Notifies the 'form.filter_values' and 'form.validation_error' events.
    *
    * @see sfForm
