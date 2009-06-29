@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -70,13 +70,17 @@ EOF;
   {
     if (count($arguments['name']))
     {
+      $files = array();
+
       foreach ($arguments['name'] as $name)
       {
-        $files = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($name));
-        foreach ($files as $file)
-        {
-          include($file);
-        }
+        $finder = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php');
+        $files = array_merge($files, $finder->in(sfConfig::get('sf_test_dir').'/unit/'.dirname($name)));
+      }
+
+      foreach ($this->filterTestFiles($files, $arguments, $options) as $file)
+      {
+        include($file);
       }
     }
     else
@@ -86,9 +90,9 @@ EOF;
       $h = new lime_harness(new lime_output($options['color']));
       $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
-      // register unit tests
+      // filter and register unit tests
       $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
-      $h->register($finder->in($h->base_dir));
+      $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
 
       $ret = $h->run() ? 0 : 1;
 

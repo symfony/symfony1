@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -75,13 +75,17 @@ EOF;
 
     if (count($arguments['controller']))
     {
+      $files = array();
+
       foreach ($arguments['controller'] as $controller)
       {
-        $files = sfFinder::type('file')->follow_link()->name(basename($controller).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($controller));
-        foreach ($files as $file)
-        {
-          include($file);
-        }
+        $finder = sfFinder::type('file')->follow_link()->name(basename($controller).'Test.php');
+        $files = array_merge($files, $finder->in(sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.dirname($controller)));
+      }
+
+      foreach ($this->filterTestFiles($files, $arguments, $options) as $file)
+      {
+        include($file);
       }
     }
     else
@@ -91,9 +95,9 @@ EOF;
       $h = new lime_harness(new lime_output($options['color']));
       $h->base_dir = sfConfig::get('sf_test_dir').'/functional/'.$app;
 
-      // register functional tests
+      // filter and register functional tests
       $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
-      $h->register($finder->in($h->base_dir));
+      $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
 
       $ret = $h->run() ? 0 : 1;
 

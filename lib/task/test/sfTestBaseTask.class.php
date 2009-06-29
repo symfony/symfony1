@@ -9,7 +9,7 @@
  */
 
 /**
- * Launches unit tests.
+ * Base test task.
  *
  * @package    symfony
  * @subpackage task
@@ -18,6 +18,24 @@
  */
 abstract class sfTestBaseTask extends sfBaseTask
 {
+  /**
+   * Filters tests through the "task.test.filter_test_files" event.
+   * 
+   * @param  array $tests     An array of absolute test file paths
+   * @param  array $arguments Current task arguments
+   * @param  array $options   Current task options
+   * 
+   * @return array The filtered array of test files
+   */
+  protected function filterTestFiles($tests, $arguments, $options)
+  {
+    $event = new sfEvent($this, 'task.test.filter_test_files', array('arguments' => $arguments, 'options' => $options));
+
+    $this->dispatcher->filter($event, $tests);
+
+    return $event->getReturnValue();
+  }
+
   protected function outputHarnessTrace(lime_harness $h)
   {
     $xml = new SimpleXMLElement($h->to_xml());

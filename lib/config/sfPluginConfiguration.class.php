@@ -166,6 +166,58 @@ abstract class sfPluginConfiguration
   }
 
   /**
+   * Connects the current plugin's tests to the "test:*" tasks.
+   */
+  public function connectTests()
+  {
+    $this->dispatcher->connect('task.test.filter_test_files', array($this, 'filterTestFiles'));
+  }
+
+  /**
+   * Listens for the "task.test.filter_test_files" event and adds tests from the current plugin.
+   * 
+   * @param  sfEvent $event
+   * @param  array   $files
+   * 
+   * @return array An array of files with the appropriate tests from the current plugin merged in
+   */
+  public function filterTestFiles(sfEvent $event, $files)
+  {
+    $task = $event->getSubject();
+
+    $task->logSection('test', sprintf('Merging %s tests', $this->name));
+
+    if ($task instanceof sfTestAllTask)
+    {
+      $directory = $this->rootDir.'/test';
+      $names = array();
+    }
+    else if ($task instanceof sfTestFunctionalTask)
+    {
+      $directory = $this->rootDir.'/test/functional';
+      $names = $event['arguments']['controller'];
+    }
+    else if ($task instanceof sfTestUnitTask)
+    {
+      $directory = $this->rootDir.'/test/unit';
+      $names = $event['arguments']['name'];
+    }
+
+    if (!count($names))
+    {
+      $names = array('*');
+    }
+
+    foreach ($names as $name)
+    {
+      $finder = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php');
+      $files = array_merge($files, $finder->in($directory.'/'.dirname($name)));
+    }
+
+    return $files;
+  }
+
+  /**
    * Guesses the plugin root directory.
    * 
    * @return string

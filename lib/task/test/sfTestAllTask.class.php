@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,9 +25,6 @@ class sfTestAllTask extends sfTestBaseTask
   {
     $this->addOptions(array(
       new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
-    ));
-
-    $this->addOptions(array(
       new sfCommandOption('xml', null, sfCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
     ));
 
@@ -98,9 +95,9 @@ EOF;
     }
     else
     {
-      // register all tests
+      // filter and register all tests
       $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
-      $h->register($finder->in($h->base_dir));
+      $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
     }
 
     $ret = $h->run() ? 0 : 1;
