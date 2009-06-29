@@ -84,6 +84,8 @@ class sfYamlInline
         return "'$value'";
       case in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')):
         return "'$value'";
+      case in_array(strtolower($value), array('null', '~')):
+        return "'$value'";
       default:
         return $value;
     }
