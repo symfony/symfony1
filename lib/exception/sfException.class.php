@@ -250,8 +250,8 @@ class sfException extends Exception
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(
       'function' => '',
-      'file'     => $exception->getFile() != null ? $exception->getFile() : 'n/a',
-      'line'     => $exception->getLine() != null ? $exception->getLine() : 'n/a',
+      'file'     => $exception->getFile() != null ? $exception->getFile() : null,
+      'line'     => $exception->getLine() != null ? $exception->getLine() : null,
       'args'     => array(),
     ));
 
@@ -264,6 +264,7 @@ class sfException extends Exception
     {
       $lineFormat = 'at %s%s%s(%s) in %s line %s';
     }
+
     for ($i = 0, $count = count($traceData); $i < $count; $i++)
     {
       $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
@@ -275,7 +276,7 @@ class sfException extends Exception
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
         self::formatArgs($args, false, $format),
-        $shortFile,
+        self::formatFile($traceData[$i]['file'], $traceData[$i]['line'], $format, $shortFile),
         $line,
         'trace_'.$i,
         'trace_'.$i,
@@ -366,7 +367,33 @@ class sfException extends Exception
 
     return implode(', ', $result);
   }
-  
+
+  /**
+   * Formats a file path.
+   * 
+   * @param  string  $file   An absolute file path
+   * @param  integer $line   The line number
+   * @param  string  $format The output format (plain or html)
+   * @param  string  $text   Use this text for the link rather than the file path
+   * 
+   * @return string
+   */
+  static protected function formatFile($file, $line, $format = 'html', $text = null)
+  {
+    if (is_null($text))
+    {
+      $text = $file;
+    }
+
+    if ('html' == $format && $file && $line && $linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format')))
+    {
+      $link = strtr($linkFormat, array('%f' => $file, '%l' => $line));
+      $text = sprintf('<a href="%s" title="Click to open this file" class="file_link">%s</a>', $link, $text);
+    }
+
+    return $text;
+  }
+
   /**
    * Escapes a string value with html entities
    *

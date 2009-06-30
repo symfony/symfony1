@@ -21,6 +21,8 @@
   p.error a { color: #fff }
   #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; min-width: 13em; max-width: 52em }
   #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
+  a.file_link { text-decoration: none; }
+  a.file_link:hover { text-decoration: underline; }
   </style>
   <script type="text/javascript">
   function toggle(id)

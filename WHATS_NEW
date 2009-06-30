@@ -444,3 +444,24 @@ configuration's `->connectTests()` method.
         $this->pluginConfigurations['sfExamplePlugin']->connectTests();
       }
     }
+
+Settings
+--------
+
+### `sf_file_link_format`
+
+Symfony 1.3 formats file paths as clickable links whenever possible (i.e. the
+debug exception template). The `sf_file_link_format` is used for this purpose,
+if set, otherwise symfony will look for the `xdebug.file_link_format` PHP
+configuration value.
+
+For example, if you want to open files in TextMate, add the following to
+`settings.yml`:
+
+    [yml]
+    all:
+      .settings:
+        file_link_format: txmt://open?url=file://%f&line=%l
+
+The `%f` placeholder will be replaced with file's absolute path and the `%l`
+placeholder will be replaced with the line number.
