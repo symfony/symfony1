@@ -543,12 +543,15 @@ class lime_output
     echo $this->colorizer->colorize(sprintf(' %s ', $message), 'RED_BAR')."\n";
   }
 
-  public function echoln($message, $colorizer_parameter = null)
+  public function echoln($message, $colorizer_parameter = null, $colorize = true)
   {
-    $message = preg_replace('/(?:^|\.)((?:not ok|dubious) *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'ERROR\')', $message);
-    $message = preg_replace('/(?:^|\.)(ok *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'INFO\')', $message);
-    $message = preg_replace('/"(.+?)"/e', '$this->colorizer->colorize(\'$1\', \'PARAMETER\')', $message);
-    $message = preg_replace('/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
+    if ($colorize)
+    {
+      $message = preg_replace('/(?:^|\.)((?:not ok|dubious) *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'ERROR\')', $message);
+      $message = preg_replace('/(?:^|\.)(ok *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'INFO\')', $message);
+      $message = preg_replace('/"(.+?)"/e', '$this->colorizer->colorize(\'$1\', \'PARAMETER\')', $message);
+      $message = preg_replace('/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
+    }
 
     echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
   }
@@ -867,7 +870,7 @@ EOF
 
             $this->output->comment(sprintf('  at %s line %s', $testsuite['tests'][$testcase]['file'], $testsuite['tests'][$testcase]['line']));
             $this->output->info('  '.$testsuite['tests'][$testcase]['message']);
-            $this->output->echoln($testsuite['tests'][$testcase]['error']);
+            $this->output->echoln($testsuite['tests'][$testcase]['error'], null, false);
           }
         }
       }
