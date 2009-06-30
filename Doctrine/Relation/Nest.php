@@ -87,10 +87,10 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             $tableName  = $record->getTable()->getTableName();
             $identifierColumnNames = $record->getTable()->getIdentifierColumnNames();
             $identifier = array_pop($identifierColumnNames);
-    
+
             $sub = 'SELECT ' . $this->getForeignRefColumnName()
-                 . ' FROM ' . $assocTable 
-                 . ' WHERE ' . $this->getLocalRefColumnName() 
+                 . ' FROM ' . $assocTable
+                 . ' WHERE ' . $this->getLocalRefColumnName()
                  . ' = ?';
 
             $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub . ')';
@@ -107,9 +107,10 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             }
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
-              ->where(implode(' OR ', $condition));
+              ->where(implode(' OR ', $condition))
+              ->orderBy($tableName . '.' . $identifier . ' ASC');
             $q->addComponent($tableName,  $this->getClass());
-            
+
             $path = $this->getClass(). '.' . $this->getAssociationFactory()->getComponentName();
             if ($this->definition['refClassRelationAlias']) {
                 $path = $this->getClass(). '.' . $this->definition['refClassRelationAlias'];
