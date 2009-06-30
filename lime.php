@@ -638,6 +638,7 @@ class lime_harness extends lime_registration
       'php_cli'      => null,
       'force_colors' => false,
       'output'       => null,
+      'verbose'      => false,
     ), $options);
 
     $this->php_cli = $this->find_php_cli($this->options['php_cli']);
@@ -844,6 +845,32 @@ EOF
         $nb_tests = $this->stats['total'],
         $nb_tests > 0 ? ($nb_tests - $nb_failed_tests) * 100 / $nb_tests : 0
       ));
+
+      if ($this->options['verbose'])
+      {
+        foreach ($this->to_array() as $testsuite)
+        {
+          $first = true;
+          foreach ($testsuite['stats']['failed'] as $testcase)
+          {
+            if (!isset($testsuite['tests'][$testcase]['file']))
+            {
+              continue;
+            }
+
+            if ($first)
+            {
+              $this->output->echoln('');
+              $this->output->error($testsuite['file']);
+              $first = false;
+            }
+
+            $this->output->comment(sprintf('  at %s line %s', $testsuite['tests'][$testcase]['file'], $testsuite['tests'][$testcase]['line']));
+            $this->output->info('  '.$testsuite['tests'][$testcase]['message']);
+            $this->output->echoln($testsuite['tests'][$testcase]['error']);
+          }
+        }
+      }
     }
     else
     {
