@@ -35,34 +35,4 @@ abstract class sfTestBaseTask extends sfBaseTask
 
     return $event->getReturnValue();
   }
-
-  protected function outputHarnessTrace(lime_harness $h)
-  {
-    $xml = new SimpleXMLElement($h->to_xml());
-    foreach ($xml as $testsuite)
-    {
-      if (!$testsuite['failures'])
-      {
-        continue;
-      }
-
-      $new = true;
-      foreach ($testsuite->testcase as $testcase)
-      {
-        foreach ($testcase->failure as $failure)
-        {
-          if ($new)
-          {
-            $this->log('');
-            $this->log($this->formatter->format($testsuite['file'], 'ERROR'));
-            $new = false;
-          }
-
-          $this->log($this->formatter->format(sprintf('  at %s line %s', $testcase['file'], $testcase['line']), 'COMMENT'));
-          $this->log($this->formatter->format('  '.$testcase['name'], 'INFO'));
-          $this->log($failure);
-        }
-      }
-    }
-  }
 }

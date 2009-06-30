@@ -73,7 +73,7 @@ EOF;
   {
     require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php');
 
-    $h = new lime_harness(array('force_colors' => $options['color']));
+    $h = new lime_harness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
     $h->base_dir = sfConfig::get('sf_test_dir');
 
     $status = false;
@@ -103,11 +103,6 @@ EOF;
     $ret = $h->run() ? 0 : 1;
 
     file_put_contents($statusFile, serialize($h->get_failed_files()));
-
-    if ($options['trace'])
-    {
-      $this->outputHarnessTrace($h);
-    }
 
     if ($options['xml'])
     {

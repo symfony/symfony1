@@ -87,7 +87,7 @@ EOF;
     {
       require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php');
 
-      $h = new lime_harness(array('force_colors' => $options['color']));
+      $h = new lime_harness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
       $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
       // filter and register unit tests
@@ -95,11 +95,6 @@ EOF;
       $h->register($this->filterTestFiles($finder->in($h->base_dir), $arguments, $options));
 
       $ret = $h->run() ? 0 : 1;
-
-      if ($options['trace'])
-      {
-        $this->outputHarnessTrace($h);
-      }
 
       if ($options['xml'])
       {

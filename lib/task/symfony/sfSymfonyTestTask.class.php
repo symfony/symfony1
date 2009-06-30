@@ -75,7 +75,7 @@ EOF;
       }
     }
 
-    $h = new lime_symfony(array('force_colors' => $options['color']));
+    $h = new lime_harness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
     $h->base_dir = realpath(dirname(__FILE__).'/../../../test');
 
     if ($status)
@@ -105,49 +105,11 @@ EOF;
 
     file_put_contents($statusFile, serialize($h->get_failed_files()));
 
-    if ($options['trace'])
-    {
-      $this->outputHarnessTrace($h);
-    }
-
     if ($options['xml'])
     {
       file_put_contents($options['xml'], $h->to_xml());
     }
 
     return $ret;
-  }
-
-  // master is at sfTestBaseTask
-  /**
-   * @see sfTestBaseTask::outputHarnessTrace()
-   */
-  protected function outputHarnessTrace(lime_harness $h)
-  {
-    $xml = new SimpleXMLElement($h->to_xml());
-    foreach ($xml as $testsuite)
-    {
-      if ($testsuite['failures'])
-      {
-        $new = true;
-
-        foreach ($testsuite->testcase as $testcase)
-        {
-          foreach ($testcase->failure as $failure)
-          {
-            if ($new)
-            {
-              $this->log('');
-              $this->log($this->formatter->format($testsuite['file'], 'ERROR'));
-              $new = false;
-            }
-
-            $this->log($this->formatter->format(sprintf('  at %s line %s', $testcase['file'], $testcase['line']), 'COMMENT'));
-            $this->log($this->formatter->format('  '.$testcase['name'], 'INFO'));
-            $this->log($failure);
-          }
-        }
-      }
-    }
   }
 }
