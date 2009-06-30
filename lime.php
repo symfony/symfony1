@@ -621,43 +621,53 @@ lime_colorizer::style('INFO_BAR', array('fg' => 'cyan', 'bold' => true));
 
 class lime_harness extends lime_registration
 {
-  public $php_cli = '';
-  public $stats = array();
-  public $output = null;
+  public $options = array();
+  public $php_cli = null;
+  public $stats   = array();
+  public $output  = null;
 
-  public function __construct($output_instance, $php_cli = null)
+  public function __construct($options = array())
+  {
+    // for BC
+    if (!is_array($options))
+    {
+      $options = array('output' => $options);
+    }
+
+    $this->options = array_merge(array(
+      'php_cli'      => null,
+      'force_colors' => false,
+      'output'       => null,
+    ), $options);
+
+    $this->php_cli = $this->find_php_cli($this->options['php_cli']);
+    $this->output = $this->options['output'] ? $this->options['output'] : new lime_output($options['force_colors']);
+  }
+
+  protected function find_php_cli($php_cli = null)
   {
     if (is_null($php_cli))
     {
       if (getenv('PHP_PATH'))
       {
-        $this->php_cli = getenv('PHP_PATH');
+        $php_cli = getenv('PHP_PATH');
 
-        if (!is_executable($this->php_cli))
+        if (!is_executable($php_cli))
         {
           throw new Exception('The defined PHP_PATH environment variable is not a valid PHP executable.');
         }
       }
       else
       {
-        $this->php_cli = PHP_BINDIR.DIRECTORY_SEPARATOR.'php';
+        $php_cli = PHP_BINDIR.DIRECTORY_SEPARATOR.'php';
       }
     }
-    else
+
+    if (is_executable($php_cli))
     {
-      $this->php_cli = $php_cli;
+      return $php_cli;
     }
 
-    if (!is_executable($this->php_cli))
-    {
-      $this->php_cli = $this->find_php_cli();
-    }
-
-    $this->output = $output_instance ? $output_instance : new lime_output();
-  }
-
-  protected function find_php_cli()
-  {
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
     $exe_suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
     foreach (array('php5', 'php') as $php_cli)
