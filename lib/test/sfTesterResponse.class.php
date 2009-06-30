@@ -119,6 +119,49 @@ class sfTesterResponse extends sfTester
   }
 
   /**
+   * Checks that a form is rendered correctly.
+   * 
+   * @param  sfForm|string $form     A form object or the name of a form class
+   * @param  string        $selector CSS selector for the root form element for this form
+   * 
+   * @return sfTestFunctionalBase|sfTester
+   */
+  public function checkForm($form, $selector = 'form')
+  {
+    if (!$form instanceof sfForm)
+    {
+      $form = new $form();
+    }
+
+    $this->doCheckForm($form->getFormFieldSchema(), $selector);
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
+   * Loops through a forms fields and tests the response for their presence.
+   * 
+   * @param sfFormFieldSchema $fieldSchema A form's form field schema
+   * @param string            $selector    CSS selector for the root form element for this form
+   */
+  protected function doCheckForm(sfFormFieldSchema $fieldSchema, $selector = 'form')
+  {
+    foreach ($fieldSchema as $field)
+    {
+      if ($field instanceof sfFormFieldSchema)
+      {
+        $this->doCheckForm($field, $selector);
+      }
+      else
+      {
+        $values = $this->domCssSelector->matchAll(sprintf('%1$s input[name="%2$s"], %1$s textarea[name="%2$s"], %1$s select[name="%2$s"]', $selector, $field->renderName()))->getValues();
+
+        $this->tester->ok(count($values) > 0, sprintf('response includes "%s" form field', $field->renderName()));
+      }
+    }
+  }
+
+  /**
    * Tests for a response header.
    *
    * @param  string $key

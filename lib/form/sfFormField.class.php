@@ -114,7 +114,7 @@ class sfFormField
    */
   function render($attributes = array())
   {
-    return $this->widget->render($this->parent ? $this->parent->getWidget()->generateName($this->name) : $this->name, $this->value, $attributes, $this->error);
+    return $this->widget->render($this->renderName(), $this->value, $attributes, $this->error);
   }
 
   /**
@@ -224,6 +224,16 @@ class sfFormField
     }
 
     return $this->parent->getWidget()->getFormFormatter()->generateLabelName($this->name);
+  }
+
+  /**
+   * Returns the name attribute of the widget.
+   * 
+   * @return string The name attribute of the widget
+   */
+  public function renderName()
+  {
+    return $this->parent ? $this->parent->getWidget()->generateName($this->name) : $this->name;
   }
 
   /**

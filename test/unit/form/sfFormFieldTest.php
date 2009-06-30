@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(28);
+$t = new lime_test(30);
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -162,6 +162,11 @@ catch (LogicException $e)
 {
   $t->pass('->renderLabelName() throws an LogicException if the form field has no parent');
 }
+
+// ->renderName()
+$t->diag('->renderName()');
+$t->is($f->renderName(), 'article[title]', '->renderName() renders the name attribute of the field');
+$t->is($child['name']->renderName(), 'article[author][name]', '->renderName() renders the name attribute of the field');
 
 // ->renderId()
 $t->diag('->renderId()');

@@ -232,6 +232,31 @@ the lime constructor of `lime_test`:
     [php]
     $t = new lime_test(1);
 
+### `sfTesterResponse::checkForm()`
+
+The response tester now includes a method to easily verify that all fields in
+a form have been rendered to the response:
+
+    [php]
+    $browser->with('response')->begin()->
+      checkForm('ArticleForm')->
+    end();
+
+Or, if you prefer, you can pass a form object:
+
+    [php]
+    $browser->with('response')->begin()->
+      checkForm($browser->getArticleForm())->
+    end();
+
+If the response includes multiple forms you have the option of providing a CSS
+selector to pinpoint which portion of the DOM to test:
+
+    [php]
+    $browser->with('response')->begin()->
+      checkForm('ArticleForm', '#articleForm')->
+    end();
+
 Tasks
 -----
 
