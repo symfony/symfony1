@@ -13,7 +13,7 @@ define('SYMFONY_LIB_DIR', realpath(dirname(__FILE__).'/../../../..'));
 require(SYMFONY_LIB_DIR.'/vendor/lime/lime.php');
 require(SYMFONY_LIB_DIR.'/util/sfFinder.class.php');
 
-$h = new lime_harness(new lime_output_color());
+$h = new lime_harness();
 $h->base_dir = realpath(dirname(__FILE__).'/..');
 
 $h->register(sfFinder::type('file')->prune('fixtures')->name('*Test.php')->in(array(

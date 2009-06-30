@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
 require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
 
-$h = new lime_harness(new lime_output_color());
+$h = new lime_harness();
 $h->base_dir = realpath(dirname(__FILE__).'/..');
 
 // unit tests

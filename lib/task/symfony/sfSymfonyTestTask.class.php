@@ -75,7 +75,7 @@ EOF;
       }
     }
 
-    $h = new lime_symfony(new lime_output($options['color']));
+    $h = new lime_symfony(array('force_colors' => $options['color']));
     $h->base_dir = realpath(dirname(__FILE__).'/../../../test');
 
     if ($status)

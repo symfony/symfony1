@@ -73,7 +73,7 @@ EOF;
 
   protected function getTestHarness()
   {
-    $harness = new lime_harness(new lime_output($options['color']));
+    $harness = new lime_harness(array('force_colors' => $options['color']));
     $harness->base_dir = sfConfig::get('sf_root_dir');
 
     return $harness;
