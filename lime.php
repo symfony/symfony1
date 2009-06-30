@@ -29,12 +29,13 @@ class lime_test
   {
     $this->output = $output_instance ? $output_instance : new lime_output();
 
-    $d = debug_backtrace();
+    $caller = $this->find_caller(debug_backtrace());
     self::$all_results[] = array(
-      'file'  => isset($d[0]) ? $d[0]['file'] : '',
+      'file'  => $caller[0],
       'tests' => array(),
       'stats' => array('plan' => $plan, 'total' => 0, 'failed' => array(), 'passed' => array(), 'skipped' => array()),
     );
+
     $this->results = &self::$all_results[count(self::$all_results) - 1];
 
     null !== $plan and $this->output->echoln(sprintf("1..%d", $plan));
@@ -491,19 +492,7 @@ class lime_test
     ++$this->test_nb;
     ++$this->results['stats']['total'];
 
-    $this->results['tests'][$this->test_nb]['file'] = 'n/a';
-    $this->results['tests'][$this->test_nb]['line'] = '0';
-    $test_file = self::$all_results[count(self::$all_results) - 1]['file'];
-    foreach (debug_backtrace() as $trace)
-    {
-      if (isset($trace['file']) && $test_file == $trace['file'])
-      {
-        $this->results['tests'][$this->test_nb]['file'] = $trace['file'];
-        $this->results['tests'][$this->test_nb]['line'] = $trace['line'];
-
-        break;
-      }
-    }
+    list($this->results['tests'][$this->test_nb]['file'], $this->results['tests'][$this->test_nb]['line']) = $this->find_caller(debug_backtrace());
   }
 
   protected function set_last_test_errors(array $errors)
@@ -511,6 +500,13 @@ class lime_test
     $this->output->diag($errors);
 
     $this->results['tests'][$this->test_nb]['error'] = implode("\n", $errors);
+  }
+
+  protected function find_caller($traces)
+  {
+    $last = count($traces) - 1;
+
+    return array($traces[$last]['file'], $traces[$last]['line']);
   }
 }
 
