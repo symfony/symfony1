@@ -364,6 +364,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
         $connections = Doctrine_Manager::getInstance()->getConnections();
+        $classes = array();
 
         foreach ($connections as $name => $connection) {
           // Limit the databases to the ones specified by $databases.
@@ -377,7 +378,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
           $builder->setOptions($options);
 
           $definitions = array();
-          $classes = array();
+
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;
