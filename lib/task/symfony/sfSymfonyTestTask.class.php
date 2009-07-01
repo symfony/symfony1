@@ -75,7 +75,7 @@ EOF;
       }
     }
 
-    $h = new lime_harness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
+    $h = new lime_symfony(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
     $h->base_dir = realpath(dirname(__FILE__).'/../../../test');
 
     if ($status)
