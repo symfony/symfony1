@@ -35,14 +35,12 @@ class lime_test
     }
 
     $this->options = array_merge(array(
-      'base_dir'     => null,
       'force_colors' => false,
       'output'       => null,
       'verbose'      => false,
     ), $options);
 
     $this->output = $this->options['output'] ? $this->options['output'] : new lime_output($this->options['force_colors']);
-    $this->options['base_dir'] = realpath($this->options['base_dir']);
 
     $caller = $this->find_caller(debug_backtrace());
     self::$all_results[] = array(
@@ -531,12 +529,7 @@ class lime_test
 
     // return the first call
     $last = count($traces) - 1;
-    $file = $traces[$last]['file'];
-    if ($this->options['base_dir'])
-    {
-      $file = str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->options['base_dir']), '', str_replace(array('/', '\\'), $file));
-    }
-    return array($file, $traces[$last]['line']);
+    return array($traces[$last]['file'], $traces[$last]['line']);
   }
 }
 
@@ -894,11 +887,11 @@ EOF
             if ($first)
             {
               $this->output->echoln('');
-              $this->output->error($testsuite['file']);
+              $this->output->error($this->get_relative_file($testsuite['file']).$this->extension);
               $first = false;
             }
 
-            $this->output->comment(sprintf('  at %s line %s', $testsuite['tests'][$testcase]['file'], $testsuite['tests'][$testcase]['line']));
+            $this->output->comment(sprintf('  at %s line %s', $this->get_relative_file($testsuite['tests'][$testcase]['file']).$this->extension, $testsuite['tests'][$testcase]['line']));
             $this->output->info('  '.$testsuite['tests'][$testcase]['message']);
             $this->output->echoln($testsuite['tests'][$testcase]['error'], null, false);
           }
