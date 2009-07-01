@@ -27,6 +27,7 @@ class sfSymfonyTestTask extends sfTask
       new sfCommandOption('update-autoloader', 'u', sfCommandOption::PARAMETER_NONE, 'Update the sfCoreAutoload class'),
       new sfCommandOption('only-failed', 'f', sfCommandOption::PARAMETER_NONE, 'Only run tests that failed last time'),
       new sfCommandOption('xml', null, sfCommandOption::PARAMETER_REQUIRED, 'The file name for the JUnit compatible XML log file'),
+      new sfCommandOption('rebuild-all', null, sfCommandOption::PARAMETER_NONE, 'Rebuild all generated fixture files'),
     ));
 
     $this->namespace = 'symfony';
@@ -77,6 +78,16 @@ EOF;
 
     $h = new lime_symfony(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
     $h->base_dir = realpath(dirname(__FILE__).'/../../../test');
+
+    // remove generated files
+    if ($options['rebuild-all'])
+    {
+      $finder = sfFinder::type('dir')->name(array('base', 'om', 'map'));
+      foreach ($finder->in(glob($h->base_dir.'/../lib/plugins/*/test/functional/fixtures/lib')) as $dir)
+      {
+        sfToolkit::clearDirectory($dir);
+      }
+    }
 
     if ($status)
     {
