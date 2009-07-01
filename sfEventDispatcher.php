@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/sfEvent.php';
  * @see http://developer.apple.com/documentation/Cocoa/Conceptual/Notifications/index.html Apple's Cocoa framework
  *
  * @package    symfony
- * @subpackage event
+ * @subpackage event_dispatcher
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfEventDispatcher.class.php 10631 2008-08-03 16:50:47Z fabien $
  */
