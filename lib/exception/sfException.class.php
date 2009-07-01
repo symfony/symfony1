@@ -275,7 +275,7 @@ class sfException extends Exception
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
         self::formatArgs($args, false, $format),
-        self::formatFile($file, $line, $format, is_null($file) ? 'n/a' : sfDebug::shortenFilePath($shortFile)),
+        self::formatFile($file, $line, $format, is_null($file) ? 'n/a' : sfDebug::shortenFilePath($file)),
         is_null($line) ? 'n/a' : $line,
         'trace_'.$i,
         'trace_'.$i,
