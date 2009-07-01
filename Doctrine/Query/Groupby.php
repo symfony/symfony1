@@ -152,7 +152,7 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
                                                  . '.' . $conn->quoteIdentifier($term[0]);
                                     } else {
                                         // build sql expression
-                                        $term[0] = $this->_conn->quoteIdentifier($term[0]);
+                                        $term[0] = $conn->quoteIdentifier($term[0]);
                                     }
                                 } else {
                                     $found = false;
