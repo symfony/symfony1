@@ -504,8 +504,18 @@ class lime_test
 
   protected function find_caller($traces)
   {
-    $last = count($traces) - 1;
+    // find the first call to a method of an object that is an instance of lime_test
+    $t = array_reverse($traces);
+    foreach ($t as $trace)
+    {
+      if (isset($trace['object']) && $trace['object'] instanceof lime_test)
+      {
+        return array($trace['file'], $trace['line']);
+      }
+    }
 
+    // return the first call
+    $last = count($traces) - 1;
     return array($traces[$last]['file'], $traces[$last]['line']);
   }
 }
