@@ -267,8 +267,8 @@ class sfException extends Exception
 
     for ($i = 0, $count = count($traceData); $i < $count; $i++)
     {
-      $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
-      $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : 'n/a';
+      $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : null;
+      $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : null;
       $shortFile = preg_replace(array('#^'.preg_quote(sfConfig::get('sf_root_dir')).'#', '#^'.preg_quote(realpath(sfConfig::get('sf_symfony_lib_dir'))).'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
       $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
       $traces[] = sprintf($lineFormat,
@@ -276,8 +276,8 @@ class sfException extends Exception
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
         self::formatArgs($args, false, $format),
-        self::formatFile($traceData[$i]['file'], $traceData[$i]['line'], $format, $shortFile),
-        $line,
+        self::formatFile($file, $line, $format, is_null($shortFile) ? 'n/a' : $shortFile),
+        is_null($line) ? 'n/a' : $line,
         'trace_'.$i,
         'trace_'.$i,
         $i == 0 ? 'block' : 'none',
