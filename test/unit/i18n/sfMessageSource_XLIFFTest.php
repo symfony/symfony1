@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10);
+$t = new lime_test(11);
 
 // setup
 $temp = tempnam('/tmp/i18ndir', 'tmp');
@@ -19,6 +19,7 @@ mkdir($temp);
 
 // copy fixtures to tmp directory
 copy(dirname(__FILE__).'/fixtures/messages.fr.xml', $temp.'/messages.fr.xml');
+copy(dirname(__FILE__).'/fixtures/invalid.xml', $temp.'/invalid.xml');
 
 $source = sfMessageSource::factory('XLIFF', $temp);
 $source->setCulture('fr_FR');
@@ -27,6 +28,8 @@ $source->setCulture('fr_FR');
 $t->diag('->loadData()');
 $messages = $source->loadData($source->getSource('messages.fr.xml'));
 $t->is($messages['an english sentence'][0], 'une phrase en français', '->loadData() loads messages from a XLIFF file');
+
+$t->is($source->loadData($source->getSource('invalid.xml')), false, '->loadData() returns false if it cannot load the messages from the file');
 
 // ->save()
 $t->diag('->save()');

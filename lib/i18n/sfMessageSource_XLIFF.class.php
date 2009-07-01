@@ -46,18 +46,20 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    * Loads the messages from a XLIFF file.
    *
    * @param string $filename  XLIFF file.
-   * @return array of messages.
+   * @return array|false An array of messages or false if there was a problem loading the file.
    */
   public function &loadData($filename)
   {
-    $XML = simplexml_load_file($filename);
-
-    if (!$XML)
+    libxml_use_internal_errors(true);
+    if (!$xml = simplexml_load_file($filename))
     {
-      return false;
-    }
+      $error = false;
 
-    $translationUnit = $XML->xpath('//trans-unit');
+      return $error;
+    }
+    libxml_use_internal_errors(false);
+
+    $translationUnit = $xml->xpath('//trans-unit');
 
     $translations = array();
 
