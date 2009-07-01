@@ -133,32 +133,38 @@ class sfTesterResponse extends sfTester
       $form = new $form();
     }
 
-    $this->doCheckForm($form->getFormFieldSchema(), $selector);
+    foreach ($this->getFormFieldNameCounts($form->getFormFieldSchema()) as $name => $count)
+    {
+      $values = $this->domCssSelector->matchAll(sprintf('%1$s input[name="%2$s"], %1$s textarea[name="%2$s"], %1$s select[name="%2$s"]', $selector, $name))->getValues();
+      $this->tester->is(count($values), $count, sprintf('response includes the "%s" form "%s" field "%d" time(s)', get_class($form), $name, $count));
+    }
 
     return $this->getObjectToReturn();
   }
 
   /**
-   * Loops through a forms fields and tests the response for their presence.
+   * Returns an associative array of a form's field names and counts.
    * 
-   * @param sfFormFieldSchema $fieldSchema A form's form field schema
-   * @param string            $selector    CSS selector for the root form element for this form
+   * @param  sfFormFieldSchema $fieldSchema
+   * @param  array             $counts
+   * 
+   * @return array
    */
-  protected function doCheckForm(sfFormFieldSchema $fieldSchema, $selector = 'form')
+  protected function getFormFieldNameCounts(sfFormFieldSchema $fieldSchema, $counts = array())
   {
     foreach ($fieldSchema as $field)
     {
       if ($field instanceof sfFormFieldSchema)
       {
-        $this->doCheckForm($field, $selector);
+        $counts = $this->getFormFieldNameCounts($field, $counts);
       }
       else
       {
-        $values = $this->domCssSelector->matchAll(sprintf('%1$s input[name="%2$s"], %1$s textarea[name="%2$s"], %1$s select[name="%2$s"]', $selector, $field->renderName()))->getValues();
-
-        $this->tester->ok(count($values) > 0, sprintf('response includes "%s" form field', $field->renderName()));
+        $counts[$field->renderName()] = isset($counts[$field->renderName()]) ? $counts[$field->renderName()] + 1 : 1;
       }
     }
+
+    return $counts;
   }
 
   /**
