@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,14 +20,15 @@ class sfWebDebugLogger extends sfVarLogger
 {
   protected
     $context       = null,
-    $webDebugClass = null;
+    $webDebugClass = null,
+    $webDebug      = null;
 
   /**
    * Initializes this logger.
    *
    * Available options:
    *
-   * - web_debug_class: The web debug class (sfWebDebug by default).
+   *  * web_debug_class: The web debug class (sfWebDebug by default)
    *
    * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param  array             $options     An array of options.
@@ -38,12 +39,13 @@ class sfWebDebugLogger extends sfVarLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    $this->context    = sfContext::getInstance();
+    $this->context = sfContext::getInstance();
 
     $this->webDebugClass = isset($options['web_debug_class']) ? $options['web_debug_class'] : 'sfWebDebug';
 
     if (sfConfig::get('sf_web_debug'))
     {
+      $dispatcher->connect('context.load_factories', array($this, 'listenForLoadFactories'));
       $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
     }
 
@@ -101,6 +103,18 @@ class sfWebDebugLogger extends sfVarLogger
   }
 
   /**
+   * Listens for the context.load_factories event.
+   * 
+   * @param sfEvent $event
+   */
+  public function listenForLoadFactories(sfEvent $event)
+  {
+    $this->webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
+      'image_root_path' => sprintf('%s%s/images', $event->getSubject()->getRequest()->getRelativeUrlRoot(), sfConfig::get('sf_web_debug_web_dir')),
+    ));
+  }
+
+  /**
    * Listens to the response.filter_content event.
    *
    * @param  sfEvent $event   The sfEvent instance
@@ -130,21 +144,29 @@ class sfWebDebugLogger extends sfVarLogger
     // * if HTTP headers only
     $response = $event->getSubject();
     $request  = $this->context->getRequest();
-    if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
-      $request->isXmlHttpRequest() ||
-      strpos($response->getContentType(), 'html') === false ||
-      '3' == substr($response->getStatusCode(), 0, 1) ||
-      $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
+    if (
+      is_null($this->webDebug)
+      ||
+      !$this->context->has('request')
+      ||
+      !$this->context->has('response')
+      ||
+      !$this->context->has('controller')
+      ||
+      $request->isXmlHttpRequest()
+      ||
+      strpos($response->getContentType(), 'html') === false
+      ||
+      '3' == substr($response->getStatusCode(), 0, 1)
+      ||
+      $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT
+      ||
       $response->isHeaderOnly()
     )
     {
       return $content;
     }
 
-    $webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
-      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot() : '').sfConfig::get('sf_web_debug_web_dir').'/images',
-    ));
-
-    return $webDebug->injectToolbar($content);
+    return $this->webDebug->injectToolbar($content);
   }
 }
