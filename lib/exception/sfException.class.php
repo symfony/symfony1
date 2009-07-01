@@ -269,14 +269,13 @@ class sfException extends Exception
     {
       $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : null;
       $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : null;
-      $shortFile = preg_replace(array('#^'.preg_quote(sfConfig::get('sf_root_dir')).'#', '#^'.preg_quote(realpath(sfConfig::get('sf_symfony_lib_dir'))).'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
       $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
       $traces[] = sprintf($lineFormat,
         (isset($traceData[$i]['class']) ? $traceData[$i]['class'] : ''),
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
         self::formatArgs($args, false, $format),
-        self::formatFile($file, $line, $format, is_null($shortFile) ? 'n/a' : $shortFile),
+        self::formatFile($file, $line, $format, is_null($file) ? 'n/a' : sfDebug::shortenFilePath($shortFile)),
         is_null($line) ? 'n/a' : $line,
         'trace_'.$i,
         'trace_'.$i,

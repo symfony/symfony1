@@ -64,6 +64,7 @@ class sfWebDebug
     if (sfConfig::get('sf_logging_enabled'))
     {
       $this->setPanel('config', new sfWebDebugPanelConfig($this));
+      $this->setPanel('view', new sfWebDebugPanelView($this));
     }
     $this->setPanel('logs', new sfWebDebugPanelLogs($this));
     $this->setPanel('memory', new sfWebDebugPanelMemory($this));
@@ -678,6 +679,30 @@ EOF;
   padding: 1px 4px;
   background-color: #666;
   color: #fff;
+}
+
+#sfWebDebugviewDetails ul
+{
+  padding-left: 2em;
+  margin: .5em 0;
+  list-style: none;
+}
+
+#sfWebDebugviewDetails li
+{
+  margin-bottom: .5em;
+}
+
+#sfWebDebug .sfWebDebugDataType,
+#sfWebDebug .sfWebDebugDataType a
+{
+  color: #666;
+  font-style: italic;
+}
+
+#sfWebDebug .sfWebDebugDataType a:hover
+{
+  text-decoration: underline;
 }
 EOF;
   }

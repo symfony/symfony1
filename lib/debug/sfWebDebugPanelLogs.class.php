@@ -53,7 +53,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
       $debug_info = '';
       if (count($log['debug_stack']))
       {
-        $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;"><img src="'.$this->webDebug->getOption('image_root_path').'/toggle.gif" alt="Toggle XDebug details" /></a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
+        $debug_info .= '&nbsp;'.$this->getToggler('debug_'.$line_nb).'<div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
         foreach ($log['debug_stack'] as $i => $logLine)
         {
           $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($logLine).'<br/>';

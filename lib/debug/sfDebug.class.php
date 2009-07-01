@@ -236,4 +236,16 @@ class sfDebug
 
     return $nvalues;
   }
+
+  /**
+   * Shortens a file path by replacing symfony directory constants.
+   * 
+   * @param  string $file
+   * 
+   * @return string
+   */
+  static public function shortenFilePath($file)
+  {
+    return preg_replace(array('#^'.preg_quote(sfConfig::get('sf_root_dir'), '#').'#', '#^'.preg_quote(realpath(sfConfig::get('sf_symfony_lib_dir')), '#').'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
+  }
 }

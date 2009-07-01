@@ -252,6 +252,7 @@ class sfCoreAutoload
     'sfwebdebugpanelmemory' => 'debug/sfWebDebugPanelMemory.class.php',
     'sfwebdebugpanelsymfonyversion' => 'debug/sfWebDebugPanelSymfonyVersion.class.php',
     'sfwebdebugpaneltimer' => 'debug/sfWebDebugPanelTimer.class.php',
+    'sfwebdebugpanelview' => 'debug/sfWebDebugPanelView.class.php',
     'sfoutputescaper' => 'escaper/sfOutputEscaper.class.php',
     'sfoutputescaperarraydecorator' => 'escaper/sfOutputEscaperArrayDecorator.class.php',
     'sfoutputescapergetterdecorator' => 'escaper/sfOutputEscaperGetterDecorator.class.php',
