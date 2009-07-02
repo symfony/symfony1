@@ -19,10 +19,11 @@
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }
   p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
   p.error a { color: #fff }
-  #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; min-width: 13em; max-width: 52em }
+  #main { padding: 30px 40px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; min-width: 770px; max-width: 770px }
   #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
   a.file_link { text-decoration: none; }
   a.file_link:hover { text-decoration: underline; }
+  .code { overflow: auto; }
   </style>
   <script type="text/javascript">
   function toggle(id)
