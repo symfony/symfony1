@@ -500,7 +500,7 @@ class sfViewCacheManager
    * @param  string $internalUri       Internal uniform resource identifier
    * @param  string $hostName          The host name
    * @param  string $vary              The vary headers, separated by |, or "all" for all vary headers
-   * @param  string $contextualPrefix  The removal prefix for contextual partials. Deauls to '**' (all actions, all params)
+   * @param  string $contextualPrefix  The removal prefix for contextual partials. Defaults to '**' (all actions, all params)
    *
    * @return bool true, if the remove happened, false otherwise
    */
