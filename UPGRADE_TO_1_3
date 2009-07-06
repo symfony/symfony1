@@ -281,25 +281,3 @@ Doctrine Integration
 The externals to Doctrine have been updated to use the latest and greatest 
 Doctrine 1.2 version. You can read about what is new in Doctrine 1.2 
 [here](http://www.doctrine-project.org/upgrade/1_2).
-
-### Generating Form Classes
-
-It is now possible to specify additional options for symfony in your Doctrine YAML
-schema files. We've added some options to disable the generation of form and filter
-classes.
-
-For example in a typical many to many reference model, you don't need any form 
-or filter form classes generated. So you can now do the following.
-
-    UserGroup:
-      options:
-        symfony:
-          form: false
-          filter: false
-      columns:
-        user_id:
-          type: integer
-          primary: true
-        group_id:
-          type: integer
-          primary: true

@@ -490,3 +490,66 @@ For example, if you want to open files in TextMate, add the following to
 
 The `%f` placeholder will be replaced with file's absolute path and the `%l`
 placeholder will be replaced with the line number.
+
+Doctrine Integration
+--------------------
+
+### Generating Form Classes
+
+It is now possible to specify additional options for symfony in your Doctrine YAML
+schema files. We've added some options to disable the generation of form and filter
+classes.
+
+For example in a typical many to many reference model, you don't need any form 
+or filter form classes generated. So you can now do the following.
+
+    UserGroup:
+      options:
+        symfony:
+          form: false
+          filter: false
+      columns:
+        user_id:
+          type: integer
+          primary: true
+        group_id:
+          type: integer
+          primary: true
+
+### New Tasks
+
+We have introduced a few new tasks to help you when developing with Doctrine.
+
+#### Create Model Tables
+
+You can now individually create the tables for a specified array of models. It 
+will drop the tables first then re-create them for you. This is useful if you
+are developing some new models in an existing project/database and you don't
+want to blow away the whole database and just want to rebuild a subset of tables.
+
+    $ php symfony doctrine:create-model-tables Model1 Model2 Model3
+
+#### Delete Model Files
+
+Often you will change your models, renaming things, remove unused models, etc. 
+in your YAML schema files. When you do this, you then have orphaned model, form
+and filter classes. You can now manually clean out the generated files related 
+to a model by using the `doctrine:delete-model-files` task.
+
+    $ php symfony doctrine:delete-model-files ModelName
+
+The above task will find all the related generated files and report them to you 
+before asking you to confirm whether you would like to delete the files or not.
+
+#### Clean Model Files
+
+You can automate the above process and find out what models exist on the disk 
+but do not exist in your YAML schema files by using the `doctrine:clean-model-files`
+task.
+
+    $ php symfony doctrine:clean-model-files
+
+The above command will compare your YAML schema files with the models and files
+that have been generated and determine what should be removed. These models are 
+then passed on to the `doctrine:delete-model-files` task. It will ask you to 
+confirm the removal of any files before actually deleting anything.
