@@ -38,6 +38,13 @@ abstract class sfActions extends sfAction
   {
     // dispatch action
     $actionToRun = 'execute'.ucfirst($this->getActionName());
+
+    if ($actionToRun === 'execute')
+    {
+      // no action given
+      throw new sfInitializationException(sprintf('sfAction initialization failed for module "%s". There was no action given.', $this->getModuleName()));
+    }
+
     if (!is_callable(array($this, $actionToRun)))
     {
       // action not found
