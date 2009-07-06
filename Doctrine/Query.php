@@ -1368,6 +1368,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $subquery .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where'])  : '';
         $subquery .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])   : '';
         $subquery .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
+        $subquery .= ( ! empty($this->_sqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
 
         if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
             // When using "ORDER BY x.foo" where x.foo is a column of a joined table,
