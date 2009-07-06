@@ -65,6 +65,15 @@ class sfDoctrineDatabase extends sfDatabase
     $attributes = $this->getParameter('attributes', array());
     foreach ($attributes as $name => $value)
     {
+      if (is_string($name))
+      {
+        $stringName = $name;
+        $name = constant('Doctrine::ATTR_'.strtoupper($name));
+      }
+      if (is_string($value))
+      {
+        $value = constant('Doctrine::'.strtoupper($stringName).'_'.strtoupper($value));
+      }
       $this->_doctrineConnection->setAttribute($name, $value);
     }
 

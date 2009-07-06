@@ -54,11 +54,11 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
     spl_autoload_register(array('Doctrine', 'autoload'));
 
     $manager = Doctrine_Manager::getInstance();
-    $manager->setAttribute('export', 'all');
-    $manager->setAttribute('validate', 'all');
-    $manager->setAttribute('recursive_merge_fixtures', true);
-    $manager->setAttribute('auto_accessor_override', true);
-    $manager->setAttribute('autoload_table_classes', true);
+    $manager->setAttribute(Doctrine::ATTR_EXPORT, Doctrine::EXPORT_ALL);
+    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
+    $manager->setAttribute(Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES, true);
+    $manager->setAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
+    $manager->setAttribute(Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES, true);
 
     if (method_exists($this->configuration, 'configureDoctrine'))
     {
