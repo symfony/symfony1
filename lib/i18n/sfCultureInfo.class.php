@@ -208,8 +208,8 @@ class sfCultureInfo
       $culture = 'en';
     }
 
-    $this->dataDir = $this->dataDir();
-    $this->dataFileExt = $this->fileExt();
+    $this->dataDir = self::dataDir();
+    $this->dataFileExt = self::fileExt();
 
     $this->setCulture($culture);
 
