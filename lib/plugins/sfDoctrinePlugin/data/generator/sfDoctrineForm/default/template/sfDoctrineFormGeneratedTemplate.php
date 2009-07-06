@@ -72,9 +72,9 @@ class Base<?php echo $this->modelName ?>Form extends BaseFormDoctrine
 
   protected function doSave($con = null)
   {
-    <?php foreach ($this->getManyToManyRelations() as $relation): ?>
-        $this->save<?php echo $relation['alias'] ?>List($con);
-    <?php endforeach; ?>
+<?php foreach ($this->getManyToManyRelations() as $relation): ?>
+    $this->save<?php echo $relation['alias'] ?>List($con);
+<?php endforeach; ?>
 
     parent::doSave($con);
   }
