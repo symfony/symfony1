@@ -331,4 +331,25 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
     $php = str_replace('  ', ' ', $php);
     return $php;
   }
+
+  /**
+   * Filter out models that have disabled generation of form classes
+   *
+   * @return array $models Array of models to generate forms for
+   */
+  protected function filterModels($models)
+  {
+    foreach ($models as $key => $model)
+    {
+      $table = Doctrine::getTable($model);
+      $symfonyOptions = $table->getOption('symfony');
+
+      if (isset($symfonyOptions['filter']) && !$symfonyOptions['filter'])
+      {
+        unset($models[$key]);
+      }
+    }
+
+    return $models;
+  }
 }

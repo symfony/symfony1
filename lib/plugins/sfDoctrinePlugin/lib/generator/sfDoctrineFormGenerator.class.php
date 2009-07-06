@@ -602,8 +602,31 @@ class sfDoctrineFormGenerator extends sfGenerator
                                    Doctrine::MODEL_LOADING_CONSERVATIVE);
     $models = Doctrine::getLoadedModels();
     $models =  Doctrine::initializeModels($models);
-    $this->models = Doctrine::filterInvalidModels($models);
+    $models = Doctrine::filterInvalidModels($models);
+    $this->models = $this->filterModels($models);
+
     return $this->models;
+  }
+
+  /**
+   * Filter out models that have disabled generation of form classes
+   *
+   * @return array $models Array of models to generate forms for
+   */
+  protected function filterModels($models)
+  {
+    foreach ($models as $key => $model)
+    {
+      $table = Doctrine::getTable($model);
+      $symfonyOptions = $table->getOption('symfony');
+
+      if (isset($symfonyOptions['form']) && !$symfonyOptions['form'])
+      {
+        unset($models[$key]);
+      }
+    }
+
+    return $models;
   }
 
   /**
