@@ -601,3 +601,22 @@ and passing a valid `DateTime` instance.
 
     [php]
     $article->setDateTimeObject('created_at', new DateTime('09/01/1985'));
+
+### Output DQL Task as Table of Data
+
+When you would previously run the `doctrine:dql` command it will just output the
+data as YAML. We have added a new `--table` option. This option allows you to 
+output the data as a table, similar to how it ouputs in the MySQL command line.
+
+So now the following is possible.
+
+    $ ./symfony doctrine:dql "FROM Article a" --table
+    >> doctrine  executing dql query
+    DQL: FROM Article a
+    +----+-----------+----------------+---------------------+---------------------+
+    | id | author_id | is_on_homepage | created_at          | updated_at          |
+    +----+-----------+----------------+---------------------+---------------------+
+    | 1  | 1         |                | 2009-07-07 18:02:24 | 2009-07-07 18:02:24 |
+    | 2  | 2         |                | 2009-07-07 18:02:24 | 2009-07-07 18:02:24 |
+    +----+-----------+----------------+---------------------+---------------------+
+    (2 results)
