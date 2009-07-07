@@ -567,3 +567,18 @@ The above command will compare your YAML schema files with the models and files
 that have been generated and determine what should be removed. These models are 
 then passed on to the `doctrine:delete-model-files` task. It will ask you to 
 confirm the removal of any files before actually deleting anything.
+
+### Date Setters and Getters
+
+We've added two new methods for retrieving Doctrine date or timestamp values as
+PHP DateTime object instances.
+
+    [php]
+    echo $article->getDateTimeObject('created_at')
+      ->format('m/d/Y');
+
+You can also set a dates value by simply calling the `setDateTimeObject` method
+and passing a valid `DateTime` instance.
+
+    [php]
+    $article->setDateTimeObject('created_at', new DateTime('09/01/1985'));

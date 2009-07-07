@@ -209,4 +209,43 @@ abstract class sfDoctrineRecord extends Doctrine_Record
       return parent::__call($method, $arguments);
     }
   }
+
+  /**
+   * Get the Doctrine date value as a PHP DateTime object
+   *
+   * @param string $dateFieldName   The field name to get the DateTime object for
+   * @return DateTime $dateTime     The instance of PHPs DateTime
+   */
+  public function getDateTimeObject($dateFieldName)
+  {
+    $type = $this->getTable()->getTypeOf($dateFieldName);
+    if ($type == 'date' || $type == 'timestamp')
+    {
+      return new DateTime($this->get($dateFieldName));
+    }
+    else
+    {
+      throw new sfException('Cannot call getDateTimeObject() on a field that is not of type date or timestamp.');
+    }
+  }
+
+  /**
+   * Set the Doctrine date value by passing a valid PHP DateTime object instance
+   *
+   * @param string $dateFieldName       The field name to set the date for
+   * @param DateTime $dateTimeObject    The DateTime instance to use to set the value
+   * @return void
+   */
+  public function setDateTimeObject($dateFieldName, DateTime $dateTimeObject)
+  {
+    $type = $this->getTable()->getTypeOf($dateFieldName);
+    if ($type == 'date' || $type == 'timestamp')
+    {
+      return $this->set($dateFieldName, $dateTimeObject->format('Y-m-d H:i:s'));
+    }
+    else
+    {
+      throw new sfException('Cannot call setDateTimeObject() on a field that is not of type date or timestamp.');
+    }
+  }
 }

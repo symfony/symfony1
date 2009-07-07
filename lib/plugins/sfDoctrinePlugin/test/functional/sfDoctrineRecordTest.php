@@ -12,7 +12,7 @@ $app = 'frontend';
 $fixtures = 'fixtures/fixtures.yml';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(18);
+$t = new lime_test(22);
 
 $authors = Doctrine::getTable('Author')->findAll();
 $t->is(count($authors), 2);
@@ -65,3 +65,18 @@ $t->is($article->getAuthor(), $author);
 
 // Camel case with relationships
 $t->is($article->getCamelCase()->getTable()->getOption('name'), 'CamelCase');
+
+// Test getDateTimeObject()
+$dateTime = $article->getDateTimeObject('created_at');
+$t->is($dateTime instanceof DateTime, true);
+$t->is($dateTime->format('m/d/Y'), date('m/d/Y'));
+
+try {
+  $article->getDateTimeObject('author_id');
+  $t->fail();
+} catch (Exception $e) {
+  $t->pass();
+}
+
+$article->setDateTimeObject('created_at', new DateTime('1985-09-01'));
+$t->is($article->getDateTimeObject('created_at')->format('m/d/Y'), '09/01/1985');
