@@ -94,6 +94,10 @@ abstract class sfDoctrineRecord extends Doctrine_Record
   {
     self::initializeI18n();
 
+    if (!self::$_defaultCulture)
+    {
+      throw new sfException('The default culture has not been set');
+    }
     return self::$_defaultCulture;
   }
 
