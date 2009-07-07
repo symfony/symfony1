@@ -568,6 +568,25 @@ that have been generated and determine what should be removed. These models are
 then passed on to the `doctrine:delete-model-files` task. It will ask you to 
 confirm the removal of any files before actually deleting anything.
 
+#### Reload Data
+
+It is a common need to want to blow away the databases completely then reload
+your data fixtures. The `doctrine:build-all-reload` task does this but it also
+does a bunch of other work, generating models, forms, filters, etc. and this
+can be time consuming in a large project. Now you can simply use the 
+`doctrine:reload-data` task.
+
+The following command.
+
+    $ php symfony doctrine:reload-data
+
+Is equivalent to running these commands:
+
+    $ php symfony doctrine:drop-db
+    $ php symfony doctrine:build-db
+    $ php symfony doctrine:insert-sql
+    $ php symfony doctrine:data-load
+
 ### Date Setters and Getters
 
 We've added two new methods for retrieving Doctrine date or timestamp values as
