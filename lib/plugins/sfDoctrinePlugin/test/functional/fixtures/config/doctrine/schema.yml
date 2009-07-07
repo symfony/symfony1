@@ -20,7 +20,11 @@ Article:
 
 CamelCase:
   columns:
+    article_id: integer
     testCamelCase: string(255)
+  relations:
+    Article:
+      foreignAlias: camelCase
 
 Author:
   columns:
