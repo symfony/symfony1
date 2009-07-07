@@ -70,34 +70,42 @@ EOF;
 
     echo sprintf('DQL: %s', $dql) . "\n";
 
-    if ($options['show-sql']) {
-      echo sprintf('SQL: %s', $q->getSql()) . "\n";
+    if ($options['show-sql'])
+    {
+      echo sprintf('SQL: %s', $q->getSqlQuery()) . "\n";
     }
 
     $count = $q->count();
 
     if ($count)
     {
-      $results = $q->fetchArray();
-      
-      if (!$options['table']) {
+      if (!$options['table'])
+      {
+        $results = $q->fetchArray();
+
         echo sprintf('found %s results', $count) . "\n";
         $yaml = sfYaml::dump($results, 4);
         $lines = explode("\n", $yaml);
         foreach ($lines as $line)
         {
-          echo $line . "\n";
+          echo $line."\n";
         }
       }
-      else {
+      else
+      {
+        $results = $q->execute(array(), Doctrine::HYDRATE_SCALAR);
+
         $headers  = array();
         // calculate lengths
         foreach($results as $result)
         {
           foreach( $result as $field => $value )
           {
-            if ( !isset($headers[$field]) ) $headers[$field]  = 0;
-            $headers[$field]  = max($headers[$field], strlen($value));
+            if (!isset($headers[$field]))
+            {
+              $headers[$field] = 0;
+            }
+            $headers[$field] = max($headers[$field], strlen($value));
           }
         }
 
@@ -107,22 +115,23 @@ EOF;
         foreach($headers as $field => &$length)
         {
           if ($length < strlen($field))
+          {
             $length = strlen($field);
-
-          $hdr  .= " " . str_pad($field, $length) . " |";
-          $div  .= str_pad("",$length + 2, "-") . "+";
+          }
+          $hdr .= " ".str_pad($field, $length)." |";
+          $div .= str_pad("", $length + 2, "-")."+";
         }
-        echo $div . "\n";
-        echo $hdr . "\n";
-        echo $div . "\n";
+        echo $div."\n";
+        echo $hdr."\n";
+        echo $div."\n";
 
         // print results
         foreach($results as $result)
         {
-          echo( "|" );
+          echo '|';
           foreach( $result as $field => $value )
           {
-            echo " " . str_pad($value,$headers[$field]) . " |";
+            echo ' '.str_pad($value,$headers[$field]).' |';
           }
           echo "\n";
         }
@@ -130,7 +139,9 @@ EOF;
         echo sprintf('(%s results)', $count) . "\n";
         echo "\n";
       }
-    } else {
+    }
+    else
+    {
       $this->logSection('doctrine', 'no results found');
     }
   }
