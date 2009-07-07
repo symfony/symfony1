@@ -358,34 +358,36 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
    *
    * @return string
    */
-  public function getFormClassToExtend()
-  {
-    $parent = $this->modelName;
-    while (true)
-    {
-      $reflectionClass = new ReflectionClass($parent);
-      $parent = $reflectionClass->getParentClass()->getName();
+ public function getFormClassToExtend()
+ {
+   $parentName = $this->modelName;
+   while (true)
+   {
+     $reflectionClass = new ReflectionClass($parentName);
+     $parent = $reflectionClass->getParentClass();
+     $parentName = $parent->getName();
 
-      if (preg_match('/^Base/', $parent))
-      {
-        $reflectionClass = new ReflectionClass($parent);
-        $parent = $reflectionClass->getParentClass()->getName();
+     if (preg_match('/^Base/', $parentName))
+     {
+       $reflectionClass = new ReflectionClass($parentName);
+       $parent = $reflectionClass->getParentClass();
+       $parentName = $parent->getName();
 
-        if ($parent == 'sfDoctrineRecord')
-        {
-          return 'BaseFormFilterDoctrine';
-        }
-        else if (class_exists($class = $parent.'FormFilter'))
-        {
-          return $class;
-        }
+       if ($parentName == 'sfDoctrineRecord')
+       {
+         return 'BaseFormFilterDoctrine';
+       }
+       else if (!$parent->isAbstract())
+       {
+         return $parentName.'FormFilter';
+       }
 
-        return 'BaseFormFilterDoctrine';
-      }
-      else if ($parent == 'Doctrine_Record')
-      {
-        return 'BaseFormFilterDoctrine';
-      }
-    }
-  }
+       return 'BaseFormFilterDoctrine';
+     }
+     else if ($parentName == 'Doctrine_Record')
+     {
+       return 'BaseFormFilterDoctrine';
+     }
+   }
+ }
 }
