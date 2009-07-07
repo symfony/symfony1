@@ -644,4 +644,40 @@ class sfDoctrineFormGenerator extends sfGenerator
     $php = str_replace('  ', ' ', $php);
     return $php;
   }
+
+  /**
+   * Get the name of the form class to extend based on the inheritance of the model
+   *
+   * @return string
+   */
+  public function getFormClassToExtend()
+  {
+    $parent = $this->modelName;
+    while (true)
+    {
+      $reflectionClass = new ReflectionClass($parent);
+      $parent = $reflectionClass->getParentClass()->getName();
+
+      if (preg_match('/^Base/', $parent))
+      {
+        $reflectionClass = new ReflectionClass($parent);
+        $parent = $reflectionClass->getParentClass()->getName();
+
+        if ($parent == 'sfDoctrineRecord')
+        {
+          return 'BaseFormDoctrine';
+        }
+        else if (class_exists($class = $parent.'Form'))
+        {
+          return $class;
+        }
+
+        return 'BaseFormDoctrine';
+      }
+      else if ($parent == 'Doctrine_Record')
+      {
+        return 'BaseFormDoctrine';
+      }
+    }
+  }
 }

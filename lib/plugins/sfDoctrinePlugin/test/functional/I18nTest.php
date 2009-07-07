@@ -59,7 +59,8 @@ $articleForm = new MyArticleForm($article);
 $data = array(
   'is_on_homepage' => 1,
   'Author' => array(
-    'name' => 'i18n author test'),
+    'name' => 'i18n author test',
+    'type' => null),
   'en' => array(
     'title' => 'english title',
     'body'  => 'english body'),
@@ -80,6 +81,7 @@ $values = array(
   'Author' => 
   array(
     'name' => 'i18n author test',
+    'type' => null
   ),
   'en' => 
   array(
@@ -135,6 +137,7 @@ $expected = array(
   array(
     'id' => $article->Author->id,
     'name' => 'i18n author test',
+    'type' => null
   ),
 );
 
@@ -170,6 +173,7 @@ $expected = array(
   array(
     'id' => $article->Author->id,
     'name' => 'i18n author test',
+    'type' => null
   ),
 );
 

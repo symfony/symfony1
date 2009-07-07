@@ -524,6 +524,12 @@ or filter form classes generated. So you can now do the following.
           type: integer
           primary: true
 
+### Form Classes Inheritance
+
+When you generate forms from your models, and your models contain inheritance. 
+The generated child classes will respect the inheritance and generate forms
+that follow the same inheritance structure.
+
 ### New Tasks
 
 We have introduced a few new tasks to help you when developing with Doctrine.

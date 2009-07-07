@@ -30,6 +30,11 @@ Author:
   columns:
     name: string(255)
 
+AuthorInheritance:
+  inheritance:
+    extends: Author
+    type: column_aggregation
+
 Subscription:
   connection: doctrine2
   columns:

@@ -352,4 +352,40 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
 
     return $models;
   }
+
+  /**
+   * Get the name of the form class to extend based on the inheritance of the model
+   *
+   * @return string
+   */
+  public function getFormClassToExtend()
+  {
+    $parent = $this->modelName;
+    while (true)
+    {
+      $reflectionClass = new ReflectionClass($parent);
+      $parent = $reflectionClass->getParentClass()->getName();
+
+      if (preg_match('/^Base/', $parent))
+      {
+        $reflectionClass = new ReflectionClass($parent);
+        $parent = $reflectionClass->getParentClass()->getName();
+
+        if ($parent == 'sfDoctrineRecord')
+        {
+          return 'BaseFormFilterDoctrine';
+        }
+        else if (class_exists($class = $parent.'FormFilter'))
+        {
+          return $class;
+        }
+
+        return 'BaseFormFilterDoctrine';
+      }
+      else if ($parent == 'Doctrine_Record')
+      {
+        return 'BaseFormFilterDoctrine';
+      }
+    }
+  }
 }

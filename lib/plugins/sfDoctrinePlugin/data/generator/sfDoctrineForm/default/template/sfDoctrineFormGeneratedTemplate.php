@@ -8,7 +8,7 @@
 
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 8508 2008-04-17 17:39:15Z fabien $
  */
-class Base<?php echo $this->modelName ?>Form extends BaseFormDoctrine
+class Base<?php echo $this->modelName ?>Form extends <?php echo $this->getFormClassToExtend() . "\n" ?>
 {
   public function setup()
   {

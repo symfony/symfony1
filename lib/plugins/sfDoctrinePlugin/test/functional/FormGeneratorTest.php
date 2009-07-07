@@ -12,7 +12,7 @@ $app = 'backend';
 $fixtures = 'fixtures';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(20);
+$t = new lime_test(22);
 
 $t->diag("Test that these models don't generate forms or filters classes");
 $noFormsOrFilters = array('UserGroup', 'UserPermission', 'GroupPermission');
@@ -37,3 +37,10 @@ $t->is(file_exists(sfConfig::get('sf_lib_dir').'/form/doctrine/base/BaseFormGene
 
 $t->is(file_exists(sfConfig::get('sf_lib_dir').'/filter/doctrine/FormGeneratorTest2FormFilter.class.php'), true);
 $t->is(file_exists(sfConfig::get('sf_lib_dir').'/filter/doctrine/base/BaseFormGeneratorTest2FormFilter.class.php'), true);
+
+$t->diag('Check form genreator generates forms with correct inheritance');
+$test = new AuthorInheritanceForm();
+$t->is(is_subclass_of($test, 'AuthorForm'), true);
+
+$test = new AuthorInheritanceFormFilter();
+$t->is(is_subclass_of($test, 'AuthorFormFilter'), true);
