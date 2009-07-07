@@ -281,3 +281,10 @@ Doctrine Integration
 The externals to Doctrine have been updated to use the latest and greatest 
 Doctrine 1.2 version. You can read about what is new in Doctrine 1.2 
 [here](http://www.doctrine-project.org/upgrade/1_2).
+
+### Admin Generator Delete
+
+The admin generator batch delete was changed to fetch the records and issue the
+`delete()` method to each one individually instead of issuing a single DQL query
+to delete them all. The reason is so that events for deleting each individual 
+record are invoked.

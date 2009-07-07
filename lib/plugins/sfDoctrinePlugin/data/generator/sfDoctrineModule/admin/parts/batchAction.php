@@ -47,20 +47,16 @@
   {
     $ids = $request->getParameter('ids');
 
-    $count = Doctrine_Query::create()
-      ->delete()
+    $records = Doctrine_Query::create()
       ->from('<?php echo $this->getModelClass() ?>')
       ->whereIn('<?php echo $this->getPrimaryKeys(true) ?>', $ids)
       ->execute();
 
-    if ($count >= count($ids))
+    foreach ($records as $record)
     {
-      $this->getUser()->setFlash('notice', 'The selected items have been deleted successfully.');
-    }
-    else
-    {
-      $this->getUser()->setFlash('error', 'A problem occurs when deleting the selected items.');
+      $record->delete();
     }
 
+    $this->getUser()->setFlash('notice', 'The selected items have been deleted successfully.');
     $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
   }
