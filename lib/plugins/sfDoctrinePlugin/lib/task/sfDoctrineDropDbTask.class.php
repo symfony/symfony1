@@ -52,10 +52,18 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+
+    $manager = Doctrine_Manager::getInstance();
+    $connectionNames = array();
+    foreach ($manager as $conn)
+    {
+      $connectionNames[] = $conn->getName();
+    }
     if (
       !$options['no-confirmation']
       &&
-      !$this->askConfirmation(array('This command will remove all data in your database.', 'Are you sure you want to proceed? (y/N)'), 'QUESTION_LARGE', false)
+      !$this->askConfirmation(array('This command will remove all data in your database connections named: '.implode(', ', $connectionNames), 'Are you sure you want to proceed? (y/N)'), 'QUESTION_LARGE', false)
     )
     {
       $this->logSection('doctrine', 'task aborted');
@@ -65,7 +73,6 @@ EOF;
 
     $this->logSection('doctrine', 'dropping databases');
 
-    $databaseManager = new sfDatabaseManager($this->configuration);
     $this->callDoctrineCli('drop-db', array('force' => true));
   }
 }
