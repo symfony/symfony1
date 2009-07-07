@@ -60,7 +60,7 @@ EOF;
     $array = array();
     foreach ($files as $file)
     {
-      $array = array_merge_recursive($array, sfYaml::load($file));
+      $array = array_merge_recursive($array, (array) sfYaml::load($file));
     }
     $yamlModels = array_keys($array);
 
