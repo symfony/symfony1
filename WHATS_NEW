@@ -257,6 +257,14 @@ selector to pinpoint which portion of the DOM to test:
       checkForm('ArticleForm', '#articleForm')->
     end();
 
+### Listen to `context.load_factories`
+
+You can now add listeners for the `context.load_factories` event to your
+functional tests. This was not possible in previous versions of symfony.
+
+    [php]
+    $browser->addListener('context.load_factories', array($browser, 'listenForNewContext'));
+
 Tasks
 -----
 

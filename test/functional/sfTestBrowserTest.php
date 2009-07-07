@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,21 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
   return;
 }
 
-$b = new sfTestBrowser();
+class TestBrowser extends sfTestBrowser
+{
+  public $events = array();
+  public function listen(sfEvent $event)
+  {
+    $this->events[] = $event;
+  }
+}
+
+$b = new TestBrowser();
+$b->addListener('context.load_factories', array($b, 'listen'));
+
+// listeners
+$b->get('/');
+$b->test()->is(count($b->events), 1, 'browser can connect to context.load_factories');
 
 // exceptions
 $b->

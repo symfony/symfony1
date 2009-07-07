@@ -68,8 +68,18 @@ class sfBrowser extends sfBrowserBase
       $isContextEmpty = is_null($this->context);
       $context = $isContextEmpty ? sfContext::getInstance() : $this->context;
 
+      // create configuration
       $currentConfiguration = $context->getConfiguration();
       $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+
+      // connect listeners
+      $configuration->getEventDispatcher()->connect('application.throw_exception', array($this, 'listenToException'));
+      foreach ($this->listeners as $name => $listener)
+      {
+        $configuration->getEventDispatcher()->connect($name, $listener);
+      }
+
+      // create context
       $this->context = sfContext::createInstance($configuration);
       unset($currentConfiguration);
 
@@ -81,12 +91,6 @@ class sfBrowser extends sfBrowserBase
       else
       {
         $this->rawConfiguration = sfConfig::getAll();
-      }
-
-      $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
-      foreach ($this->listeners as $name => $listener)
-      {
-        $this->context->getEventDispatcher()->connect($name, $listener);
       }
     }
 
