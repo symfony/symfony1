@@ -35,6 +35,7 @@ class sfDoctrineDqlTask extends sfDoctrineBaseTask
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('show-sql', null, sfCommandOption::PARAMETER_NONE, 'Show the sql that would be executed'),
+      new sfCommandOption('table', null, sfCommandOption::PARAMETER_NONE, 'Return results in table format'),
     ));
 
     $this->aliases = array('doctrine-dql');
@@ -63,7 +64,7 @@ EOF;
     $dql = $arguments['dql_query'];
 
     $q = Doctrine_Query::create()
-      ->parseQuery($dql);
+      ->parseDqlQuery($dql);
 
     $this->logSection('doctrine', 'executing dql query');
 
@@ -77,14 +78,57 @@ EOF;
 
     if ($count)
     {
-      echo sprintf('found %s results', $count) . "\n";
-
       $results = $q->fetchArray();
-      $yaml = sfYaml::dump($results, 4);
-      $lines = explode("\n", $yaml);
-      foreach ($lines as $line)
-      {
-        echo $line . "\n";
+      
+      if (!$options['table']) {
+        echo sprintf('found %s results', $count) . "\n";
+        $yaml = sfYaml::dump($results, 4);
+        $lines = explode("\n", $yaml);
+        foreach ($lines as $line)
+        {
+          echo $line . "\n";
+        }
+      }
+      else {
+        $headers  = array();
+        // calculate lengths
+        foreach($results as $result)
+        {
+          foreach( $result as $field => $value )
+          {
+            if ( !isset($headers[$field]) ) $headers[$field]  = 0;
+            $headers[$field]  = max($headers[$field], strlen($value));
+          }
+        }
+
+        // print headers
+        $hdr  = "|";
+        $div  = "+";
+        foreach($headers as $field => &$length)
+        {
+          if ($length < strlen($field))
+            $length = strlen($field);
+
+          $hdr  .= " " . str_pad($field, $length) . " |";
+          $div  .= str_pad("",$length + 2, "-") . "+";
+        }
+        echo $div . "\n";
+        echo $hdr . "\n";
+        echo $div . "\n";
+
+        // print results
+        foreach($results as $result)
+        {
+          echo( "|" );
+          foreach( $result as $field => $value )
+          {
+            echo " " . str_pad($value,$headers[$field]) . " |";
+          }
+          echo "\n";
+        }
+        echo $div . "\n";
+        echo sprintf('(%s results)', $count) . "\n";
+        echo "\n";
       }
     } else {
       $this->logSection('doctrine', 'no results found');
