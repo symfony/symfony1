@@ -708,8 +708,7 @@ class sfToolkit
       {
         foreach (explode(PATH_SEPARATOR, $path) as $dir)
         {
-          $file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix;
-          if (is_executable($file))
+          if (is_file($file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix) && is_executable($file))
           {
             return $file;
           }

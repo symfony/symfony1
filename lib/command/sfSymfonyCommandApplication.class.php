@@ -106,7 +106,11 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $finder = sfFinder::type('file')->sort_by_name()->name('*Task.class.php');
     foreach ($finder->in($dirs) as $task)
     {
-      require_once $task;
+      // force autoloading the class
+      if (!class_exists(basename($task, '.class.php')))
+      {
+        require_once $task;
+      }
     }
   }
 
