@@ -265,9 +265,11 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
           $options[] = "'choices' => array('', 1, 0)";
           break;
         case 'date':
+          $options[] = "'from_date' => new sfValidatorDate(array('required' => false)), 'to_date' => new sfValidatorDateTime(array('required' => false))";
+          break;
         case 'datetime':
         case 'timestamp':
-          $options[] = "'from_date' => new sfValidatorDate(array('required' => false)), 'to_date' => new sfValidatorDate(array('required' => false))";
+          $options[] = "'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59'))";
           break;
         case 'enum':
           $values = array_combine($column['values'], $column['values']);
