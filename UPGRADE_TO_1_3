@@ -288,3 +288,25 @@ The admin generator batch delete was changed to fetch the records and issue the
 `delete()` method to each one individually instead of issuing a single DQL query
 to delete them all. The reason is so that events for deleting each individual 
 record are invoked.
+
+### Override Doctrine Plugin Schema
+
+You can override the model included in a plugins YAML schema simply by defining 
+that same model in your local schema.
+
+See: http://trac.symfony-project.org/ticket/6656
+
+With this change you could now create `config/doctrine/sfGuardUser.schema.yml` 
+with the following inside.
+
+    sfGuardUser:
+      package: sfDoctrineGuardPlugin.lib.model.doctrine
+      # ...
+
+You can customize the schema and your local version will be used instead of the
+one included in the plugin.
+
+> **NOTE**
+> The package option is a feature of Doctrine and is used for the schemas of
+> symfony plugins. This does not mean the package feature can be used independently
+> to package your models. It must be used directly and only with symfony plugins.
