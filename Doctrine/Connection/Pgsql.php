@@ -192,4 +192,52 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
         }
         return $serverInfo;
     }
+
+    /**
+     * Inserts a table row with specified data.
+     *
+     * @param Doctrine_Table $table     The table to insert data into.
+     * @param array $values             An associative array containing column-value pairs.
+     *                                  Values can be strings or Doctrine_Expression instances.
+     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
+     */
+    public function insert(Doctrine_Table $table, array $fields)
+    {
+        $tableName = $table->getTableName();
+
+        // column names are specified as array keys
+        $cols = array();
+        // the query VALUES will contain either expresions (eg 'NOW()') or ?
+        $a = array();
+
+        // fix #1786 and #2327 (default values when table is just 'id' as PK)
+        if(count($fields) === 1 && $table->isIdentifier(key($fields)) && $table->isIdentifierAutoincrement() )
+        {
+            return $this->exec('INSERT INTO ' . $this->quoteIdentifier($tableName)
+                              . ' '
+                              . ' VALUES (DEFAULT)');
+        }
+
+        foreach ($fields as $fieldName => $value) {
+            $cols[] = $this->quoteIdentifier($table->getColumnName($fieldName));
+            if ($value instanceof Doctrine_Expression) {
+                $a[] = $value->getSql();
+                unset($fields[$fieldName]);
+            } else {
+                $a[] = '?';
+            }
+        }
+
+        // build the statement
+        $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName)
+                . ' (' . implode(', ', $cols) . ')'
+                . ' VALUES (' . implode(', ', $a) . ')';
+
+        return $this->exec($query, array_values($fields));
+    }
+
+
+
+
+
 }
