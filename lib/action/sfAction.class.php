@@ -351,6 +351,8 @@ abstract class sfAction extends sfComponent
    * Retrieves the default view to be executed when a given request is not served by this action.
    *
    * @return string A string containing the view name associated with this action
+   *
+   * @throws sfConfigurationException If compat_10 is not enabled
    */
   public function getDefaultView()
   {
@@ -366,6 +368,8 @@ abstract class sfAction extends sfComponent
    * Executes any post-validation error application logic.
    *
    * @return string A string containing the view name associated with this action
+   *
+   * @throws sfConfigurationException If compat_10 is not enabled
    */
   public function handleError()
   {
@@ -381,6 +385,8 @@ abstract class sfAction extends sfComponent
    * Validates manually files and parameters.
    *
    * @return bool true, if validation completes successfully, otherwise false.
+   *
+   * @throws sfConfigurationException If compat_10 is not enabled
    */
   public function validate()
   {

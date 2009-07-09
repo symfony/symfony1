@@ -367,6 +367,8 @@ abstract class sfComponent
    * @param array  $arguments The method arguments
    *
    * @return mixed The returned value of the called method
+   *
+   * @throws sfException If called method is undefined
    */
   public function __call($method, $arguments)
   {
