@@ -41,8 +41,8 @@ class sfWebRequest extends sfRequest
    * Available options:
    *
    *  * formats:           The list of supported format and their associated mime-types
-   *  * path_info_key:     The path info key (default to SERVER)
-   *  * path_info_array:   The path info key (default to PATH_INFO)
+   *  * path_info_key:     The path info key (default to PATH_INFO)
+   *  * path_info_array:   The path info array (default to SERVER)
    *  * relative_url_root: The relative URL root
    *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
