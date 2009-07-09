@@ -18,6 +18,8 @@
  */
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
+  protected $taskDirs = array();
+  
   /**
    * Configures the current symfony command application.
    */
@@ -88,30 +90,56 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   public function loadTasks(sfProjectConfiguration $configuration)
   {
     // Symfony core tasks
-    $dirs = array(sfConfig::get('sf_symfony_lib_dir').'/task');
+    $this->taskDirs = array(sfConfig::get('sf_symfony_lib_dir').'/task');
 
     // Plugin tasks
     foreach ($configuration->getPluginPaths() as $path)
     {
       if (is_dir($taskPath = $path.'/lib/task'))
       {
-        $dirs[] = $taskPath;
+        $this->taskDirs[] = $taskPath;
       }
     }
 
     // project tasks
-    $dirs[] = sfConfig::get('sf_lib_dir').'/task';
+    $this->taskDirs[] = sfConfig::get('sf_lib_dir').'/task';
 
     // require tasks
-    $finder = sfFinder::type('file')->sort_by_name()->name('*Task.class.php');
-    foreach ($finder->in($dirs) as $task)
+    $finder = sfFinder::type('file')->name('*Task.class.php');
+
+    // register local autoloader for tasks
+    spl_autoload_register(array($this, 'autoloadTask'));
+
+    foreach ($finder->in($this->taskDirs) as $task)
     {
-      // force autoloading the class
-      if (!class_exists(basename($task, '.class.php')))
+      // forces autoloading of each task class
+      class_exists(basename($task, '.class.php'), true);
+    }
+
+    // unregister local autoloader
+    spl_autoload_unregister(array($this, 'autoloadTask'));
+  }
+
+  /**
+   * Autoloads a task class
+   *
+   * @param  string  $class  The task class name
+   *
+   * @return Boolean
+   */
+  public function autoloadTask($class)
+  {
+    foreach ($this->taskDirs as $dir)
+    {
+      if (file_exists($file = $dir.'/'.$class.'.class.php'))
       {
-        require_once $task;
+        require_once $file;
+
+        return true;
       }
     }
+
+    return false;
   }
 
   /**

@@ -65,7 +65,7 @@ class sf_test_project
   }
 }
 
-$t = new lime_test(35);
+$t = new lime_test(38);
 
 if (!extension_loaded('SQLite'))
 {
@@ -142,5 +142,24 @@ $content = $c->execute_command('test:all', 1);
 $t->is($content, $c->get_fixture_content('test/result-harness.txt'), '"test:all" launches all unit and functional tests');
 
 $content = $c->execute_command('cache:clear');
+
+// Test task autoloading
+mkdir($c->tmp_dir.DS.'lib'.DS.'task');
+copy(dirname(__FILE__).'/fixtures/task/aTask.class.php', $c->tmp_dir.DS.'lib'.DS.'task'.DS.'aTask.class.php');
+copy(dirname(__FILE__).'/fixtures/task/zTask.class.php', $c->tmp_dir.DS.'lib'.DS.'task'.DS.'zTask.class.php');
+mkdir($pluginDir = $c->tmp_dir.DS.'plugins'.DS.'myFooPlugin'.DS.'lib'.DS.'task', 0777, true);
+copy(dirname(__FILE__).'/fixtures/task/myPluginTask.class.php', $pluginDir.DS.'myPluginTask.class.php');
+file_put_contents(
+  $projectConfigurationFile = $c->tmp_dir.DS.'config'.DS.'ProjectConfiguration.class.php', 
+  str_replace(
+    '$this->enablePlugins(\'sfPropelPlugin\')', 
+    '$this->enablePlugins(array(\'myFooPlugin\', \'sfPropelPlugin\'))', 
+    file_get_contents($projectConfigurationFile)
+  )
+);
+
+$c->execute_command('a:run');
+$c->execute_command('z:run');
+$c->execute_command('p:run');
 
 $c->shutdown();
