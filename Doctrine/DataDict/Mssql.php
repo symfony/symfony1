@@ -96,7 +96,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 return 'IMAGE';
             case 'integer':
             case 'int':
-                return 'INT';
+                return (isset($field['unsigned']) && $field['unsigned']) ? 'BIGINT' : 'INT';
             case 'boolean':
                 return 'BIT';
             case 'date':
@@ -243,7 +243,9 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
 
 
         $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
-        $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        //$unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        // MSSQL does not support the UNSIGNED keyword
+        $unsigned = '';
         $comment  = (isset($field['comment']) && $field['comment']) 
             ? " COMMENT '" . $field['comment'] . "'" : '';
 
