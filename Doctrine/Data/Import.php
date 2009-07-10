@@ -83,8 +83,13 @@ class Doctrine_Data_Import extends Doctrine_Data
                 } else if (is_dir($dir)) {
                     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                             RecursiveIteratorIterator::LEAVES_ONLY);
-
+                    $filesOrdered = array();                                        
                     foreach ($it as $file) {
+                        $filesOrdered[] = $file;
+                    }
+                    // force correct order
+                    natcasesort($filesOrdered);
+                    foreach ($filesOrdered as $file) {
                         $e = explode('.', $file->getFileName());
                         if (in_array(end($e), $this->getFormats())) {
                             $array = $mergeFunction($array, Doctrine_Parser::load($file->getPathName(), $this->getFormat()));
