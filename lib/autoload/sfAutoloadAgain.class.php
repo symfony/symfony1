@@ -22,7 +22,8 @@ class sfAutoloadAgain
     $instance = null;
 
   protected
-    $registered = false;
+    $registered = false,
+    $reloaded   = false;
 
   /**
    * Returns the singleton autoloader.
@@ -55,6 +56,12 @@ class sfAutoloadAgain
    */
   public function autoload($class)
   {
+    // only reload once
+    if ($this->reloaded)
+    {
+      return false;
+    }
+
     $autoloads = spl_autoload_functions();
 
     // as of PHP 5.3.0, spl_autoload_functions() returns the object as the first element of the array instead of the class name
@@ -86,6 +93,8 @@ class sfAutoloadAgain
 
     $autoload = sfAutoload::getInstance();
     $autoload->reloadClasses(true);
+
+    $this->reloaded = true;
 
     return $autoload->autoload($class);
   }
