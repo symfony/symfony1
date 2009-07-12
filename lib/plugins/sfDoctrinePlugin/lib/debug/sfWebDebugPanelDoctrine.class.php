@@ -68,7 +68,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
       </div>
     ';
   }
-  
+
   /**
    * Filters out Doctrine log entries.
    *
@@ -82,11 +82,16 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
     $newLogs = array();
     foreach ($logs as $log)
     {
-      $r = new ReflectionClass($log['type']);
-      if (!$r->isSubclassOf('Doctrine_Connection') && !$r->implementsInterface('Doctrine_Adapter_Statement_Interface'))
+      if (class_exists($log['type']))
       {
-        $newLogs[] = $log;
+        $r = new ReflectionClass($log['type']);
+        if ($r->isSubclassOf('Doctrine_Connection') || $r->implementsInterface('Doctrine_Adapter_Statement_Interface'))
+        {
+          continue;
+        }
       }
+
+      $newLogs[] = $log;
     }
 
     return $newLogs;
