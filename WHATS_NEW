@@ -620,3 +620,25 @@ So now the following is possible.
     | 2  | 2         |                | 2009-07-07 18:02:24 | 2009-07-07 18:02:24 |
     +----+-----------+----------------+---------------------+---------------------+
     (2 results)
+
+### Debugging queries in functional tests
+
+The `sfTesterDoctrine` class now includes a `->debug()` method. This method
+will output information about that queries that have been run in the current
+context.
+
+    [php]
+    $browser->
+      get('/articles')->
+      with('doctrine')->debug()
+    ;
+
+You can view only the last few queries executed by passing an integer to the
+method, or show only queries that contain a substring or match a regular
+expression by passing a string.
+
+    [php]
+    $browser->
+      get('/articles')->
+      with('doctrine')->debug('/from articles/i')
+    ;

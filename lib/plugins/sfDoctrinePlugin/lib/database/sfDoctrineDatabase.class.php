@@ -29,6 +29,11 @@ class sfDoctrineDatabase extends sfDatabase
   protected $_doctrineConnection = null;
 
   /**
+   * @var sfDoctrineConnectionProfiler
+   **/
+  protected $profiler = null;
+
+  /**
    * Initialize a sfDoctrineDatabase connection with the given parameters.
    *
    * <code>
@@ -77,21 +82,24 @@ class sfDoctrineDatabase extends sfDatabase
       $this->_doctrineConnection->setAttribute($name, $value);
     }
 
-    $encoding = $this->getParameter('encoding', 'UTF8'); 
-    $eventListener = new sfDoctrineConnectionListener($this->_doctrineConnection, $encoding); 
+    $encoding = $this->getParameter('encoding', 'UTF8');
+    $eventListener = new sfDoctrineConnectionListener($this->_doctrineConnection, $encoding);
     $this->_doctrineConnection->addListener($eventListener);
 
-    // Load Query Logger Listener
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    $configuration = sfProjectConfiguration::getActive();
+
+    // Load Query Profiler
+    if ($this->getParameter('profiler', sfConfig::get('sf_debug')))
     {
-      $this->_doctrineConnection->addListener(new sfDoctrineLogger());
+      $this->profiler = new sfDoctrineConnectionProfiler($configuration->getEventDispatcher(), array(
+        'logging' => $this->getParameter('logging', sfConfig::get('sf_logging_enabled')),
+      ));
+      $this->_doctrineConnection->addListener($this->profiler);
     }
 
     // Invoke the configuration methods for the connection if they exist
-    $configuration = sfProjectConfiguration::getActive();
-
     $method = sprintf('configureDoctrineConnection%s', ucwords($this->_doctrineConnection->getName()));
-    
+
     if (method_exists($configuration, 'configureDoctrineConnection') && ! method_exists($configuration, $method))
     {
       $configuration->configureDoctrineConnection($this->_doctrineConnection);
@@ -111,6 +119,16 @@ class sfDoctrineDatabase extends sfDatabase
   public function getDoctrineConnection()
   {
     return $this->_doctrineConnection;
+  }
+
+  /**
+   * Returns the connection profiler.
+   * 
+   * @return sfDoctrineConnectionProfiler|null
+   */
+  public function getProfiler()
+  {
+    return $this->profiler;
   }
 
   /**

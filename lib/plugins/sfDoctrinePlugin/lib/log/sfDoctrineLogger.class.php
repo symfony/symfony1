@@ -17,6 +17,8 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id: sfDoctrineLogger.class.php 8938 2008-05-14 01:52:35Z Jonathan.Wage $
+ * 
+ * @deprecated In favor of {@link sfDoctrineConnectionProfiler}. Will be removed in symfony 1.4.
  */
 class sfDoctrineLogger extends Doctrine_EventListener
 {

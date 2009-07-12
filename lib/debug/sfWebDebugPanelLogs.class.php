@@ -49,27 +49,15 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
         $type = substr($type, 2);
       }
 
-      // xdebug information
-      $debug_info = '';
-      if (count($log['debug_stack']))
-      {
-        $debug_info .= '&nbsp;'.$this->getToggler('debug_'.$line_nb).'<div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
-        foreach ($log['debug_stack'] as $i => $logLine)
-        {
-          $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($logLine).'<br/>';
-        }
-        $debug_info .= "</div>\n";
-      }
-
       ++$line_nb;
-      $html .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s%s</td></tr>\n",
+      $html .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s %s</td></tr>\n",
         ucfirst($priority),
         $log['type'],
         $line_nb,
         '<img src="'.$this->webDebug->getOption('image_root_path').'/'.$priority.'.png" alt="'.ucfirst($priority).'"/>',
         $type,
         $this->formatLogLine($log['message']),
-        $debug_info
+        $this->getToggleableDebugStack($log['debug_backtrace'])
       );
     }
     $html .= '</table>';
@@ -123,7 +111,7 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
                                                    '/line (\d+)$/'        => 'line <span class="sfWebDebugLogInfo">\\1</span>'));
 
     // special formatting for SQL lines
-    $logLine = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $logLine);
+    $logLine = $this->formatSql($logLine);
 
     // remove username/password from DSN
     if (strpos($logLine, 'DSN') !== false)

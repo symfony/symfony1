@@ -653,9 +653,18 @@ EOF;
 
 .sfWebDebugDebugInfo
 {
-  margin-left: 10px;
-  padding-left: 5px;
+  color: #999;
+  font-size: 11px;
+  margin: 5px 0 5px 10px;
+  padding: 2px 0 2px 5px;
   border-left: 1px solid #aaa;
+  line-height: 1.25em;
+}
+
+.sfWebDebugDebugInfo .sfWebDebugLogInfo,
+.sfWebDebugDebugInfo a.sfWebDebugFileLink
+{
+  color: #333 !important;
 }
 
 .sfWebDebugCache
@@ -703,6 +712,28 @@ EOF;
 #sfWebDebug .sfWebDebugDataType a:hover
 {
   text-decoration: underline;
+}
+
+#sfWebDebugDatabaseLogs li
+{
+  margin-bottom: .5em;
+}
+
+.sfWebDebugDatabaseLogInfo
+{
+  color: #666;
+  font-size: 11px;
+}
+
+.sfWebDebugDatabaseQuery .sfWebDebugLogInfo
+{
+  color: #909;
+  font-weight: bold;
+}
+
+.sfWebDebugHighlight
+{
+  background: #FFC;
 }
 EOF;
   }

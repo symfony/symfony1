@@ -75,6 +75,50 @@ abstract class sfWebDebugPanel
   }
 
   /**
+   * Returns a toggleable presentation of a debug stack.
+   * 
+   * @param  array $debugStack
+   * 
+   * @return string
+   */
+  public function getToggleableDebugStack($debugStack)
+  {
+    static $i = 1;
+
+    if (!$debugStack)
+    {
+      return '';
+    }
+
+    $element = get_class($this).'Debug'.$i++;
+    $keys = array_reverse(array_keys($debugStack));
+
+    $html  = $this->getToggler($element, 'Toggle debug stack');
+    $html .= '<div class="sfWebDebugDebugInfo" id="'.$element.'" style="display:none">';
+    foreach ($debugStack as $j => $trace)
+    {
+      $isProjectFile = 0 === strpos($trace['file'], sfConfig::get('sf_root_dir')) && !preg_match('/(cache|vendor)/', $trace['file']);
+
+      $html .= sprintf('<span class="%s">#%s &raquo; ', $isProjectFile ? 'sfWebDebugHighlight' : '', $keys[$j] + 1);
+
+      if (isset($trace['function']))
+      {
+        $html .= sprintf('in <span class="sfWebDebugLogInfo">%s%s%s()</span> ',
+          isset($trace['class']) ? $trace['class'] : '',
+          isset($trace['type']) ? $trace['type'] : '',
+          $trace['function']
+        );
+      }
+
+      $html .= sprintf('from %s line %s', $this->formatFileLink($trace['file'], $trace['line']), $trace['line']);
+      $html .= '</span><br/>';
+    }
+    $html .= "</div>\n";
+
+    return $html;
+  }
+
+  /**
    * Formats a file link.
    * 
    * @param  string  $fileOrClass A file path or class name
@@ -104,9 +148,21 @@ abstract class sfWebDebugPanel
     if ($linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format')))
     {
       $link = strtr($linkFormat, array('%f' => $fileOrClass, '%l' => $line));
-      $text = sprintf('<a href="%s" title="Open this file">%s</a>', htmlspecialchars($link, ENT_QUOTES, sfConfig::get('sf_charset')), $text);
+      $text = sprintf('<a href="%s" class="sfWebDebugFileLink" title="Open this file">%s</a>', htmlspecialchars($link, ENT_QUOTES, sfConfig::get('sf_charset')), $text);
     }
 
     return $text;
+  }
+
+  /**
+   * Format a SQL string with some colors on SQL keywords to make it more readable.
+   *
+   * @param  string $sql    SQL string to format
+   * 
+   * @return string $newSql The new formatted SQL string
+   */
+  public function formatSql($sql)
+  {
+    return preg_replace('/\b(SET|SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $sql);
   }
 }
