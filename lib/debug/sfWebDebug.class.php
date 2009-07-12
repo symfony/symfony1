@@ -29,7 +29,8 @@ class sfWebDebug
    *
    * Available options:
    *
-   *  * image_root_path: The image root path
+   *  * image_root_path:    The image root path
+   *  * request_parameters: The current request parameters
    *
    * @param sfEventDispatcher $dispatcher The event dispatcher
    * @param sfVarLogger       $logger     The logger
@@ -44,6 +45,11 @@ class sfWebDebug
     if (!isset($this->options['image_root_path']))
     {
       $this->options['image_root_path'] = '';
+    }
+
+    if (!isset($this->options['request_parameters']))
+    {
+      $this->options['request_parameters'] = array();
     }
 
     $this->configure();
@@ -166,6 +172,8 @@ class sfWebDebug
    */
   public function asHtml()
   {
+    $current = isset($this->options['request_parameters']['sfWebDebugPanel']) ? $this->options['request_parameters']['sfWebDebugPanel'] : null;
+
     $titles = array();
     $panels = array();
     foreach ($this->panels as $name => $panel)
@@ -175,14 +183,16 @@ class sfWebDebug
         if (($content = $panel->getPanelContent()) || $panel->getTitleUrl())
         {
           $id = sprintf('sfWebDebug%sDetails', $name);
-          $titles[]  = sprintf('<li><a title="%s" href="%s"%s>%s</a></li>',
+          $titles[] = sprintf('<li class="%s"><a title="%s" href="%s"%s>%s</a></li>',
+            $panel->getStatus() ? 'sfWebDebug'.ucfirst($this->getPriority($panel->getStatus())) : '',
             $panel->getPanelTitle(),
             $panel->getTitleUrl() ? $panel->getTitleUrl() : '#',
             $panel->getTitleUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
             $title
           );
-          $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display: none"><h1>%s</h1>%s</div>',
+          $panels[] = sprintf('<div id="%s" class="sfWebDebugTop" style="display:%s"><h1>%s</h1>%s</div>',
             $id,
+            $name == $current ? 'block' : 'none',
             $panel->getPanelTitle(),
             $content
           );
@@ -196,7 +206,7 @@ class sfWebDebug
 
     return '
       <div id="sfWebDebug">
-        <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($this->getPriority($this->logger->getHighestPriority())).'">
+        <div id="sfWebDebugBar">
           <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->options['image_root_path'].'/sf.png" alt="Debug toolbar" /></a>
 
           <ul id="sfWebDebugDetails" class="sfWebDebugMenu">
@@ -435,6 +445,7 @@ EOF;
   filter: alpha(opacity:80);
   z-index: 10000;
   white-space: nowrap;
+  background-color: #ddd;
 }
 
 #sfWebDebugBar[id]
@@ -716,7 +727,8 @@ EOF;
 
 #sfWebDebugDatabaseLogs li
 {
-  margin-bottom: .5em;
+  padding: 2px;
+  margin-bottom: 2px;
 }
 
 .sfWebDebugDatabaseLogInfo

@@ -44,6 +44,12 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
     {
       $priority = $this->webDebug->getPriority($log['priority']);
 
+      // increase status
+      if ($log['priority'] < $this->getStatus())
+      {
+        $this->setStatus($log['priority']);
+      }
+
       if (strpos($type = $log['type'], 'sf') === 0)
       {
         $type = substr($type, 2);

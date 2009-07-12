@@ -19,7 +19,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
    * 
    * Available options:
    * 
-   *  * logging: Whether to notify query logging events (defaults to false)
+   *  * logging:              Whether to notify query logging events (defaults to false)
+   *  * slow_query_threshold: How many seconds a query must take to be considered slow (defaults to 1)
    * 
    * @param sfEventDispatcher $dispatcher
    * @param array             $options
@@ -27,7 +28,33 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
   public function __construct(sfEventDispatcher $dispatcher, $options = array())
   {
     $this->dispatcher = $dispatcher;
-    $this->options = array_merge(array('logging' => false), $options);
+    $this->options = array_merge(array(
+      'logging'              => false,
+      'slow_query_threshold' => 1,
+    ), $options);
+  }
+
+  /**
+   * Returns an option value.
+   * 
+   * @param  string $name
+   * 
+   * @return mixed
+   */
+  public function getOption($name)
+  {
+    return isset($this->options[$name]) ? $this->options[$name] : null;
+  }
+
+  /**
+   * Sets an option value.
+   * 
+   * @param string $name
+   * @param mixed  $value
+   */
+  public function setOption($name, $value)
+  {
+    $this->options[$name] = $value;
   }
 
   /**
@@ -57,6 +84,11 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
     parent::postQuery($event);
+
+    if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
+    {
+      $event->slowQuery = true;
+    }
   }
 
   /**
@@ -86,6 +118,11 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
     parent::postExec($event);
+
+    if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
+    {
+      $event->slowQuery = true;
+    }
   }
 
   /**
@@ -115,6 +152,11 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
     parent::postStmtExecute($event);
+
+    if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
+    {
+      $event->slowQuery = true;
+    }
   }
 
   /**

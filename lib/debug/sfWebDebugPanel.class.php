@@ -19,7 +19,8 @@
 abstract class sfWebDebugPanel
 {
   protected
-    $webDebug = null;
+    $webDebug = null,
+    $status   = sfLogger::INFO;
 
   /**
    * Constructor.
@@ -62,6 +63,26 @@ abstract class sfWebDebugPanel
   abstract public function getPanelContent();
 
   /**
+   * Returns the current status.
+   * 
+   * @return integer A {@link sfLogger} priority constant
+   */
+  public function getStatus()
+  {
+    return $this->status;
+  }
+
+  /**
+   * Sets the current panel's status.
+   * 
+   * @param integer $status A {@link sfLogger} priority constant
+   */
+  public function setStatus($status)
+  {
+    $this->status = $status;
+  }
+
+  /**
    * Returns a toggler element.
    * 
    * @param  string $element The value of an element's DOM id attribute
@@ -97,7 +118,10 @@ abstract class sfWebDebugPanel
     $html .= '<div class="sfWebDebugDebugInfo" id="'.$element.'" style="display:none">';
     foreach ($debugStack as $j => $trace)
     {
-      $isProjectFile = 0 === strpos($trace['file'], sfConfig::get('sf_root_dir')) && !preg_match('/(cache|vendor)/', $trace['file']);
+      $file = isset($trace['file']) ? $trace['file'] : null;
+      $line = isset($trace['line']) ? $trace['line'] : null;
+
+      $isProjectFile = $file && 0 === strpos($file, sfConfig::get('sf_root_dir')) && !preg_match('/(cache|plugins|vendor)/', $file);
 
       $html .= sprintf('<span class="%s">#%s &raquo; ', $isProjectFile ? 'sfWebDebugHighlight' : '', $keys[$j] + 1);
 
@@ -110,7 +134,7 @@ abstract class sfWebDebugPanel
         );
       }
 
-      $html .= sprintf('from %s line %s', $this->formatFileLink($trace['file'], $trace['line']), $trace['line']);
+      $html .= sprintf('from %s line %s', $this->formatFileLink($file, $line), $line);
       $html .= '</span><br/>';
     }
     $html .= "</div>\n";

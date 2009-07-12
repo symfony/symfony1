@@ -64,7 +64,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
   {
     return '
       <div id="sfWebDebugDatabaseLogs">
-      <ol><li>'.implode("</li>\n<li>", $this->getSqlLogs()).'</li></ol>
+      <ol>'.implode("\n", $this->getSqlLogs()).'</ol>
       </div>
     ';
   }
@@ -150,16 +150,30 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
     {
       $conn = $event->getInvoker() instanceof Doctrine_Connection ? $event->getInvoker() : $event->getInvoker()->getConnection();
       $params = sfDoctrineConnectionProfiler::fixParams($event->getParams());
-      $sql = $this->formatSql($event->getQuery());
+      $query = $this->formatSql($event->getQuery());
 
       // interpolate parameters
       foreach ($params as $param)
       {
-        $sql = join(var_export($param, true), explode('?', $sql, 2));
+        $query = join(var_export($param, true), explode('?', $query, 2));
       }
 
-      // add meta info
-      $query = sprintf('<span class="sfWebDebugDatabaseQuery">%s</span><br/><span class="sfWebDebugDatabaseLogInfo">%ss, "%s" connection</span>', $sql, number_format($event->getElapsedSecs(), 2), $conn->getName());
+      // slow query
+      if ($event->slowQuery && $this->getStatus() > sfLogger::NOTICE)
+      {
+        $this->setStatus(sfLogger::NOTICE);
+      }
+
+      $line = sprintf('<li class="%s">', $event->slowQuery ? 'sfWebDebugWarning' : '');
+
+      // add meta information
+      $line .= sprintf('
+        <span class="sfWebDebugDatabaseQuery">%s</span><br/>
+        <span class="sfWebDebugDatabaseLogInfo">%ss, "%s" connection</span>',
+        $query,
+        number_format($event->getElapsedSecs(), 2),
+        $conn->getName()
+      );
 
       // add backtrace
       foreach ($logs as $i => $log)
@@ -174,12 +188,12 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
         {
           // assume queries are being requested in order
           unset($logs[$i]);
-          $query .= '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']);
+          $line .= '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']);
           break;
         }
       }
 
-      $html[] = $query;
+      $html[] = $line;
     }
 
     return $html;

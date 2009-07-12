@@ -642,3 +642,26 @@ expression by passing a string.
       get('/articles')->
       with('doctrine')->debug('/from articles/i')
     ;
+
+Web Debug Toolbar
+-----------------
+
+### `sfWebDebugPanel::setStatus()`
+
+Each panel in the web debug toolbar can specify a status that will affect its
+title's background color. For example, the background color of the log panel's
+title changes if any messages with a priority greater than `sfLogger::INFO`
+are logged.
+
+### `sfWebDebugPanel` request parameter
+
+You can now specify a panel to be open on page load by appending a
+`sfWebDebugPanel` parameter to the URL. For example, appending
+`?sfWebDebugPanel=config` would cause the web debug toolbar to render with the
+config panel open.
+
+Panels can also inspect request parameters by accessing the web debug
+`request_parameters` option:
+
+    [php]
+    $requestParameters = $this->webDebug->getOption('request_parameters');
