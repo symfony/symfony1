@@ -101,8 +101,7 @@ class sfTesterForm extends sfTester
   /**
    * Tests if the submitted form has a specific error.
    *
-   * @param  string $field   The field name to check for an error (null for global errors)
-   * @param  mixed  $message The error message or the number of errors for the field (optional)
+   * @param mixed $value The error message or the number of errors for the field (optional)
    *
    * @return sfTestFunctionalBase|sfTester
    */
@@ -114,8 +113,8 @@ class sfTesterForm extends sfTester
   /**
    * Tests if the submitted form has a specific error.
    *
-   * @param  string $field   The field name to check for an error (null for global errors)
-   * @param  mixed  $message The error message or the number of errors for the field (optional)
+   * @param string $field The field name to check for an error (null for global errors)
+   * @param mixed  $value The error message or the number of errors for the field (optional)
    *
    * @return sfTestFunctionalBase|sfTester
    */
