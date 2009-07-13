@@ -85,38 +85,38 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
             return $where;
         }
     }
-    
+
 
     protected function _buildSql($leftExpr, $operator, $rightExpr)
     {
-        $leftExprOriginal = $leftExpr;        
+        $leftExprOriginal = $leftExpr;
         $leftExpr = $this->query->parseClause($leftExpr);
-        
+
         // BETWEEN operation
         if ('BETWEEN' == strtoupper(substr($operator, 0, 7))) {
             $midExpr = trim(substr($operator, 7, -3));
             $operator = 'BETWEEN ' . $this->query->parseClause($midExpr) . ' AND';
         }
-     
+
         $op = strtolower($operator);
         $isInX = ($op == 'in' || $op == 'not in');
 
         // Check if we are not dealing with "obj.field IN :named"
         if (substr($rightExpr, 0 , 1) == ':' && $isInX) {
             throw new Doctrine_Query_Exception(
-                'Cannot use ' . $operator . ' with a named parameter in "' . 
+                'Cannot use ' . $operator . ' with a named parameter in "' .
                 $leftExprOriginal . ' ' . $operator . ' ' . $rightExpr . '"'
             );
         }
-
+        
         // Right Expression
         $rightExpr = ($rightExpr == '?' && $isInX)
             ? $this->_buildWhereInArraySqlPart($rightExpr)
-            : $this->parseValue($rightExpr);
+            : $this->query->parseClause($rightExpr);
 
         return $leftExpr . ' ' . $operator . ' ' . $rightExpr;
     }
-    
+
 
     protected function _buildWhereInArraySqlPart($rightExpr)
     {
@@ -133,53 +133,6 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
         }
 
         return '(' . (count($value) > 0 ? implode(', ', $value) : $rightExpr) . ')';
-    }
-
-
-    public function parseValue($rightExpr)
-    {
-        $conn = $this->query->getConnection();
-
-        // If value is contained in paranthesis
-        if (substr($rightExpr, 0, 1) == '(') {
-            // trim brackets
-            $trimmed = $this->_tokenizer->bracketTrim($rightExpr);
-
-            // If subquery found which begins with FROM and SELECT
-            // FROM User u WHERE u.id IN(SELECT u.id FROM User u WHERE u.id = 1)
-            if (substr($trimmed, 0, 4) == 'FROM' ||
-                substr($trimmed, 0, 6) == 'SELECT') {
-
-                // subquery found
-                $q = $this->query->createSubquery()
-                    ->parseDqlQuery($trimmed, false);
-                $sql   = $q->getSqlQuery();
-                $q->free();
-                $rightExpr = '(' . $sql . ')';
-
-            // If custom sql for custom subquery
-            // You can specify SQL: followed by any valid sql expression
-            // FROM User u WHERE u.id = SQL:(select id from user where id = 1)
-            } elseif (substr($trimmed, 0, 4) == 'SQL:') {
-                $rightExpr = '(' . substr($trimmed, 4) . ')';
-            // simple in expression found
-            } else {
-                $e = $this->_tokenizer->sqlExplode($trimmed, ',');
-
-                $value = array();
-                $index = false;
-
-                foreach ($e as $part) {
-                    $value[] = $this->parseLiteralValue($part);
-                }
-
-                $rightExpr = '(' . implode(', ', $value) . ')';
-            }
-        } else {
-            $rightExpr = $this->parseLiteralValue($rightExpr);
-        }
-
-        return $rightExpr;
     }
 
     /**
@@ -201,10 +154,10 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
 
         $sub = $this->_tokenizer->bracketTrim(substr($where, $pos));
 
-        $q = $this->query->createSubquery()
-            ->parseDqlQuery($sub, false);
+        $q = $this->query->createSubquery()->parseDqlQuery($sub, false);
         $sql = $q->getSqlQuery();
         $q->free();
+
         return $operator . ' (' . $sql . ')';
     }
 }

@@ -333,6 +333,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             $this->processPendingAggregates();
 
             return $this->getSqlAggregateAlias($dqlAlias);
+        //} else if( ! ($this->_conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_EXPR)){
+        //    return $dqlAlias;
         } else {
             throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
         }
@@ -658,25 +660,24 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      */
     public function parseClause($clause)
     {
-    	$clause = trim($clause);
+    	$clause = $this->_conn->dataDict->parseBoolean(trim($clause));
 
     	if (is_numeric($clause)) {
     	   return $clause;
     	}
 
         $terms = $this->_tokenizer->clauseExplode($clause, array(' ', '+', '-', '*', '/', '<', '>', '=', '>=', '<=', '&', '|'));
-
         $str = '';
+
         foreach ($terms as $term) {
             $pos = strpos($term[0], '(');
-
-            if ($pos !== false) {
+            
+            if ($pos !== false && substr($term[0], 0, 1) !== "'") {
                 $name = substr($term[0], 0, $pos);
 
                 $term[0] = $this->parseFunctionExpression($term[0]);
             } else {
                 if (substr($term[0], 0, 1) !== "'" && substr($term[0], -1) !== "'") {
-
                     if (strpos($term[0], '.') !== false) {
                         if ( ! is_numeric($term[0])) {
                             $e = explode('.', $term[0]);
@@ -726,17 +727,14 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                             }
                         }
                     } else {
-                        if ( ! empty($term[0]) &&
-                             ! in_array(strtoupper($term[0]), self::$_keywords) &&
-                             ! is_numeric($term[0]) &&
-                            $term[0] !== '?' && substr($term[0], 0, 1) !== ':') {
+                        if ( ! empty($term[0]) && ! in_array(strtoupper($term[0]), self::$_keywords) &&
+                             ! is_numeric($term[0]) && $term[0] !== '?' && substr($term[0], 0, 1) !== ':') {
 
                             $componentAlias = $this->getRootAlias();
 
                             $found = false;
 
-                            if ($componentAlias !== false &&
-                                $componentAlias !== null) {
+                            if ($componentAlias !== false && $componentAlias !== null) {
                                 $table = $this->_queryComponents[$componentAlias]['table'];
 
                                 // check column existence
@@ -825,14 +823,24 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             $q = $this->createSubquery()->parseDqlQuery($trimmed);
             $trimmed = $q->getSqlQuery();
             $q->free();
+        } else if (substr($trimmed, 0, 4) == 'SQL:') {
+            $trimmed = substr($trimmed, 4);
         } else {
-            // parse normal clause
-            $trimmed = $this->parseClause($trimmed);
+            $e = $this->_tokenizer->sqlExplode($trimmed, ',');
+
+            $value = array();
+            $index = false;
+
+            foreach ($e as $part) {
+                $value[] = $this->parseClause($part);
+            }
+
+            $trimmed = implode(', ', $value);
         }
 
         return '(' . $trimmed . ')';
     }
-    
+
 
     /**
      * processPendingSubqueries
