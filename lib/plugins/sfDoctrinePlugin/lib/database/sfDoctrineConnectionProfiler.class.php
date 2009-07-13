@@ -71,7 +71,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
 
     sfTimerManager::getTimer('Database (Doctrine)');
 
-    parent::preQuery($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
   }
 
   /**
@@ -83,7 +84,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
   {
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
-    parent::postQuery($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
 
     if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
     {
@@ -105,7 +107,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
 
     sfTimerManager::getTimer('Database (Doctrine)');
 
-    parent::preExec($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
   }
 
   /**
@@ -117,7 +120,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
   {
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
-    parent::postExec($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
 
     if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
     {
@@ -139,7 +143,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
 
     sfTimerManager::getTimer('Database (Doctrine)');
 
-    parent::preStmtExecute($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
   }
 
   /**
@@ -151,7 +156,8 @@ class sfDoctrineConnectionProfiler extends Doctrine_Connection_Profiler
   {
     sfTimerManager::getTimer('Database (Doctrine)')->addTime();
 
-    parent::postStmtExecute($event);
+    $args = func_get_args();
+    $this->__call(__FUNCTION__, $args);
 
     if ($event->getElapsedSecs() > $this->options['slow_query_threshold'])
     {
