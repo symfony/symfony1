@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(45);
+$t = new lime_test(50);
 
 class myRequest extends sfWebRequest
 {
@@ -136,7 +136,7 @@ $t->is($request->getForwardedFor(), null, '->getForwardedFor() returns null if t
 $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1, 10.0.0.2';
 $t->is_deeply($request->getForwardedFor(), array('10.0.0.1', '10.0.0.2'), '->getForwardedFor() returns the value from HTTP_X_FORWARDED_FOR');
 
-// methods
+// ->getMethod()
 $t->diag('methods');
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST['sf_method'] = 'PUT';
@@ -153,7 +153,7 @@ unset($_POST['sf_method']);
 $request = new myRequest($dispatcher);
 $t->is($request->getMethod(), 'POST', '->getMethod() returns the "sf_method" parameter value if it exists and if the method is POST');
 
-// getScriptName
+// ->getScriptName()
 $t->diag('getScriptName');
 $_SERVER['SCRIPT_NAME']      = '/frontend_test.php';
 $_SERVER['ORIG_SCRIPT_NAME'] = '/frontend_test2.php';
@@ -168,7 +168,7 @@ unset($_SERVER['ORIG_SCRIPT_NAME']);
 $request = new myRequest($dispatcher);
 $t->is($request->getScriptName(), '', '->getScriptName() returns the script name if SCRIPT_NAME and ORIG_SCRIPT_NAME not set it return empty');
 
-// getPathInfo
+// ->getPathInfo()
 $t->diag('getPathInfo');
 $request = new myRequest($dispatcher);
 $options = $request->getOptions();
@@ -200,3 +200,18 @@ unset($_SERVER['QUERY_STRING']);
 unset($_SERVER['REQUEST_URI']);
 $request = new myRequest($dispatcher);
 $t->is($request->getPathInfo(), '/', '->getPathInfo() returns the url path value if it not exists use default /');
+
+// ->addRequestParameters() ->getRequestParameters() ->fixParameters()
+$t->diag('getPathInfo');
+$request = new myRequest($dispatcher);
+$t->is($request->getRequestParameters(), array(), '->getRequestParameters() returns the request parameters default array');
+
+$request->addRequestParameters(array('test' => 'test'));
+$t->is($request->getRequestParameters(), array('test' => 'test'), '->getRequestParameters() returns the request parameters');
+
+$request->addRequestParameters(array('test' => 'test'));
+$t->is($request->getRequestParameters(), array('test' => 'test'), '->getRequestParameters() returns the request parameters allready exists');
+
+$request->addRequestParameters(array('_sf_ignore_cache' => 1, 'test2' => 'test2'));
+$t->is($request->getRequestParameters(), array('test' => 'test', 'test2' => 'test2', '_sf_ignore_cache' => 1), '->getRequestParameters() returns the request parameters check fixParameters call for special _sf_ params');
+$t->is($request->getAttribute('sf_ignore_cache'), 1, '->getAttribute() check special param is set as attribute');
