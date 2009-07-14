@@ -28,10 +28,9 @@
  * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
- * @todo Give the tokenizer state, make it better work together with Doctrine_Query and maybe
- *       take out commonly used string manipulation methods
- *       into a stateless StringUtil? class. This tokenizer should be concerned with tokenizing
- *       DQL strings.
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author      Stefan Klug <stefan.klug@googlemail.com>
  */
 class Doctrine_Query_Tokenizer
 {
