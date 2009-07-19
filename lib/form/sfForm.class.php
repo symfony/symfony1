@@ -761,7 +761,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     $this->defaults = is_null($defaults) ? array() : $defaults;
 
-    if (self::$CSRFProtection)
+    if ($this->isCSRFProtected())
     {
       $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken(self::$CSRFSecret));
     }
