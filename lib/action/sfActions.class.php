@@ -34,7 +34,7 @@ abstract class sfActions extends sfAction
    *
    * @see sfAction
    */
-  public function execute($request)
+  public function execute(sfRequest $request)
   {
     // dispatch action
     $actionToRun = 'execute'.ucfirst($this->getActionName());
