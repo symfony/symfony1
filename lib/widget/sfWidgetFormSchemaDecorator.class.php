@@ -120,7 +120,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setLabels($labels)
+  public function setLabels(array $labels)
   {
     $this->widget->setLabels($labels);
   }
@@ -159,7 +159,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setHelps($helps)
+  public function setHelps(array $helps)
   {
     $this->widget->setHelps($helps);
   }
@@ -283,7 +283,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setPositions($positions)
+  public function setPositions(array $positions)
   {
     $this->widget->setPositions($positions);
   }

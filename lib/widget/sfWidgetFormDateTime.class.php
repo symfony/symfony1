@@ -101,6 +101,8 @@ class sfWidgetFormDateTime extends sfWidgetForm
    * @param  string $type  The type (date or time)
    *
    * @return array  An array of options
+   *
+   * @throws InvalidArgumentException when option date|time type is not array
    */
   protected function getOptionsFor($type)
   {

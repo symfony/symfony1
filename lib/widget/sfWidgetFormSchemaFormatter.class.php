@@ -211,7 +211,8 @@ abstract class sfWidgetFormSchemaFormatter
    * Set an i18n catalogue name
    *
    * @param  string  $catalogue
-   * @throws InvalidArgumentException
+   *
+   * @throws InvalidArgumentException when the catalogue is not a string
    */
   public function setTranslationCatalogue($catalogue)
   {

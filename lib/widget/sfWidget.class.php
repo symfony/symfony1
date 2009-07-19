@@ -32,6 +32,9 @@ abstract class sfWidget
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
+   *
+   * @throws InvalidArgumentException when a option is not supported
+   * @throws RuntimeException         when a required option is not given
    */
   public function __construct($options = array(), $attributes = array())
   {
@@ -125,6 +128,8 @@ abstract class sfWidget
    *
    * @param string $name   The option name
    * @param mixed  $value  The value
+   *
+   * @throws InvalidArgumentException when a option is not supported
    */
   public function setOption($name, $value)
   {
