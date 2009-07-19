@@ -31,3 +31,5 @@ $b->
   isRequestParameter('action', 'update')->
   checkResponseElement('input[name="first_name"][value="fabien"]')
 ;
+
+foo();

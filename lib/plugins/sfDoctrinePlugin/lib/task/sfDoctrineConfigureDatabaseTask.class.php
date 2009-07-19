@@ -58,7 +58,7 @@ To change the configuration for a specific application, use the [app|COMMENT] op
 
 You can also specify the connection name and the database class name:
 
-  [./symfony configure:database --name=main --class=ProjectDatabase mysql:host=localhost;dbname=example root|INFO]
+  [./symfony configure:database --name=main --class=ProjectDatabase mysql:host=localhost;dbname=example root mYsEcret|INFO]
 EOF;
   }
 
