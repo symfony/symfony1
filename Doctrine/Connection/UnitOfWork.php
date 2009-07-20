@@ -61,8 +61,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         try {
             $conn->beginInternalTransaction();
-            $this->saveRelatedLocalKeys($record);
-
             $record->state($state);
 
             $event = $record->invokeSaveHooks('pre', 'save');
@@ -71,6 +69,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $isValid = true;
 
             if ( ! $event->skipOperation) {
+                $this->saveRelatedLocalKeys($record);
+
                 switch ($state) {
                     case Doctrine_Record::STATE_TDIRTY:
                     case Doctrine_Record::STATE_TCLEAN:
@@ -84,48 +84,48 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         // do nothing
                         break;
                 }
-            }
 
-            if ($isValid) {
-                // NOTE: what about referential integrity issues?
-                foreach ($record->getPendingDeletes() as $pendingDelete) {
-                    $pendingDelete->delete();
-                }
+                if ($isValid) {
+                    // NOTE: what about referential integrity issues?
+                    foreach ($record->getPendingDeletes() as $pendingDelete) {
+                        $pendingDelete->delete();
+                    }
                 
-                foreach ($record->getPendingUnlinks() as $alias => $ids) {
-                    if ( ! $ids) {
-                        $record->unlinkInDb($alias, array());
-                    } else {
-                        $record->unlinkInDb($alias, array_keys($ids));
+                    foreach ($record->getPendingUnlinks() as $alias => $ids) {
+                        if ( ! $ids) {
+                            $record->unlinkInDb($alias, array());
+                        } else {
+                            $record->unlinkInDb($alias, array_keys($ids));
+                        }
+                    }
+                    $record->resetPendingUnlinks();
+
+                    $record->invokeSaveHooks('post', 'save', $event);
+                } else {
+                    $conn->transaction->addInvalid($record);
+                }
+
+                $state = $record->state();
+
+                $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
+
+                $saveLater = $this->saveRelatedForeignKeys($record);
+                foreach ($saveLater as $fk) {
+                    $alias = $fk->getAlias();
+
+                    if ($record->hasReference($alias)) {
+                        $obj = $record->$alias;
+
+                        // check that the related object is not an instance of Doctrine_Null
+                        if ($obj && ! ($obj instanceof Doctrine_Null)) {
+                            $obj->save($conn);
+                        }
                     }
                 }
-                $record->resetPendingUnlinks();
 
-                $record->invokeSaveHooks('post', 'save', $event);
-            } else {
-                $conn->transaction->addInvalid($record);
+                // save the MANY-TO-MANY associations
+                $this->saveAssociations($record);
             }
-
-            $state = $record->state();
-
-            $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
-
-            $saveLater = $this->saveRelatedForeignKeys($record);
-            foreach ($saveLater as $fk) {
-                $alias = $fk->getAlias();
-
-                if ($record->hasReference($alias)) {
-                    $obj = $record->$alias;
-
-                    // check that the related object is not an instance of Doctrine_Null
-                    if ($obj && ! ($obj instanceof Doctrine_Null)) {
-                        $obj->save($conn);
-                    }
-                }
-            }
-
-            // save the MANY-TO-MANY associations
-            $this->saveAssociations($record);
 
             $record->state($state);
 
