@@ -155,17 +155,32 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
             return $component;
         }
         
+        $matchedComponents = array($component);
         foreach ($subclasses as $subclass) {
             $table = Doctrine::getTable($subclass);
             $inheritanceMap = $table->getOption('inheritanceMap');
-            list($key, $value) = each($inheritanceMap);
-            $key = $this->_tables[$component]->getFieldName($key);
-            if ( ! isset($data[$key]) || $data[$key] != $value) {
-                continue;
+            if (count($inheritanceMap) > 1) {
+                $needMatches = count($inheritanceMap);
+                foreach ($inheritanceMap as $key => $value) {
+                    $key = $this->_tables[$component]->getFieldName($key);
+                    if ( isset($data[$key]) && $data[$key] == $value) {
+                        --$needMatches;
+                    }
+                }
+                if ($needMatches == 0) {
+                    $matchedComponents[] = $table->getComponentName();
+                }
             } else {
-                return $table->getComponentName();
+                list($key, $value) = each($inheritanceMap);
+                $key = $this->_tables[$component]->getFieldName($key);
+                if ( ! isset($data[$key]) || $data[$key] != $value) {
+                    continue;
+                } else {
+                    $matchedComponents[] = $table->getComponentName();
+                }
             }
         }
-        return $component;
+        
+        return $matchedComponents[count($matchedComponents)-1];
     }
 }
