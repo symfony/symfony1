@@ -1494,8 +1494,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         if (isset($this->export->tmpConnectionDatabase) && $this->export->tmpConnectionDatabase) {
             $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
-        } else if (isset($info['dbname'])) {
-            $pdoDsn .= ';dbname=' . $info['dbname'];
         }
 
         $username = $this->getOption('username');
