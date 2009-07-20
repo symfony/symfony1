@@ -179,14 +179,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
         $conn      = $this->_options['table']->getConnection();
         $tableName = $this->_options['table']->getTableName();
-        $id        = $this->_options['table']->getIdentifier();
+        $id        = current($this->_options['table']->getIdentifierColumnNames());
 
         $query = 'SELECT * FROM ' . $conn->quoteIdentifier($tableName)
                . ' WHERE ' . $conn->quoteIdentifier($id)
-               . ' IN (SELECT ' . $conn->quoteIdentifier($id)
+               . ' IN (SELECT ' . $conn->quoteIdentifier('id')
                . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName())
-               . ' WHERE keyword IS NULL) OR ' . $conn->quoteIdentifier($id)
-               . ' NOT IN (SELECT ' . $conn->quoteIdentifier($id)
+               . ' WHERE keyword = \'\') OR ' . $conn->quoteIdentifier($id)
+               . ' NOT IN (SELECT ' . $conn->quoteIdentifier('id')
                . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName()) . ')';
 
         $query = $conn->modifyLimitQuery($query, $limit, $offset);
@@ -203,33 +203,41 @@ class Doctrine_Search extends Doctrine_Record_Generator
      */
     public function batchUpdateIndex($limit = null, $offset = null, $encoding = null)
     {
-        $this->initialize($this->_options['table']);
+        $table = $this->_options['table'];
 
-        $id        = $this->_options['table']->getIdentifier();
+        $this->initialize($table);
+
+        $id        = current($table->getIdentifierColumnNames());
         $class     = $this->_options['className'];
         $fields    = $this->_options['fields'];
         $conn      = $this->_options['connection'];
-        try {
 
-            $conn->beginTransaction();
+        for ($i = 0; $i < count($fields); $i++) {
+            $fields[$i] = $table->getColumnName($fields[$i], $fields[$i]);
+        }
 
-            $rows = $this->readTableData($limit, $offset);
+        $rows = $this->readTableData($limit, $offset);
 
-            $ids = array();
-            foreach ($rows as $row) {
-                $ids[] = $row[$id];
-            }
+        $ids = array();
+        foreach ($rows as $row) {
+           $ids[] = $row[$id];
+        }
 
+        if (count($ids) > 0)
+        {
             $placeholders = str_repeat('?, ', count($ids));
             $placeholders = substr($placeholders, 0, strlen($placeholders) - 2);
 
             $sql = 'DELETE FROM ' 
-                  . $conn->quoteIdentifier($this->_table->getTableName())
-                  . ' WHERE ' . $conn->quoteIdentifier($id) . ' IN (' . substr($placeholders, 0) . ')';
+                 . $conn->quoteIdentifier($this->_table->getTableName())
+                 . ' WHERE ' . $conn->quoteIdentifier($table->getIdentifier()) . ' IN (' . substr($placeholders, 0) . ')';
 
             $conn->exec($sql, $ids);
+        }
 
-            foreach ($rows as $row) {
+        foreach ($rows as $row) {
+            $conn->beginTransaction();
+            try {
                 foreach ($fields as $field) {
                     $data  = $row[$field];
         
@@ -242,18 +250,18 @@ class Doctrine_Search extends Doctrine_Record_Generator
                         $index->position = $pos;
                         $index->field = $field;
                         
-                        foreach ((array) $id as $identifier) {
-                            $index->$identifier = $row[$identifier];
+                        foreach ((array) $table->getIdentifier() as $identifier) {
+                            $index->$identifier = $row[$table->getColumnName($identifier, $identifier)];
                         }
     
                         $index->save();
                     }
                 }
+                $conn->commit();
+            } catch (Doctrine_Exception $e) {
+                $conn->rollback();
+                throw $e;
             }
-
-            $conn->commit();
-        } catch (Doctrine_Exception $e) {
-            $conn->rollback();
         }
     }
 
