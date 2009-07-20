@@ -1486,14 +1486,16 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $pdoDsn .= 'unix_socket=' . $info['unix_socket'] . ';';
         }
 
- 	    $pdoDsn .= 'host=' . $info['host'];
+        $pdoDsn .= 'host=' . $info['host'];
 
- 	    if ($info['port']) {
- 	        $pdoDsn .= ';port=' . $info['port'];
- 	    }
+        if ($info['port']) {
+            $pdoDsn .= ';port=' . $info['port'];
+        }
 
         if (isset($this->export->tmpConnectionDatabase) && $this->export->tmpConnectionDatabase) {
             $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
+        } else if (isset($info['dbname'])) {
+            $pdoDsn .= ';dbname=' . $info['dbname'];
         }
 
         $username = $this->getOption('username');

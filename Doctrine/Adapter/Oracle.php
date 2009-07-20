@@ -92,12 +92,17 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
             $config = str_replace("oracle:","",$config);
             $parts = explode(";", $config);
             foreach($parts as $part) {
-                list($var, $value) = explode("=", $part);
-                $this->config[$var] = $value;
+                $e = explode("=", $part);
+                $key = array_shift($e);
+                $this->config[$key] = implode('=', $e);
             }
 
-            $this->config['username'] = $username;
-            $this->config['password'] = $password;
+            if ($username) {
+                $this->config['username'] = $username;
+            }
+            if ($password) {
+                $this->config['password'] = $password;
+            }
         } else {
             if ( ! isset($config['password']) || ! isset($config['username'])) {
                 throw new Doctrine_Adapter_Exception('config array must have at least a username and a password');
