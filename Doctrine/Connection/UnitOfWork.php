@@ -743,8 +743,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                             continue;
                         }
 
-                        unset($flushList[$index]);
-                        array_splice($flushList, $index3, 0, $assocClassName);
+                        unset($flushList[$index3]);
+                        array_splice($flushList, $index - 1, 0, $assocClassName);
                         $index = $relatedCompIndex;
                     } else {
                         $flushList[] = $assocClassName;
