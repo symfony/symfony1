@@ -146,11 +146,11 @@ QEND;
                'ntype'      => $val['data_type'],
                'type'       => $decl['type'][0],
                'alltypes'   => $decl['type'],
-               'fixed'      => $decl['fixed'],
-               'unsigned'   => $decl['unsigned'],
+               'fixed'      => (bool) $decl['fixed'],
+               'unsigned'   => (bool) $decl['unsigned'],
                'default'    => $val['data_default'],
                'length'     => $val['data_length'],
-               'primary'    => $val['primary'] ? true:false,
+               'primary'    => (bool) $val['primary'],
                'scale'      => isset($val['scale']) ? $val['scale']:null,
             );
         }
