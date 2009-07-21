@@ -208,7 +208,9 @@ class Doctrine_Inflector
       		// Euro Sign
       		chr(226).chr(130).chr(172) => 'E',
       		// GBP (Pound) Sign
-      		chr(194).chr(163) => '');
+      		chr(194).chr(163) => '',
+      		'Ä' => 'Ae', 'ä' => 'ae', 'Ü' => 'Ue', 'ü' => 'ue',
+      		'Ö' => 'Oe', 'ö' => 'oe', 'ß' => 'ss');
 
       		$string = strtr($string, $chars);
       	} else {
