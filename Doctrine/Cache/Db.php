@@ -93,16 +93,20 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
 
     protected function _hex2bin($hex)
     {
-      if ( ! is_string($hex)) {
-          return null;
-      }
-  
-      $bin = '';
-      for ($a = 0; $a < strlen($hex); $a += 2) {
-          $bin .= chr(hexdec($hex{$a} . $hex{($a + 1)}));
-      }
+        if ( ! is_string($hex)) {
+            return null;
+        }
 
-      return $bin;
+        if (bin2hex($hex) == $hex) {
+            return $hex;
+        }
+
+        $bin = '';
+        for ($a = 0; $a < strlen($hex); $a += 2) {
+            $bin .= chr(hexdec($hex{$a} . $hex{($a + 1)}));
+        }
+
+        return $bin;
     }
 
     /**
@@ -119,7 +123,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
         $result = $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
 
         if (isset($result[0] )) {
-        	return time();
+            return time();
         }
         return false;
     }
@@ -136,34 +140,34 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      */
     public function save($id, $data, $lifeTime = false)
     {
-    	if ($this->contains($id)) {
-    		//record is in database, do update
-    		$sql = 'UPDATE ' . $this->_options['tableName']
-    			   . ' SET data = ?, expire=? '
-             . ' WHERE id = ?';
+        if ($this->contains($id)) {
+            //record is in database, do update
+            $sql = 'UPDATE ' . $this->_options['tableName']
+                . ' SET data = ?, expire=? '
+                . ' WHERE id = ?';
 
-        if ($lifeTime) {
-            $expire = date('Y-m-d H:i:s',time() + $lifeTime);
+            if ($lifeTime) {
+                $expire = date('Y-m-d H:i:s', time() + $lifeTime);
+            } else {
+                $expire = NULL;
+            }
+
+            $params = array(bin2hex(serialize($data)), $expire, $this->_getKey($id));
         } else {
-            $expire = NULL;
+            //record is not in database, do insert
+            $sql = 'INSERT INTO ' . $this->_options['tableName']
+                . ' (id, data, expire) VALUES (?, ?, ?)';
+
+            if ($lifeTime) {
+                $expire = date('Y-m-d H:i:s', time() + $lifeTime);
+            } else {
+                $expire = NULL;
+            }
+
+            $params = array($this->_getKey($id), bin2hex(serialize($data)), $expire);
         }
 
-        $params = array(bin2hex(serialize($data)), $expire, $this->_getKey($id));
-    	} else {
-    		//record is not in database, do insert
-    		 $sql = 'INSERT INTO ' . $this->_options['tableName']
-             . ' (id, data, expire) VALUES (?, ?, ?)';
-
-          if ($lifeTime) {
-              $expire = date('Y-m-d H:i:s', time() + $lifeTime);
-          } else {
-              $expire = NULL;
-          }
-
-          $params = array($this->_getKey($id), bin2hex(serialize($data)), $expire);
-      }
-
-      return (bool) $this->getConnection()->exec($sql, $params);
+        return (bool) $this->getConnection()->exec($sql, $params);
     }
 
     /**
