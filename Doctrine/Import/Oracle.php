@@ -182,16 +182,17 @@ QEND;
     public function listTableRelations($table)
     {
         $relations = array();
-        $sql  = 'SELECT ac.table_name AS referenced_table_name, lcc.column_name AS local_column_name, rcc.column_name AS referenced_column_name '
-              . 'FROM all_constraints ac '
-              . 'JOIN all_cons_columns lcc ON ac.r_constraint_name = lcc.constraint_name '
-              . 'JOIN all_cons_columns rcc ON ac.constraint_name = rcc.constraint_name '
-              . "WHERE ac.constraint_type = 'R'" 
-              . "AND ac.r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE constraint_type IN ('P', 'U') AND table_name = :tableName)";
-        
+        $sql = 'SELECT '
+             . 'rcc.table_name AS referenced_table_name, '
+             . 'lcc.column_name AS local_column_name, '
+             . 'rcc.column_name AS referenced_column_name '
+             . 'FROM user_constraints ac '
+             . 'JOIN user_cons_columns rcc ON ac.r_constraint_name = rcc.constraint_name '
+             . 'JOIN user_cons_columns lcc ON ac.constraint_name = lcc.constraint_name '
+             . "WHERE ac.constraint_type = 'R' AND ac.table_name = :tableName";
+
         $results = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
-        foreach ($results as $result) 
-        {
+        foreach ($results as $result) {
             $result = array_change_key_case($result, CASE_LOWER);
             $relations[] = array('table'   => $result['referenced_table_name'],
                                  'local'   => $result['local_column_name'],
