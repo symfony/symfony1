@@ -1626,24 +1626,17 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $name = $generated;
         }
 
-        $count = 1;
-
         while (in_array($name, $this->_usedNames[$type])) {
             $e = explode('_', $name);
             $end = end($e);
 
             if (is_numeric($end)) {
-              unset($e[count($e) - 1]);
-              $fkName = implode('_', $e);
-            }
-
-            $name = $name . '_' . $count;
-
-            if (strlen($name) > $maxLength) {
-                $name = substr($name, 0, $maxLength - strlen($count)) . '_' . $count;
-            }
-
-            $count++;
+                unset($e[count($e) - 1]);
+                $fkName = implode('_', $e);
+                $name = $fkName . '_' . ++$end; 
+            } else { 
+                $name .= '_1'; 
+	        }
         }
 
         $this->_usedNames[$type][$key] = $name;
