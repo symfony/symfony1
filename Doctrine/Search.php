@@ -47,7 +47,9 @@ class Doctrine_Search extends Doctrine_Record_Generator
                                 'pluginTable'      => false,
                                 'fields'           => array(),
                                 'connection'       => null,
-                                'children'         => array());
+                                'children'         => array(),
+                                'cascadeDelete'    => true,
+                                'appLevelDelete'   => false);
     /**
      * __construct 
      * 

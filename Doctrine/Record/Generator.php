@@ -43,7 +43,9 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                                 'identifier'     => false,
                                 'table'          => false,
                                 'pluginTable'    => false,
-                                'children'       => array());
+                                'children'       => array(),
+                                'cascadeDelete'  => true,
+                                'appLevelDelete' => false);
 
     /**
      * _initialized
@@ -298,8 +300,11 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                          'type'     => Doctrine_Relation::MANY);
 
         $options['type'] = Doctrine_Relation::ONE;
-        $options['onDelete'] = 'CASCADE';
-        $options['onUpdate'] = 'CASCADE';
+
+        if (isset($this->_options['cascadeDelete']) && ! $this->_options['cascadeDelete'] && $this->_options['appLevelDelete']) {
+            $options['onDelete'] = 'CASCADE';
+            $options['onUpdate'] = 'CASCADE';
+        }
 
         $this->_table->getRelationParser()->bind($this->_options['table']->getComponentName(), $options);
     }
@@ -315,6 +320,10 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $options = array('local'    => $this->_options['table']->getIdentifier(),
                          'foreign'  => $this->_options['table']->getIdentifier(),
                          'type'     => Doctrine_Relation::MANY);
+
+         if (isset($this->_options['cascadeDelete']) && $this->_options['cascadeDelete'] && $this->_options['appLevelDelete']) {
+             $options['cascade'] = array('delete');
+         }
 
         $aliasStr = '';
 

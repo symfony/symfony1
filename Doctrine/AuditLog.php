@@ -49,7 +49,9 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                                 'pluginTable'       => false,
                                 'children'          => array(),
                                 'auditLog'          => true,
-                                'deleteVersions'    => true);
+                                'deleteVersions'    => true,
+                                'cascadeDelete'     => true,
+                                'appLevelDelete'    => false);
 
     /**
      * Accepts array of options to configure the AuditLog
