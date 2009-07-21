@@ -244,6 +244,9 @@ END;
                 }
 
                 foreach ($addedIndexes as $name => $index) {
+                    if (isset($changes['created_tables'][$tableName]['options']['indexes'][$name])) {
+                        continue;
+                    }
                     $up[] = $this->buildAddIndex($tableName, $name, $index);
                     $down[] = $this->buildRemoveIndex($tableName, $name, $index);
                 }
