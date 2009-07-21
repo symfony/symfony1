@@ -40,15 +40,8 @@ class Doctrine_Import_Oracle extends Doctrine_Import
         if ( ! $this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
             throw new Doctrine_Import_Exception('database listing is only supported if the "emulate_database" option is enabled');
         }
-        /**
-        if ($this->conn->options['database_name_prefix']) {
-            $query = 'SELECT SUBSTR(username, ';
-            $query.= (strlen($this->conn->getAttribute(['database_name_prefix'])+1);
-            $query.= ") FROM sys.dba_users WHERE username LIKE '";
-            $query.= $this->conn->options['database_name_prefix']."%'";
-        } else {
-        */
-        $query   = 'SELECT username FROM sys.dba_users';
+
+        $query   = 'SELECT username FROM sys.user_users';
 
         $result2 = $this->conn->standaloneQuery($query);
         $result  = $result2->fetchColumn();
@@ -76,7 +69,8 @@ class Doctrine_Import_Oracle extends Doctrine_Import
      */
     public function listTriggers($database = null)
     {
-
+        $query = "SELECT trigger_name FROM sys.user_triggers"; 
+        return $this->conn->fetchColumn($query);
     }
 
     /**
@@ -209,7 +203,7 @@ QEND;
      */
     public function listTables($database = null)
     {
-        $query = 'SELECT table_name FROM sys.user_tables';
+        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE'";
         return $this->conn->fetchColumn($query);
     }
 
@@ -242,17 +236,7 @@ QEND;
      */
     public function listUsers()
     {
-        /**
-        if ($this->conn->options['emulate_database'] && $this->conn->options['database_name_prefix']) {
-            $query = 'SELECT SUBSTR(username, ';
-            $query.= (strlen($this->conn->options['database_name_prefix'])+1);
-            $query.= ") FROM sys.dba_users WHERE username NOT LIKE '";
-            $query.= $this->conn->options['database_name_prefix']."%'";
-        } else {
-        */
-
-        $query = 'SELECT username FROM sys.dba_users';
-        //}
+        $query = 'SELECT username FROM sys.all_users';
 
         return $this->conn->fetchColumn($query);
     }
