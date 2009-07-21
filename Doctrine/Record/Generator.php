@@ -300,7 +300,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                          'type'       => Doctrine_Relation::ONE,
                          'owningSide' => true);
 
-        if (isset($this->_options['cascadeDelete']) && ! $this->_options['cascadeDelete'] && $this->_options['appLevelDelete']) {
+        if (isset($this->_options['cascadeDelete']) && $this->_options['cascadeDelete'] && ! $this->_options['appLevelDelete']) {
             $options['onDelete'] = 'CASCADE';
             $options['onUpdate'] = 'CASCADE';
         }
