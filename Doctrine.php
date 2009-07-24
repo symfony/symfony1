@@ -610,7 +610,7 @@ final class Doctrine
 
                             $declaredAfter = get_declared_classes();
                             // Using array_slice because array_diff is broken is some PHP versions
-                            $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
+                            $foundClasses = array_slice($declaredAfter, count($declaredBefore));
                             if ($foundClasses) {
                                 foreach ($foundClasses as $className) {
                                     if (self::isValidModelClass($className)) {
