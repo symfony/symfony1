@@ -1827,9 +1827,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $columnValue = $this->get($column);
 
             if ($columnValue instanceof Doctrine_Record) {
-                $a[$column] = $deep ? $columnValue->toArray($deep, $prefixKey) : null;
-            }
-            else{
+                $a[$column] = $columnValue->getIncremented();
+            } else {
                 $a[$column] = $columnValue;
             }
         }
