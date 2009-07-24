@@ -18,6 +18,9 @@
  */
 class sfAppRoutesTask extends sfBaseTask
 {
+  protected
+    $routes = array();
+
   /**
    * @see sfTask
    */
@@ -45,10 +48,13 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // get routes
+    $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
+    $params = array_merge($config['routing']['param'], array('load_configuration' => false, 'logging' => false));
+
     $config = new sfRoutingConfigHandler();
     $routes = $config->evaluate($this->configuration->getConfigPaths('config/routing.yml'));
 
-    $routing = new sfPatternRouting($this->dispatcher);
+    $routing = new sfPatternRouting($this->dispatcher, null, $params);
     $routing->setRoutes($routes);
 
     $this->dispatcher->notify(new sfEvent($routing, 'routing.load_configuration'));
