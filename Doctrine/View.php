@@ -129,7 +129,7 @@ class Doctrine_View
     {
         $sql = sprintf(self::CREATE, $this->_name, $this->_query->getSqlQuery());
         try {
-            $this->_conn->execute($sql);
+            $this->_conn->execute($sql, $this->_query->getFlattenedParams());
         } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
