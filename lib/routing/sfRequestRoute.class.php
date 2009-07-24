@@ -21,6 +21,27 @@
 class sfRequestRoute extends sfRoute
 {
   /**
+   * Constructor.
+   *
+   * Applies a default sf_method requirements of GET or HEAD.
+   *
+   * @see sfRoute
+   */
+  public function __construct($pattern, $defaults = array(), $requirements = array(), $options = array())
+  {
+    if (!isset($requirements['sf_method']))
+    {
+      $requirements['sf_method'] = array('get', 'head');
+    }
+    else if (!is_array($requirements['sf_method']))
+    {
+      $requirements['sf_method'] = array($requirements['sf_method']);
+    }
+
+    parent::__construct($pattern, $defaults, $requirements, $options);
+  }
+
+  /**
    * Returns true if the URL matches this route, false otherwise.
    *
    * @param  string  $url     The URL
@@ -35,14 +56,8 @@ class sfRequestRoute extends sfRoute
       return false;
     }
 
-    if (!isset($this->requirements['sf_method']))
-    {
-      $this->requirements['sf_method'] = array('get', 'head');
-    }
-
     // enforce the sf_method requirement
-    $methods = is_array($this->requirements['sf_method']) ? $this->requirements['sf_method'] : array($this->requirements['sf_method']);
-    foreach ($methods as $method)
+    foreach ($this->requirements['sf_method'] as $method)
     {
       if (0 == strcasecmp($method, $context['method']))
       {
@@ -59,17 +74,12 @@ class sfRequestRoute extends sfRoute
    * @param  mixed   $params The parameters
    * @param  array   $context The context
    *
-   * @return Boolean         true if the parameters matches this route, false otherwise.
+   * @return Boolean true if the parameters match this route, false otherwise.
    */
   public function matchesParameters($params, $context = array())
   {
     if (isset($params['sf_method']))
     {
-      if (!isset($this->requirements['sf_method']))
-      {
-        $this->requirements['sf_method'] = array('get', 'head');
-      }
-
       // enforce the sf_method requirement
       if (!in_array($params['sf_method'], $this->requirements['sf_method']))
       {
