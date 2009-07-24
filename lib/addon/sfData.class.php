@@ -17,7 +17,6 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-
 abstract class sfData
 {
   protected
@@ -39,7 +38,7 @@ abstract class sfData
    * Gets the current value of the flag that indicates whether
    * current data is to be deleted or not.
    *
-   * @returns boolean
+   * @return boolean
    */
   public function getDeleteCurrentData()
   {
@@ -72,7 +71,7 @@ abstract class sfData
    *
    * @param array $files The path names of the YAML data files
    */
-  protected function doLoadData($files)
+  protected function doLoadData(array $files)
   {
     $this->object_references = array();
     $this->maps = array();
