@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 // ->__construct()
 $t->diag('->__construct()');
@@ -32,3 +32,18 @@ $t->diag('->matchesParameters()');
 
 $route = new sfRequestRoute('/', array(), array('sf_method' => array('get', 'head')));
 $t->ok($route->matchesParameters(array('sf_method' => 'get')), '->matchesParameters() matches the "sf_method" parameter');
+
+$route = new sfRequestRoute('/', array(), array('sf_method' => array('get')));
+$t->ok($route->matchesParameters(array('sf_method' => 'GET')), '->matchesParameters() checks "sf_method" requirement case-insensitively');
+
+$route = new sfRequestRoute('/', array(), array('sf_method' => array('GET')));
+$t->ok($route->matchesParameters(array('sf_method' => 'get')), '->matchesParameters() checks "sf_method" requirement case-insensitively');
+
+// ->matchesUrl()
+$t->diag('->matchesUrl()');
+
+$route = new sfRequestRoute('/', array(), array('sf_method' => 'GET'));
+$t->isa_ok($route->matchesUrl('/', array('method' => 'get')), 'array', '->matchesUrl() check "sf_method" requirement case-insensitively');
+
+$route = new sfRequestRoute('/', array(), array('sf_method' => 'get'));
+$t->isa_ok($route->matchesUrl('/', array('method' => 'GET')), 'array', '->matchesUrl() check "sf_method" requirement case-insensitively');

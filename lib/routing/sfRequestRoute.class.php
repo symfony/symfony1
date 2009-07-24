@@ -33,9 +33,9 @@ class sfRequestRoute extends sfRoute
     {
       $requirements['sf_method'] = array('get', 'head');
     }
-    else if (!is_array($requirements['sf_method']))
+    else
     {
-      $requirements['sf_method'] = array($requirements['sf_method']);
+      $requirements['sf_method'] = array_map('strtolower', (array) $requirements['sf_method']);
     }
 
     parent::__construct($pattern, $defaults, $requirements, $options);
@@ -57,19 +57,16 @@ class sfRequestRoute extends sfRoute
     }
 
     // enforce the sf_method requirement
-    foreach ($this->requirements['sf_method'] as $method)
+    if (in_array(strtolower($context['method']), $this->requirements['sf_method']))
     {
-      if (0 == strcasecmp($method, $context['method']))
-      {
-        return $parameters;
-      }
+      return $parameters;
     }
 
     return false;
   }
 
   /**
-   * Returns true if the parameters matches this route, false otherwise.
+   * Returns true if the parameters match this route, false otherwise.
    *
    * @param  mixed   $params The parameters
    * @param  array   $context The context
@@ -81,7 +78,7 @@ class sfRequestRoute extends sfRoute
     if (isset($params['sf_method']))
     {
       // enforce the sf_method requirement
-      if (!in_array($params['sf_method'], $this->requirements['sf_method']))
+      if (!in_array(strtolower($params['sf_method']), $this->requirements['sf_method']))
       {
         return false;
       }
