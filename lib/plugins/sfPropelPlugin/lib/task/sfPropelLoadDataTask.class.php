@@ -86,6 +86,7 @@ EOF;
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);
 
+    $dirs = array();
     foreach ($fixturesDirs as $fixturesDir)
     {
       if (!is_readable($fixturesDir))
@@ -94,7 +95,9 @@ EOF;
       }
 
       $this->logSection('propel', sprintf('load data from "%s"', $fixturesDir));
-      $data->loadData($fixturesDir, $options['connection']);
+      $dirs[] = $fixturesDir;
     }
+
+    $data->loadData($dirs, $options['connection']);
   }
 }
