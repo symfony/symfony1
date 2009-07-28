@@ -85,11 +85,10 @@ class sfExecutionFilter extends sfFilter
    */
   protected function executeAction($actionInstance)
   {
-    $request = $this->context->getRequest();
-
-    $actionInstance->preExecute($request);
-    $viewName = $actionInstance->execute($request);
-    $actionInstance->postExecute($request);
+    // execute the action
+    $actionInstance->preExecute();
+    $viewName = $actionInstance->execute($this->context->getRequest());
+    $actionInstance->postExecute();
 
     return is_null($viewName) ? sfView::SUCCESS : $viewName;
   }

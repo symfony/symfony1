@@ -47,10 +47,8 @@ abstract class sfAction extends sfComponent
    * Executes an application defined process prior to execution of this sfAction object.
    *
    * By default, this method is empty.
-   * 
-   * @param sfRequest $request The current sfRequest object 
    */
-  public function preExecute($request)
+  public function preExecute()
   {
   }
 
@@ -58,10 +56,8 @@ abstract class sfAction extends sfComponent
    * Execute an application defined process immediately after execution of this sfAction object.
    *
    * By default, this method is empty.
-   * 
-   * @param sfRequest $request The current sfRequest object 
    */
-  public function postExecute($request)
+  public function postExecute()
   {
   }
 

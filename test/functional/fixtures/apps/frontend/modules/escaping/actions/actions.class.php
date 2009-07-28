@@ -10,7 +10,7 @@
  */
 class escapingActions extends sfActions
 {
-  public function preExecute($request)
+  public function preExecute()
   {
     $this->var = 'Lorem <strong>ipsum</strong> dolor sit amet.';
     $this->setLayout(false);

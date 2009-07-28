@@ -163,10 +163,9 @@ class sfValidationExecutionFilter extends sfFilter
   protected function executeAction($actionInstance)
   {
     // execute the action
-    $request = $this->context->getRequest();
-    $actionInstance->preExecute($request);
-    $viewName = $actionInstance->execute($request);
-    $actionInstance->postExecute($request);
+    $actionInstance->preExecute();
+    $viewName = $actionInstance->execute($this->context->getRequest());
+    $actionInstance->postExecute();
 
     return $viewName ? $viewName : sfView::SUCCESS;
   }
