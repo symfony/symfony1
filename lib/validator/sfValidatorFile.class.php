@@ -374,7 +374,7 @@ class sfValidatedFile
 
     if (!is_readable($directory))
     {
-      if ($create && !mkdir($directory, $dirMode, true))
+      if ($create && !@mkdir($directory, $dirMode, true))
       {
         // failed to create the directory
         throw new Exception(sprintf('Failed to create file upload directory "%s".', $directory));
