@@ -6,7 +6,7 @@
     <tfoot>
       <tr>
         <td colspan="2">
-          &nbsp;<a href="<?php echo url_for('articles/index') ?>">Cancel</a>
+          &nbsp;<a href="<?php echo url_for('articles/index') ?>">Back to list</a>
           <?php if (!$form->isNew()): ?>
             &nbsp;<?php echo link_to('Delete', 'articles/delete?id='.$article->get('id'), array('post' => true, 'confirm' => 'Are you sure?')) ?>
           <?php endif; ?>

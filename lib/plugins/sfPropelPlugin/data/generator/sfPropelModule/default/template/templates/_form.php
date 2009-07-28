@@ -18,9 +18,9 @@
           [?php echo $form->renderHiddenFields() ?]
 <?php endif; ?>
 <?php if (isset($this->params['route_prefix']) && $this->params['route_prefix']): ?>
-          &nbsp;<a href="[?php echo url_for('<?php echo $this->getUrlForAction('list') ?>') ?]">Cancel</a>
+          &nbsp;<a href="[?php echo url_for('<?php echo $this->getUrlForAction('list') ?>') ?]">Back to list</a>
 <?php else: ?>
-          &nbsp;<a href="[?php echo url_for('<?php echo $this->getModuleName() ?>/index') ?]">Cancel</a>
+          &nbsp;<a href="[?php echo url_for('<?php echo $this->getModuleName() ?>/index') ?]">Back to list</a>
 <?php endif; ?>
           [?php if (!$form->getObject()->isNew()): ?]
 <?php if (isset($this->params['route_prefix']) && $this->params['route_prefix']): ?>

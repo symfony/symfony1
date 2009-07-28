@@ -92,7 +92,7 @@ class CrudBrowser extends sfTestBrowser
       with('response')->begin()->
         isStatusCode(200)->
         checkElement('h1', 'New '.ucfirst($this->urlPrefix))->
-        checkElement(sprintf('a[href*="/%s"]', $this->urlPrefix), 'Cancel')->
+        checkElement(sprintf('a[href*="/%s"]', $this->urlPrefix), 'Back to list')->
         checkElement(sprintf('a[href*="/%s/"]', $this->urlPrefix), false)->
       end()->
       checkFormValues(array(
@@ -123,7 +123,7 @@ class CrudBrowser extends sfTestBrowser
     // go back to the list
     $this->
       info('go back to the list')->
-      click('Cancel')->
+      click('Back to list')->
       isStatusCode(200)->
       isRequestParameter('module', $this->urlPrefix)->
       isRequestParameter('action', 'index')
@@ -149,7 +149,7 @@ class CrudBrowser extends sfTestBrowser
       with('response')->begin()->
         isStatusCode(200)->
         checkElement('h1', 'Edit '.ucfirst($this->urlPrefix))->
-        checkElement(sprintf('a[href*="/%s"]', $this->urlPrefix), 'Cancel')->
+        checkElement(sprintf('a[href*="/%s"]', $this->urlPrefix), 'Back to list')->
         checkElement(sprintf('a[href*="/%s/3"]', $this->urlPrefix), 'Delete')->
         checkElement(sprintf('a[href*="/%s/3"][onclick*="confirm"]', $this->urlPrefix))->
         checkElement('table tbody th:nth(0)', 'Title')->
@@ -210,7 +210,7 @@ class CrudBrowser extends sfTestBrowser
     // go back to the list
     $this->
       info('go back to the list')->
-      click('Cancel')->
+      click('Back to list')->
       isStatusCode(200)->
       isRequestParameter('module', $this->urlPrefix)->
       isRequestParameter('action', 'index')

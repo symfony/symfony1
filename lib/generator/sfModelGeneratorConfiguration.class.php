@@ -502,7 +502,7 @@ abstract class sfModelGeneratorConfiguration
     }
     else
     {
-      $label = '_list' == $action ? 'Cancel' : substr($action, 1);
+      $label = '_list' == $action ? 'Back to list' : substr($action, 1);
     }
 
     $parameters['label'] = sfInflector::humanize($label);
