@@ -133,38 +133,32 @@ class sfTesterResponse extends sfTester
       $form = new $form();
     }
 
-    foreach ($this->getFormFieldNameCounts($form->getFormFieldSchema()) as $name => $count)
+    $rendered = array();
+    foreach ($this->domCssSelector->matchAll(sprintf('%1$s input, %1$s textarea, %1$s select', $selector))->getNodes() as $element)
     {
-      $values = $this->domCssSelector->matchAll(sprintf('%1$s input[name="%2$s"], %1$s textarea[name="%2$s"], %1$s select[name="%2$s"]', $selector, $name))->getValues();
-      $this->tester->is(count($values), $count, sprintf('response includes the "%s" form "%s" field "%d" time(s)', get_class($form), $name, $count));
+      $rendered[] = $element->getAttribute('name');
+    }
+
+    foreach ($form as $field => $widget)
+    {
+      $dom = new DOMDocument('1.0', sfConfig::get('sf_charset'));
+      $dom->loadHTML((string) $widget);
+
+      foreach ($dom->getElementsByTagName('*') as $element)
+      {
+        if (in_array($element->tagName, array('input', 'select', 'textarea')))
+        {
+          if (false !== $pos = array_search($element->getAttribute('name'), $rendered))
+          {
+            unset($rendered[$pos]);
+          }
+
+          $this->tester->ok(false !== $pos, sprintf('response includes "%s" form "%s" field - "%s %s[name=%s]"', get_class($form), $field, $selector, $element->tagName, $element->getAttribute('name')));
+        }
+      }
     }
 
     return $this->getObjectToReturn();
-  }
-
-  /**
-   * Returns an associative array of a form's field names and counts.
-   * 
-   * @param  sfFormFieldSchema $fieldSchema
-   * @param  array             $counts
-   * 
-   * @return array
-   */
-  protected function getFormFieldNameCounts(sfFormFieldSchema $fieldSchema, $counts = array())
-  {
-    foreach ($fieldSchema as $field)
-    {
-      if ($field instanceof sfFormFieldSchema)
-      {
-        $counts = $this->getFormFieldNameCounts($field, $counts);
-      }
-      else
-      {
-        $counts[$field->renderName()] = isset($counts[$field->renderName()]) ? $counts[$field->renderName()] + 1 : 1;
-      }
-    }
-
-    return $counts;
   }
 
   /**
