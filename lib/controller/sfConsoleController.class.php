@@ -22,8 +22,10 @@ class sfConsoleController extends sfController
    * @param string $moduleName A module name
    * @param string $actionName An action name
    * @param array  $parameters An associative array of parameters to be set
+   *
+   * @throws sfException
    */
-  public function dispatch($moduleName, $actionName, $parameters = array())
+  public function dispatch($moduleName, $actionName, array $parameters = array())
   {
     try
     {
