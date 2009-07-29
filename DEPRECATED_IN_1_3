@@ -197,3 +197,7 @@ option, you can just add it as a local option of your task class.
 The Propel templates for the 1.0 admin generator and the 1.0 CRUD will be
 removed in symfony 1.4
 (`plugins/sfPropelPlugin/data/generator/sfPropelAdmin/`).
+
+The "Dynarch calendar" (found in data/web/calendar/) will be removed in
+symfony 1.4 as it is only used by the Form helper group, which will be also
+removed in symfony 1.4.
