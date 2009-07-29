@@ -105,6 +105,8 @@ in symfony 1.4:
 
   * `sfLoader`: see the "Methods and Functions" section
 
+  * `sfConsoleRequest`, `sfConsoleResponse`, `sfConsoleController`
+
 The following classes have been removed in symfony 1.3:
 
   * `sfCommonFilter`: see the "Removal of the common filter" section of the
