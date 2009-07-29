@@ -10,7 +10,9 @@ Core Plugins
 The following core plugins have been deprecated in symfony 1.3 and will be
 removed in symfony 1.4:
 
-  * `sfCompat10Plugin`
+  * `sfCompat10Plugin`: By deprecating this plugin, we also deprecate all
+    other elements in the framework that rely on this plugin to work (1.0
+    admin generator, and 1.0 form system).
 
   * `sfProtoculousPlugin`: The helpers provided by this plugin do not
     support unobstrusiveness, and as such should not be used anymore.
@@ -94,6 +96,9 @@ in symfony 1.4:
     They have been replaced by the widget system (see the "Helpers" section
     below)
 
+  * `sfCrudGenerator`, `sfAdminGenerator`: These classes were used by the 1.0
+    admin generator
+
 The following classes have been removed in symfony 1.3:
 
   * `sfCommonFilter`: see the "Removal of the common filter" section for more
@@ -107,7 +112,7 @@ removed in symfony 1.4:
 
   * All helpers related to the 1.0 form system as provided by the
     `sfCompat10Plugin`: `DateForm`, `Form`, `ObjectAdmin`, `Object`, and
-    `Validation`.
+    `Validation`
 
 Settings
 --------
@@ -179,3 +184,7 @@ symfony 1.4:
 The symfony CLI does not accept anymore the global `--dry-run` option as it
 was not used by any symfony built-in task. If one of your task relies on this
 option, you can just add it as a local option of your task class.
+
+The Propel templates for the 1.0 admin generator and the 1.0 CRUD will be
+removed in symfony 1.4
+(`plugins/sfPropelPlugin/data/generator/sfPropelAdmin/`).
