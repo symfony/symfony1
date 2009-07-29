@@ -111,4 +111,14 @@ class sfPathInfoRouting extends sfRouting
   public function clearRoutes()
   {
   }
+
+  protected function mergeArrays($arr1, $arr2)
+  {
+    foreach ($arr2 as $key => $value)
+    {
+      $arr1[$key] = $value;
+    }
+
+    return $arr1;
+  }
 }

@@ -217,16 +217,6 @@ abstract class sfRouting
     $this->defaultParameters = $parameters;
   }
 
-  protected function mergeArrays($arr1, $arr2)
-  {
-    foreach ($arr2 as $key => $value)
-    {
-      $arr1[$key] = $value;
-    }
-
-    return $arr1;
-  }
-
   /**
    * Listens to the user.change_culture event.
    *
