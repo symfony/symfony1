@@ -90,10 +90,24 @@ in symfony 1.4:
 
   * `sfNoRouting` and `sfPathInfoRouting`
 
+  * `sfRichTextEditor`, `sfRichTextEditorFCK`, and `sfRichTextEditorTinyMCE`:
+    They have been replaced by the widget system (see the "Helpers" section
+    below)
+
 The following classes have been removed in symfony 1.3:
 
   * `sfCommonFilter`: see the "Removal of the common filter" section for more
     information about the consequences and how to migrate your code.
+
+Helpers
+-------
+
+The following helper groups have been deprecated in symfony 1.3 and will be
+removed in symfony 1.4:
+
+  * All helpers related to the 1.0 form system as provided by the
+    `sfCompat10Plugin`: `DateForm`, `Form`, `ObjectAdmin`, `Object`, and
+    `Validation`.
 
 Settings
 --------
