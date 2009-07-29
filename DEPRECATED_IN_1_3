@@ -96,13 +96,18 @@ in symfony 1.4:
     They have been replaced by the widget system (see the "Helpers" section
     below)
 
-  * `sfCrudGenerator`, `sfAdminGenerator`: These classes were used by the 1.0
-    admin generator
+  * `sfCrudGenerator`, `sfAdminGenerator`, `sfPropelCrudGenerator`,
+    `sfPropelAdminGenerator`: These classes were used by the 1.0 admin
+    generator
+
+  * `sfPropelUniqueValidator`, `sfDoctrineUniqueValidator`: These classes were
+    used by the 1.0 form system
 
 The following classes have been removed in symfony 1.3:
 
-  * `sfCommonFilter`: see the "Removal of the common filter" section for more
-    information about the consequences and how to migrate your code.
+  * `sfCommonFilter`: see the "Removal of the common filter" section of the
+    UPGRADE_TO_1_3 file for more information about the consequences and how to
+    migrate your code.
 
 Helpers
 -------
