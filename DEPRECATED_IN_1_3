@@ -158,6 +158,16 @@ been removed from symfony 1.3:
     is 5.2 and the second one has already been fixed by removing the regular
     expression that simulated the comment stripping.
 
+The following settings have been deprecated in symfony 1.3 and will be removed
+in symfony 1.4:
+
+  * `calendar_web_dir`, `rich_text_js_dir`: These settings are used by the
+    Form helper group, which is deprecated in symfony 1.3.
+
+  * `validation_error_prefix`, `validation_error_suffix`,
+    `validation_error_class`, `validation_error_id_prefix`: These settings are
+    used by the Validation helper group, which is deprecated in symfony 1.3.
+
 Tasks
 -----
 
