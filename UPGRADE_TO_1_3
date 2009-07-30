@@ -184,10 +184,10 @@ with the following inside.
 You can customize the schema and your local version will be used instead of the
 one included in the plugin.
 
-> **NOTE**
-> The package option is a feature of Doctrine and is used for the schemas of
-> symfony plugins. This does not mean the package feature can be used independently
-> to package your models. It must be used directly and only with symfony plugins.
+>**NOTE**
+>The package option is a feature of Doctrine and is used for the schemas of
+>symfony plugins. This does not mean the package feature can be used independently
+>to package your models. It must be used directly and only with symfony plugins.
 
 ### Query logging
 
@@ -196,3 +196,10 @@ than by accessing the logger object directly. Additionally, the subject of
 these events is either the connection or statement that is running the query.
 Logging is done by the new `sfDoctrineConnectionProfiler` class, which can be
 accessed via a `sfDoctrineDatabase` object.
+
+Plugins
+-------
+
+If you use the `enableAllPluginsExcept()` method to manage enabled plugins in
+your `ProjectConfiguration` class, be warned that we now sort the plugins by
+name to ensure consistency across different platforms.

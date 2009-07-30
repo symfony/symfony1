@@ -369,11 +369,9 @@ class sfProjectConfiguration
       throw new LogicException('Plugins have already been loaded.');
     }
 
-    $this->plugins = array();
-    foreach ($this->getAllPluginPaths() as $plugin => $path)
-    {
-      $this->plugins[] = $plugin;
-    }
+    $this->plugins = array_keys($this->getAllPluginPaths());
+
+    sort($this->plugins);
 
     $this->disablePlugins($plugins);
   }
