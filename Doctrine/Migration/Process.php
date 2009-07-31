@@ -165,7 +165,7 @@ class Doctrine_Migration_Process
      * @param array $constraint Constraint definition
      * @return void
      */
-    public function processDroppedConstraints(array $constraint)
+    public function processDroppedConstraint(array $constraint)
     {
         $this->_connection->export->dropConstraint($constraint['tableName'], $constraint['constraintName'], $constraint['primary']);
     }
