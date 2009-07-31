@@ -171,9 +171,9 @@ abstract class Doctrine_Migration_Base
      * @param string $constraintname    Name of the constraint.
      * @return void
      */
-    public function dropConstraint($tableName, $constraintName)
+    public function dropConstraint($tableName, $constraintName, $primary = false)
     {
-        $this->constraint('down', $tableName, $constraintName, array());
+        $this->constraint('down', $tableName, $constraintName, array('primary' => $primary));
     }
 
     /**
