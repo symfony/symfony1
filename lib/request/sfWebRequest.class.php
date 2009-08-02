@@ -863,7 +863,7 @@ class sfWebRequest extends sfRequest
 
   public function checkCSRFProtection()
   {
-    $form = new sfForm();
+    $form = new BaseForm();
     $form->bind($form->isCSRFProtected() ? array($form->getCSRFFieldName() => $this->getParameter($form->getCSRFFieldName())) : array());
 
     if (!$form->isValid())

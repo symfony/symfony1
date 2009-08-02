@@ -541,7 +541,7 @@ function _method_javascript_function($method)
   }
 
   // CSRF protection
-  $form = new sfForm();
+  $form = new BaseForm();
   if ($form->isCSRFProtected())
   {
     $function .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";

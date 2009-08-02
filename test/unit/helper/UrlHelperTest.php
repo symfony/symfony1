@@ -37,7 +37,17 @@ class myRequest
   }
 }
 
-$t = new lime_test(38);
+class BaseForm extends sfForm
+{
+  public function getCSRFToken($secret = null)
+  {
+    return '==TOKEN==';
+  }
+}
+
+sfForm::enableCSRFProtection();
+
+$t = new lime_test(40);
 
 $context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 
@@ -59,6 +69,7 @@ $t->is(link_to('test', '@homepage', array('absolute' => false)), '<a href="modul
 $t->is(link_to('test', '@homepage', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take a "query_string" option');
 $t->is(link_to('test', '@homepage', array('anchor' => 'bar')), '<a href="module/action#bar">test</a>', 'link_to() can take an "anchor" option');
 $t->is(link_to('', '@homepage'), '<a href="module/action">module/action</a>', 'link_to() takes the url as the link name if the first argument is empty');
+$t->like(link_to('test', '@homepage', array('method' => 'post')), '/==TOKEN==/', 'link_to() includes CSRF token from BaseForm');
 
 // button_to()
 $t->diag('button_to()');
@@ -69,6 +80,7 @@ $t->is(button_to('test', '@homepage', array('popup' => 'true', 'query_string' =>
 $t->is(button_to('test', '@homepage', 'popup=true'), '<input value="test" type="button" onclick="var w=window.open(\'module/action\');w.focus();return false;" />', 'button_to() accepts options as string');
 $t->is(button_to('test', '@homepage', 'confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { return document.location.href=\'module/action\';} else return false;" />', 'button_to() works with confirm option');
 $t->is(button_to('test', '@homepage', 'popup=true confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { var w=window.open(\'module/action\');w.focus(); };return false;" />', 'button_to() works with confirm and popup option');
+$t->like(button_to('test', '@homepage', array('method' => 'post')), '/==TOKEN==/', 'button_to() includes CSRF token from BaseForm');
 
 class testObject
 {

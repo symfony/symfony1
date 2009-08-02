@@ -277,7 +277,7 @@ abstract class sfBrowserBase
       if (isset($parameters['_with_csrf']) && $parameters['_with_csrf'])
       {
         unset($parameters['_with_csrf']);
-        $form = new sfForm();
+        $form = new BaseForm();
         $parameters[$form->getCSRFFieldName()] = $form->getCSRFToken();
       }
 

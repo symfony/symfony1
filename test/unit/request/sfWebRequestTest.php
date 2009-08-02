@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(50);
+$t = new lime_test(52);
 
 class myRequest extends sfWebRequest
 {
@@ -215,3 +215,41 @@ $t->is($request->getRequestParameters(), array('test' => 'test'), '->getRequestP
 $request->addRequestParameters(array('_sf_ignore_cache' => 1, 'test2' => 'test2'));
 $t->is($request->getRequestParameters(), array('test' => 'test', 'test2' => 'test2', '_sf_ignore_cache' => 1), '->getRequestParameters() returns the request parameters check fixParameters call for special _sf_ params');
 $t->is($request->getAttribute('sf_ignore_cache'), 1, '->getAttribute() check special param is set as attribute');
+
+// ->checkCSRFProtection()
+$t->diag('->checkCSRFProtection()');
+
+class BaseForm extends sfForm
+{
+  public function getCSRFToken($secret = null)
+  {
+    return '==TOKEN==';
+  }
+}
+
+sfForm::enableCSRFProtection();
+
+$request = new myRequest($dispatcher);
+try
+{
+  $request->checkCSRFProtection();
+  $t->fail('->checkCSRFProtection() throws a validator error if CSRF protection fails');
+}
+catch (sfValidatorErrorSchema $error)
+{
+  $t->pass('->checkCSRFProtection() throws a validator error if CSRF protection fails');
+}
+
+$request = new myRequest($dispatcher);
+$request->setParameter('_csrf_token', '==TOKEN==');
+try
+{
+  $request->checkCSRFProtection();
+  $t->pass('->checkCSRFProtection() checks token from BaseForm');
+}
+catch (sfValidatorErrorSchema $error)
+{
+  $t->fail('->checkCSRFProtection() checks token from BaseForm');
+}
+
+
