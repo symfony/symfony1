@@ -587,6 +587,18 @@ Is equivalent to running these commands:
     $ php symfony doctrine:insert-sql
     $ php symfony doctrine:data-load
 
+#### New option: `--migrate`
+
+The following tasks now include a `--migrate` option, which will replace the
+nested `doctrine:insert-sql` task with `doctrine:migrate`.
+
+  * `doctrine:build-all`
+  * `doctrine:build-all-load`
+  * `doctrine:build-all-reload`
+  * `doctrine:build-all-reload-test-all`
+  * `doctrine:rebuild-db`
+  * `doctrine:reload-data`
+
 ### Date Setters and Getters
 
 We've added two new methods for retrieving Doctrine date or timestamp values as

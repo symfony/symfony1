@@ -30,7 +30,8 @@ class sfDoctrineRebuildDbTask extends sfDoctrineBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-      new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Whether to no-confirmation dropping of the database')
+      new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Whether to no-confirmation dropping of the database'),
+      new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
     ));
 
     $this->aliases = array('doctrine-rebuild-db');
@@ -44,6 +45,11 @@ The [doctrine:rebuild-db|INFO] task creates the database:
   [./symfony doctrine:rebuild-db|INFO]
 
 The task read connection information in [config/doctrine/databases.yml|COMMENT]:
+
+Include the [--migrate|COMMENT] option if you would like to run your application's
+migrations rather than inserting the Doctrine SQL.
+
+  [./symfony doctrine:rebuild-db --migrate|INFO]
 EOF;
   }
 
@@ -67,8 +73,14 @@ EOF;
     $dropDb->setCommandApplication($this->commandApplication);
     $dropDb->run(array(), $dropDbOptions);
 
+    $buildAllOptions = $baseOptions;
+    if (isset($options['migrate']) && $options['migrate'])
+    {
+      $buildAllOptions[] = '--migrate';
+    }
+
     $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->run(array(), $baseOptions);
+    $buildAll->run(array(), $buildAllOptions);
   }
 }

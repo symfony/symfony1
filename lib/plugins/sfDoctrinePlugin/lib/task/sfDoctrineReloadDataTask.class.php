@@ -29,7 +29,8 @@ class sfDoctrineReloadDataTask extends sfDoctrineBaseTask
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
-    ));  	
+      new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
+    ));
 
     $this->namespace        = 'doctrine';
     $this->name             = 'reload-data';
@@ -84,9 +85,18 @@ EOF;
 
     Doctrine::initializeModels(Doctrine::loadModels(sfConfig::get('sf_lib_dir').'/model/doctrine'));
 
-    $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
-    $insertSql->setCommandApplication($this->commandApplication);
-    $ret = $insertSql->run(array(), $baseOptions);
+    if ($options['migrate'])
+    {
+      $migrateTask = new sfDoctrineMigrateTask($this->dispatcher, $this->formatter);
+      $migrateTask->setCommandApplication($this->commandApplication);
+      $ret = $migrateTask->run(array(), $baseOptions);
+    }
+    else
+    {
+      $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
+      $insertSql->setCommandApplication($this->commandApplication);
+      $ret = $insertSql->run(array(), $baseOptions);
+    }
 
     if ($ret)
     {

@@ -33,6 +33,7 @@ class sfDoctrineBuildAllReloadTask extends sfDoctrineBaseTask
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
       new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
+      new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
     ));
 
@@ -53,6 +54,11 @@ The task is equivalent to:
   [./symfony doctrine:build-model|INFO]
   [./symfony doctrine:insert-sql|INFO]
   [./symfony doctrine:data-load|INFO]
+
+Include the [--migrate|COMMENT] option if you would like to run your project's
+migrations rather than inserting the Doctrine SQL.
+
+  [./symfony doctrine:build-all-reload --migrate|INFO]
 EOF;
   }
 
@@ -101,6 +107,10 @@ EOF;
     if (isset($options['skip-forms']) && $options['skip-forms'])
     {
       $buildAllLoadOptions[] = '--skip-forms';
+    }
+    if (isset($options['migrate']) && $options['migrate'])
+    {
+      $buildAllLoadOptions[] = '--migrate';
     }
     $buildAllLoad->run(array(), $buildAllLoadOptions);
   }

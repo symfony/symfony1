@@ -36,7 +36,8 @@ class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
-      new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms')
+      new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
+      new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
     ));
 
     $this->detailedDescription = <<<EOF
@@ -57,6 +58,18 @@ To bypass the confirmation, you can pass the [no-confirmation|COMMENT]
 option:
 
   [./symfony doctrine:buil-all-load --no-confirmation|INFO]
+
+Include the [--migrate|COMMENT] option if you would like to run your project's
+migrations rather than inserting the Doctrine SQL.
+
+  [./symfony doctrine:build-all --migrate|INFO]
+
+This is equivalent to:
+
+  [./symfony doctrine:build-model|INFO]
+  [./symfony doctrine:build-sql|INFO]
+  [./symfony doctrine:build-forms|INFO]
+  [./symfony doctrine:migrate|INFO]
 EOF;
   }
 
@@ -118,9 +131,18 @@ EOF;
       }
     }
 
-    $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
-    $insertSql->setCommandApplication($this->commandApplication);
-    $ret = $insertSql->run(array(), $baseOptions);
+    if ($options['migrate'])
+    {
+      $migrate = new sfDoctrineMigrateTask($this->dispatcher, $this->formatter);
+      $migrate->setCommandApplication($this->commandApplication);
+      $ret = $migrate->run(array(), $baseOptions);
+    }
+    else
+    {
+      $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
+      $insertSql->setCommandApplication($this->commandApplication);
+      $ret = $insertSql->run(array(), $baseOptions);
+    }
 
     return $ret;
   }

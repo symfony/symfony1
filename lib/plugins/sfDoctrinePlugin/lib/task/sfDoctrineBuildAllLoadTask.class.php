@@ -33,6 +33,7 @@ class sfDoctrineBuildAllLoadTask extends sfDoctrineBaseTask
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
       new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
+      new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
     ));
 
@@ -58,6 +59,11 @@ To bypass the confirmation, you can pass the [no-confirmation|COMMENT]
 option:
 
   [./symfony doctrine:build-all-load --no-confirmation|INFO]
+
+Include the [--migrate|COMMENT] option if you would like to run your project's
+migrations rather than inserting the Doctrine SQL.
+
+  [./symfony doctrine:build-all-load --migrate|INFO]
 EOF;
   }
 
@@ -75,6 +81,10 @@ EOF;
     if ($options['skip-forms'])
     {
       $buildAllOptions[] = '--skip-forms';
+    }
+    if ($options['migrate'])
+    {
+      $buildAllOptions[] = '--migrate';
     }
     if ($options['no-confirmation'])
     {
