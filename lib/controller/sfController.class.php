@@ -527,7 +527,7 @@ abstract class sfController
    *
    * @return mixed The returned value of the called method
    */
-  public function __call($method, array $arguments)
+  public function __call($method, $arguments)
   {
     $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'controller.method_not_found', array('method' => $method, 'arguments' => $arguments)));
     if (!$event->isProcessed())
