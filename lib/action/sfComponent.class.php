@@ -74,7 +74,7 @@ abstract class sfComponent
    *
    * @return mixed     A string containing the view name associated with this action
    */
-  abstract function execute(sfRequest $request);
+  abstract function execute($request);
 
   /**
    * Gets the module name associated with this component.

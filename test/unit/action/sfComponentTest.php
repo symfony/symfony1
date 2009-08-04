@@ -15,7 +15,7 @@ $t = new lime_test(8);
 
 class myComponent extends sfComponent
 {
-  function execute(sfRequest $request) {}
+  function execute($request) {}
 }
 
 $context = sfContext::getInstance(array(
