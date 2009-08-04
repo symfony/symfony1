@@ -76,7 +76,7 @@ class sfObjectRoute extends sfRequestRoute
    *
    * @return string The generated URL
    */
-  public function generate($params = array(), $context = array(), $absolute = false)
+  public function generate($params, $context = array(), $absolute = false)
   {
     return parent::generate('object' == $this->options['type'] ? $this->convertObjectToArray($params) : $params, $context, $absolute);
   }

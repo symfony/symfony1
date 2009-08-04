@@ -200,7 +200,7 @@ class sfRoute implements Serializable
    *
    * @return string The generated URL
    */
-  public function generate($params = array(), $context = array(), $absolute = false)
+  public function generate($params, $context = array(), $absolute = false)
   {
     if (!$this->compiled)
     {

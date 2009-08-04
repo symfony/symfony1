@@ -88,7 +88,7 @@ $collection = new sfObjectRouteCollection(array(
 $routes = $collection->getRoutes();
 $t->isa_ok($routes['test_export'], 'sfObjectRoute', '->generateRoutes() generates custom collection routes');
 
-$url = $routes['test_export']->generate();
+$url = $routes['test_export']->generate(array());
 $t->isa_ok($routes['test_export']->matchesUrl($url, array('method' => 'post')), 'array', '->generateRoutes() creates a collection action route that matches a URL it generates');
 
 $match = null;
