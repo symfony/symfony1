@@ -185,8 +185,6 @@ abstract class sfPluginConfiguration
   {
     $task = $event->getSubject();
 
-    $task->logSection('test', sprintf('Merging %s tests', $this->name));
-
     if ($task instanceof sfTestAllTask)
     {
       $directory = $this->rootDir.'/test';
