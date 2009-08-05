@@ -103,6 +103,8 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
             if (isset($e[1])) {
                 $length = $length + strlen($e[1]);
             }
+        } else if ($type == 'blob') {
+            $length = strlen($value);
         } else {
             $length = self::getStringLength($value);
         }
