@@ -26,8 +26,7 @@ class sfFormatter
     if (is_null($maxLineSize))
     {
       // this is tricky because "tput cols 2>&1" is not accurate
-      $maxLineSize = is_executable(trim(shell_exec('which tput 2>&1'))) && ctype_digit($cols = trim(shell_exec('tput cols'))) ? (integer) $cols : 78;
-      clearstatcache();
+      $maxLineSize = ctype_digit(trim(shell_exec('tput cols 2>&1'))) ? (integer) shell_exec('tput cols') : 78;
     }
 
     $this->size = $maxLineSize;
