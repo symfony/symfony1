@@ -24,7 +24,7 @@ abstract class sfWidgetFormSchemaFormatter
   protected
     $rowFormat                 = '',
     $helpFormat                = '%help%',
-    $errorRowFormat            = '',
+    $errorRowFormat            = '%errors%',
     $errorListFormatInARow     = "  <ul class=\"error_list\">\n%errors%  </ul>\n",
     $errorRowFormatInARow      = "    <li>%error%</li>\n",
     $namedErrorRowFormatInARow = "    <li>%name%: %error%</li>\n",
