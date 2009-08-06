@@ -106,8 +106,8 @@ $t->is_deeply($task->lastOptions, array('none' => true, 'required' => 'TEST1', '
 $task->run(array(), array('none' => false, 'required' => 'TEST1', 'array' => array('one', 'two', 'three')));
 $t->is_deeply($task->lastOptions, array('none' => false, 'required' => 'TEST1', 'optional' => null, 'array' => array('one', 'two', 'three')), '->run() accepts an associative array of option values');
 
-$task->run(array(), array('optional' => null));
-$t->is_deeply($task->lastOptions, array('none' => false, 'required' => null, 'optional' => null, 'array' => array()), '->run() accepts an associative array of options when optional values are passed as null');
+$task->run(array(), array('optional' => null, 'array' => array()));
+$t->is_deeply($task->lastOptions, array('none' => false, 'required' => null, 'optional' => null, 'array' => array()), '->run() accepts an associative array of options when optional values are passed as empty');
 
 $task->run('--none --required=TEST1 --array=one --array=two --array=three');
 $t->is_deeply($task->lastOptions, array('none' => true, 'required' => 'TEST1', 'optional' => null, 'array' => array('one', 'two', 'three')), '->run() accepts a string of options');

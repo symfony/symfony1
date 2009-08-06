@@ -84,7 +84,6 @@ EOF;
     $buildAllLoad->setConfiguration($this->configuration);
     $buildAllLoad->run(array(), array(
       'dir'        => $options['dir'],
-      'append'     => $options['append'],
       'skip-forms' => $options['skip-forms'],
       'migrate'    => $options['migrate'],
     ));
