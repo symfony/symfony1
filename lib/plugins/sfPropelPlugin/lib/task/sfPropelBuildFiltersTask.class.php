@@ -30,7 +30,6 @@ class sfPropelBuildFiltersTask extends sfPropelBaseTask
       new sfCommandOption('model-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The model dir name', 'model'),
       new sfCommandOption('filter-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The filter form dir name', 'filter'),
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
-      new sfCommandOption('skip-reload', null, sfCommandOption::PARAMETER_NONE, 'Prevents autoloader from reloading'),
     ));
 
     $this->namespace = 'propel';
@@ -82,9 +81,6 @@ EOF;
     $finder = sfFinder::type('file')->name('*.php');
     $this->getFilesystem()->replaceTokens($finder->in(sfConfig::get('sf_lib_dir').'/filter/'), '##', '##', $constants);
 
-    if (!$options['skip-reload'])
-    {
-      $this->reloadAutoload();
-    }
+    $this->reloadAutoload();
   }
 }

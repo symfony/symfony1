@@ -102,5 +102,7 @@ EOF;
     $import = new Doctrine_Import_Schema();
     $import->setOptions($options);
     $import->importSchema(array($tmpPath, $config['yaml_schema_path']), 'yml', $config['models_path']);
+
+    $this->reloadAutoload();
   }
 }

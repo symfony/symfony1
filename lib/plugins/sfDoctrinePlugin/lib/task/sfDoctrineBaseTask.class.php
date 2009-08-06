@@ -20,29 +20,6 @@
  */
 abstract class sfDoctrineBaseTask extends sfBaseTask
 {
-  static protected $done = false;
-
-  public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
-  {
-    parent::initialize($dispatcher, $formatter);
-    self::$done = true;
-  }
-
-  protected function createConfiguration($application, $env)
-  {
-    $configuration = parent::createConfiguration($application, $env);
-
-    $autoloader = sfSimpleAutoload::getInstance();
-    $config = new sfAutoloadConfigHandler();
-    $mapping = $config->evaluate($configuration->getConfigPaths('config/autoload.yml'));
-    foreach ($mapping as $class => $file)
-    {
-      $autoloader->setClassPath($class, $file);
-    }
-    $autoloader->register();
-
-    return $configuration;
-  }
   /**
    * Get array of configuration variables for the Doctrine cli
    *

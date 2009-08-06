@@ -27,7 +27,6 @@ class sfPropelBuildModelTask extends sfPropelBaseTask
   {
     $this->addOptions(array(
       new sfCommandOption('phing-arg', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'Arbitrary phing argument'),
-      new sfCommandOption('skip-reload', null, sfCommandOption::PARAMETER_NONE, 'Prevents autoloader from reloading'),
     ));
 
     $this->aliases = array('propel-build-model');
@@ -63,10 +62,7 @@ EOF;
     $ret = $this->callPhing('om', self::CHECK_SCHEMA);
     $this->cleanup();
 
-    if ($ret && !$options['skip-reload'])
-    {
-      $this->reloadAutoload();
-    }
+    $this->reloadAutoload();
 
     return !$ret;
   }

@@ -207,6 +207,10 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
   /**
    * Reloads autoloaders.
+   *
+   * This method should be called whenever a task generates new classes that
+   * are to be loaded by the symfony autoloader. It clears the autoloader
+   * cache for all applications and environments and the current execution.
    */
   protected function reloadAutoload()
   {
@@ -214,7 +218,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $finder = sfFinder::type('file')->name('*autoload.yml.php');
     $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_cache_dir')));
-    sfAutoload::getInstance()->reloadClasses();
+    sfAutoload::getInstance()->reloadClasses(true);
 
     sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache')->reload();
   }

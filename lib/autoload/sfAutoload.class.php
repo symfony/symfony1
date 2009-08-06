@@ -89,18 +89,25 @@ class sfAutoload
     return isset($this->classes[$class]) ? $this->classes[$class] : null;
   }
 
+  /**
+   * Reloads the autoloader.
+   *
+   * @param  boolean $force Whether to force a reload
+   *
+   * @return boolean True if the reload was successful, otherwise false
+   */
   public function reloadClasses($force = false)
   {
     // only (re)load the autoloading cache once per request
-    if (self::$freshCache)
+    if (self::$freshCache && !$force)
     {
-      return;
+      return false;
     }
 
     $configuration = sfProjectConfiguration::getActive();
     if (!$configuration || !$configuration instanceof sfApplicationConfiguration)
     {
-      return;
+      return false;
     }
 
     self::$freshCache = true;
@@ -121,6 +128,8 @@ class sfAutoload
     {
       $this->classes[$class] = $path;
     }
+
+    return true;
   }
 
   /**

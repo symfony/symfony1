@@ -40,22 +40,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
     }
   }
 
-  protected function createConfiguration($application, $env)
-  {
-    $configuration = parent::createConfiguration($application, $env);
-
-    $autoloader = sfSimpleAutoload::getInstance();
-    $config = new sfAutoloadConfigHandler();
-    $mapping = $config->evaluate($configuration->getConfigPaths('config/autoload.yml'));
-    foreach ($mapping as $class => $file)
-    {
-      $autoloader->setClassPath($class, $file);
-    }
-    $autoloader->register();
-
-    return $configuration;
-  }
-
   protected function process(sfCommandManager $commandManager, $options)
   {
     parent::process($commandManager, $options);
