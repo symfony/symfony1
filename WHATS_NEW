@@ -385,6 +385,24 @@ The previous version, which still works:
       '--env='.$options['env'],
     ));
 
+### `project:disable` and `project:enable`
+
+You can now wholesale disable or enable an entire environment using the
+`project:disable` and `project:enable` tasks:
+
+    $ php symfony project:disable prod
+    $ php symfony project:enable prod
+
+You can also specify which applications to disable in that environment:
+
+    $ php symfony project:disable prod frontend backend
+    $ php symfony project:enable prod frontend backend
+
+These tasks are backward compatible with their previous signature:
+
+    $ php symfony project:disable frontend prod
+    $ php symfony project:enable frontend prod
+
 Exceptions
 ----------
 
