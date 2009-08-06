@@ -3,10 +3,10 @@
 /**
  * <?php echo $this->modelName ?> form base class.
  *
- * @package    form
- * @subpackage <?php echo $this->underscore($this->modelName) ?>
-
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 8508 2008-04-17 17:39:15Z fabien $
+ * @package    ##PROJECT_NAME##
+ * @subpackage form
+ * @author     ##AUTHOR_NAME##
+ * @version    SVN: $Id$
  */
 class Base<?php echo $this->modelName ?>Form extends <?php echo $this->getFormClassToExtend() . "\n" ?>
 {

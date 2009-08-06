@@ -5,10 +5,10 @@ require_once(sfConfig::get('sf_lib_dir').'/filter/doctrine/BaseFormFilterDoctrin
 /**
  * <?php echo $this->table->getOption('name') ?> filter form base class.
  *
- * @package    filters
- * @subpackage <?php echo $this->table->getOption('name') ?>
- *
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 11675 2008-09-19 15:21:38Z fabien $
+ * @package    ##PROJECT_NAME##
+ * @subpackage filter
+ * @author     ##AUTHOR_NAME##
+ * @version    SVN: $Id$
  */
 class Base<?php echo $this->table->getOption('name') ?>FormFilter extends <?php echo $this->getFormClassToExtend() . "\n" ?>
 {

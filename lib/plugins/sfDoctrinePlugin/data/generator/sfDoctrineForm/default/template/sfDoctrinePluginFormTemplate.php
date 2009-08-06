@@ -3,10 +3,10 @@
 /**
  * <?php echo $this->table->getOption('name') ?> form.
  *
- * @package    form
- * @subpackage <?php echo $this->table->getOption('name') ?>
-
- * @version    SVN: $Id: sfDoctrineFormTemplate.php 6174 2007-11-27 06:22:40Z fabien $
+ * @package    ##PROJECT_NAME##
+ * @subpackage form
+ * @author     ##AUTHOR_NAME##
+ * @version    SVN: $Id$
  */
 class <?php echo $this->table->getOption('name') ?>Form extends Plugin<?php echo $this->table->getOption('name') ?>Form
 {
