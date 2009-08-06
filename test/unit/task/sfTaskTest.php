@@ -9,7 +9,7 @@
  */
 require_once dirname(__FILE__).'/../../bootstrap/unit.php';
 
-$t = new lime_test(null);
+$t = new lime_test(12);
 
 abstract class BaseTestTask extends sfTask
 {
