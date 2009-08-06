@@ -282,7 +282,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function enablePlugin($plugin)
   {
-    $this->getPluginManager()->enablePlugin($plugin);
+    sfSymfonyPluginManager::enablePlugin($plugin, sfConfig::get('sf_config_dir'));
   }
 
   /**
@@ -292,7 +292,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function disablePlugin($plugin)
   {
-    $this->getPluginManager()->disablePlugin($plugin);
+    sfSymfonyPluginManager::disablePlugin($plugin, sfConfig::get('sf_config_dir'));
   }
 
   /**

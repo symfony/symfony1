@@ -106,16 +106,20 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Enables a plugin in the ProjectConfiguration class.
    *
-   * @param string $plugin The name of the plugin
+   * This is a static method that does not rely on the PEAR environment
+   * as we don't want this method to have PEAR as a dependency.
+   *
+   * @param string $plugin    The name of the plugin
+   * @param string $configDir The config directory
    */
-  public function enablePlugin($plugin)
+  static public function enablePlugin($plugin, $configDir)
   {
-    if (!$this->environment->getOption('config_dir'))
+    if (!$configDir)
     {
       throw new sfPluginException('You must provide a "config_dir" option.');
     }
 
-    $manipulator = sfClassManipulator::fromFile($this->environment->getOption('config_dir').'/ProjectConfiguration.class.php');
+    $manipulator = sfClassManipulator::fromFile($configDir.'/ProjectConfiguration.class.php');
     $manipulator->wrapMethod('setup', '', sprintf('$this->enablePlugins(\'%s\');', $plugin));
     $manipulator->save();
   }
@@ -123,16 +127,20 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Disables a plugin in the ProjectConfiguration class.
    *
+   * This is a static method that does not rely on the PEAR environment
+   * as we don't want this method to have PEAR as a dependency.
+   *
    * @param string $plugin The name of the plugin
+   * @param string $configDir The config directory
    */
-  protected function disablePlugin($plugin)
+  static protected function disablePlugin($plugin, $configDir)
   {
-    if (!$this->environment->getOption('config_dir'))
+    if (!$configDir)
     {
       throw new sfPluginException('You must provide a "config_dir" option.');
     }
 
-    $file = $this->environment->getOption('config_dir').'/ProjectConfiguration.class.php';
+    $file = $configDir.'/ProjectConfiguration.class.php';
     $source = file_get_contents($file);
 
     $source = preg_replace(sprintf('# *\$this\->enablePlugins\(array\(([^\)]+), *\'%s\'([^\)]*)\)\)#', $plugin), '$this->enablePlugins(array($1$2))', $source);
@@ -153,7 +161,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   {
     $this->installWebContent($event['plugin'], isset($event['plugin_dir']) ? $event['plugin_dir'] : $this->environment->getOption('plugin_dir'));
 
-    $this->enablePlugin($event['plugin']);
+    $this->enablePlugin($event['plugin'], $this->environment->getOption('config_dir'));
   }
 
   /**
@@ -168,7 +176,7 @@ class sfSymfonyPluginManager extends sfPluginManager
 
   public function listenToPluginPostUnintall(sfEvent $event)
   {
-    $this->disablePlugin($event['plugin']);
+    $this->disablePlugin($event['plugin'], $this->environment->getOption('config_dir'));
   }
 
   /**
