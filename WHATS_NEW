@@ -365,6 +365,26 @@ The previous version, which still works:
       '--name=master',
     ));
 
+### `sfBaseTask::setConfiguration()`
+
+When calling a task that extends `sfBaseTask` from PHP, you no longer have to
+pass `--application` and `--env` options to `->run()`. Instead, you can simply
+set the configuration object directly by calling `->setConfiguration()`.
+
+    [php]
+    $task = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
+    $task->setConfiguration($this->configuration);
+    $task->run();
+
+The previous version, which still works:
+
+    [php]
+    $task = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
+    $task->run(array(), array(
+      '--application='.$options['application],
+      '--env='.$options['env'],
+    ));
+
 Exceptions
 ----------
 

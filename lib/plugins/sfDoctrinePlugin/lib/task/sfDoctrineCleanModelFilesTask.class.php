@@ -81,14 +81,16 @@ EOF;
 
       $deleteModelFiles = new sfDoctrineDeleteModelFilesTask($this->dispatcher, $this->formatter);
       $deleteModelFiles->setCommandApplication($this->commandApplication);
+      $deleteModelFiles->setConfiguration($this->configuration);
       foreach ($modelsToRemove as $model)
       {
-        $ret = $deleteModelFiles->run(array($model), array());
+        $ret = $deleteModelFiles->run(array($model));
       }
 
       $cc = new sfCacheClearTask($this->dispatcher, $this->formatter);
       $cc->setCommandApplication($this->commandApplication);
-      $cc->run(array(), array());
+      $cc->setConfiguration($this->configuration);
+      $cc->run();
     }
     else
     {

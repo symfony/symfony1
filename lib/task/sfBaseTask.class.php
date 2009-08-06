@@ -41,20 +41,23 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $this->checkProjectExists();
 
-    $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
-    $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
-
-    if (true === $application)
+    if (is_null($this->configuration))
     {
-      $application = $this->getFirstApplication();
+      $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
+      $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
 
-      if ($commandManager->getOptionSet()->hasOption('application'))
+      if (true === $application)
       {
-        $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
-      }
-    }
+        $application = $this->getFirstApplication();
 
-    $this->configuration = $this->createConfiguration($application, $env);
+        if ($commandManager->getOptionSet()->hasOption('application'))
+        {
+          $commandManager->setOption($commandManager->getOptionSet()->getOption('application'), $application);
+        }
+      }
+
+      $this->configuration = $this->createConfiguration($application, $env);
+    }
 
     if (!is_null($this->commandApplication) && !$this->commandApplication->withTrace())
     {
@@ -66,6 +69,16 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     $this->dispatcher->notify(new sfEvent($this, 'command.post_command'));
 
     return $ret;
+  }
+
+  /**
+   * Sets the current task's configuration.
+   *
+   * @param sfProjectConfiguration $configuration
+   */
+  public function setConfiguration(sfProjectConfiguration $configuration = null)
+  {
+    $this->configuration = $configuration;
   }
 
   /**
@@ -315,5 +328,20 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     }
 
     return $this->pluginManager;
+  }
+
+  /**
+   * @see sfCommandApplicationTask
+   */
+  protected function createTask($name)
+  {
+    $task = parent::createTask($name);
+
+    if ($task instanceof sfBaseTask)
+    {
+      $task->setConfiguration($this->configuration);
+    }
+
+    return $task;
   }
 }

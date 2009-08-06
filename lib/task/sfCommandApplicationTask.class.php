@@ -54,15 +54,15 @@ abstract class sfCommandApplicationTask extends sfTask
   }
 
   /**
-   * Executes another task in the context of the current one.
+   * Creates a new task object.
    *
-   * @param  string  $name      The name of the task to execute
-   * @param  array   $arguments An array of arguments to pass to the task
-   * @param  array   $options   An array of options to pass to the task
+   * @param  string $name The name of the task
    *
-   * @return Boolean The returned value of the task run() method
+   * @return sfTask
+   *
+   * @throws LogicException If the current task has no command application
    */
-  protected function runTask($name, $arguments = array(), $options = array())
+  protected function createTask($name)
   {
     if (is_null($this->commandApplication))
     {
@@ -70,8 +70,28 @@ abstract class sfCommandApplicationTask extends sfTask
     }
 
     $task = $this->commandApplication->getTaskToExecute($name);
-    $task->setCommandApplication($this->commandApplication);
 
-    return $task->run($arguments, $options);
+    if ($task instanceof sfCommandApplicationTask)
+    {
+      $task->setCommandApplication($this->commandApplication);
+    }
+
+    return $task;
+  }
+
+  /**
+   * Executes another task in the context of the current one.
+   *
+   * @param  string  $name      The name of the task to execute
+   * @param  array   $arguments An array of arguments to pass to the task
+   * @param  array   $options   An array of options to pass to the task
+   *
+   * @return Boolean The returned value of the task run() method
+   *
+   * @see createTask()
+   */
+  protected function runTask($name, $arguments = array(), $options = array())
+  {
+    return $this->createTask($name)->run($arguments, $options);
   }
 }

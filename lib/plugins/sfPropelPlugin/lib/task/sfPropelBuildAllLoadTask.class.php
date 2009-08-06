@@ -74,57 +74,24 @@ EOF;
 
     $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-
-    $buildAllOptions = array('--env='.$options['env'], '--connection='.$options['connection']);
-    foreach ($options['phing-arg'] as $arg)
-    {
-      $buildAllOptions[] = '--phing-arg='.escapeshellarg($arg);
-    }
-    if ($options['application'])
-    {
-      $buildAllOptions[] = '--application='.$options['application'];
-    }
-    if ($options['skip-forms'])
-    {
-      $buildAllOptions[] = '--skip-forms';
-    }
-    if ($options['classes-only'])
-    {
-      $buildAllOptions[] = '--classes-only';
-    }
-    if ($options['no-confirmation'])
-    {
-      $buildAllOptions[] = '--no-confirmation';
-    }
-    if ($options['skip-reload'])
-    {
-      $buildAllOptions[] = '--skip-reload';
-    }
-    $ret = $buildAll->run(array(), $buildAllOptions);
+    $buildAll->setConfiguration($this->configuration);
+    $ret = $buildAll->run(array(), array(
+      'phing-arg'       => $options['phing-arg'],
+      'skip-forms'      => $options['skip-forms'],
+      'classes-only'    => $options['classes-only'],
+      'no-confirmation' => $options['no-confirmation'],
+      'skip-reload'     => $options['skip-reload'],
+    ));
 
     if (0 == $ret)
     {
       $loadData = new sfPropelLoadDataTask($this->dispatcher, $this->formatter);
       $loadData->setCommandApplication($this->commandApplication);
-
-      $dataLoadOptions = array('--env='.$options['env'], '--connection='.$options['connection']);
-      if ($options['application'])
-      {
-        $dataLoadOptions[] = '--application='.$options['application'];
-      }
-      if ($options['dir'])
-      {
-        foreach ($options['dir'] as $dir)
-        {
-          $dataLoadOptions[] = '--dir='.$dir;
-        }
-      }
-      if ($options['append'])
-      {
-        $dataLoadOptions[] = '--append';
-      }
-
-      $loadData->run(array(), $dataLoadOptions);
+      $loadData->setConfiguration($this->configuration);
+      $loadData->run(array(), array(
+        'dir'    => $options['dir'],
+        'append' => $options['append'],
+      ));
     }
 
     $this->cleanup();

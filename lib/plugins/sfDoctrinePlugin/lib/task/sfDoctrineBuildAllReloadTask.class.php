@@ -69,18 +69,10 @@ EOF;
   {
     $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
     $dropDb->setCommandApplication($this->commandApplication);
-
-    $dropDbOptions = array();
-    $dropDbOptions[] = '--env='.$options['env'];
-    if (isset($options['no-confirmation']) && $options['no-confirmation'])
-    {
-      $dropDbOptions[] = '--no-confirmation';
-    }
-    if (isset($options['application']) && $options['application'])
-    {
-      $dropDbOptions[] = '--application=' . $options['application'];
-    }
-    $ret = $dropDb->run(array(), $dropDbOptions);
+    $dropDb->setConfiguration($this->configuration);
+    $ret = $dropDb->run(array(), array(
+      'no-confirmation' => $options['no-confirmation'],
+    ));
 
     if ($ret)
     {
@@ -89,29 +81,12 @@ EOF;
 
     $buildAllLoad = new sfDoctrineBuildAllLoadTask($this->dispatcher, $this->formatter);
     $buildAllLoad->setCommandApplication($this->commandApplication);
-
-    $buildAllLoadOptions = array();
-    $buildAllLoadOptions[] = '--env='.$options['env'];
-    if (!empty($options['dir']))
-    {
-      $buildAllLoadOptions[] = '--dir=' . implode(' --dir=', $options['dir']);
-    }
-    if (isset($options['append']) && $options['append'])
-    {
-      $buildAllLoadOptions[] = '--append';
-    }
-    if (isset($options['application']) && $options['application'])
-    {
-      $buildAllLoadOptions[] = '--application=' . $options['application'];
-    }
-    if (isset($options['skip-forms']) && $options['skip-forms'])
-    {
-      $buildAllLoadOptions[] = '--skip-forms';
-    }
-    if (isset($options['migrate']) && $options['migrate'])
-    {
-      $buildAllLoadOptions[] = '--migrate';
-    }
-    $buildAllLoad->run(array(), $buildAllLoadOptions);
+    $buildAllLoad->setConfiguration($this->configuration);
+    $buildAllLoad->run(array(), array(
+      'dir'        => $options['dir'],
+      'append'     => $options['append'],
+      'skip-forms' => $options['skip-forms'],
+      'migrate'    => $options['migrate'],
+    ));
   }
 }

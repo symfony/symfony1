@@ -159,6 +159,7 @@ EOF;
 
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);
+    $fixPerms->setConfiguration($this->configuration);
     $fixPerms->run();
 
     // Create test dir

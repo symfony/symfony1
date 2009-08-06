@@ -58,29 +58,18 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
-      '--application='.$this->configuration->getApplication(),
-      '--env='.$options['env'],
-    ) : array();
-
-    $dropDbOptions = $baseOptions;
-    if (isset($options['no-confirmation']) && $options['no-confirmation'])
-    {
-      $dropDbOptions[] = '--no-confirmation';
-    }
-
     $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
     $dropDb->setCommandApplication($this->commandApplication);
-    $dropDb->run(array(), $dropDbOptions);
-
-    $buildAllOptions = $baseOptions;
-    if (isset($options['migrate']) && $options['migrate'])
-    {
-      $buildAllOptions[] = '--migrate';
-    }
+    $dropDb->setConfiguration($this->configuration);
+    $dropDb->run(array(), array(
+      'no-confirmation' => $options['no-confirmation'],
+    ));
 
     $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->run(array(), $buildAllOptions);
+    $buildAll->setConfiguration($this->configuration);
+    $buildAll->run(array(), array(
+      'migrate' => $options['migrate'],
+    ));
   }
 }

@@ -79,36 +79,18 @@ EOF;
     // execute the doctrine:generate-module task
     $task = new sfDoctrineGenerateModuleTask($this->dispatcher, $this->formatter);
     $task->setCommandApplication($this->commandApplication);
-
-    $taskOptions = array(
-      '--theme='.$options['theme'],
-      '--env='.$options['env'],
-      '--route-prefix='.$routeOptions['name'],
-      '--with-doctrine-route',
-    );
-
-    if ($routeOptions['with_show'])
-    {
-      $taskOptions[] = '--with-show';
-    }
-
-    if ($options['non-verbose-templates'])
-    {
-      $taskOptions[] = '--non-verbose-templates';
-    }
-
-    if (!is_null($options['singular']))
-    {
-      $taskOptions[] = '--singular='.$options['singular'];
-    }
-
-    if (!is_null($options['plural']))
-    {
-      $taskOptions[] = '--plural='.$options['plural'];
-    }
+    $task->setConfiguration($this->configuration);
 
     $this->logSection('app', sprintf('Generating module "%s" for model "%s"', $module, $model));
 
-    return $task->run(array($arguments['application'], $module, $model), $taskOptions);
+    return $task->run(array($arguments['application'], $module, $model), array(
+      'theme'                 => $options['theme'],
+      'route-prefix'          => $routeOptions['name'],
+      'with-doctrine-route'   => true,
+      'with-show'             => $routeOptions['with_show'],
+      'non-verbose-templates' => $options['non-verbose-templates'],
+      'singular'              => $options['singular'],
+      'plural'                => $options['plural'],
+    ));
   }
 }

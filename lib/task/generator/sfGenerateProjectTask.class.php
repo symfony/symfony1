@@ -128,6 +128,7 @@ EOF;
     // fix permission for common directories
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);
+    $fixPerms->setConfiguration($this->configuration);
     $fixPerms->run();
 
     $this->replaceTokens();

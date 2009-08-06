@@ -76,42 +76,21 @@ EOF;
 
     $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-
-    $buildAllOptions = array();
-    if ($options['skip-forms'])
-    {
-      $buildAllOptions[] = '--skip-forms';
-    }
-    if ($options['migrate'])
-    {
-      $buildAllOptions[] = '--migrate';
-    }
-    if ($options['no-confirmation'])
-    {
-      $buildAllOptions[] = '--no-confirmation';
-    }
-    if (isset($options['application']) && $options['application'])
-    {
-      $buildAllOptions[] = '--application=' . $options['application'];
-    }
-    $ret = $buildAll->run(array(), $buildAllOptions);
+    $buildAll->setConfiguration($this->configuration);
+    $ret = $buildAll->run(array(), array(
+      'skip-forms'      => $options['skip-forms'],
+      'migrate'         => $options['migrate'],
+      'no-confirmation' => $options['no-confirmation'],
+    ));
 
     if (0 == $ret)
     {
       $loadData = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
       $loadData->setCommandApplication($this->commandApplication);
-
-      $loadDataOptions = array('--env='.$options['env'], '--connection='.$options['connection']);
-      if (isset($options['application']))
-      {
-        $loadDataOptions[] = '--application='.$options['application'];
-      }
-      if (!empty($options['dir']))
-      {
-        $loadDataOptions[] = '--dir=' . implode(' --dir=', $options['dir']);
-      }
-
-      $loadData->run(array(), $loadDataOptions);
+      $loadData->setConfiguration($this->configuration);
+      $loadData->run(array(), array(
+        'dir' => $options['dir'],
+      ));
     }
 
     return $ret;

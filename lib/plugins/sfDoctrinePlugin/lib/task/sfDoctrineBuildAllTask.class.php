@@ -78,14 +78,10 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
-      '--application='.$this->configuration->getApplication(),
-      '--env='.$options['env'],
-    ) : array();
-
     $buildDb = new sfDoctrineBuildDbTask($this->dispatcher, $this->formatter);
     $buildDb->setCommandApplication($this->commandApplication);
-    $ret = $buildDb->run(array(), $baseOptions);
+    $buildDb->setConfiguration($this->configuration);
+    $ret = $buildDb->run();
 
     if ($ret)
     {
@@ -94,7 +90,8 @@ EOF;
 
     $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
     $buildModel->setCommandApplication($this->commandApplication);
-    $ret = $buildModel->run(array(), $baseOptions);
+    $buildModel->setConfiguration($this->configuration);
+    $ret = $buildModel->run();
 
     if ($ret)
     {
@@ -103,7 +100,8 @@ EOF;
 
     $buildSql = new sfDoctrineBuildSqlTask($this->dispatcher, $this->formatter);
     $buildSql->setCommandApplication($this->commandApplication);
-    $ret = $buildSql->run(array(), $baseOptions);
+    $buildSql->setConfiguration($this->configuration);
+    $ret = $buildSql->run();
 
     if ($ret)
     {
@@ -114,7 +112,8 @@ EOF;
     {
       $buildForms = new sfDoctrineBuildFormsTask($this->dispatcher, $this->formatter);
       $buildForms->setCommandApplication($this->commandApplication);
-      $ret = $buildForms->run(array(), $baseOptions);
+      $buildForms->setConfiguration($this->configuration);
+      $ret = $buildForms->run();
 
       if ($ret)
       {
@@ -123,7 +122,8 @@ EOF;
 
       $buildFilters = new sfDoctrineBuildFiltersTask($this->dispatcher, $this->formatter);
       $buildFilters->setCommandApplication($this->commandApplication);
-      $ret = $buildFilters->run(array(), $baseOptions);
+      $buildFilters->setConfiguration($this->configuration);
+      $ret = $buildFilters->run();
 
       if ($ret)
       {
@@ -135,13 +135,15 @@ EOF;
     {
       $migrate = new sfDoctrineMigrateTask($this->dispatcher, $this->formatter);
       $migrate->setCommandApplication($this->commandApplication);
-      $ret = $migrate->run(array(), $baseOptions);
+      $migrate->setConfiguration($this->configuration);
+      $ret = $migrate->run();
     }
     else
     {
       $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
       $insertSql->setCommandApplication($this->commandApplication);
-      $ret = $insertSql->run(array(), $baseOptions);
+      $insertSql->setConfiguration($this->configuration);
+      $ret = $insertSql->run();
     }
 
     return $ret;

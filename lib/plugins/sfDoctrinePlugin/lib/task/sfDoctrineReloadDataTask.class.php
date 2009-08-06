@@ -54,29 +54,17 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-    $dropDbOptions = array();
-    $dropDbOptions[] = '--env='.$options['env'];
-    if (isset($options['no-confirmation']) && $options['no-confirmation'])
-    {
-      $dropDbOptions[] = '--no-confirmation';
-    }
-    if (isset($options['application']) && $options['application'])
-    {
-      $dropDbOptions[] = '--application=' . $options['application'];
-    }
-
     $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
     $dropDb->setCommandApplication($this->commandApplication);
-    $dropDb->run(array(), $dropDbOptions);
-  	
-    $baseOptions = array(
-      '--application='.$this->configuration->getApplication(),
-      '--env='.$options['env'],
-    );
+    $dropDb->setConfiguration($this->configuration);
+    $dropDb->run(array(), array(
+      'no-confirmation' => $options['no-confirmation'],
+    ));
 
     $buildDb = new sfDoctrineBuildDbTask($this->dispatcher, $this->formatter);
     $buildDb->setCommandApplication($this->commandApplication);
-    $ret = $buildDb->run(array(), $baseOptions);    
+    $buildDb->setConfiguration($this->configuration);
+    $ret = $buildDb->run();    
 
     if ($ret)
     {
@@ -89,13 +77,15 @@ EOF;
     {
       $migrateTask = new sfDoctrineMigrateTask($this->dispatcher, $this->formatter);
       $migrateTask->setCommandApplication($this->commandApplication);
-      $ret = $migrateTask->run(array(), $baseOptions);
+      $migrateTask->setConfiguration($this->configuration);
+      $ret = $migrateTask->run();
     }
     else
     {
       $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
       $insertSql->setCommandApplication($this->commandApplication);
-      $ret = $insertSql->run(array(), $baseOptions);
+      $insertSql->setConfiguration($this->configuration);
+      $ret = $insertSql->run();
     }
 
     if ($ret)
@@ -103,15 +93,12 @@ EOF;
       return $ret;
     }    
 
-    $loadDataOptions = array_merge($baseOptions,array('--connection='.$options['connection']));
-    if (!empty($options['dir']))
-    {
-      $loadDataOptions[] = '--dir=' . implode(' --dir=', $options['dir']);
-    }
-
     $loadData = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
     $loadData->setCommandApplication($this->commandApplication);
-    $ret = $loadData->run(array(), $loadDataOptions);
+    $loadData->setConfiguration($this->configuration);
+    $ret = $loadData->run(array(), array(
+      'dir' => $options['dir'],
+    ));
     
     return $ret;
   }

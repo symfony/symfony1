@@ -73,30 +73,13 @@ EOF;
   {
     $buildAllReload = new sfDoctrineBuildAllReloadTask($this->dispatcher, $this->formatter);
     $buildAllReload->setCommandApplication($this->commandApplication);
-
-    $buildAllReloadOptions = array();
-    if (!empty($options['application']))
-    {
-      $buildAllReloadOptions[] = '--application=' . $options['application'];
-    }
-    $buildAllReloadOptions[] = '--env='.$options['env'];
-    if (!empty($options['dir']))
-    {
-      $buildAllReloadOptions[] = '--dir=' . implode(' --dir=', $options['dir']);
-    }
-    if (isset($options['append']) && $options['append'])
-    {
-      $buildAllReloadOptions[] = '--append';
-    }
-    if (isset($options['no-confirmation']) && $options['no-confirmation'])
-    {
-      $buildAllReloadOptions[] = '--no-confirmation';
-    }
-    if (isset($options['migrate']) && $options['migrate'])
-    {
-      $buildAllReloadOptions[] = '--migrate';
-    }
-    $ret = $buildAllReload->run(array(), $buildAllReloadOptions);
+    $buildAllReload->setConfiguration($this->configuration);
+    $ret = $buildAllReload->run(array(), array(
+      'dir'             => $options['dir'],
+      'append'          => $options['append'],
+      'no-confirmation' => $options['no-confirmation'],
+      'migrate'         => $options['migrate'],
+    ));
 
     if ($ret)
     {
@@ -107,6 +90,7 @@ EOF;
     
     $testAll = new sfTestAllTask($this->dispatcher, $this->formatter);
     $testAll->setCommandApplication($this->commandApplication);
+    $testAll->setConfiguration($this->configuration);
     $testAll->run();
   }
 }

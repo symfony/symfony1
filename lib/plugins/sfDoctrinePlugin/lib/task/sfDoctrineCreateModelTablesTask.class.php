@@ -47,14 +47,10 @@ EOF;
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
-      '--application='.$this->configuration->getApplication(),
-      '--env='.$options['env'],
-    ) : array();
-
     $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
     $buildModel->setCommandApplication($this->commandApplication);
-    $ret = $buildModel->run(array(), $baseOptions);
+    $buildModel->setConfiguration($this->configuration);
+    $ret = $buildModel->run();
 
     $connections = array();
     $models = $arguments['models'];
