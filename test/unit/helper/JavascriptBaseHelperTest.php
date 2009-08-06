@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/JavascriptBaseHelper.php');
 
-$t = new lime_test(7);
+$t = new lime_test(9, new lime_output_color());
 
 // boolean_for_javascript()
 $t->diag('boolean_for_javascript()');
@@ -36,3 +36,9 @@ alert("foo");
 </script>
 EOT;
 $t->is(javascript_tag('alert("foo");'), $expect, 'javascript_tag() takes the content as string parameter');
+
+//link_to_function()
+$t->diag('link_to_function()');
+$t->is(link_to_function('foo', 'alert(\'bar\')'), '<a href="#" onclick="alert(\'bar\'); return false;">foo</a>', 'link_to_function generates a link with onClick handler for function');
+//#4152
+$t->is(link_to_function('foo', 'alert(\'bar\')', array('confirm' => 'sure?')), '<a href="#" onclick="if(window.confirm(\'sure?\')){ alert(\'bar\');}; return false;">foo</a>', 'link_to_function works fine with confirm dialog');
