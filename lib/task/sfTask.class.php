@@ -109,13 +109,65 @@ abstract class sfTask
   {
     $commandManager = new sfCommandManager(new sfCommandArgumentSet($this->getArguments()), new sfCommandOptionSet($this->getOptions()));
 
-    // add -- before each option if needed
-    foreach ($options as &$option)
+    if (is_array($arguments) && is_string(key($arguments)))
     {
-      if (0 !== strpos($option, '--'))
+      // index arguments by name for ordering and reference
+      $indexArguments = array();
+      foreach ($this->arguments as $argument)
       {
-        $option = '--'.$option;
+        $indexArguments[$argument->getName()] = $argument;
       }
+
+      foreach ($arguments as $name => $value)
+      {
+        if (false !== $pos = array_search($name, array_keys($indexArguments)))
+        {
+          if ($indexArguments[$name]->isArray())
+          {
+            $value = join(' ', (array) $value);
+            $arguments[$pos] = isset($arguments[$pos]) ? $arguments[$pos].' '.$value : $value;
+          }
+          else
+          {
+            $arguments[$pos] = $value;
+          }
+
+          unset($arguments[$name]);
+        }
+      }
+
+      ksort($arguments);
+    }
+
+    // index options by name for reference
+    $indexedOptions = array();
+    foreach ($this->options as $option)
+    {
+      $indexedOptions[$option->getName()] = $option;
+    }
+
+    foreach ($options as $name => $value)
+    {
+      if (is_string($name))
+      {
+        if (false === $value)
+        {
+          unset($options[$name]);
+          continue;
+        }
+
+        // convert associative array
+        $value = true === $value ? $name : sprintf('%s=%s', $name, isset($indexedOptions[$name]) && $indexedOptions[$name]->isArray() ? join(' --'.$name.'=', (array) $value) : $value);
+      }
+
+      // add -- before each option if needed
+      if (0 !== strpos($value, '--'))
+      {
+        $value = '--'.$value;
+      }
+
+      $options[] = $value;
+      unset($options[$name]);
     }
 
     return $this->doRun($commandManager, is_string($arguments) ? $arguments : implode(' ', array_merge($arguments, $options)));

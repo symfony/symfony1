@@ -343,6 +343,28 @@ The `test:*` tasks now filter test files through the
 `task.test.filter_test_files` event prior to running them. This event includes
 `arguments` and `options` parameters.
 
+### Enhancements to `sfTask::run()`
+
+You can now pass an associative array of arguments and options to
+`sfTask::run()`:
+
+    [php]
+    $task = new sfDoctrineConfigureDatabaseTask($this->dispatcher, $this->formatter);
+    $task->run(array(
+      'dsn' => 'mysql:dbname=mydb;host=localhost',
+    ), array(
+      'name' => 'master',
+    ));
+
+The previous version, which still works:
+
+    [php]
+    $task->run(array(
+      'mysql:dbname=mydb;host=localhost',
+    ), array(
+      '--name=master',
+    ));
+
 Exceptions
 ----------
 
