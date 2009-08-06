@@ -94,7 +94,8 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
         mkdir($baseDir.'/base', 0777, true);
       }
 
-      file_put_contents($baseDir.'/base/Base'.$model.'FormFilter.class.php', $this->evalTemplate('sfDoctrineFormFilterGeneratedTemplate.php'));
+      file_put_contents($baseDir.'/base/Base'.$model.'FormFilter.class.php', $this->evalTemplate(is_null($this->getParentModel()) ? 'sfDoctrineFormFilterGeneratedTemplate.php' : 'sfDoctrineFormFilterGeneratedInheritanceTemplate.php'));
+
       if ($isPluginModel)
       {
         $pluginBaseDir = $pluginPaths[$pluginName].'/lib/filter/doctrine';
@@ -360,36 +361,8 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
    *
    * @return string
    */
- public function getFormClassToExtend()
- {
-   $parentName = $this->modelName;
-   while (true)
-   {
-     $reflectionClass = new ReflectionClass($parentName);
-     $parent = $reflectionClass->getParentClass();
-     $parentName = $parent->getName();
-
-     if (preg_match('/^Base/', $parentName))
-     {
-       $reflectionClass = new ReflectionClass($parentName);
-       $parent = $reflectionClass->getParentClass();
-       $parentName = $parent->getName();
-
-       if ($parentName == 'sfDoctrineRecord')
-       {
-         return 'BaseFormFilterDoctrine';
-       }
-       else if (!$parent->isAbstract())
-       {
-         return $parentName.'FormFilter';
-       }
-
-       return 'BaseFormFilterDoctrine';
-     }
-     else if ($parentName == 'Doctrine_Record')
-     {
-       return 'BaseFormFilterDoctrine';
-     }
-   }
- }
+  public function getFormClassToExtend()
+  {
+    return is_null($model = $this->getParentModel()) ? 'BaseFormFilterDoctrine' : sprintf('%sFormFilter', $model);
+  }
 }

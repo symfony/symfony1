@@ -539,6 +539,13 @@ abstract class sfFormDoctrine extends sfFormObject
     }
   }
 
+  /**
+   * Used in generated forms when models use inheritance.
+   */
+  protected function setupInheritance()
+  {
+  }
+
   protected function camelize($text)
   {
     return sfToolkit::pregtr($text, array('#/(.?)#e' => "'::'.strtoupper('\\1')", '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));

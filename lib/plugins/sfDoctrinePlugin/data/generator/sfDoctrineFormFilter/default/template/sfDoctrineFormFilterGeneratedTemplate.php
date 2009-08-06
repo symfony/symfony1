@@ -38,6 +38,8 @@ class Base<?php echo $this->table->getOption('name') ?>FormFilter extends <?php 
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
+    $this->setupInheritance();
+
     parent::setup();
   }
 

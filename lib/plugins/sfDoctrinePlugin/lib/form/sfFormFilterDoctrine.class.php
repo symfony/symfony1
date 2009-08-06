@@ -256,6 +256,13 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
     }
   }
 
+  /**
+   * Used in generated forms when models use inheritance.
+   */
+  protected function setupInheritance()
+  {
+  }
+
   protected function getColName($field)
   {
     return $this->getTable()->getColumnName($field);
