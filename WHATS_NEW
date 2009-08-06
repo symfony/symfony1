@@ -381,7 +381,7 @@ The previous version, which still works:
     [php]
     $task = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
     $task->run(array(), array(
-      '--application='.$options['application],
+      '--application='.$options['application'],
       '--env='.$options['env'],
     ));
 
