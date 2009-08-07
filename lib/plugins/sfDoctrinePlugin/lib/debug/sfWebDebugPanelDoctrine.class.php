@@ -164,18 +164,8 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
         $this->setStatus(sfLogger::NOTICE);
       }
 
-      $line = sprintf('<li class="%s">', $event->slowQuery ? 'sfWebDebugWarning' : '');
-
-      // add meta information
-      $line .= sprintf('
-        <span class="sfWebDebugDatabaseQuery">%s</span><br/>
-        <span class="sfWebDebugDatabaseLogInfo">%ss, "%s" connection</span>',
-        $query,
-        number_format($event->getElapsedSecs(), 2),
-        $conn->getName()
-      );
-
-      // add backtrace
+      // backtrace
+      $backtrace = null;
       foreach ($logs as $i => $log)
       {
         if (!$log['debug_backtrace'])
@@ -188,12 +178,22 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
         {
           // assume queries are being requested in order
           unset($logs[$i]);
-          $line .= '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']);
+          $backtrace = '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']);
           break;
         }
       }
 
-      $html[] = $line;
+      $html[] = sprintf('
+        <li class="%s">
+          <p class="sfWebDebugDatabaseQuery">%s</p>
+          <p class="sfWebDebugDatabaseLogInfo">%ss, "%s" connection%s</p>
+        </li>',
+        $event->slowQuery ? 'sfWebDebugWarning' : '',
+        $query,
+        number_format($event->getElapsedSecs(), 2),
+        $conn->getName(),
+        $backtrace
+      );
     }
 
     return $html;

@@ -725,10 +725,25 @@ EOF;
   text-decoration: underline;
 }
 
+#sfWebDebugDatabaseLogs
+{
+  margin-bottom: 10px;
+}
+
 #sfWebDebugDatabaseLogs li
 {
-  padding: 2px;
-  margin-bottom: 2px;
+  padding: 6px;
+}
+
+#sfWebDebugDatabaseLogs li:nth-child(odd)
+{
+  background-color: #CCC;
+}
+
+.sfWebDebugDatabaseQuery
+{
+  line-height: 1.25em;
+  margin-bottom: .5em;
 }
 
 .sfWebDebugDatabaseLogInfo
