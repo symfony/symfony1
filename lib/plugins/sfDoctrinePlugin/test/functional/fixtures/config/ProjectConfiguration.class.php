@@ -25,7 +25,7 @@ class ProjectConfiguration extends sfProjectConfiguration
       throw new sfException('Invalid data fixtures file');
     }
     chdir(sfConfig::get('sf_root_dir'));
-    $task = new sfDoctrineLoadDataTask($this->dispatcher, new sfFormatter());
+    $task = new sfDoctrineDataLoadTask($this->dispatcher, new sfFormatter());
     $task->run(array(), array('--env=test', '--dir=' . $path));
   }
 

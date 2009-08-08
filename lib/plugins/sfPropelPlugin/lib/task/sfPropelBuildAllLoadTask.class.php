@@ -83,7 +83,7 @@ EOF;
 
     if (0 == $ret)
     {
-      $loadData = new sfPropelLoadDataTask($this->dispatcher, $this->formatter);
+      $loadData = new sfPropelDataLoadTask($this->dispatcher, $this->formatter);
       $loadData->setCommandApplication($this->commandApplication);
       $loadData->setConfiguration($this->configuration);
       $loadData->run(array(), array(

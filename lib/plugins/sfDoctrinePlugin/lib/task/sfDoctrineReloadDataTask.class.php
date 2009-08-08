@@ -93,7 +93,7 @@ EOF;
       return $ret;
     }    
 
-    $loadData = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
+    $loadData = new sfDoctrineDataLoadTask($this->dispatcher, $this->formatter);
     $loadData->setCommandApplication($this->commandApplication);
     $loadData->setConfiguration($this->configuration);
     $ret = $loadData->run(array(), array(

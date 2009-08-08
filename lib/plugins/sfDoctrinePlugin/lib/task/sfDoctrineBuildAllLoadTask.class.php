@@ -85,7 +85,7 @@ EOF;
 
     if (0 == $ret)
     {
-      $loadData = new sfDoctrineLoadDataTask($this->dispatcher, $this->formatter);
+      $loadData = new sfDoctrineDataLoadTask($this->dispatcher, $this->formatter);
       $loadData->setCommandApplication($this->commandApplication);
       $loadData->setConfiguration($this->configuration);
       $loadData->run(array(), array(
