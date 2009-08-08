@@ -83,6 +83,8 @@ several reasons:
     problems might occur
     (see #6064 - http://trac.symfony-project.org/ticket/6064).
 
+Autoloading in symfony 1.3 is now case-insensitive.
+
 Routing
 -------
 
@@ -138,6 +140,16 @@ How to upgrade?
 
 Tasks
 -----
+
+The following task classes have been renamed:
+
+  symfony 1.2               | symfony 1.3
+  ------------------------- | --------------
+  `sfConfigureDatabaseTask` | `sfDoctrineConfigureDatabaseTask` or `sfPropelConfigureDatabaseTask`
+  `sfDoctrineLoadDataTask`  | `sfDoctrineDataLoadTask`
+  `sfDoctrineDumpDataTask`  | `sfDoctrineDataDumpTask`
+  `sfPropelLoadDataTask`    | `sfPropelDataLoadTask`
+  `sfPropelDumpDataTask`    | `sfPropelDataDumpTask`
 
 ### Formatters
 
@@ -203,3 +215,10 @@ Plugins
 If you use the `enableAllPluginsExcept()` method to manage enabled plugins in
 your `ProjectConfiguration` class, be warned that we now sort the plugins by
 name to ensure consistency across different platforms.
+
+Widgets
+-------
+
+The `sfWidgetFormInput` class is now abstract. Text input fields are now
+created with the `sfWidgetFormInputText` class. This change was made to ease
+introspection of form classes.

@@ -16,14 +16,14 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfWidgetFormInput extends sfWidgetForm
+abstract class sfWidgetFormInput extends sfWidgetForm
 {
   /**
    * Constructor.
    *
    * Available options:
    *
-   *  * type: The widget type (text by default)
+   *  * type: The widget type
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -32,9 +32,7 @@ class sfWidgetFormInput extends sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
   {
-    $this->addOption('type', 'text');
-
-    $this->setOption('is_hidden', false);
+    $this->addRequiredOption('type');
   }
 
   /**

@@ -15,12 +15,12 @@ $t = new lime_test(30);
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
   'id'   => new sfWidgetFormInputHidden(),
-  'name' => $nameWidget = new sfWidgetFormInput(),
+  'name' => $nameWidget = new sfWidgetFormInputText(),
 ));
 $authorSchema->setNameFormat('article[author][%s]');
 
 $schema = new sfWidgetFormSchema(array(
-  'title'  => $titleWidget = new sfWidgetFormInput(),
+  'title'  => $titleWidget = new sfWidgetFormInputText(),
   'author' => $authorSchema,
 ));
 $schema->setNameFormat('article[%s]');

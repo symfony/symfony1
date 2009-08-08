@@ -26,9 +26,9 @@ class TestForm1 extends FormTest
   {
     $this->disableCSRFProtection();
     $this->setWidgets(array(
-      'a' => new sfWidgetFormInput(),
-      'b' => new sfWidgetFormInput(),
-      'c' => new sfWidgetFormInput(),
+      'a' => new sfWidgetFormInputText(),
+      'b' => new sfWidgetFormInputText(),
+      'c' => new sfWidgetFormInputText(),
     ));
     $this->setValidators(array(
       'a' => new sfValidatorString(array('min_length' => 2)),
@@ -193,8 +193,8 @@ $t->ok($f->getValidator('name') == $v3, '->setValidator() sets a validator for a
 $t->diag('->setWidgets() ->setWidgetSchema() ->getWidgetSchema()');
 $f = new FormTest();
 $widgets = array(
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
 );
 $widgetSchema = new sfWidgetFormSchema($widgets);
 $f->setWidgetSchema($widgetSchema);
@@ -203,15 +203,15 @@ $f->setWidgets($widgets);
 $schema = $f->getWidgetSchema();
 $t->ok($schema['first_name'] == $widgets['first_name'], '->setWidgets() sets field widgets');
 $t->ok($schema['last_name'] == $widgets['last_name'], '->setWidgets() sets field widgets');
-$f->setWidget('name', $w3 = new sfWidgetFormInput());
+$f->setWidget('name', $w3 = new sfWidgetFormInputText());
 $t->ok($f->getWidget('name') == $w3, '->setWidget() sets a widget for a field');
 
 // ArrayAccess interface
 $t->diag('ArrayAccess interface');
 $f = new FormTest();
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(array('default' => 'Fabien')),
+  'last_name'  => new sfWidgetFormInputText(),
   'image'      => new sfWidgetFormInputFile(),
 )));
 $f->setValidatorSchema(new sfValidatorSchema(array(
@@ -262,15 +262,15 @@ $f->bind(array(
 ));
 unset($f['first_name']);
 $t->is_deeply($f->getValues(), array('last_name' => 'Doe'), '"sfForm" ArrayAccess implementation removes bound values');
-$w['first_name'] = new sfWidgetFormInput();
+$w['first_name'] = new sfWidgetFormInputText();
 $t->is($f['first_name']->getValue(), '', '"sfForm" ArrayAccess implementation removes tainted values');
 
 // Countable interface
 $t->diag('Countable interface');
 $f = new FormTest();
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(array('default' => 'Fabien')),
+  'last_name'  => new sfWidgetFormInputText(),
   'image'      => new sfWidgetFormInputFile(),
 )));
 $t->is(count($f), 3, '"sfForm" implements the Countable interface');
@@ -279,8 +279,8 @@ $t->is(count($f), 3, '"sfForm" implements the Countable interface');
 $t->diag('Iterator interface');
 $f = new FormTest();
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(array('default' => 'Fabien')),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(array('default' => 'Fabien')),
+  'last_name'  => new sfWidgetFormInputText(),
   'image'      => new sfWidgetFormInputFile(),
 )));
 foreach ($f as $name => $value)
@@ -295,31 +295,31 @@ $t->is_deeply(array_keys($values), array('first_name', 'last_name', 'image'), '"
 $t->diag('->useFields()');
 $f = new FormTest();
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
-  'email'      => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
+  'email'      => new sfWidgetFormInputText(),
 )));
 $f->useFields(array('first_name', 'last_name'));
 $t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'last_name'), '->useFields() removes all fields except the ones given as an argument');
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
-  'email'      => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
+  'email'      => new sfWidgetFormInputText(),
 )));
 $f->useFields(array('email', 'first_name'));
 $t->is($f->getWidgetSchema()->getPositions(), array('email', 'first_name'), '->useFields() reorders the fields');
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
-  'email'      => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
+  'email'      => new sfWidgetFormInputText(),
 )));
 $f->useFields(array('email', 'first_name'), false);
 $t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'email'), '->useFields() does not reorder the fields if the second argument is false');
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
   'id'         => new sfWidgetFormInputHidden(),
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
-  'email'      => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
+  'email'      => new sfWidgetFormInputText(),
 )));
 $f->useFields(array('first_name', 'last_name'));
 $t->is($f->getWidgetSchema()->getPositions(), array('first_name', 'last_name', 'id'), '->useFields() does not remove hidden fields');
@@ -412,8 +412,8 @@ $f->setValidatorSchema(new sfValidatorSchema(array(
 )));
 $f->setWidgetSchema(new sfWidgetFormSchema(array(
   'id'         => new sfWidgetFormInputHidden(),
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
 )));
 $f->bind(array(
   'id'         => 'dddd',
@@ -438,8 +438,8 @@ $f->setValidators(array(
 ));
 $f->setWidgets(array(
   'id'         => new sfWidgetFormInputHidden(array('default' => 3)),
-  'first_name' => new sfWidgetFormInput(array('default' => 'Thomas')),
-  'last_name'  => new sfWidgetFormInput(),
+  'first_name' => new sfWidgetFormInputText(array('default' => 'Thomas')),
+  'last_name'  => new sfWidgetFormInputText(),
 ));
 
 // unbound
@@ -508,7 +508,7 @@ $t->is((string) $f['last_name'], '<input type="text" name="last_name" value="Pot
 // renderUsing()
 $t->diag('->renderUsing()');
 $f = new sfForm();
-$f->setWidgets(array('name' => new sfWidgetFormInput()));
+$f->setWidgets(array('name' => new sfWidgetFormInputText()));
 $output = <<<EOF
 <li>
   <label for="name">Name</label>
@@ -538,7 +538,7 @@ $t->diag('->renderHiddenFields()');
 $f = new sfForm();
 $f->setWidgets(array(
   'id' => new sfWidgetFormInputHidden(),
-  'name' => new sfWidgetFormInput(),
+  'name' => new sfWidgetFormInputText(),
   'is_admin' => new sfWidgetFormInputHidden(),
 ));
 $output = '<input type="hidden" name="id" id="id" /><input type="hidden" name="is_admin" id="is_admin" />';
@@ -549,15 +549,15 @@ $t->is(count($f->getFormFieldSchema()), 3, 'renderHiddenFields() does not modify
 $t->diag('->embedForm()');
 
 $author = new FormTest(array('first_name' => 'Fabien'));
-$author->setWidgetSchema($author_widget_schema = new sfWidgetFormSchema(array('first_name' => new sfWidgetFormInput())));
+$author->setWidgetSchema($author_widget_schema = new sfWidgetFormSchema(array('first_name' => new sfWidgetFormInputText())));
 $author->setValidatorSchema($author_validator_schema = new sfValidatorSchema(array('first_name' => new sfValidatorString(array('min_length' => 2)))));
 
 $company = new FormTest();
-$company->setWidgetSchema($company_widget_schema = new sfWidgetFormSchema(array('name' => new sfWidgetFormInput())));
+$company->setWidgetSchema($company_widget_schema = new sfWidgetFormSchema(array('name' => new sfWidgetFormInputText())));
 $company->setValidatorSchema($company_validator_schema = new sfValidatorSchema(array('name' => new sfValidatorString(array('min_length' => 2)))));
 
 $article = new FormTest();
-$article->setWidgetSchema($article_widget_schema = new sfWidgetFormSchema(array('title' => new sfWidgetFormInput())));
+$article->setWidgetSchema($article_widget_schema = new sfWidgetFormSchema(array('title' => new sfWidgetFormInputText())));
 $article->setValidatorSchema($article_validator_schema = new sfValidatorSchema(array('title' => new sfValidatorString(array('min_length' => 2)))));
 
 $author->embedForm('company', $company);
@@ -606,7 +606,7 @@ $t->is($w['authors'][0]->generateName('first_name'), 'article[authors][0][first_
 // bind too many values for embedded forms
 $t->diag('bind too many values for embedded forms');
 $list = new FormTest();
-$list->setWidgets(array('title' => new sfWidgetFormInput()));
+$list->setWidgets(array('title' => new sfWidgetFormInputText()));
 $list->setValidators(array('title' => new sfValidatorString()));
 $list->embedFormForEach('items', clone $list, 2);
 $list->bind(array(

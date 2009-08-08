@@ -9,14 +9,14 @@
  */
 
 /**
- * Adds BaseForm and upgrades form classes to extend it.
+ * Migrates form classes.
  *
  * @package    symfony
  * @subpackage task
  * @author     Pascal Borreli <pborreli@sqli.com>
  * @version    SVN: $Id: sfFormSymfonyUpgrade.class.php 12542 2008-11-01 15:38:31Z Pascal $
  */
-class sfFormSymfonyUpgrade extends sfUpgrade
+class sfFormsUpgrade extends sfUpgrade
 {
   public function upgrade()
   {
@@ -32,18 +32,42 @@ class sfFormSymfonyUpgrade extends sfUpgrade
       $this->getFilesystem()->replaceTokens(array($file), '##', '##', $tokens);
     }
 
-    // change all forms that extend sfForm to extend BaseForm
     $finder = sfFinder::type('file')->name('*.php');
     foreach ($finder->in($this->getProjectLibDirectories('/form')) as $file)
     {
       $contents = file_get_contents($file);
-      if (preg_match_all('/\bextends\b\s+\bsfForm\b/i', $contents, $matches))
+      $changed = false;
+
+      // change all forms that extend sfForm to extend BaseForm
+      if (preg_match_all('/\bextends\b\s+\bsfForm\b/i', $contents, $matches, PREG_OFFSET_CAPTURE))
       {
         foreach ($matches[0] as $match)
         {
-          $contents = str_replace($match, str_ireplace('sfForm', 'BaseForm', $match), $contents);
+          list($search, $offset) = $match;
+          $replace = str_ireplace('sfForm', 'BaseForm', $search);
+
+          $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
         }
 
+        $changed = true;
+      }
+
+      // change sfWidgetFormInput to sfWidgetFormInputText
+      if (preg_match_all('/\bnew\b\s+\bsfWidgetFormInput\b/i', $contents, $matches, PREG_OFFSET_CAPTURE))
+      {
+        foreach ($matches[0] as $match)
+        {
+          list($search, $offset) = $match;
+          $replace = $search.'Text';
+
+          $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
+        }
+
+        $changed = true;
+      }
+
+      if ($changed)
+      {
         $this->logSection('form', 'Migrating '.$file);
         file_put_contents($file, $contents);
       }

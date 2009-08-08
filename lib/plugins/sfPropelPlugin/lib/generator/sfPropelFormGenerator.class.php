@@ -233,7 +233,7 @@ class sfPropelFormGenerator extends sfGenerator
         $name = 'DateTime';
         break;
       default:
-        $name = 'Input';
+        $name = 'InputText';
     }
 
     if ($column->isPrimaryKey())

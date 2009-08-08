@@ -39,6 +39,12 @@ removed:
   * `first_name` => First name (as before)
   * `author_id` => Author (was "Author id" before)
 
+### `sfWidgetFormInputText`
+
+The `sfWidgetFormInput` class is now abstract. Text input fields are now
+created with the `sfWidgetFormInputText` class. This change was made to ease
+introspection of form classes.
+
 Validators
 ----------
 

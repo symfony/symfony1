@@ -4,9 +4,9 @@ class I18nForm extends sfForm
   public function configure()
   {
     $this->setWidgets(array(
-      'first_name' => new sfWidgetFormInput(),
-      'last_name'  => new sfWidgetFormInput(),
-      'email'      => new sfWidgetFormInput(),
+      'first_name' => new sfWidgetFormInputText(),
+      'last_name'  => new sfWidgetFormInputText(),
+      'email'      => new sfWidgetFormInputText(),
     ));
     
     $this->setValidators(array(

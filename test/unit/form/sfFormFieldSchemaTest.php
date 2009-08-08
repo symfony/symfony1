@@ -14,12 +14,12 @@ $t = new lime_test(10);
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
-  'name' => $nameWidget = new sfWidgetFormInput(),
+  'name' => $nameWidget = new sfWidgetFormInputText(),
 ));
 $authorSchema->setNameFormat('article[author][%s]');
 
 $schema = new sfWidgetFormSchema(array(
-  'title'  => $titleWidget = new sfWidgetFormInput(),
+  'title'  => $titleWidget = new sfWidgetFormInputText(),
   'author' => $authorSchema,
 ));
 $schema->setNameFormat('article[%s]');
@@ -74,8 +74,8 @@ catch (LogicException $e)
 // implements Countable
 $t->diag('implements Countable');
 $widgetSchema = new sfWidgetFormSchema(array(
-  'w1' => $w1 = new sfWidgetFormInput(),
-  'w2' => $w2 = new sfWidgetFormInput(),
+  'w1' => $w1 = new sfWidgetFormInputText(),
+  'w2' => $w2 = new sfWidgetFormInputText(),
 ));
 $f = new sfFormFieldSchema($widgetSchema, null, 'article', array());
 $t->is(count($f), 2, 'sfFormFieldSchema implements the Countable interface');

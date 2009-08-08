@@ -30,8 +30,8 @@ class MyFormatter extends sfWidgetFormSchemaFormatter
   }
 }
 
-$w1 = new sfWidgetFormInput();
-$w2 = new sfWidgetFormInput();
+$w1 = new sfWidgetFormInputText();
+$w2 = new sfWidgetFormInputText();
 $w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
 $f = new MyFormatter($w);
 
@@ -122,9 +122,9 @@ $t->is($f->translate('label'), '[label]', 'translate() call i18n callable as exp
 $t->diag('->generateLabel() ->generateLabelName() ->setLabel() ->setLabels()');
 MyFormatter::dropTranslationCallable();
 $w = new sfWidgetFormSchema(array(
-  'author_id'  => new sfWidgetFormInput(),
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
+  'author_id'  => new sfWidgetFormInputText(),
+  'first_name' => new sfWidgetFormInputText(),
+  'last_name'  => new sfWidgetFormInputText(),
 ));
 $f = new MyFormatter($w);
 $t->is($f->generateLabelName('first_name'), 'First name', '->generateLabelName() generates a label value from a label name');
