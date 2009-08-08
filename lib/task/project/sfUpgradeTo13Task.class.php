@@ -28,12 +28,12 @@ class sfUpgradeTo13Task extends sfBaseTask
     $this->briefDescription = 'Upgrade a symfony project to the 1.3 symfony release (from 1.2)';
 
     $this->detailedDescription = <<<EOF
-The [project:upgrade1.3|INFO] task upgrades a symfony project
-based on the 1.2 release to the 1.3 symfony release.
+The [project:upgrade1.3|INFO] task upgrades a symfony project based on the 1.2
+release to the 1.3 symfony release.
 
   [./symfony project:upgrade1.3|INFO]
 
-Please read the UPGRADE_TO_1_3 file to have information on what does this task.
+Please read the UPGRADE_TO_1_3 file to have information on what this task does.
 EOF;
   }
 
@@ -46,6 +46,7 @@ EOF;
     {
       $upgrader = new $class($this->dispatcher, $this->formatter);
       $upgrader->setCommandApplication($this->commandApplication);
+      $upgrader->setConfiguration($this->configuration);
       $upgrader->upgrade();
     }
   }

@@ -75,15 +75,17 @@ abstract class sfUpgrade extends sfBaseTask
 
   /**
    * Returns all project lib directories.
+   * 
+   * @param string $subdirectory A subdirectory within lib (i.e. "/form")
    */
-  protected function getProjectLibDirectories()
+  protected function getProjectLibDirectories($subdirectory = null)
   {
     return array_merge(
-      glob(sfConfig::get('sf_apps_dir').'/*/modules/*/lib'),
-      glob(sfConfig::get('sf_apps_dir').'/*/lib'),
+      glob(sfConfig::get('sf_apps_dir').'/*/modules/*/lib'.$subdirectory),
+      glob(sfConfig::get('sf_apps_dir').'/*/lib'.$subdirectory),
       array(
-        sfConfig::get('sf_apps_dir').'/lib',
-        sfConfig::get('sf_lib_dir'),
+        sfConfig::get('sf_apps_dir').'/lib'.$subdirectory,
+        sfConfig::get('sf_lib_dir').$subdirectory,
       )
     );
   }
