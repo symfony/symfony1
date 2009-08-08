@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfPropelLoadDataTask extends sfPropelBaseTask
+class sfPropelDataLoadTask extends sfPropelBaseTask
 {
   /**
    * @see sfTask

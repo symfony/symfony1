@@ -20,7 +20,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id$
  */
-class sfDoctrineDumpDataTask extends sfDoctrineBaseTask
+class sfDoctrineDataDumpTask extends sfDoctrineBaseTask
 {
   /**
    * @see sfTask
