@@ -361,28 +361,54 @@ class sfViewCacheManager
   /**
    * Returns true if the current content is cacheable.
    *
-   * If no $actionName parameter is provided the first parameter is assumed to
-   * be an internal URI which is then parsed for $moduleName and $actionName
-   * values.
+   * Possible break in backward compatibility: If the sf_lazy_cache_key
+   * setting is turned on in settings.yml, this method is not used when
+   * initially checking a partial's cacheability.
    *
-   * @param  string $moduleName Module name or internal URI if no $actionName parameter is provided.
-   * @param  string $actionName
+   * @see sfPartialView, isActionCacheable()
+   *
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return bool true, if the content is cacheable otherwise false
    */
-  public function isCacheable($moduleName, $actionName = null)
+  public function isCacheable($internalUri)
   {
     if (count($_GET) || count($_POST))
     {
       return false;
     }
 
-    if (is_null($actionName))
-    {
-      list(, $params) = $this->controller->convertUrlStringToParameters($moduleName);
+    list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
-      $moduleName = $params['module'];
-      $actionName = $params['action'];
+    $this->registerConfiguration($params['module']);
+
+    if (isset($this->cacheConfig[$params['module']][$params['action']]))
+    {
+      return ($this->cacheConfig[$params['module']][$params['action']]['lifeTime'] > 0);
+    }
+    else if (isset($this->cacheConfig[$params['module']]['DEFAULT']))
+    {
+      return ($this->cacheConfig[$params['module']]['DEFAULT']['lifeTime'] > 0);
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns true if the action is cacheable.
+   * 
+   * @param  string $moduleName A module name
+   * @param  string $actionName An action or partial template name
+   * 
+   * @return boolean True if the action is cacheable
+   * 
+   * @see isCacheable()
+   */
+  public function isActionCacheable($moduleName, $actionName)
+  {
+    if (count($_GET) || count($_POST))
+    {
+      return false;
     }
 
     $this->registerConfiguration($moduleName);
