@@ -145,33 +145,35 @@ abstract class sfWebDebugPanel
   /**
    * Formats a file link.
    * 
-   * @param  string  $fileOrClass A file path or class name
+   * @param  string  $file A file path or class name
    * @param  integer $line
-   * @param  string  $text        Text to use for the link
+   * @param  string  $text Text to use for the link
    * 
    * @return string
    */
-  public function formatFileLink($fileOrClass, $line = null, $text = null)
+  public function formatFileLink($file, $line = null, $text = null)
   {
-    if (class_exists($fileOrClass))
+    // this method is called a lot so we avoid calling class_exists()
+    if ($file && !sfToolkit::isPathAbsolute($file))
     {
       if (is_null($text))
       {
-        $text = $fileOrClass;
+        $text = $file;
       }
 
-      $r = new ReflectionClass($fileOrClass);
-      $fileOrClass = $r->getFileName();
+      // translate class to file name
+      $r = new ReflectionClass($file);
+      $file = $r->getFileName();
     }
 
     if (is_null($text))
     {
-      $text = sfDebug::shortenFilePath($fileOrClass);
+      $text = sfDebug::shortenFilePath($file);
     }
 
     if ($linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format')))
     {
-      $link = strtr($linkFormat, array('%f' => $fileOrClass, '%l' => $line));
+      $link = strtr($linkFormat, array('%f' => $file, '%l' => $line));
       $text = sprintf('<a href="%s" class="sfWebDebugFileLink" title="Open this file">%s</a>', htmlspecialchars($link, ENT_QUOTES, sfConfig::get('sf_charset')), $text);
     }
 
