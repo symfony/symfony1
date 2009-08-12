@@ -34,6 +34,7 @@ class sfDoctrineGenerateMigrationTask extends sfDoctrineBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('editor-cmd', null, sfCommandOption::PARAMETER_REQUIRED, 'Open script with this command upon creation'),
     ));
 
     $this->aliases = array('doctrine-generate-migration');
@@ -44,7 +45,12 @@ class sfDoctrineGenerateMigrationTask extends sfDoctrineBaseTask
     $this->detailedDescription = <<<EOF
 The [doctrine:generate-migration|INFO] task generates migration template
 
-  [./symfony doctrine:generate-migration|INFO]
+  [./symfony doctrine:generate-migration AddUserEmailColumn|INFO]
+
+You can provide an [--editor-cmd|COMMENT] option to open the new migration class in your
+editor of choice upon creation:
+
+  [./symfony doctrine:generate-migration AddUserEmailColumn --editor-cmd=mate|INFO]
 EOF;
   }
 
@@ -57,5 +63,13 @@ EOF;
 
     $databaseManager = new sfDatabaseManager($this->configuration);
     $this->callDoctrineCli('generate-migration', array('name' => $arguments['name']));
+
+    if (isset($options['editor-cmd']))
+    {
+      $config = $this->getCliConfig();
+      $files = sfFinder::type('file')->sort_by_name()->name('*.php')->in($config['migrations_path']);
+
+      $this->getFilesystem()->sh($options['editor-cmd'].' '.escapeshellarg(array_pop($files)));
+    }
   }
 }

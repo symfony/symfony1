@@ -665,6 +665,13 @@ nested `doctrine:insert-sql` task with `doctrine:migrate`.
   * `doctrine:rebuild-db`
   * `doctrine:reload-data`
 
+#### `doctrine:generate-migration --editor-cmd`
+
+The `doctrine:generate-migration` task now includes a `--editor-cmd` option
+which will execute once the migration class is created for easy editing.
+
+    $ php symfony doctrine:generate-migration AddUserEmailColumn --editor-cmd=mate
+
 ### Date Setters and Getters
 
 We've added two new methods for retrieving Doctrine date or timestamp values as
