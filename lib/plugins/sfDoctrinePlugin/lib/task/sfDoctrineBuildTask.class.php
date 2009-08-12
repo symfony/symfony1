@@ -267,13 +267,7 @@ EOF;
     {
       if (isset($options[$name]) && true === $options[$name])
       {
-        if (0 === strpos($name, 'all'))
-        {
-          // use any selected "all" option as the mode
-          return $value;
-        }
-
-        $mode += $value;
+        $mode = $mode | $value;
       }
     }
 
