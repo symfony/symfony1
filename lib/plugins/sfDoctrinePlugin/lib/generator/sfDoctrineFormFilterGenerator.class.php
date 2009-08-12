@@ -43,11 +43,6 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
   {
     $this->params = $params;
 
-    if (!isset($this->params['connection']))
-    {
-      throw new sfParseException('You must specify a "connection" parameter.');
-    }
-
     if (!isset($this->params['model_dir_name']))
     {
       $this->params['model_dir_name'] = 'model';
