@@ -55,6 +55,21 @@ EOF;
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    $this->callDoctrineCli('migrate', array('version' => $arguments['version']));
+    try
+    {
+      $this->callDoctrineCli('migrate', array('version' => $arguments['version']));
+    }
+    catch (sfException $e)
+    {
+      // return quietly if no migration is necessary
+      if (false === strpos($e->getMessage(), 'Already at version #'))
+      {
+        throw $e;
+      }
+      else if ($this->commandApplication && $this->commandApplication->withTrace())
+      {
+        $this->commandApplication->renderException($e);
+      }
+    }
   }
 }
