@@ -187,6 +187,16 @@ symfony 1.4:
 
   * All symfony 1.0 task aliases.
 
+The following Doctrine tasks have been merged into `doctrine:build` and will
+be removed in symfony 1.4:
+
+  * `doctrine:build-all`
+  * `doctrine:build-all-load`
+  * `doctrine:build-all-reload`
+  * `doctrine:build-all-reload-test-all`
+  * `doctrine:rebuild-db`
+  * `doctrine:reload-data`
+
 Miscellaneous
 -------------
 

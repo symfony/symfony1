@@ -26,11 +26,10 @@ class sfDoctrineBuildFiltersTask extends sfDoctrineBaseTask
   protected function configure()
   {
     $this->addOptions(array(
-      new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-      new sfCommandOption('model-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The model dir name', 'model'),
-      new sfCommandOption('filter-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The filter form dir name', 'filter'),
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('model-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The model dir name', 'model'),
+      new sfCommandOption('filter-dir-name', null, sfCommandOption::PARAMETER_REQUIRED, 'The filter form dir name', 'filter'),
     ));
 
     $this->namespace = 'doctrine';
@@ -44,11 +43,6 @@ The [doctrine:build-filters|INFO] task creates filter form classes from the sche
 
 The task read the schema information in [config/*schema.xml|COMMENT] and/or
 [config/*schema.yml|COMMENT] from the project and all installed plugins.
-
-The task use the [doctrine|COMMENT] connection as defined in [config/databases.yml|COMMENT].
-You can use another connection by using the [--connection|COMMENT] option:
-
-  [./symfony doctrine:build-filters --connection="name"|INFO]
 
 The model filter form classes files are created in [lib/filter|COMMENT].
 
@@ -66,9 +60,8 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $generatorManager = new sfGeneratorManager($this->configuration);
     $generatorManager->generate('sfDoctrineFormFilterGenerator', array(
-      'connection'     => $options['connection'],
-      'model_dir_name' => $options['model-dir-name'],
-      'filter_dir_name'  => $options['filter-dir-name'],
+      'model_dir_name'  => $options['model-dir-name'],
+      'filter_dir_name' => $options['filter-dir-name'],
     ));
 
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'properties.ini', true);

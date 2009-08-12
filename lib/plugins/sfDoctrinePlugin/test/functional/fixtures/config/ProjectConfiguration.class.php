@@ -14,8 +14,15 @@ class ProjectConfiguration extends sfProjectConfiguration
   {
     chdir(sfConfig::get('sf_root_dir'));
 
-    $task = new sfDoctrineBuildAllTask($this->dispatcher, new sfFormatter());
-    $task->run(array(), array('--env=test'));
+    $task = new sfDoctrineBuildTask($this->dispatcher, new sfFormatter());
+    $task->setConfiguration($this);
+    $task->run(array(), array(
+      'no-confirmation' => true,
+      'db'              => true,
+      'model'           => true,
+      'forms'           => true,
+      'filters'         => true,
+    ));
   }
 
   public function loadFixtures($fixtures)
@@ -26,7 +33,8 @@ class ProjectConfiguration extends sfProjectConfiguration
     }
     chdir(sfConfig::get('sf_root_dir'));
     $task = new sfDoctrineDataLoadTask($this->dispatcher, new sfFormatter());
-    $task->run(array(), array('--env=test', '--dir=' . $path));
+    $task->setConfiguration($this);
+    $task->run(array(), array('--dir=' . $path));
   }
 
   public function configureDoctrine(Doctrine_Manager $manager)

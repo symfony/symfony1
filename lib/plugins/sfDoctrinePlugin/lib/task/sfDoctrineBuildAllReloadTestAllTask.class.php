@@ -20,6 +20,8 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id: sfDoctrineBuildAllReloadTask.class.php 8743 2008-05-03 05:02:39Z Jonathan.Wage $
+ *
+ * @deprecated Use doctrine:build and test:all instead
  */
 class sfDoctrineBuildAllReloadTestAllTask extends sfDoctrineBaseTask
 {
@@ -31,10 +33,11 @@ class sfDoctrineBuildAllReloadTestAllTask extends sfDoctrineBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-      new sfCommandOption('append', null, sfCommandOption::PARAMETER_NONE, 'Don\'t delete current data in the database'),
-      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
+      new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
+      new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
       new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
-      new sfCommandOption('force', null, sfCommandOption::PARAMETER_NONE, 'Whether to force dropping of the database'),
+      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
+      new sfCommandOption('append', null, sfCommandOption::PARAMETER_NONE, 'Don\'t delete current data in the database'),
     ));
 
     $this->aliases = array('doctrine-build-all-reload-test-all');
@@ -77,6 +80,7 @@ EOF;
     $ret = $buildAllReload->run(array(), array(
       'dir'             => $options['dir'],
       'append'          => $options['append'],
+      'skip-forms'      => $options['skip-forms'],
       'no-confirmation' => $options['no-confirmation'],
       'migrate'         => $options['migrate'],
     ));

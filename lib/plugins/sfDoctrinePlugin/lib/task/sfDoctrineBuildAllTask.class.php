@@ -19,6 +19,8 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id$
+ *
+ * @deprecated Use doctrine:build instead
  */
 class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
 {
@@ -27,11 +29,6 @@ class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
    */
   protected function configure()
   {
-    $this->aliases = array('doctrine-build-all');
-    $this->namespace = 'doctrine';
-    $this->name = 'build-all';
-    $this->briefDescription = 'Generates Doctrine model, SQL and initializes the database';
-
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
@@ -39,6 +36,11 @@ class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
       new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms'),
       new sfCommandOption('migrate', null, sfCommandOption::PARAMETER_NONE, 'Migrate instead of reset the database'),
     ));
+  
+    $this->aliases = array('doctrine-build-all');
+    $this->namespace = 'doctrine';
+    $this->name = 'build-all';
+    $this->briefDescription = 'Generates Doctrine model, SQL and initializes the database';
 
     $this->detailedDescription = <<<EOF
 The [doctrine:build-all|INFO] task is a shortcut for three other tasks:
@@ -78,73 +80,18 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $buildDb = new sfDoctrineBuildDbTask($this->dispatcher, $this->formatter);
-    $buildDb->setCommandApplication($this->commandApplication);
-    $buildDb->setConfiguration($this->configuration);
-    $ret = $buildDb->run();
-
-    if ($ret)
-    {
-      return $ret;
-    }
-
-    $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
-    $buildModel->setCommandApplication($this->commandApplication);
-    $buildModel->setConfiguration($this->configuration);
-    $ret = $buildModel->run();
-
-    if ($ret)
-    {
-      return $ret;
-    }
-
-    $buildSql = new sfDoctrineBuildSqlTask($this->dispatcher, $this->formatter);
-    $buildSql->setCommandApplication($this->commandApplication);
-    $buildSql->setConfiguration($this->configuration);
-    $ret = $buildSql->run();
-
-    if ($ret)
-    {
-      return $ret;
-    }
-
-    if (!$options['skip-forms'])
-    {
-      $buildForms = new sfDoctrineBuildFormsTask($this->dispatcher, $this->formatter);
-      $buildForms->setCommandApplication($this->commandApplication);
-      $buildForms->setConfiguration($this->configuration);
-      $ret = $buildForms->run();
-
-      if ($ret)
-      {
-        return $ret;
-      }
-
-      $buildFilters = new sfDoctrineBuildFiltersTask($this->dispatcher, $this->formatter);
-      $buildFilters->setCommandApplication($this->commandApplication);
-      $buildFilters->setConfiguration($this->configuration);
-      $ret = $buildFilters->run();
-
-      if ($ret)
-      {
-        return $ret;
-      }
-    }
-
-    if ($options['migrate'])
-    {
-      $migrate = new sfDoctrineMigrateTask($this->dispatcher, $this->formatter);
-      $migrate->setCommandApplication($this->commandApplication);
-      $migrate->setConfiguration($this->configuration);
-      $ret = $migrate->run();
-    }
-    else
-    {
-      $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
-      $insertSql->setCommandApplication($this->commandApplication);
-      $insertSql->setConfiguration($this->configuration);
-      $ret = $insertSql->run();
-    }
+    $task = new sfDoctrineBuildTask($this->dispatcher, $this->formatter);
+    $task->setCommandApplication($this->commandApplication);
+    $task->setConfiguration($this->configuration);
+    $ret = $task->run(array(), array(
+      'no-confirmation' => $options['no-confirmation'],
+      'db'              => true,
+      'model'           => true,
+      'forms'           => !$options['skip-forms'],
+      'filters'         => !$options['skip-forms'],
+      'sql'             => true,
+      'and-migrate'     => $options['migrate'],
+    ));
 
     return $ret;
   }

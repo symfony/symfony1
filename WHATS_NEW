@@ -653,6 +653,34 @@ Is equivalent to running these commands:
     $ php symfony doctrine:insert-sql
     $ php symfony doctrine:data-load
 
+#### Build whatever
+
+The new `doctrine:build` task allows you to specify what exactly you would
+like symfony and Doctrine to build. This task replicates the functionality in
+many of the existing combination-tasks, which have all been deprecated in
+favor of this more flexible solution.
+
+Here are some possible uses of `doctrine:build`:
+
+    $ php symfony doctrine:build --db --and-load
+
+This will drop (`:drop-db`) and create (`:build-db`) the database, create the
+tables configured in `schema.yml` (`:insert-sql`) and load the fixture data
+(`:data-load`).
+
+    $ php symfony doctrine:build --all --and-migrate
+
+This will build the model (`:build-model`), sql (`:build-sql`), forms
+(`:build-forms`), form filters (`:build-filters`) and run any pending
+migrations (`:migrate`).
+
+    $ php symfony doctrine:build --model --and-migrate --and-append=data/fixtures/categories.yml
+
+This will build the model (`:build-model`), migrate the database (`:migrate`)
+and append category fixtures data (`:data-load --append --dir=data/fixtures/categories.yml`).
+
+For more information see the `doctrine:build` task's help page.
+
 #### New option: `--migrate`
 
 The following tasks now include a `--migrate` option, which will replace the

@@ -19,6 +19,8 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @version    SVN: $Id$
+ *
+ * @deprecated Use doctrine:build instead
  */
 class sfDoctrineRebuildDbTask extends sfDoctrineBaseTask
 {
@@ -58,18 +60,15 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
-    $dropDb->setCommandApplication($this->commandApplication);
-    $dropDb->setConfiguration($this->configuration);
-    $dropDb->run(array(), array(
+    $task = new sfDoctrineBuildTask($this->dispatcher, $this->formatter);
+    $task->setCommandApplication($this->commandApplication);
+    $task->setConfiguration($this->configuration);
+    $ret = $task->run(array(), array(
       'no-confirmation' => $options['no-confirmation'],
+      'db'              => true,
+      'and-migrate'     => $options['migrate'],
     ));
 
-    $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
-    $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->setConfiguration($this->configuration);
-    $buildAll->run(array(), array(
-      'migrate' => $options['migrate'],
-    ));
+    return $ret;
   }
 }
