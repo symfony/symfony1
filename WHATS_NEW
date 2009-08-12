@@ -668,11 +668,10 @@ This will drop (`:drop-db`) and create (`:build-db`) the database, create the
 tables configured in `schema.yml` (`:insert-sql`) and load the fixture data
 (`:data-load`).
 
-    $ php symfony doctrine:build --all --and-migrate
+    $ php symfony doctrine:build --all-classes --and-migrate
 
-This will build the model (`:build-model`), sql (`:build-sql`), forms
-(`:build-forms`), form filters (`:build-filters`) and run any pending
-migrations (`:migrate`).
+This will build the model (`:build-model`), forms (`:build-forms`), form
+filters (`:build-filters`) and run any pending migrations (`:migrate`).
 
     $ php symfony doctrine:build --model --and-migrate --and-append=data/fixtures/categories.yml
 
@@ -699,6 +698,9 @@ The `doctrine:generate-migration` task now includes a `--editor-cmd` option
 which will execute once the migration class is created for easy editing.
 
     $ php symfony doctrine:generate-migration AddUserEmailColumn --editor-cmd=mate
+
+This example will generate the new migration class and open the new file in
+TextMate.
 
 ### Date Setters and Getters
 
