@@ -211,9 +211,9 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   public function checkLock()
   {
     if (
-      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'-cli.lck', 5)
+      $this->hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'-cli.lck', 5)
       ||
-      sfToolkit::hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'.lck')
+      $this->hasLockFile(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'.lck')
     )
     {
       // application is not available - we'll find the most specific unavailable page...
@@ -235,6 +235,35 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
 
       die(1);
     }
+  }
+
+  /**
+   * Determines if a lock file is present.
+   *
+   * @param  string  $lockFile             Name of the lock file.
+   * @param  integer $maxLockFileLifeTime  A max amount of life time for the lock file.
+   *
+   * @return bool true, if the lock file is present, otherwise false.
+   */
+  protected function hasLockFile($lockFile, $maxLockFileLifeTime = 0)
+  {
+    $isLocked = false;
+    if (is_readable($lockFile) && ($last_access = fileatime($lockFile)))
+    {
+      $now = time();
+      $timeDiff = $now - $last_access;
+
+      if (!$maxLockFileLifeTime || $timeDiff < $maxLockFileLifeTime)
+      {
+        $isLocked = true;
+      }
+      else
+      {
+        $isLocked = @unlink($lockFile) ? false : true;
+      }
+    }
+
+    return $isLocked;
   }
 
   /**
