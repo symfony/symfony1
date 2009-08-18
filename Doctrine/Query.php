@@ -1145,7 +1145,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $queryComponentsAfter = $this->getQueryComponents();
                 
                 // Root alias is the key of difference of query components
-                $this->_rootAlias = key(array_diff_key($queryComponentsAfter, $queryComponentsBefore));
+                $diffQueryComponents = array_diff_key($queryComponentsAfter, $queryComponentsBefore); 
+                $this->_rootAlias = key($diffQueryComponents);
             }
         }
         $this->_state = self::STATE_CLEAN;
