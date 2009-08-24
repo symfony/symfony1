@@ -612,6 +612,19 @@ function _dynamic_path($uri, $format, $absolute = false)
 /**
  * Returns <script> tags for all javascripts associated with the given form.
  *
+ * The scripts are set by implementing the getJavaScripts() method in the
+ * corresponding widget.
+ *
+ * <code>
+ * class MyWidget extends sfWidgetForm
+ * {
+ *   public function getJavaScripts()
+ *   {
+ *     return array('/path/to/a/file.js');
+ *   }
+ * }
+ * </code>
+ *
  * @return string <script> tags
  */
 function get_javascripts_for_form(sfForm $form)
@@ -637,6 +650,19 @@ function include_javascripts_for_form(sfForm $form)
 
 /**
  * Returns <link> tags for all stylesheets associated with the given form.
+ *
+ * The stylesheets are set by implementing the getStyleSheets() method in the
+ * corresponding widget.
+ *
+ * <code>
+ * class MyWidget extends sfWidgetForm
+ * {
+ *   public function getStyleSheets()
+ *   {
+ *     return array('/path/to/a/file.css');
+ *   }
+ * }
+ * </code>
  *
  * @return string <link> tags
  */
