@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10);
+$t = new lime_test(11);
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -92,3 +92,14 @@ foreach ($f as $name => $value)
 $t->is(isset($values['w1']), true, 'sfFormFieldSchema implements the Iterator interface');
 $t->is(isset($values['w2']), true, 'sfFormFieldSchema implements the Iterator interface');
 $t->is(count($values), 2, 'sfFormFieldSchema implements the Iterator interface');
+
+$t->diag('implements Iterator respecting the order of fields');
+$widgetSchema->moveField('w2', 'first');
+$f = new sfFormFieldSchema($widgetSchema, null, 'article', array());
+
+$values = array();
+foreach ($f as $name => $value)
+{
+  $values[$name] = $value;
+}
+$t->is(array_keys($values), array('w2', 'w1'), 'sfFormFieldSchema keeps the order');

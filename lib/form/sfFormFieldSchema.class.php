@@ -36,7 +36,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   {
     parent::__construct($widget, $parent, $name, $value, $error);
 
-    $this->fieldNames = array_keys($widget->getFields());
+    $this->fieldNames = $widget->getPositions();
   }
 
   /**
