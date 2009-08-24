@@ -28,8 +28,13 @@ class sfDoctrineBuildTask extends sfDoctrineBaseTask
     BUILD_SQL     = 8,
     BUILD_DB      = 16,
 
-    BUILD_ALL_CLASSES = 7,  // model, forms, filters
-    BUILD_ALL         = 31; // model, forms, filters, sql, db
+    OPTION_MODEL       = 1,
+    OPTION_FORMS       = 3,  // model, forms
+    OPTION_FILTERS     = 5,  // model, filters
+    OPTION_SQL         = 9,  // model, sql
+    OPTION_DB          = 16,
+    OPTION_ALL_CLASSES = 7,  // model, forms, filters
+    OPTION_ALL         = 31; // model, forms, filters, sql, db
 
   /**
    * @see sfTask
@@ -284,7 +289,7 @@ EOF;
     $options = array();
     foreach ($this->options as $option)
     {
-      if (defined($constant = __CLASS__.'::BUILD_'.str_replace('-', '_', strtoupper($option->getName()))))
+      if (defined($constant = __CLASS__.'::OPTION_'.str_replace('-', '_', strtoupper($option->getName()))))
       {
         $options[$option->getName()] = constant($constant);
       }
