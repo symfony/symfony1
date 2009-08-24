@@ -426,7 +426,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       $javascripts = array_merge($javascripts, $field->getJavaScripts());
     }
 
-    return $javascripts;
+    return array_unique($javascripts);
   }
 
   /**

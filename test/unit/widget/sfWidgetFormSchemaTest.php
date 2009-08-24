@@ -425,12 +425,12 @@ class MyWidget extends sfWidgetForm
 
   public function getJavaScripts()
   {
-    return array('/path/to/a/'.$this->getOption('name').'.js');
+    return array('/path/to/a/'.$this->getOption('name').'.js', '/path/to/foo.js');
   }
 
   public function getStylesheets()
   {
-    return array('/path/to/a/'.$this->getOption('name').'.css' => 'all');
+    return array('/path/to/a/'.$this->getOption('name').'.css' => 'all', '/path/to/foo.css' => 'all');
   }
 }
 
@@ -440,5 +440,5 @@ $w = new sfWidgetFormSchema(array(
   'foo' => new MyWidget(array('name' => 'foo')),
   'bar' => new MyWidget(array('name' => 'bar')),
 ));
-$t->is($w->getJavaScripts(), array('/path/to/a/foo.js', '/path/to/a/bar.js'), '->getJavaScripts() returns an array of stylesheets');
-$t->is($w->getStylesheets(), array('/path/to/a/foo.css' => 'all', '/path/to/a/bar.css' => 'all'), '->getStylesheets() returns an array of JavaScripts');
+$t->is($w->getJavaScripts(), array('/path/to/a/foo.js', '/path/to/foo.js', '/path/to/a/bar.js'), '->getJavaScripts() returns an array of stylesheets');
+$t->is($w->getStylesheets(), array('/path/to/a/foo.css' => 'all', '/path/to/foo.css' => 'all', '/path/to/a/bar.css' => 'all'), '->getStylesheets() returns an array of JavaScripts');
