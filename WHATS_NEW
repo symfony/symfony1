@@ -409,6 +409,18 @@ These tasks are backward compatible with their previous signature:
     $ php symfony project:disable frontend prod
     $ php symfony project:enable frontend prod
 
+### `help` and `list`
+
+The `help` and `list` tasks can now display their information as XML:
+
+    $ php symfony list --xml
+    $ php symfony help test:all --xml
+
+The output is based on the new `sfTask::asXml()` method, which returns a XML
+representation of a task object.
+
+The XML output is mostly useful for third-party tools like IDEs.
+
 Exceptions
 ----------
 

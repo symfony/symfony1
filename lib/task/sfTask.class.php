@@ -560,6 +560,85 @@ abstract class sfTask
   }
 
   /**
+   * Returns an XML representation of a task.
+   *
+   * @return string An XML string representing the task
+   */
+  public function asXml()
+  {
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    $dom->formatOutput = true;
+    $dom->appendChild($taskXML = $dom->createElement('task'));
+    $taskXML->setAttribute('id', $this->getFullName());
+    $taskXML->setAttribute('namespace', $this->getNamespace() ? $this->getNamespace() : '_global');
+    $taskXML->setAttribute('name', $this->getName());
+
+    $taskXML->appendChild($usageXML = $dom->createElement('usage'));
+    $usageXML->appendChild($dom->createTextNode(sprintf($this->getSynopsis(), '')));
+
+    $taskXML->appendChild($descriptionXML = $dom->createElement('description'));
+    $descriptionXML->appendChild($dom->createTextNode(implode("\n ", explode("\n", $this->getBriefDescription()))));
+
+    $taskXML->appendChild($helpXML = $dom->createElement('help'));
+    $help = $this->detailedDescription;
+    $help = str_replace(array('|COMMENT', '|INFO'), array('|strong', '|em'), $help);
+    $help = preg_replace('/\[(.+?)\|(\w+)\]/s', '<$2>$1</$2>', $help);
+    $helpXML->appendChild($dom->createTextNode(implode("\n ", explode("\n", $help))));
+
+    $taskXML->appendChild($aliasesXML = $dom->createElement('aliases'));
+    foreach ($this->getAliases() as $alias)
+    {
+      $aliasesXML->appendChild($aliasXML = $dom->createElement('alias'));
+      $aliasXML->appendChild($dom->createTextNode($alias));
+    }
+
+    $taskXML->appendChild($argumentsXML = $dom->createElement('arguments'));
+    foreach ($this->getArguments() as $argument)
+    {
+      $argumentsXML->appendChild($argumentXML = $dom->createElement('argument'));
+      $argumentXML->setAttribute('name', $argument->getName());
+      $argumentXML->setAttribute('is_required', $argument->isRequired() ? 1 : 0);
+      $argumentXML->setAttribute('is_array', $argument->isArray() ? 1 : 0);
+      $argumentXML->appendChild($helpXML = $dom->createElement('description'));
+      $helpXML->appendChild($dom->createTextNode($argument->getHelp()));
+
+      $argumentXML->appendChild($defaultsXML = $dom->createElement('defaults'));
+      $defaults = is_array($argument->getDefault()) ? $argument->getDefault() : ($argument->getDefault() ? array($argument->getDefault()) : array());
+      foreach ($defaults as $default)
+      {
+        $defaultsXML->appendChild($defaultXML = $dom->createElement('default'));
+        $defaultXML->appendChild($dom->createTextNode($default));
+      }
+    }
+
+    $taskXML->appendChild($optionsXML = $dom->createElement('options'));
+    foreach ($this->getOptions() as $option)
+    {
+      $optionsXML->appendChild($optionXML = $dom->createElement('option'));
+      $optionXML->setAttribute('name', '--'.$option->getName());
+      $optionXML->setAttribute('shortcut', $option->getShortcut() ? '-'.$option->getShortcut() : '');
+      $optionXML->setAttribute('accept_parameter', $option->acceptParameter() ? 1 : 0);
+      $optionXML->setAttribute('is_parameter_required', $option->isParameterRequired() ? 1 : 0);
+      $optionXML->setAttribute('is_multiple', $option->isArray() ? 1 : 0);
+      $optionXML->appendChild($helpXML = $dom->createElement('description'));
+      $helpXML->appendChild($dom->createTextNode($option->getHelp()));
+
+      if ($option->acceptParameter())
+      {
+        $optionXML->appendChild($defaultsXML = $dom->createElement('defaults'));
+        $defaults = is_array($option->getDefault()) ? $option->getDefault() : ($option->getDefault() ? array($option->getDefault()) : array());
+        foreach ($defaults as $default)
+        {
+          $defaultsXML->appendChild($defaultXML = $dom->createElement('default'));
+          $defaultXML->appendChild($dom->createTextNode($default));
+        }
+      }
+    }
+
+    return $dom->saveXml();
+  }
+
+  /**
    * Executes the current task.
    *
    * @param array    $arguments  An array of arguments

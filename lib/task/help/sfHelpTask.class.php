@@ -27,9 +27,23 @@ class sfHelpTask extends sfCommandApplicationTask
       new sfCommandArgument('task_name', sfCommandArgument::OPTIONAL, 'The task name', 'help'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('xml', null, sfCommandOption::PARAMETER_NONE, 'To output help as XML'),
+    ));
+
     $this->aliases = array('h');
 
     $this->briefDescription = 'Displays help for a task';
+
+    $this->detailedDescription = <<<EOF
+The [help|INFO] task displays help for a given task:
+
+  [./symfony help test:all|INFO]
+
+You can also output the help as XML by using the [--xml|COMMENT] option:
+
+  [./symfony help test:all --xml|INFO]
+EOF;
   }
 
   /**
@@ -44,6 +58,18 @@ class sfHelpTask extends sfCommandApplicationTask
 
     $task = $this->commandApplication->getTask($arguments['task_name']);
 
+    if ($options['xml'])
+    {
+      $this->outputAsXml($task);
+    }
+    else
+    {
+      $this->outputAsText($task);
+    }
+  }
+
+  protected function outputAsText(sfTask $task)
+  {
     $messages = array();
 
     $messages[] = $this->formatter->format('Usage:', 'COMMENT');
@@ -100,5 +126,10 @@ class sfHelpTask extends sfCommandApplicationTask
     }
 
     $this->log($messages);
+  }
+
+  protected function outputAsXml(sfTask $task)
+  {
+    echo $task->asXml();
   }
 }
