@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(82);
+$t = new lime_test(90);
 
 $w1 = new sfWidgetFormInputText(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInputText();
@@ -68,6 +68,18 @@ $w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
 unset($w['w1']);
 $t->is($w['w1'], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 $t->is($w->getPositions(), array('w2'), 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+
+// unset with numeric keys
+$w = new sfWidgetFormSchema(array('0' => $w1, 'w2' => $w2));
+unset($w['w2']);
+$t->is($w['w2'], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+$t->is($w->getPositions(), array('0'), 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+
+$w = new sfWidgetFormSchema(array('w1' => $w1, '0' => $w2));
+unset($w[0]);
+$t->is($w[0], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+$t->is($w->getPositions(), array('w1'), 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+
 
 // ->addFormFormatter() ->setFormFormatterName() ->getFormFormatterName() ->getFormFormatter() ->getFormFormatters()
 $t->diag('->addFormFormatter() ->setFormFormatterName() ->getFormFormatterName() ->getFormFormatter() ->getFormFormatters()');
@@ -275,6 +287,24 @@ catch (LogicException $e)
 {
   $t->pass('->moveField() throws an LogicException if you don\'t pass a relative field name with BEFORE');
 }
+// this case is especially interesting because the numeric array keys are always
+// converted to integers by array
+// furthermore, (int)0 == (string)'w1' succeeds
+$w = new sfWidgetFormSchema(array('w1' => $w1, '0' => $w2));
+$w->moveField(0, sfWidgetFormSchema::FIRST);
+$t->is($w->getPositions(), array('0', 'w1'), '->moveField() compares field names as strings');
+
+$w = new sfWidgetFormSchema(array('w1' => $w1, '0' => $w2));
+$w->moveField('0', sfWidgetFormSchema::FIRST);
+$t->is($w->getPositions(), array('0', 'w1'), '->moveField() compares field names as strings');
+
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2, '0' => $w1));
+$w->moveField('w1', sfWidgetFormSchema::BEFORE, '0');
+$t->is($w->getPositions(), array('w2', 'w1', '0'), '->moveField() compares field names as strings');
+
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2, '0' => $w1));
+$w->moveField('w1', sfWidgetFormSchema::BEFORE, 0);
+$t->is($w->getPositions(), array('w2', 'w1', '0'), '->moveField() compares field names as strings');
 
 // ->getGlobalErrors()
 $t->diag('->getGlobalErrors()');

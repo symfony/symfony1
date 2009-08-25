@@ -676,7 +676,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     if (!isset($this->fields[$name]))
     {
-      $this->positions[] = $name;
+      $this->positions[] = (string) $name;
     }
 
     $this->fields[$name] = clone $widget;
@@ -696,7 +696,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   public function offsetUnset($name)
   {
     unset($this->fields[$name]);
-    if (false !== $position = array_search($name, $this->positions))
+    if (false !== $position = array_search((string) $name, $this->positions))
     {
       unset($this->positions[$position]);
 
@@ -742,6 +742,10 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       throw new InvalidArgumentException('Positions must contains all field names.');
     }
+    foreach ($positions as &$position)
+    {
+      $position = (string) $position;
+    }
 
     $this->positions = $positions;
   }
@@ -767,6 +771,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function moveField($field, $action, $pivot = null)
   {
+    $field = (string) $field;
     if (false === $fieldPosition = array_search($field, $this->positions))
     {
       throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $field));
@@ -776,6 +781,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     if (!is_null($pivot))
     {
+      $pivot = (string) $pivot;
       if (false === $pivotPosition = array_search($pivot, $this->positions))
       {
         throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $pivot));
