@@ -318,7 +318,19 @@ class sfProjectConfiguration
    */
   public function enablePlugins($plugins)
   {
-    $this->setPlugins(array_merge($this->plugins, is_array($plugins) ? $plugins : array($plugins)));
+    if (!is_array($plugins))
+    {
+      if (func_num_args() > 1)
+      {
+        $plugins = func_get_args();
+      }
+      else
+      {
+        $plugins = array($plugins);
+      }
+    }
+    
+    $this->setPlugins(array_merge($this->plugins, $plugins));
   }
 
   /**

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3);
+$t = new lime_test(4);
 
 class ProjectConfiguration extends sfProjectConfiguration
 {
@@ -36,3 +36,14 @@ foreach (array('setPlugins', 'disablePlugins', 'enableAllPluginsExcept') as $met
     $t->pass('->'.$method.'() throws an exception if called too late');
   }
 }
+
+class ProjectConfiguration2 extends sfProjectConfiguration
+{
+  public function setup()
+  {
+    $this->enablePlugins('sfAutoloadPlugin', 'sfConfigPlugin');
+  }
+}
+
+$configuration2 = new ProjectConfiguration2(dirname(__FILE__).'/../../functional/fixtures');
+$t->is_deeply($configuration2->getPlugins(), array('sfAutoloadPlugin', 'sfConfigPlugin'), '->enablePlugins() can enable plugins passed as arguments instead of array');
