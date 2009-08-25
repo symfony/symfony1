@@ -23,7 +23,7 @@ class sfDoctrineCreateModelTables extends sfDoctrineBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('models', sfCommandArgument::IS_ARRAY, array()),
+      new sfCommandArgument('models', sfCommandArgument::IS_ARRAY, 'The list of models', array()),
     ));
 
     $this->addOptions(array(
