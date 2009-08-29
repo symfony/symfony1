@@ -792,3 +792,15 @@ Panels can also inspect request parameters by accessing the web debug
 
     [php]
     $requestParameters = $this->webDebug->getOption('request_parameters');
+
+Partials
+--------
+
+### Slots improvements
+
+The `get_slot()` and `include_slot()` helpers now accept a second parameter for 
+specifying the default slot content to return if none is provided by the slot:
+
+    [php]
+    <?php echo get_slot('foo', 'bar') // will output 'bar' if slot 'foo' is not defined ?>
+    <?php include_slot('foo', 'bar') // will output 'bar' if slot 'foo' is not defined ?>

@@ -301,13 +301,14 @@ function has_slot($name)
  *  include_slot('navigation');
  * </code>
  *
- * @param  string $name  slot name
+ * @param  string $name     slot name
+ * @param  string $default  default content to return if slot is unexistent
  *
  * @see    has_slot, get_slot
  */
-function include_slot($name)
+function include_slot($name, $default = '')
 {
-  return ($v = get_slot($name)) ? print $v : false;
+  return ($v = get_slot($name, $default)) ? print $v : false;
 }
 
 /**
@@ -318,12 +319,13 @@ function include_slot($name)
  *  echo get_slot('navigation');
  * </code>
  *
- * @param  string $name  slot name
+ * @param  string $name     slot name
+ * @param  string $default  default content to return if slot is unexistent
  *
  * @return string content of the slot
  * @see    has_slot, include_slot
  */
-function get_slot($name)
+function get_slot($name, $default = '')
 {
   $context = sfContext::getInstance();
   $slots = $context->getResponse()->getSlots();
@@ -333,7 +335,7 @@ function get_slot($name)
     $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Get slot "%s"', $name))));
   }
 
-  return isset($slots[$name]) ? $slots[$name] : '';
+  return isset($slots[$name]) ? $slots[$name] : $default;
 }
 
 function _call_component($moduleName, $componentName, $vars)
