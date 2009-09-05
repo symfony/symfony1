@@ -770,6 +770,39 @@ expression by passing a string.
       with('doctrine')->debug('/from articles/i')
     ;
 
+### `sfFormFilterDoctrine`
+
+The `sfFormFilterDoctrine` class can now be seeded a `Doctrine_Query` object
+via the `query` option:
+
+    [php]
+    $filter = new ArticleFormFilter(array(), array(
+      'query' => $table->createQuery()->select('title, body'),
+    ));
+
+The table method specified via `->setTableMethod()` (or now via the
+`table_method` option), is no longer required to return a query object. Any of
+the following are valid `sfFormFilterDoctrine` table methods:
+
+    [php]
+    // works in symfony >= 1.2
+    public function getQuery()
+    {
+      return $this->createQuery()->select('title, body');
+    }
+
+    // works in symfony >= 1.2
+    public function filterQuery(Doctrine_Query $query)
+    {
+      return $query->select('title, body');
+    }
+
+    // works in symfony >= 1.3
+    public function modifyQuery(Doctrine_Query $query)
+    {
+      $query->select('title, body');
+    }
+
 Web Debug Toolbar
 -----------------
 

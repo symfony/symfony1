@@ -46,4 +46,19 @@ class ArticleTable extends Doctrine_Table
   {
     return $q;
   }
+
+  public function getNewQuery()
+  {
+    return $this->createQuery()->select('title, body');
+  }
+
+  public function filterSuppliedQuery($query)
+  {
+    $query->select('title, body');
+  }
+
+  public function filterSuppliedQueryAndReturn($query)
+  {
+    return $query->select('title, body');
+  }
 }
