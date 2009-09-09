@@ -2,60 +2,225 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2009 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- * sfMailer allows you to customize the way symfony sends email.
+ * sfMailer is the main entry point for the mailer system.
  *
+ * This class is instanciated by sfContext on demand.
  *
  * @package    symfony
  * @subpackage mailer
- * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
- * @version    SVN: $Id: sfMailer.class.php 9091 2008-05-20 07:19:07Z dwhittle $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
-abstract class sfMailer
+class sfMailer extends Swift_Mailer
 {
-  protected $options = array();
-   
+  protected
+    $logger  = null,
+    $options = array();
+
   /**
-   * Sends email with the mailer.
+   * Constructor.
    *
-   * @param  string $to             The email address to send email to.
-   * @param  string $subject        The subject for the email.
-   * @param  string $body           The body of the email.
-   * @param  string $attachements   The attachments for the email.
+   * Available options:
    *
-   * @return boolean true if sent, otherwise throws exception
+   *  * charset: The default charset to use for messages
+   *  * logging: Whether to enable logging
+   *  * delivery_strategy: The delivery strategy to use
+   *  * queue_transport_class: The queue transport class (for the queue strategy)
+   *  * model_class: The model to use when using the queue strategy
+   *  * delivery_address: The email address to use for the single_address strategy
+   *  * transport: The main transport configuration
+   *  *   * class: The main transport class
+   *  *   * param: The main transport parameters
    *
-   * @throws <b>sfMailerException</b> If an error occurs while sending email with this mailer
+   * @param sfEventDispatcher $dispatcher An event dispatcher instance
+   * @param array             $options    An array of options
    */
-  abstract public function send($to, $subject, $body, $attachments = null, $options = null);
-  
-  /**
-   * Returns the options.
-   */
-  public function getOptions()
+  public function __construct(sfEventDispatcher $dispatcher, $options)
   {
-    return $this->options;
+    // options
+    $this->options = array_merge(array(
+      'charset' => 'UTF-8',
+      'logging' => false,
+      'delivery_strategy' => 'realtime',
+      'transport' => array(
+        'class' => 'Swift_MailTransport',
+        'param' => array(),
+       ),
+    ), $options);
+
+    $this->options['delivery_strategy'] = sfMailerTransport::validateDeliveryStrategy($this->options['delivery_strategy']);
+
+    // transport
+    $class = $this->options['transport']['class'];
+    $transport = new $class();
+    if (isset($this->options['transport']['param']))
+    {
+      foreach ($this->options['transport']['param'] as $key => $value)
+      {
+        $method = 'set'.ucfirst($key);
+        if (method_exists($transport, $method))
+        {
+          $transport->$method($value);
+        }
+      }
+    }
+
+    $queue = null;
+    if (sfMailerTransport::QUEUE == $this->options['delivery_strategy'])
+    {
+      if (!isset($this->options['queue_transport_class']))
+      {
+        throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_transport_class option');
+      }
+      $queue = new $this->options['queue_transport_class'];
+
+      if (method_exists($queue, 'setModel'))
+      {
+        if (!isset($this->options['model_class']))
+        {
+          throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a model_class option');
+        }
+        $queue->setModel($this->options['model_class']);
+      }
+    }
+
+    $transport = new sfMailerTransport($this->options['delivery_strategy'], $transport, $queue);
+
+    if (sfMailerTransport::SINGLE_ADDRESS == $this->options['delivery_strategy'])
+    {
+      if (!isset($this->options['delivery_address']))
+      {
+        throw new InvalidArgumentException('For the single_address mail delivery strategy, you must also define a delivery_address option');
+      }
+
+      $transport->setDeliveryAddress($this->options['delivery_address']);
+    }
+
+    // logger
+    if ($this->options['logging'])
+    {
+      $transport->setLogger(new sfMailerMessageLoggerPlugin($dispatcher));
+    }
+
+    // preferences
+    Swift_Preferences::getInstance()->setCharset($this->options['charset']);
+
+    parent::__construct($transport);
+
+    $dispatcher->notify(new sfEvent($this, 'mailer.configure'));
   }
-  
+
   /**
-   * Returns an option.
+   * Creates a new message.
+   *
+   * @param string|array $from    The from address
+   * @param string|array $to      The recipient(s)
+   * @param string       $subject The subject
+   * @param string       $body    The body
+   *
+   * @return Swift_Message A Swift_Message instance
    */
-  public function getOption($option)
+  public function compose($from = null, $to = null, $subject = null, $body = null)
   {
-    return isset($this->options[$option]) ? $this->options[$option] : null;
-  }  
-  
+    return sfMailerMessage::newInstance()
+      ->setFrom($from)
+      ->setTo($to)
+      ->setSubject($subject)
+      ->setBody($body)
+    ;
+  }
+
   /**
-   * Sets an option.
+   * Sends a message.
+   *
+   * @param string|array $from    The from address
+   * @param string|array $to      The recipient(s)
+   * @param string       $subject The subject
+   * @param string       $body    The body
+   *
+   * @return int The number of sent emails
    */
-  public function setOption($option, $value)
+  public function composeAndSend($from, $to, $subject, $body)
   {
-    $this->options[$option] = $value;
+    return $this->send($this->compose($from, $to, $subject, $body));
+  }
+
+  /**
+   * Send the current queued mails.
+   *
+   * The return value is the number of recipients who were accepted for delivery.
+   *
+   * @param int $max The maximum number of emails to send
+   *
+   * @return int The number of sent emails
+   */
+  public function sendQueue($max = null)
+  {
+    if (!$this->getTransport()->getTransportQueue())
+    {
+      throw new LogicException('You cannot send mails in queue if no mailer transport queue is defined.');
+    }
+
+    $transport = $this->getTransport()->getTransport();
+
+    if (!$transport->isStarted())
+    {
+      $transport->start();
+    }
+
+    return $this->getTransport()->getTransportQueue()->doSend($transport, $max);
+  }
+
+  /**
+   * Forces the next call to send() to use the realtime strategy.
+   *
+   * @return sfMailer The current sfMailer instance
+   */
+  public function sendNextImmediately()
+  {
+    $this->getTransport()->sendNextImmediately();
+
+    return $this;
+  }
+
+  /**
+   * Autoloads SwiftMailer classes.
+   *
+   * @param string $class The class name to autoload
+   *
+   * @return Boolean false if the class cannot be autoloaded
+   */
+  static public function autoload($class)
+  {
+    static $basePath;
+
+    // Don't interfere with other autoloaders
+    if (0 !== strpos($class, 'Swift'))
+    {
+      return false;
+    }
+
+    if (!$basePath)
+    {
+      $basePath = dirname(__FILE__).'/../vendor/swiftmailer';
+    }
+
+    require_once $basePath.'/swift_init.php';
+
+    $path = $basePath.'/classes/'.str_replace('_', '/', $class).'.php';
+
+    if (!file_exists($path))
+    {
+      return false;
+    }
+
+    require_once $path;
   }
 }

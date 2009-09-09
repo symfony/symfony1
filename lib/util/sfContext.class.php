@@ -23,9 +23,10 @@
 class sfContext implements ArrayAccess
 {
   protected
-    $dispatcher    = null,
-    $configuration = null,
-    $factories     = array();
+    $dispatcher          = null,
+    $configuration       = null,
+    $mailerConfiguration = array(),
+    $factories           = array();
 
   protected static
     $instances = array(),
@@ -232,6 +233,26 @@ class sfContext implements ArrayAccess
    public function getController()
    {
      return isset($this->factories['controller']) ? $this->factories['controller'] : null;
+   }
+
+   /**
+    * Retrieves the mailer.
+    *
+    * @return sfMailer The current sfMailer implementation instance.
+    */
+   public function getMailer()
+   {
+     if (!isset($this->factories['mailer']))
+     {
+       $this->factories['mailer'] = new $this->mailerConfiguration['class']($this->dispatcher, $this->mailerConfiguration);
+     }
+
+     return $this->factories['mailer'];
+   }
+
+   public function setMailerConfiguration($configuration)
+   {
+     $this->mailerConfiguration = $configuration;
    }
 
    /**

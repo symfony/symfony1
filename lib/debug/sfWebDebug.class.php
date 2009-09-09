@@ -78,6 +78,8 @@ class sfWebDebug
     {
       $this->setPanel('time', new sfWebDebugPanelTimer($this));
     }
+
+    $this->setPanel('mailer', new sfWebDebugPanelMailer($this));
   }
 
   /**
@@ -515,7 +517,7 @@ EOF;
 {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin: 20px 0;
   padding: 0;
   border: 0px;
   background-color: #eee;
@@ -524,6 +526,16 @@ EOF;
 #sfWebDebug h2
 {
   font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 0;
+  border: 0px;
+  background: none;
+}
+
+#sfWebDebug h3
+{
+  font-size: 12px;
   font-weight: bold;
   margin: 10px 0;
   padding: 0;
@@ -549,6 +561,11 @@ EOF;
   margin: 0;
   padding: 3px;
   font-size: 11px;
+}
+
+#sfWebDebugLogMenu
+{
+  margin-bottom: 5px;
 }
 
 #sfWebDebugLogMenu li

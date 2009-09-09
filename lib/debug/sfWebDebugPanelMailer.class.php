@@ -1,0 +1,101 @@
+<?php
+
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * sfWebDebugPanelMailer adds a panel to the web debug toolbar with sent emails.
+ *
+ * @package    symfony
+ * @subpackage debug
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+class sfWebDebugPanelMailer extends sfWebDebugPanel
+{
+  protected $mailer = null;
+
+  /**
+   * Initializes this panel.
+   */
+  public function initialize()
+  {
+    $this->mailer = sfContext::getInstance()->getMailer();
+  }
+
+  public function getTitle()
+  {
+    if (!$this->mailer)
+    {
+      $this->initialize();
+    }
+
+    if ($logger = $this->mailer->getTransport()->getLogger())
+    {
+      return '<img src="'.$this->webDebug->getOption('image_root_path').'/email.png" alt="Emailer" /> '.($count = $logger->countMessages());
+    }
+  }
+
+  public function getPanelTitle()
+  {
+    return 'Emails';
+  }
+
+  public function getPanelContent()
+  {
+    if (!$this->mailer)
+    {
+      $this->initialize();
+    }
+
+    $logger = $this->mailer->getTransport()->getLogger();
+
+    if (!$logger || !$messages = $logger->getMessages())
+    {
+      return false;
+    }
+
+    $html = array();
+
+    // configuration information
+    $strategy = $this->mailer->getTransport()->getDeliveryStrategy();
+    $html[] = '<h2>Configuration</h2>';
+    $html[] = '<em>Delivery strategy</em>: '.$strategy;
+
+    if (sfMailerTransport::SINGLE_ADDRESS == $strategy)
+    {
+      $html[] = '<em>All emails are delivered to</em>: '.$this->mailer->getTransport()->getDeliveryAddress();
+    }
+
+    // email sent
+    $html[] = '<h2>Email sent</h2>';
+    foreach ($messages as $message)
+    {
+      $html[] = $this->renderMessageInformation($message);
+    }
+
+    return implode("\n", $html);
+  }
+
+  protected function renderMessageInformation(Swift_Message $message)
+  {
+    static $i = 0;
+
+    $i++;
+
+    $to = is_null($message->getTo()) ? '' : implode(', ', array_keys($message->getTo()));
+
+    $html = array();
+    $html[] = sprintf('<h3>%s (to: %s) %s</h3>', $message->getSubject(), $to, $this->getToggler('sfWebDebugMailTemplate'.$i));
+    $html[] = '<div id="sfWebDebugMailTemplate'.$i.'" style="display:'.(1 == $i ? 'block' : 'none').'">';
+    $html[] = '<pre>'.htmlentities($message->toString(), ENT_QUOTES, $message->getCharset()).'</pre>';
+    $html[] = '</div>';
+
+    return implode("\n", $html);
+  }
+}

@@ -13,6 +13,31 @@ found in the symfony distribution.
 You will have there all the information needed to safely upgrade
 your projects to symfony 1.3.
 
+Mailer
+------
+
+As of symfony 1.3, there is a new default mailer based on SwiftMailer 4.
+
+Sending an email is as simple as using the `composeAndSend()` method from an
+action:
+
+    [php]
+    $this->getMailer()->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
+
+If you need to have more flexibility, you can also use the `compose()` method
+and send it afterwards. Here is for instance how to add an attachment to the
+message:
+
+    [php]
+    $message = $this->getMailer()->
+      compose('from@example.com', 'to@example.com', 'Subject', 'Body')->
+      attach(Swift_Attachment::fromPath('/path/to/a/file.zip'))
+    ;
+    $this->getMailer()->send($message);
+
+As the mailer is quite powerful, refer to the documentation for more
+information.
+
 Security
 --------
 

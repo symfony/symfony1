@@ -547,6 +547,16 @@ abstract class sfAction extends sfComponent
   }
 
   /**
+   * Gets the current mailer instance.
+   *
+   * @return sfMailer A sfMailer instance
+   */
+  public function getMailer()
+  {
+    return $this->getContext()->getMailer();
+  }
+
+  /**
    * Returns a formatted message for a 404 error.
    *
    * @param  string $message An error message (null by default)
