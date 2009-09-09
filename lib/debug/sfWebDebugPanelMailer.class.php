@@ -25,17 +25,12 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
    */
   public function initialize()
   {
-    $this->mailer = sfContext::getInstance()->getMailer();
+    $this->mailer = sfContext::getInstance()->hasMailer() ? sfContext::getInstance()->getMailer() : null;
   }
 
   public function getTitle()
   {
-    if (!$this->mailer)
-    {
-      $this->initialize();
-    }
-
-    if ($logger = $this->mailer->getTransport()->getLogger())
+    if ($this->mailer && $logger = $this->mailer->getTransport()->getLogger())
     {
       return '<img src="'.$this->webDebug->getOption('image_root_path').'/email.png" alt="Emailer" /> '.($count = $logger->countMessages());
     }
