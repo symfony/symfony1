@@ -37,3 +37,8 @@
 
     $this->getUser()->setAttribute('<?php echo $this->getModuleName() ?>.sort', $sort, 'admin_module');
   }
+
+  protected function isValidSortColumn($column)
+  {
+    return in_array($column, BasePeer::getFieldnames('<?php echo $this->getModelClass() ?>', BasePeer::TYPE_FIELDNAME));
+  }
