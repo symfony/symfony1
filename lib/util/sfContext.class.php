@@ -146,10 +146,20 @@ class sfContext implements ArrayAccess
     // create a new action stack
     $this->factories['actionStack'] = new sfActionStack();
 
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer = sfTimerManager::getTimer('Factories');
+    }
+
     // include the factories configuration
     require($this->configuration->getConfigCache()->checkConfig('config/factories.yml'));
 
     $this->dispatcher->notify(new sfEvent($this, 'context.load_factories'));
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer->addTime();
+    }
   }
 
   /**
