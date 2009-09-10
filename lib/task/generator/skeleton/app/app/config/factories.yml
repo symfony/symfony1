@@ -24,6 +24,15 @@ test:
     param:
       send_http_headers: false
 
+  mailer:
+    param:
+      delivery_strategy: none
+
+dev:
+  mailer:
+    param:
+      delivery_strategy: none
+
 all:
   routing:
     class: sfPatternRouting
