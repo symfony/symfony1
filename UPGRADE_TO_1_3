@@ -222,3 +222,31 @@ Widgets
 The `sfWidgetFormInput` class is now abstract. Text input fields are now
 created with the `sfWidgetFormInputText` class. This change was made to ease
 introspection of form classes.
+
+Mailer
+------
+
+Symfony 1.3 has a new mailer factory. When creating a new application, the
+`factories.yml` has sensible defaults for the `test` and `dev` environments.
+But if you upgrade an existing project, you might want to update your
+`factories.yml` with the following configuration for these environments:
+
+    [yml]
+    mailer:
+      param:
+        delivery_strategy: none
+
+With the previous configuration, emails won't be sent. Of course, they will
+still be logged, and the `mailer` tester will still work in your functional
+tests.
+
+If you'd rather want to receive all emails to a single address, you can use
+the `single_address` delivery strategy (in the `dev` environment for
+instance):
+
+    [yml]
+    dev:
+      mailer:
+        param:
+          delivery_strategy: single_address
+          delivery_address:  foo@example.com
