@@ -75,8 +75,7 @@ default:
       logging:                          %SF_LOGGING_ENABLED%
       generate_shortest_url:            false
       extra_parameters_as_query_string: false
-      cache:
-        class: ~
+      cache:                            ~
 
   logger:
     class: sfAggregateLogger
