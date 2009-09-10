@@ -95,6 +95,23 @@ methods do not return the routes as an array as they did in previous versions.
 The `lazy_routes_deserialize` option has been removed as it is not needed
 anymore.
 
+As of symfony 1.3, the cache for the routing is disabled, as this is the best
+option for most projects as far as performance are concerned. So, if you have
+not customized the routing cache, it will be automatically disabled for all
+your applications. If after upgrading to 1.3, your project is slower, you
+might want to add some routing cache to see if it helps. Here is the symfony
+1.2 default configuration you can add back to your `factories.yml`:
+
+    [yml]
+    routing:
+      cache:
+        class: sfFileCache
+        param:
+          automatic_cleaning_factor: 0
+          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
+          lifetime:                  31556926
+          prefix:                    %SF_APP_DIR%/routing
+
 JavaScripts and Stylesheets
 ---------------------------
 
