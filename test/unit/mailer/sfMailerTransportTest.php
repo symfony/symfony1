@@ -140,9 +140,10 @@ $transportQueue->reset();
 
 $t->diag('  "single_address" strategy');
 $transport = new sfMailerTransport('single_address', $transportNormal, $transportQueue);
+$transport->setDeliveryAddress('foo@example.com');
 
 $t->is($transport->send($message), 1, '->send() returns the number of email sent');
-$t->is($message->getTo(), $transport->getDeliveryAddress(), '->send() sends the message to the single address');
+$t->is(array_keys($message->getTo()), array($transport->getDeliveryAddress()), '->send() sends the message to the single address');
 $t->is($transportQueue->getQueuedCount(), 0, '->send() does not queue the message if strategy is single_address');
 $t->is($transportNormal->getSentCount(), 1, '->send() sends the message if strategy is single_address');
 $transportNormal->reset();
