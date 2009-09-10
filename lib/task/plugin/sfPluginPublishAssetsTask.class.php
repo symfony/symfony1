@@ -25,6 +25,10 @@ class sfPluginPublishAssetsTask extends sfPluginBaseTask
    */
   protected function configure()
   {
+    $this->addArguments(array(
+      new sfCommandArgument('plugins', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'Publish this plugin\'s assets'),
+    ));
+
     $this->addOptions(array(
       new sfCommandOption('core-only', '', sfCommandOption::PARAMETER_NONE, 'If set only core plugins will publish their assets'),
     ));
@@ -42,6 +46,10 @@ The [plugin:publish-assets|INFO] task will publish web assets from all plugins.
 
 In fact this will send the [plugin.post_install|INFO] event to each plugin.
 
+You can specify which plugin or plugins should install their assets by passing
+those plugins' names as arguments:
+
+  [./symfony plugin:publish-assets sfDoctrinePlugin|INFO]
 EOF;
   }
 
@@ -50,17 +58,29 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $plugins = $this->configuration->getPlugins();
+    $enabledPlugins = $this->configuration->getPlugins();
 
-    foreach ($this->configuration->getAllPluginPaths() as $pluginName => $pluginPath)
+    if ($diff = array_diff($arguments['plugins'], $enabledPlugins))
     {
-      if (!in_array($pluginName, $plugins) || ($options['core-only'] && dirname($pluginPath) != $this->configuration->getSymfonyLibDir().'/plugins'))
-      {
-        continue;
-      }
+      throw new InvalidArgumentException('Plugin(s) not found: '.join(', ', $diff));
+    }
 
-      $this->logSection('plugin', 'Configuring plugin - '.$pluginName);
-      $this->installPluginAssets($pluginName, $pluginPath);
+    if ($options['core-only'])
+    {
+      $corePlugins = sfFinder::type('dir')->relative()->maxdepth(0)->in($this->configuration->getSymfonyLibDir().'/plugins');
+      $arguments['plugins'] = array_unique(array_merge($arguments['plugins'], array_intersect($enabledPlugins, $corePlugins)));
+    }
+    else if (!count($arguments['plugins']))
+    {
+      $arguments['plugins'] = $enabledPlugins;
+    }
+
+    foreach ($arguments['plugins'] as $plugin)
+    {
+      $pluginConfiguration = $this->configuration->getPluginConfiguration($plugin);
+
+      $this->logSection('plugin', 'Configuring plugin - '.$plugin);
+      $this->installPluginAssets($plugin, $pluginConfiguration->getRootDir());
     }
   }
 
@@ -76,8 +96,7 @@ EOF;
 
     if (is_dir($webDir))
     {
-      $filesystem = new sfFilesystem();
-      $filesystem->relativeSymlink($webDir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$plugin, true);
+      $this->getFilesystem()->relativeSymlink($webDir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$plugin, true);
     }
   }
 }
