@@ -21,18 +21,22 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
   protected $mailer = null;
 
   /**
-   * Initializes this panel.
+   * Constructor.
+   *
+   * @param sfWebDebug $webDebug The web debug toolbar instance
    */
-  public function initialize()
+  public function __construct(sfWebDebug $webDebug)
   {
-    $this->mailer = sfContext::getInstance()->hasMailer() ? sfContext::getInstance()->getMailer() : null;
+    parent::__construct($webDebug);
+
+    $this->webDebug->getEventDispatcher()->connect('mailer.configure', array($this, 'listenForMailerConfigure'));
   }
 
   public function getTitle()
   {
     if ($this->mailer && $logger = $this->mailer->getTransport()->getLogger())
     {
-      return '<img src="'.$this->webDebug->getOption('image_root_path').'/email.png" alt="Emailer" /> '.($count = $logger->countMessages());
+      return '<img src="'.$this->webDebug->getOption('image_root_path').'/email.png" alt="Emailer" /> '.$logger->countMessages();
     }
   }
 
@@ -43,11 +47,6 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
   public function getPanelContent()
   {
-    if (!$this->mailer)
-    {
-      $this->initialize();
-    }
-
     $logger = $this->mailer->getTransport()->getLogger();
 
     if (!$logger || !$messages = $logger->getMessages())
@@ -92,5 +91,15 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
     $html[] = '</div>';
 
     return implode("\n", $html);
+  }
+
+  /**
+   * Listens for the mailer.configure event and captures a reference to the mailer.
+   *
+   * @param sfEvent $event
+   */
+  public function listenForMailerConfigure(sfEvent $event)
+  {
+    $this->mailer = $event->getSubject();
   }
 }
