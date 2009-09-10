@@ -92,6 +92,9 @@ The `sfPatternRouting::setRoutes()`, `sfPatternRouting::prependRoutes()`,
 `sfPatternRouting::insertRouteBefore()`, and `sfPatternRouting::connect()`
 methods do not return the routes as an array as they did in previous versions.
 
+The `lazy_routes_deserialize` option has been removed as it is not needed
+anymore.
+
 JavaScripts and Stylesheets
 ---------------------------
 

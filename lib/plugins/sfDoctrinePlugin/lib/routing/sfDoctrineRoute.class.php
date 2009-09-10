@@ -25,23 +25,6 @@ class sfDoctrineRoute extends sfObjectRoute
   protected
     $query = null;
 
-  /**
-   * Constructor.
-   *
-   * @param string $pattern       The pattern to match
-   * @param array  $defaults      An array of default parameter values
-   * @param array  $requirements  An array of requirements for parameters (regexes)
-   * @param array  $options       An array of options
-   *
-   * @see sfObjectRoute
-   */
-  public function __construct($pattern, array $defaults = array(), array $requirements = array(), array $options = array())
-  {
-    parent::__construct($pattern, $defaults, $requirements, $options);
-
-    $this->options['object_model'] = $this->options['model'];
-  }
-
   public function setListQuery(Doctrine_Query $query)
   {
     if (!$this->isBound())

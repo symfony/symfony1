@@ -415,7 +415,7 @@ class sfRoute implements Serializable
   /**
    * Compiles the current route instance.
    */
-  protected function compile()
+  public function compile()
   {
     if ($this->compiled)
     {
@@ -630,7 +630,6 @@ class sfRoute implements Serializable
 
   public function setDefaultOptions($options)
   {
-    $this->compiled = false;
     $this->defaultOptions = $options;
   }
 
@@ -782,6 +781,41 @@ class sfRoute implements Serializable
     {
       $this->suffix = $this->options['suffix'];
     }
+  }
+
+  public function setCompiledData($data)
+  {
+    $this->tokens = $data['tokens'];
+    $this->defaultParameters = $data['default_parameters'];
+    $this->defaultOptions = $data['default_options'];
+    $this->options = $data['options'];
+    $this->pattern = $data['pattern'];
+    $this->regex = $data['regex'];
+    $this->variables = $data['variables'];
+    $this->defaults = $data['defaults'];
+    $this->requirements = $data['requirements'];
+
+    $this->compiled = true;
+  }
+
+  public function getCompiledData()
+  {
+    if (!$this->compiled)
+    {
+      $this->compile();
+    }
+
+    return array(
+      'tokens'             => $this->tokens,
+      'default_parameters' => $this->defaultParameters,
+      'default_options'    => $this->defaultOptions,
+      'options'            => $this->options,
+      'pattern'            => $this->pattern,
+      'regex'              => $this->regex,
+      'variables'          => $this->variables,
+      'defaults'           => $this->defaults,
+      'requirements'       => $this->requirements,
+    );
   }
 
   public function serialize()

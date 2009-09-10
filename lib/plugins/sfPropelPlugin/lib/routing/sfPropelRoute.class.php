@@ -23,24 +23,6 @@ class sfPropelRoute extends sfObjectRoute
   protected
     $criteria = null;
 
-  /**
-   * Constructor.
-   *
-   * @param string $pattern       The pattern to match
-   * @param array  $defaults      An array of default parameter values
-   * @param array  $requirements  An array of requirements for parameters (regexes)
-   * @param array  $options       An array of options
-   *
-   * @see sfObjectRoute
-   */
-  public function __construct($pattern, array $defaults = array(), array $requirements = array(), array $options = array())
-  {
-    parent::__construct($pattern, $defaults, $requirements, $options);
-
-    $this->options['object_model'] = $this->options['model'];
-    $this->options['model'] = constant($this->options['model'].'::PEER');
-  }
-
   public function setListCriteria(Criteria $criteria)
   {
     if (!$this->isBound())
@@ -53,6 +35,8 @@ class sfPropelRoute extends sfObjectRoute
 
   protected function getObjectForParameters($parameters)
   {
+    $this->fixOptions();
+
     if (!isset($this->options['method']))
     {
       $this->options['method'] = isset($this->options['method_for_criteria']) ? $this->options['method_for_criteria'] : 'doSelectOne';
@@ -86,6 +70,8 @@ class sfPropelRoute extends sfObjectRoute
 
   protected function getObjectsForParameters($parameters)
   {
+    $this->fixOptions();
+
     if (!isset($this->options['method']))
     {
       $this->options['method'] = isset($this->options['method_for_criteria']) ? $this->options['method_for_criteria'] : 'doSelect';
@@ -125,5 +111,14 @@ class sfPropelRoute extends sfObjectRoute
     }
 
     return $parameters;
+  }
+
+  protected function fixOptions()
+  {
+    if (!isset($this->options['object_model']))
+    {
+      $this->options['object_model'] = $this->options['model'];
+      $this->options['model'] = constant($this->options['model'].'::PEER');
+    }
   }
 }
