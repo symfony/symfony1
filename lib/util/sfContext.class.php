@@ -260,16 +260,6 @@ class sfContext implements ArrayAccess
      return $this->factories['mailer'];
    }
 
-   /**
-    * Returns true if the current context has a mailer factory.
-    *
-    * @return boolean
-    */
-   public function hasMailer()
-   {
-     return isset($this->factories['mailer']);
-   }
-
    public function setMailerConfiguration($configuration)
    {
      $this->mailerConfiguration = $configuration;
