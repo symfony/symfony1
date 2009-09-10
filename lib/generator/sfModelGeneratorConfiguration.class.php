@@ -311,6 +311,11 @@ abstract class sfModelGeneratorConfiguration
 
       foreach ($fieldsets as $fieldset => $names)
       {
+        if (!$names)
+        {
+          continue;
+        }
+
         $fields[$fieldset] = array();
 
         foreach ($names as $name)
