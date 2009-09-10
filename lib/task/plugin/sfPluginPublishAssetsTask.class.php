@@ -27,7 +27,6 @@ class sfPluginPublishAssetsTask extends sfPluginBaseTask
   {
     $this->addOptions(array(
       new sfCommandOption('core-only', '', sfCommandOption::PARAMETER_NONE, 'If set only core plugins will publish their assets'),
-      new sfCommandOption('symfony-lib-dir', '', sfCommandOption::PARAMETER_REQUIRED, 'The symfony lib dir'),
     ));
 
     $this->aliases = array();
