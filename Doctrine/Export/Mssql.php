@@ -44,12 +44,13 @@ class Doctrine_Export_Mssql extends Doctrine_Export
     {
         $name = $this->conn->quoteIdentifier($name, true);
         $query = "CREATE DATABASE $name";
-        if ($this->conn->options['database_device']) {
+        $options = $this->conn->getOptions();
+        if (isset($options['database_device']) && $options['database_device']) {
             $query.= ' ON '.$this->conn->options['database_device'];
             $query.= $this->conn->options['database_size'] ? '=' .
                      $this->conn->options['database_size'] : '';
         }
-        return $this->conn->standaloneQuery($query, null, true);
+        return $this->conn->standaloneQuery($query, array(), true);
     }
 
     /**
@@ -74,6 +75,15 @@ class Doctrine_Export_Mssql extends Doctrine_Export
     {
         return '';
     }  
+
+    public function dropIndexSql($table, $name)
+    {
+        $name = $this->conn->quoteIdentifier($this->conn->formatter->getIndexName($name));
+        $table = $this->conn->quoteIdentifier($table);
+
+        return 'DROP INDEX ' . $name . ' ON ' . $table;
+    }
+
     /**
      * alter an existing table
      *
@@ -164,21 +174,44 @@ class Doctrine_Export_Mssql extends Doctrine_Export
      */
     public function alterTable($name, array $changes, $check = false)
     {
+        if ( !$name ) {
+            throw new Doctrine_Export_Exception('no valid table name specified');
+        }
+
         foreach ($changes as $changeName => $change) {
             switch ($changeName) {
                 case 'add':
-                    break;
                 case 'remove':
-                    break;
                 case 'name':
                 case 'rename':
                 case 'change':
+                    break;
                 default:
                     throw new Doctrine_Export_Exception('alterTable: change type "' . $changeName . '" not yet supported');
             }
         }
 
+        if( $check ) {
+            return true;
+        }
+
+
         $query = '';
+        $post_queries = ''; //SQL Server uses a stored procedure to rename objects
+
+        //NAME (TABLE)
+        if( !empty($changes['name']) )
+        {
+            $change_name = $this->conn->quoteIdentifier($changes['name'], true);
+
+            $post_queries .= sprintf(
+                "EXECUTE sp_RENAME '%s', '%s';",
+                $this->conn->quoteIdentifier($name),
+                $change_name
+            );
+        }
+
+        //ADD TABLE
         if ( ! empty($changes['add']) && is_array($changes['add'])) {
             foreach ($changes['add'] as $fieldName => $field) {
                 if ($query) {
@@ -188,22 +221,92 @@ class Doctrine_Export_Mssql extends Doctrine_Export
             }
         }
 
+        //REMOVE TABLE
         if ( ! empty($changes['remove']) && is_array($changes['remove'])) {
-            foreach ($changes['remove'] as $fieldName => $field) {
                 if ($query) {
                     $query .= ', ';
                 }
+            $query .= 'DROP COLUMN ';
+
+            $dropped = array();
+            foreach ($changes['remove'] as $fieldName => $field) {
+                
                 $field_name = $this->conn->quoteIdentifier($fieldName, true);
-                $query .= 'DROP COLUMN ' . $fieldName;
+                $dropped[] = $fieldName;
+            }
+
+            $query .= implode(', ', $dropped) . ' ';
+        }
+
+        $rename = array();
+        if ( ! empty($changes['rename']) && is_array($changes['rename'])) {
+            foreach ($changes['rename'] as $fieldName => $field) {
+                $rename[$field['name']] = $fieldName;
             }
         }
 
-        if ( ! $query) {
+        //CHANGE (COLUMN DEFINITION)
+        if ( ! empty($changes['change']) && is_array($changes['change'])) {
+            if ($query) {
+                $query.= ', ';
+            }
+
+            $query .= "ALTER COLUMN ";
+
+            $altered = array();
+            foreach ($changes['change'] as $fieldName => $field) {
+                
+                if (isset($rename[$fieldName])) {
+                    $oldFieldName = $rename[$fieldName];
+                    unset($rename[$fieldName]);
+                } else {
+                    $oldFieldName = $fieldName;
+                }
+                $oldFieldName = $this->conn->quoteIdentifier($oldFieldName, true);
+
+                $altered[] = $this->getDeclaration($fieldName, $field['definition']);
+            }
+
+            $query .= implode(sprintf(
+                "; ALTER TABLE %s ALTER COLUMN ",
+                $this->conn->quoteIdentifier($name, true)
+            ), $altered) . ' ';
+        }
+
+        //RENAME (COLUMN)
+        if ( ! empty($rename) && is_array($rename)) {
+            foreach ($rename as $renameName => $renamedField) {
+
+                $field = $changes['rename'][$renamedField];
+                $renamedField = $this->conn->quoteIdentifier($renamedField);
+
+                $post_queries .= sprintf(
+                    "EXECUTE sp_RENAME '%s.%s', '%s', 'COLUMN';",
+                    $this->conn->quoteIdentifier($name),
+                    $renamedField,
+                    $this->conn->quoteIdentifier($field['name'], true)
+                );
+            }
+        }
+
+        if ( !$query && !$post_queries) {
             return false;
         }
 
         $name = $this->conn->quoteIdentifier($name, true);
-        return $this->conn->exec('ALTER TABLE ' . $name . ' ' . $query);
+
+        $final_query = '';
+        if( $query )
+        {
+            $final_query .= 'ALTER TABLE ' . $name . ' ' . trim($query) . ';';
+    }
+
+        if( $post_queries )
+        {
+            $final_query .= $post_queries;
+        }
+
+        return $this->conn->exec($final_query);
     }
 
     /**
@@ -292,8 +395,27 @@ class Doctrine_Export_Mssql extends Doctrine_Export
             throw new Doctrine_Export_Exception('no fields specified for table ' . $name);
         }
 
-        $queryFields = $this->getFieldDeclarationList($fields);
+        if( !isset($options['primary']) ) //Use field declaration of primary if the primary option not set
+        {
+            foreach( $fields as $field_name => $field_data )
+            {
+                if( isset($field_data['primary']) && $field_data['primary'] )
+                    $options['primary'][$field_name] = $field_name;
+            }
+        }
 
+        if( isset($options['primary']) )
+        {
+            foreach( $options['primary'] as $field_name )
+            {
+                if( isset($fields[$field_name]) )
+                {
+                    $fields[$field_name]['notnull'] = true; //Silently forcing NOT NULL as MSSQL will kill a query that has a nullable PK
+                }
+            }
+        }
+
+        $queryFields = $this->getFieldDeclarationList($fields);
 
         if (isset($options['primary']) && ! empty($options['primary'])) {
             $primaryKeys = array_map(array($this->conn, 'quoteIdentifier'), array_values($options['primary']));
@@ -328,6 +450,7 @@ class Doctrine_Export_Mssql extends Doctrine_Export
                 }
             }
         }
+
         return $sql;
     }
 
