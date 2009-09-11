@@ -231,7 +231,7 @@ class sfRoute implements Serializable
       {
         $url = str_replace($value, urlencode($tparams[$variable]), $url);
       }
-      
+
       if(!in_array($this->suffix, $this->options['segment_separators']))
       {
         $url .= $this->suffix;
@@ -783,6 +783,11 @@ class sfRoute implements Serializable
     }
   }
 
+  /**
+   * Sets the data representing this compiled route.
+   *
+   * @param array $data An array of data representing the compiled route
+   */
   public function setCompiledData($data)
   {
     $this->tokens = $data['tokens'];
@@ -798,6 +803,11 @@ class sfRoute implements Serializable
     $this->compiled = true;
   }
 
+  /**
+   * Returns the data representing this compiled route.
+   *
+   * @return array An array of data representing the compiled route
+   */
   public function getCompiledData()
   {
     if (!$this->compiled)
@@ -815,6 +825,7 @@ class sfRoute implements Serializable
       'variables'          => $this->variables,
       'defaults'           => $this->defaults,
       'requirements'       => $this->requirements,
+      'suffix'             => $this->suffix,
     );
   }
 
@@ -823,11 +834,11 @@ class sfRoute implements Serializable
     // always serialize compiled routes
     $this->compile();
 
-    return serialize(array($this->tokens, $this->defaultParameters, $this->defaultOptions, $this->compiled, $this->options, $this->pattern, $this->regex, $this->variables, $this->defaults, $this->requirements));
+    return serialize(array($this->tokens, $this->defaultParameters, $this->defaultOptions, $this->compiled, $this->options, $this->pattern, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix));
   }
 
   public function unserialize($data)
   {
-    list($this->tokens, $this->defaultParameters, $this->defaultOptions, $this->compiled, $this->options, $this->pattern, $this->regex, $this->variables, $this->defaults, $this->requirements) = unserialize($data);
+    list($this->tokens, $this->defaultParameters, $this->defaultOptions, $this->compiled, $this->options, $this->pattern, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix) = unserialize($data);
   }
 }
