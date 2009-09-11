@@ -55,6 +55,11 @@ EOF;
   {
     $this->logSection('doctrine', 'generating sql for models');
 
+    $path = sfConfig::get('sf_data_dir').'/sql';
+    if (!is_dir($path)) {
+      $this->getFilesystem()->mkdirs($path);
+    }
+
     $databaseManager = new sfDatabaseManager($this->configuration);
     $this->callDoctrineCli('generate-sql');
   }
