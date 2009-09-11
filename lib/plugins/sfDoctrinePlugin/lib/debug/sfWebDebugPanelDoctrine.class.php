@@ -150,7 +150,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
     {
       $conn = $event->getInvoker() instanceof Doctrine_Connection ? $event->getInvoker() : $event->getInvoker()->getConnection();
       $params = sfDoctrineConnectionProfiler::fixParams($event->getParams());
-      $query = $this->formatSql($event->getQuery());
+      $query = $this->formatSql(htmlspecialchars($event->getQuery(), ENT_QUOTES, sfConfig::get('sf_charset')));
 
       // interpolate parameters
       foreach ($params as $param)
