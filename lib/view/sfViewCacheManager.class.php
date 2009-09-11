@@ -36,9 +36,9 @@ class sfViewCacheManager
    *
    * @see initialize()
    */
-  public function __construct($context, sfCache $cache)
+  public function __construct($context, sfCache $cache, $options = array())
   {
-    $this->initialize($context, $cache);
+    $this->initialize($context, $cache, $options);
   }
 
   /**
@@ -47,11 +47,15 @@ class sfViewCacheManager
    * @param sfContext $context  Current application context
    * @param sfCache   $cache    An sfCache instance
    */
-  public function initialize($context, sfCache $cache)
+  public function initialize($context, sfCache $cache, $options = array())
   {
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
     $this->controller = $context->getController();
+    $this->options    = array_merge(array(
+        'cache_key_use_vary_headers' => true,
+        'cache_key_use_host_name'    => true,
+      ), $options);
 
     if (sfConfig::get('sf_web_debug'))
     {
@@ -157,44 +161,72 @@ class sfViewCacheManager
       $cacheKey .= $this->convertParametersToKey($params);
     }
 
-    // prefix with vary headers
-    if (!$vary)
-    {
-      $varyHeaders = $this->getVary($internalUri);
-      if ($varyHeaders)
-      {
-        sort($varyHeaders);
-        $request = $this->context->getRequest();
-        $vary = '';
-
-        foreach ($varyHeaders as $header)
-        {
-          $vary .= $request->getHttpHeader($header).'|';
-        }
-
-        $vary = $vary;
-      }
-      else
-      {
-        $vary = 'all';
-      }
-    }
-
-    // prefix with hostname
-    if (!$hostName)
-    {
-      $request = $this->context->getRequest();
-      $hostName = $request->getHost();
-    }
-    $hostName = preg_replace('/[^a-z0-9\*]/i', '_', $hostName);
-    $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
-
-    $cacheKey = sprintf('/%s/%s/%s', $hostName, $vary, $cacheKey);
+    $cacheKey = sprintf('/%s/%s/%s', $this->getCacheKeyHostNamePart($hostName), $this->getCacheKeyVaryHeaderPart($internalUri, $vary), $cacheKey);
 
     // replace multiple /
     $cacheKey = preg_replace('#/+#', '/', $cacheKey);
 
     return $cacheKey;
+  }
+
+  /**
+   * Gets the vary header part of view cache key.
+   *
+   * @param  string $vary
+   * @return string
+   */
+  protected function getCacheKeyVaryHeaderPart($internalUri, $vary = '')
+  {
+    if (!$this->options['cache_key_use_vary_headers'])
+    {
+      return '';
+    }
+
+    // prefix with vary headers
+    if (!$vary)
+    {
+      $varyHeaders = $this->getVary($internalUri);
+
+      if (!$varyHeaders)
+      {
+        return 'all';
+      }
+
+      sort($varyHeaders);
+      $request = $this->context->getRequest();
+      $vary = '';
+
+      foreach ($varyHeaders as $header)
+      {
+        $vary .= $request->getHttpHeader($header).'|';
+      }
+    }
+
+    return $vary;
+  }
+
+  /**
+   * Gets the hostname part of view cache key.
+   *
+   * @param string $hostName
+   * @return void
+   */
+  protected function getCacheKeyHostNamePart($hostName = '')
+  {
+    if (!$this->options['cache_key_use_host_name'])
+    {
+      return '';
+    }
+
+    if (!$hostName)
+    {
+      $hostName = $this->context->getRequest()->getHost();
+    }
+
+    $hostName = preg_replace('/[^a-z0-9\*]/i', '_', $hostName);
+    $hostName = preg_replace('/_+/', '_', $hostName);
+
+    return strtolower($hostName);
   }
 
   /**
@@ -396,12 +428,12 @@ class sfViewCacheManager
 
   /**
    * Returns true if the action is cacheable.
-   * 
+   *
    * @param  string $moduleName A module name
    * @param  string $actionName An action or partial template name
-   * 
+   *
    * @return boolean True if the action is cacheable
-   * 
+   *
    * @see isCacheable()
    */
   public function isActionCacheable($moduleName, $actionName)
@@ -667,12 +699,12 @@ class sfViewCacheManager
 
   /**
    * Checks that the supplied parameters include a cache key.
-   * 
+   *
    * If no 'sf_cache_key' parameter is present one is added to the array as
    * it is passed by reference.
-   * 
+   *
    * @param  array  $parameters An array of parameters
-   * 
+   *
    * @return string The cache key
    */
   public function checkCacheKey(array & $parameters)

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(33);
+$t = new lime_test(36);
 
 class myViewCacheManager extends sfViewCacheManager
 {
@@ -264,3 +264,15 @@ function get_cache_config($contextual = false)
     'vary'           => array(),
   );
 }
+
+// ->initialize()
+$t->diag('Cache key generation options');
+$m = new myViewCacheManager($context, $cache = new myCache(), array('cache_key_use_vary_headers' => false));
+$t->is($m->generateCacheKey('mymodule/myaction'), '/localhost/mymodule/myaction', '->generateCacheKey() uses "cache_key_use_vary_headers" option to know if vary headers changes cache key.');
+
+$m = new myViewCacheManager($context, $cache = new myCache(), array('cache_key_use_host_name' => false));
+$t->is($m->generateCacheKey('mymodule/myaction'), '/all/mymodule/myaction', '->generateCacheKey() uses "cache_key_use_host_name" option to know if vary headers changes cache key.');
+
+$m = new myViewCacheManager($context, $cache = new myCache(), array('cache_key_use_host_name' => false, 'cache_key_use_vary_headers' => false));
+$t->is($m->generateCacheKey('mymodule/myaction'), '/mymodule/myaction', '->generateCacheKey() allows the use of both "cache_key_use_host_name" and "cache_key_use_vary_headers" options.');
+

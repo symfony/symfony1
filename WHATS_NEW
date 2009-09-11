@@ -885,3 +885,19 @@ and `Countable` interfaces.
     <?php else: ?>
       <p>No results.</p>
     <?php endif; ?>
+
+View cache
+----------
+
+The view cache manager nows accept params in factories.yml. Generating the
+cache key for a view has been refactored in different methods to ease extending the class.
+
+Two params are available in factories.yml:
+  * `cache_key_use_vary_headers` (default: true): specify if the cache keys
+    should include the vary headers part. In practice, it says if the page
+    cache should be http header dependent, as specified in `vary` cache
+    parameter.
+  * `cache_key_use_host_name` (default: true): specify if the cache keys should
+    include the host name part. In practice, it says if page cache should be
+    hostname dependant.
+

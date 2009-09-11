@@ -120,13 +120,13 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
                              "    \$class = sfConfig::get('sf_factory_view_cache', '%s');\n".
                              "    \$cache = new \$class(sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
-                             "    \$this->factories['viewCacheManager'] = new %s(\$this, \$cache);\n".
+                             "    \$this->factories['viewCacheManager'] = new %s(\$this, \$cache, %s);\n".
                              "  }\n".
                              "  else\n".
                              "  {\n".
                              "    \$this->factories['viewCacheManager'] = null;\n".
                              "  }\n",
-                             $class, var_export($parameters, true), $config['view_cache_manager']['class']);
+                             $class, var_export($parameters, true), $config['view_cache_manager']['class'], var_export($config['view_cache_manager']['param'], true));
           break;
 
         case 'i18n':
