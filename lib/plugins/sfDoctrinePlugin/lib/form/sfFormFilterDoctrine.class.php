@@ -132,8 +132,21 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
    */
   public function buildQuery(array $values)
   {
-    $values = $this->processValues($values);
+    return $this->doBuildQuery($this->processValues($values));
+  }
 
+  /**
+   * Builds a Doctrine query with processed values.
+   *
+   * Overload this method instead of {@link buildQuery()} to avoid running
+   * {@link processValues()} multiple times.
+   *
+   * @param  array $values
+   *
+   * @return Doctrine_Query
+   */
+  protected function doBuildQuery(array $values)
+  {
     $query = isset($this->options['query']) ? clone $this->options['query'] : $this->getTable()->createQuery('r');
 
     if ($method = $this->getTableMethod())

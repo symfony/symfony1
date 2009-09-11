@@ -102,8 +102,21 @@ abstract class sfFormFilterPropel extends sfFormFilter
    */
   public function buildCriteria(array $values)
   {
-    $values = $this->processValues($values);
+    return $this->doBuildCriteria($this->processValues($values));
+  }
 
+  /**
+   * Builds a Propel Criteria with processed values.
+   *
+   * Overload this method instead of {@link buildCriteria()} to avoid running
+   * {@link processValues()} multiple times.
+   *
+   * @param  array $values
+   *
+   * @return Criteria
+   */
+  protected function doBuildCriteria(array $values)
+  {
     $criteria = new Criteria();
 
     $peer = constant($this->getModelName().'::PEER');
