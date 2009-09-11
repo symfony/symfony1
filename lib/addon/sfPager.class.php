@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfPager
+abstract class sfPager implements Iterator, Countable
 {
   protected
     $page            = 1,
@@ -30,7 +30,8 @@ abstract class sfPager
     $parameters      = array(),
     $currentMaxLink  = 1,
     $parameterHolder = null,
-    $maxRecordLimit  = false;
+    $maxRecordLimit  = false,
+    $results         = null;
 
   /**
    * Constructor.
@@ -489,5 +490,91 @@ abstract class sfPager
   public function setParameter($name, $value)
   {
     $this->parameterHolder->set($name, $value);
+  }
+
+  /**
+   * Returns the current result.
+   * 
+   * @see Iterator
+   */
+  public function current()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return current($this->results);
+  }
+
+  /**
+   * Returns the 0-based index of the current results position relative to the current page.
+   * 
+   * @see Iterator
+   */
+  public function key()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return key($this->results);
+  }
+
+  /**
+   * Returns the next result.
+   * 
+   * @see Iterator
+   */
+  public function next()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return next($this->results);
+  }
+
+  /**
+   * @see Iterator
+   */
+  public function rewind()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return reset($this->results);
+  }
+
+  /**
+   * @see Iterator
+   */
+  public function valid()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return false !== current($this->results);
+  }
+
+  /**
+   * Returns the number of results on the current page.
+   *
+   * @return integer
+   */
+  public function count()
+  {
+    if (null === $this->results)
+    {
+      $this->results = $this->getResults();
+    }
+
+    return count($this->results);
   }
 }
