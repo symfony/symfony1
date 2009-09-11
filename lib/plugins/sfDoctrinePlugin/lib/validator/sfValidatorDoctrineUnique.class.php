@@ -83,9 +83,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
       $values = array($columns[0] => $values);
     }
 
-    $q = Doctrine_Query::create()
-          ->from($this->getOption('model') . ' a');
-
+    $q = Doctrine::getTable($this->getOption('model'))->createQuery('a');
     foreach ($this->getOption('column') as $column)
     {
       $colName = $table->getColumnName($column);
