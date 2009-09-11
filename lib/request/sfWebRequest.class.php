@@ -44,6 +44,7 @@ class sfWebRequest extends sfRequest
    *  * path_info_key:     The path info key (default to PATH_INFO)
    *  * path_info_array:   The path info array (default to SERVER)
    *  * relative_url_root: The relative URL root
+   *  * default_format:    The default request format if none has been defined in the request (sf_format)
    *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    * @param  array             $parameters  An associative array of initialization parameters
@@ -124,6 +125,11 @@ class sfWebRequest extends sfRequest
     if (!isset($this->options['path_info_array']))
     {
       $this->options['path_info_array'] = 'SERVER';
+    }
+
+    if (!isset($this->options['default_format']))
+    {
+      $this->options['default_format'] = 'html';
     }
 
     // additional parameters
@@ -694,7 +700,7 @@ class sfWebRequest extends sfRequest
   {
     if (is_null($this->format))
     {
-      $this->setRequestFormat($this->getParameter('sf_format'));
+      $this->setRequestFormat($this->getParameter('sf_format', $this->options['default_format']));
     }
 
     return $this->format;

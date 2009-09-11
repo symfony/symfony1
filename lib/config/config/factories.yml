@@ -9,7 +9,9 @@ default:
       path_info_array:   SERVER
       path_info_key:     PATH_INFO
       relative_url_root: ~
+      default_format:    html
       formats:
+        html: [text/html, application/xhtml+xml]
         txt:  text/plain
         js:   [application/javascript, application/x-javascript, text/javascript]
         css:  text/css
