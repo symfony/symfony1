@@ -562,8 +562,8 @@ class sfProjectConfiguration
 
   /**
    * Guesses the project root directory.
-   * 
-   * @return string
+   *
+   * @return string The project root directory
    */
   static public function guessRootDir()
   {
