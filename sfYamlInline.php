@@ -54,6 +54,9 @@ class sfYamlInline
    */
   static public function dump($value)
   {
+    $trueValues = '1.1' == sfYaml::getSpecVersion() ? array('true', 'on', '+', 'yes', 'y') : array('true');
+    $falseValues = '1.1' == sfYaml::getSpecVersion() ? array('false', 'off', '-', 'no', 'n') : array('false');
+
     switch (true)
     {
       case is_resource($value):
@@ -80,9 +83,9 @@ class sfYamlInline
         return "''";
       case preg_match(self::getTimestampRegex(), $value):
         return "'$value'";
-      case in_array(strtolower($value), array('true', 'on', '+', 'yes', 'y')):
+      case in_array(strtolower($value), $trueValues):
         return "'$value'";
-      case in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')):
+      case in_array(strtolower($value), $falseValues):
         return "'$value'";
       case in_array(strtolower($value), array('null', '~')):
         return "'$value'";
@@ -359,6 +362,9 @@ class sfYamlInline
   {
     $scalar = trim($scalar);
 
+    $trueValues = '1.1' == sfYaml::getSpecVersion() ? array('true', 'on', '+', 'yes', 'y') : array('true');
+    $falseValues = '1.1' == sfYaml::getSpecVersion() ? array('false', 'off', '-', 'no', 'n') : array('false');
+
     switch (true)
     {
       case 'null' == strtolower($scalar):
@@ -375,9 +381,9 @@ class sfYamlInline
         $raw = $scalar;
         $cast = intval($scalar);
         return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
-      case in_array(strtolower($scalar), array('true', 'on', '+', 'yes', 'y')):
+      case in_array(strtolower($scalar), $trueValues):
         return true;
-      case in_array(strtolower($scalar), array('false', 'off', '-', 'no', 'n')):
+      case in_array(strtolower($scalar), $falseValues):
         return false;
       case is_numeric($scalar):
         return '0x' == $scalar[0].$scalar[1] ? hexdec($scalar) : floatval($scalar);
