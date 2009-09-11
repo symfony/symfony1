@@ -21,18 +21,6 @@
 class sfWebDebugPanelDoctrine extends sfWebDebugPanel
 {
   /**
-   * Constructor.
-   *
-   * @param sfWebDebug $webDebug The web debut toolbar instance
-   */
-  public function __construct(sfWebDebug $webDebug)
-  {
-    parent::__construct($webDebug);
-
-    $this->webDebug->getEventDispatcher()->connect('debug.web.filter_logs', array($this, 'filterLogs'));
-  }
-
-  /**
    * Get the title/icon for the panel
    *
    * @return string $html
@@ -67,34 +55,6 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
         <ol>'.implode("\n", $this->getSqlLogs()).'</ol>
       </div>
     ';
-  }
-
-  /**
-   * Filters out Doctrine log entries.
-   *
-   * @param  sfEvent $event
-   * @param  array   $logs
-   *
-   * @return array
-   */
-  public function filterLogs(sfEvent $event, $logs)
-  {
-    $newLogs = array();
-    foreach ($logs as $log)
-    {
-      if (class_exists($log['type']))
-      {
-        $r = new ReflectionClass($log['type']);
-        if ($r->isSubclassOf('Doctrine_Connection') || $r->implementsInterface('Doctrine_Adapter_Statement_Interface'))
-        {
-          continue;
-        }
-      }
-
-      $newLogs[] = $log;
-    }
-
-    return $newLogs;
   }
 
   /**

@@ -18,18 +18,6 @@
  */
 class sfWebDebugPanelPropel extends sfWebDebugPanel
 {
-  /**
-   * Constructor.
-   *
-   * @param sfWebDebug $webDebug The web debut toolbar instance
-   */
-  public function __construct(sfWebDebug $webDebug)
-  {
-    parent::__construct($webDebug);
-
-    $this->webDebug->getEventDispatcher()->connect('debug.web.filter_logs', array($this, 'filterLogs'));
-  }
-
   public function getTitle()
   {
     if ($sqlLogs = $this->getSqlLogs())
@@ -64,20 +52,6 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         </ol>
       </div>
     ';
-  }
-
-  public function filterLogs(sfEvent $event, $logs)
-  {
-    $newLogs = array();
-    foreach ($logs as $log)
-    {
-      if ('sfPropelLogger' != $log['type'])
-      {
-        $newLogs[] = $log;
-      }
-    }
-
-    return $newLogs;
   }
 
   static public function listenToAddPanelEvent(sfEvent $event)
