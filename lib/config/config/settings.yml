@@ -14,20 +14,20 @@ default:
 
   .settings:
     # Optional features. Deactivating unused features boots performance a bit.
-    use_database:           on        # Enable database manager. Set to off if you don't use a database.
-    i18n:                   off       # Enable interface translation. Set to off if your application should not be translated.
-    compressed:             off       # Enable PHP response compression. Set to on to compress the outgoing HTML via the PHP handler.
-    check_lock:             off       # Enable the application lock system triggered by the clear-cache and disable tasks. Set to on to have all requests to disabled applications redirected to the $sf_symfony_lib_dir/exception/data/unavailable.php page.
+    use_database:           true        # Enable database manager. Set to false if you don't use a database.
+    i18n:                   false       # Enable interface translation. Set to false if your application should not be translated.
+    compressed:             false       # Enable PHP response compression. Set to true to compress the outgoing HTML via the PHP handler.
+    check_lock:             false       # Enable the application lock system triggered by the clear-cache and disable tasks. Set to true to have all requests to disabled applications redirected to the $sf_symfony_lib_dir/exception/data/unavailable.php page.
 
     # Form security secret (CSRF protection)
     csrf_secret:            false     # Unique secret to enable CSRF protection or false to disable
 
     # Output escaping settings
-    escaping_strategy:      off              # Determines how variables are made available to templates. Accepted values: on, off.
+    escaping_strategy:      false              # Determines how variables are made available to templates. Accepted values: true, false.
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
     # Routing settings
-    no_script_name:         off       # Enable the front controller name in generated URLs
+    no_script_name:         false       # Enable the front controller name in generated URLs
 
     # Validation settings, used for error generation by the Validation helper
     validation_error_prefix:    ' &darr;&nbsp;'
@@ -36,12 +36,12 @@ default:
     validation_error_id_prefix: error_for_
 
     # Cache settings
-    cache:                  off       # Enable the template cache
-    etag:                   on        # Enable etag handling
-    lazy_cache_key:         off       # Delays creation of a cache key until after checking whether an action or partial is cacheable (defaults to false for backward compatibility)
+    cache:                  false       # Enable the template cache
+    etag:                   true        # Enable etag handling
+    lazy_cache_key:         false       # Delays creation of a cache key until after checking whether an action or partial is cacheable (defaults to false for backward compatibility)
 
     # Logging and debugging settings
-    web_debug:              off       # Enable the web debug toolbar
+    web_debug:              false       # Enable the web debug toolbar
     error_reporting:        <?php echo (E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR)."\n" ?> # Determines which events are logged.
     file_link_format:       ~         # Format to use to make file paths clickable (include placeholders %f and %l for file and line number)
 
@@ -61,7 +61,7 @@ default:
     charset:                utf-8
 
     # Logging
-    logging_enabled:        on
+    logging_enabled:        true
 
     # i18n
     default_culture:        en        # Default user culture

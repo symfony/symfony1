@@ -5,7 +5,7 @@ page3:
   client_lifetime: 86400
 
 all:
-  enabled:         on
-  with_layout:     on
+  enabled:         true
+  with_layout:     true
   lifetime:        86400
   client_lifetime: 0

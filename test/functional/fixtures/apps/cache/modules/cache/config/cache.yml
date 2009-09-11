@@ -1,43 +1,43 @@
 _contextualCacheableComponent:
-  enabled:    on
+  enabled:    true
   contextual: true
 
 _contextualComponent:
-  enabled:    off
+  enabled:    false
   contextual: true
 
 _cacheableComponent:
-  enabled:  on
+  enabled:  true
 
 _component:
-  enabled:  off
+  enabled:  false
 
 _contextualCacheablePartial:
-  enabled:    on
+  enabled:    true
   contextual: true
 
 _contextualPartial:
-  enabled:    off
+  enabled:    false
   contextual: true
 
 _cacheablePartial:
-  enabled:  on
+  enabled:  true
 
 _partial:
-  enabled:  off
+  enabled:  false
 
 multi:
-  enabled:  off
+  enabled:  false
 
 multiBis:
-  enabled:  off
+  enabled:  false
 
 specificCacheKey:
-  enabled:  off
+  enabled:  false
 
 action:
-  enabled:     on
-  with_layout: off
+  enabled:     true
+  with_layout: false
 
 page:
   with_layout: true

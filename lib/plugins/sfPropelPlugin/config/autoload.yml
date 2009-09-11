@@ -3,7 +3,7 @@ autoload:
   propel:
     name:           propel
     path:           <?php echo realpath(dirname(__FILE__).'/../lib/vendor/propel')."\n"; ?>
-    recursive:      on
+    recursive:      true
 
   propel_class:
     name:           propel class
@@ -13,5 +13,5 @@ autoload:
   sfPropelPlugin_lib:
     name:           propel addon
     path:           <?php echo realpath(dirname(__FILE__).'/../lib')."\n"; ?>
-    recursive:      on
+    recursive:      true
     exclude:        [vendor]

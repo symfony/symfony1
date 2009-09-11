@@ -8,6 +8,6 @@ fields:
       msg:   The last name field cannot be left blank
 
 fillin:
-  enabled:  on
+  enabled:  true
   param:
     name: myform

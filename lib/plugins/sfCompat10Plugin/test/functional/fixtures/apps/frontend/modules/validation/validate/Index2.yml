@@ -6,17 +6,17 @@ methods:
     - "article[body]"
 
 fillin:
-  enabled:  on
+  enabled:  true
 
 names:
   fake:
-    required: yes
+    required: true
 
   id:
-    required: yes
+    required: true
 
   "article[title]":
-    required: yes
+    required: true
 
   "article[body]":
-    required: yes
+    required: true

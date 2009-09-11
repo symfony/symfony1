@@ -86,9 +86,9 @@ $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "f
 $t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/escaping_strategy: +true/', '"generate:app" switches escaping_strategy "on" by default');
 $t->like(file_get_contents($c->tmp_dir.'/apps/frontend/config/settings.yml'), '/csrf_secret: +\w+/', '"generate:app" generates a csrf_token by default');
 
-$content = $c->execute_command('generate:app backend --escaping-strategy=off --csrf-secret=false');
-$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/escaping_strategy: +false/', '"generate:app" switches escaping_strategy "off"');
-$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/csrf_secret: +false/', '"generate:app" switches csrf_token to "off"');
+$content = $c->execute_command('generate:app backend --escaping-strategy=false --csrf-secret=false');
+$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/escaping_strategy: +false/', '"generate:app" switches escaping_strategy "false"');
+$t->like(file_get_contents($c->tmp_dir.'/apps/backend/config/settings.yml'), '/csrf_secret: +false/', '"generate:app" switches csrf_token to "false"');
 
 // failing
 $content = $c->execute_command('generate:module wrongapp foo', 1);

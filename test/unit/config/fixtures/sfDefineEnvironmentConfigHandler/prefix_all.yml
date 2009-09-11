@@ -1,6 +1,6 @@
 prod:
   .settings:
-    i18n: on
+    i18n: true
 
 all:
   .actions:
@@ -8,8 +8,8 @@ all:
     error_404_action:       error404
 
   .settings:
-    available:              off
+    available:              false
 
-    i18n:                   off
+    i18n:                   false
 
     enabled_modules:       [default, user]

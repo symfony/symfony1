@@ -1,5 +1,5 @@
 default:
-  deliver:           on
+  deliver:           true
   mailer:            smtp
   domain:            localhost.localdomain
   hostname:          localhost

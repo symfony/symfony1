@@ -66,7 +66,7 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   public function isEscaped()
   {
-    return in_array($this->getEscaping(), array('on', true), true);
+    return in_array($this->getEscaping(), array('on', 'true', true), true);
   }
 
   /**

@@ -3,7 +3,7 @@ autoload:
     name:       sfAutoloadPlugin lib
     path:       <?php echo dirname(__FILE__)."/../lib\n" ?>
     exclude:    [vendor]
-    recursive:  on
+    recursive:  true
 
   not_in_lib_class:
     name:       NotInLib class

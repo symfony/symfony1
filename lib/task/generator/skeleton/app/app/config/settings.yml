@@ -1,23 +1,23 @@
 prod:
   .settings:
     no_script_name:         ##NO_SCRIPT_NAME##
-    logging_enabled:        off
+    logging_enabled:        false
 
 dev:
   .settings:
     error_reporting:        <?php echo (E_ALL | E_STRICT)."\n" ?>
-    web_debug:              on
-    cache:                  off
-    no_script_name:         off
-    etag:                   off
+    web_debug:              true
+    cache:                  false
+    no_script_name:         false
+    etag:                   false
 
 test:
   .settings:
     error_reporting:        <?php echo ((E_ALL | E_STRICT) ^ E_NOTICE)."\n" ?>
-    cache:                  off
-    web_debug:              off
-    no_script_name:         off
-    etag:                   off
+    cache:                  false
+    web_debug:              false
+    no_script_name:         false
+    etag:                   false
 
 all:
   .settings:
@@ -25,8 +25,8 @@ all:
     csrf_secret:       ##CSRF_SECRET##     # Unique secret to enable CSRF protection or false to disable
 
     # Output escaping settings
-    escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: on, off.
+    escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: true, false.
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
     # Cache settings
-    lazy_cache_key:         on        # Delays creation of a cache key until after checking whether an action or partial is cacheable
+    lazy_cache_key:         true        # Delays creation of a cache key until after checking whether an action or partial is cacheable

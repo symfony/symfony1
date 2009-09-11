@@ -3,22 +3,22 @@ autoload:
   project:
     name:           project
     path:           %SF_LIB_DIR%
-    recursive:      on
+    recursive:      true
     exclude:        [model, vendor]
 
   project_model:
     name:           project model
     path:           %SF_LIB_DIR%/model
-    recursive:      on
+    recursive:      true
 
   # application
   application:
     name:           application
     path:           %SF_APP_LIB_DIR%
-    recursive:      on
+    recursive:      true
 
   modules:
     name:           module
     path:           %SF_APP_DIR%/modules/*/lib
     prefix:         1
-    recursive:      on
+    recursive:      true

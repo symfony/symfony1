@@ -270,3 +270,23 @@ instance):
         param:
           delivery_strategy: single_address
           delivery_address:  foo@example.com
+
+YAML
+----
+
+sfYAML is now more compatible with the 1.2 spec. Here are the changes you
+might need to do in your configuration files:
+
+ * Booleans can now only be represented with the `true` or `false` strings. If
+   you used the alternative strings in the following list, you must replace
+   them with either `true` or `false`:
+
+    * `on`, `y`, `yes`, `+`
+    * `off`, `n`, `no`, `-`
+
+If you don't want to check all your YAML files, you can force the YAML parser
+to use the 1.1 YAML specification by using the `sfYaml::setSpecVersion()`
+method:
+
+    [php]
+    sfYaml::setSpecVersion('1.1');

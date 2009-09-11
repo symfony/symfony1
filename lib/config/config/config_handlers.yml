@@ -42,4 +42,4 @@ modules/*/config/module.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: mod_
-    module: yes
+    module: true

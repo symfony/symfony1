@@ -5,9 +5,9 @@ methods:
 
 names:
   article{title}:
-    required:     yes
+    required:     true
     required_msg: required
 
   article{body}:
-    required:     yes
+    required:     true
     required_msg: required

@@ -4,8 +4,8 @@ default:
     error_404_action:       error404
 
   .settings:
-    available:              on
+    available:              true
 
-    i18n:                   off
+    i18n:                   false
 
     enabled_modules:       [default]

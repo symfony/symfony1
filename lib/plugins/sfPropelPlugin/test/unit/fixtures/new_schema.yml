@@ -97,9 +97,9 @@ classes:
     tableName: my_nested_sets
     columns:
       id:
-      lft: { type: integer, required: on }
-      rgt: { type: integer, required: on }
-      scope: { type: integer, required: on }
+      lft: { type: integer, required: true }
+      rgt: { type: integer, required: true }
+      scope: { type: integer, required: true }
     nestedSet:
       left: lft
       right: rgt

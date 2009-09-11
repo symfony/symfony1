@@ -2,7 +2,7 @@ methods:
   post: [name]
 
 fillin:
-  enabled:  on
+  enabled:  true
 
 names:
   name:

@@ -78,9 +78,9 @@ propel:
   my_nested_sets:
     _attributes: { phpName: myNestedSetNode }
     id:
-    lft:    { type: integer, required: on }
-    rgt:    { type: integer, required: on }
-    scope:  { type: integer, required: on }
+    lft:    { type: integer, required: true }
+    rgt:    { type: integer, required: true }
+    scope:  { type: integer, required: true }
     _nestedSet:
       left:   lft
       right:  rgt
