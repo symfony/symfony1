@@ -72,7 +72,7 @@ class sfCacheFilter extends sfFilter
   {
     $uri = $this->routing->getCurrentInternalUri();
 
-    if (is_null($uri))
+    if (null === $uri)
     {
       return true;
     }

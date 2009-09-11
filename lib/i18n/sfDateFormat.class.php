@@ -83,7 +83,7 @@ class sfDateFormat
    */
   function __construct($formatInfo = null)
   {
-    if (is_null($formatInfo))
+    if (null === $formatInfo)
     {
       $this->formatInfo = sfDateTimeFormatInfo::getInvariantInfo();
     }
@@ -113,7 +113,7 @@ class sfDateFormat
    */
   public function getDate($time, $pattern = null)
   {
-    if (is_null($time))
+    if (null === $time)
     {
       return null;
     }
@@ -218,7 +218,7 @@ class sfDateFormat
   {
     $date = $this->getDate($time, $inputPattern);
 
-    if (is_null($pattern))
+    if (null === $pattern)
     {
       $pattern = 'F';
     }

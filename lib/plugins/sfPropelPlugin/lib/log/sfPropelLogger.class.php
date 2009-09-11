@@ -28,7 +28,7 @@ class sfPropelLogger implements BasicLogger
    */
   public function __construct(sfEventDispatcher $dispatcher = null)
   {
-    if (is_null($dispatcher))
+    if (null === $dispatcher)
     {
       $this->dispatcher = sfProjectConfiguration::getActive()->getEventDispatcher();
     }

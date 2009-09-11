@@ -314,9 +314,9 @@ EOF;
    */
   public function getFormObject()
   {
-    if (is_null($this->formObject))
+    if (null === $this->formObject)
     {
-      $class = is_null($this->configuration) ? $this->getModelClass().'Form' : $this->configuration->getFormClass();
+      $class = null === $this->configuration ? $this->getModelClass().'Form' : $this->configuration->getFormClass();
 
       $this->formObject = new $class();
     }

@@ -39,7 +39,7 @@ class sfCommandArgument
    */
   public function __construct($name, $mode = null, $help = '', $default = null)
   {
-    if (is_null($mode))
+    if (null === $mode)
     {
       $mode = self::OPTIONAL;
     }
@@ -92,14 +92,14 @@ class sfCommandArgument
    */
   public function setDefault($default = null)
   {
-    if (self::REQUIRED === $this->mode && !is_null($default))
+    if (self::REQUIRED === $this->mode && null !== $default)
     {
       throw new sfCommandException('Cannot set a default value except for sfCommandParameter::OPTIONAL mode.');
     }
 
     if ($this->isArray())
     {
-      if (is_null($default))
+      if (null === $default)
       {
         $default = array();
       }

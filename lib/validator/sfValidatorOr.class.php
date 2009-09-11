@@ -49,7 +49,7 @@ class sfValidatorOr extends sfValidatorBase
         $this->addValidator($validator);
       }
     }
-    else if (!is_null($validators))
+    else if (null !== $validators)
     {
       throw new InvalidArgumentException('sfValidatorOr constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }

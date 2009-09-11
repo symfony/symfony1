@@ -106,7 +106,7 @@ class sfDoctrineFormGenerator extends sfGenerator
         mkdir($baseDir.'/base', 0777, true);
       }
 
-      file_put_contents($baseDir.'/base/Base'.$model.'Form.class.php', $this->evalTemplate(is_null($this->getParentModel()) ? 'sfDoctrineFormGeneratedTemplate.php' : 'sfDoctrineFormGeneratedInheritanceTemplate.php'));
+      file_put_contents($baseDir.'/base/Base'.$model.'Form.class.php', $this->evalTemplate(null === $this->getParentModel() ? 'sfDoctrineFormGeneratedTemplate.php' : 'sfDoctrineFormGeneratedInheritanceTemplate.php'));
 
       if ($isPluginModel)
       {
@@ -223,7 +223,7 @@ class sfDoctrineFormGenerator extends sfGenerator
         &&
         isset($relation['refTable'])
         &&
-        (is_null($this->getParentModel()) || !Doctrine::getTable($this->getParentModel())->hasRelation($relation->getAlias()))
+        (null === $this->getParentModel() || !Doctrine::getTable($this->getParentModel())->hasRelation($relation->getAlias()))
       )
       {
         $relations[] = $relation;
@@ -291,7 +291,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     switch ($column->getDoctrineType())
     {
       case 'string':
-        $widgetSubclass = is_null($column->getLength()) || $column->getLength() > 255 ? 'Textarea' : 'InputText';
+        $widgetSubclass = null === $column->getLength() || $column->getLength() > 255 ? 'Textarea' : 'InputText';
         break;
       case 'boolean':
         $widgetSubclass = 'InputCheckbox';
@@ -673,6 +673,6 @@ class sfDoctrineFormGenerator extends sfGenerator
    */
   public function getFormClassToExtend()
   {
-    return is_null($model = $this->getParentModel()) ? 'BaseFormDoctrine' : sprintf('%sForm', $model);
+    return null === ($model = $this->getParentModel()) ? 'BaseFormDoctrine' : sprintf('%sForm', $model);
   }
 }

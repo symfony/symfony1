@@ -49,7 +49,7 @@ abstract class sfWidgetFormSchemaFormatter
       '%field%'         => $field,
       '%error%'         => $this->formatErrorsForRow($errors),
       '%help%'          => $this->formatHelp($help),
-      '%hidden_fields%' => is_null($hiddenFields) ? '%hidden_fields%' : $hiddenFields,
+      '%hidden_fields%' => null === $hiddenFields ? '%hidden_fields%' : $hiddenFields,
     ));
   }
 
@@ -67,7 +67,7 @@ abstract class sfWidgetFormSchemaFormatter
       return false;
     }
 
-    if (is_null(self::$translationCallable))
+    if (null === self::$translationCallable)
     {
       // replace object with strings
       foreach ($parameters as $key => $value)
@@ -130,7 +130,7 @@ abstract class sfWidgetFormSchemaFormatter
 
   public function formatErrorRow($errors)
   {
-    if (is_null($errors) || !$errors)
+    if (null === $errors || !$errors)
     {
       return '';
     }
@@ -140,7 +140,7 @@ abstract class sfWidgetFormSchemaFormatter
 
   public function formatErrorsForRow($errors)
   {
-    if (is_null($errors) || !$errors)
+    if (null === $errors || !$errors)
     {
       return '';
     }

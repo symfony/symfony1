@@ -37,7 +37,7 @@ abstract class sfFormPropel extends sfFormObject
   public function __construct(BaseObject $object = null, $options = array(), $CSRFSecret = null)
   {
     $class = $this->getModelName();
-    if (is_null($object))
+    if (null === $object)
     {
       $this->object = new $class();
     }
@@ -159,7 +159,7 @@ abstract class sfFormPropel extends sfFormObject
       throw $this->getErrorSchema();
     }
 
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }
@@ -191,7 +191,7 @@ abstract class sfFormPropel extends sfFormObject
    */
   public function updateObject($values = null)
   {
-    if (is_null($values))
+    if (null === $values)
     {
       $values = $this->values;
     }
@@ -227,7 +227,7 @@ abstract class sfFormPropel extends sfFormObject
    */
   public function updateObjectEmbeddedForms($values, $forms = null)
   {
-    if (is_null($forms))
+    if (null === $forms)
     {
       $forms = $this->embeddedForms;
     }
@@ -314,7 +314,7 @@ abstract class sfFormPropel extends sfFormObject
    */
   public function isI18n()
   {
-    return !is_null($this->getI18nFormClass());
+    return null !== $this->getI18nFormClass();
   }
 
   /**
@@ -372,7 +372,7 @@ abstract class sfFormPropel extends sfFormObject
    */
   protected function doSave($con = null)
   {
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }
@@ -393,12 +393,12 @@ abstract class sfFormPropel extends sfFormObject
    */
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }
 
-    if (is_null($forms))
+    if (null === $forms)
     {
       $forms = $this->embeddedForms;
     }
@@ -449,7 +449,7 @@ abstract class sfFormPropel extends sfFormObject
       throw new LogicException(sprintf('You cannot save the current file for field "%s" as the field is not a file.', $field));
     }
 
-    if (is_null($values))
+    if (null === $values)
     {
       $values = $this->values;
     }
@@ -517,7 +517,7 @@ abstract class sfFormPropel extends sfFormObject
       throw new LogicException(sprintf('You cannot save the current file for field "%s" as the field is not a file.', $field));
     }
 
-    if (is_null($file))
+    if (null === $file)
     {
       $file = $this->getValue($field);
     }
@@ -525,7 +525,7 @@ abstract class sfFormPropel extends sfFormObject
     $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $method = sprintf('generate%sFilename', $column);
 
-    if (!is_null($filename))
+    if (null !== $filename)
     {
       return $file->save($filename);
     }

@@ -71,7 +71,7 @@ class sfException extends Exception
    */
   public function printStackTrace()
   {
-    if (is_null($this->wrappedException))
+    if (null === $this->wrappedException)
     {
       $this->setWrappedException($this);
     }
@@ -184,7 +184,7 @@ class sfException extends Exception
       }
     }
 
-    $message = is_null($exception->getMessage()) ? 'n/a' : $exception->getMessage();
+    $message = null === $exception->getMessage() ? 'n/a' : $exception->getMessage();
     $name    = get_class($exception);
     $traces  = self::getTraces($exception, 'html' != $format || 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html');
 
@@ -228,7 +228,7 @@ class sfException extends Exception
     $template = sprintf('%s.%s.php', $debug ? 'exception' : 'error', $format);
     foreach ($templatePaths as $path)
     {
-      if (!is_null($path) && is_readable($file = $path.'/'.$template))
+      if (null !== $path && is_readable($file = $path.'/'.$template))
       {
         return $file;
       }
@@ -275,8 +275,8 @@ class sfException extends Exception
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
         self::formatArgs($args, false, $format),
-        self::formatFile($file, $line, $format, is_null($file) ? 'n/a' : sfDebug::shortenFilePath($file)),
-        is_null($line) ? 'n/a' : $line,
+        self::formatFile($file, $line, $format, null === $file ? 'n/a' : sfDebug::shortenFilePath($file)),
+        null === $line ? 'n/a' : $line,
         'trace_'.$i,
         'trace_'.$i,
         $i == 0 ? 'block' : 'none',
@@ -352,7 +352,7 @@ class sfException extends Exception
       {
         $formattedValue = ($format == 'html' ? sprintf("'%s'", self::escape($value)) : "'$value'");
       }
-      else if (is_null($value))
+      else if (null === $value)
       {
         $formattedValue = ($format == 'html' ? '<em>null</em>' : 'null');
       }
@@ -379,7 +379,7 @@ class sfException extends Exception
    */
   static protected function formatFile($file, $line, $format = 'html', $text = null)
   {
-    if (is_null($text))
+    if (null === $text)
     {
       $text = $file;
     }

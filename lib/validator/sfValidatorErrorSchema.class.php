@@ -52,7 +52,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    */
   public function addError(sfValidatorError $error, $name = null)
   {
-    if (is_null($name) || is_integer($name))
+    if (null === $name || is_integer($name))
     {
       if ($error instanceof sfValidatorErrorSchema)
       {

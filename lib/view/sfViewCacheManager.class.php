@@ -731,7 +731,7 @@ class sfViewCacheManager
     // retrieve content from cache
     $cache = $this->get($uri);
 
-    if (is_null($cache))
+    if (null === $cache)
     {
       return null;
     }
@@ -805,7 +805,7 @@ class sfViewCacheManager
     // retrieve content from cache
     $cache = $this->get($uri);
 
-    if (is_null($cache))
+    if (null === $cache)
     {
       return null;
     }
@@ -883,7 +883,7 @@ class sfViewCacheManager
   {
     $retval = $this->get($uri);
 
-    if (is_null($retval))
+    if (null === $retval)
     {
       return false;
     }

@@ -108,7 +108,7 @@ class sfMemcacheCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    $lifetime = is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
+    $lifetime = null === $lifetime ? $this->getOption('lifetime') : $lifetime;
 
     // save metadata
     $this->setMetadata($key, $lifetime);

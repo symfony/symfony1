@@ -55,7 +55,7 @@ class sfModelGeneratorConfigurationField
    */
   public function getConfig($key = null, $default = null, $escaped = false)
   {
-    if (is_null($key))
+    if (null === $key)
     {
       return $this->config;
     }
@@ -208,7 +208,7 @@ class sfModelGeneratorConfigurationField
    */
   public function setFlag($flag)
   {
-    if (is_null($flag))
+    if (null === $flag)
     {
       return;
     }

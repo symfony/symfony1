@@ -189,7 +189,7 @@ class sfPropelDatabase extends sfPDODatabase
    */
   public function shutdown()
   {
-    if (!is_null($this->connection))
+    if (null !== $this->connection)
     {
       @$this->connection = null;
     }

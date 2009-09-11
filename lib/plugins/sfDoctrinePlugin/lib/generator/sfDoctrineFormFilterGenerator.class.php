@@ -89,7 +89,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
         mkdir($baseDir.'/base', 0777, true);
       }
 
-      file_put_contents($baseDir.'/base/Base'.$model.'FormFilter.class.php', $this->evalTemplate(is_null($this->getParentModel()) ? 'sfDoctrineFormFilterGeneratedTemplate.php' : 'sfDoctrineFormFilterGeneratedInheritanceTemplate.php'));
+      file_put_contents($baseDir.'/base/Base'.$model.'FormFilter.class.php', $this->evalTemplate(null === $this->getParentModel() ? 'sfDoctrineFormFilterGeneratedTemplate.php' : 'sfDoctrineFormFilterGeneratedInheritanceTemplate.php'));
 
       if ($isPluginModel)
       {
@@ -358,6 +358,6 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
    */
   public function getFormClassToExtend()
   {
-    return is_null($model = $this->getParentModel()) ? 'BaseFormFilterDoctrine' : sprintf('%sFormFilter', $model);
+    return null === ($model = $this->getParentModel()) ? 'BaseFormFilterDoctrine' : sprintf('%sFormFilter', $model);
   }
 }

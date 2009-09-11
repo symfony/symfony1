@@ -65,7 +65,7 @@ class sfPatternRouting extends sfRouting
 
     parent::initialize($dispatcher, $cache, $options);
 
-    if (!is_null($this->cache) && !$options['lookup_cache_dedicated_keys'] && $cacheData = $this->cache->get('symfony.routing.data'))
+    if (null !== $this->cache && !$options['lookup_cache_dedicated_keys'] && $cacheData = $this->cache->get('symfony.routing.data'))
     {
       $this->cacheData = unserialize($cacheData);
     }
@@ -92,7 +92,7 @@ class sfPatternRouting extends sfRouting
    */
   public function getCurrentInternalUri($withRouteName = false)
   {
-    return is_null($this->currentRouteName) ? null : $this->currentInternalUri[$withRouteName ? 0 : 1];
+    return null === $this->currentRouteName ? null : $this->currentInternalUri[$withRouteName ? 0 : 1];
   }
 
   /**
@@ -295,7 +295,7 @@ class sfPatternRouting extends sfRouting
   public function generate($name, $params = array(), $absolute = false)
   {
     // fetch from cache
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       $cacheKey = 'generate_'.$name.'_'.md5(serialize(array_merge($this->defaultParameters, $params))).'_'.md5(serialize($this->options['context']));
       if ($this->options['lookup_cache_dedicated_keys'] && $url = $this->cache->get('symfony.routing.data.'.$cacheKey))
@@ -332,7 +332,7 @@ class sfPatternRouting extends sfRouting
     $url = $route->generate($params, $this->options['context'], $absolute);
 
     // store in cache
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       if ($this->options['lookup_cache_dedicated_keys'])
       {
@@ -421,7 +421,7 @@ class sfPatternRouting extends sfRouting
     $url = $this->normalizeUrl($url);
 
     // fetch from cache
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       $cacheKey = 'parse_'.$url.'_'.md5(serialize($this->options['context']));
       if ($this->options['lookup_cache_dedicated_keys'] && $info = $this->cache->get('symfony.routing.data.'.$cacheKey))
@@ -437,7 +437,7 @@ class sfPatternRouting extends sfRouting
     $info = $this->getRouteThatMatchesUrl($url);
 
     // store in cache
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       if ($this->options['lookup_cache_dedicated_keys'])
       {
@@ -528,7 +528,7 @@ class sfPatternRouting extends sfRouting
    */
   public function shutdown()
   {
-    if (!is_null($this->cache) && $this->cacheChanged)
+    if (null !== $this->cache && $this->cacheChanged)
     {
       $this->cacheChanged = false;
       $this->cache->set('symfony.routing.data', serialize($this->cacheData));

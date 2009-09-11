@@ -43,7 +43,7 @@ class sfTesterPropel extends sfTester
    */
   public function check($model, $criteria, $value = true)
   {
-    if (is_null($criteria))
+    if (null === $criteria)
     {
       $criteria = new Criteria();
     }

@@ -156,7 +156,7 @@ abstract class sfWebDebugPanel
     // this method is called a lot so we avoid calling class_exists()
     if ($file && !sfToolkit::isPathAbsolute($file))
     {
-      if (is_null($text))
+      if (null === $text)
       {
         $text = $file;
       }
@@ -166,7 +166,7 @@ abstract class sfWebDebugPanel
       $file = $r->getFileName();
     }
 
-    if (is_null($text))
+    if (null === $text)
     {
       $text = sfDebug::shortenFilePath($file);
     }

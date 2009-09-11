@@ -67,7 +67,7 @@ class sfExecutionFilter extends sfFilter
   {
     $uri = $this->context->getRouting()->getCurrentInternalUri();
 
-    if (sfConfig::get('sf_cache') && !is_null($uri) && $this->context->getViewCacheManager()->hasActionCache($uri))
+    if (sfConfig::get('sf_cache') && null !== $uri && $this->context->getViewCacheManager()->hasActionCache($uri))
     {
       // action in cache, so go to the view
       return sfView::SUCCESS;
@@ -90,7 +90,7 @@ class sfExecutionFilter extends sfFilter
     $viewName = $actionInstance->execute($this->context->getRequest());
     $actionInstance->postExecute();
 
-    return is_null($viewName) ? sfView::SUCCESS : $viewName;
+    return null === $viewName ? sfView::SUCCESS : $viewName;
   }
 
   /**

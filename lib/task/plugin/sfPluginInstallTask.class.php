@@ -113,7 +113,7 @@ EOF;
       if (false !== $license)
       {
         $temp = trim(str_replace('license', '', strtolower($license)));
-        if (!is_null($license) && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache')))
+        if (null !== $license && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache')))
         {
           throw new sfCommandException(sprintf('The license of this plugin "%s" is not MIT like (use --force-license to force installation).', $license));
         }

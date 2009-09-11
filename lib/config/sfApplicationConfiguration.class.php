@@ -195,7 +195,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function getConfigCache()
   {
-    if (is_null($this->configCache))
+    if (null === $this->configCache)
     {
       $this->configCache = new sfConfigCache($this);
     }

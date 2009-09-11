@@ -126,7 +126,7 @@ class sfDoctrineColumn implements ArrayAccess
     $doctrineType = $this->getDoctrineType();
 
     // we simulate the CHAR/VARCHAR types to generate input_tags
-    if ('string' == $doctrineType && !is_null($this->getSize()) && $this->getSize() <= 255)
+    if ('string' == $doctrineType && null !== $this->getSize() && $this->getSize() <= 255)
     {
       return 'VARCHAR';
     }

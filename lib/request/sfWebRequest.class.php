@@ -251,7 +251,7 @@ class sfWebRequest extends sfRequest
     if (!isset($this->options['no_script_name']) || !$this->options['no_script_name'])
     {
       $scriptName = $this->getScriptName();
-      $prefix = is_null($prefix) ? $scriptName : $prefix.'/'.basename($scriptName);
+      $prefix = null === $prefix ? $scriptName : $prefix.'/'.basename($scriptName);
     }
 
     return $prefix;
@@ -354,7 +354,7 @@ class sfWebRequest extends sfRequest
   {
     $preferredCultures = $this->getLanguages();
 
-    if (is_null($cultures))
+    if (null === $cultures)
     {
       return isset($preferredCultures[0]) ? $preferredCultures[0] : null;
     }
@@ -540,7 +540,7 @@ class sfWebRequest extends sfRequest
    */
   public function getRelativeUrlRoot()
   {
-    if (is_null($this->relativeUrlRoot))
+    if (null === $this->relativeUrlRoot)
     {
       if (!isset($this->options['relative_url_root']))
       {
@@ -687,7 +687,7 @@ class sfWebRequest extends sfRequest
    */
   public function getRequestFormat()
   {
-    if (is_null($this->format))
+    if (null === $this->format)
     {
       $this->setRequestFormat($this->getParameter('sf_format'));
     }
@@ -708,7 +708,7 @@ class sfWebRequest extends sfRequest
       $this->fixedFileArray = self::convertFileInformation($_FILES);
     }
 
-    return is_null($key) ? $this->fixedFileArray : (isset($this->fixedFileArray[$key]) ? $this->fixedFileArray[$key] : array());
+    return null === $key ? $this->fixedFileArray : (isset($this->fixedFileArray[$key]) ? $this->fixedFileArray[$key] : array());
   }
 
   /**

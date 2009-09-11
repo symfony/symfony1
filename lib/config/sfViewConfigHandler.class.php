@@ -168,7 +168,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     // the user set a decorator in the action
     $data = <<<EOF
-  if (!is_null(\$layout = sfConfig::get('symfony.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout')))
+  if (null !== \$layout = sfConfig::get('symfony.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout'))
   {
     \$this->setDecoratorTemplate(false === \$layout ? false : \$layout.\$this->getExtension());
   }
@@ -194,7 +194,7 @@ EOF;
       //   * the request is an XMLHttpRequest request
       $data .= <<<EOF
 
-  else if (is_null(\$this->getDecoratorTemplate()) && !\$this->context->getRequest()->isXmlHttpRequest())
+  else if (null === \$this->getDecoratorTemplate() && !\$this->context->getRequest()->isXmlHttpRequest())
   {
     \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
   }

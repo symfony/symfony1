@@ -64,7 +64,7 @@ class sfGeneratorManager
    */
   public function getBasePath()
   {
-    if (is_null($this->basePath))
+    if (null === $this->basePath)
     {
       // for BC
       $this->basePath = sfConfig::get('sf_module_cache_dir');

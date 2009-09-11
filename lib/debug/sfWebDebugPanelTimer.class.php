@@ -80,11 +80,11 @@ class sfWebDebugPanelTimer extends sfWebDebugPanel
 
   static public function isStarted()
   {
-    return !is_null(self::$startTime);
+    return null !== self::$startTime;
   }
 
   protected function getTotalTime()
   {
-    return !is_null(self::$startTime) ? sprintf('%.0f', (microtime(true) - self::$startTime) * 1000) : 0;
+    return null !== self::$startTime ? sprintf('%.0f', (microtime(true) - self::$startTime) * 1000) : 0;
   }
 }

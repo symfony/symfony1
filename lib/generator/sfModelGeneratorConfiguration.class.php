@@ -177,7 +177,7 @@ abstract class sfModelGeneratorConfiguration
       throw new InvalidArgumentException(sprintf('The context "%s" does not exist.', $context));
     }
 
-    if (is_null($fields))
+    if (null === $fields)
     {
       return $this->configuration[$context];
     }
@@ -473,7 +473,7 @@ abstract class sfModelGeneratorConfiguration
 
   protected function fixActionParameters($action, $parameters)
   {
-    if (is_null($parameters))
+    if (null === $parameters)
     {
       $parameters = array();
     }

@@ -41,7 +41,7 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
    */
   protected function doClean($values)
   {
-    if (is_null($values))
+    if (null === $values)
     {
       $values = array();
     }

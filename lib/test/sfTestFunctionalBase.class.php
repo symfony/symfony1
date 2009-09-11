@@ -39,9 +39,9 @@ abstract class sfTestFunctionalBase
   {
     $this->browser = $browser;
 
-    if (is_null(self::$test))
+    if (null === self::$test)
     {
-      self::$test = !is_null($lime) ? $lime : new lime_test();
+      self::$test = null !== $lime ? $lime : new lime_test();
     }
 
     $this->setTesters(array_merge(array(
@@ -106,7 +106,7 @@ abstract class sfTestFunctionalBase
    */
   public function end()
   {
-    if (is_null($this->blockTester))
+    if (null === $this->blockTester)
     {
       throw new LogicException(sprintf('There is not current tester block to end.'));
     }

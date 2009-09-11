@@ -81,7 +81,7 @@ EOF;
     $dirFinder = sfFinder::type('dir')->discard('.sf')->maxdepth(0)->relative();
 
     // iterate through applications
-    $apps = is_null($options['app']) ? $dirFinder->in(sfConfig::get('sf_apps_dir')) : array($options['app']);
+    $apps = null === $options['app'] ? $dirFinder->in(sfConfig::get('sf_apps_dir')) : array($options['app']);
     foreach ($apps as $app)
     {
       $this->checkAppExists($app);
@@ -92,7 +92,7 @@ EOF;
       }
 
       // iterate through environments
-      $envs = is_null($options['env']) ? $dirFinder->in(sfConfig::get('sf_cache_dir').'/'.$app) : array($options['env']);
+      $envs = null === $options['env'] ? $dirFinder->in(sfConfig::get('sf_cache_dir').'/'.$app) : array($options['env']);
       foreach ($envs as $env)
       {
         if (!is_dir(sfConfig::get('sf_cache_dir').'/'.$app.'/'.$env))
@@ -123,7 +123,7 @@ EOF;
     }
 
     // clear global cache
-    if (is_null($options['app']) && 'all' == $options['type'])
+    if (null === $options['app'] && 'all' == $options['type'])
     {
       $this->getFilesystem()->remove(sfFinder::type('file')->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
     }

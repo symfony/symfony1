@@ -109,7 +109,7 @@ abstract class sfFormFilterPropel extends sfFormFilter
     $peer = constant($this->getModelName().'::PEER');
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
+      if (!isset($values[$field]) || null === $values[$field] || '' === $values[$field])
       {
         continue;
       }
@@ -216,21 +216,21 @@ abstract class sfFormFilterPropel extends sfFormFilter
     else
     {
       $criterion = null;
-      if (!is_null($values['from']) && !is_null($values['to']))
+      if (null !== $values['from'] && null !== $values['to'])
       {
         $criterion = $criteria->getNewCriterion($colname, $values['from'], Criteria::GREATER_EQUAL);
         $criterion->addAnd($criteria->getNewCriterion($colname, $values['to'], Criteria::LESS_EQUAL));
       }
-      else if (!is_null($values['from']))
+      else if (null !== $values['from'])
       {
         $criterion = $criteria->getNewCriterion($colname, $values['from'], Criteria::GREATER_EQUAL);
       }
-      else if (!is_null($values['to']))
+      else if (null !== $values['to'])
       {
         $criterion = $criteria->getNewCriterion($colname, $values['to'], Criteria::LESS_EQUAL);
       }
 
-      if (!is_null($criterion))
+      if (null !== $criterion)
       {
         $criteria->add($criterion);
       }

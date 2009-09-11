@@ -57,7 +57,7 @@ class sfBasicSecurityFilter extends sfFilter
 
     // the user is authenticated
     $credential = $this->getUserCredential();
-    if (!is_null($credential) && !$this->context->getUser()->hasCredential($credential))
+    if (null !== $credential && !$this->context->getUser()->hasCredential($credential))
     { 
       if (sfConfig::get('sf_logging_enabled'))
       {

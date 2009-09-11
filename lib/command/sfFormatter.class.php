@@ -23,7 +23,7 @@ class sfFormatter
 
   function __construct($maxLineSize = null)
   {
-    if (is_null($maxLineSize))
+    if (null === $maxLineSize)
     {
       // this is tricky because "tput cols 2>&1" is not accurate
       $maxLineSize = ctype_digit(trim(shell_exec('tput cols 2>&1'))) ? (integer) shell_exec('tput cols') : 78;

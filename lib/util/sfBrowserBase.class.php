@@ -63,8 +63,8 @@ abstract class sfBrowserBase
     unset($_SERVER['argc']);
 
     // setup our fake environment
-    $this->hostname = is_null($hostname) ? 'localhost' : $hostname;
-    $this->remote   = is_null($remote) ? '127.0.0.1' : $remote;
+    $this->hostname = null === $hostname ? 'localhost' : $hostname;
+    $this->remote   = null === $remote ? '127.0.0.1' : $remote;
 
     // we set a session id (fake cookie / persistence)
     $this->newSession();
@@ -430,7 +430,7 @@ abstract class sfBrowserBase
    */
   public function getResponseDomCssSelector()
   {
-    if (is_null($this->dom))
+    if (null === $this->dom)
     {
       throw new LogicException('The DOM is not accessible because the browser response content type is not HTML.');
     }
@@ -445,7 +445,7 @@ abstract class sfBrowserBase
    */
   public function getResponseDom()
   {
-    if (is_null($this->dom))
+    if (null === $this->dom)
     {
       throw new LogicException('The DOM is not accessible because the browser response content type is not HTML.');
     }
@@ -509,7 +509,7 @@ abstract class sfBrowserBase
    */
   public function checkCurrentExceptionIsEmpty()
   {
-    return is_null($this->getCurrentException()) || $this->getCurrentException() instanceof sfError404Exception;
+    return null === $this->getCurrentException() || $this->getCurrentException() instanceof sfError404Exception;
   }
 
   /**

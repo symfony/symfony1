@@ -160,7 +160,7 @@ class sfDateTimeFormatInfo
   {
     static $invariant;
 
-    if (is_null($invariant))
+    if (null === $invariant)
     {
       $invariant = sfCultureInfo::getInvariantCulture()->DateTimeFormat;
     }

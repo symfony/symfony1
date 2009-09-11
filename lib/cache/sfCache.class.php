@@ -169,7 +169,7 @@ abstract class sfCache
    */
   public function getLifetime($lifetime)
   {
-    return is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
+    return null === $lifetime ? $this->getOption('lifetime') : $lifetime;
   }
 
   /**

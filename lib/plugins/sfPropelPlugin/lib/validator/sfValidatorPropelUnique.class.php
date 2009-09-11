@@ -102,7 +102,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
     $object = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelectOne'), $criteria, $this->getOption('connection'));
 
     // if no object or if we're updating the object, it's ok
-    if (is_null($object) || $this->isUpdate($object, $values))
+    if (null === $object || $this->isUpdate($object, $values))
     {
       return $values;
     }
@@ -150,7 +150,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
    */
   protected function getPrimaryKeys()
   {
-    if (is_null($this->getOption('primary_key')))
+    if (null === $this->getOption('primary_key'))
     {
       $primaryKeys = array();
       $tableMap = call_user_func(array(constant($this->getOption('model').'::PEER'), 'getTableMap'));

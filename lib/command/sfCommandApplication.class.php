@@ -41,7 +41,7 @@ abstract class sfCommandApplication
   public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter = null, $options = array())
   {
     $this->dispatcher = $dispatcher;
-    $this->formatter = is_null($formatter) ? $this->guessBestFormatter(STDOUT) : $formatter;
+    $this->formatter = null === $formatter ? $this->guessBestFormatter(STDOUT) : $formatter;
     $this->options = $options;
 
     $this->fixCgi();
@@ -119,7 +119,7 @@ abstract class sfCommandApplication
    */
   public function registerTasks($tasks = null)
   {
-    if (is_null($tasks))
+    if (null === $tasks)
     {
       $tasks = $this->autodiscoverTasks();
     }
@@ -391,7 +391,7 @@ abstract class sfCommandApplication
     }
     fwrite(STDERR, "\n");
 
-    if (!is_null($this->currentTask) && $e instanceof sfCommandArgumentsException)
+    if (null !== $this->currentTask && $e instanceof sfCommandArgumentsException)
     {
       fwrite(STDERR, $this->formatter->format(sprintf($this->currentTask->getSynopsis(), $this->getName()), 'INFO', STDERR)."\n");
       fwrite(STDERR, "\n");

@@ -50,7 +50,7 @@ class sfPropel
 
     $dispatcher->connect('user.change_culture', array('sfPropel', 'listenToChangeCultureEvent'));
 
-    if (!is_null($culture))
+    if (null !== $culture)
     {
       self::setDefaultCulture($culture);
     }

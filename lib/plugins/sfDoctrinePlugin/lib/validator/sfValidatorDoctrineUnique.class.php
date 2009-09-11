@@ -147,7 +147,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
    */
   protected function getPrimaryKeys()
   {
-    if (is_null($this->getOption('primary_key')))
+    if (null === $this->getOption('primary_key'))
     {
       $primaryKeys = Doctrine::getTable($this->getOption('model'))->getIdentifier();
       $this->setOption('primary_key', $primaryKeys);

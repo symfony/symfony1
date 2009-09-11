@@ -44,7 +44,7 @@ class sfEAcceleratorCache extends sfCache
   {
     $value = eaccelerator_get($this->getOption('prefix').$key);
 
-    return is_null($value) ? $default : $value;
+    return null === $value ? $default : $value;
   }
 
   /**
@@ -52,7 +52,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function has($key)
   {
-    return !is_null(eaccelerator_get($this->getOption('prefix').$key));
+    return null !== eaccelerator_get($this->getOption('prefix'.$key));
   }
 
   /**

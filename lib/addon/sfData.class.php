@@ -96,7 +96,7 @@ abstract class sfData
    */
   public function getFiles($element = null)
   {
-    if (is_null($element))
+    if (null === $element)
     {
       $element = sfConfig::get('sf_data_dir').'/fixtures';
     }

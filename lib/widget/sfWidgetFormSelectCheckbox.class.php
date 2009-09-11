@@ -64,7 +64,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
       $name .= '[]';
     }
 
-    if (is_null($value))
+    if (null === $value)
     {
       $value = array();
     }

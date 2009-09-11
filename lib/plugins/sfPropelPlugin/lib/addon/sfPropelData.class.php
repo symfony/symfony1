@@ -135,7 +135,7 @@ class sfPropelData extends sfData
           // foreign key?
           if ($isARealColumn)
           {
-            if ($column->isForeignKey() && !is_null($value))
+            if ($column->isForeignKey() && null !== $value)
             {
               $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
               if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
@@ -331,7 +331,7 @@ class sfPropelData extends sfData
     $this->dbMap = Propel::getDatabaseMap($connectionName);
 
     // get tables
-    if ('all' === $tables || is_null($tables))
+    if ('all' === $tables || null === $tables)
     {
       $tables = array();
       foreach ($this->dbMap->getTables() as $table)
@@ -418,7 +418,7 @@ class sfPropelData extends sfData
               $col = strtolower($column->getName());
               $isPrimaryKey = $column->isPrimaryKey();
 
-              if (is_null($row[$col]))
+              if (null === $row[$col])
               {
                 continue;
               }
@@ -511,7 +511,7 @@ class sfPropelData extends sfData
     $sql = sprintf('SELECT * FROM %s WHERE %s %s',
                    constant(constant($tableName.'::PEER').'::TABLE_NAME'),
                    strtolower($column->getName()),
-                   is_null($in) ? 'IS NULL' : 'IN ('.$in.')');
+                   null === $in ? 'IS NULL' : 'IN ('.$in.')');
     $stmt = $this->con->prepare($sql);
 
     $stmt->execute();

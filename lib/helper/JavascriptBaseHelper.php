@@ -80,7 +80,7 @@
    */
   function javascript_tag($content = null)
   {
-    if (!is_null($content))
+    if (null !== $content)
     {
       return content_tag('script', javascript_cdata_section($content), array('type' => 'text/javascript'));
     }

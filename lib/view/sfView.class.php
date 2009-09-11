@@ -120,7 +120,7 @@ abstract class sfView
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     $request = $context->getRequest();
-    if (!is_null($format = $request->getRequestFormat()))
+    if (null !== $format = $request->getRequestFormat())
     {
       if ('html' != $format)
       {
@@ -351,7 +351,7 @@ abstract class sfView
    */
   protected function preRenderCheck()
   {
-    if (is_null($this->template))
+    if (null === $this->template)
     {
       // a template has not been set
       throw new sfRenderException('A template has not been set.');
@@ -415,7 +415,7 @@ abstract class sfView
 
       return;
     }
-    else if (is_null($template))
+    else if (null === $template)
     {
       return;
     }

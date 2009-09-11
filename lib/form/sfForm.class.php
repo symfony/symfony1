@@ -206,12 +206,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->isBound = true;
     $this->resetFormFields();
 
-    if (is_null($this->taintedValues))
+    if (null === $this->taintedValues)
     {
       $this->taintedValues = array();
     }
 
-    if (is_null($this->taintedFiles))
+    if (null === $this->taintedFiles)
     {
       if ($this->isMultipart())
       {
@@ -381,7 +381,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $this->setDefault($name, $form->getDefaults());
 
-    $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
+    $decorator = null === $decorator ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
 
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator($widgetSchema, $decorator);
     $this->validatorSchema[$name] = $form->getValidatorSchema();
@@ -426,8 +426,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $this->setDefault($name, $defaults);
 
-    $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
-    $innerDecorator = is_null($innerDecorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
+    $decorator = null === $decorator ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
+    $innerDecorator = null === $innerDecorator ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
 
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $options, $attributes), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
@@ -502,12 +502,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function mergePreValidator(sfValidatorBase $validator = null)
   {
-    if (is_null($validator))
+    if (null === $validator)
     {
       return;
     }
 
-    if (is_null($this->validatorSchema->getPreValidator()))
+    if (null === $this->validatorSchema->getPreValidator())
     {
       $this->validatorSchema->setPreValidator($validator);
     }
@@ -527,12 +527,12 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function mergePostValidator(sfValidatorBase $validator = null)
   {
-    if (is_null($validator))
+    if (null === $validator)
     {
       return;
     }
 
-    if (is_null($this->validatorSchema->getPostValidator()))
+    if (null === $this->validatorSchema->getPostValidator())
     {
       $this->validatorSchema->setPostValidator($validator);
     }
@@ -759,7 +759,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function setDefaults($defaults)
   {
-    $this->defaults = is_null($defaults) ? array() : $defaults;
+    $this->defaults = null === $defaults ? array() : $defaults;
 
     if ($this->isCSRFProtected())
     {
@@ -786,14 +786,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function addCSRFProtection($secret)
   {
-    if (false === $secret || (is_null($secret) && !self::$CSRFProtection))
+    if (false === $secret || (null === $secret && !self::$CSRFProtection))
     {
       return;
     }
 
-    if (is_null($secret))
+    if (null === $secret)
     {
-      if (is_null(self::$CSRFSecret))
+      if (null === self::$CSRFSecret)
       {
         self::$CSRFSecret = md5(__FILE__.php_uname());
       }
@@ -820,7 +820,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function getCSRFToken($secret = null)
   {
-    if (is_null($secret))
+    if (null === $secret)
     {
       $secret = self::$CSRFSecret;
     }
@@ -833,7 +833,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function isCSRFProtected()
   {
-    return !is_null($this->validatorSchema[self::$CSRFFieldName]);
+    return null !== $this->validatorSchema[self::$CSRFFieldName];
   }
 
   /**
@@ -874,7 +874,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     self::$CSRFProtection = true;
 
-    if (!is_null($secret))
+    if (null !== $secret)
     {
       self::$CSRFSecret = $secret;
     }
@@ -1058,7 +1058,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function getFormFieldSchema()
   {
-    if (is_null($this->formFieldSchema))
+    if (null === $this->formFieldSchema)
     {
       $values = $this->isBound ? $this->taintedValues : array_merge($this->widgetSchema->getDefaults(), $this->defaults);
 
@@ -1187,7 +1187,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   static public function hasToStringException()
   {
-    return !is_null(self::$toStringException);
+    return null !== self::$toStringException;
   }
 
   /**
@@ -1211,7 +1211,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   static public function setToStringException(Exception $e)
   {
-    if (is_null(self::$toStringException))
+    if (null === self::$toStringException)
     {
       self::$toStringException = $e;
     }

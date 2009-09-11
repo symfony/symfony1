@@ -62,7 +62,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   {
     if (!isset($this->fields[$name]))
     {
-      if (is_null($widget = $this->widget[$name]))
+      if (null === $widget = $this->widget[$name])
       {
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }

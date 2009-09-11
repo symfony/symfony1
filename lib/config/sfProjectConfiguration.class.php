@@ -38,14 +38,14 @@ class sfProjectConfiguration
    */
   public function __construct($rootDir = null, sfEventDispatcher $dispatcher = null)
   {
-    if (is_null(self::$active) || $this instanceof sfApplicationConfiguration)
+    if (null === self::$active || $this instanceof sfApplicationConfiguration)
     {
       self::$active = $this;
     }
 
-    $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
+    $this->rootDir = null === $rootDir ? self::guessRootDir() : realpath($rootDir);
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');
-    $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
+    $this->dispatcher = null === $dispatcher ? new sfEventDispatcher() : $dispatcher;
 
     ini_set('magic_quotes_runtime', 'off');
 
@@ -557,7 +557,7 @@ class sfProjectConfiguration
    */
   static public function hasActive()
   {
-    return !is_null(self::$active);
+    return null !== self::$active;
   }
 
   /**
@@ -587,7 +587,7 @@ class sfProjectConfiguration
   {
     $class = $application.'Configuration';
 
-    if (is_null($rootDir))
+    if (null === $rootDir)
     {
       $rootDir = self::guessRootDir();
     }

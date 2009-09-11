@@ -89,7 +89,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
 
-    if (!is_null($xml) && is_string($xml))
+    if (null !== $xml && is_string($xml))
     {
       // Add header for XML with UTF-8
       if (!preg_match('/<\?xml/', $xml))
@@ -114,7 +114,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    */
   protected function getVariants($catalogue = 'messages')
   {
-    if (is_null($catalogue))
+    if (null === $catalogue)
     {
       $catalogue = 'messages';
     }
@@ -170,7 +170,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $xpath = new DomXPath($dom);
     $body = $xpath->query('//body')->item(0);
 
-    if (is_null($body))
+    if (null === $body)
     {
       //create and try again
       $this->createMessageTemplate($catalogue);
@@ -401,7 +401,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 
   protected function createMessageTemplate($catalogue)
   {
-    if (is_null($catalogue))
+    if (null === $catalogue)
     {
       $catalogue = 'messages';
     }

@@ -164,7 +164,7 @@ class sfNumberFormatInfo
   static public function getInvariantInfo($type = sfNumberFormatInfo::DECIMAL)
   {
     static $invariant;
-    if (is_null($invariant))
+    if (null === $invariant)
     {
       $culture = sfCultureInfo::getInvariantCulture();
       $invariant = $culture->NumberFormat;

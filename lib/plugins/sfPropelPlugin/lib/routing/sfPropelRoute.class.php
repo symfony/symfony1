@@ -78,7 +78,7 @@ class sfPropelRoute extends sfObjectRoute
       $parameters = new Criteria();
     }
 
-    if (!is_null($this->criteria))
+    if (null !== $this->criteria)
     {
       $parameters = $this->criteria;
     }

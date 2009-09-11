@@ -23,12 +23,12 @@ class sfError404Exception extends sfException
    */
   public function printStackTrace()
   {
-    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
+    $exception = null === $this->wrappedException ? $this : $this->wrappedException;
 
     if (sfConfig::get('sf_debug'))
     {
       $response = sfContext::getInstance()->getResponse();
-      if (is_null($response))
+      if (null === $response)
       {
         $response = new sfWebResponse(sfContext::getInstance()->getEventDispatcher());
         sfContext::getInstance()->setResponse($response);

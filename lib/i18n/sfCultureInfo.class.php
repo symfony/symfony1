@@ -449,7 +449,7 @@ class sfCultureInfo
    */
   public function getDateTimeFormat()
   {
-    if (is_null($this->dateTimeFormat))
+    if (null === $this->dateTimeFormat)
     {
       $calendar = $this->getCalendar();
       $info = $this->findInfo("calendar/{$calendar}", true);
@@ -538,7 +538,7 @@ class sfCultureInfo
   {
     static $invariant;
 
-    if (is_null($invariant))
+    if (null === $invariant)
     {
       $invariant = new sfCultureInfo();
     }
@@ -566,7 +566,7 @@ class sfCultureInfo
    */
   public function getNumberFormat()
   {
-    if (is_null($this->numberFormat))
+    if (null === $this->numberFormat)
     {
       $elements = $this->findInfo('NumberElements');
       $patterns = $this->findInfo('NumberPatterns');
@@ -726,7 +726,7 @@ class sfCultureInfo
     $allCountries = $this->findInfo('Countries', true);
 
     // restrict countries to a sub-set
-    if (!is_null($countries))
+    if (null !== $countries)
     {
       if ($problems = array_diff($countries, array_keys($allCountries)))
       {
@@ -754,7 +754,7 @@ class sfCultureInfo
     $allCurrencies = $this->findInfo('Currencies', true);
 
     // restrict countries to a sub-set
-    if (!is_null($currencies))
+    if (null !== $currencies)
     {
       if ($problems = array_diff($currencies, array_keys($allCurrencies)))
       {
@@ -788,7 +788,7 @@ class sfCultureInfo
     $allLanguages = $this->findInfo('Languages', true);
 
     // restrict languages to a sub-set
-    if (!is_null($languages))
+    if (null !== $languages)
     {
       if ($problems = array_diff($languages, array_keys($allLanguages)))
       {

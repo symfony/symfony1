@@ -54,7 +54,7 @@ class sfCommandArgumentSet
    */
   public function addArguments($arguments = array())
   {
-    if (!is_null($arguments))
+    if (null !== $arguments)
     {
       foreach ($arguments as $argument)
       {

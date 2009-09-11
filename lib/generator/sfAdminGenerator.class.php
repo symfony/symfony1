@@ -718,7 +718,7 @@ EOF;
    */
   public function getFormObject()
   {
-    if (is_null($this->formObject))
+    if (null === $this->formObject)
     {
       $class = $this->getFormClassName();
 

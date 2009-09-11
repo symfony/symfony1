@@ -70,7 +70,7 @@ abstract class sfDatabase
    */
   public function getConnection()
   {
-    if (is_null($this->connection))
+    if (null === $this->connection)
     {
       $this->connect();
     }
@@ -87,7 +87,7 @@ abstract class sfDatabase
    */
   public function getResource()
   {
-    if (is_null($this->resource))
+    if (null === $this->resource)
     {
       $this->connect();
     }

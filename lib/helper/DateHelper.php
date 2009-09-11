@@ -37,7 +37,7 @@ function format_date($date, $format = 'd', $culture = null, $charset = null)
 {
   static $dateFormats = array();
 
-  if (is_null($date))
+  if (null === $date)
   {
     return null;
   }

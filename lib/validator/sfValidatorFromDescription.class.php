@@ -52,7 +52,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    */
   public function getValidator()
   {
-    if (is_null($this->validator))
+    if (null === $this->validator)
     {
       $this->validator = $this->reduceTokens($this->tokens, 'getValidator');
     }

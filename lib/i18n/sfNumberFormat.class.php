@@ -80,7 +80,7 @@ class sfNumberFormat
    */
   function __construct($formatInfo = null)
   {
-    if (is_null($formatInfo))
+    if (null === $formatInfo)
     {
       $this->formatInfo = sfNumberFormatInfo::getInvariantInfo();
     }
@@ -151,7 +151,7 @@ class sfNumberFormat
 
     // replace currency sign
     $symbol = @$this->formatInfo->getCurrencySymbol($currency);
-    if (is_null($symbol))
+    if (null === $symbol)
     {
       $symbol = $currency;
     }

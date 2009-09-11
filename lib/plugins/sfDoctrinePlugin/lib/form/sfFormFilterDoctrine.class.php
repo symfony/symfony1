@@ -149,7 +149,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
+      if (!isset($values[$field]) || null === $values[$field] || '' === $values[$field])
       {
         continue;
       }
@@ -250,16 +250,16 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
     }
     else
     {
-      if (!is_null($values['from']) && !is_null($values['to']))
+      if (null !== $values['from'] && null !== $values['to'])
       {
         $query->andWhere(sprintf('%s.%s >= ?', $query->getRootAlias(), $fieldName), $values['from']);
         $query->andWhere(sprintf('%s.%s <= ?', $query->getRootAlias(), $fieldName), $values['to']);
       }
-      else if (!is_null($values['from']))
+      else if (null !== $values['from'])
       {
         $query->andWhere(sprintf('%s.%s >= ?', $query->getRootAlias(), $fieldName), $values['from']);
       }
-      else if (!is_null($values['to']))
+      else if (null !== $values['to'])
       {
         $query->andWhere(sprintf('%s.%s <= ?', $query->getRootAlias(), $fieldName), $values['to']);
       }

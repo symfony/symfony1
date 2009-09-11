@@ -77,7 +77,7 @@ class sfWidgetFormDoctrineSelect extends sfWidgetFormSelect
     }
 
     $a = $this->getOption('alias');
-    $q = is_null($this->getOption('query'))
+    $q = null === $this->getOption('query')
         ? Doctrine::getTable($this->getOption('model'))->createQuery($a)
         : $this->getOption('query');
 

@@ -52,7 +52,7 @@ class sfCommandOption
       $shortcut = null;
     }
 
-    if (!is_null($shortcut))
+    if (null !== $shortcut)
     {
       if ('-' == $shortcut[0])
       {
@@ -60,7 +60,7 @@ class sfCommandOption
       }
     }
 
-    if (is_null($mode))
+    if (null === $mode)
     {
       $mode = self::PARAMETER_NONE;
     }
@@ -144,14 +144,14 @@ class sfCommandOption
    */
   public function setDefault($default = null)
   {
-    if (self::PARAMETER_NONE === (self::PARAMETER_NONE & $this->mode) && !is_null($default))
+    if (self::PARAMETER_NONE === (self::PARAMETER_NONE & $this->mode) && null !== $default)
     {
       throw new sfCommandException('Cannot set a default value when using sfCommandOption::PARAMETER_NONE mode.');
     }
 
     if ($this->isArray())
     {
-      if (is_null($default))
+      if (null === $default)
       {
         $default = array();
       }

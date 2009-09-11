@@ -182,7 +182,7 @@ class sfValidatorFile extends sfValidatorBase
     {
       $type = call_user_func($method, $file);
 
-      if (!is_null($type) && $type !== false)
+      if (null !== $type && $type !== false)
       {
         return strtolower($type);
       }

@@ -164,7 +164,7 @@ class sfParameterHolder implements Serializable
    */
   public function add($parameters)
   {
-    if (is_null($parameters))
+    if (null === $parameters)
     {
       return;
     }

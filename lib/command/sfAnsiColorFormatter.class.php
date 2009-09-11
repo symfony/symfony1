@@ -90,7 +90,7 @@ class sfAnsiColorFormatter extends sfFormatter
    */
   public function formatSection($section, $text, $size = null, $style = 'INFO')
   {
-    if (is_null($size))
+    if (null === $size)
     {
       $size = $this->size;
     }

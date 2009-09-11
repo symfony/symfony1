@@ -63,9 +63,9 @@ class sfBrowser extends sfBrowserBase
    */
   public function getContext($forceReload = false)
   {
-    if (is_null($this->context) || $forceReload)
+    if (null === $this->context || $forceReload)
     {
-      $isContextEmpty = is_null($this->context);
+      $isContextEmpty = null === $this->context;
       $context = $isContextEmpty ? sfContext::getInstance() : $this->context;
 
       // create configuration

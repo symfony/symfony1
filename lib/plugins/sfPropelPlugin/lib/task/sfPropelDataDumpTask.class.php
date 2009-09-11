@@ -81,7 +81,7 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
 
     $filename = $arguments['target'];
-    if (!is_null($filename) && !sfToolkit::isPathAbsolute($filename))
+    if (null !== $filename && !sfToolkit::isPathAbsolute($filename))
     {
       $dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures';
       $this->getFilesystem()->mkdirs($dir);
@@ -92,9 +92,9 @@ EOF;
 
     $data = new sfPropelData();
 
-    $classes = is_null($options['classes']) ? 'all' : explode(',', $options['classes']);
+    $classes = null === $options['classes'] ? 'all' : explode(',', $options['classes']);
 
-    if (!is_null($filename))
+    if (null !== $filename)
     {
       $data->dumpData($filename, $classes, $options['connection']);
     }

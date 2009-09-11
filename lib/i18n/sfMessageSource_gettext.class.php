@@ -311,7 +311,7 @@ class sfMessageSource_gettext extends sfMessageSource_File
 
   protected function createMessageTemplate($catalogue)
   {
-    if (is_null($catalogue))
+    if (null === $catalogue)
     {
       $catalogue = 'messages';
     }

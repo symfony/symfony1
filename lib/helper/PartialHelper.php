@@ -147,7 +147,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
   $allVars = _call_component($moduleName, $componentName, $vars);
 
-  if (!is_null($allVars))
+  if (null !== $allVars)
   {
     // render
     $view->getAttributeHolder()->add($allVars);
@@ -242,7 +242,7 @@ function slot($name, $value = null)
     $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Set slot "%s"', $name))));
   }
 
-  if (!is_null($value))
+  if (null !== $value)
   {
     $response->setSlot($name, $value);
 

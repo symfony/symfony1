@@ -150,7 +150,7 @@ abstract class sfTask
     {
       if (is_string($name))
       {
-        if (false === $value || is_null($value) || ($indexedOptions[$name]->isArray() && !$value))
+        if (false === $value || null === $value || ($indexedOptions[$name]->isArray() && !$value))
         {
           unset($options[$name]);
           continue;
@@ -459,7 +459,7 @@ abstract class sfTask
     }
     else
     {
-      $this->logBlock($question, is_null($style) ? 'QUESTION' : $style);
+      $this->logBlock($question, null === $style ? 'QUESTION' : $style);
     }
 
     $ret = trim(fgets(STDIN));
@@ -540,7 +540,7 @@ abstract class sfTask
     $error = null;
     while (false === $options['attempts'] || $options['attempts']--)
     {
-      if (!is_null($error))
+      if (null !== $error)
       {
         $this->logBlock($error->getMessage(), 'ERROR');
       }

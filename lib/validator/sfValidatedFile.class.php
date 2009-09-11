@@ -48,7 +48,7 @@ class sfValidatedFile
    */
   public function __toString()
   {
-    return is_null($this->savedName) ? '' : $this->savedName;
+    return null === $this->savedName ? '' : $this->savedName;
   }
 
   /**
@@ -70,14 +70,14 @@ class sfValidatedFile
    */
   public function save($file = null, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
-    if (is_null($file))
+    if (null === $file)
     {
       $file = $this->generateFilename();
     }
 
     if ($file[0] != '/' && $file[0] != '\\' && !(strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')))
     {
-      if (is_null($this->path))
+      if (null === $this->path)
       {
         throw new RuntimeException('You must give a "path" when you give a relative file name.');
       }
@@ -120,7 +120,7 @@ class sfValidatedFile
 
     $this->savedName = $file;
 
-    return is_null($this->path) ? $file : str_replace($this->path.DIRECTORY_SEPARATOR, '', $file);
+    return null === $this->path ? $file : str_replace($this->path.DIRECTORY_SEPARATOR, '', $file);
   }
 
   /**
@@ -174,7 +174,7 @@ class sfValidatedFile
    */
   public function isSaved()
   {
-    return !is_null($this->savedName);
+    return null !== $this->savedName;
   }
 
   /**

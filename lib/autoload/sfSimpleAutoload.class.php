@@ -35,7 +35,7 @@ class sfSimpleAutoload
 
   protected function __construct($cacheFile = null)
   {
-    if (!is_null($cacheFile))
+    if (null !== $cacheFile)
     {
       $this->cacheFile = $cacheFile;
     }

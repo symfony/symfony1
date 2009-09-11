@@ -43,7 +43,7 @@ function cache($name, $lifeTime = 86400)
 
   $data = $cache->start($name, $lifeTime);
 
-  if (is_null($data))
+  if (null === $data)
   {
     sfConfig::set('symfony.cache.started', true);
     sfConfig::set('symfony.cache.current_name', $name);

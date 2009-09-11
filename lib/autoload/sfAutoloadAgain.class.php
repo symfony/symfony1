@@ -32,7 +32,7 @@ class sfAutoloadAgain
    */
   static public function getInstance()
   {
-    if (is_null(self::$instance))
+    if (null === self::$instance)
     {
       self::$instance = new self();
     }

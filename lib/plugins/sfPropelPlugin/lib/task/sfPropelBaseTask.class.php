@@ -194,7 +194,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
   protected function cleanup()
   {
-    if (is_null($this->commandApplication) || !$this->commandApplication->withTrace())
+    if (null === $this->commandApplication || !$this->commandApplication->withTrace())
     {
       $finder = sfFinder::type('file')->name('/^generated-.*schema(-transformed)?.xml$/');
       $this->getFilesystem()->remove($finder->in(array('config', 'plugins')));
@@ -216,7 +216,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     ));
 
     $args = array();
-    $bufferPhingOutput = is_null($this->commandApplication) || !$this->commandApplication->withTrace();
+    $bufferPhingOutput = null === $this->commandApplication || !$this->commandApplication->withTrace();
 
     $properties = array_merge(array(
       'build.properties'  => 'propel.ini',

@@ -43,7 +43,7 @@ class sfTesterDoctrine extends sfTester
    */
   public function check($model, $query, $value = true)
   {
-    if (is_null($query))
+    if (null === $query)
     {
       $query = Doctrine::getTable($model)
         ->createQuery('a');
@@ -58,7 +58,7 @@ class sfTesterDoctrine extends sfTester
       {
         $column = Doctrine::getTable($model)->getFieldName($column);
 
-        if (is_null($condition))
+        if (null === $condition)
         {
           $query->andWhere('a.'.$column.' IS NULL');
           continue;

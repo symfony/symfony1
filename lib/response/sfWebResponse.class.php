@@ -235,7 +235,7 @@ class sfWebResponse extends sfResponse
   {
     $name = $this->normalizeHeaderName($name);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->headers[$name]);
 
@@ -504,7 +504,7 @@ class sfWebResponse extends sfResponse
     // set HTTP header
     $this->setHttpHeader($key, $value, $replace);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->httpMetas[$key]);
 
@@ -546,7 +546,7 @@ class sfWebResponse extends sfResponse
   {
     $key = strtolower($key);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->metas[$key]);
 

@@ -82,7 +82,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
     $i++;
 
-    $to = is_null($message->getTo()) ? '' : implode(', ', array_keys($message->getTo()));
+    $to = null === $message->getTo() ? '' : implode(', ', array_keys($message->getTo()));
 
     $html = array();
     $html[] = sprintf('<h3>%s (to: %s) %s</h3>', $message->getSubject(), $to, $this->getToggler('sfWebDebugMailTemplate'.$i));

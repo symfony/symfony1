@@ -66,7 +66,7 @@ class sfTesterResponse extends sfTester
    */
   public function checkElement($selector, $value = true, $options = array())
   {
-    if (is_null($this->dom))
+    if (null === $this->dom)
     {
       throw new LogicException('The DOM is not accessible because the browser response content type is not HTML.');
     }
@@ -246,7 +246,7 @@ class sfTesterResponse extends sfTester
     {
       if ($name == $cookie['name'])
       {
-        if (is_null($value))
+        if (null === $value)
         {
           $this->tester->pass(sprintf('response sets cookie "%s"', $name));
         }
@@ -359,7 +359,7 @@ class sfTesterResponse extends sfTester
   {
     print $this->tester->error('Response debug');
 
-    if (!$realOutput && !is_null(sfException::getLastException()))
+    if (!$realOutput && null !== sfException::getLastException())
     {
       // print the exception and the stack trace instead of the "normal" output
       $this->tester->comment('WARNING');
@@ -379,7 +379,7 @@ class sfTesterResponse extends sfTester
       vprintf("Set-Cookie: %s=%s; %spath=%s%s%s%s\n", array(
         $cookie['name'],
         $cookie['value'],
-        is_null($cookie['expire']) ? '' : sprintf('expires=%s; ', date('D d-M-Y H:i:s T', $cookie['expire'])),
+        null === $cookie['expire'] ? '' : sprintf('expires=%s; ', date('D d-M-Y H:i:s T', $cookie['expire'])),
         $cookie['path'],
         $cookie['domain'] ? sprintf('; domain=%s', $cookie['domain']) : '',
         $cookie['secure'] ? '; secure' : '',
@@ -388,7 +388,7 @@ class sfTesterResponse extends sfTester
     }
 
     echo "\n";
-    if (!$realOutput && !is_null($exception = sfException::getLastException()))
+    if (!$realOutput && null !== $exception = sfException::getLastException())
     {
       echo $exception;
     }

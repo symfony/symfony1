@@ -130,7 +130,7 @@ function javascript_include_tag()
     $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
     $tag = content_tag('script', '', $options);
 
-    if (!is_null($condition))
+    if (null !== $condition)
     {
       $tag = comment_as_conditional($condition, $tag);
     }
@@ -228,7 +228,7 @@ function stylesheet_tag()
     $options = array_merge(array('rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'screen', 'href' => $source), $sourceOptions);
     $tag = tag('link', $options);
 
-    if (!is_null($condition))
+    if (null !== $condition)
     {
       $tag = comment_as_conditional($condition, $tag);
     }
@@ -446,7 +446,7 @@ function include_metas()
   $i18n = sfConfig::get('sf_i18n') ? $context->getI18N() : null;
   foreach ($context->getResponse()->getMetas() as $name => $content)
   {
-    echo tag('meta', array('name' => $name, 'content' => is_null($i18n) ? $content : $i18n->__($content)))."\n";
+    echo tag('meta', array('name' => $name, 'content' => null === $i18n ? $content : $i18n->__($content)))."\n";
   }
 }
 

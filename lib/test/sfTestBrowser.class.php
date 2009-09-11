@@ -41,7 +41,7 @@ class sfTestBrowser extends sfTestFunctional
     {
       $browser = new sfBrowser($hostname, $remote, $options);
 
-      if (is_null(self::$test))
+      if (null === self::$test)
       {
         $lime = new lime_test(null, isset($options['output']) ? $options['output'] : null);
       }

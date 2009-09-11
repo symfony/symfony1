@@ -81,7 +81,7 @@ abstract class sfOutputEscaper
    */
   public static function escape($escapingMethod, $value)
   {
-    if (is_null($value))
+    if (null === $value)
     {
       return $value;
     }
@@ -145,7 +145,7 @@ abstract class sfOutputEscaper
    */
   static public function unescape($value)
   {
-    if (is_null($value) || is_bool($value))
+    if (null === $value || is_bool($value))
     {
       return $value;
     }

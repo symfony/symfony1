@@ -51,7 +51,7 @@ class sfDoctrineDatabase extends sfDatabase
   {
     parent::initialize($parameters);
 
-    if (!is_null($this->_doctrineConnection))
+    if (null !== $this->_doctrineConnection)
     {
       return;
     }

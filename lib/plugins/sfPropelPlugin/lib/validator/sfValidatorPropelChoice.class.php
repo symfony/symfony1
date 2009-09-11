@@ -46,7 +46,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $criteria = is_null($this->getOption('criteria')) ? new Criteria() : clone $this->getOption('criteria');
+    $criteria = null === $this->getOption('criteria') ? new Criteria() : clone $this->getOption('criteria');
 
     if ($this->getOption('multiple'))
     {
@@ -70,7 +70,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
 
       $object = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelectOne'), $criteria, $this->getOption('connection'));
 
-      if (is_null($object))
+      if (null === $object)
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }

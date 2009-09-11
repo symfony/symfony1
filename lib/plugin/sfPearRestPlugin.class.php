@@ -88,13 +88,13 @@ class sfPearRestPlugin extends sfPearRest11
       throw new sfPluginRestException(sprintf('Unable to get plugin licence information for plugin "%s": %s', $plugin, $info->getMessage())); 
     }
 
-    if (is_null($info))
+    if (null === $info)
     {
       // plugin does not exist
       return null;
     }
 
-    if (!isset($info['license']) || is_null($info['license']))
+    if (!isset($info['license']) || null === $info['license'])
     {
       throw new Exception('No license found for this plugin!');
     }
@@ -207,7 +207,7 @@ class sfPearRestPlugin extends sfPearRest11
    */
   protected function getAllowedStates($stability = null)
   {
-    $stability = is_null($stability) ? $this->config->get('preferred_state', null, $this->channel) : $stability;
+    $stability = null === $stability ? $this->config->get('preferred_state', null, $this->channel) : $stability;
 
     return array_flip($this->betterStates($stability, true));
   }

@@ -32,6 +32,6 @@ class sfPropelDataRetriever
       throw new sfException(sprintf('Peer method "%s" not found for class "%s"', $peerMethod, $classPeer));
     }
 
-    return call_user_func(array($classPeer, $peerMethod), is_null($criteria) ? new Criteria() : $criteria);
+    return call_user_func(array($classPeer, $peerMethod), null === $criteria ? new Criteria() : $criteria);
   }
 }

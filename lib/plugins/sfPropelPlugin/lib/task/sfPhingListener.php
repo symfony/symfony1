@@ -59,7 +59,7 @@ class sfPhingListener implements BuildListener
    */
   public function targetFinished(BuildEvent $event)
   {
-    if (!is_null($event->getException()))
+    if (null !== $event->getException())
     {
       self::$exceptions[] = $event->getException();
     }

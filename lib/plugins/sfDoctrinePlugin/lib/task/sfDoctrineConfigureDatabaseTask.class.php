@@ -68,7 +68,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // update databases.yml
-    if (!is_null($options['app']))
+    if (null !== $options['app'])
     {
       $file = sfConfig::get('sf_apps_dir').'/'.$options['app'].'/config/databases.yml';
     }

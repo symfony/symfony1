@@ -41,7 +41,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $this->checkProjectExists();
 
-    if (is_null($this->configuration))
+    if (null === $this->configuration)
     {
       $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : ($commandManager->getOptionSet()->hasOption('application') ? $commandManager->getOptionValue('application') : null);
       $env = $commandManager->getOptionSet()->hasOption('env') ? $commandManager->getOptionValue('env') : 'test';
@@ -59,7 +59,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       $this->configuration = $this->createConfiguration($application, $env);
     }
 
-    if (!is_null($this->commandApplication) && !$this->commandApplication->withTrace())
+    if (null !== $this->commandApplication && !$this->commandApplication->withTrace())
     {
       sfConfig::set('sf_logging_enabled', false);
     }
@@ -90,7 +90,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   {
     if (!isset($this->filesystem))
     {
-      if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+      if (null === $this->commandApplication || $this->commandApplication->isVerbose())
       {
         $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
       }
@@ -157,7 +157,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function createConfiguration($application, $env)
   {
-    if (!is_null($application))
+    if (null !== $application)
     {
       $this->checkAppExists($application);
 
@@ -177,7 +177,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
         $configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
       }
 
-      if (!is_null($env))
+      if (null !== $env)
       {
         sfConfig::set('sf_environment', $env);
       }
@@ -231,7 +231,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function installDir($dir, $finder = null)
   {
-    if (is_null($finder))
+    if (null === $finder)
     {
       $finder = sfFinder::type('any')->discard('.sf');
     }
@@ -268,7 +268,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function reloadTasks()
   {
-    if (is_null($this->commandApplication))
+    if (null === $this->commandApplication)
     {
       return;
     }
@@ -319,7 +319,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function getPluginManager()
   {
-    if (is_null($this->pluginManager))
+    if (null === $this->pluginManager)
     {
       $environment = new sfPearEnvironment($this->dispatcher, array(
         'plugin_dir' => sfConfig::get('sf_plugins_dir'),

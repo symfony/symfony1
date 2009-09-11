@@ -35,8 +35,8 @@ abstract class sfPluginConfiguration
   {
     $this->configuration = $configuration;
     $this->dispatcher = $configuration->getEventDispatcher();
-    $this->rootDir = is_null($rootDir) ? $this->guessRootDir() : realpath($rootDir);
-    $this->name = is_null($name) ? $this->guessName() : $name;
+    $this->rootDir = null === $rootDir ? $this->guessRootDir() : realpath($rootDir);
+    $this->name = null === $name ? $this->guessName() : $name;
 
     $this->setup();
     $this->configure();

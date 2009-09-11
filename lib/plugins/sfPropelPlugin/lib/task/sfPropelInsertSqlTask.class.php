@@ -79,7 +79,7 @@ EOF;
     $sqls = array();
     foreach ($properties as $file => $connection)
     {
-      if (!is_null($options['connection']) && $options['connection'] != $connection)
+      if (null !== $options['connection'] && $options['connection'] != $connection)
       {
         continue;
       }

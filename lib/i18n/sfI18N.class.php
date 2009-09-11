@@ -109,7 +109,7 @@ class sfI18N
    */
   public function setMessageSource($dirs, $culture = null)
   {
-    if (is_null($dirs))
+    if (null === $dirs)
     {
       $this->messageSource = $this->createMessageSource();
     }
@@ -118,12 +118,12 @@ class sfI18N
       $this->messageSource = sfMessageSource::factory('Aggregate', array_map(array($this, 'createMessageSource'), $dirs));
     }
 
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       $this->messageSource->setCache($this->cache);
     }
 
-    if (!is_null($culture))
+    if (null !== $culture)
     {
       $this->setCulture($culture);
     }
@@ -240,7 +240,7 @@ class sfI18N
    */
   public function getCountry($iso, $culture = null)
   {
-    $c = sfCultureInfo::getInstance(is_null($culture) ? $this->culture : $culture);
+    $c = sfCultureInfo::getInstance(null === $culture ? $this->culture : $culture);
     $countries = $c->getCountries();
 
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
@@ -268,10 +268,10 @@ class sfI18N
    */
   public function getTimestampForCulture($dateTime, $culture = null)
   {
-    list($day, $month, $year) = $this->getDateForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
-    list($hour, $minute) = $this->getTimeForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
+    list($day, $month, $year) = $this->getDateForCulture($dateTime, null === $culture ? $this->culture : $culture);
+    list($hour, $minute) = $this->getTimeForCulture($dateTime, null === $culture ? $this->culture : $culture);
 
-    return is_null($day) ? null : mktime($hour, $minute, 0, $month, $day, $year);
+    return null === $day ? null : mktime($hour, $minute, 0, $month, $day, $year);
   }
 
   /**
@@ -289,7 +289,7 @@ class sfI18N
       return null;
     }
 
-    $dateFormatInfo = @sfDateTimeFormatInfo::getInstance(is_null($culture) ? $this->culture : $culture);
+    $dateFormatInfo = @sfDateTimeFormatInfo::getInstance(null === $culture ? $this->culture : $culture);
     $dateFormat = $dateFormatInfo->getShortDatePattern();
 
     // We construct the regexp based on date format
@@ -332,7 +332,7 @@ class sfI18N
   {
     if (!$time) return 0;
 
-    $culture = is_null($culture) ? $this->culture : $culture;
+    $culture = null === $culture ? $this->culture : $culture;
 
     $timeFormatInfo = @sfDateTimeFormatInfo::getInstance($culture);
     $timeFormat = $timeFormatInfo->getShortTimePattern();

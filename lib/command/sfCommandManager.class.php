@@ -35,13 +35,13 @@ class sfCommandManager
    */
   public function __construct(sfCommandArgumentSet $argumentSet = null, sfCommandOptionSet $optionSet = null)
   {
-    if (is_null($argumentSet))
+    if (null === $argumentSet)
     {
       $argumentSet = new sfCommandArgumentSet();
     }
     $this->setArgumentSet($argumentSet);
 
-    if (is_null($optionSet))
+    if (null === $optionSet)
     {
       $optionSet = new sfCommandOptionSet();
     }
@@ -95,7 +95,7 @@ class sfCommandManager
    */
   public function process($arguments = null)
   {
-    if (is_null($arguments))
+    if (null === $arguments)
     {
       $arguments = $_SERVER['argv'];
 

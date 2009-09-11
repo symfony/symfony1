@@ -274,10 +274,10 @@ class sfPluginManager
       list($channel, $plugin) = explode('/', $plugin);
     }
 
-    $channel = is_null($channel) ? $this->environment->getConfig()->get('default_channel') : $channel;
+    $channel = null === $channel ? $this->environment->getConfig()->get('default_channel') : $channel;
 
     $existing = $this->environment->getRegistry()->packageInfo($plugin, 'version', $channel);
-    if (is_null($existing))
+    if (null === $existing)
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Plugin "%s" is not installed', $plugin))));
 
@@ -438,9 +438,9 @@ class sfPluginManager
     $version   = isset($options['version']) ? $options['version'] : null;
 
     $rest = $this->environment->getRest();
-    $rest->setChannel(is_null($channel) ? $this->environment->getConfig()->get('default_channel') : $channel);
+    $rest->setChannel(null === $channel ? $this->environment->getConfig()->get('default_channel') : $channel);
 
-    if (is_null($version))
+    if (null === $version)
     {
       try
       {

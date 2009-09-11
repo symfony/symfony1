@@ -73,7 +73,7 @@ EOF;
     $messages = array();
 
     $messages[] = $this->formatter->format('Usage:', 'COMMENT');
-    $messages[] = $this->formatter->format(sprintf(' '.$task->getSynopsis(), is_null($this->commandApplication) ? '' : $this->commandApplication->getName()))."\n";
+    $messages[] = $this->formatter->format(sprintf(' '.$task->getSynopsis(), null === $this->commandApplication ? '' : $this->commandApplication->getName()))."\n";
 
     // find the largest option or argument name
     $max = 0;
@@ -97,7 +97,7 @@ EOF;
       $messages[] = $this->formatter->format('Arguments:', 'COMMENT');
       foreach ($task->getArguments() as $argument)
       {
-        $default = !is_null($argument->getDefault()) && (!is_array($argument->getDefault()) || count($argument->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($argument->getDefault()) ? str_replace("\n", '', print_r($argument->getDefault(), true)): $argument->getDefault()), 'COMMENT') : '';
+        $default = null !== $argument->getDefault() && (!is_array($argument->getDefault()) || count($argument->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($argument->getDefault()) ? str_replace("\n", '', print_r($argument->getDefault(), true)): $argument->getDefault()), 'COMMENT') : '';
         $messages[] = sprintf(" %-${max}s %s%s", $this->formatter->format($argument->getName(), 'INFO'), $argument->getHelp(), $default);
       }
 
@@ -110,7 +110,7 @@ EOF;
 
       foreach ($task->getOptions() as $option)
       {
-        $default = $option->acceptParameter() && !is_null($option->getDefault()) && (!is_array($option->getDefault()) || count($option->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($option->getDefault()) ? str_replace("\n", '', print_r($option->getDefault(), true)): $option->getDefault()), 'COMMENT') : '';
+        $default = $option->acceptParameter() && null !== $option->getDefault() && (!is_array($option->getDefault()) || count($option->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($option->getDefault()) ? str_replace("\n", '', print_r($option->getDefault(), true)): $option->getDefault()), 'COMMENT') : '';
         $multiple = $option->isArray() ? $this->formatter->format(' (multiple values allowed)', 'COMMENT') : '';
         $messages[] = sprintf(' %-'.$max.'s %s%s%s%s', $this->formatter->format('--'.$option->getName(), 'INFO'), $option->getShortcut() ? sprintf('(-%s) ', $option->getShortcut()) : '', $option->getHelp(), $default, $multiple);
       }

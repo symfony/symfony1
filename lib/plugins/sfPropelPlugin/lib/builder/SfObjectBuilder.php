@@ -209,9 +209,9 @@ $script .= '
 
   public function getCurrent'.$className.'($culture = null)
   {
-    if (is_null($culture))
+    if (null === $culture)
     {
-      $culture = is_null($this->culture) ? sfPropel::getDefaultCulture() : $this->culture;
+      $culture = null === $this->culture ? sfPropel::getDefaultCulture() : $this->culture;
     }
 
     if (!isset($this->current_i18n[$culture]))

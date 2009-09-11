@@ -862,7 +862,7 @@ class sfPropelDatabaseSchema
     }
     else
     {
-      return is_null($value) ? 'null' : $value;
+      return null === $value ? 'null' : $value;
     }
   }
 

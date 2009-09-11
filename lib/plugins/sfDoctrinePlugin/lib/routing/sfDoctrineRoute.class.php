@@ -76,7 +76,7 @@ class sfDoctrineRoute extends sfObjectRoute
 
     if (!isset($this->options['method']))
     {
-      if (is_null($this->query))
+      if (null === $this->query)
       {
         $q = $this->options['model']->createQuery('a');
         foreach ($values as $variable => $value)

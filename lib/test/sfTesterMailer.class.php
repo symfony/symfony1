@@ -55,7 +55,7 @@ class sfTesterMailer extends sfTester
    */
   public function hasSent($nb = null)
   {
-    if (is_null($nb))
+    if (null === $nb)
     {
       $this->tester->ok($this->logger->countMessages() > 0, 'mailer sent some email(s).');
     }

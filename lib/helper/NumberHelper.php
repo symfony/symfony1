@@ -19,7 +19,7 @@
 
 function format_number($number, $culture = null)
 {
-  if (is_null($number))
+  if (null === $number)
   {
     return null;
   }
@@ -31,7 +31,7 @@ function format_number($number, $culture = null)
 
 function format_currency($amount, $currency = null, $culture = null)
 {
-  if (is_null($amount))
+  if (null === $amount)
   {
     return null;
   }

@@ -36,7 +36,7 @@ abstract class sfCommandApplicationTask extends sfTask
    */
   public function log($messages)
   {
-    if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+    if (null === $this->commandApplication || $this->commandApplication->isVerbose())
     {
       parent::log($messages);
     }
@@ -47,7 +47,7 @@ abstract class sfCommandApplicationTask extends sfTask
    */
   public function logSection($section, $message, $size = null, $style = 'INFO')
   {
-    if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+    if (null === $this->commandApplication || $this->commandApplication->isVerbose())
     {
       parent::logSection($section, $message, $size, $style);
     }
@@ -64,7 +64,7 @@ abstract class sfCommandApplicationTask extends sfTask
    */
   protected function createTask($name)
   {
-    if (is_null($this->commandApplication))
+    if (null === $this->commandApplication)
     {
       throw new LogicException('No command application associated with this task yet.');
     }

@@ -146,7 +146,7 @@ class sfWebDebugLogger extends sfVarLogger
     $response = $event->getSubject();
     $request  = $this->context->getRequest();
     if (
-      is_null($this->webDebug)
+      null === $this->webDebug
       ||
       !$this->context->has('request')
       ||

@@ -48,7 +48,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
         $this[$name] = $validator;
       }
     }
-    else if (!is_null($fields))
+    else if (null !== $fields)
     {
       throw new InvalidArgumentException('sfValidatorSchema constructor takes an array of sfValidatorBase objects.');
     }
@@ -95,7 +95,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    */
   protected function doClean($values)
   {
-    if (is_null($values))
+    if (null === $values)
     {
       $values = array();
     }
@@ -216,7 +216,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    */
   public function preClean($values)
   {
-    if (is_null($validator = $this->getPreValidator()))
+    if (null === $validator = $this->getPreValidator())
     {
       return;
     }
@@ -238,7 +238,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    */
   public function postClean($values)
   {
-    if (is_null($validator = $this->getPostValidator()))
+    if (null === $validator = $this->getPostValidator())
     {
       return $values;
     }
@@ -361,12 +361,12 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
       $this->fields[$name] = clone $field;
     }
 
-    if (!is_null($this->preValidator))
+    if (null !== $this->preValidator)
     {
       $this->preValidator = clone $this->preValidator;
     }
 
-    if (!is_null($this->postValidator))
+    if (null !== $this->postValidator)
     {
       $this->postValidator = clone $this->postValidator;
     }
