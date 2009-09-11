@@ -42,7 +42,7 @@ catch (InvalidArgumentException $e)
 $mailer = new sfMailer($dispatcher, array(
   'logging' => true,
   'delivery_strategy' => 'queue',
-  'queue_transport_class' => 'TestMailerTransportQueue',
+  'queue_class' => 'TestMailerTransportQueue',
   'model_class' => 'TestMailMessage',
   'transport' => array('class' => 'TestMailerTransport', 'param' => array('foo' => 'bar', 'bar' => 'foo')),
 ));
@@ -53,16 +53,16 @@ try
 {
   $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue'));
 
-  $t->fail('__construct() throws an InvalidArgumentException exception if the queue_transport_class option is not set with the queue delivery strategy');
+  $t->fail('__construct() throws an InvalidArgumentException exception if the queue_class option is not set with the queue delivery strategy');
 }
 catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an InvalidArgumentException exception if the queue_transport_class option is not set with the queue delivery strategy');
+  $t->pass('__construct() throws an InvalidArgumentException exception if the queue_class option is not set with the queue delivery strategy');
 }
 
 try
 {
-  $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_transport_class' => 'TestMailerTransportQueue'));
+  $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue'));
 
   $t->fail('__construct() throws an InvalidArgumentException exception if the model_class option is not set with the queue delivery strategy');
 }
@@ -71,7 +71,7 @@ catch (InvalidArgumentException $e)
   $t->pass('__construct() throws an InvalidArgumentException exception if the model_class option is not set with the queue delivery strategy');
 }
 
-$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_transport_class' => 'TestMailerTransportQueue', 'model_class' => 'TestMailMessage'));
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue', 'model_class' => 'TestMailMessage'));
 $t->is($mailer->getTransport()->getTransportQueue()->getModel(), 'TestMailMessage', '__construct() recognizes the queue delivery strategy');
 
 // single address
@@ -133,7 +133,7 @@ catch (LogicException $e)
 
 $mailer = new sfMailer($dispatcher, array(
   'delivery_strategy' => 'queue',
-  'queue_transport_class' => 'TestMailerTransportQueue',
+  'queue_class' => 'TestMailerTransportQueue',
   'model_class' => 'TestMailMessage',
   'transport' => array('class' => 'TestMailerTransport'),
 ));
@@ -152,7 +152,7 @@ $t->diag('->sendNextImmediately()');
 $mailer = new sfMailer($dispatcher, array(
   'logging' => true,
   'delivery_strategy' => 'queue',
-  'queue_transport_class' => 'TestMailerTransportQueue',
+  'queue_class' => 'TestMailerTransportQueue',
   'model_class' => 'TestMailMessage',
   'transport' => array('class' => 'TestMailerTransport'),
 ));

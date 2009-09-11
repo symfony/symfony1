@@ -32,7 +32,7 @@ class sfMailer extends Swift_Mailer
    *  * charset: The default charset to use for messages
    *  * logging: Whether to enable logging
    *  * delivery_strategy: The delivery strategy to use
-   *  * queue_transport_class: The queue transport class (for the queue strategy)
+   *  * queue_class: The queue transport class (for the queue strategy)
    *  * model_class: The model to use when using the queue strategy
    *  * delivery_address: The email address to use for the single_address strategy
    *  * transport: The main transport configuration
@@ -75,11 +75,11 @@ class sfMailer extends Swift_Mailer
     $queue = null;
     if (sfMailerTransport::QUEUE == $this->options['delivery_strategy'])
     {
-      if (!isset($this->options['queue_transport_class']))
+      if (!isset($this->options['queue_class']))
       {
-        throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_transport_class option');
+        throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_class option');
       }
-      $queue = new $this->options['queue_transport_class'];
+      $queue = new $this->options['queue_class'];
 
       if (method_exists($queue, 'setModel'))
       {
