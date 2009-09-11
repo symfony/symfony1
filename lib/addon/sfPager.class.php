@@ -2,21 +2,13 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- * @package    symfony
- * @subpackage addon
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
-
-/**
- *
  * sfPager class.
  *
  * @package    symfony
@@ -38,8 +30,14 @@ abstract class sfPager
     $parameters      = array(),
     $currentMaxLink  = 1,
     $parameterHolder = null,
-    $maxRecordLimit = false;
+    $maxRecordLimit  = false;
 
+  /**
+   * Constructor.
+   * 
+   * @param string  $class      The model class
+   * @param integer $maxPerPage Number of records to display per page
+   */
   public function __construct($class, $maxPerPage = 10)
   {
     $this->setClass($class);
@@ -47,40 +45,76 @@ abstract class sfPager
     $this->parameterHolder = new sfParameterHolder();
   }
 
-  // function to be called after parameters have been set
+  /**
+   * Initialize the pager.
+   * 
+   * Function to be called after parameters have been set.
+   */
   abstract public function init();
 
-  // main method: returns an array of result on the given page
+  /**
+   * Returns an array of results on the given page.
+   * 
+   * @return array
+   */
   abstract public function getResults();
 
-  // used internally by getCurrent()
+  /**
+   * Returns an object at a certain offset.
+   * 
+   * Used internally by {@link getCurrent()}.
+   * 
+   * @return mixed
+   */
   abstract protected function retrieveObject($offset);
 
+  /**
+   * Returns the current pager's max link.
+   * 
+   * @return integer
+   */
   public function getCurrentMaxLink()
   {
     return $this->currentMaxLink;
   }
 
+  /**
+   * Returns the current pager's max record limit.
+   * 
+   * @return integer
+   */
   public function getMaxRecordLimit()
   {
     return $this->maxRecordLimit;
   }
 
+  /**
+   * Sets the current pager's max record limit.
+   * 
+   * @param integer $limit
+   */
   public function setMaxRecordLimit($limit)
   {
     $this->maxRecordLimit = $limit;
   }
 
+  /**
+   * Returns an array of page numbers to use in pagination links.
+   * 
+   * @param  integer $nb_links The maximum number of page numbers to return
+   * 
+   * @return array
+   */
   public function getLinks($nb_links = 5)
   {
     $links = array();
     $tmp   = $this->page - floor($nb_links / 2);
     $check = $this->lastPage - $nb_links + 1;
-    $limit = ($check > 0) ? $check : 1;
-    $begin = ($tmp > 0) ? (($tmp > $limit) ? $limit : $tmp) : 1;
+    $limit = $check > 0 ? $check : 1;
+    $begin = $tmp > 0 ? ($tmp > $limit ? $limit : $tmp) : 1;
 
     $i = (int) $begin;
-    while (($i < $begin + $nb_links) && ($i <= $this->lastPage))
+    while ($i < $begin + $nb_links && $i <= $this->lastPage)
     {
       $links[] = $i++;
     }
@@ -90,16 +124,31 @@ abstract class sfPager
     return $links;
   }
 
+  /**
+   * Returns true if the current query requires pagination.
+   * 
+   * @return boolean
+   */
   public function haveToPaginate()
   {
-    return (($this->getMaxPerPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
+    return $this->getMaxPerPage() && $this->getNbResults() > $this->getMaxPerPage();
   }
 
+  /**
+   * Returns the current cursor.
+   * 
+   * @return integer
+   */
   public function getCursor()
   {
     return $this->cursor;
   }
 
+  /**
+   * Sets the current cursor.
+   * 
+   * @param integer $pos
+   */
   public function setCursor($pos)
   {
     if ($pos < 1)
@@ -116,6 +165,13 @@ abstract class sfPager
     }
   }
 
+  /**
+   * Returns an object by cursor position.
+   * 
+   * @param  integer $pos
+   * 
+   * @return mixed
+   */
   public function getObjectByCursor($pos)
   {
     $this->setCursor($pos);
@@ -123,14 +179,24 @@ abstract class sfPager
     return $this->getCurrent();
   }
 
+  /**
+   * Returns the current object.
+   * 
+   * @return mixed
+   */
   public function getCurrent()
   {
     return $this->retrieveObject($this->cursor);
   }
 
+  /**
+   * Returns the next object.
+   * 
+   * @return mixed|null
+   */
   public function getNext()
   {
-    if (($this->cursor + 1) > $this->nbResults)
+    if ($this->cursor + 1 > $this->nbResults)
     {
       return null;
     }
@@ -140,9 +206,14 @@ abstract class sfPager
     }
   }
 
+  /**
+   * Returns the previous object.
+   * 
+   * @return mixed|null
+   */
   public function getPrevious()
   {
-    if (($this->cursor - 1) < 1)
+    if ($this->cursor - 1 < 1)
     {
       return null;
     }
@@ -152,6 +223,11 @@ abstract class sfPager
     }
   }
 
+  /**
+   * Returns the first index on the current page.
+   * 
+   * @return integer
+   */
   public function getFirstIndice()
   {
     if ($this->page == 0)
@@ -164,6 +240,11 @@ abstract class sfPager
     }
   }
 
+  /**
+   * Returns the last index on the current page.
+   * 
+   * @return integer
+   */
   public function getLastIndice()
   {
     if ($this->page == 0)
@@ -172,86 +253,153 @@ abstract class sfPager
     }
     else
     {
-      if (($this->page * $this->maxPerPage) >= $this->nbResults)
+      if ($this->page * $this->maxPerPage >= $this->nbResults)
       {
         return $this->nbResults;
       }
       else
       {
-        return ($this->page * $this->maxPerPage);
+        return $this->page * $this->maxPerPage;
       }
     }
   }
 
+  /**
+   * Returns the current class.
+   * 
+   * @return string
+   */
   public function getClass()
   {
     return $this->class;
   }
 
+  /**
+   * Sets the current class.
+   * 
+   * @param string $class
+   */
   public function setClass($class)
   {
     $this->class = $class;
   }
 
+  /**
+   * Returns the number of results.
+   * 
+   * @return integer
+   */
   public function getNbResults()
   {
     return $this->nbResults;
   }
 
+  /**
+   * Sets the number of results.
+   * 
+   * @param integer $nb
+   */
   protected function setNbResults($nb)
   {
     $this->nbResults = $nb;
   }
 
+  /**
+   * Returns the first page number.
+   * 
+   * @return integer
+   */
   public function getFirstPage()
   {
     return 1;
   }
 
+  /**
+   * Returns the last page number.
+   * 
+   * @return integer
+   */
   public function getLastPage()
   {
     return $this->lastPage;
   }
 
+  /**
+   * Sets the last page number.
+   * 
+   * @param integer $page
+   */
   protected function setLastPage($page)
   {
     $this->lastPage = $page;
+
     if ($this->getPage() > $page)
     {
       $this->setPage($page);
     }
   }
 
+  /**
+   * Returns the current page.
+   * 
+   * @return integer
+   */
   public function getPage()
   {
     return $this->page;
   }
 
+  /**
+   * Returns the next page.
+   * 
+   * @return integer
+   */
   public function getNextPage()
   {
     return min($this->getPage() + 1, $this->getLastPage());
   }
 
+  /**
+   * Returns the previous page.
+   * 
+   * @return integer
+   */
   public function getPreviousPage()
   {
     return max($this->getPage() - 1, $this->getFirstPage());
   }
 
+  /**
+   * Sets the current page.
+   * 
+   * @param integer $page
+   */
   public function setPage($page)
   {
     $this->page = intval($page);
+
     if ($this->page <= 0)
     {
-      //set first page, which depends on a maximum set
+      // set first page, which depends on a maximum set
       $this->page = $this->getMaxPerPage() ? 1 : 0;
     }
   }
 
+  /**
+   * Returns the maximum number of results per page.
+   * 
+   * @return integer
+   */
   public function getMaxPerPage()
   {
     return $this->maxPerPage;
   }
 
+  /**
+   * Sets the maximum number of results per page.
+   * 
+   * @param integer $max
+   */
   public function setMaxPerPage($max)
   {
     if ($max > 0)
@@ -277,33 +425,69 @@ abstract class sfPager
     }
   }
 
+  /**
+   * Returns true if on the first page.
+   * 
+   * @return boolean
+   */
   public function isFirstPage()
   {
     return 1 == $this->page;
   }
 
+  /**
+   * Returns true if on the last page.
+   * 
+   * @return boolean
+   */
   public function isLastPage()
   {
     return $this->page == $this->lastPage;
   }
 
+  /**
+   * Returns the current pager's parameter holder.
+   * 
+   * @return sfParameterHolder
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Returns a parameter.
+   * 
+   * @param  string $name
+   * @param  mixed  $default
+   * 
+   * @return mixed
+   */
   public function getParameter($name, $default = null)
   {
     return $this->parameterHolder->get($name, $default);
   }
 
+  /**
+   * Checks whether a parameter has been set.
+   * 
+   * @param  string $name
+   * 
+   * @return boolean
+   */
   public function hasParameter($name)
   {
     return $this->parameterHolder->has($name);
   }
 
+  /**
+   * Sets a parameter.
+   * 
+   * @param  string $name
+   * @param  mixed  $value
+   */
   public function setParameter($name, $value)
   {
-    return $this->parameterHolder->set($name, $value);
+    $this->parameterHolder->set($name, $value);
   }
 }

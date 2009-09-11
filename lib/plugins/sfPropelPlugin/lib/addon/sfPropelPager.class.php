@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,8 +12,8 @@
  * This class is the Propel implementation of sfPager.  It interacts with the propel record set and
  * manages criteria.
  *
- * @package    symfony
- * @subpackage propel
+ * @package    sfPropelPlugin
+ * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
@@ -24,6 +24,11 @@ class sfPropelPager extends sfPager
     $peer_method_name       = 'doSelect',
     $peer_count_method_name = 'doCount';
 
+  /**
+   * Constructor.
+   * 
+   * @see sfPager
+   */
   public function __construct($class, $maxPerPage = 10)
   {
     parent::__construct($class, $maxPerPage);
@@ -32,25 +37,31 @@ class sfPropelPager extends sfPager
     $this->tableName = constant($this->getClassPeer().'::TABLE_NAME');
   }
 
+  /**
+   * @see sfPager
+   */
   public function init()
   {
     $hasMaxRecordLimit = ($this->getMaxRecordLimit() !== false);
     $maxRecordLimit = $this->getMaxRecordLimit();
 
-    $cForCount = clone $this->getCriteria();
-    $cForCount->setOffset(0);
-    $cForCount->setLimit(0);
-    $cForCount->clearGroupByColumns();
+    $criteriaForCount = clone $this->getCriteria();
+    $criteriaForCount
+      ->setOffset(0)
+      ->setLimit(0)
+      ->clearGroupByColumns()
+    ;
 
-    $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount);
+    $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $criteriaForCount);
 
     $this->setNbResults($hasMaxRecordLimit ? min($count, $maxRecordLimit) : $count);
 
-    $c = $this->getCriteria();
-    $c->setOffset(0);
-    $c->setLimit(0);
+    $criteria = $this->getCriteria()
+      ->setOffset(0)
+      ->setLimit(0)
+    ;
 
-    if (($this->getPage() == 0 || $this->getMaxPerPage() == 0))
+    if (0 == $this->getPage() || 0 == $this->getMaxPerPage())
     {
       $this->setLastPage(0);
     }
@@ -59,77 +70,133 @@ class sfPropelPager extends sfPager
       $this->setLastPage(ceil($this->getNbResults() / $this->getMaxPerPage()));
 
       $offset = ($this->getPage() - 1) * $this->getMaxPerPage();
-      $c->setOffset($offset);
+      $criteria->setOffset($offset);
 
       if ($hasMaxRecordLimit)
       {
         $maxRecordLimit = $maxRecordLimit - $offset;
         if ($maxRecordLimit > $this->getMaxPerPage())
         {
-          $c->setLimit($this->getMaxPerPage());
+          $criteria->setLimit($this->getMaxPerPage());
         }
         else
         {
-          $c->setLimit($maxRecordLimit);
+          $criteria->setLimit($maxRecordLimit);
         }
       }
       else
       {
-        $c->setLimit($this->getMaxPerPage());
+        $criteria->setLimit($this->getMaxPerPage());
       }
     }
   }
 
+  /**
+   * @see sfPager
+   */
   protected function retrieveObject($offset)
   {
-    $cForRetrieve = clone $this->getCriteria();
-    $cForRetrieve->setOffset($offset - 1);
-    $cForRetrieve->setLimit(1);
+    $criteriaForRetrieve = clone $this->getCriteria();
+    $criteriaForRetrieve
+      ->setOffset($offset - 1)
+      ->setLimit(1)
+    ;
 
-    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $cForRetrieve);
+    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $criteriaForRetrieve);
 
     return is_array($results) && isset($results[0]) ? $results[0] : null;
   }
 
+  /**
+   * @see sfPager
+   */
   public function getResults()
   {
-    $c = $this->getCriteria();
-
-    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
+    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria());
   }
 
+  /**
+   * @throws InvalidArgumentException If the class does not extend BaseObject
+   * 
+   * @see sfPager
+   */
+  public function setClass($class)
+  {
+    if (!is_subclass_of($class, 'BaseObject'))
+    {
+      throw new InvalidArgumentException(sprintf('The class "%s" does not extend BaseObject.', $class));
+    }
+
+    parent::setClass($class);
+  }
+
+  /**
+   * Returns the peer method name.
+   * 
+   * @return string
+   */
   public function getPeerMethod()
   {
     return $this->peer_method_name;
   }
 
+  /**
+   * Sets the peer method name.
+   * 
+   * @param string $method A method on the current peer class
+   */
   public function setPeerMethod($peer_method_name)
   {
     $this->peer_method_name = $peer_method_name;
   }
 
+  /**
+   * Returns the peer count method name.
+   * 
+   * @return string
+   */
   public function getPeerCountMethod()
   {
     return $this->peer_count_method_name;
   }
 
+  /**
+   * Sets the peer count method name.
+   * 
+   * @param string $peer_count_method_name
+   */
   public function setPeerCountMethod($peer_count_method_name)
   {
     $this->peer_count_method_name = $peer_count_method_name;
   }
 
+  /**
+   * Returns the name of the current model class' peer class.
+   * 
+   * @return string
+   */
   public function getClassPeer()
   {
     return constant($this->class.'::PEER');
   }
 
+  /**
+   * Returns the current Criteria.
+   * 
+   * @return Criteria
+   */
   public function getCriteria()
   {
     return $this->criteria;
   }
 
-  public function setCriteria($c)
+  /**
+   * Sets the Criteria for the current pager.
+   * 
+   * @param Criteria $criteria
+   */
+  public function setCriteria($criteria)
   {
-    $this->criteria = $c;
+    $this->criteria = $criteria;
   }
 }
