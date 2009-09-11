@@ -23,7 +23,7 @@ interface sfMailerModelInterface
    *
    * @param Swift_Mime_Message $message A Swift_Mime_Message instance
    */
-  public function setMessage(Swift_Mime_Message $message);
+  public function setMessage($message);
 
   /**
    * Gets the message associated with this model.
