@@ -388,7 +388,13 @@ class sfPropelData extends sfData
       }
       else
       {
-        $stmt = $this->con->query('SELECT * FROM '.constant(constant($tableName.'::PEER').'::TABLE_NAME'));
+        $in = array();
+        foreach ($tableMap->getColumns() as $column)
+        {
+          $in[] = strtolower($column->getName());
+        }
+        $stmt = $this->con->query(sprintf('SELECT %s FROM %s', implode(',', $in), constant(constant($tableName.'::PEER').'::TABLE_NAME')));
+
         $resultsSets[] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
         unset($stmt);
