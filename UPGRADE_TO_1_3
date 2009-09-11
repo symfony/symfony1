@@ -284,6 +284,9 @@ might need to do in your configuration files:
     * `on`, `y`, `yes`, `+`
     * `off`, `n`, `no`, `-`
 
+The `project:upgrade` task tells you where you use old syntax but does not fix
+them (to avoid loosing comments for instance). You must fix them by hand.
+
 If you don't want to check all your YAML files, you can force the YAML parser
 to use the 1.1 YAML specification by using the `sfYaml::setSpecVersion()`
 method:
