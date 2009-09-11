@@ -59,6 +59,11 @@ class sfWebRequest extends sfRequest
    */
   public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
   {
+    $options = array_merge(array(
+      'path_info_key'   => 'PATH_INFO',
+      'path_info_array' => 'SERVER',
+      'default_format'  => 'html',
+    ), $options);
     parent::initialize($dispatcher, $parameters, $attributes, $options);
 
     // GET parameters
@@ -115,21 +120,6 @@ class sfWebRequest extends sfRequest
       {
         $this->setFormat($format, $mimeTypes);
       }
-    }
-
-    if (!isset($this->options['path_info_key']))
-    {
-      $this->options['path_info_key'] = 'PATH_INFO';
-    }
-
-    if (!isset($this->options['path_info_array']))
-    {
-      $this->options['path_info_array'] = 'SERVER';
-    }
-
-    if (!isset($this->options['default_format']))
-    {
-      $this->options['default_format'] = 'html';
     }
 
     // additional parameters
