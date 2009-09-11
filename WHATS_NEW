@@ -862,10 +862,3 @@ specifying the default slot content to return if none is provided by the slot:
     [php]
     <?php echo get_slot('foo', 'bar') // will output 'bar' if slot 'foo' is not defined ?>
     <?php include_slot('foo', 'bar') // will output 'bar' if slot 'foo' is not defined ?>
-
-Request
--------
-
-The request has a new option: `default_format`, which defaults to `html`. Now,
-when calling the `getRequestFormat()` when no `sf_format` is defined, the
-method returns the `default_format` value, instead of `null`.

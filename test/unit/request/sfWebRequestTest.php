@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(53);
+$t = new lime_test(52);
 
 class myRequest extends sfWebRequest
 {
@@ -85,11 +85,10 @@ $t->is($request->splitHttpAcceptHeader('a;q=0.1,b,c;q=0.3'), array('b', 'c', 'a'
 
 // ->getRequestFormat() ->setRequestFormat()
 $t->diag('->getRequestFormat() ->setRequestFormat()');
-$t->is($request->getRequestFormat(), 'html', '->getRequestFormat() returns the default_format value if the format is not defined in the request');
-$request1 = new myRequest($dispatcher, array(), array(), array('default_format' => 'xml'));
-$t->is($request1->getRequestFormat(), 'xml', '->getRequestFormat() returns the default_format value if the format is not defined in the request');
-$request2 = new myRequest($dispatcher, array('sf_format' => 'js'), array(), array('default_format' => 'xml'));
-$t->is($request2->getRequestFormat(), 'js', '->getRequestFormat() returns the request format');
+
+$t->ok(is_null($request->getRequestFormat()), '->getRequestFormat() returns null if the format is not defined in the request');
+$request->setParameter('sf_format', 'js');
+$t->is($request->getRequestFormat(), 'js', '->getRequestFormat() returns the request format');
 
 $request->setRequestFormat('css');
 $t->is($request->getRequestFormat(), 'css', '->setRequestFormat() sets the request format');
