@@ -327,8 +327,8 @@ abstract class sfTask
     $options = array();
     foreach ($this->getOptions() as $option)
     {
-      $shortcut = $option->getShortcut() ? sprintf('|-%s', $option->getShortcut()) : '';
-      $options[] = sprintf('['.($option->isParameterRequired() ? '--%s%s="..."' : ($option->isParameterOptional() ? '--%s%s[="..."]' : '--%s%s')).']', $option->getName(), $shortcut);
+      $shortcut = $option->getShortcut() ? sprintf('-%s|', $option->getShortcut()) : '';
+      $options[] = sprintf('['.($option->isParameterRequired() ? '%s--%s="..."' : ($option->isParameterOptional() ? '%s--%s[="..."]' : '%s--%s')).']', $shortcut, $option->getName());
     }
 
     $arguments = array();
