@@ -249,7 +249,7 @@ class sfYamlParser
   /**
    * Returns the next embed block of YAML.
    *
-   * @param string A YAML string
+   * @return string A YAML string
    */
   protected function getNextEmbedBlock()
   {
