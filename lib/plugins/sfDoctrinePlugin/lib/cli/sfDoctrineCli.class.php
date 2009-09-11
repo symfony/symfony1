@@ -66,6 +66,6 @@ class sfDoctrineCli extends Doctrine_Cli
    */
   public function notifyException($exception)
   {
-    throw new sfException($exception->getMessage());
+    throw $exception;
   }
 }
