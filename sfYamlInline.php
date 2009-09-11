@@ -65,7 +65,7 @@ class sfYamlInline
         return '!!php/object:'.serialize($value);
       case is_array($value):
         return self::dumpArray($value);
-      case is_null($value):
+      case null === $value:
         return 'null';
       case true === $value:
         return 'true';
