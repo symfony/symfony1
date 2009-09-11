@@ -747,6 +747,14 @@ EOF;
   margin-bottom: 10px;
 }
 
+#sfWebDebugDatabaseLogs ol
+{
+  margin: 0;
+  padding: 0;
+  margin-left: 20px;
+  list-style: number;
+}
+
 #sfWebDebugDatabaseLogs li
 {
   padding: 6px;
@@ -759,8 +767,8 @@ EOF;
 
 .sfWebDebugDatabaseQuery
 {
-  line-height: 1.25em;
   margin-bottom: .5em;
+  margin-top: 0;
 }
 
 .sfWebDebugDatabaseLogInfo

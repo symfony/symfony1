@@ -48,12 +48,20 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     $logs = array();
     foreach ($this->getSqlLogs() as $log)
     {
-      $logs[] = htmlspecialchars($log, ENT_QUOTES, sfConfig::get('sf_charset'));
+      $logs[] = sprintf('
+        <li>
+          <p class="sfWebDebugDatabaseQuery">%s</p>
+        </li>
+        ',
+        $this->formatSql(htmlspecialchars($log, ENT_QUOTES, sfConfig::get('sf_charset')))
+      );
     }
 
     return '
       <div id="sfWebDebugDatabaseLogs">
-      <ol><li>'.implode("</li>\n<li>", $logs).'</li></ol>
+        <ol>
+          '.implode("\n", $logs).'
+        </ol>
       </div>
     ';
   }
