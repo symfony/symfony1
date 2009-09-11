@@ -116,21 +116,6 @@ class sfPropelPager extends sfPager
   }
 
   /**
-   * @throws InvalidArgumentException If the class does not extend BaseObject
-   * 
-   * @see sfPager
-   */
-  public function setClass($class)
-  {
-    if (!is_subclass_of($class, 'BaseObject'))
-    {
-      throw new InvalidArgumentException(sprintf('The class "%s" does not extend BaseObject.', $class));
-    }
-
-    parent::setClass($class);
-  }
-
-  /**
    * Returns the peer method name.
    * 
    * @return string
