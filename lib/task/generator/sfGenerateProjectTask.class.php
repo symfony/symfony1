@@ -82,7 +82,7 @@ EOF;
   {
     if (file_exists('symfony'))
     {
-      throw new sfCommandException(sprintf('A project named "%s" already exists in this directory.', $arguments['name']));
+      throw new sfCommandException(sprintf('A symfony project already exists in this directory (%s).', getcwd()));
     }
 
     if (!in_array($options['orm'], array('Propel', 'Doctrine', 'none'), false))
