@@ -90,6 +90,11 @@ EOF;
       throw new InvalidArgumentException(sprintf('Invalid ORM name "%s".', $options['orm']));
     }
 
+    if ($options['installer'] && $this->commandApplication && !file_exists($options['installer']))
+    {
+      throw new InvalidArgumentException(sprintf('The installer "%s" does not exist.', $options['installer']));
+    }
+
     $this->arguments = $arguments;
     $this->options = $options;
 
