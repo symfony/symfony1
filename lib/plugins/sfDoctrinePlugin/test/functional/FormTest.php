@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(16);
+$t = new lime_test(17);
 
 // test for ticket #4935
 $user = new User();
@@ -113,3 +113,7 @@ if ($userForm->isValid())
 
 $t->is($user->Groups[0]->name, 'New User Group 1 Name');
 $t->is($user->Groups[1]->name, 'New User Group 2 Name');
+
+$form = new DefaultValueTestForm();
+$validatorSchema = $form->getValidatorSchema();
+$t->is($validatorSchema['name']->getOption('required'), false);

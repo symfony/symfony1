@@ -156,3 +156,10 @@ FormGeneratorTest2:
       filter: true
   columns:
     name: string(255)
+
+DefaultValueTest:
+  columns:
+    name:
+      type: string(255)
+      notnull: true
+      default: ''

@@ -462,7 +462,9 @@ class sfDoctrineFormGenerator extends sfGenerator
       }
     }
 
-    if (!$column->isNotNull() || $column->isPrimaryKey())
+    // If notnull = false, is a primary or the column has a default value then
+    // make the widget not required
+    if (!$column->isNotNull() || $column->isPrimaryKey() || $column->hasDefinitionKey('default'))
     {
       $options[] = '\'required\' => false';
     }
