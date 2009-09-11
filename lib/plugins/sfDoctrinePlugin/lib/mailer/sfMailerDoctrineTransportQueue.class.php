@@ -9,7 +9,7 @@
  */
 
 /**
- * sfMailerDoctrineModelTransport is a SwiftMailer transport that uses a Doctrine model as a queue.
+ * sfMailerDoctrineTransportQueue is a SwiftMailer transport that uses a Doctrine model as a queue.
  *
  * Example schema:
  *
