@@ -277,6 +277,16 @@ abstract class sfPager
     }
   }
 
+  public function isFirstPage()
+  {
+    return 1 == $this->page;
+  }
+
+  public function isLastPage()
+  {
+    return $this->page == $this->lastPage;
+  }
+
   public function getParameterHolder()
   {
     return $this->parameterHolder;

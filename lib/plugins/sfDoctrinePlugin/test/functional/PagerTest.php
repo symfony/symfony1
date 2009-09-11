@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(11);
+$t = new lime_test(13);
 
 $total = 50;
 for ($i = 0; $i < $total; $i++)
@@ -28,12 +28,14 @@ $pager->setPage(1);
 $pager->init();
 
 $t->is($pager->getQuery()->getSqlQuery(), 'SELECT a.id AS a__id, a.name AS a__name, a.type AS a__type FROM author a WHERE a.id > 0 LIMIT 25');
+$t->ok($pager->isFirstPage());
 
 $pager->setPage(2);
 $pager->init();
 
 $t->is($pager->getQuery()->getSqlQuery(), 'SELECT a.id AS a__id, a.name AS a__name, a.type AS a__type FROM author a WHERE a.id > 0 LIMIT 25 OFFSET 25');
 $t->is($pager->getQuery()->count(), $total);
+$t->ok($pager->isLastPage());
 
 $results = $pager->getResults();
 
