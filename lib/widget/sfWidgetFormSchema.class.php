@@ -125,7 +125,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Returns the defaults values for the widget schema.
    *
-   * @param array An array of default values
+   * @return array An array of default values
    */
   public function getDefaults()
   {

@@ -87,7 +87,7 @@ abstract class sfTestFunctionalBase
   /**
    * Begins a block of test for the current tester.
    *
-   * @param sfTester The current sfTester instance
+   * @return sfTester The current sfTester instance
    */
   public function begin()
   {
@@ -102,7 +102,7 @@ abstract class sfTestFunctionalBase
   /**
    * End a block of test for the current tester.
    *
-   * @param sfTestFunctionalBase
+   * @return sfTestFunctionalBase
    */
   public function end()
   {

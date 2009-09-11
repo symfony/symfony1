@@ -887,7 +887,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the request context used.
    *
-   * @param array An array of values representing the current request
+   * @return array An array of values representing the current request
    */
   public function getRequestContext()
   {

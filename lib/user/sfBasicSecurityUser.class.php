@@ -216,7 +216,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   /**
    * Returns the timestamp of the last user request.
    *
-   * @param  int
+   * @return  int
    */
   public function getLastRequestTime()
   {

@@ -34,7 +34,7 @@ class sfCallable
   /**
    * Returns the current callable.
    *
-   * @param mixed The current callable
+   * @return mixed The current callable
    */
   public function getCallable()
   {

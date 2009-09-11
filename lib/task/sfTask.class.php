@@ -240,7 +240,7 @@ abstract class sfTask
   /**
    * Returns the task namespace.
    *
-   * @param string The task namespace
+   * @return string The task namespace
    */
   public function getNamespace()
   {
@@ -320,7 +320,7 @@ abstract class sfTask
   /**
    * Returns the synopsis for the task.
    *
-   * @param string The synopsis
+   * @return string The synopsis
    */
   public function getSynopsis()
   {
