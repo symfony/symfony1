@@ -449,6 +449,7 @@ class sfCoreAutoload
     'sftoolkit' => 'util/sfToolkit.class.php',
     'sfvalidatori18nchoicecountry' => 'validator/i18n/sfValidatorI18nChoiceCountry.class.php',
     'sfvalidatori18nchoicelanguage' => 'validator/i18n/sfValidatorI18nChoiceLanguage.class.php',
+    'sfvalidatedfile' => 'validator/sfValidatedFile.class.php',
     'sfvalidatorand' => 'validator/sfValidatorAnd.class.php',
     'sfvalidatorbase' => 'validator/sfValidatorBase.class.php',
     'sfvalidatorboolean' => 'validator/sfValidatorBoolean.class.php',
