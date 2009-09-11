@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(13);
+$t = new lime_test(16);
 
 // test for ticket #4935
 $user = new User();
@@ -73,3 +73,43 @@ foreach ($methods as $method)
 
 $widget = new sfWidgetFormDoctrineChoice(array('model' => 'User', 'table_method' => 'widgetChoiceTableMethod4'));
 $t->is($widget->getChoices(), array());
+
+$user = new User();
+$user->Groups[]->name = 'User Group 1';
+$user->Groups[]->name = 'User Group 2';
+
+class UserGroupForm extends GroupForm
+{
+  public function configure()
+  {
+    parent::configure();
+    $this->useFields(array('name'));
+  }
+}
+
+$userForm = new UserForm($user);
+$userForm->embedRelation('Groups', 'UserGroupForm');
+
+$data = array(
+  'username' => 'jonwage',
+  'password' => 'changeme',
+  'Groups'  => array(
+    0 => array(
+      'name' => 'New User Group 1 Name'
+    ),
+    1 => array(
+      'name' => 'New User Group 2 Name'
+    )
+  )
+);
+
+$userForm->bind($data);
+$t->is($userForm->isValid(), true);
+
+if ($userForm->isValid())
+{
+  $userForm->save();
+}
+
+$t->is($user->Groups[0]->name, 'New User Group 1 Name');
+$t->is($user->Groups[1]->name, 'New User Group 2 Name');

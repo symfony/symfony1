@@ -118,6 +118,38 @@ abstract class sfFormDoctrine extends sfFormObject
   }
 
   /**
+   * Embed a Doctrine_Collection relationship in to a form
+   *
+   *     [php]
+   *     $userForm = new UserForm($user);
+   *     $userForm->embedRelation('Groups');
+   *
+   * @param string $relationName
+   * @return void
+   */
+  public function embedRelation($relationName, $formClass = null)
+  {    
+    $relation = $this->object->getTable()->getRelation($relationName);
+
+    if ($relation->getType() !== Doctrine_Relation::MANY)
+    {
+      throw new sfException('You can only embed a relationship that is a collection.');
+    }
+
+    $formClass = $formClass ? $formClass:$relation->getClass().'Form';
+
+    $subForm = new sfForm();
+    foreach ($this->object[$relationName] as $index => $childObject)
+    {
+      $form = new $formClass($childObject);
+      $subForm->embedForm($index, $form);
+      $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
+    }
+
+    $this->embedForm($relationName, $subForm);
+  }
+
+  /**
    * Returns the current object for this form.
    *
    * @return BaseObject The current object.
