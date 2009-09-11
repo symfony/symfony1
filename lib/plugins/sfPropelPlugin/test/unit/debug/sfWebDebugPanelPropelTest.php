@@ -28,4 +28,4 @@ $t->diag('->getPanelContent()');
 $dispatcher = new sfEventDispatcher();
 $debug = new sfWebDebug($dispatcher, new sfVarLogger($dispatcher));
 $panel = new sfWebDebugPanelPropelTest($debug);
-$t->like($panel->getPanelContent(), '/'.preg_quote('query: SELECT * FROM foo WHERE bar&lt;1', '/').'/', '->getPanelContent() returns escaped queries');
+$t->like(strip_tags($panel->getPanelContent()), '/'.preg_quote('query: SELECT * FROM foo WHERE bar&lt;1', '/').'/', '->getPanelContent() returns escaped queries');
