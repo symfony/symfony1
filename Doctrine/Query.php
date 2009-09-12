@@ -1164,12 +1164,28 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
         if ( ! empty($this->_sqlParts['limit']) && $this->_needsSubquery &&
                 $table->getAttribute(Doctrine::ATTR_QUERY_LIMIT) == Doctrine::LIMIT_RECORDS) {
-            // We do not need a limit-subquery if only fields from the root component are
-            // selected and DISTINCT is used (i.e. DQL: SELECT DISTINCT u.id FROM User u LEFT JOIN u.phonenumbers LIMIT 5).
-            if (count($this->_pendingFields) > 1 || ! isset($this->_pendingFields[$this->getRootAlias()])
-                    || ! $this->_sqlParts['distinct']) {
+            // We do not need a limit-subquery if DISTINCT is used
+            // and the selected fields are either from the root component or from a localKey relation (hasOne)
+            // (i.e. DQL: SELECT DISTINCT u.id FROM User u LEFT JOIN u.phonenumbers LIMIT 5).
+            if(!$this->_sqlParts['distinct']) {
                 $this->_isLimitSubqueryUsed = true;
                 $needsSubQuery = true;
+            } else {
+                foreach( array_keys($this->_pendingFields) as $alias){
+                    //no subquery for root fields
+                    if($alias == $this->getRootAlias()){
+                        continue;
+                    }
+                    
+                    //no subquery for ONE relations
+                    if(isset($this->_queryComponents[$alias]['relation']) &&
+                        $this->_queryComponents[$alias]['relation']->getType() == Doctrine_Relation::ONE){
+                        continue;
+                    }
+                    
+                    $this->_isLimitSubqueryUsed = true;
+                    $needsSubQuery = true;
+                }
             }
         }
 
