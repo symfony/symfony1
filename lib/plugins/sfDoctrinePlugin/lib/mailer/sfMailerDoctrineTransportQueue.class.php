@@ -61,7 +61,7 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
    *
    * Available options:
    *
-   *  * max: The maximum number of emails to send
+   *  * time: The maximum time allowed to send emails
    *
    * @param Swift_Transport $transport         A transport instance
    * @param string[]        &$failedRecipients An array of failures by-reference
@@ -84,18 +84,21 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
     }
     else
     {
-      $query = $table->createQuery();
+      $objects = $table->createQuery()->execute();
+    }
 
-      if (isset($options['max']) && $options['max'])
-      {
-        $query->setLimit($options['max']);
-      }
-
-      $objects = $query->execute();
+    if (isset($options['time']))
+    {
+      $begin = time();
     }
 
     foreach ($objects as $object)
     {
+      if (isset($options['time']) && time() - $begin > $options['time'])
+      {
+        break;
+      }
+
       $message = unserialize($object->message);
 
       $object->delete();

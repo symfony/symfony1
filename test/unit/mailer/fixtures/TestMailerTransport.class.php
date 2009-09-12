@@ -10,9 +10,15 @@
 class TestMailerTransport implements Swift_Transport
 {
   protected
+    $sleep = null,
     $foo = null,
     $started = false,
     $count = 0;
+
+  public function __construct($sleep = null)
+  {
+    $this->sleep = $sleep;
+  }
 
   public function isStarted() { return $this->started; }
   public function start() { $this->started = true; }
@@ -37,6 +43,11 @@ class TestMailerTransport implements Swift_Transport
   public function send(Swift_Mime_Message $message, &$failedRecipients = null)
   {
     ++$this->count;
+
+    if ($this->sleep)
+    {
+      sleep($this->sleep);
+    }
 
     return 1;
   }

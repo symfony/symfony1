@@ -57,7 +57,7 @@ class sfMailerFileTransportQueue extends sfMailerTransportQueue
    *
    * Available options:
    *
-   *  * max: The maximum number of emails to send
+   *  * time: The maximum time allowed to send emails
    *
    * @param Swift_Transport $transport         A transport instance
    * @param string[]        &$failedRecipients An array of failures by-reference
@@ -68,7 +68,6 @@ class sfMailerFileTransportQueue extends sfMailerTransportQueue
   public function doSend(Swift_Transport $transport, &$failedRecipients = null, $options = array())
   {
     $count = 0;
-    $nb = 0;
     $messages = array();
     $options = array_merge($this->options, $options);
     $max = isset($options['max']) && $options['max'] ? $options['max'] : null;
@@ -78,18 +77,23 @@ class sfMailerFileTransportQueue extends sfMailerTransportQueue
       return 0;
     }
 
+    if (isset($options['time']))
+    {
+      $begin = time();
+    }
+
     foreach (new DirectoryIterator($options['path']) as $file)
     {
+      if (isset($options['time']) && time() - $begin > $options['time'])
+      {
+        break;
+      }
+
       $file = $file->getRealPath();
 
       if (!strpos($file, '.message'))
       {
         continue;
-      }
-
-      if ($max && $nb >= $max)
-      {
-        break;
       }
 
       $message = unserialize(file_get_contents($file));
@@ -103,8 +107,6 @@ class sfMailerFileTransportQueue extends sfMailerTransportQueue
       {
         // TODO: What to do with errors?
       }
-
-      ++$nb;
     }
 
     return $count;

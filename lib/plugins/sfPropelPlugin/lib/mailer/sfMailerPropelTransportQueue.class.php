@@ -60,7 +60,7 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
    *
    * Available options:
    *
-   *  * max: The maximum number of emails to send
+   *  * time: The maximum time allowed to send emails
    *
    * @param Swift_Transport $transport         A transport instance
    * @param string[]        &$failedRecipients An array of failures by-reference
@@ -83,18 +83,21 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
     }
     else
     {
-      $criteria = new Criteria();
+      $objects = call_user_func(array($model, 'doSelect'), new Criteria());
+    }
 
-      if (isset($options['max']) && $options['max'])
-      {
-        $criteria->setLimit($options['max']);
-      }
-
-      $objects = call_user_func(array($model, 'doSelect'), $criteria);
+    if (isset($options['time']))
+    {
+      $begin = time();
     }
 
     foreach ($objects as $object)
     {
+      if (isset($options['time']) && time() - $begin > $options['time'])
+      {
+        break;
+      }
+
       $message = unserialize($object->getMessage());
 
       $object->delete();

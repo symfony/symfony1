@@ -31,7 +31,7 @@ catch (InvalidArgumentException $e)
 }
 
 $path = sys_get_temp_dir().'/sf_mailer'.uniqid();
-$queue = new sfMailerFileTransportQueue(array('path' => $path, 'max' => 2));
+$queue = new sfMailerFileTransportQueue(array('path' => $path, 'time' => 2));
 $message = sfMailerMessage::newInstance()
   ->setFrom('from@example.com')
   ->setTo('to@example.com')
@@ -59,10 +59,10 @@ $t->is($count, 4, '->store() stores the messages under the "path" directory');
 
 // ->send()
 $t->diag('->send()');
-$transport = new TestMailerTransport();
-$queue->doSend($transport, $failed, array('max' => 1));
+$transport = new TestMailerTransport(2);
+$queue->doSend($transport, $failed, array('time' => 1));
 $t->is($transport->getSentCount(), 1, '->doSend() sends the messages in the queue');
-$transport->reset();
+$transport = new TestMailerTransport();
 $queue = new sfMailerFileTransportQueue(array('path' => $path));
 $queue->doSend($transport);
 $t->is($transport->getSentCount(), 3, '->doSend() sends the messages in the queue');
