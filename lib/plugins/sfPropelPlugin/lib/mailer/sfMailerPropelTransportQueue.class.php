@@ -56,7 +56,7 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
     }
 
     $model = constant($this->options['model'].'::PEER');
-    $method = 'set'.call_user_func(array($model, 'translateFieldName'), $variable, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+    $method = 'set'.call_user_func(array($model, 'translateFieldName'), $this->options['column'], BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
 
     $object->$method(serialize($message));
     $object->save();
@@ -98,7 +98,7 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
       $begin = time();
     }
 
-    $method = 'get'.call_user_func(array($model, 'translateFieldName'), $variable, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+    $method = 'get'.call_user_func(array($model, 'translateFieldName'), $this->options['column'], BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     foreach ($objects as $object)
     {
       if (isset($options['time']) && time() - $begin > $options['time'])
