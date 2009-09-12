@@ -109,8 +109,11 @@ class sfWebDebugLogger extends sfVarLogger
    */
   public function listenForLoadFactories(sfEvent $event)
   {
+    $path = sprintf('%s%s/images', $event->getSubject()->getRequest()->getRelativeUrlRoot(), sfConfig::get('sf_web_debug_web_dir'));
+    $path = str_replace('//', '/', $path);
+
     $this->webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
-      'image_root_path'    => sprintf('%s/%s/images', $event->getSubject()->getRequest()->getRelativeUrlRoot(), sfConfig::get('sf_web_debug_web_dir')),
+      'image_root_path'    => $path,
       'request_parameters' => $event->getSubject()->getRequest()->getParameterHolder()->getAll(),
     ));
   }
