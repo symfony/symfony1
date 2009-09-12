@@ -30,12 +30,16 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
    *
    * Available options:
    *
-   *  * model:  The Doctrine model to use to store the messages
+   *  * model:  The Doctrine model to use to store the messages (MailMessage by default)
+   *  * column: The column name to use for message storage (message by default)
    *  * method: The method to call to retrieve the messages to send (optional)
    */
   public function __construct($options = array())
   {
-    parent::__construct(array_merge(array('model' => 'MailMessage'), $options));
+    parent::__construct(array_merge(array(
+      'model'  => 'MailMessage',
+      'column' => 'message',
+    ), $options));
   }
 
   /**
@@ -52,7 +56,7 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
       throw new InvalidArgumentException('The mailer message object must be a Doctrine_Record object.');
     }
 
-    $object->message = serialize($message);
+    $object->{$this->options['column']} = serialize($message);
     $object->save();
   }
 
@@ -99,7 +103,7 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
         break;
       }
 
-      $message = unserialize($object->message);
+      $message = unserialize($object->{$this->options['column']});
 
       $object->delete();
 

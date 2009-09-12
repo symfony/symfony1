@@ -29,12 +29,16 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
    *
    * Available options:
    *
-   *  * model:  The Doctrine model to use to store the messages
+   *  * model:  The Doctrine model to use to store the messages (MailMessage by default)
+   *  * column: The column name to use for message storage (message by default)
    *  * method: The method to call to retrieve the messages to send (optional)
    */
   public function __construct($options = array())
   {
-    parent::__construct(array_merge(array('model' => 'MailMessage'), $options));
+    parent::__construct(array_merge(array(
+      'model'  => 'MailMessage',
+      'column' => 'message',
+    ), $options));
   }
 
   /**
@@ -51,7 +55,10 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
       throw new InvalidArgumentException('The mailer message object must be a BaseObject object.');
     }
 
-    $object->setMessage(serialize($message));
+    $model = constant($this->options['model'].'::PEER');
+    $method = 'set'.call_user_func(array($model, 'translateFieldName'), $variable, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+
+    $object->$method(serialize($message));
     $object->save();
   }
 
@@ -91,6 +98,7 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
       $begin = time();
     }
 
+    $method = 'get'.call_user_func(array($model, 'translateFieldName'), $variable, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     foreach ($objects as $object)
     {
       if (isset($options['time']) && time() - $begin > $options['time'])
@@ -98,7 +106,7 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
         break;
       }
 
-      $message = unserialize($object->getMessage());
+      $message = unserialize($object->$method());
 
       $object->delete();
 
