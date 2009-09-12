@@ -33,7 +33,7 @@ class sfMailer extends Swift_Mailer
    *  * logging: Whether to enable logging
    *  * delivery_strategy: The delivery strategy to use
    *  * queue_class: The queue transport class (for the queue strategy)
-   *  * queue_model: The model to use when using the queue strategy
+   *  * queue_options: The options to pass to the queue constructor
    *  * delivery_address: The email address to use for the single_address strategy
    *  * transport: The main transport configuration
    *  *   * class: The main transport class
@@ -79,16 +79,9 @@ class sfMailer extends Swift_Mailer
       {
         throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_class option');
       }
-      $queue = new $this->options['queue_class'];
+      $options = isset($this->options['queue_options']) ? $this->options['queue_options'] : array();
 
-      if (method_exists($queue, 'setModel'))
-      {
-        if (!isset($this->options['queue_model']))
-        {
-          throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_model option');
-        }
-        $queue->setModel($this->options['queue_model']);
-      }
+      $queue = new $this->options['queue_class']($options);
     }
 
     $transport = new sfMailerTransport($this->options['delivery_strategy'], $transport, $queue);
@@ -157,11 +150,12 @@ class sfMailer extends Swift_Mailer
    *
    * The return value is the number of recipients who were accepted for delivery.
    *
-   * @param int $max The maximum number of emails to send
+   * @param array    $options The options to pass to the queue
+   * @param string[] &$failedRecipients An array of failures by-reference
    *
    * @return int The number of sent emails
    */
-  public function sendQueue($max = null)
+  public function sendQueue($options = array(), &$failedRecipients = null)
   {
     if (!$this->getTransport()->getTransportQueue())
     {
@@ -175,7 +169,7 @@ class sfMailer extends Swift_Mailer
       $transport->start();
     }
 
-    return $this->getTransport()->getTransportQueue()->doSend($transport, $max);
+    return $this->getTransport()->getTransportQueue()->doSend($transport, $failedRecipients, $options);
   }
 
   /**

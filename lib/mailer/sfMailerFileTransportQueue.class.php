@@ -9,33 +9,30 @@
  */
 
 /**
- * sfMailerDoctrineTransportQueue is a SwiftMailer transport that uses a Doctrine model as a queue.
- *
- * Example schema:
- *
- *  MailMessage:
- *   actAs: { Timestampable: ~ }
- *   columns:
- *     message: { type: clob, notnull: true }
+ * sfMailerFileTransportQueue is a SwiftMailer transport that the filesystem as a queue.
  *
  * @package    symfony
  * @subpackage mailer
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
+class sfMailerFileTransportQueue extends sfMailerTransportQueue
 {
   /**
    * Constructor.
    *
    * Available options:
    *
-   *  * model:  The Doctrine model to use to store the messages
-   *  * method: The method to call to retrieve the messages to send (optional)
+   *  * path: The path where to store the messages
    */
   public function __construct($options = array())
   {
-    parent::__construct(array_merge(array('model' => 'MailMessage'), $options));
+    if (!isset($options['path']))
+    {
+      throw new InvalidArgumentException('You must provide a "path" options when using the message file queue.');
+    }
+
+    parent::__construct($options);
   }
 
   /**
@@ -45,15 +42,14 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
    */
   public function store(Swift_Mime_Message $message)
   {
-    $object = new $this->options['model'];
+    $ser = serialize($message);
 
-    if (!$object instanceof Doctrine_Record)
+    if (!file_exists($this->options['path']))
     {
-      throw new InvalidArgumentException('The mailer message object must be a Doctrine_Record object.');
+      mkdir($this->options['path'], 0777, true);
     }
 
-    $object->message = serialize($message);
-    $object->save();
+    file_put_contents($this->options['path'].'/'.md5($ser.uniqid()).'.message', $ser);
   }
 
   /**
@@ -72,33 +68,32 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
   public function doSend(Swift_Transport $transport, &$failedRecipients = null, $options = array())
   {
     $count = 0;
+    $nb = 0;
     $messages = array();
     $options = array_merge($this->options, $options);
-    $table = Doctrine::getTable($this->options['model']);
+    $max = isset($options['max']) && $options['max'] ? $options['max'] : null;
 
-    if (isset($options['method']))
+    if (!file_exists($options['path']))
     {
-      $method = $options['method'];
-
-      $objects = $table->$method($options);
+      return 0;
     }
-    else
-    {
-      $query = $table->createQuery();
 
-      if (isset($options['max']) && $options['max'])
+    foreach (new DirectoryIterator($options['path']) as $file)
+    {
+      $file = $file->getRealPath();
+
+      if (!strpos($file, '.message'))
       {
-        $query->setLimit($options['max']);
+        continue;
       }
 
-      $objects = $query->execute();
-    }
+      if ($max && $nb >= $max)
+      {
+        break;
+      }
 
-    foreach ($objects as $object)
-    {
-      $message = unserialize($object->message);
-
-      $object->delete();
+      $message = unserialize(file_get_contents($file));
+      unlink($file);
 
       try
       {
@@ -108,6 +103,8 @@ class sfMailerDoctrineTransportQueue extends sfMailerTransportQueue
       {
         // TODO: What to do with errors?
       }
+
+      ++$nb;
     }
 
     return $count;

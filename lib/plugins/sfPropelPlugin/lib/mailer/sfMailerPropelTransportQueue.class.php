@@ -24,27 +24,17 @@
  */
 class sfMailerPropelTransportQueue extends sfMailerTransportQueue
 {
-  protected
-    $model = 'MailMessage';
-
   /**
-   * Sets the model class name associated with this transport.
+   * Constructor.
    *
-   * @param string $model The model class name
-   */
-  public function setModel($model)
-  {
-    $this->model = $model;
-  }
-
-  /**
-   * Gets the model class name associated with this transport.
+   * Available options:
    *
-   * @return string The model class name
+   *  * model:  The Doctrine model to use to store the messages
+   *  * method: The method to call to retrieve the messages to send (optional)
    */
-  public function getModel()
+  public function __construct($options = array())
   {
-    return $this->model;
+    parent::__construct(array_merge(array('model' => 'MailMessage'), $options));
   }
 
   /**
@@ -54,55 +44,58 @@ class sfMailerPropelTransportQueue extends sfMailerTransportQueue
    */
   public function store(Swift_Mime_Message $message)
   {
-    $object = new $this->model;
-
-    if (!$object instanceof sfMailerModelInterface)
-    {
-      throw new InvalidArgumentException('The mailer message object must implement the sfMailerModelInterface interface.');
-    }
+    $object = new $this->options['model'];
 
     if (!$object instanceof BaseObject)
     {
       throw new InvalidArgumentException('The mailer message object must be a BaseObject object.');
     }
 
-    $object->setMessage($message);
+    $object->setMessage(serialize($message));
     $object->save();
   }
 
   /**
-   * Sends a message using the given transport instance.
+   * Sends messages using the given transport instance.
+   *
+   * Available options:
+   *
+   *  * max: The maximum number of emails to send
    *
    * @param Swift_Transport $transport         A transport instance
    * @param string[]        &$failedRecipients An array of failures by-reference
-   * @param int             $max               The maximum number of messages to send
+   * @param array           $options           An array of options
    *
    * @return int The number of sent emails
    */
-  public function doSend(Swift_Transport $transport, &$failedRecipients = null, $max = 0)
+  public function doSend(Swift_Transport $transport, &$failedRecipients = null, $options = array())
   {
     $count = 0;
     $messages = array();
+    $options = array_merge($this->options, $options);
+    $model = constant($this->options['model'].'::PEER');
 
-    $model = constant($this->model.'::PEER');
-
-    if (method_exists($model, $method = 'getQueueCriteria'))
+    if (isset($options['method']))
     {
-      $criteria = call_user_func(array($model, $method));
+      $method = $options['method'];
+
+      $objects = call_user_func(array($model, $method), $options);
     }
     else
     {
       $criteria = new Criteria();
+
+      if (isset($options['max']) && $options['max'])
+      {
+        $criteria->setLimit($options['max']);
+      }
+
+      $objects = call_user_func(array($model, 'doSelect'), $criteria);
     }
 
-    if ($max)
+    foreach ($objects as $object)
     {
-      $criteria->setLimit($max);
-    }
-
-    foreach (call_user_func(array($model, 'doSelect'), $criteria) as $object)
-    {
-      $message = $object->getMessage();
+      $message = unserialize($object->getMessage());
 
       $object->delete();
 

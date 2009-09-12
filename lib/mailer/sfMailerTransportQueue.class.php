@@ -18,13 +18,17 @@
  */
 abstract class sfMailerTransportQueue implements Swift_Transport
 {
-  protected $eventDispatcher = null;
+  protected
+    $eventDispatcher = null,
+    $options         = array();
 
   /**
-   * Creates a new Doctrine transport.
+   * Constructor.
    */
-  public function __construct()
+  public function __construct($options = array())
   {
+    $this->options = $options;
+
     $this->eventDispatcher = Swift_DependencyContainer::getInstance()->lookup('transport.eventdispatcher');
   }
 
@@ -79,17 +83,17 @@ abstract class sfMailerTransportQueue implements Swift_Transport
   abstract public function store(Swift_Mime_Message $message);
 
   /**
-   * Sends a message using the given transport instance.
+   * Sends messages using the given transport instance.
    *
    * The return value is the number of recipients who were accepted for delivery.
    *
    * @param Swift_Transport $transport         A transport instance
    * @param string[]        &$failedRecipients An array of failures by-reference
-   * @param int             $max               The maximum number of messages to send
+   * @param array           $options           An array of options
    *
    * @return int The number of sent emails
    */
-  abstract public function doSend(Swift_Transport $transport, &$failedRecipients = null, $max = 0);
+  abstract public function doSend(Swift_Transport $transport, &$failedRecipients = null, $options = array());
 
   /**
    * Register a plugin in the Transport.

@@ -26,7 +26,6 @@ class sfProjectSendEmailsTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-      new sfCommandOption('max', null, sfCommandOption::PARAMETER_REQUIRED, 'The maximum number of emails to send'),
     ));
 
     $this->namespace = 'project';
@@ -47,7 +46,7 @@ EOF;
 
     $mailer = $this->initializeMailer();
 
-    $sent = $mailer->sendQueue(isset($options['max']) ? $options['max'] : null);
+    $sent = $mailer->sendQueue($options);
 
     $this->logSection('project', sprintf('sent %s emails', $sent));
   }

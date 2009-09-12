@@ -10,12 +10,11 @@
 require_once dirname(__FILE__) . '/../../bootstrap/unit.php';
 require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift/Mailer.php';
 spl_autoload_register(array('sfMailer', 'autoload'));
-require_once dirname(__FILE__).'/../../../lib/mailer/sfMailer.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransport.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransportQueue.class.php';
 
-$t = new lime_test(32);
+$t = new lime_test(31);
 
 $dispatcher = new sfEventDispatcher();
 
@@ -40,11 +39,11 @@ catch (InvalidArgumentException $e)
 
 // main transport
 $mailer = new sfMailer($dispatcher, array(
-  'logging' => true,
+  'logging'           => true,
   'delivery_strategy' => 'queue',
-  'queue_class' => 'TestMailerTransportQueue',
-  'model_class' => 'TestMailMessage',
-  'transport' => array('class' => 'TestMailerTransport', 'param' => array('foo' => 'bar', 'bar' => 'foo')),
+  'queue_class'       => 'TestMailerTransportQueue',
+  'queue_options'     => array('model' => 'TestMailMessage'),
+  'transport'         => array('class' => 'TestMailerTransport', 'param' => array('foo' => 'bar', 'bar' => 'foo')),
 ));
 $t->is($mailer->getTransport()->getTransport()->getFoo(), 'bar', '__construct() passes the parameters to the main transport');
 
@@ -60,19 +59,8 @@ catch (InvalidArgumentException $e)
   $t->pass('__construct() throws an InvalidArgumentException exception if the queue_class option is not set with the queue delivery strategy');
 }
 
-try
-{
-  $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue'));
-
-  $t->fail('__construct() throws an InvalidArgumentException exception if the model_class option is not set with the queue delivery strategy');
-}
-catch (InvalidArgumentException $e)
-{
-  $t->pass('__construct() throws an InvalidArgumentException exception if the model_class option is not set with the queue delivery strategy');
-}
-
-$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue', 'model_class' => 'TestMailMessage'));
-$t->is($mailer->getTransport()->getTransportQueue()->getModel(), 'TestMailMessage', '__construct() recognizes the queue delivery strategy');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue'));
+$t->is(get_class($mailer->getTransport()->getTransportQueue()), 'TestMailerTransportQueue', '__construct() recognizes the queue delivery strategy');
 
 // single address
 try
@@ -133,9 +121,9 @@ catch (LogicException $e)
 
 $mailer = new sfMailer($dispatcher, array(
   'delivery_strategy' => 'queue',
-  'queue_class' => 'TestMailerTransportQueue',
-  'model_class' => 'TestMailMessage',
-  'transport' => array('class' => 'TestMailerTransport'),
+  'queue_class'       => 'TestMailerTransportQueue',
+  'queue_options'     => array('model' => 'TestMailMessage'),
+  'transport'         => array('class' => 'TestMailerTransport'),
 ));
 $transportNormal = $mailer->getTransport()->getTransport();
 $transportQueue = $mailer->getTransport()->getTransportQueue();
@@ -150,11 +138,11 @@ $t->is($transportNormal->getSentCount(), 1, '->sendQueue() sends messages in the
 // ->sendNextImmediately()
 $t->diag('->sendNextImmediately()');
 $mailer = new sfMailer($dispatcher, array(
-  'logging' => true,
+  'logging'           => true,
   'delivery_strategy' => 'queue',
-  'queue_class' => 'TestMailerTransportQueue',
-  'model_class' => 'TestMailMessage',
-  'transport' => array('class' => 'TestMailerTransport'),
+  'queue_class'       => 'TestMailerTransportQueue',
+  'queue_options'     => array('model' => 'TestMailMessage'),
+  'transport'         => array('class' => 'TestMailerTransport'),
 ));
 $transportNormal = $mailer->getTransport()->getTransport();
 $transportQueue = $mailer->getTransport()->getTransportQueue();

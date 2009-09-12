@@ -10,8 +10,6 @@
 require_once dirname(__FILE__) . '/../../bootstrap/unit.php';
 require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift/Mailer.php';
 spl_autoload_register(array('sfMailer', 'autoload'));
-require_once dirname(__FILE__).'/../../../lib/mailer/sfMailer.class.php';
-require_once dirname(__FILE__).'/../../../lib/mailer/sfMailerTransport.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransport.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransportQueue.class.php';
