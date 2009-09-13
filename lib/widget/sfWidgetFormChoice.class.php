@@ -50,6 +50,19 @@ class sfWidgetFormChoice extends sfWidgetForm
   }
 
   /**
+   * Sets the format for HTML id attributes. This is made avaiable to the renderer, 
+   * as this widget does not render itself, but delegates to the renderer instead.
+   *
+   * @param string $format  The format string (must contain a %s for the id placeholder)
+   *
+   * @see sfWidgetForm
+   */
+  public function setIdFormat($format)
+  {
+    $this->options['renderer_options']['id_format'] = $format;
+  }
+
+  /**
    * @param  string $name        The element name
    * @param  string $value       The value selected in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
