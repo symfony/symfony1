@@ -926,7 +926,7 @@ class sfViewCacheManager
     if (sfView::RENDER_VAR == $this->controller->getRenderMode())
     {
       $this->controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
-      $this->response->setContent('');
+      $this->context->getResponse()->setContent('');
     }
     else
     {
