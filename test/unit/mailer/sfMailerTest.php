@@ -8,21 +8,16 @@
  * file that was distributed with this source code.
  */
 require_once dirname(__FILE__) . '/../../bootstrap/unit.php';
-require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift/Mailer.php';
-spl_autoload_register(array('sfMailer', 'autoload'));
+require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift.php';
+Swift::registerAutoload();
+sfMailer::initialize();
 require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransport.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransportQueue.class.php';
 
-$t = new lime_test(31);
+$t = new lime_test(28);
 
 $dispatcher = new sfEventDispatcher();
-
-// ::autoload()
-$t->diag('::autoload()');
-$t->ok(false === sfMailer::autoload('FooBar'), '::autoload() returns false if the class does not start with Swift');
-$t->ok(false === sfMailer::autoload('Swift_FooBar'), '::autoload() returns false if the class starts with Swift but does not exist');
-$t->ok(class_exists('Swift_Preferences', true), '::autoload() require the class if it exists');
 
 // __construct()
 $t->diag('__construct()');

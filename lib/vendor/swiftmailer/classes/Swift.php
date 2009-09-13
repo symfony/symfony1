@@ -1,21 +1,11 @@
 <?php
 
 /*
- General utility class from Swift Mailer.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+ * This file is part of SwiftMailer.
+ * (c) 2004-2009 Chris Corbyn
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
@@ -39,17 +29,19 @@ abstract class Swift
   public static function autoload($class)
   {
     //Don't interfere with other autoloaders
-    if (substr($class, 0, strlen(__CLASS__)) != __CLASS__)
+    if (0 !== strpos($class, 'Swift'))
     {
-      return;
+      return false;
     }
-    
-    $path = SWIFT_CLASS_DIRECTORY . '/' . str_replace('_', '/', $class) . '.php';
-    
-    if (file_exists($path))
+
+    $path = dirname(__FILE__).'/'.str_replace('_', '/', $class).'.php';
+
+    if (!file_exists($path))
     {
-      require_once $path;                                                        
+      return false;
     }
+
+    require_once $path;
   }
   
   /**
@@ -59,19 +51,7 @@ abstract class Swift
    */
   public static function registerAutoload()
   {
-    if (!$callbacks = spl_autoload_functions())
-    {
-      $callbacks = array();
-    }
-    foreach ($callbacks as $callback)
-    {
-      spl_autoload_unregister($callback);
-    }
     spl_autoload_register(array('Swift', 'autoload'));
-    foreach ($callbacks as $callback)
-    {
-      spl_autoload_register($callback);
-    }
   }
   
 }

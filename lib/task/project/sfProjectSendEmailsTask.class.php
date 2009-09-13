@@ -53,8 +53,9 @@ EOF;
 
   protected function initializeMailer()
   {
-    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift/Mailer.php';
-    spl_autoload_register(array('sfMailer', 'autoload'));
+    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift.php';
+    Swift::registerAutoload();
+    sfMailer::initialize();
 
     $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
 

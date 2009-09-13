@@ -184,37 +184,8 @@ class sfMailer extends Swift_Mailer
     return $this;
   }
 
-  /**
-   * Autoloads SwiftMailer classes.
-   *
-   * @param string $class The class name to autoload
-   *
-   * @return Boolean false if the class cannot be autoloaded
-   */
-  static public function autoload($class)
+  static public function initialize()
   {
-    static $basePath;
-
-    // Don't interfere with other autoloaders
-    if (0 !== strpos($class, 'Swift'))
-    {
-      return false;
-    }
-
-    if (!$basePath)
-    {
-      $basePath = dirname(__FILE__).'/../vendor/swiftmailer';
-    }
-
-    require_once $basePath.'/swift_init.php';
-
-    $path = $basePath.'/classes/'.str_replace('_', '/', $class).'.php';
-
-    if (!file_exists($path))
-    {
-      return false;
-    }
-
-    require_once $path;
+    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/swift_init.php';
   }
 }
