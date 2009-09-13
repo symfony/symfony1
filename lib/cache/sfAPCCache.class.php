@@ -59,15 +59,15 @@ class sfAPCCache extends sfCache
   {
     $has = null;
     $value = apc_fetch($key, $has);
-	// the second argument was added in APC 3.0.17. If it is still null we fall back to the value returned
-	if (null !== $has)
+    // the second argument was added in APC 3.0.17. If it is still null we fall back to the value returned
+    if (null !== $has)
     {
-	  $success = $has;
-	}
-	else
-	{
-	  $success = $value !== false;
-	}
+      $success = $has;
+    }
+    else
+    {
+      $success = $value !== false;
+    }
     return $value;
   }
   
