@@ -28,7 +28,13 @@ class sfCacheDriverTests
 
     $data = 'another some random data to store in the cache system...';
     $t->ok($cache->set('test', $data), '->set() overrides previous data stored in the cache');
-    $t->is($cache->get('test'), $data, '->set() retrieves the latest data form the cache');
+    $t->is($cache->get('test'), $data, '->get() retrieves the latest data form the cache');
+
+    $data = false;
+    $t->ok($cache->set('test', $data), '->set() false data are stored in the cache');
+    $t->is($cache->has('test'), true, '->has() returns true if the cache exists with false value');
+    $t->is($cache->get('test'), $data, '->get() retrieves the latest data form the cache');
+	$t->is($cache->get('test', 'foo'), $data, '->get() does not return default value if false is stored');
 
     $cache->clean();
     $cache->set('foo', 'foo');

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
-$t = new lime_test(61);
+$t = new lime_test(65);
 
 // setup
 sfConfig::set('sf_logging_enabled', false);

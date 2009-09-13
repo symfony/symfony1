@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$plan = 60;
+$plan = 64;
 $t = new lime_test($plan);
 
 if (!class_exists('Memcache'))

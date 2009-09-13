@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
-$plan = 121;
+$plan = 128;
 $t = new lime_test($plan);
 
 if (!extension_loaded('SQLite')) 
