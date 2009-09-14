@@ -182,13 +182,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
         $conn      = $this->_options['table']->getConnection();
         $tableName = $this->_options['table']->getTableName();
         $id        = current($this->_options['table']->getIdentifierColumnNames());
+        $tableId   = current($this->_table->getIdentifierColumnNames());
 
         $query = 'SELECT * FROM ' . $conn->quoteIdentifier($tableName)
                . ' WHERE ' . $conn->quoteIdentifier($id)
-               . ' IN (SELECT ' . $conn->quoteIdentifier('id')
+               . ' IN (SELECT ' . $conn->quoteIdentifier($tableId)
                . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName())
                . ' WHERE keyword = \'\') OR ' . $conn->quoteIdentifier($id)
-               . ' NOT IN (SELECT ' . $conn->quoteIdentifier('id')
+               . ' NOT IN (SELECT ' . $conn->quoteIdentifier($tableId)
                . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName()) . ')';
 
         $query = $conn->modifyLimitQuery($query, $limit, $offset);
