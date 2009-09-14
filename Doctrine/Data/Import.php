@@ -171,6 +171,9 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
+        $relation = $record->getTable()->getRelation($relationName);
+        $rowKey = $relation->getClass() . $rowKey;
+
         if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception(
                 sprintf('Invalid row key specified: %s, referred to in %s', $rowKey, $referringRowKey)
@@ -179,7 +182,6 @@ class Doctrine_Data_Import extends Doctrine_Data
 
         $relatedRowKeyObject = $this->_importedObjects[$rowKey];
 
-        $relation = $record->getTable()->getRelation($relationName);
         if ($relation->getClass() !== get_class($relatedRowKeyObject)) {
             if ( ! is_subclass_of($relatedRowKeyObject, $relation->getClass())) {
                 throw new Doctrine_Data_Exception(sprintf(
@@ -301,9 +303,9 @@ class Doctrine_Data_Import extends Doctrine_Data
         $buildRows = array();
         foreach ($this->_rows as $className => $classRows) {
             foreach ($classRows as $rowKey => $row) {
-                $buildRows[$rowKey] = $row;
-                $this->_importedObjects[$rowKey] = new $className();
-                $this->_importedObjects[$rowKey]->state('TDIRTY');
+                $buildRows[$className . $rowKey] = $row;
+                $this->_importedObjects[$className . $rowKey] = new $className();
+                $this->_importedObjects[$className . $rowKey]->state('TDIRTY');
             }
         }
 
@@ -360,9 +362,9 @@ class Doctrine_Data_Import extends Doctrine_Data
                 unset($nestedSet['children']);
             }
 
-            $record = $this->_importedObjects[$rowKey];
+            $record = $this->_importedObjects[$model . $rowKey];
             // remove this nested set from _importedObjects so it's not processed in the save routine for normal objects
-            unset($this->_importedObjects[$rowKey]);
+            unset($this->_importedObjects[$model . $rowKey]);
 
             if ( ! $parent) {
                 $record->save(); // save, so that createRoot can do: root id = id
