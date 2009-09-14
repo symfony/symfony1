@@ -38,8 +38,8 @@ class sfValidatorInteger extends sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->addMessage('max', '"%value%" must be less than %max%.');
-    $this->addMessage('min', '"%value%" must be greater than %min%.');
+    $this->addMessage('max', '"%value%" must be at most %max%.');
+    $this->addMessage('min', '"%value%" must be at least %min%.');
 
     $this->addOption('min');
     $this->addOption('max');
