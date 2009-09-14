@@ -20,27 +20,88 @@ class sfYamlUpgrade extends sfUpgrade
 {
   public function upgrade()
   {
-    $found = false;
-    $finder = sfFinder::type('file')->name('*.yml');
+    $specVersion = sfYaml::getSpecVersion();
+
+    $queue = array();
+    $success = true;
+
+    $finder = sfFinder::type('file')->name('*.yml')->prune('vendor');
     foreach ($finder->in(sfConfig::get('sf_root_dir')) as $file)
     {
+      // attempt to upgrade booleans
+      $original = file_get_contents($file);
+      $upgraded = sfToolkit::pregtr($original, array(
+        '/^([^:]+: +)(?:on|y(?:es)?|\+)(\s*)$/im' => '\\1true\\2',
+        '/^([^:]+: +)(?:off|no?|-)(\s*)$/im'      => '\\1false\\2',
+      ));
+
       sfYaml::setSpecVersion('1.1');
-      $yaml11 = sfYaml::load($file);
+      $yaml11 = sfYaml::load($original);
 
       sfYaml::setSpecVersion('1.2');
-      $yaml12 = sfYaml::load($file);
+      $yaml12 = sfYaml::load($upgraded);
 
-      if ($yaml11 != $yaml12)
+      if ($yaml11 == $yaml12)
       {
-        $found = true;
+        if ($original != $upgraded)
+        {
+          $queue[$file] = $upgraded;
+        }
+      }
+      else
+      {
+        $this->logSection('yaml', 'Unable to upgrade '.sfDebug::shortenFilePath($file));
 
-        $this->logSection('yaml', 'You must upgrade '.$file, null, 'ERROR');
+        // force project to use YAML 1.1 spec
+        if ('1.1' != $specVersion)
+        {
+          $class = sfClassManipulator::fromFile(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
+
+          $original = $class->getCode();
+          $modified = $class->wrapMethod('setup', 'sfYaml::setSpecVersion(\'1.1\');');
+
+          if ($original != $modified)
+          {
+            $this->logSection('yaml', 'Forcing YAML 1.1 spec');
+
+            $this->getFilesystem()->touch($class->getFile());
+            $class->save();
+          }
+          else
+          {
+            $this->logBlock(array('', 'Unable to either upgrade YAML files or force 1.1 spec.', '(see UPGRADE file for more information)', ''), 'ERROR');
+          }
+        }
+
+        $success = false;
+        break;
       }
     }
 
-    if ($found)
+    if ($success)
     {
-      $this->logBlock(array('', 'You must upgrade the YAML files listed above', '(see UPGRADE file for more information)', ''), 'ERROR');
+      // upgrades were all successful, write changes to the filesystem
+      foreach ($queue as $file => $contents)
+      {
+        $this->getFilesystem()->touch($file);
+        file_put_contents($file, $contents);
+      }
+
+      // remove 1.1 spec setting
+      if ('1.1' == $specVersion)
+      {
+        $file = sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
+        $original = file_get_contents($file);
+        $modified = preg_replace('/^\s*sfYaml::setSpecVersion\(\'1\.1\'\);\n/im', '', $original);
+
+        if ($original != $modified)
+        {
+          $this->logSection('yaml', 'Removing setting of YAML 1.1 spec');
+
+          $this->getFilesystem()->touch($file);
+          file_put_contents($file, $modified);
+        }
+      }
     }
   }
 }
