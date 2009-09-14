@@ -595,42 +595,53 @@ final class Doctrine
 
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
+                                                        
                 foreach ($it as $file) {
                     $e = explode('.', $file->getFileName());
+                    
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
                         $className = $e[0];
 
-                        if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
-                            self::loadModel($className, $file->getPathName());
+                        if ( ! class_exists($className)) {
+                            if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
+                                self::loadModel($className, $file->getPathName());
 
-                            $loadedModels[$className] = $className;
-                        } else {
-                            $declaredBefore = get_declared_classes();
-                            require_once($file->getPathName());
+                                $loadedModels[$className] = $className;
+                            } else {
+                                $declaredBefore = get_declared_classes();
+                                require_once($file->getPathName());
+                                $declaredAfter = get_declared_classes();
+                                
+                                // Using array_slice because array_diff is broken is some PHP versions
+                                $foundClasses = array_slice($declaredAfter, count($declaredBefore));
+                                
+                                if ($foundClasses) {
+                                    foreach ($foundClasses as $className) {
+                                        if (self::isValidModelClass($className)) {
+                                            $loadedModels[$className] = $className;
 
-                            $declaredAfter = get_declared_classes();
-                            // Using array_slice because array_diff is broken is some PHP versions
-                            $foundClasses = array_slice($declaredAfter, count($declaredBefore));
-                            if ($foundClasses) {
-                                foreach ($foundClasses as $className) {
-                                    if (self::isValidModelClass($className)) {
-                                        $loadedModels[$className] = $className;
-
-                                        self::loadModel($className, $file->getPathName());
+                                            self::loadModel($className, $file->getPathName());
+                                        }
                                     }
                                 }
+                                
+                                $previouslyLoaded = array_keys(self::$_loadedModelFiles, $file->getPathName());
+
+                                if ( ! empty($previouslyLoaded)) {
+                                    $previouslyLoaded = array_combine(array_values($previouslyLoaded), array_values($previouslyLoaded));
+                                    $loadedModels = array_merge($loadedModels, $previouslyLoaded);
+                                }
                             }
-                            $previouslyLoaded = array_keys(self::$_loadedModelFiles, $file->getPathName());
-                            if ( ! empty($previouslyLoaded)) {
-                                $previouslyLoaded = array_combine(array_values($previouslyLoaded), array_values($previouslyLoaded));
-                                $loadedModels = array_merge($loadedModels, $previouslyLoaded);
-                            }
+                        } else {
+                            $loadedModels[$className] = $className;
                         }
                     }
                 }
             }
         }
+        
         asort($loadedModels);
+        
         return $loadedModels;
     }
 
