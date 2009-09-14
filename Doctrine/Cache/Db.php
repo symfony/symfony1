@@ -97,7 +97,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
             return null;
         }
 
-        if (bin2hex($hex) == $hex) {
+        if ( ! ctype_xdigit($hex)) {
             return $hex;
         }
 
