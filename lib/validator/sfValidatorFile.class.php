@@ -23,7 +23,7 @@ class sfValidatorFile extends sfValidatorBase
    *
    * Available options:
    *
-   *  * max_size:             The maximum file size
+   *  * max_size:             The maximum file size in bytes (cannot exceed upload_max_filesize in php.ini)
    *  * mime_types:           Allowed mime types array or category (available categories: web_images)
    *  * mime_type_guessers:   An array of mime type guesser PHP callables (must return the mime type or null)
    *  * mime_categories:      An array of mime type categories (web_images is defined by default)
