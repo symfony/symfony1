@@ -602,7 +602,7 @@ final class Doctrine
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
                         $className = $e[0];
 
-                        //if ( ! class_exists($className)) {
+                        if ( ! class_exists($className)) {
                             if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
                                 self::loadModel($className, $file->getPathName());
 
@@ -632,9 +632,9 @@ final class Doctrine
                                     $loadedModels = array_merge($loadedModels, $previouslyLoaded);
                                 }
                             }
-                        //} else {
-                        //    $loadedModels[$className] = $className;
-                        //}
+                        } else {
+                            $loadedModels[$className] = $className;
+                        }
                     }
                 }
             }

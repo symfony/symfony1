@@ -51,7 +51,18 @@ class Doctrine_Record_Listener implements Doctrine_Record_Listener_Interface
         } else { 
             $this->_options[$name] = $value; 
         }
-    } 
+    }
+    
+    /**
+     * getOptions
+     * returns all options of this template and the associated values
+     *
+     * @return array    all options and their values
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
 
     /** 
      * getOption 

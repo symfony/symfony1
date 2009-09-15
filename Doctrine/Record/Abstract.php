@@ -213,6 +213,17 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
             $this->_table->setOption($name, $value);
         }
     }
+    
+    /**
+     * getOptions
+     * returns all options of this record and the associated values
+     *
+     * @return array    all options and their values
+     */
+    public function getOptions()
+    {
+        return $this->_table->getOptions();
+    }
 
     /**
      * hasOne
