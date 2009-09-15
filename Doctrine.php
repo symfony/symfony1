@@ -602,7 +602,7 @@ final class Doctrine
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
                         $className = $e[0];
 
-                        if ( ! class_exists($className)) {
+                        if ( ! class_exists($className, false)) {
                             if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
                                 self::loadModel($className, $file->getPathName());
 
