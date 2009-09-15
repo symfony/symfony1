@@ -1107,7 +1107,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
                 in_array('Doctrine_Table', class_parents($class))) {
             $table = new $class($name, $this, true);
         } else {
-            $table = new Doctrine_Table($name, $this, true);
+            $tableClass = $this->getAttribute(Doctrine::ATTR_TABLE_CLASS);
+            $table = new $tableClass($name, $this, true);
         }
         
         return $table;

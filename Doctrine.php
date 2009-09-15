@@ -206,6 +206,7 @@ final class Doctrine
     const ATTR_QUERY_CLASS                  = 173;
     const ATTR_CASCADE_SAVES                = 174;
     const ATTR_COLLECTION_CLASS             = 175;
+    const ATTR_TABLE_CLASS                  = 176;
 
     /**
      * LIMIT CONSTANTS
