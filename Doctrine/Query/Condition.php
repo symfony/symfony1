@@ -63,6 +63,8 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
 
                 if (count($test) == 3 && strtoupper($test[1]) == 'BETWEEN') {
                     $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
+                } else if (count($test) == 4 && strtoupper($test[1]) == 'NOT' && strtoupper($test[2]) == 'BETWEEN') {
+                    $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
                 } else {
                     $tmp[] = $parts[$i];
                 }

@@ -98,6 +98,12 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
             $operator = 'BETWEEN ' . $this->query->parseClause($midExpr) . ' AND';
         }
 
+        // NOT BETWEEN operation
+        if ('NOT BETWEEN' == strtoupper(substr($operator, 0, 11))) {
+            $midExpr = trim(substr($operator, 11, -3));
+            $operator = 'NOT BETWEEN ' . $this->query->parseClause($midExpr) . ' AND';
+        }
+
         $op = strtolower($operator);
         $isInX = ($op == 'in' || $op == 'not in');
 
