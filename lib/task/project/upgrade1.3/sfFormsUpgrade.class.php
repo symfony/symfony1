@@ -38,30 +38,24 @@ class sfFormsUpgrade extends sfUpgrade
       $contents = file_get_contents($file);
       $changed = false;
 
-      // change all forms that extend sfForm to extend BaseForm
-      if (preg_match_all('/\bextends\b\s+\bsfForm\b/i', $contents, $matches, PREG_OFFSET_CAPTURE))
+      // change all forms that extend sfForm to extend BaseForm (one at a time)
+      while (preg_match('/\bextends\b\s+\bsfForm\b/i', $contents, $match, PREG_OFFSET_CAPTURE))
       {
-        foreach ($matches[0] as $match)
-        {
-          list($search, $offset) = $match;
-          $replace = str_ireplace('sfForm', 'BaseForm', $search);
+        list($search, $offset) = current($match);
+        $replace = str_ireplace('sfForm', 'BaseForm', $search);
 
-          $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
-        }
+        $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
 
         $changed = true;
       }
 
-      // change sfWidgetFormInput to sfWidgetFormInputText
-      if (preg_match_all('/\bnew\b\s+\bsfWidgetFormInput\b/i', $contents, $matches, PREG_OFFSET_CAPTURE))
+      // change sfWidgetFormInput to sfWidgetFormInputText (one at a time)
+      while (preg_match('/\bnew\b\s+\bsfWidgetFormInput\b/i', $contents, $match, PREG_OFFSET_CAPTURE))
       {
-        foreach ($matches[0] as $match)
-        {
-          list($search, $offset) = $match;
-          $replace = $search.'Text';
+        list($search, $offset) = current($match);
+        $replace = $search.'Text';
 
-          $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
-        }
+        $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
 
         $changed = true;
       }
