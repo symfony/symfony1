@@ -606,12 +606,12 @@ EOF;
 
 .sfWebDebugWarning, .sfWebDebugWarning td
 {
-  background-color: orange;
+  background-color: orange !important;
 }
 
 .sfWebDebugError, .sfWebDebugError td
 {
-  background-color: #f99;
+  background-color: #f99 !important;
 }
 
 .sfWebDebugLogNumber
