@@ -235,7 +235,8 @@ abstract class Doctrine_Query_Abstract
      * @var array $_options                 an array of options
      */
     protected $_options    = array(
-                            'hydrationMode'      => Doctrine::HYDRATE_RECORD
+                            'hydrationMode'      => Doctrine::HYDRATE_RECORD,
+                            'hydrationPolicy'    => Doctrine::HYDRATE_POLICY_IMMEDIATE
                             );
 
     /**
@@ -274,6 +275,21 @@ abstract class Doctrine_Query_Abstract
         $this->_resultCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_RESULT_CACHE_LIFESPAN);
         $this->_queryCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE_LIFESPAN);
     }
+
+    /** 
+ 	 * hydrationPolicy 
+ 	 * Set the query's hydration policy 
+ 	 * HYDRATE_POLICY_IMMEDIATE : Doctrine_Query::execute() returns the fully hydrated resultset 
+ 	 * HYDRATE_POLICY_ON_DEMAND : Doctrine_Query::execute() returns an Iteratable Doctrine_Collection 
+ 	 *                            where each entry is hydrated as it's requested 
+ 	 * 
+ 	 * @param $policy Doctrine::HYDRATE_POLICY_* 
+ 	 */ 
+ 	public function hydrationPolicy($policy) 
+ 	{ 
+ 	    $this->_options['hydrationPolicy'] = $policy; 
+ 	    return $this; 
+ 	}
 
     /**
      * setOption
@@ -947,7 +963,7 @@ abstract class Doctrine_Query_Abstract
      * @param array $params
      * @return Doctrine_Collection            the root collection
      */
-    public function execute($params = array(), $hydrationMode = null)
+    public function execute($params = array(), $hydrationMode = null, $hydrationPolicy = null)
     {
         // Clean any possible processed params
         $this->_execParams = array();
@@ -962,6 +978,17 @@ abstract class Doctrine_Query_Abstract
 
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
+        }
+
+        if ($hydrationPolicy !== null) {
+            $this->_hydrator->setHydrationPolicy($hydrationPolicy);
+        }
+
+        $hydrationMode = $this->_hydrator->getHydrationMode();
+        $hydrationPolicy = $this->_hydrator->getHydrationPolicy();
+
+        if ($hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND && $hydrationMode != Doctrine::HYDRATE_RECORD) {
+            throw new Doctrine_Query_Exception('You can only use Doctrine::HYDRATE_POLICY_ON_DEMAND with Doctrine::HYDRATE_RECORD');
         }
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
@@ -987,7 +1014,14 @@ abstract class Doctrine_Query_Abstract
                 $result = $stmt;
             } else {
                 $this->_hydrator->setQueryComponents($this->_queryComponents);
-                $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
+                if ($this->_type == self::SELECT && $hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND && 
+                    ($hydrationMode != Doctrine::HYDRATE_SINGLE_SCALAR && $hydrationMode != Doctrine::HYDRATE_NONE)) 
+                {
+                    $hydrationDriver = $this->_hydrator->getHydratorDriver($stmt, $this->_tableAliasMap);
+                    $result = new Doctrine_Collection_OnDemand($stmt, $hydrationDriver, $this->_tableAliasMap); 
+                } else {
+                    $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
+                }
             }
         }
         if ($this->getConnection()->getAttribute(Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS)) {
@@ -1747,6 +1781,12 @@ abstract class Doctrine_Query_Abstract
     public function setHydrationMode($hydrationMode)
     {
         $this->_hydrator->setHydrationMode($hydrationMode);
+        return $this;
+    }
+
+    public function setHydrationPolicy($hydrationPolicy)
+    {
+        $this->_hydrator->setHydrationPolicy($hydrationPolicy);
         return $this;
     }
 

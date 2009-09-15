@@ -35,12 +35,19 @@
 class Doctrine_Hydrator
 {
     protected static
-      $_totalHydrationTime = 0;
+        $_totalHydrationTime = 0;
 
-    protected 
+    protected
+        $_hydrators,
         $_rootAlias = null,
         $_hydrationMode = Doctrine::HYDRATE_RECORD,
+        $_hydrationPolicy = Doctrine::HYDRATE_POLICY_IMMEDIATE,
         $_queryComponents = array();
+
+    public function __construct()
+    {
+        $this->_hydrators = Doctrine_Manager::getInstance()->getHydrators();
+    }
 
     /**
      * Set the hydration mode
@@ -63,6 +70,16 @@ class Doctrine_Hydrator
         return $this->_hydrationMode;
     }
 
+    public function setHydrationPolicy($hydrationPolicy)
+    {
+        $this->_hydrationPolicy = $hydrationPolicy;
+    }
+
+    public function getHydrationPolicy()
+    {
+        return $this->_hydrationPolicy;
+    }
+
     /**
      * Set the array of query components
      *
@@ -83,6 +100,18 @@ class Doctrine_Hydrator
         return $this->_queryComponents;
     }
 
+    public function getHydratorDriver($mode, $tableAliases)
+    {
+        if ( ! isset($this->_hydrators[$this->_hydrationMode])) {
+            throw new Doctrine_Hydrator_Exception('Invalid hydration mode specified.');
+        }
+
+        $driverClass = $this->_hydrators[$this->_hydrationMode];
+        $driver = new $driverClass($this->_queryComponents, $tableAliases, $this->_hydrationPolicy);
+
+        return $driver;
+    }
+
     /**
      * Hydrate the query statement in to its final data structure by one of the
      * hydration drivers.
@@ -93,14 +122,7 @@ class Doctrine_Hydrator
      */
     public function hydrateResultSet($stmt, $tableAliases)
     {
-        $hydrators = Doctrine_Manager::getInstance()->getHydrators();
-        if ( ! isset($hydrators[$this->_hydrationMode])) {
-            throw new Doctrine_Hydrator_Exception('Invalid hydration mode specified.');
-        }
-
-        $driverClass = $hydrators[$this->_hydrationMode];
-        $driver = new $driverClass($this->_queryComponents, $tableAliases);
-
+        $driver = $this->getHydratorDriver($stmt, $tableAliases);
         $result = $driver->hydrateResultSet($stmt);
 
         return $result;

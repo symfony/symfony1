@@ -326,6 +326,9 @@ final class Doctrine
      */
     const EXPORT_ALL                = 7;
 
+    const HYDRATE_POLICY_IMMEDIATE  = 1;
+    const HYDRATE_POLICY_ON_DEMAND   = 2;
+
     /**
      * HYDRATION CONSTANTS
      */

@@ -72,31 +72,64 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
         $id = array();
         $idTemplate = array();
 
+        // Initialize 
+     	foreach ($this->_queryComponents as $dqlAlias => $data) { 
+     	    $componentName = $data['table']->getComponentName(); 
+     	    $instances[$componentName] = $data['table']->getRecordInstance(); 
+     	    $listeners[$componentName] = $data['table']->getRecordListener(); 
+     	    $identifierMap[$dqlAlias] = array(); 
+     	    $prev[$dqlAlias] = null; 
+     	    $idTemplate[$dqlAlias] = ''; 
+     	} 
+     	$cache = array();
+     	
         $result = $this->getElementCollection($rootComponentName);
 
         if ($stmt === false || $stmt === 0) {
             return $result;
         }
 
-        // Initialize
-        foreach ($this->_queryComponents as $dqlAlias => $data) {
-            $componentName = $data['table']->getComponentName();
-            $instances[$componentName] = $data['table']->getRecordInstance();
-            $listeners[$componentName] = $data['table']->getRecordListener();
-            $identifierMap[$dqlAlias] = array();
-            $prev[$dqlAlias] = null;
-            $idTemplate[$dqlAlias] = '';
-        }
+        $hydrationPolicy = $this->_hydrationPolicy;
 
         // Process result set
         $cache = array();
 
         $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
 
-        while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC)) {
+        if ($hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND) {
+            if ( ! is_null($this->_priorRow)) {
+                $data = $this->_priorRow;
+                $this->_priorRow = null;
+            } else {
+                $data = $stmt->fetch(Doctrine::FETCH_ASSOC);
+                if ( ! $data) {
+                    return $result;
+                }
+            }
+            $activeRootIdentifier = null;
+        } else { 
+            $data = $stmt->fetch(Doctrine::FETCH_ASSOC); 
+            if (!$data) { 
+                return $result; 
+            }
+        }
+
+        do {
             $id = $idTemplate; // initialize the id-memory
             $nonemptyComponents = array();
             $rowData = $this->_gatherRowData($data, $cache, $id, $nonemptyComponents);
+
+            if ($hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND) 
+            { 
+                if (is_null($activeRootIdentifier)) { 
+                    // first row for this record 
+                    $activeRootIdentifier = $id[$rootAlias]; 
+                } else if ($activeRootIdentifier != $id[$rootAlias]) { 
+                    // first row for the next record 
+                    $this->_priorRow = $data; 
+                    return $result; 
+                } 
+            }
 
             //
             // hydrate the data of the root component from the current row
@@ -223,7 +256,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                     $this->setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
                 }
             }
-        }
+        } while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC));
 
         $stmt->closeCursor();
         $this->flush();
