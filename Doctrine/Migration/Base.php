@@ -286,6 +286,7 @@ abstract class Doctrine_Migration_Base
      *
      * @param string $tableName     Name of the table to change the column on
      * @param string $columnName    Name of the column to change
+     * @param string $length        The length of the column
      * @param string $type          New type of column
      * @param array  $options       New options for the column
      * @return void
