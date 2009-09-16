@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfWidgetFormInput extends sfWidgetForm
+class sfWidgetFormInput extends sfWidgetForm
 {
   /**
    * Constructor.
@@ -33,6 +33,9 @@ abstract class sfWidgetFormInput extends sfWidgetForm
   protected function configure($options = array(), $attributes = array())
   {
     $this->addRequiredOption('type');
+
+    // to maintain BC with symfony 1.2
+    $this->setOption('type', 'text');
   }
 
   /**
