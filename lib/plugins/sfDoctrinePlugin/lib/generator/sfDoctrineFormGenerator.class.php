@@ -652,10 +652,13 @@ class sfDoctrineFormGenerator extends sfGenerator
   {
     $model = $this->modelName;
 
+    $builderOptions = sfConfig::get('doctrine_model_builder_options', array());
+    $baseClassName = isset($builderOptions['baseClassName']) ? $builderOptions['baseClassName'] : 'sfDoctrineRecord';
+
     // find the first non-abstract parent
     while ($model = get_parent_class($model))
     {
-      if ('Doctrine_Record' == $model)
+      if ($baseClassName == $model)
       {
         break;
       }
