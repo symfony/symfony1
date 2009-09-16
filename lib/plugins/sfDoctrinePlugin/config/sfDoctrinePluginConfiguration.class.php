@@ -60,6 +60,9 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
     $manager->setAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
     $manager->setAttribute(Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES, true);
 
+    // apply default attributes
+    $manager->setDefaultAttributes();
+
     if (method_exists($this->configuration, 'configureDoctrine'))
     {
       $this->configuration->configureDoctrine($manager);
