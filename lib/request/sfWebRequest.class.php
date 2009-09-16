@@ -61,7 +61,7 @@ class sfWebRequest extends sfRequest
     $options = array_merge(array(
       'path_info_key'   => 'PATH_INFO',
       'path_info_array' => 'SERVER',
-      'default_format'  => 'html',
+      'default_format'  => null, // to maintain bc
     ), $options);
     parent::initialize($dispatcher, $parameters, $attributes, $options);
 
@@ -88,7 +88,7 @@ class sfWebRequest extends sfRequest
 
         case 'PUT':
           $this->setMethod(self::PUT);
-          
+
           $putParameters = array();
           parse_str($this->getContent(), $putParameters);
           $putParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($putParameters) : $putParameters;
@@ -681,7 +681,7 @@ class sfWebRequest extends sfRequest
    *
    *  * format defined by the user (with setRequestFormat())
    *  * sf_format request parameter
-   *  * null
+   *  * default format from factories
    *
    * @return string The request format
    */
@@ -689,7 +689,7 @@ class sfWebRequest extends sfRequest
   {
     if (null === $this->format)
     {
-      $this->setRequestFormat($this->getParameter('sf_format'));
+      $this->setRequestFormat($this->getParameter('sf_format', $this->options['default_format']));
     }
 
     return $this->format;
@@ -835,7 +835,7 @@ class sfWebRequest extends sfRequest
 
   /**
    * Returns an array containing a list of IPs, the first being the client address
-   * and the others the addresses of each proxy that passed the request. The address 
+   * and the others the addresses of each proxy that passed the request. The address
    * for the last proxy can be retrieved via getRemoteAddress().
    *
    * This method returns null if no proxy passed this request. Note that some proxies
