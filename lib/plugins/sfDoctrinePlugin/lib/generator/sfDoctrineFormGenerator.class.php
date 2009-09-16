@@ -650,15 +650,22 @@ class sfDoctrineFormGenerator extends sfGenerator
    */
   public function getParentModel()
   {
-    $model = $this->modelName;
+    $baseClasses = array(
+      'Doctrine_Record',
+      'sfDoctrineRecord',
+    );
 
     $builderOptions = sfConfig::get('doctrine_model_builder_options', array());
-    $baseClassName = isset($builderOptions['baseClassName']) ? $builderOptions['baseClassName'] : 'sfDoctrineRecord';
+    if (isset($builderOptions['baseClassName']))
+    {
+      $baseClasses[] = $builderOptions['baseClassName'];
+    }
 
     // find the first non-abstract parent
+    $model = $this->modelName;
     while ($model = get_parent_class($model))
     {
-      if ($baseClassName == $model)
+      if (in_array($model, $baseClasses))
       {
         break;
       }
