@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -120,25 +120,26 @@ abstract class sfView
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     $request = $context->getRequest();
-    if (null !== $format = $request->getRequestFormat())
+
+    $format = $request->getRequestFormat();
+    if (null !== $format)
     {
       if ('html' != $format)
       {
         $this->setExtension('.'.$format.$this->getExtension());
       }
-      
+
       if ($mimeType = $request->getMimeType($format))
       {
         $this->context->getResponse()->setContentType($mimeType);
-        
+
         if ('html' != $format)
         {
           $this->setDecorator(false);
         }
       }
-
-      $this->dispatcher->notify(new sfEvent($this, 'view.configure_format', array('format' => $format, 'response' => $context->getResponse(), 'request' => $context->getRequest())));
     }
+    $this->dispatcher->notify(new sfEvent($this, 'view.configure_format', array('format' => $format, 'response' => $context->getResponse(), 'request' => $context->getRequest())));
 
     // include view configuration
     $this->configure();
