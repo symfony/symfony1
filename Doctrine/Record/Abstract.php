@@ -150,9 +150,11 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
 
     public function setSubclasses($map)
     {
-        if (isset($map[get_class($this)])) {
+        $class = get_class($this);
+        // Set the inheritance map for subclasses
+        if (isset($map[$class])) {
             // fix for #1621 
-            $mapFieldNames = $map[get_class($this)]; 
+            $mapFieldNames = $map[$class]; 
             $mapColumnNames = array(); 
 
             foreach ($mapFieldNames as $fieldName => $val) { 
@@ -161,8 +163,13 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
  
             $this->_table->setOption('inheritanceMap', $mapColumnNames);
             return;
+        } else {
+            // Put an index on the key column
+            $mapFieldName = array_keys(end($map));
+            $this->index($mapFieldName[0], array('fields' => array($mapFieldName[0])));
         }
 
+        // Set the subclasses array for the parent class
         $this->_table->setOption('subclasses', array_keys($map));
     }
 
