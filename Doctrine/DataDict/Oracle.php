@@ -113,7 +113,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                 return 'NUMBER(*,'.$scale.')';
             default:
         }
-        throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
+        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
     }
 
     /**
@@ -218,8 +218,8 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             case 'rowid':
             case 'urowid':
             default:
-                $type[] = 'string';
-                $length = null;
+                $type[] = $field['type'];
+                $length = isset($field['length']) ? $field['length']:null;
         }
 
         return array('type'     => $type,

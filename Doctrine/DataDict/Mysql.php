@@ -229,7 +229,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'bit':
                 return 'BIT';
         }
-        throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
+        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
     }
 
     /**
@@ -401,8 +401,8 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $length = null;
             break;
             default:
-                $type[] = 'string';
-                $length = null;
+                $type[] = $field['type'];
+                $length = isset($field['length']) ? $field['length']:null;
         }
 
         $length = ((int) $length == 0) ? null : (int) $length;

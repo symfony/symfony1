@@ -426,7 +426,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
                 return 'NUMERIC('.$length.','.$scale.')';
         }
-        throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
+        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
     }
 
     /**
@@ -573,8 +573,8 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $length = null;
                 break;
             default:
-                $type[] = 'string';
-                $length = null;
+                $type[] = $field['type'];
+                $length = isset($field['length']) ? $field['length']:null;
         }
 
         return array('type'     => $type,

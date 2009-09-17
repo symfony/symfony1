@@ -189,7 +189,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
              case 'enum':
                  return is_string($var) || is_int($var);
              default:
-                 return false;
+                 return true;
          }
      }
 }
