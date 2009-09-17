@@ -326,11 +326,12 @@ final class Doctrine
      */
     const EXPORT_ALL                = 7;
 
-    const HYDRATE_POLICY_IMMEDIATE  = 1;
-    const HYDRATE_POLICY_ON_DEMAND   = 2;
-
     /**
      * HYDRATION CONSTANTS
+     */
+
+    /**
+     * HYDRATE_RECORD
      */
     const HYDRATE_RECORD            = 2;
 
@@ -355,14 +356,9 @@ final class Doctrine
     const HYDRATE_SINGLE_SCALAR     = 6;
 
     /**
-     * HYDRATE_NONE_ASSOC
+     * HYDRATE_ON_DEMAND
      */
-    const HYDRATE_NONE_ASSOC        = 7;
-
-    /**
-     * HYDRATE_NO_ALIAS_SCALAR
-     */
-    const HYDRATE_NO_ALIAS_SCALAR   = 8;
+    const HYDRATE_ON_DEMAND         = 7;
 
     /**
      * VALIDATION CONSTANTS

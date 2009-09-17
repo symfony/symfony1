@@ -35,14 +35,14 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     protected
         $_queryComponents = array(),
         $_tableAliases = array(),
-        $_hydrationPolicy,
-        $_priorRow;
+        $_priorRow,
+        $_hydrationMode;
 
-    public function __construct($queryComponents, $tableAliases, $hydrationPolicy)
+    public function __construct($queryComponents, $tableAliases, $hydrationMode)
     {
         $this->_queryComponents = $queryComponents;
         $this->_tableAliases = $tableAliases;
-        $this->_hydrationPolicy = $hydrationPolicy;
+        $this->_hydrationMode = $hydrationMode;
     }
 
     public function onDemandReset()

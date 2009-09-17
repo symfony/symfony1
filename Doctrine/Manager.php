@@ -72,7 +72,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         Doctrine::HYDRATE_RECORD          => 'Doctrine_Hydrator_RecordDriver',
         Doctrine::HYDRATE_NONE            => 'Doctrine_Hydrator_NoneDriver',
         Doctrine::HYDRATE_SCALAR          => 'Doctrine_Hydrator_ScalarDriver',
-        Doctrine::HYDRATE_SINGLE_SCALAR   => 'Doctrine_Hydrator_SingleScalarDriver'
+        Doctrine::HYDRATE_SINGLE_SCALAR   => 'Doctrine_Hydrator_SingleScalarDriver',
+        Doctrine::HYDRATE_ON_DEMAND       => 'Doctrine_Hydrator_RecordDriver'
     );
 
     protected $_connectionDrivers = array(

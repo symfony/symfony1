@@ -89,14 +89,12 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             return $result;
         }
 
-        $hydrationPolicy = $this->_hydrationPolicy;
-
         // Process result set
         $cache = array();
 
         $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
 
-        if ($hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND) {
+        if ($this->_hydrationMode == Doctrine::HYDRATE_ON_DEMAND) {
             if ( ! is_null($this->_priorRow)) {
                 $data = $this->_priorRow;
                 $this->_priorRow = null;
@@ -109,7 +107,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             $activeRootIdentifier = null;
         } else { 
             $data = $stmt->fetch(Doctrine::FETCH_ASSOC); 
-            if (!$data) { 
+            if ( ! $data) { 
                 return $result; 
             }
         }
@@ -119,8 +117,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             $nonemptyComponents = array();
             $rowData = $this->_gatherRowData($data, $cache, $id, $nonemptyComponents);
 
-            if ($hydrationPolicy == Doctrine::HYDRATE_POLICY_ON_DEMAND) 
-            { 
+            if ($this->_hydrationMode == Doctrine::HYDRATE_ON_DEMAND)  { 
                 if (is_null($activeRootIdentifier)) { 
                     // first row for this record 
                     $activeRootIdentifier = $id[$rootAlias]; 
@@ -172,7 +169,6 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             unset($rowData[$rootAlias]);
 
             // end hydrate data of the root component for the current row
-
 
             // $prev[$rootAlias] now points to the last element in $result.
             // now hydrate the rest of the data found in the current row, that belongs to other

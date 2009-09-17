@@ -41,7 +41,6 @@ class Doctrine_Hydrator
         $_hydrators,
         $_rootAlias = null,
         $_hydrationMode = Doctrine::HYDRATE_RECORD,
-        $_hydrationPolicy = Doctrine::HYDRATE_POLICY_IMMEDIATE,
         $_queryComponents = array();
 
     public function __construct()
@@ -68,16 +67,6 @@ class Doctrine_Hydrator
     public function getHydrationMode()
     {
         return $this->_hydrationMode;
-    }
-
-    public function setHydrationPolicy($hydrationPolicy)
-    {
-        $this->_hydrationPolicy = $hydrationPolicy;
-    }
-
-    public function getHydrationPolicy()
-    {
-        return $this->_hydrationPolicy;
     }
 
     /**
@@ -107,7 +96,7 @@ class Doctrine_Hydrator
         }
 
         $driverClass = $this->_hydrators[$this->_hydrationMode];
-        $driver = new $driverClass($this->_queryComponents, $tableAliases, $this->_hydrationPolicy);
+        $driver = new $driverClass($this->_queryComponents, $tableAliases, $this->_hydrationMode);
 
         return $driver;
     }
