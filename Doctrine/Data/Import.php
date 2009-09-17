@@ -125,17 +125,29 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     protected function _buildRows($className, $data)
     {
+        $table = Doctrine::getTable($className);
+
         foreach ($data as $rowKey => $row) {
             // do the same for the row information
             $this->_rows[$className][$rowKey] = $row;
 
             foreach ((array) $row as $key => $value) {
-                if (Doctrine::getTable($className)->hasRelation($key) && is_array($value)) {
-                    $keys = array_keys($value);
-
+                if ($table->hasRelation($key) && is_array($value) && ! $table->hasTemplate('Doctrine_Template_I18n')) {
                     // Skip associative arrays defining keys to relationships
-                    if ( ! isset($keys[0])) {
-                        $this->_buildRows(Doctrine::getTable($className)->getRelation($key)->getTable()->getOption('name'), $value);
+                    if ( ! isset($value[0]) || (isset($value[0]) && is_array($value[0]))) {
+                        $rel = $table->getRelation($key);
+                        $relClassName = $rel->getTable()->getOption('name');
+                        $relRowKey = $rowKey . '_' . $relClassName;
+            
+                        if ($rel->getType() == Doctrine_Relation::ONE) {
+                            $val = array($relRowKey => $value);
+                            $this->_rows[$className][$rowKey][$key] = $relRowKey;
+                        } else {
+                            $val = $value;
+                            $this->_rows[$className][$rowKey][$key] = array_keys($val);
+                        }
+            
+                        $this->_buildRows($relClassName, $val);
                     }
                 }
             }
@@ -171,7 +183,7 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
-        $relation = $record->getTable()->getRelation($relationName);
+        $relation = $record->getTable()->getRelation($relationName); 
         $rowKey = $relation->getClass() . $rowKey;
 
         if ( ! isset($this->_importedObjects[$rowKey])) {
