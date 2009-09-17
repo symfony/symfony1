@@ -102,19 +102,13 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
      */
     public function createDatabase()
     {
-      try {
-          if ( ! $dsn = $this->getOption('dsn')) {
-              throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
-          }
+        if ( ! $dsn = $this->getOption('dsn')) {
+            throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
+        }
 
-          $info = $this->getManager()->parseDsn($dsn);
+        $info = $this->getManager()->parseDsn($dsn);
 
-          $this->export->createDatabase($info['database']);
-
-          return 'Successfully created database for connection "' . $this->getName() . '" at path "' . $info['database'] . '"';
-      } catch (Exception $e) {
-          return $e;
-      }
+        $this->export->createDatabase($info['database']);
     }
 
     /**
@@ -124,18 +118,12 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
      */
     public function dropDatabase()
     {
-      try {
-          if ( ! $dsn = $this->getOption('dsn')) {
-              throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
-          }
-          
-          $info = $this->getManager()->parseDsn($dsn);
+        if ( ! $dsn = $this->getOption('dsn')) {
+            throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
+        }
+        
+        $info = $this->getManager()->parseDsn($dsn);
 
-          $this->export->dropDatabase($info['database']);
-
-          return 'Successfully dropped database for connection "' . $this->getName() . '" at path "' . $info['database'] . '"';
-      } catch (Exception $e) {
-          return $e;
-      }
+        $this->export->dropDatabase($info['database']);
     }
 }

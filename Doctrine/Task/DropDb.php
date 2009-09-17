@@ -48,12 +48,14 @@ class Doctrine_Task_DropDb extends Doctrine_Task
             }
         }
 
-        $results = Doctrine::dropDatabases();
-
-        foreach ($results as $name => $result) {
-            $msg = $result instanceof Exception ? 'Could not drop database for connection: "' .$name . '." Failed with exception: ' . $result->getMessage():$result;
-
-            $this->notify($msg);
+        $manager = Doctrine_Manager::getInstance();
+        foreach ($manager as $name => $connection) {
+            try {
+                $connection->dropDatabase();
+                $this->notify("Successfully dropped database for connection named '" . $name . "'");
+            } catch (Exception $e) {
+                $this->notify($e->getMessage());
+            }
         }
     }
 }

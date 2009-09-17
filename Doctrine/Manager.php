@@ -633,17 +633,13 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $specifiedConnections = (array) $specifiedConnections;
         }
 
-        $results = array();
-
         foreach ($this as $name => $connection) {
             if ( ! empty($specifiedConnections) && ! in_array($name, $specifiedConnections)) {
                 continue;
             }
 
-            $results[$name] = $connection->createDatabase();
+            $connection->createDatabase();
         }
-
-        return $results;
     }
 
     /**
@@ -659,17 +655,13 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $specifiedConnections = (array) $specifiedConnections;
         }
 
-        $results = array();
-
         foreach ($this as $name => $connection) {
             if ( ! empty($specifiedConnections) && ! in_array($name, $specifiedConnections)) {
                 continue;
             }
 
-            $results[$name] = $connection->dropDatabase();
+            $connection->dropDatabase();
         }
-
-        return $results;
     }
 
     /**

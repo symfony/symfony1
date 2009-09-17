@@ -1415,11 +1415,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Parse pdo dsn so we are aware of the connection information parts
         $info = $this->getManager()->parsePdoDsn($dsn);
 
-        // Get the temporary connection to issue the drop database command
+        // Get the temporary connection to issue the create database command
         $tmpConnection = $this->getTmpConnection($info);
 
+        // Catch any exceptions and delay the throwing of it so we can close
+        // the tmp connection
         try {
-            // Issue create database command
             $tmpConnection->export->createDatabase($info['dbname']);
         } catch (Exception $e) {}
 
@@ -1427,9 +1428,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $this->getManager()->closeConnection($tmpConnection);
 
         if (isset($e)) {
-            return $e;
-        } else {
-            return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
+            throw $e;
         }
     }
 
@@ -1452,18 +1451,18 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Get the temporary connection to issue the drop database command
         $tmpConnection = $this->getTmpConnection($info);
 
+        // Catch any exceptions and delay the throwing of it so we can close
+        // the tmp connection
         try {
-            // Issue drop database command
             $tmpConnection->export->dropDatabase($info['dbname']);
         } catch (Exception $e) {}
 
         // Close the temporary connection used to issue the drop database command
         $this->getManager()->closeConnection($tmpConnection);
 
+
         if (isset($e)) {
-            return $e;
-        } else {
-            return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
+            throw $e;
         }
     }
 

@@ -37,12 +37,14 @@ class Doctrine_Task_CreateDb extends Doctrine_Task
     
     public function execute()
     {
-        $results = Doctrine::createDatabases();
-        
-        foreach ($results as $name => $result) {
-            $msg = $result instanceof Exception ? 'Could not create database for connection: "' .$name . '." Failed with exception: ' . $result->getMessage():$result;
-            
-            $this->notify($msg);
+        $manager = Doctrine_Manager::getInstance();
+        foreach ($manager as $name => $connection) {
+            try {
+                $connection->createDatabase();
+                $this->notify("Successfully created database for connection named '" . $name . "'");
+            } catch (Exception $e) {
+                $this->notify($e->getMessage());
+            }
         }
     }
 }
