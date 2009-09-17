@@ -311,6 +311,10 @@ END;';
     {
         $sql = parent::createTableSql($name, $fields, $options);
 
+        if (isset($options['comment']) && ! empty($options['comment'])) {
+     	    $sql[] = $this->_createTableCommentSql($name, $options['comment']);
+     	}
+
         foreach ($fields as $fieldName => $field) {
             if (isset($field['sequence'])) {
               $sql[] = $this->createSequenceSql($field['sequence'], 1);
@@ -319,6 +323,10 @@ END;';
             if (isset($field['autoincrement']) && $field['autoincrement'] ||
                (isset($field['autoinc']) && $fields['autoinc'])) {           
                 $sql = array_merge($sql, $this->_makeAutoincrement($fieldName, $name));
+            }
+
+            if (isset($field['comment']) && ! empty($field['comment'])){
+                $sql[] = $this->_createColumnCommentSql($name,$fieldName,$field['comment']); 
             }
         }
         
@@ -333,6 +341,33 @@ END;';
         }
         
         return $sql;
+    }
+
+    /**
+     * create a comment on a table
+     *
+     * @param string $table    Name of the table we are commenting
+     * @param string $comment  The comment for the table
+     *
+     * @return string
+     */
+    public function _createTableCommentSql($table,$comment)
+    {
+        return 'COMMENT ON TABLE '. $this->conn->quoteIdentifier($table, true). ' IS '.$this->conn->quote($comment, 'text').'';
+    }
+
+    /**
+     * create a comment on a column
+     *
+     * @param string $table    Name of the table
+     * @param string $column   Name of the column we are commenting
+     * @param string $comment  The comment for the table
+     *
+     * @return string
+     */
+    public function _createColumnCommentSql($table,$column, $comment)
+    {
+        return 'COMMENT ON COLUMN '. $this->conn->quoteIdentifier($table, true). '.'. $this->conn->quoteIdentifier($column, true). ' IS '.$this->conn->quote($comment, 'text').'';
     }
 
     /**

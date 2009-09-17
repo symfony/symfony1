@@ -87,7 +87,8 @@ class Doctrine_Import_Schema
                                                           'inheritance',
                                                           'detect_relations',
                                                           'listeners',
-                                                          'checks'),
+                                                          'checks',
+                                                          'comment'),
 
                                    'column'     =>  array('name',
                                                           'format',
@@ -105,7 +106,8 @@ class Doctrine_Import_Schema
                                                           'protected',
                                                           'zerofill',
                                                           'owner',
-                                                          'extra'),
+                                                          'extra',
+                                                          'comment'),
 
                                    'relation'   =>  array('key',
                                                           'class',

@@ -1153,13 +1153,21 @@ class Doctrine_Export extends Doctrine_Connection_Module
                      unset($sql[$key]);
                      continue;
                  }
-                 
+
                  // If create trgger statement
                  if (substr($query, 0, strlen('CREATE TRIGGER')) == 'CREATE TRIGGER') {
-                 	$connections[$connectionName]['create_triggers'][] = $query;
-                 	
-                 	unset($sql[$key]);
-                 	continue;
+                     $connections[$connectionName]['create_triggers'][] = $query;
+
+                 	 unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If comment statement
+                 if (substr($query, 0, strlen('COMMENT ON')) == 'COMMENT ON') {
+                     $connections[$connectionName]['comments'][] = $query;
+
+                     unset($sql[$key]);
+                     continue;
                  }
              }
          }
