@@ -809,12 +809,11 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $rootColName = $this->_tree->getAttribute('rootColumnName');
             $q = new Doctrine_Query($conn);
             $q = $q->update($componentName)
-                    ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
-                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
-                    ->set($componentName . '.level', $componentName.'.level - ?', $oldLevel)
-                    ->set($componentName . '.' . $rootColName, '?', $newRoot)
-                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                    array($oldLft, $oldRgt));
+                    ->set($componentName . '.lft', $componentName.'.lft + ?', array($diff))
+                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', array($diff))
+                    ->set($componentName . '.level', $componentName.'.level - ?', array($oldLevel))
+                    ->set($componentName . '.' . $rootColName, '?', array($newRoot))
+                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
             
