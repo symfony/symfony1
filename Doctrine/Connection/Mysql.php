@@ -206,7 +206,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
             $params[] = $value;
         }
 
-        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+        $query = 'REPLACE INTO ' . $this->quoteIdentifier($table->getTableName()) . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
 
         return $this->exec($query, $params);
     }
