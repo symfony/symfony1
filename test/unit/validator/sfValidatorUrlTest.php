@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(14);
+$t = new lime_test(15);
 
 $v = new sfValidatorUrl();
 
@@ -47,4 +47,15 @@ foreach (array(
     $t->pass('->clean() throws an sfValidatorError if the value is not a valid URL');
     $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
   }
+}
+
+$v = new sfValidatorUrl(array('protocols' => array('http', 'https')));
+try
+{
+  $v->clean('ftp://google.com/foo.tgz');
+  $t->fail('->clean() only allows protocols specified in the protocols option');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() only allows protocols specified in the protocols option');
 }

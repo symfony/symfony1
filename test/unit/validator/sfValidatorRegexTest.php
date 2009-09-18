@@ -10,7 +10,12 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(8);
+function generate_regex()
+{
+  return '/^123$/';
+}
+
+$t = new lime_test(11);
 
 // __construct()
 $t->diag('__construct()');
@@ -57,6 +62,28 @@ catch (sfValidatorError $e)
   $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
+$v = new sfValidatorRegex(array('pattern' => new sfCallable('generate_regex')));
+
+try
+{
+  $v->clean('123');
+  $t->pass('->clean() uses the pattern returned by a sfCallable pattern option');
+}
+catch (sfValidatorError $e)
+{
+  $t->fail('->clean() uses the pattern returned by a sfCallable pattern option');
+}
+
 // ->asString()
 $t->diag('->asString()');
+
+$v = new sfValidatorRegex(array('pattern' => '/^[0-9]+$/', 'must_match' => false));
 $t->is($v->asString(), 'Regex({ must_match: false, pattern: \'/^[0-9]+$/\' })', '->asString() returns a string representation of the validator');
+
+// ->getPattern()
+$t->diag('->getPattern()');
+
+$v = new sfValidatorRegex(array('pattern' => '/\w+/'));
+$t->is($v->getPattern(), '/\w+/', '->getPattern() returns the regular expression');
+$v = new sfValidatorRegex(array('pattern' => new sfCallable('generate_regex')));
+$t->is($v->getPattern(), '/^123$/', '->getPattern() returns a regular expression from a sfCallable');
