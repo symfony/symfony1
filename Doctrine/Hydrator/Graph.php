@@ -316,17 +316,18 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             }
 
             if ($cache[$key]['isSimpleType']) {
-                $rowData[$dqlAlias][$fieldName] = $value;
+                $preparedValue = $value;
             } else {
-                $rowData[$dqlAlias][$fieldName] = $table->prepareValue(
-                        $fieldName, $value, $cache[$key]['type']);
+                $preparedValue = $table->prepareValue($fieldName, $value, $cache[$key]['type']);
             }
 
             // Ticket #1380
             // Hydrate aggregates in to the root component as well.
             // So we know that all aggregate values will always be available in the root component
             if ($agg) {
-                $rowData[$this->_rootAlias][$fieldName] = $rowData[$dqlAlias][$fieldName];
+                $rowData[$this->_rootAlias][$fieldName] = $preparedValue;
+            } else {
+                $rowData[$dqlAlias][$fieldName] = $preparedValue;
             }
 
             if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {
