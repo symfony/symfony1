@@ -61,8 +61,7 @@ class sfBasicSecurityFilter extends sfFilter
     { 
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $credential = is_array($credential) ? implode(', ', $credential) : $credential;
-        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires credentials "%s", forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), $credential, sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action')))));
+        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires credentials "%s", forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfYaml::dump($credential, 0), sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action')))));
       }
     
       // the user doesn't have access
