@@ -3,18 +3,18 @@ methods:
 
 names:
   input1:
-    required:     no
+    required:     false
     group:        group1
   input2:
-    required:     no
+    required:     false
     group:        group1
     validators:   [nameValidator]
 
   input3:
-    required:     no
+    required:     false
     group:        group2
   input4:
-    required:     no
+    required:     false
     group:        group2
 
 nameValidator:
