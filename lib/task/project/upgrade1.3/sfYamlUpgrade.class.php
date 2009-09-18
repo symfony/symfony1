@@ -35,6 +35,8 @@ class sfYamlUpgrade extends sfUpgrade
         '/^([^:]+: +)(?:off|no?|-)(\s*)$/im'      => '\\1false\\2',
       ));
 
+      $this->logSection('yaml', 'Trying to upgrade '.sfDebug::shortenFilePath($file));
+
       sfYaml::setSpecVersion('1.1');
       $yaml11 = sfYaml::load($original);
 
