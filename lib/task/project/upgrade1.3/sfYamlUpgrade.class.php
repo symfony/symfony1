@@ -54,22 +54,25 @@ class sfYamlUpgrade extends sfUpgrade
       {
         if ($original != $upgraded)
         {
-          $queue[$file] = $upgraded;
+          $this->getFilesystem()->touch($file);
+          file_put_contents($file, $upgraded);
         }
       }
       else
       {
-        $this->logSection('yaml', 'Unable to upgrade '.sfDebug::shortenFilePath($file));
+        $this->logSection('yaml', 'Unable to upgrade '.sfDebug::shortenFilePath($file), null, 'ERROR');
 
         // force project to use YAML 1.1 spec
         if ('1.1' != $specVersion)
         {
+          $specVersion = '1.1';
+
           $class = sfClassManipulator::fromFile(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
 
           $original = $class->getCode();
           $modified = $class->wrapMethod('setup', 'sfYaml::setSpecVersion(\'1.1\');');
 
-          if ($original != $modified)
+          if ($original != $modified && $this->askConfirmation(array(sprintf('Unable to automatically convert one of your YAML file (%s).', sfDebug::shortenFilePath($file)), 'Would you like to force YAML to be parsed with the 1.1 specification?')))
           {
             $this->logSection('yaml', 'Forcing YAML 1.1 spec');
 
@@ -83,33 +86,21 @@ class sfYamlUpgrade extends sfUpgrade
         }
 
         $success = false;
-        break;
       }
     }
 
-    if ($success)
+    if ($success && '1.1' == $specVersion)
     {
-      // upgrades were all successful, write changes to the filesystem
-      foreach ($queue as $file => $contents)
+      $file = sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
+      $original = file_get_contents($file);
+      $modified = preg_replace('/^\s*sfYaml::setSpecVersion\(\'1\.1\'\);\n/im', '', $original);
+
+      if ($original != $modified)
       {
+        $this->logSection('yaml', 'Removing setting of YAML 1.1 spec');
+
         $this->getFilesystem()->touch($file);
-        file_put_contents($file, $contents);
-      }
-
-      // remove 1.1 spec setting
-      if ('1.1' == $specVersion)
-      {
-        $file = sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
-        $original = file_get_contents($file);
-        $modified = preg_replace('/^\s*sfYaml::setSpecVersion\(\'1\.1\'\);\n/im', '', $original);
-
-        if ($original != $modified)
-        {
-          $this->logSection('yaml', 'Removing setting of YAML 1.1 spec');
-
-          $this->getFilesystem()->touch($file);
-          file_put_contents($file, $modified);
-        }
+        file_put_contents($file, $modified);
       }
     }
   }
