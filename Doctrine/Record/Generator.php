@@ -364,12 +364,12 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $definition['className'] = $this->_options['className'];
 
         $builder = new Doctrine_Import_Builder();
+        $builderOptions = isset($this->_options['builderOptions']) ? (array) $this->_options['builderOptions']:array();
+        $builder->setOptions($builderOptions);
 
         if ($this->_options['generateFiles']) {
             if (isset($this->_options['generatePath']) && $this->_options['generatePath']) {
                 $builder->setTargetPath($this->_options['generatePath']);
-                $builderOptions = isset($this->_options['builderOptions']) ? (array) $this->_options['builderOptions']:array();
-                $builder->setOptions($builderOptions);
                 $builder->buildRecord($definition);
             } else {
                 throw new Doctrine_Record_Exception('If you wish to generate files then you must specify the path to generate the files in.');
