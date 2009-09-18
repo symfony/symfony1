@@ -36,7 +36,7 @@ final class Doctrine
     /**
      * VERSION
      */
-    const VERSION                   = '1.2-DEV';
+    const VERSION                   = '1.2.0-ALPHA1';
 
     /**
      * ERROR CONSTANTS
