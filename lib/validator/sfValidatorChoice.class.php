@@ -25,6 +25,8 @@ class sfValidatorChoice extends sfValidatorBase
    *
    *  * choices:  An array of expected values (required)
    *  * multiple: true if the select tag must allow multiple selections
+   *  * min: The minimum number of values that need to be selected (this option is only active if multiple is true)
+   *  * max: The maximum number of values that need to be selected (this option is only active if multiple is true)
    *
    * @param array $options    An array of options
    * @param array $messages   An array of error messages
@@ -35,6 +37,11 @@ class sfValidatorChoice extends sfValidatorBase
   {
     $this->addRequiredOption('choices');
     $this->addOption('multiple', false);
+    $this->addOption('min');
+    $this->addOption('max');
+
+    $this->addMessage('min', 'At least %min% values must be selected (%count% values selected).');
+    $this->addMessage('max', 'At most %max% values must be selected (%count% values selected).');
   }
 
   /**
@@ -50,18 +57,7 @@ class sfValidatorChoice extends sfValidatorBase
 
     if ($this->getOption('multiple'))
     {
-      if (!is_array($value))
-      {
-        $value = array($value);
-      }
-
-      foreach ($value as $v)
-      {
-        if (!self::inChoices($v, $choices))
-        {
-          throw new sfValidatorError($this, 'invalid', array('value' => $v));
-        }
-      }
+      $value = $this->cleanMultiple($value, $choices);
     }
     else
     {
@@ -69,6 +65,43 @@ class sfValidatorChoice extends sfValidatorBase
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
+    }
+
+    return $value;
+  }
+
+  /**
+   * Cleans a value when multiple is true.
+   *
+   * @param  mixed $value The submitted value
+   *
+   * @return array The cleaned value
+   */
+  protected function cleanMultiple($value, $choices)
+  {
+    if (!is_array($value))
+    {
+      $value = array($value);
+    }
+
+    foreach ($value as $v)
+    {
+      if (!self::inChoices($v, $choices))
+      {
+        throw new sfValidatorError($this, 'invalid', array('value' => $v));
+      }
+    }
+
+    $count = count($value);
+
+    if ($this->hasOption('min') && $count < $this->getOption('min'))
+    {
+      throw new sfValidatorError($this, 'min', array('count' => $count, 'min' => $this->getOption('min')));
+    }
+
+    if ($this->hasOption('max') && $count > $this->getOption('max'))
+    {
+      throw new sfValidatorError($this, 'max', array('count' => $count, 'max' => $this->getOption('max')));
     }
 
     return $value;
