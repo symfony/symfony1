@@ -136,6 +136,7 @@ class sfDebug
     }
 
     return array(
+      'status'      => array('code' => $response->getStatusCode(), 'text' => $response->getStatusText()),
       'options'     => $response->getOptions(),
       'cookies'     => method_exists($response, 'getCookies')     ? $response->getCookies() : array(),
       'httpHeaders' => method_exists($response, 'getHttpHeaders') ? $response->getHttpHeaders() : array(),
