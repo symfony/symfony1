@@ -166,18 +166,27 @@ abstract class sfWebDebugPanel
       $file = $r->getFileName();
     }
 
-    if (null === $text)
-    {
-      $text = sfDebug::shortenFilePath($file);
-    }
+    $shortFile = sfDebug::shortenFilePath($file);
 
     if ($linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format')))
     {
-      $link = strtr($linkFormat, array('%f' => $file, '%l' => $line));
-      $text = sprintf('<a href="%s" class="sfWebDebugFileLink" title="Open this file">%s</a>', htmlspecialchars($link, ENT_QUOTES, sfConfig::get('sf_charset')), $text);
+      // return a link
+      return sprintf(
+        '<a href="%s" class="sfWebDebugFileLink" title="%s">%s</a>',
+        htmlspecialchars(strtr($linkFormat, array('%f' => $file, '%l' => $line)), ENT_QUOTES, sfConfig::get('sf_charset')),
+        htmlspecialchars($shortFile, ENT_QUOTES, sfConfig::get('sf_charset')),
+        null === $text ? $shortFile : $text);
     }
-
-    return $text;
+    else if (null === $text)
+    {
+      // return the shortened file path
+      return $shortFile;
+    }
+    else
+    {
+      // return the provided text with the shortened file path as a tooltip
+      return sprintf('<span title="%s">%s</span>', $shortFile, $text);
+    }
   }
 
   /**
