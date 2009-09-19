@@ -97,7 +97,10 @@ class sfWebDebugPanelView extends sfWebDebugPanel
    */
   public function getTitle()
   {
-    return 'view';
+    if (count($this->actions) || count($this->partials))
+    {
+      return 'view';
+    }
   }
 
   /**
