@@ -50,18 +50,13 @@ class sfWebDebugPanelLogs extends sfWebDebugPanel
         $this->setStatus($log['priority']);
       }
 
-      if (strpos($type = $log['type'], 'sf') === 0)
-      {
-        $type = substr($type, 2);
-      }
-
       ++$line_nb;
       $html .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s %s</td></tr>\n",
         ucfirst($priority),
         $log['type'],
         $line_nb,
         '<img src="'.$this->webDebug->getOption('image_root_path').'/'.$priority.'.png" alt="'.ucfirst($priority).'"/>',
-        $type,
+        class_exists($log['type'], false) ? $this->formatFileLink($log['type']) : $log['type'],
         $this->formatLogLine($log['message']),
         $this->getToggleableDebugStack($log['debug_backtrace'])
       );

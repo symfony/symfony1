@@ -623,7 +623,16 @@ EOF;
 {
   width: 1%;
   white-space: nowrap;
+}
+
+.sfWebDebugLogType, #sfWebDebug .sfWebDebugLogType a
+{
   color: darkgreen;
+}
+
+#sfWebDebug .sfWebDebugLogType a:hover
+{
+  text-decoration: underline;
 }
 
 .sfWebDebugLogInfo
