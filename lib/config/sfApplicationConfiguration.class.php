@@ -333,10 +333,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   public function getControllerDirs($moduleName)
   {
     $dirs = array();
-    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
-    {
-      $dirs[$key.'/'.$moduleName.'/actions'] = $value;
-    }
 
     $dirs[sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/actions'] = false;             // application
 
@@ -363,10 +359,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   public function getLibDirs($moduleName)
   {
     $dirs = array();
-    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
-    {
-      $dirs[] = $key.'/'.$moduleName.'/lib';
-    }
 
     $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/lib';                  // application
     $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/lib')); // plugins
@@ -386,10 +378,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   public function getTemplateDirs($moduleName)
   {
     $dirs = array();
-    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
-    {
-      $dirs[] = $key.'/'.$moduleName.'/templates';
-    }
 
     $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';                  // application
     $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/templates')); // plugins
