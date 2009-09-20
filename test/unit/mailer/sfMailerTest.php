@@ -15,7 +15,7 @@ require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransport.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransportQueue.class.php';
 
-$t = new lime_test(28);
+$t = new lime_test(29);
 
 $dispatcher = new sfEventDispatcher();
 
@@ -41,6 +41,16 @@ $mailer = new sfMailer($dispatcher, array(
   'transport'         => array('class' => 'TestMailerTransport', 'param' => array('foo' => 'bar', 'bar' => 'foo')),
 ));
 $t->is($mailer->getTransport()->getTransport()->getFoo(), 'bar', '__construct() passes the parameters to the main transport');
+
+// main transport
+$mailer = new sfMailer($dispatcher, array(
+  'logging'           => true,
+  'delivery_strategy' => 'queue',
+  'queue_class'       => 'TestMailerTransportQueue',
+  'queue_options'     => array('model' => 'TestMailMessage'),
+  'transport'         => array('class' => 'Swift_SmtpTransport', 'param' => array('username' => 'foo')),
+));
+$t->is($mailer->getTransport()->getTransport()->getUsername(), 'foo', '__construct() passes the parameters to the main transport');
 
 // queue
 try

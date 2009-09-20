@@ -69,6 +69,16 @@ class sfMailer extends Swift_Mailer
         {
           $transport->$method($value);
         }
+        elseif (method_exists($transport, 'getExtensionHandlers'))
+        {
+          foreach ($transport->getExtensionHandlers() as $handler)
+          {
+            if (in_array(strtolower($method), array_map('strtolower', (array) $handler->exposeMixinMethods())))
+            {
+              $transport->$method($value);
+            }
+          }
+        }
       }
     }
 
