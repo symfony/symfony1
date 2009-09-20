@@ -54,6 +54,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       $this->checkLock();
     }
 
+    if (file_exists($file = sfConfig::get('sf_app_cache_dir').'/config/configuration.php'))
+    {
+      $this->cache = require $file;
+    }
+
     $this->initialize();
 
     // store current sfConfig values
@@ -332,6 +337,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function getControllerDirs($moduleName)
   {
+    if (null !== $this->cache['getControllerDirs'][$moduleName])
+    {
+      return $this->cache['getControllerDirs'][$moduleName];
+    }
+
     $dirs = array();
 
     $dirs[sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/actions'] = false;             // application
@@ -426,6 +436,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function getTemplateDir($moduleName, $templateFile)
   {
+    if (null !== $this->cache['getTemplateDir'][$moduleName][$templateFile])
+    {
+      return $this->cache['getTemplateDir'][$moduleName][$templateFile];
+    }
+
     foreach ($this->getTemplateDirs($moduleName) as $dir)
     {
       if (is_readable($dir.'/'.$templateFile))

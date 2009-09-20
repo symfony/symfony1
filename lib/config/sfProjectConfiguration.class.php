@@ -25,7 +25,8 @@ class sfProjectConfiguration
     $pluginPaths           = array(),
     $overriddenPluginPaths = array(),
     $pluginConfigurations  = array(),
-    $pluginsLoaded         = false;
+    $pluginsLoaded         = false,
+    $cache                 = null;
 
   static protected
     $active = null;
@@ -432,6 +433,11 @@ class sfProjectConfiguration
    */
   public function getPluginPaths()
   {
+    if (null !== $this->cache['getPluginPaths'])
+    {
+      return $this->cache['getPluginPaths'];
+    }
+
     if (array_key_exists('', $this->pluginPaths))
     {
       return $this->pluginPaths[''];
