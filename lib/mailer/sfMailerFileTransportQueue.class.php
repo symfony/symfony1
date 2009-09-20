@@ -70,7 +70,6 @@ class sfMailerFileTransportQueue extends sfMailerTransportQueue
     $count = 0;
     $messages = array();
     $options = array_merge($this->options, $options);
-    $max = isset($options['max']) && $options['max'] ? $options['max'] : null;
 
     if (!file_exists($options['path']))
     {
