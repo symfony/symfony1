@@ -99,7 +99,7 @@ class sfWebDebugPanelView extends sfWebDebugPanel
   {
     if (count($this->actions) || count($this->partials))
     {
-      return 'view';
+      return '<img src="'.$this->webDebug->getOption('image_root_path').'/view.png" alt="View Layer" /> view';
     }
   }
 
