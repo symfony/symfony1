@@ -9,7 +9,7 @@
  */
 
 /**
- * Deploys a project to another server.
+ * Optimizes a project for better performance.
  *
  * @package    symfony
  * @subpackage task
@@ -30,13 +30,15 @@ class sfProjectOptimizeTask extends sfBaseTask
 
     $this->namespace = 'project';
     $this->name = 'optimize';
-    $this->briefDescription = 'Deploys a project to another server';
+    $this->briefDescription = 'Optimizes a project for better performance';
 
     $this->detailedDescription = <<<EOF
-The [project:deploy|INFO] task deploys a project on a server:
+The [project:optimize|INFO] optimizes a project for better performance:
 
-  [./symfony project:deploy production|INFO]
+  [./symfony project:optimizes frontend prod|INFO]
 
+This task should only be used on a production server. Don't forget to re-run
+the task each time the project changes.
 EOF;
   }
 
