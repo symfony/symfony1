@@ -184,7 +184,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
         $relation = $record->getTable()->getRelation($relationName); 
-        $rowKey = $relation->getClass() . $rowKey;
+        $rowKey = $this->_getRowKeyPrefix($relation->getTable()) . $rowKey;
 
         if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception(
@@ -194,12 +194,12 @@ class Doctrine_Data_Import extends Doctrine_Data
 
         $relatedRowKeyObject = $this->_importedObjects[$rowKey];
 
-        if ($relation->getClass() !== get_class($relatedRowKeyObject)) {
-            if ( ! is_subclass_of($relatedRowKeyObject, $relation->getClass())) {
-                throw new Doctrine_Data_Exception(sprintf(
-                    'Class referred to in "%s" is expected to be "%s" and "%s" was given',
-                    $referringRowKey, $relation->getClass(), get_class($relatedRowKeyObject)));
-            }
+        $relationClass = $relation->getClass();
+        if ( ! $relatedRowKeyObject instanceof $relationClass) {
+            throw new Doctrine_Data_Exception(sprintf(
+                'Class referred to in "%s" is expected to be "%s" and "%s" was given',
+                $referringRowKey, $relation->getClass(), get_class($relatedRowKeyObject)
+            ));
         }
 
         return $relatedRowKeyObject;
@@ -314,10 +314,12 @@ class Doctrine_Data_Import extends Doctrine_Data
 
         $buildRows = array();
         foreach ($this->_rows as $className => $classRows) {
+            $rowKeyPrefix = $this->_getRowKeyPrefix(Doctrine::getTable($className));
             foreach ($classRows as $rowKey => $row) {
-                $buildRows[$className . $rowKey] = $row;
-                $this->_importedObjects[$className . $rowKey] = new $className();
-                $this->_importedObjects[$className . $rowKey]->state('TDIRTY');
+                $rowKey = $rowKeyPrefix . $rowKey;
+                $buildRows[$rowKey] = $row;
+                $this->_importedObjects[$rowKey] = new $className();
+                $this->_importedObjects[$rowKey]->state('TDIRTY');
             }
         }
 
@@ -374,9 +376,11 @@ class Doctrine_Data_Import extends Doctrine_Data
                 unset($nestedSet['children']);
             }
 
-            $record = $this->_importedObjects[$model . $rowKey];
+            $rowKey = $this->_getRowKeyPrefix(Doctrine::getTable($model)) . $rowKey;
+
+            $record = $this->_importedObjects[$rowKey];
             // remove this nested set from _importedObjects so it's not processed in the save routine for normal objects
-            unset($this->_importedObjects[$model . $rowKey]);
+            unset($this->_importedObjects[$rowKey]);
 
             if ( ! $parent) {
                 $record->save(); // save, so that createRoot can do: root id = id
@@ -389,5 +393,16 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $this->_loadNestedSetData($model, $children, $record);
             }
         }
+    }
+
+    /**
+     * Returns the prefix to use when indexing an object from the supplied table.
+     *
+     * @param Doctrine_Table $table
+     * @return string
+     */
+    protected function _getRowKeyPrefix(Doctrine_Table $table)
+    {
+        return sprintf('(%s) ', $table->getTableName());
     }
 }
