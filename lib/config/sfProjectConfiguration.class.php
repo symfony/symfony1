@@ -60,6 +60,7 @@ class sfProjectConfiguration
     $this->setup();
 
     $this->loadPlugins();
+    $this->setupPlugins();
   }
 
   /**
@@ -98,6 +99,15 @@ class sfProjectConfiguration
     }
 
     $this->pluginsLoaded = true;
+  }
+
+  /**
+   * Sets up plugin configurations.
+   *
+   * Override this method if you want to customize plugin configurations.
+   */
+  public function setupPlugins()
+  {
   }
 
   /**
