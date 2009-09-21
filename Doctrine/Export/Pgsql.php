@@ -88,7 +88,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         } else {
             $query .= ' NOT DEFERRABLE';
         }
-        if (isset($definition['feferred'])) {
+        if (isset($definition['deferred'])) {
             $query .= ' INITIALLY DEFERRED';
         } else {
             $query .= ' INITIALLY IMMEDIATE';
