@@ -104,11 +104,14 @@ default:
       logging:           %SF_LOGGING_ENABLED%
       charset:           %SF_CHARSET%
       delivery_strategy: realtime
-      transport:
-        class: Swift_SmtpTransport
-        param:
-          host:       localhost
-          port:       25
-          encryption: ~
-          username:   ~
-          password:   ~
+      transports:
+        realtime:
+          class: Swift_SmtpTransport
+          param:
+            host:       localhost
+            port:       25
+            encryption: ~
+            username:   ~
+            password:   ~
+          queue:
+            
