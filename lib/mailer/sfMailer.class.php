@@ -20,9 +20,19 @@
  */
 class sfMailer extends Swift_Mailer
 {
+  const
+    REALTIME       = 'realtime',
+    SPOOL          = 'spool',
+    SINGLE_ADDRESS = 'single_address',
+    NONE           = 'none';
+
   protected
-    $logger  = null,
-    $options = array();
+    $spool             = null,
+    $logger            = null,
+    $strategy          = 'realtime',
+    $address           = '',
+    $realtimeTransport = null,
+    $force             = false;
 
   /**
    * Constructor.
@@ -30,10 +40,10 @@ class sfMailer extends Swift_Mailer
    * Available options:
    *
    *  * charset: The default charset to use for messages
-   *  * logging: Whether to enable logging
+   *  * logging: Whether to enable logging or not
    *  * delivery_strategy: The delivery strategy to use
-   *  * queue_class: The queue transport class (for the queue strategy)
-   *  * queue_options: The options to pass to the queue constructor
+   *  * spool_class: The spool class (for the spool strategy)
+   *  * spool_arguments: The arguments to pass to the spool constructor
    *  * delivery_address: The email address to use for the single_address strategy
    *  * transport: The main transport configuration
    *  *   * class: The main transport class
@@ -45,7 +55,7 @@ class sfMailer extends Swift_Mailer
   public function __construct(sfEventDispatcher $dispatcher, $options)
   {
     // options
-    $this->options = array_merge(array(
+    $options = array_merge(array(
       'charset' => 'UTF-8',
       'logging' => false,
       'delivery_strategy' => 'realtime',
@@ -55,14 +65,18 @@ class sfMailer extends Swift_Mailer
        ),
     ), $options);
 
-    $this->options['delivery_strategy'] = sfMailerTransport::validateDeliveryStrategy($this->options['delivery_strategy']);
+    $this->strategy = @constant('sfMailer::'.strtoupper($options['delivery_strategy']));
+    if (!$this->strategy)
+    {
+      throw new InvalidArgumentException(sprintf('Unknown mail delivery strategy "%s" (should be one of realtime, spool, single_address, or none)', $options['delivery_strategy']));
+    }
 
     // transport
-    $class = $this->options['transport']['class'];
+    $class = $options['transport']['class'];
     $transport = new $class();
-    if (isset($this->options['transport']['param']))
+    if (isset($options['transport']['param']))
     {
-      foreach ($this->options['transport']['param'] as $key => $value)
+      foreach ($options['transport']['param'] as $key => $value)
       {
         $method = 'set'.ucfirst($key);
         if (method_exists($transport, $method))
@@ -81,43 +95,130 @@ class sfMailer extends Swift_Mailer
         }
       }
     }
+    $this->realtimeTransport = $transport;
 
-    $queue = null;
-    if (sfMailerTransport::QUEUE == $this->options['delivery_strategy'])
+    if (sfMailer::SPOOL == $this->strategy)
     {
-      if (!isset($this->options['queue_class']))
+      if (!isset($options['spool_class']))
       {
-        throw new InvalidArgumentException('For the queue mail delivery strategy, you must also define a queue_class option');
+        throw new InvalidArgumentException('For the spool mail delivery strategy, you must also define a spool_class option');
       }
-      $options = isset($this->options['queue_options']) ? $this->options['queue_options'] : array();
+      $arguments = isset($options['spool_arguments']) ? $options['spool_arguments'] : array();
 
-      $queue = new $this->options['queue_class']($options);
+      if ($options)
+      {
+        $r = new ReflectionClass($options['spool_class']);
+        $this->spool = $r->newInstanceArgs($arguments);
+      }
+      else
+      {
+        $this->spool = new $options['spool_class'];
+      }
+
+      $transport = new Swift_SpoolTransport($this->spool);
     }
-
-    $transport = new sfMailerTransport($this->options['delivery_strategy'], $transport, $queue);
-
-    if (sfMailerTransport::SINGLE_ADDRESS == $this->options['delivery_strategy'])
+    elseif (sfMailer::SINGLE_ADDRESS == $this->strategy)
     {
-      if (!isset($this->options['delivery_address']))
+      if (!isset($options['delivery_address']))
       {
         throw new InvalidArgumentException('For the single_address mail delivery strategy, you must also define a delivery_address option');
       }
 
-      $transport->setDeliveryAddress($this->options['delivery_address']);
-    }
+      $this->address = $options['delivery_address'];
 
-    // logger
-    if ($this->options['logging'])
-    {
-      $transport->setLogger(new sfMailerMessageLoggerPlugin($dispatcher));
+      $transport->registerPlugin(new Swift_Plugins_RedirectingPlugin($this->address));
     }
-
-    // preferences
-    Swift_Preferences::getInstance()->setCharset($this->options['charset']);
 
     parent::__construct($transport);
 
+    // logger
+    if ($options['logging'])
+    {
+      $this->logger = new sfMailerMessageLoggerPlugin($dispatcher);
+
+      $transport->registerPlugin($this->logger);
+    }
+
+    if (sfMailer::NONE == $this->strategy)
+    {
+      // must be registered after logging
+      $transport->registerPlugin(new Swift_Plugins_BlackholePlugin());
+    }
+
+    // preferences
+    Swift_Preferences::getInstance()->setCharset($options['charset']);
+
     $dispatcher->notify(new sfEvent($this, 'mailer.configure'));
+  }
+
+  /**
+   * Gets the realtime transport instance.
+   *
+   * @return Swift_Transport The realtime transport instance.
+   */
+  public function getRealtimeTransport()
+  {
+    return $this->realtimeTransport;
+  }
+
+  /**
+   * Sets the realtime transport instance.
+   *
+   * @param Swift_Transport $transport The realtime transport instance.
+   */
+  public function setRealtimeTransport(Swift_Transport $transport)
+  {
+    $this->realtimeTransport = $transport;
+  }
+
+  /**
+   * Gets the logger instance.
+   *
+   * @return sfMailerMessageLoggerPlugin The logger instance.
+   */
+  public function getLogger()
+  {
+    return $this->logger;
+  }
+
+  /**
+   * Sets the logger instance.
+   *
+   * @param sfMailerMessageLoggerPlugin $logger The logger instance.
+   */
+  public function setLogger($logger)
+  {
+    $this->logger = $logger;
+  }
+
+  /**
+   * Gets the delivery strategy.
+   *
+   * @return string The delivery strategy
+   */
+  public function getDeliveryStrategy()
+  {
+    return $this->strategy;
+  }
+
+  /**
+   * Gets the delivery address.
+   *
+   * @return string The delivery address
+   */
+  public function getDeliveryAddress()
+  {
+    return $this->address;
+  }
+
+  /**
+   * Sets the delivery address.
+   *
+   * @param string $address The delivery address
+   */
+  public function setDeliveryAddress($address)
+  {
+    $this->address = $address;
   }
 
   /**
@@ -132,7 +233,7 @@ class sfMailer extends Swift_Mailer
    */
   public function compose($from = null, $to = null, $subject = null, $body = null)
   {
-    return sfMailerMessage::newInstance()
+    return Swift_Message::newInstance()
       ->setFrom($from)
       ->setTo($to)
       ->setSubject($subject)
@@ -156,42 +257,54 @@ class sfMailer extends Swift_Mailer
   }
 
   /**
-   * Send the current queued mails.
-   *
-   * The return value is the number of recipients who were accepted for delivery.
-   *
-   * @param array    $options The options to pass to the queue
-   * @param string[] &$failedRecipients An array of failures by-reference
-   *
-   * @return int The number of sent emails
-   */
-  public function sendQueue($options = array(), &$failedRecipients = null)
-  {
-    if (!$this->getTransport()->getTransportQueue())
-    {
-      throw new LogicException('You cannot send mails in queue if no mailer transport queue is defined.');
-    }
-
-    $transport = $this->getTransport()->getTransport();
-
-    if (!$transport->isStarted())
-    {
-      $transport->start();
-    }
-
-    return $this->getTransport()->getTransportQueue()->doSend($transport, $failedRecipients, $options);
-  }
-
-  /**
    * Forces the next call to send() to use the realtime strategy.
    *
    * @return sfMailer The current sfMailer instance
    */
   public function sendNextImmediately()
   {
-    $this->getTransport()->sendNextImmediately();
+    $this->force = true;
 
     return $this;
+  }
+
+  /**
+   * Sends the given message.
+   *
+   * @param Swift_Transport $transport         A transport instance
+   * @param string[]        &$failedRecipients An array of failures by-reference
+   *
+   * @return int|false The number of sent emails
+   */
+  public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+  {
+    if ($this->force)
+    {
+      $this->force = false;
+
+      return $this->realtimeTransport->send($message, $failedRecipients);
+    }
+
+    return parent::send($message, $failedRecipients);
+  }
+
+  /**
+   * Sends the current messages in the spool.
+   *
+   * The return value is the number of recipients who were accepted for delivery.
+   *
+   * @param string[] &$failedRecipients An array of failures by-reference
+   *
+   * @return int The number of sent emails
+   */
+  public function flushQueue(&$failedRecipients = null)
+  {
+    if (self::SPOOL != $this->strategy)
+    {
+      throw new LogicException(sprintf('You cannot only send message in the spools if the delivery strategy is "spool" (%s is the current strategy).', $this->strategy));
+    }
+
+    return $this->spool->flushQueue($this->realtimeTransport, $failedRecipients);
   }
 
   static public function initialize()

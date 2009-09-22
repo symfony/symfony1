@@ -34,7 +34,7 @@ class sfTesterMailer extends sfTester
    */
   public function initialize()
   {
-    $this->logger = $this->browser->getContext()->getMailer()->getTransport()->getLogger();
+    $this->logger = $this->browser->getContext()->getMailer()->getLogger();
 
     if ($this->logger->countMessages())
     {

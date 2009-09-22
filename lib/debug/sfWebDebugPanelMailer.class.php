@@ -34,7 +34,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
   public function getTitle()
   {
-    if ($this->mailer && $logger = $this->mailer->getTransport()->getLogger())
+    if ($this->mailer && ($logger = $this->mailer->getLogger()) && $logger->countMessages())
     {
       return '<img src="'.$this->webDebug->getOption('image_root_path').'/email.png" alt="Emailer" /> '.$logger->countMessages();
     }
@@ -47,7 +47,7 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
 
   public function getPanelContent()
   {
-    $logger = $this->mailer->getTransport()->getLogger();
+    $logger = $this->mailer->getLogger();
 
     if (!$logger || !$messages = $logger->getMessages())
     {
@@ -57,13 +57,13 @@ class sfWebDebugPanelMailer extends sfWebDebugPanel
     $html = array();
 
     // configuration information
-    $strategy = $this->mailer->getTransport()->getDeliveryStrategy();
+    $strategy = $this->mailer->getDeliveryStrategy();
     $html[] = '<h2>Configuration</h2>';
     $html[] = '<em>Delivery strategy</em>: '.$strategy;
 
-    if (sfMailerTransport::SINGLE_ADDRESS == $strategy)
+    if (sfMailer::SINGLE_ADDRESS == $strategy)
     {
-      $html[] = '<em>All emails are delivered to</em>: '.$this->mailer->getTransport()->getDeliveryAddress();
+      $html[] = ' - <em>all emails are delivered to</em>: '.$this->mailer->getDeliveryAddress();
     }
 
     // email sent

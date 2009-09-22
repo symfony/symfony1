@@ -46,7 +46,7 @@ EOF;
 
     $mailer = $this->initializeMailer();
 
-    $sent = $mailer->sendQueue($options);
+    $sent = $mailer->flushQueue();
 
     $this->logSection('project', sprintf('sent %s emails', $sent));
   }

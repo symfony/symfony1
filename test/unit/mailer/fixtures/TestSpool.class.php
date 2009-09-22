@@ -7,30 +7,36 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class TestMailerTransportQueue extends sfMailerTransportQueue
+class TestSpool implements Swift_Spool
 {
   protected
-    $model = null,
     $messages = array();
 
-  public function setModel($model)
+  public function __construct()
   {
-    $this->model = $model;
   }
 
-  public function getModel()
+  public function isStarted()
   {
-    return $this->model;
+    return true;
   }
 
-  public function store(Swift_Mime_Message $message)
+  public function start()
+  {
+  }
+
+  public function stop()
+  {
+  }
+
+  public function queueMessage(Swift_Mime_Message $message)
   {
     $this->messages[] = $message;
 
     return 0;
   }
 
-  public function doSend(Swift_Transport $transport, &$failedRecipients = null, $max = 0)
+  public function flushQueue(Swift_Transport $transport, &$failedRecipients = null)
   {
     foreach ($this->messages as $message)
     {

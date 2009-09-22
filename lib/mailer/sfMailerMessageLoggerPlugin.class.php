@@ -67,6 +67,11 @@ class sfMailerMessageLoggerPlugin implements Swift_Events_SendListener
    */
   public function beforeSendPerformed(Swift_Events_SendEvent $evt)
   {
+    $this->messages[] = $message = clone $evt->getMessage();
+
+    $to = null === $message->getTo() ? '' : implode(', ', array_keys($message->getTo()));
+
+    $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Sending email "%s" to "%s"', $message->getSubject(), $to))));
   }
 
   /**
@@ -76,10 +81,5 @@ class sfMailerMessageLoggerPlugin implements Swift_Events_SendListener
    */
   public function sendPerformed(Swift_Events_SendEvent $evt)
   {
-    $this->messages[] = $message = clone $evt->getMessage();
-
-    $to = null === $message->getTo() ? '' : implode(', ', array_keys($message->getTo()));
-
-    $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Sent email "%s" to "%s"', $message->getSubject(), $to))));
   }
 }

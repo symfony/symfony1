@@ -11,11 +11,11 @@ require_once dirname(__FILE__) . '/../../bootstrap/unit.php';
 require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift.php';
 Swift::registerAutoload();
 sfMailer::initialize();
-require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 require_once dirname(__FILE__).'/fixtures/TestMailerTransport.class.php';
-require_once dirname(__FILE__).'/fixtures/TestMailerTransportQueue.class.php';
+require_once dirname(__FILE__).'/fixtures/TestSpool.class.php';
+require_once dirname(__FILE__).'/fixtures/TestMailMessage.class.php';
 
-$t = new lime_test(29);
+$t = new lime_test(34);
 
 $dispatcher = new sfEventDispatcher();
 
@@ -35,58 +35,56 @@ catch (InvalidArgumentException $e)
 // main transport
 $mailer = new sfMailer($dispatcher, array(
   'logging'           => true,
-  'delivery_strategy' => 'queue',
-  'queue_class'       => 'TestMailerTransportQueue',
-  'queue_options'     => array('model' => 'TestMailMessage'),
+  'delivery_strategy' => 'realtime',
   'transport'         => array('class' => 'TestMailerTransport', 'param' => array('foo' => 'bar', 'bar' => 'foo')),
 ));
-$t->is($mailer->getTransport()->getTransport()->getFoo(), 'bar', '__construct() passes the parameters to the main transport');
+$t->is($mailer->getTransport()->getFoo(), 'bar', '__construct() passes the parameters to the main transport');
 
-// main transport
+// spool
 $mailer = new sfMailer($dispatcher, array(
   'logging'           => true,
-  'delivery_strategy' => 'queue',
-  'queue_class'       => 'TestMailerTransportQueue',
-  'queue_options'     => array('model' => 'TestMailMessage'),
+  'delivery_strategy' => 'spool',
+  'spool_class'       => 'TestSpool',
+  'spool_arguments'   => array('TestMailMessage'),
   'transport'         => array('class' => 'Swift_SmtpTransport', 'param' => array('username' => 'foo')),
 ));
-$t->is($mailer->getTransport()->getTransport()->getUsername(), 'foo', '__construct() passes the parameters to the main transport');
+$t->is($mailer->getRealTimeTransport()->getUsername(), 'foo', '__construct() passes the parameters to the main transport');
 
-// queue
 try
 {
-  $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue'));
+  $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'spool'));
 
-  $t->fail('__construct() throws an InvalidArgumentException exception if the queue_class option is not set with the queue delivery strategy');
+  $t->fail('__construct() throws an InvalidArgumentException exception if the spool_class option is not set with the spool delivery strategy');
 }
 catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an InvalidArgumentException exception if the queue_class option is not set with the queue delivery strategy');
+  $t->pass('__construct() throws an InvalidArgumentException exception if the spool_class option is not set with the spool delivery strategy');
 }
 
-$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'queue', 'queue_class' => 'TestMailerTransportQueue'));
-$t->is(get_class($mailer->getTransport()->getTransportQueue()), 'TestMailerTransportQueue', '__construct() recognizes the queue delivery strategy');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'spool', 'spool_class' => 'TestSpool'));
+$t->is(get_class($mailer->getTransport()), 'Swift_SpoolTransport', '__construct() recognizes the spool delivery strategy');
+$t->is(get_class($mailer->getTransport()->getSpool()), 'TestSpool', '__construct() recognizes the spool delivery strategy');
 
 // single address
 try
 {
   $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'single_address'));
 
-  $t->fail('__construct() throws an InvalidArgumentException exception if the delivery_address option is not set with the queue single_address strategy');
+  $t->fail('__construct() throws an InvalidArgumentException exception if the delivery_address option is not set with the spool single_address strategy');
 }
 catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an InvalidArgumentException exception if the delivery_address option is not set with the queue single_address strategy');
+  $t->pass('__construct() throws an InvalidArgumentException exception if the delivery_address option is not set with the spool single_address strategy');
 }
 
 $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'single_address', 'delivery_address' => 'foo@example.com'));
-$t->is($mailer->getTransport()->getDeliveryAddress(), 'foo@example.com', '__construct() recognizes the single_address delivery strategy');
+$t->is($mailer->getDeliveryAddress(), 'foo@example.com', '__construct() recognizes the single_address delivery strategy');
 
 // logging
 $mailer = new sfMailer($dispatcher, array('logging' => false));
-$t->is($mailer->getTransport()->getLogger(), null, '__construct() disables logging if the logging option is set to false');
+$t->is($mailer->getLogger(), null, '__construct() disables logging if the logging option is set to false');
 $mailer = new sfMailer($dispatcher, array('logging' => true));
-$t->ok($mailer->getTransport()->getLogger() instanceof sfMailerMessageLoggerPlugin, '__construct() enables logging if the logging option is set to true');
+$t->ok($mailer->getLogger() instanceof sfMailerMessageLoggerPlugin, '__construct() enables logging if the logging option is set to true');
 
 // ->compose()
 $t->diag('->compose()');
@@ -102,62 +100,85 @@ $t->is($message->getBody(), 'Body', '->compose() takes the body as its fourth ar
 $t->diag('->composeAndSend()');
 $mailer = new sfMailer($dispatcher, array('logging' => true, 'delivery_strategy' => 'none'));
 $mailer->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
-$t->is($mailer->getTransport()->getLogger()->countMessages(), 1, '->composeAndSend() composes and sends the message');
-$messages = $mailer->getTransport()->getLogger()->getMessages();
+$t->is($mailer->getLogger()->countMessages(), 1, '->composeAndSend() composes and sends the message');
+$messages = $mailer->getLogger()->getMessages();
 $t->is($messages[0]->getFrom(), array('from@example.com' => ''), '->composeAndSend() takes the from address as its first argument');
 $t->is($messages[0]->getTo(), array('to@example.com' => ''), '->composeAndSend() takes the to address as its second argument');
 $t->is($messages[0]->getSubject(), 'Subject', '->composeAndSend() takes the subject as its third argument');
 $t->is($messages[0]->getBody(), 'Body', '->composeAndSend() takes the body as its fourth argument');
 
-// ->sendQueue()
-$t->diag('->sendQueue()');
+// ->flushQueue()
+$t->diag('->flushQueue()');
 $mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'none'));
 $mailer->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
 try
 {
-  $mailer->sendQueue();
+  $mailer->flushQueue();
 
-  $t->fail('->sendQueue() throws a LogicException exception if the delivery_strategy is not queue');
+  $t->fail('->flushQueue() throws a LogicException exception if the delivery_strategy is not spool');
 }
 catch (LogicException $e)
 {
-  $t->pass('->sendQueue() throws a LogicException exception if the delivery_strategy is not queue');
+  $t->pass('->flushQueue() throws a LogicException exception if the delivery_strategy is not spool');
 }
 
 $mailer = new sfMailer($dispatcher, array(
-  'delivery_strategy' => 'queue',
-  'queue_class'       => 'TestMailerTransportQueue',
-  'queue_options'     => array('model' => 'TestMailMessage'),
+  'delivery_strategy' => 'spool',
+  'spool_class'       => 'TestSpool',
+  'spool_arguments'   => array('TestMailMessage'),
   'transport'         => array('class' => 'TestMailerTransport'),
 ));
-$transportNormal = $mailer->getTransport()->getTransport();
-$transportQueue = $mailer->getTransport()->getTransportQueue();
+$transport = $mailer->getRealtimeTransport();
+$spool = $mailer->getTransport()->getSpool();
 
 $mailer->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
-$t->is($transportQueue->getQueuedCount(), 1, '->sendQueue() sends messages in the queue');
-$t->is($transportNormal->getSentCount(), 0, '->sendQueue() sends messages in the queue');
-$mailer->sendQueue();
-$t->is($transportQueue->getQueuedCount(), 0, '->sendQueue() sends messages in the queue');
-$t->is($transportNormal->getSentCount(), 1, '->sendQueue() sends messages in the queue');
+$t->is($spool->getQueuedCount(), 1, '->flushQueue() sends messages in the spool');
+$t->is($transport->getSentCount(), 0, '->flushQueue() sends messages in the spool');
+$mailer->flushQueue();
+$t->is($spool->getQueuedCount(), 0, '->flushQueue() sends messages in the spool');
+$t->is($transport->getSentCount(), 1, '->flushQueue() sends messages in the spool');
 
 // ->sendNextImmediately()
 $t->diag('->sendNextImmediately()');
 $mailer = new sfMailer($dispatcher, array(
   'logging'           => true,
-  'delivery_strategy' => 'queue',
-  'queue_class'       => 'TestMailerTransportQueue',
-  'queue_options'     => array('model' => 'TestMailMessage'),
+  'delivery_strategy' => 'spool',
+  'spool_class'       => 'TestSpool',
+  'spool_arguments'   => array('TestMailMessage'),
   'transport'         => array('class' => 'TestMailerTransport'),
 ));
-$transportNormal = $mailer->getTransport()->getTransport();
-$transportQueue = $mailer->getTransport()->getTransportQueue();
+$transport = $mailer->getRealtimeTransport();
+$spool = $mailer->getTransport()->getSpool();
 $t->is($mailer->sendNextImmediately(), $mailer, '->sendNextImmediately() implements a fluid interface');
 $mailer->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
-$t->is($transportQueue->getQueuedCount(), 0, '->sendNextImmediately() bypasses the queue');
-$t->is($transportNormal->getSentCount(), 1, '->sendNextImmediately() bypasses the queue');
-$transportNormal->reset();
-$transportQueue->reset();
+$t->is($spool->getQueuedCount(), 0, '->sendNextImmediately() bypasses the spool');
+$t->is($transport->getSentCount(), 1, '->sendNextImmediately() bypasses the spool');
+$transport->reset();
+$spool->reset();
 
 $mailer->composeAndSend('from@example.com', 'to@example.com', 'Subject', 'Body');
-$t->is($transportQueue->getQueuedCount(), 1, '->sendNextImmediately() bypasses the queue but only for the very next message');
-$t->is($transportNormal->getSentCount(), 0, '->sendNextImmediately() bypasses the queue but only for the very next message');
+$t->is($spool->getQueuedCount(), 1, '->sendNextImmediately() bypasses the spool but only for the very next message');
+$t->is($transport->getSentCount(), 0, '->sendNextImmediately() bypasses the spool but only for the very next message');
+
+// ->getDeliveryAddress() ->setDeliveryAddress()
+$t->diag('->getDeliveryAddress() ->setDeliveryAddress()');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'none'));
+$mailer->setDeliveryAddress('foo@example.com');
+$t->is($mailer->getDeliveryAddress(), 'foo@example.com', '->setDeliveryAddress() sets the delivery address for the single_address strategy');
+
+// ->getLogger() ->setLogger()
+$t->diag('->getLogger() ->setLogger()');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'none'));
+$mailer->setLogger($logger = new sfMailerMessageLoggerPlugin($dispatcher));
+$t->ok($mailer->getLogger() === $logger, '->setLogger() sets the mailer logger');
+
+// ->getDeliveryStrategy()
+$t->diag('->getDeliveryStrategy()');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'none'));
+$t->is($mailer->getDeliveryStrategy(), 'none', '->getDeliveryStrategy() returns the delivery strategy');
+
+// ->getRealtimeTransport() ->setRealtimeTransport()
+$t->diag('->getRealtimeTransport() ->setRealtimeTransport()');
+$mailer = new sfMailer($dispatcher, array('delivery_strategy' => 'none'));
+$mailer->setRealtimeTransport($transport = new TestMailerTransport());
+$t->ok($mailer->getRealtimeTransport() === $transport, '->setRealtimeTransport() sets the mailer transport');
