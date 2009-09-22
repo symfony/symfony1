@@ -1230,6 +1230,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
 
         $modifyLimit = true;
+        $limitSubquerySql = '';
         
         if ( ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) && $needsSubQuery) {
             $subquery = $this->getLimitSubquery();
@@ -1257,27 +1258,32 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     break;
             }
 
-            // only append the subquery if it actually contains something
-            if (count($this->_sqlParts['where']) > 0) {
-                array_unshift($this->_sqlParts['where'], 'AND');
-            }
-
             $field = $this->getSqlTableAlias($rootAlias) . '.' . $idColumnName;
 
             // FIX #1868: If not ID under MySQL is found to be restricted, restrict pk column for null
             //            (which will lead to a return of 0 items)
-            array_unshift(
-                $this->_sqlParts['where'], $this->_conn->quoteIdentifier($field) .
-                (( ! empty($subquery)) ? ' IN (' . $subquery . ')' : ' IS NULL')
-            );
-
+            $limitSubquerySql = $this->_conn->quoteIdentifier($field) 
+                              . (( ! empty($subquery)) ? ' IN (' . $subquery . ')' : ' IS NULL')
+                              . ((count($this->_sqlParts['where']) > 0) ? ' AND ' : '');
+                              
             $modifyLimit = false;
         }
-
-        $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where']) : '';
-        $q .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])  : '';
-        $q .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']): '';
-        $q .= ( ! empty($this->_sqlParts['orderby']))? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
+        
+        // FIX #DC-26: Include limitSubquerySql as major relevance in conditions
+        $emptyWhere = empty($this->_sqlParts['where']);
+        
+        if ( ! ($emptyWhere && $limitSubquerySql == '')) {
+            $where = implode(' ', $this->_sqlParts['where']);
+            $where = ($where == '' || (substr($where, 0, 1) === '(' && substr($where, -1) === ')')) 
+                ? $where : '(' . $where . ')';
+            
+            $q .= ' WHERE ' . $limitSubquerySql . $where;
+            //   .  (($limitSubquerySql == '' && count($this->_sqlParts['where']) == 1) ? substr($where, 1, -1) : $where);            
+        }
+        
+        $q .= ( ! empty($this->_sqlParts['groupby'])) ? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])  : '';
+        $q .= ( ! empty($this->_sqlParts['having'])) ?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']): '';
+        $q .= ( ! empty($this->_sqlParts['orderby'])) ? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
 
         if ($modifyLimit) {
             $q = $this->_conn->modifyLimitQuery($q, $this->_sqlParts['limit'], $this->_sqlParts['offset']);
@@ -1304,7 +1310,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             array_shift($this->_sqlParts['where']);
         }
 
-        $this->_sql = $q;
+		$this->_sql = $q;
 
         return $q;
     }
