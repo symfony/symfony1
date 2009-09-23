@@ -184,9 +184,15 @@ class sfException extends Exception
       }
     }
 
+    // when using CLI, we force the format to be TXT
+    if (0 == strncasecmp(PHP_SAPI, 'cli', 3))
+    {
+      $format = 'txt';
+    }
+
     $message = null === $exception->getMessage() ? 'n/a' : $exception->getMessage();
     $name    = get_class($exception);
-    $traces  = self::getTraces($exception, 'html' != $format || 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html');
+    $traces  = self::getTraces($exception, $format);
 
     // dump main objects values
     $sf_settings = '';
@@ -255,11 +261,11 @@ class sfException extends Exception
    * Returns an array of exception traces.
    *
    * @param Exception $exception  An Exception implementation instance
-   * @param string    $format     The trace format (plain or html)
+   * @param string    $format     The trace format (txt or html)
    *
    * @return array An array of traces
    */
-  static protected function getTraces($exception, $format = 'plain')
+  static protected function getTraces($exception, $format = 'txt')
   {
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(
@@ -342,7 +348,7 @@ class sfException extends Exception
    *
    * @param array   $args     The argument array
    * @param boolean $single
-   * @param string  $format   The format string (html or plain)
+   * @param string  $format   The format string (html or txt)
    *
    * @return string
    */
@@ -386,7 +392,7 @@ class sfException extends Exception
    * 
    * @param  string  $file   An absolute file path
    * @param  integer $line   The line number
-   * @param  string  $format The output format (plain or html)
+   * @param  string  $format The output format (txt or html)
    * @param  string  $text   Use this text for the link rather than the file path
    * 
    * @return string
