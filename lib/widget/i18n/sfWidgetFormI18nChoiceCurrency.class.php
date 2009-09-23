@@ -23,7 +23,7 @@ class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
    *
    * Available options:
    *
-   *  * culture:    The culture to use for internationalized strings (required)
+   *  * culture:    The culture to use for internationalized strings
    *  * currencies: An array of currency codes to use (ISO 4217)
    *  * add_empty:  Whether to add a first empty value or not (false by default)
    *                If the option is not a Boolean, the value will be used as the text value
@@ -37,7 +37,7 @@ class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
   {
     parent::configure($options, $attributes);
 
-    $this->addRequiredOption('culture');
+    $this->addOption('culture');
     $this->addOption('currencies');
     $this->addOption('add_empty', false);
 

@@ -52,8 +52,6 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
       $languages = $options['languages'];
     }
 
-    sort($languages);
-
     $this->setOption('choices', $languages);
   }
 }

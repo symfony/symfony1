@@ -26,7 +26,7 @@ catch (InvalidArgumentException $e)
 }
 
 $v = new sfValidatorI18nChoiceLanguage(array('languages' => array('fr', 'en')));
-$t->is($v->getOption('choices'), array('en', 'fr'), '->configure() can restrict the number of languages with the languages option');
+$t->is($v->getOption('choices'), array('fr', 'en'), '->configure() can restrict the number of languages with the languages option');
 
 // ->clean()
 $t->diag('->clean()');

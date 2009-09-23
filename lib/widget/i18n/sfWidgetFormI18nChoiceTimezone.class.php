@@ -9,14 +9,14 @@
  */
 
 /**
- * sfWidgetFormI18nChoiceCountry represents a country choice widget.
+ * sfWidgetFormI18nChoiceTimezone represents a timezone choice widget.
  *
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nChoiceCountry.class.php 11842 2008-09-29 10:53:28Z fabien $
+ * @version    SVN: $Id: sfWidgetFormI18nChoiceLanguage.class.php 11842 2008-09-29 10:53:28Z fabien $
  */
-class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
+class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice
 {
   /**
    * Constructor.
@@ -24,7 +24,6 @@ class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
    * Available options:
    *
    *  * culture:   The culture to use for internationalized strings
-   *  * countries: An array of country codes to use (ISO 3166)
    *  * add_empty: Whether to add a first empty value or not (false by default)
    *               If the option is not a Boolean, the value will be used as the text value
    *
@@ -38,20 +37,18 @@ class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
     parent::configure($options, $attributes);
 
     $this->addOption('culture');
-    $this->addOption('countries');
     $this->addOption('add_empty', false);
 
-    // populate choices with all countries
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
-
-    $countries = sfCultureInfo::getInstance($culture)->getCountries(isset($options['countries']) ? $options['countries'] : null);
+    $timezones = array_keys(sfCultureInfo::getInstance($culture)->getTimeZones());
+    $timezones = array_combine($timezones, $timezones);
 
     $addEmpty = isset($options['add_empty']) ? $options['add_empty'] : false;
     if (false !== $addEmpty)
     {
-      $countries = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $countries);
+      $timezones = array_merge(array('' => true === $addEmpty ? '' : $addEmpty), $timezones);
     }
 
-    $this->setOption('choices', $countries);
+    $this->setOption('choices', $timezones);
   }
 }

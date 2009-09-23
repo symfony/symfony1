@@ -52,8 +52,6 @@ class sfValidatorI18nChoiceCountry extends sfValidatorChoice
       $countries = $options['countries'];
     }
 
-    sort($countries);
-
     $this->setOption('choices', $countries);
   }
 }
