@@ -209,7 +209,7 @@ $b->
   end()
 ;
 
-// sfValidatorPropelChoiceMany
+// sfValidatorPropelChoice (multiple == true)
 
 // submit a form with an impossible choice validator
 $b->

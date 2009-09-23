@@ -26,7 +26,7 @@
       $this->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
     }
 
-    $validator = new sfValidatorPropelChoiceMany(array('model' => '<?php echo $this->getModelClass() ?>'));
+    $validator = new sfValidatorPropelChoice(array('multiple' => true, 'model' => '<?php echo $this->getModelClass() ?>'));
     try
     {
       // validate ids
