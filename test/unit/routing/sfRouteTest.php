@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(50);
+$t = new lime_test(51);
 
 // ->matchesUrl()
 $t->diag('->matchesUrl()');
@@ -168,7 +168,10 @@ $t->is($route->matchesUrl('/foo/foo/foo.bar'), array('foo' => 'foo.bar'), '->par
 $t->is($route->matchesUrl('/foo'), array(), '->parseStarParameter() returns no additional parameters if the * value is empty');
 
 $route = new sfRoute('/foo/*', array('module' => 'foo'));
-$t->is($route->matchesUrl('/foo/foo/bar/module/barbar'), array('foo' => 'bar', 'module' => 'foo'), '->parseStarParameter() cannot override a default value');
+$t->is($route->matchesUrl('/foo/foo/bar/module/barbar'), array('foo' => 'bar', 'module' => 'foo'), '->parseStarParameter() cannot override special module/sction values');
+
+$route = new sfRoute('/foo/*', array('foo' => 'foo'));
+$t->is($route->matchesUrl('/foo/foo/bar'), array('foo' => 'bar'), '->parseStarParameter() can override a default value');
 
 $route = new sfRoute('/:foo/*');
 $t->is($route->matchesUrl('/bar/foo/barbar'), array('foo' => 'bar'), '->parseStarParameter() cannot override pattern variables');

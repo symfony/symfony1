@@ -83,7 +83,7 @@ class sfRoute implements Serializable
   }
 
   /**
-   * Returns true if the URL matches this route, false otherwise.
+   * Returns an array of parameters if the URL matches this route, false otherwise.
    *
    * @param  string  $url     The URL
    * @param  array   $context The context
@@ -109,11 +109,11 @@ class sfRoute implements Serializable
     if (isset($matches['_star']))
     {
       $parameters = $this->parseStarParameter($matches['_star']);
-      unset($matches['_star']);
+      unset($matches['_star'], $parameters['module'], $parameters['action']);
     }
 
     // defaults
-    $parameters = $this->mergeArrays($parameters, $defaults);
+    $parameters = $this->mergeArrays($defaults, $parameters);
 
     // variables
     foreach ($matches as $key => $value)
