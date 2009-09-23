@@ -28,7 +28,7 @@ class sfGenerateTaskTask extends sfBaseTask
 
     $this->addOptions(array(
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory to create the task in', 'lib/task'),
-      new sfCommandOption('use-database', null, sfCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database', 'propel'),
+      new sfCommandOption('use-database', null, sfCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database', 'doctrine'),
       new sfCommandOption('brief-description', null, sfCommandOption::PARAMETER_REQUIRED, 'A brief task description (appears in task list)'),
     ));
 
@@ -51,7 +51,7 @@ if it does not already exist.
 
   [./symfony generate:task namespace:name --dir=plugins/myPlugin/lib/task|INFO]
 
-If you want the task to default to a connection other than [propel|COMMENT], provide
+If you want the task to default to a connection other than [doctrine|COMMENT], provide
 the name of this connection with the [--use-database|COMMENT] option:
 
   [./symfony generate:task namespace:name --use-database=main|INFO]
@@ -93,7 +93,7 @@ Call it with:
 HED;
 
     $useDatabase = sfToolkit::literalize($options['use-database']);
-    $defaultConnection = is_string($useDatabase) ? $useDatabase : 'propel';
+    $defaultConnection = is_string($useDatabase) ? $useDatabase : 'doctrine';
 
     if ($useDatabase)
     {
