@@ -85,9 +85,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
       $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
       $q = $q->andWhereIn($a . '.' . $this->getColumn(), $value);
 
-      $objects = $q->execute();
-
-      if (count($objects) != count($value))
+      if ($q->count() != count($value))
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
@@ -98,9 +96,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
       $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
       $q->addWhere($a.'.'.$this->getColumn().' = ?', $value);
 
-      $object = $q->fetchOne();
-
-      if (!$object)
+      if (!$q->count())
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
