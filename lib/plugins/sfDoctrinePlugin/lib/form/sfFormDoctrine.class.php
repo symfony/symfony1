@@ -124,24 +124,28 @@ abstract class sfFormDoctrine extends sfFormObject
    *     $userForm = new UserForm($user);
    *     $userForm->embedRelation('Groups');
    *
-   * @param string $relationName
-   * @return void
+   * @param  string $relationName  The name of the relation
+   * @param  string $formClass     The name of the form class to use
+   * @param  array  $formArguments Arguments to pass to the constructor (related object will be shifted onto the front)
+   *
+   * @throws InvalidArgumentException If the relationship is not a collection
    */
-  public function embedRelation($relationName, $formClass = null)
-  {    
+  public function embedRelation($relationName, $formClass = null, $formArgs = array())
+  {
     $relation = $this->object->getTable()->getRelation($relationName);
 
     if ($relation->getType() !== Doctrine_Relation::MANY)
     {
-      throw new sfException('You can only embed a relationship that is a collection.');
+      throw new InvalidArgumentException('You can only embed a relationship that is a collection.');
     }
 
-    $formClass = $formClass ? $formClass:$relation->getClass().'Form';
+    $r = new ReflectionClass(null === $formClass ? $relation->getClass().'Form' : $formClass);
 
     $subForm = new sfForm();
     foreach ($this->object[$relationName] as $index => $childObject)
     {
-      $form = new $formClass($childObject);
+      $form = $r->newInstanceArgs(array_merge(array($childObject), $formArgs));
+
       $subForm->embedForm($index, $form);
       $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
@@ -310,8 +314,8 @@ abstract class sfFormDoctrine extends sfFormObject
     $valuesToProcess = $values;
     foreach ($valuesToProcess as $field => $value)
     {
-      $method = sprintf('update%sColumn', self::camelize($field));
-      
+      $method = sprintf('update%sColumn', $this->camelize($field));
+
       if (method_exists($this, $method))
       {
         if (false === $ret = $this->$method($value))
@@ -580,6 +584,6 @@ abstract class sfFormDoctrine extends sfFormObject
 
   protected function camelize($text)
   {
-    return sfToolkit::pregtr($text, array('#/(.?)#e' => "'::'.strtoupper('\\1')", '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
+    return preg_replace(array('#/(.?)#e', '/(^|_|-)+(.)/e'), array("'::'.strtoupper('\\1')", "strtoupper('\\2')"), $text);
   }
 }
