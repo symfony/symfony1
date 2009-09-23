@@ -76,9 +76,9 @@ class sfValidatorPropelChoice extends sfValidatorBase
 
       $criteria->addAnd($this->getColumn(), $value, Criteria::IN);
 
-      $objects = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelect'), $criteria, $this->getOption('connection'));
+      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, $this->getOption('connection'));
 
-      if (count($objects) != count($value))
+      if ($dbcount != $count)
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
@@ -87,9 +87,9 @@ class sfValidatorPropelChoice extends sfValidatorBase
     {
       $criteria->addAnd($this->getColumn(), $value);
 
-      $object = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelectOne'), $criteria, $this->getOption('connection'));
+      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, $this->getOption('connection'));
 
-      if (null === $object)
+      if (0 === $dbcount)
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
