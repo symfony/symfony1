@@ -1,7 +1,5 @@
 [?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/doctrine/BaseFormFilterDoctrine.class.php');
-
 /**
  * <?php echo $this->table->getOption('name') ?> filter form base class.
  *

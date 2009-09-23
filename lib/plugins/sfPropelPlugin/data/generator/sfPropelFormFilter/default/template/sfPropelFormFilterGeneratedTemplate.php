@@ -1,7 +1,5 @@
 [?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.class.php');
-
 /**
  * <?php echo $this->table->getClassname() ?> filter form base class.
  *
