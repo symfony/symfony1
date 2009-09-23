@@ -223,16 +223,29 @@ function form_tag_for(sfForm $form, $routePrefix, $attributes = array())
  * @param  string $name          name of the link, i.e. string to appear between the <a> tags
  * @param  string $internal_uri  'module/action' or '@rule' of the action
  * @param  array  $options       additional HTML compliant <a> tag parameters
+ *
  * @return string XHTML compliant <a href> tag or name
+ *
  * @see    link_to
  */
-function link_to_if($condition, $name = '', $internal_uri = '', $options = array())
+function link_to_if()
 {
+  $arguments = func_get_args();
+  if (empty($arguments[2]) || '@' == substr($arguments[2], 0, 1) || false !== strpos($arguments[2], '/'))
+  {
+    list($condition, $name, $params, $options) = array_pad($arguments, 4, null);
+  }
+  else
+  {
+    list($condition, $name, $routeName, $params, $options) = array_pad($arguments, 5, null);
+    $params = array_merge(array('sf_route' => $routeName), is_object($params) ? array('sf_subject' => $params) : (array) $params);
+  }
+
   $html_options = _parse_attributes($options);
   if ($condition)
   {
     unset($html_options['tag']);
-    return link_to($name, $internal_uri, $html_options);
+    return link_to1($name, $params, $html_options);
   }
   else
   {
@@ -273,12 +286,16 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
  * @param  string $name          name of the link, i.e. string to appear between the <a> tags
  * @param  string $internal_uri  'module/action' or '@rule' of the action
  * @param  array  $options       additional HTML compliant <a> tag parameters
+ *
  * @return string XHTML compliant <a href> tag or name
+ *
  * @see    link_to
  */
-function link_to_unless($condition, $name = '', $internal_uri = '', $options = array())
+function link_to_unless()
 {
-  return link_to_if(!$condition, $name, $internal_uri, $options);
+  $arguments = func_get_args();
+  $arguments[0] = !$arguments[0];
+  return call_user_func_array('link_to_if', $arguments);
 }
 
 /**

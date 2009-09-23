@@ -15,7 +15,8 @@ class myController
 {
   public function genUrl($parameters = array(), $absolute = false)
   {
-    return ($absolute ? '/' : '').'module/action';
+    $url = is_array($parameters) && isset($parameters['sf_route']) ? $parameters['sf_route'] : 'module/action';
+    return ($absolute ? '/' : '').$url;
   }
 }
 
@@ -47,7 +48,7 @@ class BaseForm extends sfForm
 
 sfForm::enableCSRFProtection();
 
-$t = new lime_test(40);
+$t = new lime_test(44);
 
 $context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 
@@ -115,11 +116,15 @@ $t->is(link_to_if(false, 'test', '@homepage', array('tag' => 'div')), '<div>test
 $t->is(link_to_if(true, 'test', '@homepage', 'tag=div'), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as string) in true case');
 $t->is(link_to_if(true, 'test', '@homepage', array('tag' => 'div')), '<a href="module/action">test</a>', 'link_to_if() removes "tag" option (given as array) in true case');
 $t->is(link_to_if(false, 'test', '@homepage', array('query_string' => 'foo=bar', 'absolute' => true, 'absolute_url' => 'http://www.google.com/')), '<span>test</span>', 'link_to_if() returns an HTML "span" tag by default if the condition is false');
+$t->is(link_to_if(true, 'test', 'homepage', array(), array('class' => 'test')), '<a class="test" href="homepage">test</a>', 'link_to_if() accepts link_to2 compatible usage');
+$t->is(link_to_if(false, 'test', 'homepage', array(), array('class' => 'test')), '<span class="test">test</span>', 'link_to_if() accepts link_to2 compatible usage');
 
 // link_to_unless()
 $t->diag('link_to_unless()');
 $t->is(link_to_unless(false, 'test', '@homepage'), '<a href="module/action">test</a>', 'link_to_unless() returns an HTML "a" tag if the condition is false');
 $t->is(link_to_unless(true, 'test', '@homepage'), '<span>test</span>', 'link_to_unless() returns an HTML "span" tag by default if the condition is true');
+$t->is(link_to_unless(true, 'test', 'homepage', array(), array('class' => 'test')), '<span class="test">test</span>', 'link_to_unless() accepts link_to2 compatible usage');
+$t->is(link_to_unless(false, 'test', 'homepage', array(), array('class' => 'test')), '<a class="test" href="homepage">test</a>', 'link_to_unless() accepts link_to2 compatible usage');
 
 // public_path()
 $t->diag('public_path()');
