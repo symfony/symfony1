@@ -71,7 +71,10 @@ EOF;
 
   protected function reverseDatabase($databaseManager, $connection, $options)
   {
+    $name = 'propel' == $connection ? 'schema' : $connection.'-schema';
+
     $properties = $this->getPhingPropertiesForConnection($databaseManager, $connection);
+    $properties['propel.default.schema.basename'] = $name;
 
     $ret = $this->callPhing('reverse', self::DO_NOT_CHECK_SCHEMA, $properties);
 
@@ -80,8 +83,8 @@ EOF;
       return 1;
     }
 
-    $xmlSchemaPath = sfConfig::get('sf_config_dir').'/schema.xml';
-    $ymlSchemaPath = sfConfig::get('sf_config_dir').'/schema.yml';
+    $xmlSchemaPath = sfConfig::get('sf_config_dir').'/'.$name.'.xml';
+    $ymlSchemaPath = sfConfig::get('sf_config_dir').'/'.$name.'.yml';
 
     // Fix database name
     if (file_exists($xmlSchemaPath))
