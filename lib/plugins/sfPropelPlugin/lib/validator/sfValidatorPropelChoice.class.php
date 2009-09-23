@@ -29,6 +29,8 @@ class sfValidatorPropelChoice extends sfValidatorBase
    *                must be in field name format
    *  * connection: The Propel connection to use (null by default)
    *  * multiple:   true if the select tag must allow multiple selections
+   *  * min:        The minimum number of values that need to be selected (this option is only active if multiple is true)
+   *  * max:        The maximum number of values that need to be selected (this option is only active if multiple is true)
    *
    * @see sfValidatorBase
    */
@@ -39,6 +41,11 @@ class sfValidatorPropelChoice extends sfValidatorBase
     $this->addOption('column', null);
     $this->addOption('connection', null);
     $this->addOption('multiple', false);
+    $this->addOption('min');
+    $this->addOption('max');
+
+    $this->addMessage('min', 'At least %min% values must be selected (%count% values selected).');
+    $this->addMessage('max', 'At most %max% values must be selected (%count% values selected).');
   }
 
   /**
@@ -53,6 +60,18 @@ class sfValidatorPropelChoice extends sfValidatorBase
       if (!is_array($value))
       {
         $value = array($value);
+      }
+
+      $count = count($value);
+
+      if ($this->hasOption('min') && $count < $this->getOption('min'))
+      {
+        throw new sfValidatorError($this, 'min', array('count' => $count, 'min' => $this->getOption('min')));
+      }
+
+      if ($this->hasOption('max') && $count > $this->getOption('max'))
+      {
+        throw new sfValidatorError($this, 'max', array('count' => $count, 'max' => $this->getOption('max')));
       }
 
       $criteria->addAnd($this->getColumn(), $value, Criteria::IN);

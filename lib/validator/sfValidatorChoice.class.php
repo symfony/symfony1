@@ -25,8 +25,8 @@ class sfValidatorChoice extends sfValidatorBase
    *
    *  * choices:  An array of expected values (required)
    *  * multiple: true if the select tag must allow multiple selections
-   *  * min: The minimum number of values that need to be selected (this option is only active if multiple is true)
-   *  * max: The maximum number of values that need to be selected (this option is only active if multiple is true)
+   *  * min:      The minimum number of values that need to be selected (this option is only active if multiple is true)
+   *  * max:      The maximum number of values that need to be selected (this option is only active if multiple is true)
    *
    * @param array $options    An array of options
    * @param array $messages   An array of error messages
