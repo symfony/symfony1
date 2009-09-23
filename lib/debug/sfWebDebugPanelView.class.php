@@ -285,7 +285,8 @@ class sfWebDebugPanelView extends sfWebDebugPanel
     $path = realpath($path);
 
     // application module
-    if (preg_match('#apps'.DIRECTORY_SEPARATOR.'\w+'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'(\w+)'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'(.*)$#', $path, $match))
+    $sep = preg_quote(DIRECTORY_SEPARATOR);
+    if (preg_match('#apps'.$sep.'\w+'.$sep.'modules'.$sep.'(\w+)'.$sep.'templates'.$sep.'(.*)$#', $path, $match))
     {
       return $match[1].'/&hellip;/'.$match[2];
     }
