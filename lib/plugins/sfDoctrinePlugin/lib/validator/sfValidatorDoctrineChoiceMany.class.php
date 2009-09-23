@@ -21,31 +21,14 @@
 class sfValidatorDoctrineChoiceMany extends sfValidatorDoctrineChoice
 {
   /**
-   * @see sfValidatorBase
+   * Configures the current validator.
+   *
+   * @see sfValidatorPropelChoice
    */
-  protected function doClean($values)
+  protected function configure($options = array(), $messages = array())
   {
-    if (!is_array($values))
-    {
-      $values = array($values);
-    }
+    parent::configure($options, $messages);
 
-    if(isset($values[0]) && !$values[0])
-    {
-      unset($values[0]);
-    }
-
-    $a = $this->getOption('alias');
-    $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
-    $q = $q->andWhereIn($a . '.' . $this->getColumn(), $values);
-
-    $objects = $q->execute();
-
-    if (count($objects) != count($values))
-    {
-      throw new sfValidatorError($this, 'invalid', array('value' => $values));
-    }
-
-    return $values;
+    $this->setOption('multiple', true);
   }
 }

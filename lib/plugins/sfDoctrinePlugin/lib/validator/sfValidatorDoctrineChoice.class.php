@@ -31,6 +31,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    *  * column:     The column name (null by default which means we use the primary key)
    *                must be in field name format
    *  * connection: The Doctrine connection to use (null by default)
+   *  * multiple:   true if the select tag must allow multiple selections
    *
    * @see sfValidatorBase
    */
@@ -41,6 +42,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
     $this->addOption('query', null);
     $this->addOption('column', null);
     $this->addOption('connection', null);
+    $this->addOption('multiple', false);
   }
 
   /**
@@ -48,15 +50,41 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $a = ($q = $this->getOption('query')) ? $q->getRootAlias():$this->getOption('alias');
-    $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
-    $q->addWhere($a . '.' . $this->getColumn() . ' = ?', $value);
-
-    $object = $q->fetchOne();
-    
-    if (!$object)
+    if ($this->getOption('multiple'))
     {
-      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+      if (!is_array($value))
+      {
+        $value = array($value);
+      }
+
+      if (isset($value[0]) && !$value[0])
+      {
+        unset($value[0]);
+      }
+
+      $a = $this->getOption('alias');
+      $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
+      $q = $q->andWhereIn($a . '.' . $this->getColumn(), $value);
+
+      $objects = $q->execute();
+
+      if (count($objects) != count($value))
+      {
+        throw new sfValidatorError($this, 'invalid', array('value' => $value));
+      }
+    }
+    else
+    {
+      $a = ($q = $this->getOption('query')) ? $q->getRootAlias():$this->getOption('alias');
+      $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
+      $q->addWhere($a.'.'.$this->getColumn().' = ?', $value);
+
+      $object = $q->fetchOne();
+
+      if (!$object)
+      {
+        throw new sfValidatorError($this, 'invalid', array('value' => $value));
+      }
     }
 
     return $value;

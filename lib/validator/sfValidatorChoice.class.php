@@ -49,11 +49,7 @@ class sfValidatorChoice extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $choices = $this->getOption('choices');
-    if ($choices instanceof sfCallable)
-    {
-      $choices = $choices->call();
-    }
+    $choices = $this->getChoices();
 
     if ($this->getOption('multiple'))
     {
@@ -68,6 +64,17 @@ class sfValidatorChoice extends sfValidatorBase
     }
 
     return $value;
+  }
+
+  public function getChoices()
+  {
+    $choices = $this->getOption('choices');
+    if ($choices instanceof sfCallable)
+    {
+      $choices = $choices->call();
+    }
+
+    return $choices;
   }
 
   /**
