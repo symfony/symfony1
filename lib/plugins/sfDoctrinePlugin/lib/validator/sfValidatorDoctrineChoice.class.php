@@ -26,11 +26,9 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    * Available options:
    *
    *  * model:      The model class (required)
-   *  * alias:      The alias of the root component used in the query
    *  * query:      A query to use when retrieving objects
    *  * column:     The column name (null by default which means we use the primary key)
    *                must be in field name format
-   *  * connection: The Doctrine connection to use (null by default)
    *  * multiple:   true if the select tag must allow multiple selections
    *  * min:        The minimum number of values that need to be selected (this option is only active if multiple is true)
    *  * max:        The maximum number of values that need to be selected (this option is only active if multiple is true)
@@ -40,10 +38,8 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
   protected function configure($options = array(), $messages = array())
   {
     $this->addRequiredOption('model');
-    $this->addOption('alias', 'a');
     $this->addOption('query', null);
     $this->addOption('column', null);
-    $this->addOption('connection', null);
     $this->addOption('multiple', false);
     $this->addOption('min');
     $this->addOption('max');
@@ -81,22 +77,26 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
         throw new sfValidatorError($this, 'max', array('count' => $count, 'max' => $this->getOption('max')));
       }
 
-      $a = $this->getOption('alias');
-      $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
-      $q = $q->andWhereIn($a . '.' . $this->getColumn(), $value);
+      if (!$query = $this->getOption('query'))
+      {
+        $query = Doctrine::getTable($this->getOption('model'))->createQuery();
+      }
+      $query->andWhereIn(sprintf('%s.%s', $query->getRootAlias(), $this->getColumn()), $value);
 
-      if ($q->count() != count($value))
+      if ($query->count() != count($value))
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }
     else
     {
-      $a = ($q = $this->getOption('query')) ? $q->getRootAlias():$this->getOption('alias');
-      $q = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery($a) : $this->getOption('query');
-      $q->addWhere($a.'.'.$this->getColumn().' = ?', $value);
+      if (!$query = $this->getOption('query'))
+      {
+        $query = Doctrine::getTable($this->getOption('model'))->createQuery();
+      }
+      $query->andWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $this->getColumn()), $value);
 
-      if (!$q->count())
+      if (!$query->count())
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
