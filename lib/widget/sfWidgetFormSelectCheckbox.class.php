@@ -88,7 +88,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
     }
     else
     {
-      return $this->formatChoices($name, $value, $choices, $attributes);;
+      return $this->formatChoices($name, $value, $choices, $attributes);
     }
   }
 
