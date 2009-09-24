@@ -28,8 +28,8 @@ class sfValidatorDate extends sfValidatorBase
    *  * date_output:             The format to use when returning a date (default to Y-m-d)
    *  * datetime_output:         The format to use when returning a date with time (default to Y-m-d H:i:s)
    *  * date_format_error:       The date format to use when displaying an error for a bad_format error (use date_format if not provided)
-   *  * max:                     The maximum date allowed (as a timestamp)
-   *  * min:                     The minimum date allowed (as a timestamp)
+   *  * max:                     The maximum date allowed (as a timestamp or accecpted date() format)
+   *  * min:                     The minimum date allowed (as a timestamp or accecpted date() format)
    *  * date_format_range_error: The date format to use when displaying an error for min/max (default to d/m/Y H:i:s)
    *
    * Available error codes:
@@ -64,43 +64,97 @@ class sfValidatorDate extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    if (is_array($value))
-    {
-      $clean = $this->convertDateArrayToTimestamp($value);
-    }
-    else if ($regex = $this->getOption('date_format'))
+    // check date format
+    if ($regex = $this->getOption('date_format'))
     {
       if (!preg_match($regex, $value, $match))
       {
         throw new sfValidatorError($this, 'bad_format', array('value' => $value, 'date_format' => $this->getOption('date_format_error') ? $this->getOption('date_format_error') : $this->getOption('date_format')));
       }
 
-      $clean = $this->convertDateArrayToTimestamp($match);
+      $value = $match;
     }
-    else if (!ctype_digit($value))
+
+    // convert array to date string
+    if (is_array($value))
     {
-      $clean = strtotime($value);
-      if (false === $clean)
+      $value = $this->convertDateArrayToString($value);
+    }
+
+    // convert timestamp to date number format
+    if (ctype_digit($value))
+    {
+      $cleanTime = (integer) $value;
+      $clean     = date('YmdHis', $cleanTime);
+    }
+    // convert string to date number format
+    else
+    {
+      try
+      {
+        $date  = new DateTime($value);
+        $clean = $date->format('YmdHis');
+      }
+      catch (Exception $e)
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
     }
-    else
+
+    // check max
+    if ($max = $this->hasOption('max'))
     {
-      $clean = (integer) $value;
+      // convert timestamp to date number format
+      if (ctype_digit($max))
+      {
+        $max      = date('YmdHis', $max);
+        $maxError = date($this->getOption('date_format_range_error'), $max);
+      }
+      // convert string to date number
+      else
+      {
+        $dateMax  = new DateTime($max);
+        $max      = $dateMax->format('YmdHis');
+        $maxError = $dateMax->format($this->getOption('date_format_range_error'));
+      }
+
+      if ($clean > $max)
+      {
+        throw new sfValidatorError($this, 'max', array('value' => $value, 'max' => $maxError));
+      }
     }
 
-    if ($this->hasOption('max') && $clean > $this->getOption('max'))
+    // check min
+    if ($min = $this->hasOption('min'))
     {
-      throw new sfValidatorError($this, 'max', array('value' => $value, 'max' => date($this->getOption('date_format_range_error'), $this->getOption('max'))));
+      // convert timestamp to date number
+      if (ctype_digit($min))
+      {
+        $min      = date('YmdHis', $min);
+        $minError = date($this->getOption('date_format_range_error'), $min);
+      }
+      // convert string to date number
+      else
+      {
+        $dateMin  = new DateTime($min);
+        $min      = $dateMin->format('YmdHis');
+        $minError = $dateMin->format($this->getOption('date_format_range_error'));
+      }
+
+      if ($clean < $min)
+      {
+        throw new sfValidatorError($this, 'min', array('value' => $value, 'min' => $minError));
+      }
     }
 
-    if ($this->hasOption('min') && $clean < $this->getOption('min'))
+    if ($clean === $this->getEmptyValue())
     {
-      throw new sfValidatorError($this, 'min', array('value' => $value, 'min' => date($this->getOption('date_format_range_error'), $this->getOption('min'))));
+      return $cleanTime;
     }
 
-    return $clean === $this->getEmptyValue() ? $clean : date($this->getOption('with_time') ? $this->getOption('datetime_output') : $this->getOption('date_output'), $clean);
+    $format = $this->getOption('with_time') ? $this->getOption('datetime_output') : $this->getOption('date_output');
+
+    return isset($date) ? $date->format($format) : date($format, $cleanTime);
   }
 
   /**
@@ -112,7 +166,7 @@ class sfValidatorDate extends sfValidatorBase
    *
    * @return int A timestamp
    */
-  protected function convertDateArrayToTimestamp($value)
+  protected function convertDateArrayToString($value)
   {
     // all elements must be empty or a number
     foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $key)
@@ -156,23 +210,27 @@ class sfValidatorDate extends sfValidatorBase
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
 
-      $clean = mktime(
-        isset($value['hour']) ? intval($value['hour']) : 0,
-        isset($value['minute']) ? intval($value['minute']) : 0,
-        isset($value['second']) ? intval($value['second']) : 0,
+      $clean = sprintf(
+        "%04d-%02d-%02d %02d:%02d:%02d",
+        intval($value['year']),
         intval($value['month']),
         intval($value['day']),
-        intval($value['year'])
+        isset($value['hour']) ? intval($value['hour']) : 0,
+        isset($value['minute']) ? intval($value['minute']) : 0,
+        isset($value['second']) ? intval($value['second']) : 0
       );
     }
     else
     {
-      $clean = mktime(0, 0, 0, intval($value['month']), intval($value['day']), intval($value['year']));
-    }
-
-    if (false === $clean)
-    {
-      throw new sfValidatorError($this, 'invalid', array('value' => var_export($value, true)));
+      $clean = sprintf(
+        "%04d-%02d-%02d %02d:%02d:%02d",
+        intval($value['year']),
+        intval($value['month']),
+        intval($value['day']),
+        0,
+        0,
+        0
+      );
     }
 
     return $clean;
