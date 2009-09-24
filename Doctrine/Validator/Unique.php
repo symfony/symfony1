@@ -78,7 +78,8 @@ class Doctrine_Validator_Unique
         if ( ! ($state == Doctrine_Record::STATE_TDIRTY || $state == Doctrine_Record::STATE_TCLEAN)) {
             foreach ((array) $table->getIdentifierColumnNames() as $pk) {
                 $sql .= ' AND ' . $conn->quoteIdentifier($pk) . ' != ?';
-                $values[] = $this->invoker->$pk;
+                $pkFieldName = $table->getFieldName($pk);
+                $values[] = $this->invoker->$pkFieldName;
             }
         }
 
