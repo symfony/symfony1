@@ -1004,7 +1004,7 @@ abstract class Doctrine_Query_Abstract
         if ($this->getConnection()->getAttribute(Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS)) {
             $this->free();
         }
-        $this->clear();
+
         return $result;
     }
 
