@@ -2573,7 +2573,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if (isset($by)) {
             if ( ! isset($arguments[0])) {
-                throw new Doctrine_Table_Exception('You must specify the value to findBy');
+                throw new Doctrine_Table_Exception('You must specify the value to ' . $method);
             }
 
             $fieldName = $this->_resolveFindByFieldName($by);
