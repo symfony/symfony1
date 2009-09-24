@@ -1466,6 +1466,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             return $old * 100 != $new * 100;
         } else if (in_array($type, array('integer', 'int')) && is_numeric($old) && is_numeric($new)) {
             return (int) $old !== (int) $new;
+        } else if ($type == 'timestamp' || $type == 'date') {
+            return strtotime($old) !== strtotime($new);
         } else {
             return $old !== $new;
         }
