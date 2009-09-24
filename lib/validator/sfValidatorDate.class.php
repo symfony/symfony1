@@ -102,7 +102,7 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     // check max
-    if ($max = $this->hasOption('max'))
+    if ($max = $this->getOption('max'))
     {
       // convert timestamp to date number format
       if (ctype_digit($max))
@@ -125,7 +125,7 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     // check min
-    if ($min = $this->hasOption('min'))
+    if ($min = $this->getOption('min'))
     {
       // convert timestamp to date number
       if (ctype_digit($min))
