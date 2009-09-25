@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
 
 /**
- * Loads data from fixtures directory.
+ * Loads YAML fixture data.
  *
  * @package    symfony
  * @subpackage propel
@@ -25,18 +25,21 @@ class sfPropelDataLoadTask extends sfPropelBaseTask
    */
   protected function configure()
   {
+    $this->addArguments(array(
+      new sfCommandArgument('dir_or_file', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'Directory or file to load'),
+    ));
+
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'cli'),
       new sfCommandOption('append', null, sfCommandOption::PARAMETER_NONE, 'Don\'t delete current data in the database'),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'propel'),
-      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED | sfCommandOption::IS_ARRAY, 'The directories to look for fixtures'),
     ));
 
     $this->aliases = array('propel-load-data');
     $this->namespace = 'propel';
     $this->name = 'data-load';
-    $this->briefDescription = 'Loads data from fixtures directory';
+    $this->briefDescription = 'Loads YAML fixture data';
 
     $this->detailedDescription = <<<EOF
 The [propel:data-load|INFO] task loads data fixtures into the database:
@@ -45,10 +48,10 @@ The [propel:data-load|INFO] task loads data fixtures into the database:
 
 The task loads data from all the files found in [data/fixtures/|COMMENT].
 
-If you want to load data from other directories, you can use
-the [--dir|COMMENT] option:
+If you want to load data from specific files or directories, you can append
+them as arguments:
 
-  [./symfony propel:data-load --dir="data/fixtures" --dir="data/data"|INFO]
+  [./symfony propel:data-load data/fixtures/dev data/fixtures/users.yml|INFO]
 
 The task use the [propel|COMMENT] connection as defined in [config/databases.yml|COMMENT].
 You can use another connection by using the [--connection|COMMENT] option:
@@ -74,17 +77,17 @@ EOF;
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    if (count($options['dir']))
+    if (count($arguments['dir_or_file']))
     {
-      $fixturesDirs = $options['dir'];
+      $fixturesDirs = $arguments['dir_or_file'];
     }
     else
     {
-      $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($this->configuration->getPluginSubPaths('/data'), array(sfConfig::get('sf_data_dir'))));
+      $fixturesDirs = array_merge(array(sfConfig::get('sf_data_dir').'/fixtures'), $this->configuration->getPluginSubPaths('/data/fixtures'));
     }
 
     $data = new sfPropelData();
-    $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);
+    $data->setDeleteCurrentData(!$options['append']);
 
     $dirs = array();
     foreach ($fixturesDirs as $fixturesDir)

@@ -21,22 +21,13 @@
 abstract class sfDoctrineBaseTask extends sfBaseTask
 {
   /**
-   * Get array of configuration variables for the Doctrine cli
+   * Returns an array of configuration variables for the Doctrine CLI.
    *
    * @return array $config
    */
   public function getCliConfig()
   {
-    $fixtures = array();
-    $fixtures[] = sfConfig::get('sf_root_dir').'/data/fixtures';
-    $pluginPaths = $this->configuration->getPluginPaths();
-    foreach ($pluginPaths as $pluginPath)
-    {
-      if (is_dir($dir = $pluginPath.'/data/fixtures'))
-      {
-        $fixtures[] = $dir;
-      }
-    }
+    $fixtures = array_merge(array(sfConfig::get('sf_data_dir').'/fixtures'), $this->configuration->getPluginSubPaths('/data/fixtures'));
     $models = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . 'doctrine';
     $migrations = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'doctrine';
     $sql = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'sql';
@@ -52,11 +43,12 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
   }
 
   /**
-   * Call a command from the Doctrine CLI
+   * Calls a Doctrine CLI command.
    *
    * @param string $task Name of the Doctrine task to call
-   * @param string $args Arguments for the task
-   * @return void
+   * @param array  $args Arguments for the task
+   *
+   * @see sfDoctrineCli
    */
   public function callDoctrineCli($task, $args = array())
   {
