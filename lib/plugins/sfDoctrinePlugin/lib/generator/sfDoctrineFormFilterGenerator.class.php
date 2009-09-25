@@ -158,7 +158,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
   {
     $options = array();
 
-    $withEmpty = sprintf('\'with_empty\' => %s', $column->isNotNull() ? 'false' : 'true');
+    $withEmpty = $column->isNotNull() && !$column->isForeignKey() ? array("'with_empty' => false") : array();
     switch ($column->getDoctrineType())
     {
       case 'boolean':
@@ -168,14 +168,16 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
       case 'datetime':
       case 'timestamp':
         $options[] = "'from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate()";
-        $options[] = $withEmpty;
+        $options = array_merge($options, $withEmpty);
         break;
       case 'enum':
         $values = array('' => '');
         $values = array_merge($values, $column['values']);
         $values = array_combine($values, $values);
-        $options[] = "'choices' => " . str_replace("\n", '', $this->arrayExport($values));
+        $options[] = "'choices' => ".$this->arrayExport($values);
         break;
+      default:
+        $options = array_merge($options, $withEmpty);
     }
 
     if ($column->isForeignKey())
@@ -269,7 +271,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
           break;
         case 'enum':
           $values = array_combine($column['values'], $column['values']);
-          $options[] = "'choices' => " . str_replace("\n", '', $this->arrayExport($values));
+          $options[] = "'choices' => ".$this->arrayExport($values);
           break;
       }
     }

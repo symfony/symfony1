@@ -144,7 +144,7 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
   {
     $options = array();
 
-    $withEmpty = sprintf('\'with_empty\' => %s', $column->isNotNull() ? 'false' : 'true');
+    $withEmpty = $column->isNotNull() && !$column->isForeignKey() ? array("'with_empty' => false") : array();
     switch ($column->getType())
     {
       case PropelColumnTypes::BOOLEAN:
@@ -154,8 +154,10 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
       case PropelColumnTypes::TIME:
       case PropelColumnTypes::TIMESTAMP:
         $options[] = "'from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate()";
-        $options[] = $withEmpty;
+        $options = array_merge($options, $withEmpty);
         break;
+      default:
+        $options = array_merge($options, $withEmpty);
     }
 
     if ($column->isForeignKey())
