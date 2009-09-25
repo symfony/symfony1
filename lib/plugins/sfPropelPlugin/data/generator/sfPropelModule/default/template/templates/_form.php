@@ -1,5 +1,5 @@
-[?php include_stylesheets_for_form($form) ?]
-[?php include_javascripts_for_form($form) ?]
+[?php use_stylesheets_for_form($form) ?]
+[?php use_javascripts_for_form($form) ?]
 
 <?php $form = $this->getFormObject() ?>
 <?php if (isset($this->params['route_prefix']) && $this->params['route_prefix']): ?>

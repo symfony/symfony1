@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(67);
+$t = new lime_test(69);
 
 class myRequest
 {
@@ -37,6 +37,15 @@ class myRequest
   }
 }
 
+class myResponse extends sfWebResponse
+{
+  public function resetAssets()
+  {
+    $this->javascripts = array_combine($this->positions, array_fill(0, count($this->positions), array()));
+    $this->stylesheets = array_combine($this->positions, array_fill(0, count($this->positions), array()));
+  }
+}
+
 class myController
 {
   public function genUrl($parameters = array(), $absolute = false)
@@ -45,7 +54,7 @@ class myController
   }
 }
 
-$context = sfContext::getInstance(array('request' => 'myRequest', 'response' => 'sfWebResponse', 'controller' => 'myController'));
+$context = sfContext::getInstance(array('request' => 'myRequest', 'response' => 'myResponse', 'controller' => 'myController'));
 
 // _compute_public_path()
 $t->diag('_compute_public_path');
@@ -196,7 +205,7 @@ $t->is(dynamic_javascript_include_tag('module/action'), '<script type="text/java
 $t->is(dynamic_javascript_include_tag('module/action', true), '<script type="text/javascript" src="/module/action?sf_format=js"></script>'."\n", 'dynamic_javascript_include_tag() takes an absolute boolean as its second argument');
 $t->is(dynamic_javascript_include_tag('module/action', true, array('class' => 'foo')), '<script type="text/javascript" src="/module/action?sf_format=js" class="foo"></script>'."\n", 'dynamic_javascript_include_tag() takes an array of HTML attributes as its third argument');
 
-$context->response = new sfWebResponse($context->getEventDispatcher());
+$context->response = new myResponse($context->getEventDispatcher());
 
 // use_dynamic_javascript()
 $t->diag('use_dynamic_javascript()');
@@ -242,6 +251,20 @@ $output = <<<EOF
 
 EOF;
 $t->is(get_stylesheets_for_form($form), fix_linebreaks($output), 'get_stylesheets_for_form() returns link tags');
+
+// use_javascripts_for_form() use_stylesheets_for_form()
+$t->diag('use_javascripts_for_form() use_stylesheets_for_form()');
+
+$response = sfContext::getInstance()->getResponse();
+$form = new MyForm();
+
+$response->resetAssets();
+use_stylesheets_for_form($form);
+$t->is_deeply($response->getStylesheets(), array('/path/to/a/foo.css' => array('media' => 'all'), '/path/to/a/bar.css' => array('media' => 'print')), 'use_stylesheets_for_form() adds stylesheets to the response');
+
+$response->resetAssets();
+use_javascripts_for_form($form);
+$t->is_deeply($response->getJavaScripts(), array('/path/to/a/foo.js' => array(), '/path/to/a/bar.js' => array()), 'use_javascripts_for_form() adds javascripts to the response');
 
 // custom web paths
 $t->diag('Custom asset path handling');

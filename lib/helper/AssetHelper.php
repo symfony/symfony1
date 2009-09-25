@@ -647,6 +647,21 @@ function include_javascripts_for_form(sfForm $form)
 }
 
 /**
+ * Adds javascripts from the supplied form to the response object.
+ *
+ * @param sfForm $form
+ */
+function use_javascripts_for_form(sfForm $form)
+{
+  $response = sfContext::getInstance()->getResponse();
+
+  foreach ($form->getJavascripts() as $file)
+  {
+    $response->addJavascript($file);
+  }
+}
+
+/**
  * Returns <link> tags for all stylesheets associated with the given form.
  *
  * The stylesheets are set by implementing the getStyleSheets() method in the
@@ -683,4 +698,19 @@ function get_stylesheets_for_form(sfForm $form)
 function include_stylesheets_for_form(sfForm $form)
 {
   echo get_stylesheets_for_form($form);
+}
+
+/**
+ * Adds stylesheets from the supplied form to the response object.
+ *
+ * @param sfForm $form
+ */
+function use_stylesheets_for_form(sfForm $form)
+{
+  $response = sfContext::getInstance()->getResponse();
+
+  foreach ($form->getStylesheets() as $file => $media)
+  {
+    $response->addStylesheet($file, '', array('media' => $media));
+  }
 }
