@@ -34,7 +34,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     chdir(sfConfig::get('sf_root_dir'));
     $task = new sfDoctrineDataLoadTask($this->dispatcher, new sfFormatter());
     $task->setConfiguration($this);
-    $task->run(array(), array('--dir=' . $path));
+    $task->run(array($path));
   }
 
   public function configureDoctrine(Doctrine_Manager $manager)
