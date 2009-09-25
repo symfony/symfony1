@@ -114,7 +114,14 @@ class sfFormField
    */
   function render($attributes = array())
   {
-    return $this->widget->render($this->renderName(), $this->value, $attributes, $this->error);
+    if ($this->parent)
+    {
+      return $this->parent->getWidget()->renderField($this->name, $this->value, $attributes, $this->error);
+    }
+    else
+    {
+      return $this->widget->render($this->name, $this->value, $attributes, $this->error);
+    }
   }
 
   /**
