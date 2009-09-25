@@ -15,6 +15,16 @@ class articlesActions extends sfActions
     $this->articleList = $this->getArticleTable()->findAll();
   }
 
+  public function executeRedirectToShow()
+  {
+    $this->redirect('article', Doctrine::getTable('Article')->createQuery()->fetchOne());
+  }
+
+  public function executeShow()
+  {
+    $this->article = $this->getRoute()->getObject();
+  }
+
   public function executeCreate()
   {
     $this->form = new ArticleForm();

@@ -192,6 +192,13 @@ abstract class sfAction extends sfComponent
    */
   public function redirect($url, $statusCode = 302)
   {
+    // compatibility with url_for2() style signature
+    if (is_object($statusCode) || is_array($statusCode))
+    {
+      $url = array_merge(array('sf_route' => $url), is_object($statusCode) ? array('sf_subject' => $statusCode) : $statusCode);
+      $statusCode = func_num_args() >= 3 ? func_get_arg(2) : 302;
+    }
+
     $this->getController()->redirect($url, 0, $statusCode);
 
     throw new sfStopException();
@@ -214,7 +221,9 @@ abstract class sfAction extends sfComponent
   {
     if ($condition)
     {
-      $this->redirect($url, $statusCode);
+      // compatibility with url_for2() style signature
+      $arguments = func_get_args();
+      call_user_func_array(array($this, 'redirect'), array_slice($arguments, 1));
     }
   }
 
@@ -235,7 +244,9 @@ abstract class sfAction extends sfComponent
   {
     if (!$condition)
     {
-      $this->redirect($url, $statusCode);
+      // compatibility with url_for2() style signature
+      $arguments = func_get_args();
+      call_user_func_array(array($this, 'redirect'), array_slice($arguments, 1));
     }
   }
 
