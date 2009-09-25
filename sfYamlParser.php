@@ -214,7 +214,28 @@ class sfYamlParser
           return $value;
         }
 
-        throw new InvalidArgumentException(sprintf('Unable to parse line %d (%s).', $this->getRealCurrentLineNb() + 1, $this->currentLine));
+        switch (preg_last_error())
+        {
+          case PREG_INTERNAL_ERROR:
+            $error = 'Internal PCRE error on line';
+            break;
+          case PREG_BACKTRACK_LIMIT_ERROR:
+            $error = 'pcre.backtrack_limit reached on line';
+            break;
+          case PREG_RECURSION_LIMIT_ERROR:
+            $error = 'pcre.recursion_limit reached on line';
+            break;
+          case PREG_BAD_UTF8_ERROR:
+            $error = 'Malformed UTF-8 data on line';
+            break;
+          case PREG_BAD_UTF8_OFFSET_ERROR:
+            $error = 'Offset doesn\'t correspond to the begin of a valid UTF-8 code point on line';
+            break;
+          default:
+            $error = 'Unable to parse line';
+        }
+
+        throw new InvalidArgumentException(sprintf('%s %d (%s).', $error, $this->getRealCurrentLineNb() + 1, $this->currentLine));
       }
 
       if ($isRef)
