@@ -825,12 +825,19 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Adds CSRF protection to the current form.
    *
    * @param string $secret The secret to use to compute the CSRF token
+   *
+   * @return sfForm The current form instance
    */
-  public function addCSRFProtection($secret)
+  public function addCSRFProtection($secret = null)
   {
+    if (null === $secret)
+    {
+      $secret = $this->localCSRFSecret;
+    }
+
     if (false === $secret || (null === $secret && false === self::$CSRFSecret))
     {
-      return;
+      return $this;
     }
 
     if (null === $secret)
@@ -848,6 +855,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->validatorSchema[self::$CSRFFieldName] = new sfValidatorCSRFToken(array('token' => $token));
     $this->widgetSchema[self::$CSRFFieldName] = new sfWidgetFormInputHidden();
     $this->setDefault(self::$CSRFFieldName, $token);
+
+    return $this;
   }
 
   /**
