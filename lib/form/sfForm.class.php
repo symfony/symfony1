@@ -15,6 +15,11 @@
  *
  * sfForm also takes care of CSRF protection by default.
  *
+ * A CSRF secret can be any random string. If set to false, it disables the
+ * CSRF protection, and if set to null, it forces the form to use the global
+ * CSRF secret. If the global CSRF secret is also null, then a random one
+ * is generated on the fly.
+ *
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -23,8 +28,7 @@
 class sfForm implements ArrayAccess, Iterator, Countable
 {
   protected static
-    $CSRFProtection    = false,
-    $CSRFSecret        = null,
+    $CSRFSecret        = false,
     $CSRFFieldName     = '_csrf_token',
     $toStringException = null;
 
@@ -49,7 +53,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param array  $defaults    An array of field default values
    * @param array  $options     An array of options
-   * @param string $CSRFSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param string $CSRFSecret  A CSRF secret
    */
   public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
   {
@@ -786,7 +790,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function addCSRFProtection($secret)
   {
-    if (false === $secret || (null === $secret && !self::$CSRFProtection))
+    if (false === $secret || (null === $secret && false === self::$CSRFSecret))
     {
       return;
     }
@@ -867,17 +871,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   static public function enableCSRFProtection($secret = null)
   {
-    if (false === $secret)
-    {
-      return self::disableCSRFProtection();
-    }
-
-    self::$CSRFProtection = true;
-
-    if (null !== $secret)
-    {
-      self::$CSRFSecret = $secret;
-    }
+    self::$CSRFSecret = $secret;
   }
 
   /**
@@ -885,7 +879,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   static public function disableCSRFProtection()
   {
-    self::$CSRFProtection = false;
+    self::$CSRFSecret = false;
   }
 
   /**
