@@ -11,7 +11,7 @@
 require_once dirname(__FILE__).'/../../bootstrap/unit.php';
 
 $rootDir = realpath(dirname(__FILE__).'/../../functional/fixtures');
-$pluginRoot = $rootDir.'/plugins/sfAutoloadPlugin';
+$pluginRoot = realpath($rootDir.'/plugins/sfAutoloadPlugin');
 
 require_once $pluginRoot.'/config/sfAutoloadPluginConfiguration.class.php';
 
