@@ -11,7 +11,7 @@
 /**
  * Release script.
  *
- * Usage: php data/bin/release.php 1.1.0 stable
+ * Usage: php data/bin/release.php 1.3.0 stable
  *
  * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -62,7 +62,7 @@ else
 print sprintf("Releasing symfony version \"%s\".\n", $version);
 
 // tests
-$result = $filesystem->sh('php test/bin/prove.php');
+$result = $filesystem->sh('php data/bin/symfony symfony:test');
 
 if (0 != $result)
 {
