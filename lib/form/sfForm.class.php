@@ -46,6 +46,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $fieldNames      = array(),
     $options         = array(),
     $count           = 0,
+    $localCSRFSecret = null,
     $embeddedForms   = array();
 
   /**
@@ -59,6 +60,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     $this->setDefaults($defaults);
     $this->options = $options;
+    $this->localCSRFSecret = $CSRFSecret;
 
     $this->validatorSchema = new sfValidatorSchema();
     $this->widgetSchema    = new sfWidgetFormSchema();
@@ -67,7 +69,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
     $this->setup();
     $this->configure();
 
-    $this->addCSRFProtection($CSRFSecret);
+    $this->addCSRFProtection($this->localCSRFSecret);
     $this->resetFormFields();
   }
 
@@ -858,6 +860,24 @@ class sfForm implements ArrayAccess, Iterator, Countable
   static public function getCSRFFieldName()
   {
     return self::$CSRFFieldName;
+  }
+
+  /**
+   * Enables CSRF protection for this form.
+   *
+   * @param string $secret A secret to use when computing the CSRF token
+   */
+  public function enableLocalCSRFProtection($secret = null)
+  {
+    $this->localCSRFSecret = $secret;
+  }
+
+  /**
+   * Disables CSRF protection for this form.
+   */
+  public function disableLocalCSRFProtection()
+  {
+    $this->localCSRFSecret = false;
   }
 
   /**
