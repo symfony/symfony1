@@ -96,10 +96,14 @@ abstract class sfWidget
    * Adds a required option.
    *
    * @param string $name  The option name
+   *
+   * @return sfWidget The current widget instance
    */
   public function addRequiredOption($name)
   {
     $this->requiredOptions[] = $name;
+
+    return $this;
   }
 
   /**
@@ -117,10 +121,14 @@ abstract class sfWidget
    *
    * @param string $name   The option name
    * @param mixed  $value  The default value
+   *
+   * @return sfWidget The current widget instance
    */
   public function addOption($name, $value = null)
   {
     $this->options[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -128,6 +136,8 @@ abstract class sfWidget
    *
    * @param string $name   The option name
    * @param mixed  $value  The value
+   *
+   * @return sfWidget The current widget instance
    *
    * @throws InvalidArgumentException when a option is not supported
    */
@@ -139,6 +149,8 @@ abstract class sfWidget
     }
 
     $this->options[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -179,10 +191,14 @@ abstract class sfWidget
    * Sets the options.
    *
    * @param array $options  An array of options
+   *
+   * @return sfWidget The current widget instance
    */
   public function setOptions($options)
   {
     $this->options = $options;
+
+    return $this;
   }
 
   /**
@@ -200,10 +216,14 @@ abstract class sfWidget
    *
    * @param string $name   The attribute name
    * @param string $value  The attribute value
+   *
+   * @return sfWidget The current widget instance
    */
   public function setAttribute($name, $value)
   {
     $this->attributes[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -222,10 +242,14 @@ abstract class sfWidget
    * Sets the HTML attributes.
    *
    * @param array $attributes  An array of HTML attributes
+   *
+   * @return sfWidget The current widget instance
    */
   public function setAttributes($attributes)
   {
     $this->attributes = $attributes;
+
+    return $this;
   }
 
   /**

@@ -49,6 +49,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    *
    * @param sfValidatorError $error  An sfValidatorError instance
    * @param string           $name   The error name
+   *
+   * @return sfValidatorErrorSchema The current error schema instance
    */
   public function addError(sfValidatorError $error, $name = null)
   {
@@ -97,12 +99,16 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
 
     $this->updateCode();
     $this->updateMessage();
+
+    return $this;
   }
 
   /**
    * Adds an array of errors.
    *
    * @param array $errors  An array of sfValidatorError instances
+   *
+   * @return sfValidatorErrorSchema The current error schema instance
    */
   public function addErrors($errors)
   {
@@ -125,6 +131,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
         $this->addError($error, $name);
       }
     }
+
+    return $this;
   }
 
   /**

@@ -66,7 +66,9 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
    */
   public function addFormFormatter($name, sfWidgetFormSchemaFormatter $formatter)
   {
-    return $this->widget->addFormFormatter($name, $formatter);
+    $this->widget->addFormFormatter($name, $formatter);
+
+    return $this;
   }
 
   /**
@@ -83,6 +85,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setFormFormatterName($name)
   {
     $this->widget->setFormFormatterName($name);
+
+    return $this;
   }
 
   /**
@@ -107,6 +111,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setNameFormat($format)
   {
     $this->widget->setNameFormat($format);
+
+    return $this;
   }
 
   /**
@@ -123,6 +129,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setLabels(array $labels)
   {
     $this->widget->setLabels($labels);
+
+    return $this;
   }
 
   /**
@@ -146,6 +154,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
     {
       $this->widget->setLabel($name);
     }
+
+    return $this;
   }
 
   /**
@@ -162,6 +172,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setHelps(array $helps)
   {
     $this->widget->setHelps($helps);
+
+    return $this;
   }
 
   /**
@@ -178,6 +190,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setHelp($name, $help)
   {
     $this->widget->setHelp($name, $help);
+
+    return $this;
   }
 
   /**
@@ -262,6 +276,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setParent(sfWidgetFormSchema $parent = null)
   {
     $this->widget->setParent($parent);
+
+    return $this;
   }
 
   /**
@@ -286,6 +302,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   public function setPositions(array $positions)
   {
     $this->widget->setPositions($positions);
+
+    return $this;
   }
 
   /**

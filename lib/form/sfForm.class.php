@@ -555,10 +555,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Sets the validators associated with this form.
    *
    * @param array $validators An array of named validators
+   *
+   * @return sfForm The current form instance
    */
   public function setValidators(array $validators)
   {
     $this->setValidatorSchema(new sfValidatorSchema($validators));
+
+    return $this;
   }
 
   /**
@@ -566,12 +570,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param string      $name      The field name
    * @param sfValidator $validator The validator
+   *
+   * @return sfForm The current form instance
    */
   public function setValidator($name, sfValidatorBase $validator)
   {
     $this->validatorSchema[$name] = $validator;
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**
@@ -595,12 +603,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Sets the validator schema associated with this form.
    *
    * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
+   *
+   * @return sfForm The current form instance
    */
   public function setValidatorSchema(sfValidatorSchema $validatorSchema)
   {
     $this->validatorSchema = $validatorSchema;
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**
@@ -617,10 +629,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Sets the widgets associated with this form.
    *
    * @param array $widgets An array of named widgets
+   *
+   * @return sfForm The current form instance
    */
   public function setWidgets(array $widgets)
   {
     $this->setWidgetSchema(new sfWidgetFormSchema($widgets));
+
+    return $this;
   }
 
   /**
@@ -628,12 +644,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param string       $name   The field name
    * @param sfWidgetForm $widget The widget
+   *
+   * @return sfForm The current form instance
    */
   public function setWidget($name, sfWidgetForm $widget)
   {
     $this->widgetSchema[$name] = $widget;
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**
@@ -657,12 +677,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * Sets the widget schema associated with this form.
    *
    * @param sfWidgetFormSchema $widgetSchema A sfWidgetFormSchema instance
+   *
+   * @return sfForm The current form instance
    */
   public function setWidgetSchema(sfWidgetFormSchema $widgetSchema)
   {
     $this->widgetSchema = $widgetSchema;
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**
@@ -700,10 +724,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param string $name  The option name
    * @param mixed  $value The default value
+   *
+   * @return sfForm The current form instance
    */
   public function setOption($name, $value)
   {
     $this->options[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -724,12 +752,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @param string $name    The field name
    * @param mixed  $default The default value
+   *
+   * @return sfForm The current form instance
    */
   public function setDefault($name, $default)
   {
     $this->defaults[$name] = $default;
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**
@@ -762,6 +794,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * The default values are only used if the form is not bound.
    *
    * @param array $defaults An array of default values
+   *
+   * @return sfForm The current form instance
    */
   public function setDefaults($defaults)
   {
@@ -773,6 +807,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
     }
 
     $this->resetFormFields();
+
+    return $this;
   }
 
   /**

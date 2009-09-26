@@ -250,10 +250,14 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    * Sets the pre validator.
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setPreValidator(sfValidatorBase $validator)
   {
     $this->preValidator = clone $validator;
+
+    return $this;
   }
 
   /**
@@ -270,10 +274,14 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    * Sets the post validator.
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setPostValidator(sfValidatorBase $validator)
   {
     $this->postValidator = clone $validator;
+
+    return $this;
   }
 
   /**

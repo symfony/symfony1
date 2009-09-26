@@ -119,10 +119,14 @@ abstract class sfValidatorBase
    *
    * @param string $name   The error code
    * @param string $value  The error message
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function addMessage($name, $value)
   {
     $this->messages[$name] = isset(self::$globalDefaultMessages[$name]) ? self::$globalDefaultMessages[$name] : $value;
+
+    return $this;
   }
 
   /**
@@ -130,6 +134,8 @@ abstract class sfValidatorBase
    *
    * @param string $name   The error code
    * @param string $value  The error message
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setMessage($name, $value)
   {
@@ -139,6 +145,8 @@ abstract class sfValidatorBase
     }
 
     $this->messages[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -155,10 +163,14 @@ abstract class sfValidatorBase
    * Changes all error messages.
    *
    * @param array $values  An array of error messages
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setMessages($values)
   {
     $this->messages = $values;
+
+    return $this;
   }
 
   /**
@@ -178,10 +190,14 @@ abstract class sfValidatorBase
    *
    * @param string $name   The option name
    * @param mixed  $value  The default value
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function addOption($name, $value = null)
   {
     $this->options[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -189,6 +205,8 @@ abstract class sfValidatorBase
    *
    * @param string $name   The option name
    * @param mixed  $value  The value
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setOption($name, $value)
   {
@@ -198,6 +216,8 @@ abstract class sfValidatorBase
     }
 
     $this->options[$name] = $value;
+
+    return $this;
   }
 
   /**
@@ -226,20 +246,28 @@ abstract class sfValidatorBase
    * Changes all options.
    *
    * @param array $values  An array of options
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function setOptions($values)
   {
     $this->options = $values;
+
+    return $this;
   }
 
   /**
    * Adds a required option.
    *
    * @param string $name  The option name
+   *
+   * @return sfValidatorBase The current validator instance
    */
   public function addRequiredOption($name)
   {
     $this->requiredOptions[] = $name;
+
+    return $this;
   }
 
   /**
