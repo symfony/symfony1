@@ -101,7 +101,7 @@ class sfWebRequest extends sfRequest
           $this->setMethod(self::PUT);
           if ('application/x-www-form-urlencoded' === $this->getContentType())
           {
-            parse_str($this->getRawBody(), $postParameters);
+            parse_str($this->getContent(), $postParameters);
           }
           break;
 
@@ -109,7 +109,7 @@ class sfWebRequest extends sfRequest
           $this->setMethod(self::DELETE);
           if ('application/x-www-form-urlencoded' === $this->getContentType())
           {
-            parse_str($this->getRawBody(), $postParameters);
+            parse_str($this->getContent(), $postParameters);
           }
           break;
 
