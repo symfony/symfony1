@@ -69,9 +69,7 @@ class sfWebRequest extends sfRequest
     $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
     $this->parameterHolder->add($this->getParameters);
 
-    // POST parameters
-    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
-    $this->parameterHolder->add($this->postParameters);
+    $postParameters = $_POST;
 
     if (isset($_SERVER['REQUEST_METHOD']))
     {
@@ -82,21 +80,37 @@ class sfWebRequest extends sfRequest
           break;
 
         case 'POST':
-          $this->setMethod(strtoupper($this->getParameter('sf_method', 'POST')));
+          if (isset($_POST['sf_method']))
+          {
+            $this->setMethod(strtoupper($_POST['sf_method']));
+            unset($postParameters['sf_method']);
+          }
+          elseif (isset($_GET['sf_method']))
+          {
+            $this->setMethod(strtoupper($_GET['sf_method']));
+            unset($_GET['sf_method']);
+          }
+          else
+          {
+            $this->setMethod(self::POST);
+          }
           $this->parameterHolder->remove('sf_method');
           break;
 
         case 'PUT':
           $this->setMethod(self::PUT);
-
-          $putParameters = array();
-          parse_str($this->getContent(), $putParameters);
-          $putParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($putParameters) : $putParameters;
-          $this->parameterHolder->add($putParameters);
+          if ('application/x-www-form-urlencoded' === $this->getContentType())
+          {
+            parse_str($this->getRawBody(), $postParameters);
+          }
           break;
 
         case 'DELETE':
           $this->setMethod(self::DELETE);
+          if ('application/x-www-form-urlencoded' === $this->getContentType())
+          {
+            parse_str($this->getRawBody(), $postParameters);
+          }
           break;
 
         case 'HEAD':
@@ -113,6 +127,9 @@ class sfWebRequest extends sfRequest
       $this->setMethod(self::GET);
     }
 
+    $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($postParameters) : $postParameters;
+    $this->parameterHolder->add($this->postParameters);
+
     if (isset($this->options['formats']))
     {
       foreach ($this->options['formats'] as $format => $mimeTypes)
@@ -126,6 +143,25 @@ class sfWebRequest extends sfRequest
     $this->parameterHolder->add($this->requestParameters);
 
     $this->fixParameters();
+  }
+
+  /**
+   * Returns the content type of the current request.
+   *
+   * @param  Boolean $trimmed If false the full Content-Type header will be returned
+   *
+   * @return string
+   */
+  public function getContentType($trim = true)
+  {
+    $contentType = $this->getHttpHeader('Content-Type', null);
+
+    if ($trim && false !== $pos = strpos($contentType, ';'))
+    {
+      $contentType = substr($contentType, 0, $pos);
+    }
+
+    return $contentType;
   }
 
   /**

@@ -30,7 +30,7 @@ abstract class sfRequest implements ArrayAccess
 
   protected
     $dispatcher      = null,
-    $content         = null,
+    $rawBody         = null,
     $method          = null,
     $options         = array(),
     $parameterHolder = null,
@@ -79,8 +79,6 @@ abstract class sfRequest implements ArrayAccess
 
     $this->parameterHolder->add($parameters);
     $this->attributeHolder->add($attributes);
-    
-    $this->content = file_get_contents('php://input'); 
   }
 
   /**
@@ -282,15 +280,23 @@ abstract class sfRequest implements ArrayAccess
   {
     $this->parameterHolder->set($name, $value);
   }
-  
-  /** 
-   * Returns the content of the current request. 
-   *  
-   * @return string 
-   */ 
-  public function getContent() 
-  { 
-    return $this->content; 
+
+  /**
+   * Returns the raw body of the current request.
+   *
+   * @return string|Boolean The raw body or false if none is available
+   */
+  public function getRawBody()
+  {
+    if (null === $this->rawBody)
+    {
+      if (0 === strlen(trim($this->rawBody = file_get_contents('php://input'))))
+      {
+        $this->rawBody = false;
+      }
+    }
+
+    return $this->rawBody;
   }
 
   /**

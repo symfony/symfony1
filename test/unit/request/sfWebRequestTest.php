@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(52);
+$t = new lime_test(55);
 
 class myRequest extends sfWebRequest
 {
@@ -252,4 +252,12 @@ catch (sfValidatorErrorSchema $error)
   $t->fail('->checkCSRFProtection() checks token from BaseForm');
 }
 
-
+// ->getContentType()
+$t->diag('->getContentType()');
+$_SERVER['CONTENT_TYPE'] = 'text/html';
+$request = new myRequest($dispatcher);
+$t->is($request->getContentType(), 'text/html', '->getContentType() returns the content type');
+$_SERVER['CONTENT_TYPE'] = 'text/html; charset=UTF-8';
+$request = new myRequest($dispatcher);
+$t->is($request->getContentType(), 'text/html', '->getContentType() strips the charset information by default');
+$t->is($request->getContentType(false), 'text/html; charset=UTF-8', '->getContentType() does not strip the charset information by defaultif you pass false as the first argument');
