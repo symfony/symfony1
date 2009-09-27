@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit>
         <source>Save</source>
-        <target>Salvar</target>
+        <target>Desar</target>
       </trans-unit>
       <trans-unit>
         <source>Save and add</source>
@@ -31,10 +31,14 @@
       </trans-unit>
       <trans-unit>
         <source>Cancel</source>
-        <target>Cancelar</target>
+        <target>Cancel·lar</target>
       </trans-unit>
 
       <!-- Filters -->
+      <trans-unit>
+        <source>Filters</source>
+        <target>Filtres</target>
+      </trans-unit>
       <trans-unit>
         <source>Reset</source>
         <target>Restablir</target>
