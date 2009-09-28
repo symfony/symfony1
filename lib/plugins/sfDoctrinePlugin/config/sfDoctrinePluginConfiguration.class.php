@@ -55,7 +55,7 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 
     $manager = Doctrine_Manager::getInstance();
     $manager->setAttribute(Doctrine::ATTR_EXPORT, Doctrine::EXPORT_ALL);
-    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
+    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_NONE);
     $manager->setAttribute(Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES, true);
     $manager->setAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
     $manager->setAttribute(Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES, true);
