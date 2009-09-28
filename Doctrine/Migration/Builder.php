@@ -348,7 +348,7 @@ END;
      */
     public function buildCreateForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->createForeignKey('" . $tableName . "', '" . $definition['name'] . "', " . $this->varExport($definition, true) . ");";
+        return "        \$this->createForeignKey('" . $tableName . "', '" . $definition['name'] . "', " . $this->varExport($definition, true) . ");";
     }
 
     /**
@@ -360,7 +360,7 @@ END;
      */
     public function buildDropForeignKey($tableName, $definition)
     {
-        return "\t\t\$this->dropForeignKey('" . $tableName . "', '" . $definition['name'] . "');";
+        return "        \$this->dropForeignKey('" . $tableName . "', '" . $definition['name'] . "');";
     }
 
     /**
@@ -371,7 +371,7 @@ END;
      */
     public function buildCreateTable($tableData)
     {
-        $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
+        $code  = "        \$this->createTable('" . $tableData['tableName'] . "', ";
 
         $code .= $this->varExport($tableData['columns'], true) . ", ";
 
@@ -399,7 +399,7 @@ END;
      */
     public function buildDropTable($tableData)
     {
-        return "\t\t\$this->dropTable('" . $tableData['tableName'] . "');";
+        return "        \$this->dropTable('" . $tableData['tableName'] . "');";
     }
 
     /**
@@ -415,7 +415,7 @@ END;
         $length = $column['length'];
         $type = $column['type'];
         unset($column['length'], $column['type']);
-        return "\t\t\$this->addColumn('" . $tableName . "', '" . $columnName. "', '" . $type . "', '" . $length . "', " . $this->varExport($column) . ");";
+        return "        \$this->addColumn('" . $tableName . "', '" . $columnName. "', '" . $type . "', '" . $length . "', " . $this->varExport($column) . ");";
     }
 
     /**
@@ -428,7 +428,7 @@ END;
      */
     public function buildRemoveColumn($tableName, $columnName, $column)
     {
-        return "\t\t\$this->removeColumn('" . $tableName . "', '" . $columnName. "');";
+        return "        \$this->removeColumn('" . $tableName . "', '" . $columnName. "');";
     }
 
     /**
@@ -444,7 +444,7 @@ END;
         $length = $column['length'];
         $type = $column['type'];
         unset($column['length'], $column['type']);
-        return "\t\t\$this->changeColumn('" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
+        return "        \$this->changeColumn('" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
     }
 
     /**
@@ -457,7 +457,7 @@ END;
      */
     public function buildAddIndex($tableName, $indexName, $index)
     {
-        return "\t\t\$this->addIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
+        return "        \$this->addIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
     }
 
     /**
@@ -470,7 +470,7 @@ END;
      */
     public function buildRemoveIndex($tableName, $indexName, $index)
     {
-        return "\t\t\$this->removeIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
+        return "        \$this->removeIndex('$tableName', '$indexName', " . $this->varExport($index) . ");";
     }
 
     /**
