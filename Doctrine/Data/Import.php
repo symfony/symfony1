@@ -334,15 +334,9 @@ class Doctrine_Data_Import extends Doctrine_Data
             }
         }
 
-        $objects = array();
-        foreach ($this->_importedObjects as $object) {
-            $className = get_class($object);
-            $objects[$className] = $className;
-        }
-
         $manager = Doctrine_Manager::getInstance();
         foreach ($manager as $connection) {
-            $tree = $connection->unitOfWork->buildFlushTree($objects);
+            $tree = $connection->unitOfWork->buildFlushTree(array_keys($array));
 
             foreach ($tree as $model) {
                 foreach ($this->_importedObjects as $obj) {
