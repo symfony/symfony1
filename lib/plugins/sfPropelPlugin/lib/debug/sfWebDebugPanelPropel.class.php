@@ -71,27 +71,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         continue;
       }
 
-      if (preg_match('/^(?:prepare|exec|query): (.*)$/s', $log['message'], $match))
-      {
-        $logs[$i++] = $match[1];
-        $bindings[$i - 1] = array();
-      }
-      else if (preg_match('/Binding (.*) at position (.+?) w\//', $log['message'], $match))
-      {
-        $bindings[$i - 1][$match[2]] = $match[1];
-      }
-    }
-
-    foreach ($logs as $i => $log)
-    {
-      if (count($bindings[$i]))
-      {
-        $bindings[$i] = array_reverse($bindings[$i]);
-        foreach ($bindings[$i] as $search => $replace)
-        {
-          $logs[$i] = str_replace($search, $replace, $logs[$i]);
-        }
-      }
+      $logs[$i++] = $log['message'];
     }
 
     return $logs;
