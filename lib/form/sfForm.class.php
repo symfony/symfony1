@@ -463,6 +463,25 @@ class sfForm implements ArrayAccess, Iterator, Countable
   }
 
   /**
+   * Returns an embedded form.
+   *
+   * @param  string $name The name used to embed the form
+   *
+   * @return sfForm
+   * 
+   * @throws InvalidArgumentException If there is no form embedded with the supplied name
+   */
+  public function getEmbeddedForm($name)
+  {
+    if (!isset($this->embeddedForms[$name]))
+    {
+      throw new InvalidArgumentException(sprintf('There is no embedded "%s" form.', $name));
+    }
+
+    return $this->embeddedForms[$name];
+  }
+
+  /**
    * Merges current form widget and validator schemas with the ones from the
    * sfForm object passed as parameter. Please note it also merge defaults.
    *

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(150);
+$t = new lime_test(152);
 
 class FormTest extends sfForm
 {
@@ -652,6 +652,16 @@ $article->embedForm('author', $author);
 $forms = $article->getEmbeddedForms();
 $t->is(array_keys($forms), array('company', 'author'), '->getEmbeddedForms() returns the embedded forms');
 $t->is($forms['company'], $company, '->getEmbeddedForms() returns the embedded forms');
+$t->isa_ok($article->getEmbeddedForm('company'), 'FormTest', '->getEmbeddedForm() return an embedded form');
+try
+{
+  $article->getEmbeddedForm('nonexistant');
+  $t->fail('->getEmbeddedForm() throws an exception if the embedded form does not exist');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('->getEmbeddedForm() throws an exception if the embedded form does not exist');
+}
 
 // ::convertFileInformation()
 $t->diag('::convertFileInformation()');
