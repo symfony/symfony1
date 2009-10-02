@@ -82,7 +82,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         // file mapping
         foreach ($entry['files'] as $class => $file)
         {
-          $mapping[strtolower($class)] = $file;
+          $mapping[strtolower($class)] = self::removeIncludePath($file);
         }
       }
       else
@@ -140,10 +140,25 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         }
       }
 
-      $mapping[$localPrefix.strtolower($class)] = $file;
+      $mapping[$localPrefix.strtolower($class)] = self::removeIncludePath($file);
     }
 
     return $mapping;
+  }
+
+  static protected function removeIncludePath($file)
+  {
+    $includePaths = array_map('realpath', explode(PATH_SEPARATOR, get_include_path()));
+
+    foreach ($includePaths as $includePath)
+    {
+      if (0 === strpos($file, $includePath))
+      {
+        return trim(substr($file, strlen($includePath)), '/');
+      }
+    }
+
+    return $file;
   }
 
   /**
