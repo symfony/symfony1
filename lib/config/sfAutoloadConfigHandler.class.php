@@ -148,10 +148,17 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
 
   static protected function removeIncludePath($file)
   {
-    $includePaths = array_map('realpath', explode(PATH_SEPARATOR, get_include_path()));
+    $includePaths = explode(PATH_SEPARATOR, get_include_path());
 
     foreach ($includePaths as $includePath)
     {
+      // ignore relative include paths
+      if (0 === strpos($includePath, '.'))
+      {
+        continue;
+      }
+
+      $includePath = realpath($includePath);
       if (0 === strpos($file, $includePath))
       {
         return trim(substr($file, strlen($includePath)), '/');
