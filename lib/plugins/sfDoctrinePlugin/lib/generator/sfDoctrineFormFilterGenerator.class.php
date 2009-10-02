@@ -282,6 +282,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
   public function getValidatorForColumn($column)
   {
     $format = 'new %s(%s)';
+
     if (in_array($class = $this->getValidatorClassForColumn($column), array('sfValidatorInteger', 'sfValidatorNumber')))
     {
       $format = 'new sfValidatorSchemaFilter(\'text\', new %s(%s))';

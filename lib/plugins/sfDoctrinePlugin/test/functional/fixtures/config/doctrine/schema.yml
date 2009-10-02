@@ -35,6 +35,12 @@ AuthorInheritance:
     extends: Author
     type: column_aggregation
 
+AuthorInheritanceConcrete:
+  inheritance:
+    extends: Author
+  columns:
+    additional: string(255)
+
 Subscription:
   connection: doctrine2
   columns:

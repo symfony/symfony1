@@ -14,6 +14,11 @@ class Base<?php echo $this->modelName ?>Form extends <?php echo $this->getFormCl
   {
     parent::setupInheritance();
 
+<?php foreach ($this->getColumns() as $column): ?>
+    $this->widgetSchema   ['<?php echo $column->getFieldName() ?>'] = new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>);
+    $this->validatorSchema['<?php echo $column->getFieldName() ?>'] = new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>);
+
+<?php endforeach; ?>
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
     $this->widgetSchema   ['<?php echo $this->underscore($relation['alias']) ?>_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => '<?php echo $relation['table']->getOption('name') ?>'));
     $this->validatorSchema['<?php echo $this->underscore($relation['alias']) ?>_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => '<?php echo $relation['table']->getOption('name') ?>', 'required' => false));

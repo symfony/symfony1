@@ -547,13 +547,17 @@ class sfDoctrineFormGenerator extends sfGenerator
   }
 
   /**
-   * Get array of sfDoctrineColumn objects
+   * Get array of sfDoctrineColumn objects that exist on the current model but not its parent.
    *
    * @return array $columns
    */
   public function getColumns()
   {
-    foreach (array_keys($this->table->getColumns()) as $name)
+    $parentModel = $this->getParentModel();
+    $parentColumns = $parentModel ? array_keys(Doctrine::getTable($parentModel)->getColumns()) : array();
+
+    $columns = array();
+    foreach (array_diff(array_keys($this->table->getColumns()), $parentColumns) as $name)
     {
       $columns[] = new sfDoctrineColumn($name, $this->table);
     }
