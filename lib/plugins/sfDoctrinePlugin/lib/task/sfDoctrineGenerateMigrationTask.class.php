@@ -59,22 +59,35 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    $config = $this->getCliConfig();
+
     $this->logSection('doctrine', sprintf('generating migration class named "%s"', $arguments['name']));
 
-    $path = sfConfig::get('sf_lib_dir').'/migration/doctrine';
-    if (!is_dir($path)) {
+    if (!is_dir($path = sfConfig::get('sf_lib_dir').'/migration/doctrine'))
+    {
       $this->getFilesystem()->mkdirs($path);
     }
 
-    $databaseManager = new sfDatabaseManager($this->configuration);
     $this->callDoctrineCli('generate-migration', array('name' => $arguments['name']));
 
-    if (isset($options['editor-cmd']))
+    $finder = sfFinder::type('file')->sort_by_name()->name('*.php');
+    if ($files = $finder->in($config['migrations_path']))
     {
-      $config = $this->getCliConfig();
-      $files = sfFinder::type('file')->sort_by_name()->name('*.php')->in($config['migrations_path']);
+      $file = array_pop($files);
 
-      $this->getFilesystem()->sh($options['editor-cmd'].' '.escapeshellarg(array_pop($files)));
+      $contents = file_get_contents($file);
+      $contents = strtr(sfToolkit::stripComments($contents), array(
+        "{\n\n" => "{\n",
+        "\n}"   => "\n}\n",
+        '    '  => '  ',
+      ));
+      file_put_contents($file, $contents);
+
+      if (isset($options['editor-cmd']))
+      {
+        $this->getFilesystem()->sh($options['editor-cmd'].' '.escapeshellarg($file));
+      }
     }
   }
 }

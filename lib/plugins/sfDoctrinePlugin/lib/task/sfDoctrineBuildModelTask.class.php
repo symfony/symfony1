@@ -103,6 +103,25 @@ EOF;
     $import->setOptions($options);
     $import->importSchema(array($tmpPath, $config['yaml_schema_path']), 'yml', $config['models_path']);
 
+    $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
+    $finder = sfFinder::type('file')->name('*'.$options['suffix'])->maxdepth(0);
+    $this->getFilesystem()->replaceTokens($finder->in($config['models_path']), '##', '##', array(
+      'PACKAGE'    => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
+      'SUBPACKAGE' => 'model',
+      'NAME'       => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
+      'EMAIL'      => isset($properties['symfony']['email']) ? $properties['symfony']['email'] : 'you@email.com',
+    ));
+
+    $finder = sfFinder::type('file')->name('*Table'.$options['suffix'])->maxdepth(0);
+    foreach ($finder->in($config['models_path']) as $file)
+    {
+      $contents = file_get_contents($file);
+      $contents = strtr(sfToolkit::stripComments($contents), array(
+        "{\n\n}" => "{\n}\n",
+      ));
+      file_put_contents($file, $contents);
+    }
+
     $this->reloadAutoload();
   }
 }
