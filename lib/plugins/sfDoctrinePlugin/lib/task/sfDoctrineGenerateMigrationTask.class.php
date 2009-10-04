@@ -64,9 +64,9 @@ EOF;
 
     $this->logSection('doctrine', sprintf('generating migration class named "%s"', $arguments['name']));
 
-    if (!is_dir($path = sfConfig::get('sf_lib_dir').'/migration/doctrine'))
+    if (!is_dir($config['migrations_path']))
     {
-      $this->getFilesystem()->mkdirs($path);
+      $this->getFilesystem()->mkdirs($config['migrations_path']);
     }
 
     $this->callDoctrineCli('generate-migration', array('name' => $arguments['name']));
