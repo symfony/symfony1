@@ -115,7 +115,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
       // interpolate parameters
       foreach ($params as $param)
       {
-        $query = join(var_export($param, true), explode('?', $query, 2));
+        $query = join(var_export(is_scalar($param) ? $param : (string) $param, true), explode('?', $query, 2));
       }
 
       // slow query
