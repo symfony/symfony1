@@ -82,7 +82,7 @@ class sfWebDebugPanelView extends sfWebDebugPanel
     foreach (array_reverse($this->webDebug->getLogger()->getLogs()) as $log)
     {
       if (
-        ($class == $log['type'] || is_subclass_of($log['type'], $class))
+        ($class == $log['type'] || (class_exists($log['type'], false) && is_subclass_of($log['type'], $class)))
         &&
         preg_match('/^Render "(.*)"$/', $log['message'], $match)
       )
