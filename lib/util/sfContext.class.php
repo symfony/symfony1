@@ -553,7 +553,10 @@ class sfContext implements ArrayAccess
   }
   
   /**
-   * Calls methods defined via context objects.
+   * Calls methods defined via sfEventDispatcher.
+   *
+   * If a method cannot be found via sfEventDispatcher, the method name will
+   * be parsed to magically handle getMyFactory() and setMyFactory() methods.
    *
    * @param  string $method     The method name
    * @param  array  $arguments  The method arguments
@@ -564,19 +567,25 @@ class sfContext implements ArrayAccess
    */
   public function __call($method, $arguments)
   {
-    $name = substr($method, 0, 3); // get | set
-    $factory = strtolower(substr($method, 3)); // factory name
-    
-    if($name == 'get' && $this->has($factory))
-    {    
-      return $this->factories[$factory];
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'context.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
+    {
+      $verb = substr($method, 0, 3); // get | set
+      $factory = strtolower(substr($method, 3)); // factory name
+
+      if ('get' == $verb && $this->has($factory))
+      {
+        return $this->factories[$factory];
+      }
+      else if ('set' == $verb && isset($arguments[0]))
+      {
+        return $this->set($factory, $arguments[0]);
+      }
+
+      throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
     }
-    else if($name == 'set' && isset($arguments[0]))
-    {    
-      return $this->set($factory, $arguments[0]);
-    }
-    
-    throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
+
+    return $event->getReturnValue();
   }
 
   /**
