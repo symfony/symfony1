@@ -99,27 +99,27 @@ EOF;
                      'baseClassName'        => 'sfDoctrineRecord');
     $options = array_merge($options, sfConfig::get('doctrine_model_builder_options', array()));
 
+    $finder = sfFinder::type('file')->maxdepth(0)->name('*'.$options['suffix']);
+    $before = $finder->in($config['models_path']);
+
     $import = new Doctrine_Import_Schema();
     $import->setOptions($options);
     $import->importSchema(array($tmpPath, $config['yaml_schema_path']), 'yml', $config['models_path']);
 
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
-    $finder = sfFinder::type('file')->name('*'.$options['suffix'])->maxdepth(0);
-    $this->getFilesystem()->replaceTokens($finder->in($config['models_path']), '##', '##', array(
-      'PACKAGE'    => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
-      'SUBPACKAGE' => 'model',
-      'NAME'       => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
-      'EMAIL'      => isset($properties['symfony']['email']) ? $properties['symfony']['email'] : 'you@email.com',
+    $this->getFilesystem()->replaceTokens(array_diff($finder->in($config['models_path']), $before), '', '', array(
+      '##PACKAGE##'    => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
+      '##SUBPACKAGE##' => 'model',
+      '##NAME##'       => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
+      ' <##EMAIL##>'   => '',
+      "{\n\n}"         => "{\n}\n",
     ));
 
-    $finder = sfFinder::type('file')->name('*Table'.$options['suffix'])->maxdepth(0);
-    foreach ($finder->in($config['models_path']) as $file)
+    $finder = sfFinder::type('file')->maxdepth(0)->name('*Table'.$options['suffix']);
+    foreach (array_diff($finder->in($config['models_path']), $before) as $file)
     {
       $contents = file_get_contents($file);
-      $contents = strtr(sfToolkit::stripComments($contents), array(
-        "{\n\n}" => "{\n}\n",
-      ));
-      file_put_contents($file, $contents);
+      file_put_contents($file, sfToolkit::stripComments($contents));
     }
 
     $this->reloadAutoload();
