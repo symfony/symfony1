@@ -307,7 +307,11 @@ abstract class sfCommandApplication
 
     foreach ($this->commandManager->getOptionSet()->getOptions() as $option)
     {
-      $messages[] = sprintf('  %-24s %s  %s', $this->formatter->format('--'.$option->getName(), 'INFO'), $this->formatter->format('-'.$option->getShortcut(), 'INFO'), $option->getHelp());
+      $messages[] = sprintf('  %-24s %s  %s',
+        $this->formatter->format('--'.$option->getName(), 'INFO'),
+        $option->getShortcut() ? $this->formatter->format('-'.$option->getShortcut(), 'INFO') : '  ',
+        $option->getHelp()
+      );
     }
 
     $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
