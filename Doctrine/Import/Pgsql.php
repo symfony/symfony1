@@ -193,10 +193,12 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
             $matches = array(); 
 
             if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", $description['default'], $matches)) { 
-     
                 $description['sequence'] = $this->conn->formatter->fixSequenceName($matches[1]); 
                 $description['default'] = null; 
-            } 
+            } else if (preg_match("/^'(.*)'::character varying$/", $description['default'], $matches)) {
+                $description['default'] = $matches[1];
+            }
+            
             
             $columns[$val['field']] = $description;
         }
