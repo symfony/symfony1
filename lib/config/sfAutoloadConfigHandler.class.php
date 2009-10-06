@@ -161,7 +161,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       $includePath = realpath($includePath);
       if (0 === strpos($file, $includePath))
       {
-        return trim(substr($file, strlen($includePath)), '/');
+        return trim(substr($file, strlen($includePath)), DIRECTORY_SEPARATOR);
       }
     }
 
