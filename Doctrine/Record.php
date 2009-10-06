@@ -1460,6 +1460,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     protected function _isValueModified($type, $old, $new)
     {
+        if ($new instanceof Doctrine_Expression) {
+            return true;
+        }
+
         if ($type == 'boolean' && (is_bool($old) || is_numeric($old)) && (is_bool($new) || is_numeric($new)) && $old == $new) {
             return false;
         } else if (in_array($type, array('decimal', 'float')) && is_numeric($old) && is_numeric($new)) {
