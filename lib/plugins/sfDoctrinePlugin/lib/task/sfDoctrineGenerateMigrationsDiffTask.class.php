@@ -49,13 +49,14 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $dir = sfConfig::get('sf_lib_dir').'/migration/doctrine';
-    if (!is_dir($dir))
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    $config = $this->getCliConfig();
+
+    if (!is_dir($config['migrations_path']))
     {
-      mkdir($dir, 0777, true);
+      $this->getFilesystem()->mkdirs($config['migrations_path']);
     }
 
-    $databaseManager = new sfDatabaseManager($this->configuration);
     $this->callDoctrineCli('generate-migrations-diff');
   }
 }

@@ -49,9 +49,16 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    $config = $this->getCliConfig();
+
     $this->logSection('doctrine', 'generating migration classes from database');
 
-    $databaseManager = new sfDatabaseManager($this->configuration);
+    if (!is_dir($config['migrations_path']))
+    {
+      $this->getFilesystem()->mkdirs($config['migrations_path']);
+    }
+
     $this->callDoctrineCli('generate-migrations-db');
   }
 }
