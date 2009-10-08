@@ -773,6 +773,8 @@ class sfCultureInfo
       }
     }
 
+    $this->sortArray($allCurrencies);
+
     return $allCurrencies;
   }
 
