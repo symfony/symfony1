@@ -34,7 +34,17 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     $config = array();
     foreach ($configFiles as $configFile)
     {
-      $config = sfToolkit::arrayDeepMerge($config, self::parseYaml($configFile));
+      // the first level is an environment and its value must be an array
+      $values = array();
+      foreach (self::parseYaml($configFile) as $env => $value)
+      {
+        if (null !== $value)
+        {
+          $values[$env] = $value;
+        }
+      }
+
+      $config = sfToolkit::arrayDeepMerge($config, $values);
     }
 
     return $config;
