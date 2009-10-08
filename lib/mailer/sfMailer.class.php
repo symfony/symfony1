@@ -282,6 +282,11 @@ class sfMailer extends Swift_Mailer
     {
       $this->force = false;
 
+      if (!$this->realtimeTransport->isStarted())
+      {
+        $this->realtimeTransport->start();
+      }
+
       return $this->realtimeTransport->send($message, $failedRecipients);
     }
 
