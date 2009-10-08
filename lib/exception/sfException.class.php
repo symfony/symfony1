@@ -207,6 +207,11 @@ class sfException extends Exception
       $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
+    if ($response)
+    {
+      $response->sendHttpHeaders();
+    }
+
     if ($template = self::getTemplatePathForError($format, true))
     {
       if (isset($dispatcher))
