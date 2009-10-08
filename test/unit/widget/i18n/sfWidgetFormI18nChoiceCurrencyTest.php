@@ -28,7 +28,7 @@ catch (InvalidArgumentException $e)
 }
 
 $v = new sfWidgetFormI18nChoiceCurrency(array('culture' => 'en', 'currencies' => array('EUR', 'USD')));
-$t->is(array_keys($v->getOption('choices')), array('USD', 'EUR'), '->configure() can restrict the number of currencies with the currencies option');
+$t->is(array_keys($v->getOption('choices')), array('EUR', 'USD'), '->configure() can restrict the number of currencies with the currencies option');
 
 // ->render()
 $t->diag('->render()');

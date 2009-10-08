@@ -120,7 +120,7 @@ $t->is($currencies_fr['EUR'], 'euro', '->getCurrencies() returns a list of curre
 $t->is($currencies_en, $c_en->Currencies, '->getCurrencies() is equivalent to ->Currencies');
 
 $currencies = $c_en->getCurrencies(array('USD', 'EUR'));
-$t->is(array_keys($currencies), array('USD', 'EUR'), '->getCurrencies() takes an array of currencies as its first argument');
+$t->is(array_keys($currencies), array('EUR', 'USD'), '->getCurrencies() takes an array of currencies as its first argument');
 
 try
 {
