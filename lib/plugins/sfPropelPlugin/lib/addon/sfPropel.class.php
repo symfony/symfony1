@@ -143,10 +143,10 @@ class sfPropel
    */
   static public function clearAllInstancePools()
   {
-    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
+    $files = sfFinder::type('file')->name('*TableMap.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
     foreach ($files as $file)
     {
-      $omClass = basename($file, 'MapBuilder.php');
+      $omClass = basename($file, 'TableMap.php');
       if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
       {
         $peer = constant($omClass.'::PEER');

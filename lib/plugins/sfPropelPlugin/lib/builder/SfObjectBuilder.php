@@ -21,39 +21,12 @@ class SfObjectBuilder extends PHP5ObjectBuilder
   public function build()
   {
     $objectCode = parent::build();
-    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    if (!$this->getBuildProperty('builderAddComments'))
     {
       $objectCode = sfToolkit::stripComments($objectCode);
     }
 
-    if(!DataModelBuilder::getBuildProperty('builderAddIncludes'))
-    {
-       // remove all inline includes: object classes include the peers
-      $objectCode = preg_replace("/include_once\s*.*Base.*Peer\.php.*\s*/", "", $objectCode);
-    }
-
     return $objectCode;
-  }
-
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
-    {
-      return;
-    }
-
-    parent::addIncludes($script);
-
-    // include the i18n classes if needed
-    if ($this->getTable()->getAttribute('isI18N'))
-    {
-      $relatedTable = $this->getDatabase()->getTable($this->getTable()->getAttribute('i18nTable'));
-
-      $script .= '
-require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPackage().'.', $relatedTable->getPhpName().'Peer').'\';
-require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPackage().'.', $relatedTable->getPhpName()).'\';
-';
-    }
   }
 
   protected function addClassBody(&$script)
@@ -73,28 +46,9 @@ require_once \''.ClassTools::getFilePath($this->getStubObjectBuilder()->getPacka
       $this->addI18nMethods($script);
     }
 
-    $this->addToString($script);
-
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    if ($this->getBuildProperty('builderAddBehaviors'))
     {
       $this->addCall($script);
-    }
-  }
-
-  protected function addToString(&$script)
-  {
-    foreach ($this->getTable()->getColumns() as $column)
-    {
-      if ($column->getAttribute('isPrimaryString'))
-      {
-        $script .= "
-  public function __toString()
-  {
-    return \$this->get{$column->getPhpName()}();
-  }
-";
-        break;
-      }
     }
   }
 
@@ -281,7 +235,7 @@ $script .= '
     $tmp = '';
     parent::addDelete($tmp);
 
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    if ($this->getBuildProperty('builderAddBehaviors'))
     {
       // add sfMixer call
       $pre_mixer_script = "
@@ -348,7 +302,7 @@ $script .= '
     }
     $tmp = preg_replace('/{/', '{'.$date_script, $tmp, 1);
 
-    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    if ($this->getBuildProperty('builderAddBehaviors'))
     {
       // add sfMixer call
       $pre_mixer_script = "

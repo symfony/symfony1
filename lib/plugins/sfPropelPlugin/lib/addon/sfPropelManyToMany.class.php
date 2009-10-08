@@ -73,23 +73,8 @@ class sfPropelManyToMany
   {
     $column = self::getRelatedColumn($class, $middleClass, $relatedColumn);
 
-    // we must load all map builder classes
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
-    foreach ($classes as $class)
-    {
-      $omClass = basename($class, 'MapBuilder.php');
-      if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
-      {
-        $class_map_builder = basename($class, '.php');
-        $map = new $class_map_builder();
-        if (!$map->isBuilt())
-        {
-          $map->doBuild();
-        }
-      }
-    }
-
     $tableMap = call_user_func(array(constant($middleClass.'::PEER'), 'getTableMap'));
+    $tableMap->getRelations();
 
     return $tableMap->getDatabaseMap()->getTable($column->getRelatedTableName())->getPhpName();
   }

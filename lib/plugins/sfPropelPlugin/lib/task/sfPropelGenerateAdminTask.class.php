@@ -106,15 +106,9 @@ EOF;
 
     if (!isset($routesArray[$name]))
     {
-      $class = $model.'MapBuilder';
-      $map = new $class();
-      if (!$map->isBuilt())
-      {
-        $map->doBuild();
-      }
-
       $primaryKey = 'id';
-      foreach ($map->getDatabaseMap()->getTable(constant(constant($model.'::PEER').'::TABLE_NAME'))->getColumns() as $column)
+      $map = call_user_func(array($model.'PEER', 'getTableMap'));
+      foreach ($map->getColumns() as $column)
       {
         if ($column->isPrimaryKey())
         {

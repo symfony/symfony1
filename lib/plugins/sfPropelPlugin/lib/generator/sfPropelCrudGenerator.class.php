@@ -79,32 +79,14 @@ class sfPropelCrudGenerator extends sfAdminGenerator
    */
   protected function loadMapBuilderClasses()
   {
-    // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in($this->generatorManager->getConfiguration()->getModelDirs());
-    foreach ($classes as $class)
+    $this->tableMap = call_user_func(array($this->peerClassName, 'getTableMap'));
+    // load all related table maps, 
+    // and all tables related to the related table maps (for m2m relations)
+    foreach ($this->tableMap->getRelations() as $relation)
     {
-      $omClass = basename($class, 'MapBuilder.php');
-      if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
-      {
-        $class_map_builder = basename($class, '.php');
-        $maps[$class_map_builder] = new $class_map_builder();
-        if (!$maps[$class_map_builder]->isBuilt())
-        {
-          $maps[$class_map_builder]->doBuild();
-        }
-
-        if ($this->className == $omClass)
-        {
-          $this->map = $maps[$class_map_builder];
-        }
-      }
+      $relation->getForeignTable()->getRelations();
     }
-    if (!$this->map)
-    {
-      throw new sfException(sprintf('The model class "%s" does not exist.', $this->className));
-    }
-
-    $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($this->peerClassName.'::TABLE_NAME'));
+    $this->map = $this->tableMap;
   }
 
   /**

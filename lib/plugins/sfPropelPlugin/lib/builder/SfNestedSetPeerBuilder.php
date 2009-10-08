@@ -21,21 +21,11 @@ class SfNestedSetPeerBuilder extends PHP5NestedSetPeerBuilder
   public function build()
   {
     $code = parent::build();
-    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    if (!$this->getBuildProperty('builderAddComments'))
     {
       $code = sfToolkit::stripComments($code);
     }
 
     return $code;
-  }
-
-  protected function addIncludes(&$script)
-  {
-    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
-    {
-      return;
-    }
-
-    parent::addIncludes($script);
   }
 }

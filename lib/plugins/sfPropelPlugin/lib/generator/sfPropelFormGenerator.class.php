@@ -61,10 +61,10 @@ class sfPropelFormGenerator extends sfGenerator
       $this->params['form_dir_name'] = 'form';
     }
 
-    $this->loadBuilders();
-
     $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
 
+    $this->loadBuilders();
+    
     // create the project base class for all forms
     $file = sfConfig::get('sf_lib_dir').'/form/BaseFormPropel.class.php';
     if (!file_exists($file))
@@ -484,18 +484,15 @@ class sfPropelFormGenerator extends sfGenerator
    */
   protected function loadBuilders()
   {
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in($this->generatorManager->getConfiguration()->getModelDirs());
+    $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
+    $classes = sfFinder::type('file')->name('*TableMap.php')->in($this->generatorManager->getConfiguration()->getModelDirs());
     foreach ($classes as $class)
     {
-      $omClass = basename($class, 'MapBuilder.php');
+      $omClass = basename($class, 'TableMap.php');
       if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
       {
-        $class = basename($class, '.php');
-        $map = new $class();
-        if (!$map->isBuilt())
-        {
-          $map->doBuild();
-        }
+        $tableMapClass = basename($class, '.php');
+        $this->dbMap->addTableFromMapClass($tableMapClass);
       }
     }
   }
