@@ -77,6 +77,16 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     }
 
     /**
+     * Get array of configured options
+     *
+     * @return array $options
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
+
+    /**
      * add
      * adds a listener to the chain of listeners
      *

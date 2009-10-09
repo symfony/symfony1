@@ -32,6 +32,12 @@
  */
 interface Doctrine_Record_Listener_Interface
 {
+    public function setOption($name, $value = null);
+
+    public function getOptions();
+
+    public function getOption($name);
+
     public function preSerialize(Doctrine_Event $event);
 
     public function postSerialize(Doctrine_Event $event);
