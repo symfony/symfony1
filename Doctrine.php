@@ -613,10 +613,6 @@ final class Doctrine
 
         $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING):$modelLoading;
 
-        if ($modelLoading == self::MODEL_LOADING_PEAR) {
-            throw new Doctrine_Exception('You cannot use loadModels() with PEAR, use setModelsDirectory()');
-        }
-
         $loadedModels = array();
 
         if ($directory !== null) {
