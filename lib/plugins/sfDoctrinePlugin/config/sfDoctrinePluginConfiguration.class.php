@@ -65,7 +65,10 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 
     if (method_exists($this->configuration, 'configureDoctrine'))
     {
+      $this->dispatcher->notify(new sfEvent($this->configuration, 'application.log', array('ProjectConfiguration::configureDoctrine() has been deprecated. Please use the "doctrine.configure" event instead.', 'priority' => sfLogger::NOTICE)));
       $this->configuration->configureDoctrine($manager);
     }
+
+    $this->dispatcher->notify(new sfEvent($manager, 'doctrine.configure'));
   }
 }
