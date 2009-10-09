@@ -433,7 +433,16 @@ final class Doctrine
      * Will not require_once() found model files inititally instead it will build an array
      * and reference it in autoload() when a class is needed it will require_once() it
      */
-    const MODEL_LOADING_CONSERVATIVE= 2;
+    const MODEL_LOADING_CONSERVATIVE = 2;
+
+    /**
+     * MODEL_LOADING_PEAR
+     *
+     * Constant for pear model loading
+     * Will simply store the path passed to Doctrine::loadModels() 
+     * and Doctrine::autoload() will check there
+     */
+    const MODEL_LOADING_PEAR = 3;
 
     /**
      * Path to Doctrine root
@@ -469,6 +478,13 @@ final class Doctrine
      * @var array
      */
     private static $_validators = array();
+
+    /**
+     * Path to the models directory
+     *
+     * @var string
+     */
+    private static $_modelsDirectory;
 
     /**
      * __construct
@@ -573,6 +589,18 @@ final class Doctrine
     }
 
     /**
+     * Set the directory where your models are located for PEAR style
+     * naming convention autoloading.
+     *
+     * @param string $directory 
+     * @return void
+     */
+    public static function setModelsDirectory($directory)
+    {
+        self::$_modelsDirectory = $directory;
+    }
+
+    /**
      * Recursively load all models from a directory or array of directories
      *
      * @param  string   $directory      Path to directory of models or array of directory paths
@@ -584,6 +612,10 @@ final class Doctrine
         $manager = Doctrine_Manager::getInstance();
 
         $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING):$modelLoading;
+
+        if ($modelLoading == self::MODEL_LOADING_PEAR) {
+            throw new Doctrine_Exception('You cannot use loadModels() with PEAR, use setModelsDirectory()');
+        }
 
         $loadedModels = array();
 
@@ -1073,13 +1105,25 @@ final class Doctrine
             return false;
         }
 
-        $loadedModels = self::$_loadedModelFiles;
+        if ( ! self::$_modelsDirectory) {
+            $loadedModels = self::$_loadedModelFiles;
 
-        if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
-            require $loadedModels[$className];
+            if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
+                require $loadedModels[$className];
 
-            return true;
+                return true;
+            }
+        } else {
+            $class = self::$_modelsDirectory . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+
+            if (file_exists($class)) {
+                require $class;
+
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**

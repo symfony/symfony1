@@ -130,6 +130,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_classPrefixFiles = true;
 
     /**
+     * Whether or not to generate PEAR style directories and files
+     *
+     * @var boolean
+     */
+    protected $_pearStyle = false;
+
+    /**
      * The package name to use for the generated php docs
      *
      * @var string
@@ -1113,6 +1120,15 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         $code .= PHP_EOL . $definitionCode;
+
+        if ($this->_pearStyle) {
+            $writePath = str_replace('_', '/', $writePath);
+        }
+
+        $dir = dirname($writePath);
+        if ( ! is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
 
         if (isset($definition['generate_once']) && $definition['generate_once'] === true) {
             if ( ! file_exists($writePath)) {
