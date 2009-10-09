@@ -98,6 +98,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     protected $_loadedValidatorsFromDisk = false;
 
+    protected static $_instance;
+
     /**
      * constructor
      *
@@ -175,11 +177,43 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public static function getInstance()
     {
-        static $instance;
-        if ( ! isset($instance)) {
-            $instance = new self();
+        if ( ! isset(self::$_instance)) {
+            self::$_instance = new self();
         }
-        return $instance;
+        return self::$_instance;
+    }
+
+    /**
+     * Reset the internal static instance
+     *
+     * @return void
+     */
+    public static function resetInstance()
+    {
+        if (self::$_instance) {
+            self::$_instance->reset();
+            self::$_instance = null;
+        }
+    }
+
+    /**
+     * Reset this instance of the manager
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        foreach ($this->_connections as $conn) {
+            $conn->close();
+        }
+        $this->_connections = array();
+        $this->_queryRegistry = null;
+        $this->_extensions = array();
+        $this->_bound = array();
+        $this->_validators = array();
+        $this->_loadedValidatorsFromDisk = false;
+        $this->_index = 0;
+        $this->_currIndex = 0;
     }
 
     /**
