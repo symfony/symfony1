@@ -109,22 +109,24 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                 $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
-                $saveLater = $this->saveRelatedForeignKeys($record);
-                foreach ($saveLater as $fk) {
-                    $alias = $fk->getAlias();
+                if ($isValid) {
+                    $saveLater = $this->saveRelatedForeignKeys($record);
+                    foreach ($saveLater as $fk) {
+                        $alias = $fk->getAlias();
 
-                    if ($record->hasReference($alias)) {
-                        $obj = $record->$alias;
+                        if ($record->hasReference($alias)) {
+                            $obj = $record->$alias;
 
-                        // check that the related object is not an instance of Doctrine_Null
-                        if ($obj && ! ($obj instanceof Doctrine_Null)) {
-                            $obj->save($conn);
+                            // check that the related object is not an instance of Doctrine_Null
+                            if ($obj && ! ($obj instanceof Doctrine_Null)) {
+                                $obj->save($conn);
+                            }
                         }
                     }
-                }
 
-                // save the MANY-TO-MANY associations
-                $this->saveAssociations($record);
+                    // save the MANY-TO-MANY associations
+                    $this->saveAssociations($record);
+                }
             }
 
             $record->state($state);
