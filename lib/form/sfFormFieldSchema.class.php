@@ -40,6 +40,32 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   }
 
   /**
+   * Returns an array of hidden fields from the current schema.
+   * 
+   * @param boolean $recursive Whether to recur through embedded schemas
+   * 
+   * @return array
+   */
+  public function getHiddenFields($recursive = true)
+  {
+    $fields = array();
+
+    foreach ($this as $name => $field)
+    {
+      if ($field instanceof sfFormFieldSchema && $recursive)
+      {
+        $fields = array_merge($fields, $field->getHiddenFields($recursive));
+      }
+      else if ($field->isHidden())
+      {
+        $fields[] = $field;
+      }
+    }
+
+    return $fields;
+  }
+
+  /**
    * Returns true if the bound field exists (implements the ArrayAccess interface).
    *
    * @param string $name The name of the bound field
