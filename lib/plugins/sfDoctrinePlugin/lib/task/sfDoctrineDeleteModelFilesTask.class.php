@@ -23,7 +23,7 @@ class sfDoctrineDeleteModelFilesTask extends sfDoctrineBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The name of the model you wish to delete all related files for.'),
+      new sfCommandArgument('name', sfCommandArgument::REQUIRED | sfCommandArgument::IS_ARRAY, 'The name of the model you wish to delete all related files for.'),
     ));
 
     $this->addOptions(array(
@@ -44,66 +44,37 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $modelName = $arguments['name'];
+    $paths = array_merge(array(sfConfig::get('sf_lib_dir')), $this->configuration->getPluginSubPaths('/lib'));
+    $total = 0;
 
-    if (!$options['no-confirmation'] && !$this->askConfirmation(array('This command will delete generated files related to the model named "'.$modelName.'"', 'Are you sure you want to proceed? (y/N)'), null, false))
+    foreach ($arguments['name'] as $modelName)
     {
-      $this->logSection('doctrine', 'Delete model task aborted');
+      $finder = sfFinder::type('file')->name('/^(Base|Plugin)?'.$modelName.'(Form(Filter)?|Table)?\.class\.php$/');
+      $files = $finder->in($paths);
 
-      return 1;
+      if ($files)
+      {
+        if (!$options['no-confirmation'] && !$this->askConfirmation(array_merge(
+          array('The following '.$modelName.' files will be deleted:', ''),
+          array_map(create_function('$v', 'return \' - \'.sfDebug::shortenFilePath($v);'), $files),
+          array('', 'Continue? (y/N)')
+        ), 'QUESTION_LARGE', false))
+        {
+          $this->logSection('doctrine', 'Aborting delete of "'.$modelName.'" files');
+          continue;
+        }
+
+        $this->logSection('doctrine', 'Deleting "'.$modelName.'" files');
+        $this->getFilesystem()->remove($files);
+
+        $total += count($files);
+      }
+      else
+      {
+        $this->logSection('doctrine', 'No files found for the model named "'.$modelName.'"');
+      }
     }
 
-    $names = array(
-      $modelName.'.class.php',
-      $modelName.'Table.class.php',
-      'Plugin'.$modelName.'.class.php',
-      'Plugin'.$modelName.'Table.class.php',
-      'Base'.$modelName.'.class.php',
-      $modelName.'Form.class.php',
-      'Plugin'.$modelName.'Form.class.php',
-      'Base'.$modelName.'Form.class.php',
-      $modelName.'FormFilter.class.php',
-      'Plugin'.$modelName.'FormFilter.class.php',
-      'Base'.$modelName.'FormFilter.class.php'
-    );
-
-    $pluginPaths = $this->configuration->getPluginPaths();
-    $pluginLibDirs = sfFinder::type('dir')
-      ->name('lib')
-      ->maxdepth(1)
-      ->in($pluginPaths);
-
-    $in = array(
-      sfConfig::get('sf_lib_dir'),
-    );
-    $in = array_merge($in, $pluginLibDirs);
-
-    $files = sfFinder::type('file')
-      ->name($names)
-      ->in($in);
-
-    if (empty($files))
-    {
-      throw new sfException('No files found for the model named "'.$modelName.'"');
-    }
-
-    $this->logSection('doctrine', 'Found '.count($files).' files related to the model named "'.$modelName.'"');
-    $this->log(null);
-    foreach ($files as $file)
-    {
-      $this->log('  '.$file);
-    }
-    $this->log(null);
-    if (!$options['no-confirmation'] && !$this->askConfirmation(array('You are about to delete the above listed files!', 'Are you sure you want to proceed? (y/N)'), null, false))
-    {
-      $this->logSection('doctrine', 'Delete model task aborted');
-
-      return 1;
-    }
-
-    foreach ($files as $file)
-    {
-      $this->getFilesystem()->remove($file);
-    }
+    $this->logSection('doctrine', 'Deleted a total of '.$total.' file(s)');
   }
 }
