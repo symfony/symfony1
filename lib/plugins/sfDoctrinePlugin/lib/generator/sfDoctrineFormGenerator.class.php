@@ -435,7 +435,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->modelName, $column->getName());
+      $options[] = sprintf('\'model\' => $this->getModelName(), \'column\' => \'%s\'', $column->getName());
     }
     else
     {
