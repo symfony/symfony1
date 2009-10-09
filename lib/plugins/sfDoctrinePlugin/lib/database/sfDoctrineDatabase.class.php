@@ -107,13 +107,11 @@ class sfDoctrineDatabase extends sfDatabase
 
     if (method_exists($configuration, 'configureDoctrineConnection') && ! method_exists($configuration, $method))
     {
-      $dispatcher->notify(new sfEvent($configuration, 'application.log', array('ProjectConfiguration::configureDoctrineConnection() has been deprecated. Please use the "doctrine.configure_connection" event instead.', 'priority' => sfLogger::NOTICE)));
       $configuration->configureDoctrineConnection($this->_doctrineConnection);
     }
 
     if (method_exists($configuration, $method))
     {
-      $dispatcher->notify(new sfEvent($configuration, 'application.log', array('The ProjectConfiguration::configureDoctrineConnection*() methods have been deprecated. Please use the "doctrine.configure_connection" event instead.', 'priority' => sfLogger::NOTICE)));
       $configuration->$method($this->_doctrineConnection);
     }
 
