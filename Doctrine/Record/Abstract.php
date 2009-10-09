@@ -279,12 +279,41 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         $this->_table->setColumn($name, $type, $length, $options);
     }
 
+    /**
+     * Set multiple column definitions at once
+     *
+     * @param array $definitions 
+     * @return void
+     */
     public function hasColumns(array $definitions)
     {
         foreach ($definitions as $name => $options) {
             $length = isset($options['length']) ? $options['length']:null;
             $this->hasColumn($name, $options['type'], $length, $options);
         }
+    }
+
+    /**
+     * Customize the array of validators for a column or multiple columns. First
+     * argument can be a single field/column name or an array of them. The second
+     * argument is an array of validator names and options.
+     *
+     *     [php]
+     *     public function setTableDefinition()
+     *     {
+     *         parent::setTableDefinition();
+     *         $this->setColumnValidators('username', array(
+     *             'unique' => true
+     *         ));
+     *     }
+     *
+     * @param string $columnName 
+     * @param array $validators 
+     * @return void
+     */
+    public function setColumnValidators($name, array $validators)
+    {
+        $this->_table->setColumnValidators($name, $validators);
     }
 
     /**

@@ -1104,6 +1104,42 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return $columnName;
     }
 
+    /**
+     * Customize the array of validators for a column or multiple columns. First
+     * argument can be a single field/column name or an array of them. The second
+     * argument is an array of validator names and options.
+     *
+     *     [php]
+     *     public function setTableDefinition()
+     *     {
+     *         parent::setTableDefinition();
+     *         $this->setColumnValidators('username', array(
+     *             'unique' => true
+     *         ));
+     *     }
+     *
+     * @param string $columnName 
+     * @param array $validators 
+     * @return void
+     */
+    public function setColumnValidators($columnName, array $validators)
+    {
+        if (is_array($columnName)) {
+            foreach ($columnName as $name) {
+                $this->setColumnValidators($name, $validators);
+            }
+        } else {
+            $columnName = $this->getColumnName($columnName);
+            $this->_columns[$columnName] = array_merge($this->_columns[$columnName], $validators);
+        }
+    }
+
+    /**
+     * Set multiple column definitions at once
+     *
+     * @param array $definitions 
+     * @return void
+     */
     public function setColumns(array $definitions)
     {
         foreach ($definitions as $name => $options) {
