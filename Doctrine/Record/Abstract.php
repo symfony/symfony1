@@ -294,15 +294,15 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * Customize the array of validators for a column or multiple columns. First
+     * Customize the array of options for a column or multiple columns. First
      * argument can be a single field/column name or an array of them. The second
-     * argument is an array of validator names and options.
+     * argument is an array of options.
      *
      *     [php]
      *     public function setTableDefinition()
      *     {
      *         parent::setTableDefinition();
-     *         $this->setColumnValidators('username', array(
+     *         $this->setColumnOptions('username', array(
      *             'unique' => true
      *         ));
      *     }
@@ -311,9 +311,22 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      * @param array $validators 
      * @return void
      */
-    public function setColumnValidators($name, array $validators)
+    public function setColumnOptions($name, array $options)
     {
-        $this->_table->setColumnValidators($name, $validators);
+        $this->_table->setColumnOptions($name, $options);
+    }
+
+    /**
+     * Set an individual column option
+     *
+     * @param string $columnName 
+     * @param string $option 
+     * @param string $value 
+     * @return void
+     */
+    public function setColumnOption($columnName, $option, $value)
+    {
+        $this->_table->setColumnOption($columnName, $option, $value);
     }
 
     /**
