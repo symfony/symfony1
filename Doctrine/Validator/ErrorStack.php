@@ -72,7 +72,7 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     public function add($invalidFieldName, $errorCode = 'general')
     {
         // FIXME: In the future the error stack should contain nothing but validator objects
-        if (is_object($errorCode) && $errorCode instanceof Doctrine_Validator_Driver) {
+        if ($errorCode instanceof Doctrine_Validator_Driver) {
             $validator = $errorCode;
             $this->_validators[$invalidFieldName][] = $validator;
             $errorCode = (string) $validator;
