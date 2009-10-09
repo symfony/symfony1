@@ -1195,7 +1195,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         // extract column name & field name
         if (stripos($name, ' as '))
         {
-            if (strpos($name, ' as')) {
+            if (strpos($name, ' as ')) {
                 $parts = explode(' as ', $name);
             } else {
                 $parts = explode(' AS ', $name);
