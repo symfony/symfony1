@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Country
+class Doctrine_Validator_Country extends Doctrine_Validator_Driver
 {
     private static $countries = array(
         'ad' =>    'Andorra',

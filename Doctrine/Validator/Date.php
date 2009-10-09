@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Date
+class Doctrine_Validator_Date extends Doctrine_Validator_Driver
 {
     /**
      * checks if given value is a valid date

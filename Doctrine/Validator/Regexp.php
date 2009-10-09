@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Regexp
+class Doctrine_Validator_Regexp extends Doctrine_Validator_Driver
 {
     /**
      * checks if given value satisfies a regular expression

@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Range
+class Doctrine_Validator_Range extends Doctrine_Validator_Driver
 {
     /**
      * checks if value is within given range

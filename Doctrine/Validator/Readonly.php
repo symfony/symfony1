@@ -26,7 +26,7 @@
  * @link        www.phpdoctrine.org
  * @author      Adam Huttler <ahuttler@geminisbs.com>
  */
-class Doctrine_Validator_Readonly
+class Doctrine_Validator_Readonly extends Doctrine_Validator_Driver
 {
     /**
      * checks if value has been modified

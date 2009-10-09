@@ -35,7 +35,9 @@ class Doctrine_Validator_Driver
     /**
      * @var array $_args     an array of plugin specific args
      */
-    protected $_args = array();
+    public $args;
+    public $invoker;
+    public $field;
 
     /**
      * __get
@@ -45,8 +47,8 @@ class Doctrine_Validator_Driver
      */
     public function __get($arg)
     {
-        if (isset($this->_args[$arg])) {
-            return $this->_args[$arg];
+        if (isset($this->args[$arg])) {
+            return $this->args[$arg];
         }
         return null;
     }
@@ -58,7 +60,7 @@ class Doctrine_Validator_Driver
      */
     public function __isset($arg)
     {
-        return isset($this->_args[$arg]);
+        return isset($this->args[$arg]);
     }
 
     /**
@@ -70,7 +72,7 @@ class Doctrine_Validator_Driver
      */
     public function __set($arg, $value)
     {
-        $this->_args[$arg] = $value;
+        $this->args[$arg] = $value;
         
         return $this;
     }
@@ -83,11 +85,11 @@ class Doctrine_Validator_Driver
      */
     public function getArg($arg)
     {
-        if ( ! isset($this->_args[$arg])) {
+        if ( ! isset($this->args[$arg])) {
             throw new Doctrine_Validator_Exception('Unknown option ' . $arg);
         }
         
-        return $this->_args[$arg];
+        return $this->args[$arg];
     }
 
     /**
@@ -99,7 +101,7 @@ class Doctrine_Validator_Driver
      */
     public function setArg($arg, $value)
     {
-        $this->_args[$arg] = $value;
+        $this->args[$arg] = $value;
         
         return $this;
     }
@@ -111,6 +113,12 @@ class Doctrine_Validator_Driver
      */
     public function getArgs()
     {
-        return $this->_args;
+        return $this->args;
+    }
+
+    public function __toString()
+    {
+        $className = get_class($this);
+        return strtolower(substr($className, strlen('Doctrine_Validator_'), strlen($className)));
     }
 }

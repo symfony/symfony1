@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Ip
+class Doctrine_Validator_Ip extends Doctrine_Validator_Driver
 {
     /**
      * checks if given value is valid ip address

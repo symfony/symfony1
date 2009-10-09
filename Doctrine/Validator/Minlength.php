@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Gijs van Dulmen <gijs@vandulmen.net>
  */
-class Doctrine_Validator_Minlength 
+class Doctrine_Validator_Minlength extends Doctrine_Validator_Driver
 {
     /**
      * checks if given value is more length than the minimum length required

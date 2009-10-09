@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Email
+class Doctrine_Validator_Email extends Doctrine_Validator_Driver
 {
     /**
      * checks if given value is a valid email address

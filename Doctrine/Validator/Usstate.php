@@ -30,7 +30,7 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Validator_Usstate
+class Doctrine_Validator_Usstate extends Doctrine_Validator_Driver
 {
     private static $states = array(
                 'AK' => true,
