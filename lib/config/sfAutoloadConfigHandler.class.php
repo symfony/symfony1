@@ -82,7 +82,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         // file mapping
         foreach ($entry['files'] as $class => $file)
         {
-          $mapping[strtolower($class)] = self::removeIncludePath($file);
+          $mapping[strtolower($class)] = $file;
         }
       }
       else
@@ -140,39 +140,10 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         }
       }
 
-      $mapping[$localPrefix.strtolower($class)] = self::removeIncludePath($file);
+      $mapping[$localPrefix.strtolower($class)] = $file;
     }
 
     return $mapping;
-  }
-
-  static protected function removeIncludePath($file)
-  {
-    $includePaths = explode(PATH_SEPARATOR, get_include_path());
-
-    // sort by length so that longest matches are tried first
-    function sortByLength($a, $b)
-    {
-      return strlen($b) - strlen($a);
-    }
-    usort($includePaths, 'sortByLength');
-
-    foreach ($includePaths as $includePath)
-    {
-      // ignore relative include paths
-      if (0 === strpos($includePath, '.'))
-      {
-        continue;
-      }
-
-      $includePath = realpath($includePath);
-      if (($includePath !== false) && (0 === strpos($file, $includePath)))
-      {
-        return trim(substr($file, strlen($includePath)), DIRECTORY_SEPARATOR);
-      }
-    }
-
-    return $file;
   }
 
   /**
