@@ -60,7 +60,7 @@ The task creates a module in the [%frontend%|COMMENT] application for the
 [%article%|COMMENT] route definition found in [routing.yml|COMMENT].
 
 For the filters and batch actions to work properly, you need to add
-the [wildcard|COMMENT] option to the route:
+the [with_wildcard_routes|COMMENT] option to the route:
 
   article:
     class: sfPropelRouteCollection
@@ -124,14 +124,15 @@ EOF;
   options:
     model:                %s
     module:               %s
-    prefix_path:          %s
+    prefix_path:          /%s
     column:               %s
     with_wildcard_routes: true
 
 
 EOF
-      , $name, $model, $module, $module, $primaryKey).$content;
+      , $name, $model, $module, isset($options['plural']) ? $options['plural'] : $module, $primaryKey).$content;
 
+      $this->logSection('file+', $routing);
       file_put_contents($routing, $content);
     }
 
