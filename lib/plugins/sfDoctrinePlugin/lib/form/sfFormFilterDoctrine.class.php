@@ -160,7 +160,13 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
       }
     }
 
-    foreach ($this->getFields() as $field => $type)
+    $fields = $this->getFields();
+
+    // add those widgets that are not represented in getFields() with a null type
+    $names = array_merge($fields, array_diff($this->widgetSchema->getPositions(), array_keys($fields)));
+    $fields = array_merge($fields, array_combine($names, array_fill(0, count($names), null)));
+
+    foreach ($fields as $field => $type)
     {
       if (!isset($values[$field]) || null === $values[$field] || '' === $values[$field])
       {
@@ -171,20 +177,16 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
       {
         $method = sprintf('add%sColumnQuery', self::camelize($this->getFieldName($field)));
       }
-      else
+      else if (!method_exists($this, $method = sprintf('add%sColumnQuery', self::camelize($field))) && null !== $type)
       {
-        // not a "real" column
-        if (!method_exists($this, $method = sprintf('add%sColumnQuery', self::camelize($field))))
-        {
-          throw new LogicException(sprintf('You must define a "%s" method to be able to filter with the "%s" field.', $method, $field));
-        }  
+        throw new LogicException(sprintf('You must define a "%s" method to be able to filter with the "%s" field.', $method, $field));
       }
 
       if (method_exists($this, $method))
       {
         $this->$method($query, $field, $values[$field]);
       }
-      else
+      else if (null !== $type)
       {
         if (!method_exists($this, $method = sprintf('add%sQuery', $type)))
         {
