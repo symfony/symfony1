@@ -13,6 +13,58 @@ abstract class sfModelGeneratorConfiguration
   protected
     $configuration = array();
 
+  abstract public function getActionsDefault();
+
+  abstract public function getFormActions();
+
+  abstract public function getNewActions();
+
+  abstract public function getEditActions();
+
+  abstract public function getListObjectActions();
+
+  abstract public function getListActions();
+
+  abstract public function getListBatchActions();
+
+  abstract public function getListParams();
+
+  abstract public function getListLayout();
+
+  abstract public function getListTitle();
+
+  abstract public function getEditTitle();
+
+  abstract public function getNewTitle();
+
+  abstract public function getFilterDisplay();
+
+  abstract public function getFormDisplay();
+
+  abstract public function getNewDisplay();
+
+  abstract public function getEditDisplay();
+
+  abstract public function getListDisplay();
+
+  abstract public function getFieldsDefault();
+
+  abstract public function getFieldsList();
+
+  abstract public function getFieldsFilter();
+
+  abstract public function getFieldsForm();
+
+  abstract public function getFieldsEdit();
+
+  abstract public function getFieldsNew();
+
+  abstract public function getFormClass();
+
+  abstract public function hasFilterForm();
+
+  abstract public function getFilterFormClass();
+
   /**
    * Constructor.
    */
@@ -389,26 +441,22 @@ abstract class sfModelGeneratorConfiguration
     return $default;
   }
 
-  /**
-   * getFormDisplay - return default field list if new/edit context do not override them.
-   *
-   * @return array
-   */
-  abstract public function getFormDisplay();
+  public function getCredentials($action)
+  {
+    if (0 === strpos($action, '_'))
+    {
+      $action = substr($action, 1);
+    }
 
-  /**
-   * getNewDisplay - return field list for "new" context.
-   *
-   * @return array
-   */
-  abstract public function getNewDisplay();
+    return isset($this->configuration['credentials'][$action]) ? $this->configuration['credentials'][$action] : array();
+  }
 
-  /**
-   * getEditDisplay - return field list for "edit" context.
-   *
-   * @return array
-   */
-  abstract public function getEditDisplay();
+  public function getPager($model)
+  {
+    $class = $this->getPagerClass();
+
+    return new $class($model, $this->getPagerMaxPerPage());
+  }
 
   /**
    * Gets a new form object.
@@ -428,16 +476,22 @@ abstract class sfModelGeneratorConfiguration
   {
     return array();
   }
-
-  /**
-   * getConnection - return the orm connection string. Depends on which
-   * concrete implementation is currently used, but null means default.
-   *
-   * @return mixed
-   */
-  public function getConnection()
+  
+  public function getFilterForm($filters)
   {
-    return null;
+    $class = $this->getFilterFormClass();
+
+    return new $class($filters, $this->getFilterFormOptions());
+  }
+
+  public function getFilterFormOptions()
+  {
+    return array();
+  }
+
+  public function getFilterDefaults()
+  {
+    return array();
   }
 
   protected function mapFieldName(sfModelGeneratorConfigurationField $field)

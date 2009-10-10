@@ -1,10 +1,3 @@
-  public function getPager($model)
-  {
-    $class = $this->getPagerClass();
-
-    return new $class($model, $this->getPagerMaxPerPage());
-  }
-
   public function getPagerClass()
   {
     return '<?php echo isset($this->config['list']['pager_class']) ? $this->config['list']['pager_class'] : 'sfPropelPager' ?>';

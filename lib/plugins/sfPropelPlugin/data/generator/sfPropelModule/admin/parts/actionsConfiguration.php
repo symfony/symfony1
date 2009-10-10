@@ -1,13 +1,3 @@
-  public function getCredentials($action)
-  {
-    if (0 === strpos($action, '_'))
-    {
-      $action = substr($action, 1);
-    }
-
-    return isset($this->configuration['credentials'][$action]) ? $this->configuration['credentials'][$action] : array();
-  }
-
   public function getActionsDefault()
   {
     return <?php echo $this->asPhp(isset($this->config['actions']) ? $this->config['actions'] : array()) ?>;
