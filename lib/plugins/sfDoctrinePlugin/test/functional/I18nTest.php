@@ -46,11 +46,6 @@ class MyArticleForm extends ArticleForm
 
     unset($this['author_id']);
   }
-
-  public function updateDefaultsFromObject()
-  {
-    parent::updateDefaultsFromObject();
-  }
 }
 
 $article = new Article();
@@ -143,7 +138,7 @@ $expected = array(
 
 $t->is($article->toArray(true), $expected);
 
-$articleForm->updateDefaultsFromObject();
+$articleForm = new MyArticleForm($article);
 
 $expected = array(
   'id' => $article->id,

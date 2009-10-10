@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 /**
  * sfFormPropel is the base class for forms based on Propel objects.
  *
@@ -21,23 +20,19 @@
  */
 abstract class sfFormPropel extends sfFormObject
 {
-  protected
-    $isNew  = true,
-    $object = null;
-
   /**
    * Constructor.
    *
-   * @param BaseObject $object      A Propel object used to initialize default values
-   * @param array      $options     An array of options
-   * @param string     $CSRFSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param mixed  A object used to initialize default values
+   * @param array  An array of options
+   * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    *
    * @see sfForm
    */
-  public function __construct(BaseObject $object = null, $options = array(), $CSRFSecret = null)
+  public function __construct($object = null, $options = array(), $CSRFSecret = null)
   {
     $class = $this->getModelName();
-    if (null === $object)
+    if (!$object)
     {
       $this->object = new $class();
     }
@@ -49,7 +44,7 @@ abstract class sfFormPropel extends sfFormObject
       }
 
       $this->object = $object;
-      $this->isNew = $this->object->isNew();
+      $this->isNew = $this->getObject()->isNew();
     }
 
     parent::__construct(array(), $options, $CSRFSecret);
@@ -58,28 +53,12 @@ abstract class sfFormPropel extends sfFormObject
   }
 
   /**
-   * Returns the default connection for the current model.
-   *
-   * @return PropelPDO A database connection
+   * @return PropelPDO
+   * @see sfFormObject
    */
   public function getConnection()
   {
-    return Propel::getConnection(constant(sprintf('%s::DATABASE_NAME', get_class($this->object->getPeer()))));
-  }
-
-  /**
-   * Returns the current model name.
-   */
-  abstract public function getModelName();
-
-  /**
-   * Returns true if the current form embeds a new object.
-   *
-   * @return Boolean true if the current form embeds a new object, false otherwise
-   */
-  public function isNew()
-  {
-    return $this->isNew;
+    return Propel::getConnection(constant(constant(get_class($this->getObject()).'::PEER').'::DATABASE_NAME'));
   }
 
   /**
@@ -99,7 +78,7 @@ abstract class sfFormPropel extends sfFormObject
     foreach ($cultures as $culture)
     {
       $method = sprintf('getCurrent%s', $this->getI18nModelName($culture));
-      $i18nObject = $this->object->$method($culture);
+      $i18nObject = $this->getObject()->$method($culture);
       $i18n = new $class($i18nObject);
       unset($i18n['id'], $i18n['culture']);
 
@@ -108,146 +87,11 @@ abstract class sfFormPropel extends sfFormObject
   }
 
   /**
-   * Returns the current object for this form.
-   *
-   * @return BaseObject The current object.
-   */
-  public function getObject()
-  {
-    return $this->object;
-  }
-
-  /**
-   * Binds the current form and save the to the database in one step.
-   *
-   * @param  array      $taintedValues    An array of tainted values to use to bind the form
-   * @param  array      $taintedFiles     An array of uploaded files (in the $_FILES or $_GET format)
-   * @param  PropelPDO  $con              An optional PropelPDO object
-   *
-   * @return Boolean    true if the form is valid, false otherwise
-   */
-  public function bindAndSave($taintedValues, $taintedFiles = null, $con = null)
-  {
-    $this->bind($taintedValues, $taintedFiles);
-    if ($this->isValid())
-    {
-      $this->save($con);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Saves the current object to the database.
-   *
-   * The object saving is done in a transaction and handled by the doSave() method.
-   *
-   * If the form is not valid, it throws an sfValidatorError.
-   *
-   * @param PropelPDO $con An optional PropelPDO object
-   *
-   * @return BaseObject The current saved object
-   *
-   * @see doSave()
-   */
-  public function save($con = null)
-  {
-    if (!$this->isValid())
-    {
-      throw $this->getErrorSchema();
-    }
-
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    try
-    {
-      $con->beginTransaction();
-
-      $this->doSave($con);
-
-      $con->commit();
-    }
-    catch (Exception $e)
-    {
-      $con->rollBack();
-
-      throw $e;
-    }
-
-    return $this->object;
-  }
-
-  /**
-   * Updates the values of the object with the cleaned up values.
-   *
-   * @param  array $values An array of values
-   *
-   * @return BaseObject The current updated object
-   */
-  public function updateObject($values = null)
-  {
-    if (null === $values)
-    {
-      $values = $this->values;
-    }
-
-    $values = $this->processValues($values);
-
-    $this->doUpdateObject($values);
-
-    // embedded forms
-    $this->updateObjectEmbeddedForms($values);
-
-    return $this->object;
-  }
-
-  /**
-   * Updates the values of the object with the cleaned up values.
-   *
-   * If you want to add some logic before updating or update other associated
-   * objects, this is the method to override.
-   *
-   * @param array $values An array of values
+   * @see sfFormObject
    */
   protected function doUpdateObject($values)
   {
-    $this->object->fromArray($values, BasePeer::TYPE_FIELDNAME);
-  }
-
-  /**
-   * Updates the values of the objects in embedded forms.
-   *
-   * @param array $values An array of values
-   * @param array $forms  An array of forms
-   */
-  public function updateObjectEmbeddedForms($values, $forms = null)
-  {
-    if (null === $forms)
-    {
-      $forms = $this->embeddedForms;
-    }
-
-    foreach ($forms as $name => $form)
-    {
-      if (!isset($values[$name]) || !is_array($values[$name]))
-      {
-        continue;
-      }
-
-      if ($form instanceof sfFormPropel)
-      {
-        $form->updateObject($values[$name]);
-      }
-      else
-      {
-        $this->updateObjectEmbeddedForms($values[$name], $form->getEmbeddedForms());
-      }
-    }
+    $this->getObject()->fromArray($values, BasePeer::TYPE_FIELDNAME);
   }
 
   /**
@@ -260,9 +104,7 @@ abstract class sfFormPropel extends sfFormObject
    * The method must return the processed value or false to remove the value
    * from the array of cleaned up values.
    *
-   * @param  array $values An array of values
-   *
-   * @return array An array of cleaned up values processed by the user defined methods
+   * @see sfFormObject
    */
   public function processValues($values)
   {
@@ -272,7 +114,7 @@ abstract class sfFormPropel extends sfFormObject
     {
       try
       {
-        $method = sprintf('update%sColumn', call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME));
+        $method = sprintf('update%sColumn', call_user_func(array(constant(get_class($this->getObject()).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME));
       }
       catch (Exception $e)
       {
@@ -338,98 +180,18 @@ abstract class sfFormPropel extends sfFormObject
   }
 
   /**
-   * Renders a form tag suitable for the related Propel object.
-   *
-   * The method is automatically guessed based on the Propel object:
-   *
-   *  * if the object is new, the method is POST
-   *  * if the object already exists, the method is PUT
-   *
-   * @param  string $url         The URL for the action
-   * @param  array  $attributes  An array of HTML attributes
-   *
-   * @return string An HTML representation of the opening form tag
-   *
-   * @see sfForm
-   */
-  public function renderFormTag($url, array $attributes = array())
-  {
-    if (!isset($attributes['method']))
-    {
-      $attributes['method'] = $this->getObject()->isNew() ? 'post' : 'put';
-    }
-
-    return parent::renderFormTag($url, $attributes);
-  }
-
-  /**
-   * Updates and saves the current object.
-   *
-   * If you want to add some logic before saving or save other associated objects,
-   * this is the method to override.
-   *
-   * @param PropelPDO $con An optional PropelPDO object
-   */
-  protected function doSave($con = null)
-  {
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    $this->updateObject();
-
-    $this->object->save($con);
-
-    // embedded forms
-    $this->saveEmbeddedForms($con);
-  }
-
-  /**
-   * Saves embedded form objects.
-   *
-   * @param PropelPDO $con   An optional PropelPDO object
-   * @param array     $forms An array of forms
-   */
-  public function saveEmbeddedForms($con = null, $forms = null)
-  {
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    if (null === $forms)
-    {
-      $forms = $this->embeddedForms;
-    }
-
-    foreach ($forms as $form)
-    {
-      if ($form instanceof sfFormPropel)
-      {
-        $form->saveEmbeddedForms($con);
-        $form->getObject()->save($con);
-      }
-      else
-      {
-        $this->saveEmbeddedForms($con, $form->getEmbeddedForms());
-      }
-    }
-  }
-
-  /**
    * Updates the default values of the form with the current values of the current object.
    */
   protected function updateDefaultsFromObject()
   {
     // update defaults for the main object
-    if ($this->isNew)
+    if ($this->isNew())
     {
-      $this->setDefaults(array_merge($this->object->toArray(BasePeer::TYPE_FIELDNAME), $this->getDefaults()));
+      $this->setDefaults(array_merge($this->getObject()->toArray(BasePeer::TYPE_FIELDNAME), $this->getDefaults()));
     }
     else
     {
-      $this->setDefaults(array_merge($this->getDefaults(), $this->object->toArray(BasePeer::TYPE_FIELDNAME)));
+      $this->setDefaults(array_merge($this->getDefaults(), $this->getObject()->toArray(BasePeer::TYPE_FIELDNAME)));
     }
   }
 
@@ -463,10 +225,10 @@ abstract class sfFormPropel extends sfFormObject
 
     if (!$values[$field])
     {
-      $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+      $column = call_user_func(array(constant(get_class($this->getObject()).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
       $getter = 'get'.$column;
 
-      return $this->object->$getter();
+      return $this->getObject()->$getter();
     }
 
     // we need the base directory
@@ -492,12 +254,12 @@ abstract class sfFormPropel extends sfFormObject
       throw new LogicException(sprintf('You cannot remove the current file for field "%s" as the field is not a file.', $field));
     }
 
-    $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+    $column = call_user_func(array(constant(get_class($this->getObject()).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $getter = 'get'.$column;
 
-    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.DIRECTORY_SEPARATOR.$this->object->$getter()))
+    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.DIRECTORY_SEPARATOR.$this->getObject()->$getter()))
     {
-      unlink($directory.DIRECTORY_SEPARATOR.$this->object->$getter());
+      unlink($directory.DIRECTORY_SEPARATOR.$this->getObject()->$getter());
     }
   }
 
@@ -522,25 +284,20 @@ abstract class sfFormPropel extends sfFormObject
       $file = $this->getValue($field);
     }
 
-    $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
+    $column = call_user_func(array(constant(get_class($this->getObject()).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $method = sprintf('generate%sFilename', $column);
 
     if (null !== $filename)
     {
       return $file->save($filename);
     }
-    else if (method_exists($this->object, $method))
+    else if (method_exists($this->getObject(), $method))
     {
-      return $file->save($this->object->$method($file));
+      return $file->save($this->getObject()->$method($file));
     }
     else
     {
       return $file->save();
     }
-  }
-
-  protected function camelize($text)
-  {
-    return sfToolkit::pregtr($text, array('#/(.?)#e' => "'::'.strtoupper('\\1')", '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
   }
 }

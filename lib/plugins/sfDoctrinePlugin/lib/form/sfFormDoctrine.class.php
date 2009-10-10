@@ -10,14 +10,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage doctrine
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfFormDoctrine.class.php 7845 2008-03-12 22:36:14Z fabien $
- */
-
-/**
  * sfFormDoctrine is the base class for forms based on Doctrine objects.
  *
  * This class extends BaseForm, a class generated automatically with each new project.
@@ -30,16 +22,12 @@
  */
 abstract class sfFormDoctrine extends sfFormObject
 {
-  protected
-    $isNew  = true,
-    $object = null;
-
   /**
    * Constructor.
    *
-   * @param BaseObject A Doctrine object used to initialize default values
-   * @param array      An array of options
-   * @param string     A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param mixed  A object used to initialize default values
+   * @param array  An array of options
+   * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    *
    * @see sfForm
    */
@@ -58,7 +46,7 @@ abstract class sfFormDoctrine extends sfFormObject
       }
 
       $this->object = $object;
-      $this->isNew = !$this->object->exists();
+      $this->isNew = !$this->getObject()->exists();
     }
 
     parent::__construct(array(), $options, $CSRFSecret);
@@ -67,30 +55,12 @@ abstract class sfFormDoctrine extends sfFormObject
   }
 
   /**
-   * Returns the default connection for the current model.
-   *
-   * @return Connection A database connection
+   * @return Doctrine_Connection
+   * @see sfFormObject
    */
   public function getConnection()
   {
     return Doctrine_Manager::getInstance()->getConnectionForComponent($this->getModelName());
-  }
-
-  /**
-   * Returns the current model name.
-   */
-  abstract public function getModelName();
-
-  /**
-   * Returns true if the current form embeds a new object.
-   *
-   * @return Boolean true if the current form embeds a new object, false otherwise
-   */
-  public function isNew()
-  {
-    $this->isNew = !$this->object->exists();
-
-    return $this->isNew;
   }
 
   /**
@@ -109,7 +79,7 @@ abstract class sfFormDoctrine extends sfFormObject
     $class = $this->getI18nFormClass();
     foreach ($cultures as $culture)
     {
-      $i18nObject = $this->object->Translation[$culture];
+      $i18nObject = $this->getObject()->Translation[$culture];
       $i18n = new $class($i18nObject);
       unset($i18n['id'], $i18n['lang']);
 
@@ -132,7 +102,7 @@ abstract class sfFormDoctrine extends sfFormObject
    */
   public function embedRelation($relationName, $formClass = null, $formArgs = array())
   {
-    $relation = $this->object->getTable()->getRelation($relationName);
+    $relation = $this->getObject()->getTable()->getRelation($relationName);
 
     if ($relation->getType() !== Doctrine_Relation::MANY)
     {
@@ -142,7 +112,7 @@ abstract class sfFormDoctrine extends sfFormObject
     $r = new ReflectionClass(null === $formClass ? $relation->getClass().'Form' : $formClass);
 
     $subForm = new sfForm();
-    foreach ($this->object[$relationName] as $index => $childObject)
+    foreach ($this->getObject()->$relationName as $index => $childObject)
     {
       $form = $r->newInstanceArgs(array_merge(array($childObject), $formArgs));
 
@@ -154,146 +124,11 @@ abstract class sfFormDoctrine extends sfFormObject
   }
 
   /**
-   * Returns the current object for this form.
-   *
-   * @return BaseObject The current object.
-   */
-  public function getObject()
-  {
-    return $this->object;
-  }
-
-  /**
-   * Binds the current form and save the to the database in one step.
-   *
-   * @param  array      An array of tainted values to use to bind the form
-   * @param  array      An array of uploaded files (in the $_FILES or $_GET format)
-   * @param  Connection An optional Doctrine Connection object
-   *
-   * @return Boolean    true if the form is valid, false otherwise
-   */
-  public function bindAndSave($taintedValues, $taintedFiles = null, $con = null)
-  {
-    $this->bind($taintedValues, $taintedFiles);
-    if ($this->isValid())
-    {
-      $this->save($con);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Saves the current object to the database.
-   *
-   * The object saving is done in a transaction and handled by the doSave() method.
-   *
-   * If the form is not valid, it throws an sfValidatorError.
-   *
-   * @param Connection An optional Connection object
-   *
-   * @return BaseObject The current saved object
-   *
-   * @see doSave()
-   */
-  public function save($con = null)
-  {
-    if (!$this->isValid())
-    {
-      throw $this->getErrorSchema();
-    }
-
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    try
-    {
-      $con->beginTransaction();
-
-      $this->doSave($con);
-
-      $con->commit();
-    }
-    catch (Exception $e)
-    {
-      $con->rollback();
-
-      throw $e;
-    }
-
-    return $this->object;
-  }
-
-  /**
-   * Updates the values of the object with the cleaned up values.
-   *
-   * @param  array $values An array of values
-   *
-   * @return BaseObject The current updated object
-   */
-  public function updateObject($values = null)
-  {
-    if (null === $values)
-    {
-      $values = $this->values;
-    }
-
-    $values = $this->processValues($values);
-
-    $this->doUpdateObject($values);
-
-    // embedded forms
-    $this->updateObjectEmbeddedForms($values);
-
-    return $this->object;
-  }
-
-  /**
-   * Updates the values of the object with the cleaned up values.
-   *
-   * If you want to add some logic before updating or update other associated
-   * objects, this is the method to override.
-   *
-   * @param array $values An array of values
+   * @see sfFormObject
    */
   protected function doUpdateObject($values)
   {
-    $this->object->fromArray($values);
-  }
-
-  /**
-   * Updates the values of the objects in embedded forms.
-   *
-   * @param array $values An array of values
-   * @param array $forms  An array of forms
-   */
-  public function updateObjectEmbeddedForms($values, $forms = null)
-  {
-    if (null === $forms)
-    {
-      $forms = $this->embeddedForms;
-    }
-
-    foreach ($forms as $name => $form)
-    {
-      if (!isset($values[$name]) || !is_array($values[$name]))
-      {
-        continue;
-      }
-
-      if ($form instanceof sfFormDoctrine)
-      {
-        $form->updateObject($values[$name]);
-      }
-      else
-      {
-        $this->updateObjectEmbeddedForms($values[$name], $form->getEmbeddedForms());
-      }
-    }
+    $this->getObject()->fromArray($values);
   }
 
   /**
@@ -306,9 +141,9 @@ abstract class sfFormDoctrine extends sfFormObject
    * The method must return the processed value or false to remove the value
    * from the array of cleaned up values.
    *
-   * @return array An array of cleaned up values processed by the user defined methods
+   * @see sfFormObject
    */
-  public function processValues($values = null)
+  public function processValues($values)
   {
     // see if the user has overridden some column setter
     $valuesToProcess = $values;
@@ -367,87 +202,7 @@ abstract class sfFormDoctrine extends sfFormObject
    */
   public function getI18nFormClass()
   {
-    return $this->getI18nModelName() . 'Form';
-  }
-
-  /**
-   * Renders a form tag suitable for the related Doctrine object.
-   *
-   * The method is automatically guessed based on the Doctrine object:
-   *
-   *  * if the object is new, the method is POST
-   *  * if the object already exists, the method is PUT
-   *
-   * @param  string $url         The URL for the action
-   * @param  array  $attributes  An array of HTML attributes
-   *
-   * @return string An HTML representation of the opening form tag
-   *
-   * @see sfForm
-   */
-  public function renderFormTag($url, array $attributes = array())
-  {
-    if (!isset($attributes['method']))
-    {
-      $attributes['method'] = $this->isNew() ? 'post' : 'put';
-    }
-
-    return parent::renderFormTag($url, $attributes);
-  }
-
-  /**
-   * Updates and saves the current object.
-   *
-   * If you want to add some logic before saving or save other associated objects,
-   * this is the method to override.
-   *
-   * @param Connection An optional Connection object
-   */
-  protected function doSave($con = null)
-  {
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    $this->updateObject();
-
-    $this->object->save($con);
-
-    // embedded forms
-    $this->saveEmbeddedForms($con);
-  }
-
-  /**
-   * Saves embedded form objects.
-   *
-   * @param Connection $con   An optional Connection object
-   * @param array      $forms An array of forms
-   */
-  public function saveEmbeddedForms($con = null, $forms = null)
-  {
-    if (null === $con)
-    {
-      $con = $this->getConnection();
-    }
-
-    if (null === $forms)
-    {
-      $forms = $this->embeddedForms;
-    }
-
-    foreach ($forms as $form)
-    {
-      if ($form instanceof sfFormDoctrine)
-      {
-        $form->getObject()->save($con);
-        $form->saveEmbeddedForms($con);
-      }
-      else
-      {
-        $this->saveEmbeddedForms($con, $form->getEmbeddedForms());
-      }
-    }
+    return $this->getI18nModelName().'Form';
   }
 
   /**
@@ -458,11 +213,11 @@ abstract class sfFormDoctrine extends sfFormObject
     // update defaults for the main object
     if ($this->isNew())
     {
-      $this->setDefaults(array_merge($this->object->toArray(false), $this->getDefaults()));
+      $this->setDefaults(array_merge($this->getObject()->toArray(false), $this->getDefaults()));
     }
     else
     {
-      $this->setDefaults(array_merge($this->getDefaults(), $this->object->toArray(false)));
+      $this->setDefaults(array_merge($this->getDefaults(), $this->getObject()->toArray(false)));
     }
 
     $defaults = $this->getDefaults();
@@ -507,7 +262,7 @@ abstract class sfFormDoctrine extends sfFormObject
 
     if (!$values[$field])
     {
-      return $this->object->$field;
+      return $this->getObject()->$field;
     }
 
     // we need the base directory
@@ -533,9 +288,9 @@ abstract class sfFormDoctrine extends sfFormObject
       throw new LogicException(sprintf('You cannot remove the current file for field "%s" as the field is not a file.', $field));
     }
 
-    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->object->$field))
+    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->getObject()->$field))
     {
-      unlink($directory.$this->object->$field);
+      unlink($directory.$this->getObject()->$field);
     }
   }
 
@@ -554,6 +309,7 @@ abstract class sfFormDoctrine extends sfFormObject
     {
       throw new LogicException(sprintf('You cannot save the current file for field "%s" as the field is not a file.', $field));
     }
+
     if (null === $file)
     {
       $file = $this->getValue($field);
@@ -565,9 +321,9 @@ abstract class sfFormDoctrine extends sfFormObject
     {
       return $file->save($filename);
     }
-    else if (method_exists($this->object, $method))
+    else if (method_exists($this->getObject(), $method))
     {
-      return $file->save($this->object->$method($file));
+      return $file->save($this->getObject()->$method($file));
     }
     else
     {
@@ -580,10 +336,5 @@ abstract class sfFormDoctrine extends sfFormObject
    */
   protected function setupInheritance()
   {
-  }
-
-  protected function camelize($text)
-  {
-    return preg_replace(array('#/(.?)#e', '/(^|_|-)+(.)/e'), array("'::'.strtoupper('\\1')", "strtoupper('\\2')"), $text);
   }
 }
