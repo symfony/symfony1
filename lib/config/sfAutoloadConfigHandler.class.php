@@ -150,6 +150,13 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
   {
     $includePaths = explode(PATH_SEPARATOR, get_include_path());
 
+    // sort by length so that longest matches are tried first
+    function sortByLength($a, $b)
+    {
+      return strlen($b) - strlen($a);
+    }
+    usort($includePaths, 'sortByLength');
+
     foreach ($includePaths as $includePath)
     {
       // ignore relative include paths
@@ -159,7 +166,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       }
 
       $includePath = realpath($includePath);
-      if (0 === strpos($file, $includePath))
+      if (($includePath !== false) && (0 === strpos($file, $includePath)))
       {
         return trim(substr($file, strlen($includePath)), DIRECTORY_SEPARATOR);
       }
