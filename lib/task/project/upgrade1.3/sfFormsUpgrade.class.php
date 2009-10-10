@@ -38,27 +38,13 @@ class sfFormsUpgrade extends sfUpgrade
       $contents = file_get_contents($file);
       $changed = false;
 
-      // change all forms that extend sfForm to extend BaseForm (one at a time)
-      while (preg_match('/\bextends\b\s+\bsfForm\b/i', $contents, $match, PREG_OFFSET_CAPTURE))
-      {
-        list($search, $offset) = current($match);
-        $replace = str_ireplace('sfForm', 'BaseForm', $search);
+      // forms that extend sfForm should now extend BaseForm
+      $contents = preg_replace('/(\bextends\s+)sfForm\b/i', '\\1BaseForm', $contents, -1, $count);
+      $changed = $count || $changed;
 
-        $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
-
-        $changed = true;
-      }
-
-      // change sfWidgetFormInput to sfWidgetFormInputText (one at a time)
-      while (preg_match('/\bnew\b\s+\bsfWidgetFormInput\b/i', $contents, $match, PREG_OFFSET_CAPTURE))
-      {
-        list($search, $offset) = current($match);
-        $replace = $search.'Text';
-
-        $contents = substr($contents, 0, $offset).$replace.substr($contents, $offset + strlen($search));
-
-        $changed = true;
-      }
+      // change instances of sfWidgetFormInput to sfWidgetFormInputText
+      $contents = preg_replace('/\bnew\s+sfWidgetFormInput\b/i', '\\0Text', $contents, -1, $count);
+      $changed = $count || $changed;
 
       if ($changed)
       {

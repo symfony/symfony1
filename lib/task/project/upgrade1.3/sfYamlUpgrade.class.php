@@ -72,7 +72,12 @@ class sfYamlUpgrade extends sfUpgrade
           $original = $class->getCode();
           $modified = $class->wrapMethod('setup', 'sfYaml::setSpecVersion(\'1.1\');');
 
-          if ($original != $modified && $this->askConfirmation(array(sprintf('Unable to automatically convert one of your YAML file (%s).', sfDebug::shortenFilePath($file)), 'Would you like to force YAML to be parsed with the 1.1 specification?')))
+          if ($original != $modified && $this->askConfirmation(array(
+            'Unable to convert YAML file:',
+            sfDebug::shortenFilePath($file),
+            '',
+            'Would you like to force YAML to be parsed with the 1.1 specification? (Y/n)',
+          ), 'QUESTION_LARGE'))
           {
             $this->logSection('yaml', 'Forcing YAML 1.1 spec');
 
@@ -81,7 +86,7 @@ class sfYamlUpgrade extends sfUpgrade
           }
           else
           {
-            $this->logBlock(array('', 'Unable to either upgrade YAML files or force 1.1 spec.', '(see UPGRADE file for more information)', ''), 'ERROR');
+            $this->logBlock(array('Unable to either upgrade YAML files or force 1.1 spec.', '(see UPGRADE_TO_1_3 file for more information)'), 'ERROR_LARGE');
           }
         }
 
