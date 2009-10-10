@@ -34,48 +34,6 @@
 class Doctrine_DataDict extends Doctrine_Connection_Module
 {
     /**
-     * Obtain an array of changes that may need to applied
-     *
-     * @param array $current new definition
-     * @param array  $previous old definition
-     * @return array  containing all changes that will need to be applied
-     */
-    public function compareDefinition($current, $previous)
-    {
-        $type = !empty($current['type']) ? $current['type'] : null;
-
-        if ( ! method_exists($this, "_compare{$type}Definition")) {
-            throw new Doctrine_DataDict_Exception('type "'.$current['type'].'" is not yet supported');
-        }
-
-        if (empty($previous['type']) || $previous['type'] != $type) {
-            return $current;
-        }
-
-        $change = $this->{"_compare{$type}Definition"}($current, $previous);
-
-        if ($previous['type'] != $type) {
-            $change['type'] = true;
-        }
-
-        $previous_notnull = !empty($previous['notnull']) ? $previous['notnull'] : false;
-        $notnull = !empty($current['notnull']) ? $current['notnull'] : false;
-        if ($previous_notnull != $notnull) {
-            $change['notnull'] = true;
-        }
-
-        $previous_default = array_key_exists('default', $previous) ? $previous['default'] :
-            ($previous_notnull ? '' : null);
-        $default = array_key_exists('default', $current) ? $current['default'] :
-            ($notnull ? '' : null);
-        if ($previous_default !== $default) {
-            $change['default'] = true;
-        }
-
-        return $change;
-    }
-
-    /**
      * parseBoolean
      * parses a literal boolean value and returns 
      * proper sql equivalent
