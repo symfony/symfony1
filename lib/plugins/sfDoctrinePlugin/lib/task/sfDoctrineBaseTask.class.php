@@ -24,22 +24,12 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
    * Returns an array of configuration variables for the Doctrine CLI.
    *
    * @return array $config
+   *
+   * @see sfDoctrinePluginConfiguration::getCliConfig()
    */
   public function getCliConfig()
   {
-    $fixtures = array_merge(array(sfConfig::get('sf_data_dir').'/fixtures'), $this->configuration->getPluginSubPaths('/data/fixtures'));
-    $models = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . 'doctrine';
-    $migrations = sfConfig::get('sf_lib_dir') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'doctrine';
-    $sql = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'sql';
-    $yaml = sfConfig::get('sf_config_dir') . DIRECTORY_SEPARATOR . 'doctrine';
-
-    $config = array('data_fixtures_path'  =>  $fixtures,
-                    'models_path'         =>  $models,
-                    'migrations_path'     =>  $migrations,
-                    'sql_path'            =>  $sql,
-                    'yaml_schema_path'    =>  $yaml);
-
-    return $config;
+    return $this->configuration->getPluginConfiguration('sfDoctrinePlugin')->getCliConfig();
   }
 
   /**

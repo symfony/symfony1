@@ -70,4 +70,51 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 
     $this->dispatcher->notify(new sfEvent($manager, 'doctrine.configure'));
   }
+
+  /**
+   * Returns options for the Doctrine schema builder.
+   * 
+   * @return array
+   */
+  public function getModelBuilderOptions()
+  {
+    $options = array(
+      'generateBaseClasses'  => true,
+      'generateTableClasses' => true,
+      'packagesPath'         => sfConfig::get('sf_plugins_dir'),
+      'packagesPrefix'       => 'Plugin',
+      'suffix'               => '.class.php',
+      'baseClassesDirectory' => 'base',
+      'baseClassName'        => 'sfDoctrineRecord',
+    );
+
+    // for BC
+    $options = array_merge($options, sfConfig::get('doctrine_model_builder_options', array()));
+
+    // filter options through the dispatcher
+    $options = $this->dispatcher->filter(new sfEvent($this, 'doctrine.filter_model_builder_options'), $options)->getReturnValue();
+
+    return $options;
+  }
+
+  /**
+   * Returns a configuration array for the Doctrine CLI.
+   * 
+   * @return array
+   */
+  public function getCliConfig()
+  {
+    $config = array(
+      'data_fixtures_path' => array_merge(array(sfConfig::get('sf_data_dir').'/fixtures'), $this->configuration->getPluginSubPaths('/data/fixtures')),
+      'models_path'        => sfConfig::get('sf_lib_dir').'/model/doctrine',
+      'migrations_path'    => sfConfig::get('sf_lib_dir').'/migration/doctrine',
+      'sql_path'           => sfConfig::get('sf_data_dir').'/sql',
+      'yaml_schema_path'   => sfConfig::get('sf_config_dir').'/doctrine',
+    );
+
+    // filter config through the dispatcher
+    $config = $this->dispatcher->filter(new sfEvent($this, 'doctrine.filter_cli_config'), $config)->getReturnValue();
+
+    return $config;
+  }
 }

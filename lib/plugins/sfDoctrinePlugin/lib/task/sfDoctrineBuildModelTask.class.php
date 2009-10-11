@@ -90,20 +90,13 @@ EOF;
       }
     }
 
-    $options = array('generateBaseClasses'  => true,
-                     'generateTableClasses' => true,
-                     'packagesPath'         => sfConfig::get('sf_plugins_dir'),
-                     'packagesPrefix'       => 'Plugin',
-                     'suffix'               => '.class.php',
-                     'baseClassesDirectory' => 'base',
-                     'baseClassName'        => 'sfDoctrineRecord');
-    $options = array_merge($options, sfConfig::get('doctrine_model_builder_options', array()));
+    $builderOptions = $this->configuration->getPluginConfiguration('sfDoctrinePlugin')->getModelBuilderOptions();
 
-    $finder = sfFinder::type('file')->maxdepth(0)->name('*'.$options['suffix']);
+    $finder = sfFinder::type('file')->maxdepth(0)->name('*'.$builderOptions['suffix']);
     $before = $finder->in($config['models_path']);
 
     $import = new Doctrine_Import_Schema();
-    $import->setOptions($options);
+    $import->setOptions($builderOptions);
     $import->importSchema(array($tmpPath, $config['yaml_schema_path']), 'yml', $config['models_path']);
 
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
@@ -115,7 +108,7 @@ EOF;
       "{\n\n}"         => "{\n}\n",
     ));
 
-    $finder = sfFinder::type('file')->maxdepth(0)->name('*Table'.$options['suffix']);
+    $finder = sfFinder::type('file')->maxdepth(0)->name('*Table'.$builderOptions['suffix']);
     foreach (array_diff($finder->in($config['models_path']), $before) as $file)
     {
       $contents = file_get_contents($file);
