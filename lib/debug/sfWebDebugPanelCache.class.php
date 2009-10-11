@@ -26,7 +26,16 @@ class sfWebDebugPanelCache extends sfWebDebugPanel
 
   public function getTitleUrl()
   {
-    return $_SERVER['REQUEST_URI'].((strpos($_SERVER['REQUEST_URI'], '_sf_ignore_cache') === false) ? '?_sf_ignore_cache=1' : '');
+    $queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+
+    if (false === strpos($queryString, '_sf_ignore_cache'))
+    {
+      return sprintf('?%s%s_sf_ignore_cache=1', $queryString, $queryString ? '&' : '');
+    }
+    else
+    {
+      return '?'.$queryString;
+    }
   }
 
   public function getPanelTitle()
