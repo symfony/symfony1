@@ -117,10 +117,7 @@ abstract class sfPluginConfiguration
       $config = new sfAutoloadConfigHandler();
       $mappings = $config->evaluate(array($file));
 
-      foreach ($mappings as $class => $file)
-      {
-        $autoload->setClassPath($class, $file);
-      }
+      $autoload->addFiles(array_values($mappings));
     }
     else
     {
