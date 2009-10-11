@@ -158,6 +158,11 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
 
     $connect_function = 'mysql_connect';
 
+    if (!function_exists($connect_function))
+    {
+      throw new RuntimeException('The function mysql_connect() does not exist. Please confirm MySQL is enabled in php.ini');
+    }
+
     if ($dbhost && $user && $pw)
     {
       $conn = @$connect_function($dbhost, $user, $pw);
