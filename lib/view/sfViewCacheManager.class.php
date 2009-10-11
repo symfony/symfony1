@@ -29,6 +29,7 @@ class sfViewCacheManager
     $dispatcher  = null,
     $controller  = null,
     $routing     = null,
+    $request     = null,
     $loaded      = array();
 
   /**
@@ -52,6 +53,7 @@ class sfViewCacheManager
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
     $this->controller = $context->getController();
+    $this->request    = $context->getRequest();
     $this->options    = array_merge(array(
         'cache_key_use_vary_headers' => true,
         'cache_key_use_host_name'    => true,
@@ -405,7 +407,7 @@ class sfViewCacheManager
    */
   public function isCacheable($internalUri)
   {
-    if (count($_GET) || count($_POST))
+    if ($this->request instanceof sfWebRequest && !$this->request->isMethod(sfRequest::GET))
     {
       return false;
     }
@@ -438,7 +440,7 @@ class sfViewCacheManager
    */
   public function isActionCacheable($moduleName, $actionName)
   {
-    if (count($_GET) || count($_POST))
+    if ($this->request instanceof sfWebRequest && !$this->request->isMethod(sfRequest::GET))
     {
       return false;
     }
