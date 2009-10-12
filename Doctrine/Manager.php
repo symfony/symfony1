@@ -68,12 +68,14 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @var array                       Array of registered hydrators
      */
     protected $_hydrators = array(
-        Doctrine::HYDRATE_ARRAY           => 'Doctrine_Hydrator_ArrayDriver',
-        Doctrine::HYDRATE_RECORD          => 'Doctrine_Hydrator_RecordDriver',
-        Doctrine::HYDRATE_NONE            => 'Doctrine_Hydrator_NoneDriver',
-        Doctrine::HYDRATE_SCALAR          => 'Doctrine_Hydrator_ScalarDriver',
-        Doctrine::HYDRATE_SINGLE_SCALAR   => 'Doctrine_Hydrator_SingleScalarDriver',
-        Doctrine::HYDRATE_ON_DEMAND       => 'Doctrine_Hydrator_RecordDriver'
+        Doctrine::HYDRATE_ARRAY            => 'Doctrine_Hydrator_ArrayDriver',
+        Doctrine::HYDRATE_RECORD           => 'Doctrine_Hydrator_RecordDriver',
+        Doctrine::HYDRATE_NONE             => 'Doctrine_Hydrator_NoneDriver',
+        Doctrine::HYDRATE_SCALAR           => 'Doctrine_Hydrator_ScalarDriver',
+        Doctrine::HYDRATE_SINGLE_SCALAR    => 'Doctrine_Hydrator_SingleScalarDriver',
+        Doctrine::HYDRATE_ON_DEMAND        => 'Doctrine_Hydrator_RecordDriver',
+        Doctrine::HYDRATE_ARRAY_HIERARCHY  => 'Doctrine_Hydrator_ArrayHierarchyDriver',
+        Doctrine::HYDRATE_RECORD_HIERARCHY => 'Doctrine_Hydrator_RecordHierarchyDriver',
     );
 
     protected $_connectionDrivers = array(

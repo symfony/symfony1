@@ -359,6 +359,16 @@ final class Doctrine
      * HYDRATE_ON_DEMAND
      */
     const HYDRATE_ON_DEMAND         = 7;
+    
+    /**
+     * HYDRATE_ARRAY_HIERARCHY     
+     */
+    const HYDRATE_ARRAY_HIERARCHY   = 8;
+    
+    /**
+     * HYDRATE_RECORD_HIERARCHY     
+     */
+    const HYDRATE_RECORD_HIERARCHY  = 9;
 
     /**
      * VALIDATION CONSTANTS

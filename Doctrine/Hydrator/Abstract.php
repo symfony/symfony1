@@ -45,6 +45,12 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
         $this->_hydrationMode = $hydrationMode;
     }
 
+    public function getRootComponent()
+    {
+        $queryComponents = array_values($this->_queryComponents);
+        return $queryComponents[0]['table'];
+    }
+
     public function onDemandReset()
     {
         $this->_priorRow = null;
@@ -64,7 +70,7 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
-     * parseData
+     * hydrateResultSet
      * parses the data returned by statement object
      *
      * This is method defines the core of Doctrine object population algorithm
