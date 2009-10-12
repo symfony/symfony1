@@ -56,7 +56,9 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function dropDatabase($database)
     {
-        $this->conn->execute($this->dropDatabaseSql($database));
+        foreach ((array) $this->dropDatabaseSql($database) as $query) {
+            $this->conn->execute($query);
+        }
     }
 
     /**
