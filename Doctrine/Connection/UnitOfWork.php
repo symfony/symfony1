@@ -856,6 +856,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 $dataSet[$component] = array();
             }
 
+            if ( isset($definition['owner']) && ! isset($dataSet[$definition['owner']])) {
+                $dataSet[$definition['owner']] = array();
+            }
+
             $fieldName = $table->getFieldName($columnName);
             if (isset($definition['primary']) && $definition['primary']) {
                 continue;
