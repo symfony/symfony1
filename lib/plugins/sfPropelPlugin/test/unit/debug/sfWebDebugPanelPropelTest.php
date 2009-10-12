@@ -14,11 +14,9 @@ $t = new lime_test(1);
 
 class sfWebDebugPanelPropelTest extends sfWebDebugPanelPropel
 {
-  protected function getSqlLogs()
+  protected function getSlowQueryThreshold()
   {
-    return array(
-      'query: SELECT * FROM foo WHERE bar<1',
-    );
+    return 0.01;
   }
 }
 
@@ -26,6 +24,8 @@ class sfWebDebugPanelPropelTest extends sfWebDebugPanelPropel
 $t->diag('->getPanelContent()');
 
 $dispatcher = new sfEventDispatcher();
-$debug = new sfWebDebug($dispatcher, new sfVarLogger($dispatcher));
-$panel = new sfWebDebugPanelPropelTest($debug);
-$t->like(strip_tags($panel->getPanelContent()), '/'.preg_quote('query: SELECT * FROM foo WHERE bar&lt;1', '/').'/', '->getPanelContent() returns escaped queries');
+$logger = new sfVarLogger($dispatcher);
+$logger->log('{sfPropelLogger} SELECT * FROM foo WHERE bar<1');
+$panel = new sfWebDebugPanelPropelTest(new sfWebDebug($dispatcher, $logger));
+
+$t->ok(false !== strpos($panel->getPanelContent(), 'bar&lt;1'), '->getPanelContent() returns escaped queries');

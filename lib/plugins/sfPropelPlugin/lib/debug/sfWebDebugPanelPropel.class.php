@@ -72,8 +72,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    */
   protected function getSqlLogs()
   {
-    // slow query limit
-    $threshold = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT)->getParameter('debugpdo.logging.details.slow.threshold');
+    $threshold = $this->getSlowQueryThreshold();
 
     $html = array();
     foreach ($this->webDebug->getLogger()->getLogs() as $log)
@@ -116,10 +115,20 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         $class,
         $this->formatSql(htmlspecialchars($query, ENT_QUOTES, sfConfig::get('sf_charset'))),
         implode(', ', $details),
-        isset($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : ''
+        count($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : ''
       );
     }
 
     return $html;
+  }
+
+  /**
+   * Returns the slow query threshold.
+   * 
+   * @return integer|null
+   */
+  protected function getSlowQueryThreshold()
+  {
+    return Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT)->getParameter('debugpdo.logging.details.slow.threshold');
   }
 }
