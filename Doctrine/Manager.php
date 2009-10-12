@@ -68,14 +68,14 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @var array                       Array of registered hydrators
      */
     protected $_hydrators = array(
-        Doctrine::HYDRATE_ARRAY            => 'Doctrine_Hydrator_ArrayDriver',
-        Doctrine::HYDRATE_RECORD           => 'Doctrine_Hydrator_RecordDriver',
-        Doctrine::HYDRATE_NONE             => 'Doctrine_Hydrator_NoneDriver',
-        Doctrine::HYDRATE_SCALAR           => 'Doctrine_Hydrator_ScalarDriver',
-        Doctrine::HYDRATE_SINGLE_SCALAR    => 'Doctrine_Hydrator_SingleScalarDriver',
-        Doctrine::HYDRATE_ON_DEMAND        => 'Doctrine_Hydrator_RecordDriver',
-        Doctrine::HYDRATE_ARRAY_HIERARCHY  => 'Doctrine_Hydrator_ArrayHierarchyDriver',
-        Doctrine::HYDRATE_RECORD_HIERARCHY => 'Doctrine_Hydrator_RecordHierarchyDriver',
+        Doctrine_Core::HYDRATE_ARRAY            => 'Doctrine_Hydrator_ArrayDriver',
+        Doctrine_Core::HYDRATE_RECORD           => 'Doctrine_Hydrator_RecordDriver',
+        Doctrine_Core::HYDRATE_NONE             => 'Doctrine_Hydrator_NoneDriver',
+        Doctrine_Core::HYDRATE_SCALAR           => 'Doctrine_Hydrator_ScalarDriver',
+        Doctrine_Core::HYDRATE_SINGLE_SCALAR    => 'Doctrine_Hydrator_SingleScalarDriver',
+        Doctrine_Core::HYDRATE_ON_DEMAND        => 'Doctrine_Hydrator_RecordDriver',
+        Doctrine_Core::HYDRATE_ARRAY_HIERARCHY  => 'Doctrine_Hydrator_ArrayHierarchyDriver',
+        Doctrine_Core::HYDRATE_RECORD_HIERARCHY => 'Doctrine_Hydrator_RecordHierarchyDriver',
     );
 
     protected $_connectionDrivers = array(
@@ -129,36 +129,36 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         if ( ! $init) {
             $init = true;
             $attributes = array(
-                        Doctrine::ATTR_CACHE                        => null,
-                        Doctrine::ATTR_RESULT_CACHE                 => null,
-                        Doctrine::ATTR_QUERY_CACHE                  => null,
-                        Doctrine::ATTR_LOAD_REFERENCES              => true,
-                        Doctrine::ATTR_LISTENER                     => new Doctrine_EventListener(),
-                        Doctrine::ATTR_RECORD_LISTENER              => new Doctrine_Record_Listener(),
-                        Doctrine::ATTR_THROW_EXCEPTIONS             => true,
-                        Doctrine::ATTR_VALIDATE                     => Doctrine::VALIDATE_NONE,
-                        Doctrine::ATTR_QUERY_LIMIT                  => Doctrine::LIMIT_RECORDS,
-                        Doctrine::ATTR_IDXNAME_FORMAT               => "%s_idx",
-                        Doctrine::ATTR_SEQNAME_FORMAT               => "%s_seq",
-                        Doctrine::ATTR_TBLNAME_FORMAT               => "%s",
-                        Doctrine::ATTR_FKNAME_FORMAT                => "%s",
-                        Doctrine::ATTR_QUOTE_IDENTIFIER             => false,
-                        Doctrine::ATTR_SEQCOL_NAME                  => 'id',
-                        Doctrine::ATTR_PORTABILITY                  => Doctrine::PORTABILITY_NONE,
-                        Doctrine::ATTR_EXPORT                       => Doctrine::EXPORT_ALL,
-                        Doctrine::ATTR_DECIMAL_PLACES               => 2,
-                        Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE      => 'doctrine',
-                        Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES       => false,
-                        Doctrine::ATTR_USE_DQL_CALLBACKS            => false,
-                        Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE       => false,
-                        Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS      => false,
-                        Doctrine::ATTR_DEFAULT_IDENTIFIER_OPTIONS   => array(),
-                        Doctrine::ATTR_DEFAULT_COLUMN_OPTIONS       => array(),
-                        Doctrine::ATTR_HYDRATE_OVERWRITE            => true,
-                        Doctrine::ATTR_QUERY_CLASS                  => 'Doctrine_Query',
-                        Doctrine::ATTR_COLLECTION_CLASS             => 'Doctrine_Collection',
-                        Doctrine::ATTR_TABLE_CLASS                  => 'Doctrine_Table',
-                        Doctrine::ATTR_CASCADE_SAVES                => true,
+                        Doctrine_Core::ATTR_CACHE                        => null,
+                        Doctrine_Core::ATTR_RESULT_CACHE                 => null,
+                        Doctrine_Core::ATTR_QUERY_CACHE                  => null,
+                        Doctrine_Core::ATTR_LOAD_REFERENCES              => true,
+                        Doctrine_Core::ATTR_LISTENER                     => new Doctrine_EventListener(),
+                        Doctrine_Core::ATTR_RECORD_LISTENER              => new Doctrine_Record_Listener(),
+                        Doctrine_Core::ATTR_THROW_EXCEPTIONS             => true,
+                        Doctrine_Core::ATTR_VALIDATE                     => Doctrine_Core::VALIDATE_NONE,
+                        Doctrine_Core::ATTR_QUERY_LIMIT                  => Doctrine_Core::LIMIT_RECORDS,
+                        Doctrine_Core::ATTR_IDXNAME_FORMAT               => "%s_idx",
+                        Doctrine_Core::ATTR_SEQNAME_FORMAT               => "%s_seq",
+                        Doctrine_Core::ATTR_TBLNAME_FORMAT               => "%s",
+                        Doctrine_Core::ATTR_FKNAME_FORMAT                => "%s",
+                        Doctrine_Core::ATTR_QUOTE_IDENTIFIER             => false,
+                        Doctrine_Core::ATTR_SEQCOL_NAME                  => 'id',
+                        Doctrine_Core::ATTR_PORTABILITY                  => Doctrine_Core::PORTABILITY_NONE,
+                        Doctrine_Core::ATTR_EXPORT                       => Doctrine_Core::EXPORT_ALL,
+                        Doctrine_Core::ATTR_DECIMAL_PLACES               => 2,
+                        Doctrine_Core::ATTR_DEFAULT_PARAM_NAMESPACE      => 'doctrine',
+                        Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES       => false,
+                        Doctrine_Core::ATTR_USE_DQL_CALLBACKS            => false,
+                        Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE       => false,
+                        Doctrine_Core::ATTR_AUTO_FREE_QUERY_OBJECTS      => false,
+                        Doctrine_Core::ATTR_DEFAULT_IDENTIFIER_OPTIONS   => array(),
+                        Doctrine_Core::ATTR_DEFAULT_COLUMN_OPTIONS       => array(),
+                        Doctrine_Core::ATTR_HYDRATE_OVERWRITE            => true,
+                        Doctrine_Core::ATTR_QUERY_CLASS                  => 'Doctrine_Query',
+                        Doctrine_Core::ATTR_COLLECTION_CLASS             => 'Doctrine_Collection',
+                        Doctrine_Core::ATTR_TABLE_CLASS                  => 'Doctrine_Table',
+                        Doctrine_Core::ATTR_CASCADE_SAVES                => true,
                         ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);
@@ -280,7 +280,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                 throw new Doctrine_Manager_Exception("First argument should be an instance of PDO or implement Doctrine_Adapter_Interface");
             }
 
-            $driverName = $adapter->getAttribute(Doctrine::ATTR_DRIVER_NAME);
+            $driverName = $adapter->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME);
         } else if (is_array($adapter)) {
             if ( ! isset($adapter[0])) {
                 throw new Doctrine_Manager_Exception('Empty data source name given.');
@@ -545,7 +545,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public function getConnectionForComponent($componentName)
     {
-        Doctrine::autoload($componentName);
+        Doctrine_Core::autoload($componentName);
 
         if (isset($this->_bound[$componentName])) {
             return $this->getConnection($this->_bound[$componentName]);
@@ -727,7 +727,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
 
             $validators = array();
 
-            $dir = Doctrine::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Validator';
+            $dir = Doctrine_Core::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Validator';
 
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($files as $file) {
@@ -812,7 +812,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     public function registerExtension($name, $path = null)
     {
         if (is_null($path)) {
-            $path = Doctrine::getExtensionsPath() . '/' . $name . '/lib';
+            $path = Doctrine_Core::getExtensionsPath() . '/' . $name . '/lib';
         }
         $this->_extensions[$name] = $path;
     }

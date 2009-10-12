@@ -39,7 +39,7 @@ class Doctrine_Task_GenerateMigration extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateMigrationClass($this->getArgument('class_name'), $this->getArgument('migrations_path'));
+        Doctrine_Core::generateMigrationClass($this->getArgument('class_name'), $this->getArgument('migrations_path'));
         
         $this->notify(sprintf('Generated migration class: %s successfully to %s', $this->getArgument('class_name'), $this->getArgument('migrations_path')));
     }

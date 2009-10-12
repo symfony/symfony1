@@ -81,7 +81,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     public function __construct($table, $keyColumn = null)
     {
         if ( ! ($table instanceof Doctrine_Table)) {
-            $table = Doctrine::getTable($table);
+            $table = Doctrine_Core::getTable($table);
         }
 
         $this->_table = $table;
@@ -91,7 +91,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         }
 
         if ($keyColumn === null) {
-        	$keyColumn = $table->getAttribute(Doctrine::ATTR_COLL_KEY);
+        	$keyColumn = $table->getAttribute(Doctrine_Core::ATTR_COLL_KEY);
         }
 
         if ($keyColumn !== null) {
@@ -113,9 +113,9 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     {
         if (is_null($class)) {
             if ( ! $table instanceof Doctrine_Table) {
-                $table = Doctrine::getTable($table);
+                $table = Doctrine_Core::getTable($table);
             }
-            $class = $table->getAttribute(Doctrine::ATTR_COLLECTION_CLASS);
+            $class = $table->getAttribute(Doctrine_Core::ATTR_COLLECTION_CLASS);
         }
 
         return new $class($table, $keyColumn);
@@ -684,7 +684,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     }
 
     /**
-     * Mimics the result of a $query->execute(array(), Doctrine::HYDRATE_ARRAY);
+     * Mimics the result of a $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
      *
      * @param boolean $deep
      */

@@ -43,7 +43,7 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
     public function nextId($seqName, $onDemand = true)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
 
         $query        = 'INSERT INTO ' . $sequenceName . ' (' . $seqcolName . ') VALUES (NULL)';
 
@@ -52,7 +52,7 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
             $this->conn->exec($query);
 
         } catch(Doctrine_Connection_Exception $e) {
-            if ($onDemand && $e->getPortableCode() == Doctrine::ERR_NOSUCHTABLE) {
+            if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 // Since we are creating the sequence on demand
                 // we know the first id = 1 so initialize the
                 // sequence at 2
@@ -105,7 +105,7 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
     public function currId($seqName)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
 
         $query        = 'SELECT MAX(' . $seqcolName . ') FROM ' . $sequenceName;
 

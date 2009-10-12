@@ -94,19 +94,19 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
 
         $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
 
-        if ($this->_hydrationMode == Doctrine::HYDRATE_ON_DEMAND) {
+        if ($this->_hydrationMode == Doctrine_Core::HYDRATE_ON_DEMAND) {
             if ( ! is_null($this->_priorRow)) {
                 $data = $this->_priorRow;
                 $this->_priorRow = null;
             } else {
-                $data = $stmt->fetch(Doctrine::FETCH_ASSOC);
+                $data = $stmt->fetch(Doctrine_Core::FETCH_ASSOC);
                 if ( ! $data) {
                     return $result;
                 }
             }
             $activeRootIdentifier = null;
         } else { 
-            $data = $stmt->fetch(Doctrine::FETCH_ASSOC); 
+            $data = $stmt->fetch(Doctrine_Core::FETCH_ASSOC); 
             if ( ! $data) { 
                 return $result; 
             }
@@ -117,7 +117,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             $nonemptyComponents = array();
             $rowData = $this->_gatherRowData($data, $cache, $id, $nonemptyComponents);
 
-            if ($this->_hydrationMode == Doctrine::HYDRATE_ON_DEMAND)  { 
+            if ($this->_hydrationMode == Doctrine_Core::HYDRATE_ON_DEMAND)  { 
                 if (is_null($activeRootIdentifier)) { 
                     // first row for this record 
                     $activeRootIdentifier = $id[$rootAlias]; 
@@ -252,7 +252,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                     $this->setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
                 }
             }
-        } while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC));
+        } while ($data = $stmt->fetch(Doctrine_Core::FETCH_ASSOC));
 
         $stmt->closeCursor();
         $this->flush();
@@ -374,8 +374,8 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
     protected function _getClassnameToReturn(array &$data, $component)
     {
         if ( ! isset($this->_tables[$component])) {
-            $this->_tables[$component] = Doctrine::getTable($component);
-            $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
+            $this->_tables[$component] = Doctrine_Core::getTable($component);
+            $this->_tables[$component]->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, false);
         }
         
         if ( ! ($subclasses = $this->_tables[$component]->getOption('subclasses'))) {
@@ -384,7 +384,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
         
         $matchedComponents = array($component);
         foreach ($subclasses as $subclass) {
-            $table = Doctrine::getTable($subclass);
+            $table = Doctrine_Core::getTable($subclass);
             $inheritanceMap = $table->getOption('inheritanceMap');
             if (count($inheritanceMap) > 1) {
                 $needMatches = count($inheritanceMap);

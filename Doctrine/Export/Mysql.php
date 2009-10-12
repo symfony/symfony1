@@ -188,7 +188,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
+            $type = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE);
         }
 
         if ($type) {
@@ -478,7 +478,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
     public function createSequence($sequenceName, $start = 1, array $options = array())
     {
         $sequenceName   = $this->conn->quoteIdentifier($sequenceName, true);
-        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
 
         $optionsStrings = array();
 
@@ -499,7 +499,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
+            $type = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE);
         }
         if ($type) {
             $optionsStrings[] = 'ENGINE = ' . $type;
@@ -612,14 +612,14 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     ? null : $this->valid_default_values[$field['type']];
 
                 if ($field['default'] === ''
-                    && ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_EMPTY_TO_NULL)
+                    && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_EMPTY_TO_NULL)
                 ) {
                     $field['default'] = ' ';
                 }
             }
     
             // Proposed patch:
-            if ($field['type'] == 'enum' && $this->conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
+            if ($field['type'] == 'enum' && $this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM)) {
                 $fieldType = 'varchar';
             } else {
                 $fieldType = $field['type'];

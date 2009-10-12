@@ -39,8 +39,8 @@ class Doctrine_Task_LoadData extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::loadModels($this->getArgument('models_path'));
-        Doctrine::loadData($this->getArgument('data_fixtures_path'));
+        Doctrine_Core::loadModels($this->getArgument('models_path'));
+        Doctrine_Core::loadData($this->getArgument('data_fixtures_path'));
         
         $this->notify('Data was successfully loaded');
     }

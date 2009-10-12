@@ -60,7 +60,7 @@ class Doctrine_Locking_Manager_Pessimistic
     {
         $this->conn = $conn;
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_EXPORT) & Doctrine::EXPORT_TABLES) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_EXPORT) & Doctrine_Core::EXPORT_TABLES) {
             $columns = array();
             $columns['object_type']        = array('type'    => 'string',
                                                    'length'  => 50,

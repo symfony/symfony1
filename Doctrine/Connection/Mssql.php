@@ -81,7 +81,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
      */
     public function quoteIdentifier($identifier, $checkOption = false)
     {
-        if ($checkOption && ! $this->getAttribute(Doctrine::ATTR_QUOTE_IDENTIFIER)) {
+        if ($checkOption && ! $this->getAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER)) {
             return $identifier;
         }
         
@@ -267,7 +267,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
         try {
             $this->exec($query);
         } catch(Doctrine_Connection_Exception $e) {
-            if ($e->getPortableCode() == Doctrine::ERR_NOSUCHTABLE) {
+            if ($e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 return false;
             }
 

@@ -187,7 +187,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     {
         if ( ! $class) {
             $class = Doctrine_Manager::getInstance()
-                ->getAttribute(Doctrine::ATTR_QUERY_CLASS);
+                ->getAttribute(Doctrine_Core::ATTR_QUERY_CLASS);
         }
         return new $class($conn);
     }
@@ -264,7 +264,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      */
     public function fetchArray($params = array())
     {
-        return $this->execute($params, Doctrine::HYDRATE_ARRAY);
+        return $this->execute($params, Doctrine_Core::HYDRATE_ARRAY);
     }
 
     /**
@@ -273,7 +273,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      * of the collection.
      *
      * @param string $params        Query parameters
-     * @param int $hydrationMode    Hydration mode: see Doctrine::HYDRATE_* constants
+     * @param int $hydrationMode    Hydration mode: see Doctrine_Core::HYDRATE_* constants
      * @return mixed                Array or Doctrine_Collection, depending on hydration mode. False if no result.
      */
     public function fetchOne($params = array(), $hydrationMode = null)
@@ -333,7 +333,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             $this->processPendingAggregates();
 
             return $this->getSqlAggregateAlias($dqlAlias);
-        } else if( ! ($this->_conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_EXPR)){
+        } else if( ! ($this->_conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_EXPR)){
             return $dqlAlias;
         } else {
             throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
@@ -424,7 +424,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $table = $this->_queryComponents[$componentAlias]['table'];
 
         if ( ! isset($this->_pendingFields[$componentAlias])) {
-            if ($this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
+            if ($this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_NONE) {
                 if ( ! $this->_isSubquery && $componentAlias == $this->getRootAlias()) {
                     throw new Doctrine_Query_Exception("The root class of the query (alias $componentAlias) "
                             . " must have at least one field selected.");
@@ -440,9 +440,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         if ( ! $this->isSubquery() && isset($this->_queryComponents[$componentAlias]['parent'])) {
             $parentAlias = $this->_queryComponents[$componentAlias]['parent'];
             if (is_string($parentAlias) && ! isset($this->_pendingFields[$parentAlias])
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SCALAR
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SINGLE_SCALAR) {
+                    && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_NONE
+                    && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_SCALAR
+                    && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_SINGLE_SCALAR) {
                 throw new Doctrine_Query_Exception("The left side of the join between "
                         . "the aliases '$parentAlias' and '$componentAlias' must have at least"
                         . " the primary key field(s) selected.");
@@ -457,9 +457,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         } else {
             // only auto-add the primary key fields if this query object is not
             // a subquery of another query object and we're not using HYDRATE_NONE
-            if ( ! $this->_isSubquery && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SCALAR
-                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_SINGLE_SCALAR) {
+            if ( ! $this->_isSubquery && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_NONE
+                    && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_SCALAR
+                    && $this->_hydrator->getHydrationMode() != Doctrine_Core::HYDRATE_SINGLE_SCALAR) {
                 $fields = array_unique(array_merge((array) $table->getIdentifier(), $fields));
             }
         }
@@ -1163,7 +1163,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $rootAlias = $this->getRootAlias();
 
         if ( ! empty($this->_sqlParts['limit']) && $this->_needsSubquery &&
-                $table->getAttribute(Doctrine::ATTR_QUERY_LIMIT) == Doctrine::LIMIT_RECORDS) {
+                $table->getAttribute(Doctrine_Core::ATTR_QUERY_LIMIT) == Doctrine_Core::LIMIT_RECORDS) {
             // We do not need a limit-subquery if DISTINCT is used
             // and the selected fields are either from the root component or from a localKey relation (hasOne)
             // (i.e. DQL: SELECT DISTINCT u.id FROM User u LEFT JOIN u.phonenumbers LIMIT 5).
@@ -1243,7 +1243,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     $this->useQueryCache(false);
                     
                     // mysql doesn't support LIMIT in subqueries
-                    $list = $this->_conn->execute($subquery, $this->_execParams)->fetchAll(Doctrine::FETCH_COLUMN);
+                    $list = $this->_conn->execute($subquery, $this->_execParams)->fetchAll(Doctrine_Core::FETCH_COLUMN);
                     $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));
                     
                     break;
@@ -1339,7 +1339,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         // what about composite keys?
         $primaryKey = $alias . '.' . $table->getColumnName($table->getIdentifier());
 
-        $driverName = $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME);
+        $driverName = $this->_conn->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME);
 
         // initialize the base of the subquery
         if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
@@ -1918,7 +1918,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             $queryPart .= ' LEFT JOIN ' . $this->_conn->quoteIdentifier($parentTable->getTableName())
                         . ' ' . $this->_conn->quoteIdentifier($parentTableAlias) . ' ON ';
 
-            //Doctrine::dump($table->getIdentifier());
+            //Doctrine_Core::dump($table->getIdentifier());
             foreach ((array) $table->getIdentifier() as $identifier) {
                 $column = $table->getColumnName($identifier);
 
@@ -2065,8 +2065,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      *
      * @param string $query      Dql query
      * @param array $params      prepared statement parameters
-     * @param int $hydrationMode Doctrine::HYDRATE_ARRAY or Doctrine::HYDRATE_RECORD
-     * @see Doctrine::FETCH_* constants
+     * @param int $hydrationMode Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
+     * @see Doctrine_Core::FETCH_* constants
      * @return mixed
      */
     public function query($query, $params = array(), $hydrationMode = null)

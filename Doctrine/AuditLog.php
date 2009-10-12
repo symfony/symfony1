@@ -109,7 +109,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      * @param	boolean			$asCollection
      * @return  array           An array or Doctrine_Collection or a Doctrine_Record
      */
-    public function getVersion(Doctrine_Record $record, $version, $hydrationMode = Doctrine::HYDRATE_ARRAY, $asCollection = true)
+    public function getVersion(Doctrine_Record $record, $version, $hydrationMode = Doctrine_Core::HYDRATE_ARRAY, $asCollection = true)
     {
         $className = $this->_options['className'];
         $method    = ($asCollection) ? 'execute' : 'fetchOne'; 
@@ -152,7 +152,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                 ->from($className)
                 ->where(implode(' AND ',$conditions));
 
-        $result = $q->execute($values, Doctrine::HYDRATE_ARRAY);
+        $result = $q->execute($values, Doctrine_Core::HYDRATE_ARRAY);
 
         return isset($result[0]['max_version']) ? $result[0]['max_version']:0;
     }

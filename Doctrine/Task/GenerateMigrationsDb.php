@@ -44,13 +44,13 @@ class Doctrine_Task_GenerateMigrationsDb extends Doctrine_Task
             $migration = new Doctrine_Migration($migrationsPath);
             $result1 = false;
             if ( ! count($migration->getMigrationClasses())) {
-                $result1 = Doctrine::generateMigrationsFromDb($migrationsPath);
+                $result1 = Doctrine_Core::generateMigrationsFromDb($migrationsPath);
             }
             $connections = array();
             foreach (Doctrine_Manager::getInstance() as $connection) {
                 $connections[] = $connection->getName();
             }
-            $changes = Doctrine::generateMigrationsFromDiff($migrationsPath, $connections, $yamlSchemaPath);
+            $changes = Doctrine_Core::generateMigrationsFromDiff($migrationsPath, $connections, $yamlSchemaPath);
             $numChanges = count($changes, true) - count($changes);
             $result = ($result1 || $numChanges) ? true:false;
         } catch (Exception $e) {

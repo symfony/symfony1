@@ -129,7 +129,7 @@ class Doctrine_Cli
     public function notifyException($exception)
     {
         $msg = $exception->getMessage();
-        if (Doctrine::debug()) {
+        if (Doctrine_Core::debug()) {
             $msg .= "\n" . $exception->getTraceAsString();
         }
         echo $this->_formatter->format($msg, 'ERROR') . "\n";
@@ -466,7 +466,7 @@ class Doctrine_Cli
     public function loadTasks($directory = null)
     {
         if ($directory === null) {
-            $directory = Doctrine::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Task';
+            $directory = Doctrine_Core::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Task';
         }
         
         if (is_dir($directory))

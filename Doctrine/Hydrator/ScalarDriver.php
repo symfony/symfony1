@@ -37,7 +37,7 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
         $cache = array();
         $result = array();
 
-        while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC)) {
+        while ($data = $stmt->fetch(Doctrine_Core::FETCH_ASSOC)) {
             $result[] = $this->_gatherRowData($data, $cache);
         }
 

@@ -39,7 +39,7 @@ class Doctrine_Task_Compile extends Doctrine_Task
     
     public function execute()
     {
-        $compiledPath = Doctrine::compile($this->getArgument('compiled_path'), $this->getArgument('drivers', array()));
+        $compiledPath = Doctrine_Core::compile($this->getArgument('compiled_path'), $this->getArgument('drivers', array()));
         
         $this->notify('Compiled Doctrine successfully to: ' . $compiledPath);
     }

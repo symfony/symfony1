@@ -59,7 +59,7 @@ class Doctrine_Data_Export extends Doctrine_Data
      */
     public function doExport()
     {
-        $models = Doctrine::getLoadedModels();
+        $models = Doctrine_Core::getLoadedModels();
         $specifiedModels = $this->getModels();
 
         $data = array();
@@ -69,12 +69,12 @@ class Doctrine_Data_Export extends Doctrine_Data
           $models = $specifiedModels;
         }
 
-        $models = Doctrine::initializeModels($models);
+        $models = Doctrine_Core::initializeModels($models);
 
         // temporarily disable indexBy query parts of selected and related tables
         $originalIndexBy = array();
         foreach ($models AS $name) {
-          $table = Doctrine::getTable($name);
+          $table = Doctrine_Core::getTable($name);
           if ( !is_null($indexBy = $table->getBoundQueryPart('indexBy'))) {
             $originalIndexBy[$name] = $indexBy;
             $table->bindQueryPart('indexBy', null);
@@ -86,7 +86,7 @@ class Doctrine_Data_Export extends Doctrine_Data
                 continue;
             }
 
-            $results = Doctrine::getTable($name)->findAll();
+            $results = Doctrine_Core::getTable($name)->findAll();
 
             if ($results->count() > 0) {
                 $data[$name] = $results;
@@ -95,7 +95,7 @@ class Doctrine_Data_Export extends Doctrine_Data
 
         // Restore the temporarily disabled indexBy query parts
         foreach($originalIndexBy AS $name => $indexBy) {
-            Doctrine::getTable($name)->bindQueryPart('indexBy', $indexBy);
+            Doctrine_Core::getTable($name)->bindQueryPart('indexBy', $indexBy);
         }
 
         $data = $this->prepareData($data);

@@ -66,7 +66,7 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     public function doParsing()
     {
-        $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute(Doctrine::ATTR_RECURSIVE_MERGE_FIXTURES);
+        $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_RECURSIVE_MERGE_FIXTURES);
         $mergeFunction = $recursiveMerge === true ? 'array_merge_recursive':'array_merge';
         $directory = $this->getDirectory();
 
@@ -125,7 +125,7 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     protected function _buildRows($className, $data)
     {
-        $table = Doctrine::getTable($className);
+        $table = Doctrine_Core::getTable($className);
 
         foreach ($data as $rowKey => $row) {
             // do the same for the row information
@@ -271,7 +271,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     */
     protected function _hasNaturalNestedSetFormat($className, array &$data)
     {
-        if (Doctrine::getTable($className)->isTree()) {
+        if (Doctrine_Core::getTable($className)->isTree()) {
             if (isset($data['NestedSet']) && $data['NestedSet'] == true) {
                 unset($data['NestedSet']);
                 return true;
@@ -314,7 +314,7 @@ class Doctrine_Data_Import extends Doctrine_Data
 
         $buildRows = array();
         foreach ($this->_rows as $className => $classRows) {
-            $rowKeyPrefix = $this->_getRowKeyPrefix(Doctrine::getTable($className));
+            $rowKeyPrefix = $this->_getRowKeyPrefix(Doctrine_Core::getTable($className));
             foreach ($classRows as $rowKey => $row) {
                 $rowKey = $rowKeyPrefix . $rowKey;
                 $buildRows[$rowKey] = $row;
@@ -370,7 +370,7 @@ class Doctrine_Data_Import extends Doctrine_Data
                 unset($nestedSet['children']);
             }
 
-            $rowKey = $this->_getRowKeyPrefix(Doctrine::getTable($model)) . $rowKey;
+            $rowKey = $this->_getRowKeyPrefix(Doctrine_Core::getTable($model)) . $rowKey;
 
             $record = $this->_importedObjects[$rowKey];
             // remove this nested set from _importedObjects so it's not processed in the save routine for normal objects
@@ -378,7 +378,7 @@ class Doctrine_Data_Import extends Doctrine_Data
 
             if ( ! $parent) {
                 $record->save(); // save, so that createRoot can do: root id = id
-                Doctrine::getTable($model)->getTree()->createRoot($record);
+                Doctrine_Core::getTable($model)->getTree()->createRoot($record);
             } else {
                 $parent->getNode()->addChild($record);
             }

@@ -177,7 +177,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      * attribute
      * sets or retrieves an option
      *
-     * @see Doctrine::ATTR_* constants   availible attributes
+     * @see Doctrine_Core::ATTR_* constants   availible attributes
      * @param mixed $attr
      * @param mixed $value
      * @return mixed

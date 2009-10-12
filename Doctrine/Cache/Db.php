@@ -82,7 +82,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
             $sql .= " AND (expire is null OR expire > '" . date('Y-m-d H:i:s') . "')";
         }
 
-        $result = $this->getConnection()->execute($sql, array($this->_getKey($id)))->fetchAll(Doctrine::FETCH_NUM);
+        $result = $this->getConnection()->execute($sql, array($this->_getKey($id)))->fetchAll(Doctrine_Core::FETCH_NUM);
 
         if ( ! isset($result[0])) {
             return false;

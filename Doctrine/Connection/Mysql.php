@@ -46,7 +46,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
+        $this->setAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
         $this->supported = array(
                           'sequences'            => 'emulated',
                           'indexes'              => true,

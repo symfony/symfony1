@@ -39,7 +39,7 @@ class Doctrine_Task_Dql extends Doctrine_Task
 
     public function execute()
     {
-        Doctrine::loadModels($this->getArgument('models_path'));
+        Doctrine_Core::loadModels($this->getArgument('models_path'));
 
         $dql = $this->getArgument('dql_query');
 
@@ -50,7 +50,7 @@ class Doctrine_Task_Dql extends Doctrine_Task
 
         $this->notify('executing: "' . $dql . '" (' . implode(', ', $params) . ')');
 
-        $results = $query->query($dql, $params, Doctrine::HYDRATE_ARRAY);
+        $results = $query->query($dql, $params, Doctrine_Core::HYDRATE_ARRAY);
 
         $this->_printResults($results);
     }

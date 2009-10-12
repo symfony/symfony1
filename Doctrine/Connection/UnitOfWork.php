@@ -423,7 +423,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $rel = $record->getTable()->getRelation($k);
 
             if ($rel instanceof Doctrine_Relation_Association) {
-                if ($this->conn->getAttribute(Doctrine::ATTR_CASCADE_SAVES) || $v->isModified()) {
+                if ($this->conn->getAttribute(Doctrine_Core::ATTR_CASCADE_SAVES) || $v->isModified()) {
                     $v->save($this->conn, false);
                 }
 
@@ -599,7 +599,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $this->conn->insert($table, $fields);
 
         if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
-            $table->getIdentifierType() != Doctrine::IDENTIFIER_NATURAL) {
+            $table->getIdentifierType() != Doctrine_Core::IDENTIFIER_NATURAL) {
             if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
                 $seq = $table->getTableName() . '_' . $identifier[0];
             } elseif ($driver == 'oracle') {

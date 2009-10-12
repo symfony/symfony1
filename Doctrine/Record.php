@@ -211,7 +211,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         } else {
             // get the table of this class
             $class = get_class($this);
-            $this->_table = Doctrine::getTable($class);
+            $this->_table = Doctrine_Core::getTable($class);
             $exists = false;
         }
 
@@ -374,7 +374,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function isValid($deep = false, $hooks = true)
     {
-        if ( ! $this->_table->getAttribute(Doctrine::ATTR_VALIDATE)) {
+        if ( ! $this->_table->getAttribute(Doctrine_Core::ATTR_VALIDATE)) {
             return true;
         }
 
@@ -756,9 +756,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     private function prepareIdentifiers($exists = true)
     {
         switch ($this->_table->getIdentifierType()) {
-            case Doctrine::IDENTIFIER_AUTOINC:
-            case Doctrine::IDENTIFIER_SEQUENCE:
-            case Doctrine::IDENTIFIER_NATURAL:
+            case Doctrine_Core::IDENTIFIER_AUTOINC:
+            case Doctrine_Core::IDENTIFIER_SEQUENCE:
+            case Doctrine_Core::IDENTIFIER_NATURAL:
                 $name = $this->_table->getIdentifier();
                 if (is_array($name)) {
                     $name = $name[0];
@@ -769,7 +769,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     }
                 }
                 break;
-            case Doctrine::IDENTIFIER_COMPOSITE:
+            case Doctrine_Core::IDENTIFIER_COMPOSITE:
                 $names = $this->_table->getIdentifier();
 
                 foreach ($names as $name) {
@@ -956,8 +956,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
         $id = array_values($id);
 
-        $overwrite = $this->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE);
-        $this->getTable()->setAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE, true);
+        $overwrite = $this->getTable()->getAttribute(Doctrine_Core::ATTR_HYDRATE_OVERWRITE);
+        $this->getTable()->setAttribute(Doctrine_Core::ATTR_HYDRATE_OVERWRITE, true);
 
         if ($deep) {
             $query = $this->getTable()->createQuery();
@@ -969,13 +969,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $record = $query->fetchOne($id);
         } else {
             // Use HYDRATE_ARRAY to avoid clearing object relations
-            $record = $this->getTable()->find($id, Doctrine::HYDRATE_ARRAY);
+            $record = $this->getTable()->find($id, Doctrine_Core::HYDRATE_ARRAY);
             if ($record) {
                 $this->hydrate($record);
             }
         }
 
-        $this->getTable()->setAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE, $overwrite);
+        $this->getTable()->setAttribute(Doctrine_Core::ATTR_HYDRATE_OVERWRITE, $overwrite);
 
         if ($record === false) {
             throw new Doctrine_Record_Exception('Failed to refresh. Record does not exist.');
@@ -1118,7 +1118,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 return false;
             }
 
-            $data = empty($data) ? $this->getTable()->find($id, Doctrine::HYDRATE_ARRAY) : $data;
+            $data = empty($data) ? $this->getTable()->find($id, Doctrine_Core::HYDRATE_ARRAY) : $data;
             
             foreach ($data as $field => $value) {
                if ( ! isset($this->_data[$field]) || $this->_data[$field] === self::$_null) {
@@ -1276,7 +1276,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function get($fieldName, $load = true)
     {
-        if ($this->_table->getAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE) || $this->hasAccessor($fieldName)) {
+        if ($this->_table->getAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE) || $this->hasAccessor($fieldName)) {
             $componentName = $this->_table->getComponentName();
 
             $accessor = $this->hasAccessor($fieldName) 
@@ -1368,7 +1368,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function set($fieldName, $value, $load = true)
     {
-        if ($this->_table->getAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE) || $this->hasMutator($fieldName)) {
+        if ($this->_table->getAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE) || $this->hasMutator($fieldName)) {
             $componentName = $this->_table->getComponentName();
             $mutator = $this->hasMutator($fieldName)
                 ? $this->getMutator($fieldName):
@@ -1500,7 +1500,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             if ( ! $rel->isOneToOne()) {
                 // one-to-many relation found
                 if ( ! ($value instanceof Doctrine_Collection)) {
-                    throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
+                    throw new Doctrine_Record_Exception("Couldn't call Doctrine_Core::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
                 }
 
                 if (isset($this->_references[$name])) {
@@ -1518,7 +1518,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
                 // one-to-one relation found
                 if ( ! ($value instanceof Doctrine_Record) && ! ($value instanceof Doctrine_Null)) {
-                    throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Record or Doctrine_Null when setting one-to-one references.");
+                    throw new Doctrine_Record_Exception("Couldn't call Doctrine_Core::set(), second argument should be an instance of Doctrine_Record or Doctrine_Null when setting one-to-one references.");
                 }
 
                 if ($rel instanceof Doctrine_Relation_LocalKey) {
@@ -1536,7 +1536,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         } else if ($rel instanceof Doctrine_Relation_Association) {
             // join table relation found
             if ( ! ($value instanceof Doctrine_Collection)) {
-                throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting many-to-many references.");
+                throw new Doctrine_Record_Exception("Couldn't call Doctrine_Core::set(), second argument should be an instance of Doctrine_Collection when setting many-to-many references.");
             }
         }
 
@@ -1839,7 +1839,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
         }
 
-        if ($this->_table->getIdentifierType() ==  Doctrine::IDENTIFIER_AUTOINC) {
+        if ($this->_table->getIdentifierType() ==  Doctrine_Core::IDENTIFIER_AUTOINC) {
             $i      = $this->_table->getIdentifier();
             $a[$i]  = $this->getIncremented();
         }
@@ -2120,7 +2120,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         $data = $this->_data;
 
-        if ($this->_table->getIdentifierType() === Doctrine::IDENTIFIER_AUTOINC) {
+        if ($this->_table->getIdentifierType() === Doctrine_Core::IDENTIFIER_AUTOINC) {
             $id = $this->_table->getIdentifier();
 
             unset($data[$id]);
@@ -2619,7 +2619,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function toString()
     {
-        return Doctrine::dump(get_object_vars($this));
+        return Doctrine_Core::dump(get_object_vars($this));
     }
 
     /**

@@ -67,7 +67,7 @@ class Doctrine_Migration_Diff
     {
         $this->_from = $from;
         $this->_to = $to;
-        $this->_startingModelFiles = Doctrine::getLoadedModelFiles();
+        $this->_startingModelFiles = Doctrine_Core::getLoadedModelFiles();
 
         if ($migration instanceof Doctrine_Migration) {
             $this->_migration = $migration;
@@ -121,8 +121,8 @@ class Doctrine_Migration_Diff
     protected function _diff($from, $to)
     {
         // Load the from and to models
-        $fromModels = Doctrine::initializeModels(Doctrine::loadModels($from));
-        $toModels = Doctrine::initializeModels(Doctrine::loadModels($to));
+        $fromModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($from));
+        $toModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($to));
 
         // Build schema information for the models
         $fromInfo = $this->_buildModelInformation($fromModels);
@@ -250,7 +250,7 @@ class Doctrine_Migration_Diff
     {
         $info = array();
         foreach ($models as $key => $model) {
-            $table = Doctrine::getTable($model);
+            $table = Doctrine_Core::getTable($model);
             if ($table->getTableName() !== $this->_migration->getTableName()) {
                 $info[$model] = $table->getExportableFormat();
             }
@@ -318,7 +318,7 @@ class Doctrine_Migration_Diff
             }
 
             if ($extension === 'yml') {
-                Doctrine::generateModelsFromYaml($item, $path, $options);
+                Doctrine_Core::generateModelsFromYaml($item, $path, $options);
 
                 return $path;
             } else if ($extension === 'php') {
@@ -330,7 +330,7 @@ class Doctrine_Migration_Diff
             }
         } else {
             try {
-                Doctrine::generateModelsFromDb($path, (array) $item, $options);
+                Doctrine_Core::generateModelsFromDb($path, (array) $item, $options);
                 return $path;
             } catch (Exception $e) {
                 throw new Doctrine_Migration_Exception('Could not generate models from connection: ' . $e->getMessage());
@@ -345,7 +345,7 @@ class Doctrine_Migration_Diff
      */
     protected function _cleanup()
     {
-        $modelFiles = Doctrine::getLoadedModelFiles();
+        $modelFiles = Doctrine_Core::getLoadedModelFiles();
         $filesToClean = array_diff($modelFiles, $this->_startingModelFiles);
 
         foreach ($filesToClean as $file) {

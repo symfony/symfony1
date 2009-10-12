@@ -43,7 +43,7 @@ class Doctrine_Search_File extends Doctrine_Search
 
         if ( ! isset($this->_options['resource'])) {
             $conn = Doctrine_Manager::connection();
-            $tableClass = $conn->getAttribute(Doctrine::ATTR_TABLE_CLASS);
+            $tableClass = $conn->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
             $table = new $tableClass('File', $conn);
 
             $table->setColumn('url', 'string', 255, array('primary' => true));

@@ -42,7 +42,7 @@ class Doctrine_Export_Oracle extends Doctrine_Export
      */
     public function createDatabase($name)
     {
-        if ($this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE)) {
             $username   = $name;
             $password   = $this->conn->dsn['password'] ? $this->conn->dsn['password'] : $name;
 
@@ -90,7 +90,7 @@ SQL;
 
         $this->conn->exec($sql);
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE)) {
             $username = $name;
             $this->conn->exec('DROP USER ' . $username . ' CASCADE');
         }
@@ -109,7 +109,7 @@ SQL;
     {
         $sql   = array();
 
-        if ( ! $this->conn->getAttribute(Doctrine::ATTR_QUOTE_IDENTIFIER)) {
+        if ( ! $this->conn->getAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER)) {
         	$table = strtoupper($table);
         }
         $indexName  = $table . '_AI_PK';

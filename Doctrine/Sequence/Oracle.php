@@ -48,7 +48,7 @@ class Doctrine_Sequence_Oracle extends Doctrine_Sequence
         try {
             $result = $this->conn->fetchOne($query);
         } catch(Doctrine_Connection_Exception $e) {
-            if ($onDemand && $e->getPortableCode() == Doctrine::ERR_NOSUCHTABLE) {
+            if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
 
                 try {
                     $result = $this->conn->export->createSequence($seqName);

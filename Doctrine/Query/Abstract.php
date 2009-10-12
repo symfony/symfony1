@@ -235,7 +235,7 @@ abstract class Doctrine_Query_Abstract
      * @var array $_options                 an array of options
      */
     protected $_options    = array(
-        'hydrationMode'      => Doctrine::HYDRATE_RECORD
+        'hydrationMode'      => Doctrine_Core::HYDRATE_RECORD
     );
 
     /**
@@ -271,8 +271,8 @@ abstract class Doctrine_Query_Abstract
         $this->_conn = $connection;
         $this->_hydrator = $hydrator;
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
-        $this->_resultCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_RESULT_CACHE_LIFESPAN);
-        $this->_queryCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE_LIFESPAN);
+        $this->_resultCacheTTL = $this->_conn->getAttribute(Doctrine_Core::ATTR_RESULT_CACHE_LIFESPAN);
+        $this->_queryCacheTTL = $this->_conn->getAttribute(Doctrine_Core::ATTR_QUERY_CACHE_LIFESPAN);
     }
 
     /**
@@ -882,7 +882,7 @@ abstract class Doctrine_Query_Abstract
 
         // Check if we're not using a Doctrine_View
         if ( ! $this->_view) {
-            if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
+            if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine_Core::ATTR_QUERY_CACHE))) {
                 $queryCacheDriver = $this->getQueryCacheDriver();
                 $hash = $this->calculateQueryCacheHash();
                 $cached = $queryCacheDriver->fetch($hash);
@@ -906,7 +906,7 @@ abstract class Doctrine_Query_Abstract
 
                     // Check again because getSqlQuery() above could have flipped the _queryCache flag
                     // if this query contains the limit sub query algorithm we don't need to cache it
-                    if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
+                    if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine_Core::ATTR_QUERY_CACHE))) {
                         // Convert query into a serialized form
                         $serializedQuery = $this->getCachedForm($query);
 
@@ -925,7 +925,7 @@ abstract class Doctrine_Query_Abstract
         $params = $this->getInternalParams();
 
         if ($this->isLimitSubqueryUsed() &&
-                $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
+                $this->_conn->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME) !== 'mysql') {
             $params = array_merge((array) $params, (array) $params);
         }
 
@@ -993,7 +993,7 @@ abstract class Doctrine_Query_Abstract
                 $result = $stmt;
             } else {
                 $this->_hydrator->setQueryComponents($this->_queryComponents);
-                if ($this->_type == self::SELECT && $hydrationMode == Doctrine::HYDRATE_ON_DEMAND) {
+                if ($this->_type == self::SELECT && $hydrationMode == Doctrine_Core::HYDRATE_ON_DEMAND) {
                     $hydrationDriver = $this->_hydrator->getHydratorDriver($stmt, $this->_tableAliasMap);
                     $result = new Doctrine_Collection_OnDemand($stmt, $hydrationDriver, $this->_tableAliasMap); 
                 } else {
@@ -1001,7 +1001,7 @@ abstract class Doctrine_Query_Abstract
                 }
             }
         }
-        if ($this->getConnection()->getAttribute(Doctrine::ATTR_AUTO_FREE_QUERY_OBJECTS)) {
+        if ($this->getConnection()->getAttribute(Doctrine_Core::ATTR_AUTO_FREE_QUERY_OBJECTS)) {
             $this->free();
         }
 
@@ -1057,7 +1057,7 @@ abstract class Doctrine_Query_Abstract
      */
     protected function _preQuery($params = array())
     {
-        if ( ! $this->_preQueried && $this->getConnection()->getAttribute(Doctrine::ATTR_USE_DQL_CALLBACKS)) {
+        if ( ! $this->_preQueried && $this->getConnection()->getAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS)) {
             $this->_preQueried = true;
 
             $callback = $this->_getDqlCallback();
@@ -2046,7 +2046,7 @@ abstract class Doctrine_Query_Abstract
         if ( ! isset($this->_parsers[$name])) {
             $class = 'Doctrine_Query_' . ucwords(strtolower($name));
 
-            Doctrine::autoload($class);
+            Doctrine_Core::autoload($class);
 
             if ( ! class_exists($class)) {
                 throw new Doctrine_Query_Exception('Unknown parser ' . $name);

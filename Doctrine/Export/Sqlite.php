@@ -286,7 +286,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
     public function createSequence($seqName, $start = 1, array $options = array())
     {
         $sequenceName   = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
         $query          = 'CREATE TABLE ' . $sequenceName . ' (' . $seqcolName . ' INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)';
 
         $this->conn->exec($query);

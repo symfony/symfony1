@@ -40,7 +40,7 @@ class Doctrine_Hydrator
     protected
         $_hydrators,
         $_rootAlias = null,
-        $_hydrationMode = Doctrine::HYDRATE_RECORD,
+        $_hydrationMode = Doctrine_Core::HYDRATE_RECORD,
         $_queryComponents = array();
 
     public function __construct()
@@ -51,7 +51,7 @@ class Doctrine_Hydrator
     /**
      * Set the hydration mode
      *
-     * @param mixed $hydrationMode  One of the Doctrine::HYDRATE_* constants or 
+     * @param mixed $hydrationMode  One of the Doctrine_Core::HYDRATE_* constants or 
      *                              a string representing the name of the hydration mode
      */
     public function setHydrationMode($hydrationMode)
@@ -62,7 +62,7 @@ class Doctrine_Hydrator
     /**
      * Get the hydration mode
      *
-     * @return mixed $hydrationMode One of the Doctrine::HYDRATE_* constants
+     * @return mixed $hydrationMode One of the Doctrine_Core::HYDRATE_* constants
      */
     public function getHydrationMode()
     {

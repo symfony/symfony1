@@ -54,7 +54,7 @@ class Doctrine_Search_Query
     public function __construct($table)
     {
         if (is_string($table)) {
-           $table = Doctrine::getTable($table);
+           $table = Doctrine_Core::getTable($table);
         } else {
             if ( ! $table instanceof Doctrine_Table) {
                 throw new Doctrine_Search_Exception('Invalid argument type. Expected instance of Doctrine_Table.');

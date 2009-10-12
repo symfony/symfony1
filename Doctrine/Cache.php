@@ -323,7 +323,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
             if ($rand < $this->_options['savePropability']) {
                 $stmt = $event->getInvoker()->getAdapter()->query($query);
 
-                $data = $stmt->fetchAll(Doctrine::FETCH_ASSOC);
+                $data = $stmt->fetchAll(Doctrine_Core::FETCH_ASSOC);
 
                 $this->success = true;
 
@@ -399,7 +399,7 @@ class Doctrine_Cache extends Doctrine_EventListener implements Countable, Iterat
 
                 $stmt->execute($event->getParams());
 
-                $data = $stmt->fetchAll(Doctrine::FETCH_ASSOC);
+                $data = $stmt->fetchAll(Doctrine_Core::FETCH_ASSOC);
 
                 $this->success = true;
 

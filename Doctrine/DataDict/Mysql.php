@@ -143,7 +143,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
 
                 return $length ? 'CHAR('.$length.')' : 'CHAR(255)';
             case 'enum':
-                if ($this->conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
+                if ($this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM)) {
                     $values = array();
                     foreach ($field['values'] as $value) {
                       $values[] = $this->conn->quote($value, 'varchar');
@@ -224,7 +224,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 return 'DOUBLE';
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
-                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
+                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
                 return 'DECIMAL('.$length.','.$scale.')';
             case 'bit':
                 return 'BIT';

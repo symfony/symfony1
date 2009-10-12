@@ -109,7 +109,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 return 'FLOAT';
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
-                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
+                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
                 return 'DECIMAL('.$length.','.$scale.')';
         }
         return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);

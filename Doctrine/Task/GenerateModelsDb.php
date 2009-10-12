@@ -38,7 +38,7 @@ class Doctrine_Task_GenerateModelsDb extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateModelsFromDb($this->getArgument('models_path'), (array) $this->getArgument('connection'));
+        Doctrine_Core::generateModelsFromDb($this->getArgument('models_path'), (array) $this->getArgument('connection'));
         
         $this->notify('Generated models successfully from databases');
     }

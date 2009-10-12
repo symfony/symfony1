@@ -185,7 +185,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
     {
         $this->conn->connect();
         
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->savePoints[] = $savepoint;
@@ -241,7 +241,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
         
         $this->conn->connect();
 
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->_nestingLevel -= $this->removeSavePoints($savepoint);
@@ -330,7 +330,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
             return false;
         }
 
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->_nestingLevel -= $this->removeSavePoints($savepoint);

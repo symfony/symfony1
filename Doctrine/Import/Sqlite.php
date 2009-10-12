@@ -79,8 +79,8 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
                 $result[] = $sqn;
             }
         }
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            $result = array_map(($this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE) == CASE_LOWER ? 'strtolower' : 'strtoupper'), $result);
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE) {
+            $result = array_map(($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER ? 'strtolower' : 'strtoupper'), $result);
         }
         return $result;
     }
@@ -97,7 +97,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
 
         $query = "SELECT sql FROM sqlite_master WHERE type='index' AND ";
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE) {
             $query .= 'LOWER(tbl_name) = ' . strtolower($table);
         } else {
             $query .= 'tbl_name = ' . $table;
@@ -115,8 +115,8 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
             }
         }
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            $result = array_change_key_case($result, $this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE));
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE) {
+            $result = array_change_key_case($result, $this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE));
         }
         return array_keys($result);
     }

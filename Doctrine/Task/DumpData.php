@@ -39,7 +39,7 @@ class Doctrine_Task_DumpData extends Doctrine_Task
 
     public function execute()
     {
-        $models = Doctrine::loadModels($this->getArgument('models_path')); 
+        $models = Doctrine_Core::loadModels($this->getArgument('models_path')); 
 
         if (empty($models)) { 
             throw new Doctrine_Task_Exception('No models were loaded'); 
@@ -52,7 +52,7 @@ class Doctrine_Task_DumpData extends Doctrine_Task
         }
 
         if ( ! empty($path)) {
-            Doctrine::dumpData($path);
+            Doctrine_Core::dumpData($path);
 
             $this->notify(sprintf('Dumped data successfully to: %s', $path));
         } else {

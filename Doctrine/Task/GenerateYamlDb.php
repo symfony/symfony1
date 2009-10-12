@@ -38,7 +38,7 @@ class Doctrine_Task_GenerateYamlDb extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateYamlFromDb($this->getArgument('yaml_schema_path'));
+        Doctrine_Core::generateYamlFromDb($this->getArgument('yaml_schema_path'));
         
         $this->notify('Generate YAML schema successfully from database');
     }

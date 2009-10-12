@@ -180,7 +180,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     public function __construct()
     {
-        $this->_baseTableClassName = Doctrine_Manager::getInstance()->getAttribute(Doctrine::ATTR_TABLE_CLASS);
+        $this->_baseTableClassName = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
         $this->loadTemplate();
     }
 
@@ -809,7 +809,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
     
                 foreach ($value as $attr) {
-                    $const = "Doctrine::" . strtoupper($key) . "_" . strtoupper($attr);
+                    $const = "Doctrine_Core::" . strtoupper($key) . "_" . strtoupper($attr);
                     if (defined($const)) {
                         $values[] = $const;
                     } else {
@@ -819,7 +819,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
     
             $string = implode(' ^ ', $values);
-            $build .= "        \$this->setAttribute(Doctrine::ATTR_" . strtoupper($key) . ", " . $string . ");" . PHP_EOL;
+            $build .= "        \$this->setAttribute(Doctrine_Core::ATTR_" . strtoupper($key) . ", " . $string . ");" . PHP_EOL;
         }
     
         return $build;
@@ -1010,7 +1010,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
 
-        Doctrine::loadModel($className, $writePath);
+        Doctrine_Core::loadModel($className, $writePath);
 
         if ( ! file_exists($writePath)) {
             file_put_contents($writePath, $content);
@@ -1142,6 +1142,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             throw new Doctrine_Import_Builder_Exception("Couldn't write file " . $writePath);
         }
 
-        Doctrine::loadModel($definition['className'], $writePath);
+        Doctrine_Core::loadModel($definition['className'], $writePath);
     }
 }

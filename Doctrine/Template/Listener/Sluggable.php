@@ -180,7 +180,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         ->select('r.'.$name)
         ->from(get_class($record).' r')
         ->where($whereString , $whereParams)
-        ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
+        ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
 
         // We need to introspect SoftDelete to check if we are not disabling unique records too
         if ($record->getTable()->hasTemplate('Doctrine_Template_SoftDelete')) {

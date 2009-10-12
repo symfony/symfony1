@@ -46,8 +46,8 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     protected $connection = false;
 
 
-    protected $attributes = array(Doctrine::ATTR_DRIVER_NAME    => "oci8",
-                                  Doctrine::ATTR_ERRMODE        => Doctrine::ERRMODE_SILENT);
+    protected $attributes = array(Doctrine_Core::ATTR_DRIVER_NAME    => "oci8",
+                                  Doctrine_Core::ATTR_ERRMODE        => Doctrine_Core::ERRMODE_SILENT);
 
     /**
      * User-provided configuration.
@@ -239,12 +239,12 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     public function setAttribute($attribute, $value)
     {
         switch ($attribute) {
-            case Doctrine::ATTR_DRIVER_NAME:
+            case Doctrine_Core::ATTR_DRIVER_NAME:
                 //TODO throw an error since driver name can not be changed
-            case Doctrine::ATTR_ERRMODE:
+            case Doctrine_Core::ATTR_ERRMODE:
             break;
-            case Doctrine::ATTR_CASE:
-                if ($value == Doctrine::CASE_NATURAL) {
+            case Doctrine_Core::ATTR_CASE:
+                if ($value == Doctrine_Core::CASE_NATURAL) {
                     break;
                 } else {
                     throw new Doctrine_Adapter_Exception("Unsupported Option for ATTR_CASE: $value");
@@ -261,7 +261,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
      * Retrieve a statement attribute
      *
      * @param integer $attribute
-     * @see Doctrine::ATTR_* constants
+     * @see Doctrine_Core::ATTR_* constants
      * @return mixed                        the attribute value
      */
     public function getAttribute($attribute)

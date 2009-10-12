@@ -72,8 +72,8 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
     {
         $component = $this->_getClassNameToReturn($data, $component);
         if ( ! isset($this->_tables[$component])) {
-            $this->_tables[$component] = Doctrine::getTable($component);
-            $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
+            $this->_tables[$component] = Doctrine_Core::getTable($component);
+            $this->_tables[$component]->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, false);
         }
 
         $this->_tables[$component]->setData($data);
@@ -123,7 +123,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
             $coll->takeSnapshot();
         }
         foreach ($this->_tables as $table) {
-            $table->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, true);
+            $table->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, true);
         }
         $this->_initializedRelations = null;
         $this->_collections = null;

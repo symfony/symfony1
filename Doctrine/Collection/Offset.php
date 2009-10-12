@@ -44,7 +44,7 @@ class Doctrine_Collection_Offset extends Doctrine_Collection
     public function __construct(Doctrine_Table $table)
     {
         parent::__construct($table);
-        $this->limit = $table->getAttribute(Doctrine::ATTR_COLL_LIMIT);
+        $this->limit = $table->getAttribute(Doctrine_Core::ATTR_COLL_LIMIT);
     }
 
     /**

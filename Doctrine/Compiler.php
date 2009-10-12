@@ -61,7 +61,7 @@ class Doctrine_Compiler
             $excludedDrivers = array_diff($drivers, $includedDrivers);
         }
         
-        $path = Doctrine::getPath();
+        $path = Doctrine_Core::getPath();
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY);
 
         foreach ($it as $file) {

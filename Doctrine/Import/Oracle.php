@@ -37,7 +37,7 @@ class Doctrine_Import_Oracle extends Doctrine_Import
      */
     public function listDatabases()
     {
-        if ( ! $this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
+        if ( ! $this->conn->getAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE)) {
             throw new Doctrine_Import_Exception('database listing is only supported if the "emulate_database" option is enabled');
         }
 

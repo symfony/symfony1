@@ -76,11 +76,11 @@ class Doctrine_Lib
     {
         $r[] = '<pre>';
         $r[] = 'Component  : ' . $record->getTable()->getComponentName();
-        $r[] = 'ID         : ' . Doctrine::dump($record->identifier());
+        $r[] = 'ID         : ' . Doctrine_Core::dump($record->identifier());
         $r[] = 'References : ' . count($record->getReferences());
         $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->state());
         $r[] = 'OID        : ' . $record->getOID();
-        $r[] = 'data       : ' . Doctrine::dump($record->getData(), false);
+        $r[] = 'data       : ' . Doctrine_Core::dump($record->getData(), false);
         $r[] = '</pre>';
 
         return implode("\n",$r)."<br />";
@@ -126,7 +126,7 @@ class Doctrine_Lib
         $r[] = 'State               : ' . Doctrine_Lib::getConnectionStateAsString($connection->transaction->getState());
         $r[] = 'Open Transactions   : ' . $connection->transaction->getTransactionLevel();
         $r[] = 'Table in memory     : ' . $connection->count();
-        $r[] = 'Driver name         : ' . $connection->getAttribute(Doctrine::ATTR_DRIVER_NAME);
+        $r[] = 'Driver name         : ' . $connection->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME);
         $r[] = "</pre>";
         
         return implode("\n",$r)."<br>";
@@ -195,8 +195,8 @@ class Doctrine_Lib
     {
         $r[] = "<pre>";
         $r[] = get_class($collection);
-        $r[] = 'data : ' . Doctrine::dump($collection->getData(), false);
-        //$r[] = 'snapshot : ' . Doctrine::dump($collection->getSnapshot());
+        $r[] = 'data : ' . Doctrine_Core::dump($collection->getData(), false);
+        //$r[] = 'snapshot : ' . Doctrine_Core::dump($collection->getSnapshot());
         $r[] = "</pre>";
         
         return implode("\n",$r);

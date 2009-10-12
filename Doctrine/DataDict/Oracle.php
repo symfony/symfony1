@@ -109,7 +109,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             case 'double':
                 return 'NUMBER';
             case 'decimal':
-                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
+                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
                 return 'NUMBER(*,'.$scale.')';
             default:
         }
