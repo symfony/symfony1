@@ -64,6 +64,9 @@ classes:
     behaviors:
       paranoid: { column: deleted_at }
       act_as_nested_set:
+    propel_behaviors:
+      paranoid: { column: deleted_at }
+      act_as_nested_set:
 
   KlArticle:
     tableName:        kl_article

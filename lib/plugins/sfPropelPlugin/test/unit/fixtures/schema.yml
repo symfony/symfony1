@@ -51,6 +51,9 @@ propel:
     _behaviors:
       paranoid: { column: deleted_at }
       act_as_nested_set:
+    _propel_behaviors:
+      paranoid: { column: deleted_at }
+      act_as_nested_set:
 
   kl_article:
     title:          varchar(50)

@@ -152,6 +152,9 @@ class sfPropelDatabaseSchema
                 case '_behaviors':
                   $classes[$phpName]['behaviors'] = $column_params;
                   break;
+                case '_propel_behaviors':
+                  $classes[$phpName]['propel_behaviors'] = $column_params;
+                  break;
                 case '_inheritance':
                   $classes[$phpName]['inheritance'] = $column_params;
                   break;
@@ -240,6 +243,11 @@ class sfPropelDatabaseSchema
         {
           $tableParams['_behaviors'] = $classParams['behaviors'];
           unset($classParams['behaviors']);
+        }
+        if (isset($classParams['propel_behaviors']))
+        {
+          $tableParams['_propel_behaviors'] = $classParams['propel_behaviors'];
+          unset($classParams['propel_behaviors']);
         }
 
         // Inheritance
@@ -337,7 +345,28 @@ class sfPropelDatabaseSchema
         $xml .= sprintf(" behaviors=\"%s\"", htmlspecialchars(serialize($table['_behaviors'])), ENT_QUOTES, sfConfig::get('sf_charset'));
       }
       $xml .= ">\n";
-
+      
+      // behaviors
+      if (isset($table['_propel_behaviors']))
+      {
+        foreach ($table['_propel_behaviors'] as $behavior_name => $parameters)
+        {
+          if ($parameters)
+          {
+            $xml .= "    <behavior name=\"$behavior_name\">\n";
+            foreach ($parameters as $param_name => $param_value)
+            {
+              $xml .= "      <parameter name=\"$param_name\" value=\"$param_value\" />\n";
+            }
+            $xml .= "    </behavior>\n";
+          }
+          else
+          {
+            $xml .= "    <behavior name=\"$behavior_name\" />\n";
+          }
+        }
+      }
+      
       // columns
       foreach ($this->getChildren($table) as $col_name => $column)
       {

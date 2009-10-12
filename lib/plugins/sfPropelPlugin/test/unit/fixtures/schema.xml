@@ -58,6 +58,10 @@
   </table>
 
   <table name="ij_article" phpName="Article" behaviors="a:2:{s:8:&quot;paranoid&quot;;a:1:{s:6:&quot;column&quot;;s:10:&quot;deleted_at&quot;;}s:17:&quot;act_as_nested_set&quot;;N;}">
+    <behavior name="paranoid">
+      <parameter name="column" value="deleted_at" />
+    </behavior>
+    <behavior name="act_as_nested_set" />
     <column name="title" type="varchar" size="50" />
     <column name="user_id" type="integer" />
     <column name="created_at" type="timestamp" />
