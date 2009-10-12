@@ -171,7 +171,9 @@ EOF;
       $task = new sfPropelInsertSqlTask($this->dispatcher, $this->formatter);
       $task->setCommandApplication($this->commandApplication);
       $task->setConfiguration($this->configuration);
-      $ret = $task->run();
+      $ret = $task->run(array(), array(
+        'no-confirmation' => $options['no-confirmation'],
+      ));
 
       if ($ret)
       {
