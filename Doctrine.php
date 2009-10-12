@@ -19,7 +19,7 @@
  * <http://www.phpdoctrine.org>.
  */
 
-require 'Doctrine/Core.php';
+require_once 'Doctrine/Core.php';
 
 /**
  * This class only exists for backwards compatability. All code was moved to 
