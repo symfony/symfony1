@@ -32,7 +32,7 @@ class sfDoctrineBuildTask extends sfDoctrineBaseTask
     OPTION_FORMS       = 3,  // model, forms
     OPTION_FILTERS     = 5,  // model, filters
     OPTION_SQL         = 9,  // model, sql
-    OPTION_DB          = 16,
+    OPTION_DB          = 25, // model, sql, db
     OPTION_ALL_CLASSES = 7,  // model, forms, filters
     OPTION_ALL         = 31; // model, forms, filters, sql, db
 
