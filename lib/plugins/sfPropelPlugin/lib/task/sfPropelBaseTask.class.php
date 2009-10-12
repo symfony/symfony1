@@ -256,6 +256,9 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
     $args[] = $taskName;
 
+    // filter arguments through the event dispatcher
+    $args = $this->dispatcher->filter(new sfEvent($this, 'propel.filter_phing_args'), $args)->getReturnValue();
+
     require_once dirname(__FILE__).'/sfPhing.class.php';
 
     // enable output buffering
