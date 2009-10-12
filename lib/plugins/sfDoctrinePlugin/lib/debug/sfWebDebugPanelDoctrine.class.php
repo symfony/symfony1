@@ -58,10 +58,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
   }
 
   /**
-   * Hook to allow the loading of the Doctrine webdebug toolbar with the rest of the panels
-   *
-   * @param sfEvent $event 
-   * @return void
+   * Listens to debug.web.load_panels and adds this panel.
    */
   static public function listenToAddPanelEvent(sfEvent $event)
   {

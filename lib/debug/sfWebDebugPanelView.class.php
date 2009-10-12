@@ -25,7 +25,7 @@ class sfWebDebugPanelView extends sfWebDebugPanel
   /**
    * Constructor.
    *
-   * @param sfWebDebug $webDebug The web debut toolbar instance
+   * @param sfWebDebug $webDebug The web debug toolbar instance
    */
   public function __construct(sfWebDebug $webDebug)
   {
