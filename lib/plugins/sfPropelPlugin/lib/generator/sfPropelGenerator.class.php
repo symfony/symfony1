@@ -70,6 +70,9 @@ class sfPropelGenerator extends sfModelGenerator
     // go through all tables to find m2m relationships
     foreach ($this->dbMap->getTables() as $tableName => $table)
     {
+      // load this table's relations and related tables
+      $table->getRelations();
+
       foreach ($table->getColumns() as $column)
       {
         if ($column->isForeignKey() && $column->isPrimaryKey() && $this->getTableMap()->getClassname() == $this->dbMap->getTable($column->getRelatedTableName())->getClassname())
