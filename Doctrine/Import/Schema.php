@@ -125,7 +125,8 @@ class Doctrine_Import_Schema
                                                           'onUpdate',
                                                           'equal',
                                                           'owningSide',
-                                                          'refClassRelationAlias'),
+                                                          'refClassRelationAlias',
+                                                          'foreignKeyName'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',

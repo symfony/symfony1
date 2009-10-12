@@ -70,6 +70,7 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'cascade'     => array(), // application-level cascades
                                   'owningSide'  => false, // whether this is the owning side
                                   'refClassRelationAlias' => null,
+                                  'foreignKeyName' => null
                                   );
 
     /**
@@ -99,6 +100,8 @@ abstract class Doctrine_Relation implements ArrayAccess
      *          type                    the relation type, either Doctrine_Relation::ONE or Doctrine_Relation::MANY
      *
      *          constraint              boolean value, true if the relation has an explicit referential integrity constraint
+     *
+     *          foreignKeyName          the name of the dbms foreign key to create. Optional, if left blank Doctrine will generate one for you
      *
      * The onDelete and onUpdate keys accept the following values:
      *
@@ -365,6 +368,9 @@ abstract class Doctrine_Relation implements ArrayAccess
      */
     public function getForeignKeyName()
     {
+        if (isset($this->definition['foreignKeyName'])) {
+            return $this->definition['foreignKeyName'];
+        }
         return $this['localTable']->getConnection()->generateUniqueRelationForeignKeyName($this);
     }
 
