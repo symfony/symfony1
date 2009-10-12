@@ -1002,13 +1002,33 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      *
      * @return void
      */
-    public function writeTableClassDefinition($className, $path, $options = array())
+    public function writeTableClassDefinition(array $definition, $path, $options = array())
     {
+        if ($prefix = $this->_classPrefix) {
+            $className = $prefix . $definition['tableClassName'];
+            if ($this->_classPrefixFiles) {
+                $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;                
+            } else {
+                $writePath = $path . DIRECTORY_SEPARATOR . $definition['tableClassName'] . $this->_suffix;
+            }
+        } else {
+            $className = $definition['tableClassName'];
+            $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
+        }
+
+        $className = $definition['tableClassName'];
         $content = $this->buildTableClassDefinition($className, $options);
 
         Doctrine_Lib::makeDirectories($path);
 
-        $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
+        if ($this->_pearStyle) {
+            $writePath = str_replace('_', '/', $writePath);
+        }
+
+        $dir = dirname($writePath);
+        if ( ! is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
 
         Doctrine_Core::loadModel($className, $writePath);
 
@@ -1033,9 +1053,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $originalClassName = $definition['className'];
         if ($prefix = $this->_classPrefix) {
-            if (isset($definition['tableClassName'])) {
-                $definition['tableClassName'] = $prefix . $definition['tableClassName'];
-            }
             $definition['className'] = $prefix . $definition['className'];
             if (isset($definition['connectionClassName'])) {
                 $definition['connectionClassName'] = $prefix . $definition['connectionClassName'];
@@ -1073,7 +1090,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             if ($this->generateTableClasses()) {
-                $this->writeTableClassDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+                $this->writeTableClassDefinition($definition, $writePath, array('extends' => $definition['inheritance']['tableExtends']));
             }
         }
         // If is the package class then we need to make the path to the complete package
@@ -1085,7 +1102,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             if ($this->generateTableClasses()) {
-                $this->writeTableClassDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+                $this->writeTableClassDefinition($definition, $writePath, array('extends' => $definition['inheritance']['tableExtends']));
             }
         }
         // If it is the base class of the doctrine record definition
