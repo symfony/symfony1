@@ -470,7 +470,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $table  = $this->conn->quoteIdentifier($table);
         $name   = $this->conn->quoteIdentifier($name);
         $type   = '';
-
+        
         if (isset($definition['type'])) {
             switch (strtolower($definition['type'])) {
                 case 'unique':
@@ -503,7 +503,6 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function createForeignKeySql($table, array $definition)
     {
         $table = $this->conn->quoteIdentifier($table);
-
         $query = 'ALTER TABLE ' . $table . ' ADD ' . $this->getForeignKeyDeclaration($definition);
 
         return $query;
@@ -1006,7 +1005,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
         $sql = '';
         if (isset($definition['name'])) {
-            $sql .= 'CONSTRAINT ' . $this->conn->quoteIdentifier($definition['name']) . ' ';
+            $sql .= 'CONSTRAINT ' . $this->conn->quoteIdentifier($this->conn->formatter->getForeignKeyName($definition['name'])) . ' ';
         }
         $sql .= 'FOREIGN KEY (';
 

@@ -249,6 +249,17 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
         return sprintf($this->conn->getAttribute(Doctrine_Core::ATTR_IDXNAME_FORMAT),
             preg_replace('/[^a-z0-9_\$]/i', '_', $idx));
     }
+    
+    /**
+     * Formatting a foreign Key name
+     *
+     * @param string    name of the foreign key
+     * @return string   formatted foreign key name
+     */
+    public function getForeignKeyName($fkey)
+    {
+        return preg_replace('/[^a-z0-9_\$]/i', '_', $fkey);
+    }
 
     /**
      * adds table name formatting to a table name
