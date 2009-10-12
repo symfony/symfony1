@@ -689,6 +689,11 @@ abstract class sfBrowserBase
    */
   public function doClick($name, $arguments = array(), $options = array())
   {
+    if (false !== strpos($name, '[') || false !== strpos($name, ']'))
+    {
+      throw new InvalidArgumentException(sprintf('The name "%s" is not valid', $name));
+    }
+
     $query  = sprintf('//a[.="%s"]', $name);
     $query .= sprintf('|//a/img[@alt="%s"]/ancestor::a', $name);
     $query .= sprintf('|//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]', $name, $name);
@@ -720,7 +725,7 @@ abstract class sfBrowserBase
    * @uses   getResponseDomCssSelector() doClickElement()
    * @throws InvalidArgumentException If a matching element cannot be found
    */
-  protected function doClickCssSelector($selector, $arguments = array(), $options = array())
+  public function doClickCssSelector($selector, $arguments = array(), $options = array())
   {
     $elements = $this->getResponseDomCssSelector()->matchAll($selector)->getNodes();
     $position = isset($options['position']) ? $options['position'] - 1 : 0;
@@ -748,7 +753,7 @@ abstract class sfBrowserBase
    *
    * @uses getResponseDomXpath()
    */
-  protected function doClickElement(DOMElement $item, $arguments = array(), $options = array())
+  public function doClickElement(DOMElement $item, $arguments = array(), $options = array())
   {
     $method = strtolower(isset($options['method']) ? $options['method'] : 'get');
 
