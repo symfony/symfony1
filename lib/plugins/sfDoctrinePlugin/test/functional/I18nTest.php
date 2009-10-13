@@ -102,40 +102,38 @@ $t->is($articleForm->getValues(), $values);
 $articleForm->save();
 
 $expected = array(
+  'id' => $article->id,
+  'author_id' => $article->Author->id,
+  'is_on_homepage' => true,
+  'created_at' => $article->created_at,
+  'updated_at' => $article->updated_at,
+  'Translation' => 
+  array(
+    'en' => 
+    array(
+      'id' => $article->id,
+      'title' => 'english title',
+      'body' => 'english body',
+      'test_column' => '',
+      'lang' => 'en',
+      'slug' => 'english-title',
+    ),
+    'fr' => 
+    array(
+      'id' => $article->id,
+      'title' => 'french title',
+      'body' => 'french body',
+      'test_column' => '',
+      'lang' => 'fr',
+      'slug' => 'french-title',
+    ),
+  ),
   'Author' => 
   array(
     'id' => $article->Author->id,
     'name' => 'i18n author test',
     'type' => null
   ),
-  'Translation' => 
-  array(
-    'en' => 
-    array(
-      'title' => 'english title',
-      'body' => 'english body',
-      'test_column' => '',
-      'lang' => 'en',
-      'slug' => 'english-title',
-      'generator_auto_id' => $article->Translation['en']->generator_auto_id,
-      'parent_id' => $article->id,
-    ),
-    'fr' => 
-    array(
-      'title' => 'french title',
-      'body' => 'french body',
-      'test_column' => '',
-      'lang' => 'fr',
-      'slug' => 'french-title',
-      'generator_auto_id' => $article->Translation['fr']->generator_auto_id,
-      'parent_id' => $article->id,
-    ),
-  ),
-  'id' => $article->id,
-  'author_id' => $article->Author->id,
-  'is_on_homepage' => true,
-  'created_at' => $article->created_at,
-  'updated_at' => $article->updated_at,
 );
 
 $t->is($article->toArray(true), $expected);
@@ -143,37 +141,35 @@ $t->is($article->toArray(true), $expected);
 $articleForm = new MyArticleForm($article);
 
 $expected = array(
-  'en' => 
-  array(
-    'title' => 'english title',
-    'body' => 'english body',
-    'test_column' => '',
-    'slug' => 'english-title',
-    'generator_auto_id' => $article->Translation['en']->generator_auto_id,
-    'parent_id' => $article->id,
-    'lang' => 'en',
-  ),
-  'fr' => 
-  array(
-    'title' => 'french title',
-    'body' => 'french body',
-    'test_column' => '',
-    'slug' => 'french-title',
-    'generator_auto_id' => $article->Translation['fr']->generator_auto_id,
-    'parent_id' => $article->id,
-    'lang' => 'fr',
-  ),
-  'Author' => 
-  array(
-    'name' => 'i18n author test',
-    'type' => null,
-    'id' => $article->Author->id,
-  ),
   'id' => $article->id,
   'author_id' => $article->author_id,
   'is_on_homepage' => true,
   'created_at' => $article->created_at,
   'updated_at' => $article->updated_at,
+  'en' => 
+  array(
+    'id' => $article->id,
+    'title' => 'english title',
+    'body' => 'english body',
+    'test_column' => '',
+    'lang' => 'en',
+    'slug' => 'english-title',
+  ),
+  'fr' => 
+  array(
+    'id' => $article->id,
+    'title' => 'french title',
+    'body' => 'french body',
+    'test_column' => '',
+    'lang' => 'fr',
+    'slug' => 'french-title',
+  ),
+  'Author' => 
+  array(
+    'id' => $article->Author->id,
+    'name' => 'i18n author test',
+    'type' => null
+  ),
 );
 
 $t->is($articleForm->getDefaults(), $expected);
