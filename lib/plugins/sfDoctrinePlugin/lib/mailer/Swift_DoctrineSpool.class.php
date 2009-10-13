@@ -96,7 +96,7 @@ class Swift_DoctrineSpool implements Swift_Spool
    */
   public function flushQueue(Swift_Transport $transport, &$failedRecipients = null)
   {
-    $table = Doctrine::getTable($this->model);
+    $table = Doctrine_Core::getTable($this->model);
     $objects = $this->method ? $table->{$this->method}() : $table->createQuery()->execute();
 
     if (!$transport->isStarted())

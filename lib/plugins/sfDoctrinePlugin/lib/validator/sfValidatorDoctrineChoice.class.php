@@ -79,7 +79,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
 
       if (!$query = $this->getOption('query'))
       {
-        $query = Doctrine::getTable($this->getOption('model'))->createQuery();
+        $query = Doctrine_Core::getTable($this->getOption('model'))->createQuery();
       }
       $query->andWhereIn(sprintf('%s.%s', $query->getRootAlias(), $this->getColumn()), $value);
 
@@ -92,7 +92,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
     {
       if (!$query = $this->getOption('query'))
       {
-        $query = Doctrine::getTable($this->getOption('model'))->createQuery();
+        $query = Doctrine_Core::getTable($this->getOption('model'))->createQuery();
       }
       $query->andWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $this->getColumn()), $value);
 
@@ -114,7 +114,7 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    */
   protected function getColumn()
   {
-    $table = Doctrine::getTable($this->getOption('model'));
+    $table = Doctrine_Core::getTable($this->getOption('model'));
     if ($this->getOption('column'))
     {
       $columnName = $this->getOption('column');

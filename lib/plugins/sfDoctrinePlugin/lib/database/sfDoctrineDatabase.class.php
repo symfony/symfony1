@@ -78,12 +78,12 @@ class sfDoctrineDatabase extends sfDatabase
       if (is_string($name))
       {
         $stringName = $name;
-        $name = constant('Doctrine::ATTR_'.strtoupper($name));
+        $name = constant('Doctrine_Core::ATTR_'.strtoupper($name));
       }
 
       if (is_string($value))
       {
-        $value = constant('Doctrine::'.strtoupper($stringName).'_'.strtoupper($value));
+        $value = constant('Doctrine_Core::'.strtoupper($stringName).'_'.strtoupper($value));
       }
 
       $this->_doctrineConnection->setAttribute($name, $value);

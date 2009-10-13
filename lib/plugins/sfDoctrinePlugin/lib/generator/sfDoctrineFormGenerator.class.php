@@ -89,7 +89,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     // create a form class for every Doctrine class
     foreach ($models as $model)
     {
-      $this->table = Doctrine::getTable($model);
+      $this->table = Doctrine_Core::getTable($model);
       $this->modelName = $model;
 
       $baseDir = sfConfig::get('sf_lib_dir') . '/form/doctrine';
@@ -167,7 +167,7 @@ class sfDoctrineFormGenerator extends sfGenerator
             if ($reflection->isSubClassOf($parent))
             {
               $this->pluginModels[$modelName] = $pluginName;
-              $generators = Doctrine::getTable($modelName)->getGenerators();
+              $generators = Doctrine_Core::getTable($modelName)->getGenerators();
               foreach ($generators as $generator)
               {
                 $this->pluginModels[$generator->getOption('className')] = $pluginName;
@@ -223,7 +223,7 @@ class sfDoctrineFormGenerator extends sfGenerator
         &&
         isset($relation['refTable'])
         &&
-        (null === $this->getParentModel() || !Doctrine::getTable($this->getParentModel())->hasRelation($relation->getAlias()))
+        (null === $this->getParentModel() || !Doctrine_Core::getTable($this->getParentModel())->hasRelation($relation->getAlias()))
       )
       {
         $relations[] = $relation;
@@ -554,7 +554,7 @@ class sfDoctrineFormGenerator extends sfGenerator
   public function getColumns()
   {
     $parentModel = $this->getParentModel();
-    $parentColumns = $parentModel ? array_keys(Doctrine::getTable($parentModel)->getColumns()) : array();
+    $parentColumns = $parentModel ? array_keys(Doctrine_Core::getTable($parentModel)->getColumns()) : array();
 
     $columns = array();
     foreach (array_diff(array_keys($this->table->getColumns()), $parentColumns) as $name)
@@ -600,11 +600,11 @@ class sfDoctrineFormGenerator extends sfGenerator
    */
   protected function loadModels()
   {
-    Doctrine::loadModels($this->generatorManager->getConfiguration()->getModelDirs(),
-                                   Doctrine::MODEL_LOADING_CONSERVATIVE);
-    $models = Doctrine::getLoadedModels();
-    $models =  Doctrine::initializeModels($models);
-    $models = Doctrine::filterInvalidModels($models);
+    Doctrine_Core::loadModels($this->generatorManager->getConfiguration()->getModelDirs(),
+                                   Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
+    $models = Doctrine_Core::getLoadedModels();
+    $models =  Doctrine_Core::initializeModels($models);
+    $models = Doctrine_Core::filterInvalidModels($models);
     $this->models = $this->filterModels($models);
 
     return $this->models;
@@ -619,7 +619,7 @@ class sfDoctrineFormGenerator extends sfGenerator
   {
     foreach ($models as $key => $model)
     {
-      $table = Doctrine::getTable($model);
+      $table = Doctrine_Core::getTable($model);
       $symfonyOptions = $table->getOption('symfony');
 
       if (isset($symfonyOptions['form']) && !$symfonyOptions['form'])

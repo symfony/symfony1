@@ -131,12 +131,12 @@ class sfDoctrinePager extends sfPager implements Serializable
     if (!$this->tableMethodCalled && $this->tableMethodName)
     {
       $method = $this->tableMethodName;
-      $this->query = Doctrine::getTable($this->getClass())->$method($this->query);
+      $this->query = Doctrine_Core::getTable($this->getClass())->$method($this->query);
       $this->tableMethodCalled = true;
     }
     else if (!$this->query)
     {
-      $this->query = Doctrine::getTable($this->getClass())->createQuery();
+      $this->query = Doctrine_Core::getTable($this->getClass())->createQuery();
     }
 
     return $this->query;
@@ -175,11 +175,11 @@ class sfDoctrinePager extends sfPager implements Serializable
   /**
    * Get all the results for the pager instance
    *
-   * @param integer $hydrationMode Doctrine::HYDRATE_* constants
+   * @param integer $hydrationMode Doctrine_Core::HYDRATE_* constants
    *
    * @return Doctrine_Collection|array
    */
-  public function getResults($hydrationMode = Doctrine::HYDRATE_RECORD)
+  public function getResults($hydrationMode = Doctrine_Core::HYDRATE_RECORD)
   {
     return $this->getQuery()->execute(array(), $hydrationMode);
   }

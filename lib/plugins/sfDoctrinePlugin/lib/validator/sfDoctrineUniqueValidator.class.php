@@ -43,7 +43,7 @@ class sfDoctrineUniqueValidator extends sfValidator
     $className  = $this->getParameter('class');
     $columnName = $className.'.'.$this->getParameter('column');
 
-    $primaryKeys = Doctrine::getTable($className)->getIdentifier();
+    $primaryKeys = Doctrine_Core::getTable($className)->getIdentifier();
     if (!is_array($primaryKeys))
     {
       $primaryKeys = array($primaryKeys);

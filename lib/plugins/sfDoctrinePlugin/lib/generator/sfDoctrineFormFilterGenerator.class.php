@@ -72,7 +72,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
     // create a form class for every Doctrine class
     foreach ($models as $model)
     {
-      $this->table = Doctrine::getTable($model);
+      $this->table = Doctrine_Core::getTable($model);
       $this->modelName = $model;
 
       $baseDir = sfConfig::get('sf_lib_dir') . '/filter/doctrine';
@@ -342,7 +342,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
   {
     foreach ($models as $key => $model)
     {
-      $table = Doctrine::getTable($model);
+      $table = Doctrine_Core::getTable($model);
       $symfonyOptions = $table->getOption('symfony');
 
       if (isset($symfonyOptions['filter']) && !$symfonyOptions['filter'])

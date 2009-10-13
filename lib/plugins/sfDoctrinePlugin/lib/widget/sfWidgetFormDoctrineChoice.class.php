@@ -78,7 +78,7 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
 
     if (null === $this->getOption('table_method'))
     {
-      $query = null === $this->getOption('query') ? Doctrine::getTable($this->getOption('model'))->createQuery() : $this->getOption('query');
+      $query = null === $this->getOption('query') ? Doctrine_Core::getTable($this->getOption('model'))->createQuery() : $this->getOption('query');
       if ($order = $this->getOption('order_by'))
       {
         $query->addOrderBy($order[0] . ' ' . $order[1]);
@@ -88,7 +88,7 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
     else
     {
       $tableMethod = $this->getOption('table_method');
-      $results = Doctrine::getTable($this->getOption('model'))->$tableMethod();
+      $results = Doctrine_Core::getTable($this->getOption('model'))->$tableMethod();
 
       if ($results instanceof Doctrine_Query)
       {

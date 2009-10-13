@@ -78,7 +78,7 @@ class sfWidgetFormDoctrineSelect extends sfWidgetFormSelect
 
     $a = $this->getOption('alias');
     $q = null === $this->getOption('query')
-        ? Doctrine::getTable($this->getOption('model'))->createQuery($a)
+        ? Doctrine_Core::getTable($this->getOption('model'))->createQuery($a)
         : $this->getOption('query');
 
     if ($order = $this->getOption('order_by'))

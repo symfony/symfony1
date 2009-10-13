@@ -93,7 +93,7 @@ EOF;
       }
       else
       {
-        $results = $q->execute(array(), Doctrine::HYDRATE_SCALAR);
+        $results = $q->execute(array(), Doctrine_Core::HYDRATE_SCALAR);
 
         $headers  = array();
         // calculate lengths

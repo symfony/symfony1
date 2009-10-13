@@ -57,7 +57,7 @@ EOF;
     foreach ($models as $key => $model)
     {
       $model = trim($model);
-      $conn = Doctrine::getTable($model)->getConnection();
+      $conn = Doctrine_Core::getTable($model)->getConnection();
       $connections[$conn->getName()][] = $model;
     }
 
@@ -71,7 +71,7 @@ EOF;
 
       foreach ($models as $model)
       {
-        $tableName = Doctrine::getTable($model)->getOption('tableName');
+        $tableName = Doctrine_Core::getTable($model)->getOption('tableName');
 
         $this->logSection('doctrine', 'dropping table "'.$tableName.'"');
 
@@ -86,7 +86,7 @@ EOF;
 
       $this->logSection('doctrine', 'recreating tables for models');
 
-      Doctrine::createTablesFromArray($models);
+      Doctrine_Core::createTablesFromArray($models);
     }
   }
 }

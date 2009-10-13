@@ -34,7 +34,7 @@ class sfDoctrineDataRetriever
       $peerMethod = 'findAll';
     }
 
-    $table = Doctrine::getTable($class);
+    $table = Doctrine_Core::getTable($class);
 
     return call_user_func(array($table, $peerMethod));
   }

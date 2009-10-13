@@ -305,6 +305,6 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
   protected function getTable()
   {
-    return Doctrine::getTable($this->getModelName());
+    return Doctrine_Core::getTable($this->getModelName());
   }
 }

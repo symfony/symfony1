@@ -38,7 +38,7 @@ class sfDoctrineGenerator extends sfModelGenerator
    */
   public function configure()
   {
-    $this->table = Doctrine::getTable($this->modelClass);
+    $this->table = Doctrine_Core::getTable($this->modelClass);
 
     // load all primary keys
     $this->loadPrimaryKeys();

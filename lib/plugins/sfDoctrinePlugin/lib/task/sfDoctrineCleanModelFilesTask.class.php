@@ -81,7 +81,7 @@ EOF;
    */
   protected function getFileModels()
   {
-    Doctrine::loadModels(sfConfig::get('sf_lib_dir').'/model/doctrine');
-    return Doctrine::getLoadedModels();
+    Doctrine_Core::loadModels(sfConfig::get('sf_lib_dir').'/model/doctrine');
+    return Doctrine_Core::getLoadedModels();
   }
 }

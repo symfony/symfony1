@@ -107,7 +107,7 @@ EOF;
     if (!isset($routesArray[$name]))
     {
       $databaseManager = new sfDatabaseManager($this->configuration);
-      $primaryKey = Doctrine::getTable($model)->getIdentifier();
+      $primaryKey = Doctrine_Core::getTable($model)->getIdentifier();
       $module = $options['module'] ? $options['module'] : $name;
       $content = sprintf(<<<EOF
 %s:

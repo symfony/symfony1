@@ -260,7 +260,7 @@ class sfDoctrineColumn implements ArrayAccess
   {
     if ($this->isForeignKey())
     {
-      return Doctrine::getTable($this->foreignClassName);
+      return Doctrine_Core::getTable($this->foreignClassName);
     } else {
       return false;
     }

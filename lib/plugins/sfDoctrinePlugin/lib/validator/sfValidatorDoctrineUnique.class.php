@@ -69,7 +69,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
   protected function doClean($values)
   {
     $originalValues = $values;
-    $table = Doctrine::getTable($this->getOption('model'));
+    $table = Doctrine_Core::getTable($this->getOption('model'));
     if (!is_array($this->getOption('column')))
     {
       $this->setOption('column', array($this->getOption('column')));
@@ -83,7 +83,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
       $values = array($columns[0] => $values);
     }
 
-    $q = Doctrine::getTable($this->getOption('model'))->createQuery('a');
+    $q = Doctrine_Core::getTable($this->getOption('model'))->createQuery('a');
     foreach ($this->getOption('column') as $column)
     {
       $colName = $table->getColumnName($column);
@@ -147,7 +147,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
   {
     if (null === $this->getOption('primary_key'))
     {
-      $primaryKeys = Doctrine::getTable($this->getOption('model'))->getIdentifier();
+      $primaryKeys = Doctrine_Core::getTable($this->getOption('model'))->getIdentifier();
       $this->setOption('primary_key', $primaryKeys);
     }
 
