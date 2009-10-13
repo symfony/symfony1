@@ -37,21 +37,27 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      *
      * @var array
      */
-    protected $_options = array('className'         => '%CLASS%Version',
-                                'version'           => array('name'   => 'version',
-                                                             'alias'  => null,
-                                                             'type'   => 'integer',
-                                                             'length' => 8,
-                                                             'options' => array('primary' => true)),
-                                'tableName'         => false,
-                                'generateFiles'     => false,
-                                'table'             => false,
-                                'pluginTable'       => false,
-                                'children'          => array(),
-                                'auditLog'          => true,
-                                'deleteVersions'    => true,
-                                'cascadeDelete'     => true,
-                                'appLevelDelete'    => false);
+    protected $_options = array(
+        'className'         => '%CLASS%Version',
+        'version'           => array(
+            'name'    => 'version',
+            'alias'   => null,
+            'type'    => 'integer',
+            'length'  => 8,
+            'options' => array(
+                'primary' => false
+            )
+        ),
+        'tableName'         => false,
+        'generateFiles'     => false,
+        'table'             => false,
+        'pluginTable'       => false,
+        'children'          => array(),
+        'auditLog'          => true,
+        'deleteVersions'    => true,
+        'cascadeDelete'     => true,
+        'appLevelDelete'    => false
+    );
 
     /**
      * Accepts array of options to configure the AuditLog
@@ -81,15 +87,13 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             unset($definition['autoincrement']);
             unset($definition['sequence']);
             unset($definition['unique']);
+            unset($definition['primary']);
+
+            $definition['extra']['audit'] = true;
 
             $fieldName = $this->_options['table']->getFieldName($column);
-            if ($fieldName != $column) {
-                $name = $column . ' as ' . $fieldName;
-            } else {
-                $name = $fieldName;
-            }
 
-            $this->hasColumn($name, $definition['type'], $definition['length'], $definition);
+            $this->hasColumn('audit_' . $fieldName, $definition['type'], $definition['length'], $definition);
         }
 
         // the version column should be part of the primary key definition
@@ -97,7 +101,8 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 	        $this->_options['version']['name'], 
             $this->_options['version']['type'], 
             $this->_options['version']['length'], 
-            $this->_options['version']['options']);
+            $this->_options['version']['options']
+        );
     }
 
     /**
@@ -118,7 +123,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         $values = array();
         foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-            $conditions[] = $className . '.' . $id . ' = ?';
+            $conditions[] = $className . '.parent_' . $id . ' = ?';
             $values[] = $record->get($id);
         }
 
@@ -126,7 +131,8 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         $values[] = $version;
 
-        $q->from($className)->where($where);
+        $q->from($className)
+          ->where($where);
 
         return $q->$method($values, $hydrationMode);
     }
@@ -143,7 +149,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
         $select = 'MAX(' . $className . '.' . $this->_options['version']['name'] . ') max_version';
 
         foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-            $conditions[] = $className . '.' . $id . ' = ?';
+            $conditions[] = $className . '.parent_' . $id . ' = ?';
             $values[] = $record->get($id);
         }
 

@@ -39,16 +39,20 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      *
      * @var array
      */
-    protected $_options = array('version'           => array('name'   => 'version',
-                                                             'alias'  => null,
-                                                             'type'   => 'integer',
-                                                             'length' => 8,
-                                                             'options' => array()),
-								'generateRelations' => true,
-                                'tableName'         => false,
-                                'generateFiles'     => false,
-                                'auditLog'          => true,
-                                'deleteVersions'    => true);
+    protected $_options = array(
+        'version' => array(
+            'name'   => 'version',
+            'alias'  => null,
+            'type'   => 'integer',
+            'length' => 8,
+            'options' => array()
+        ),
+		'generateRelations' => true,
+        'tableName'         => false,
+        'generateFiles'     => false,
+        'auditLog'          => true,
+        'deleteVersions'    => true
+    );
 
     /**
      * __construct
@@ -67,7 +71,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      *
      * @return void
      */
-    public function setUp()
+    public function setTableDefinition()
     {
         if ($this->_plugin->getOption('auditLog')) {
             $this->_plugin->initialize($this->_table);
@@ -113,9 +117,14 @@ class Doctrine_Template_Versionable extends Doctrine_Template
             throw new Doctrine_Record_Exception('Version ' . $version . ' does not exist!');
         }
 
-        $this->getInvoker()->merge($data[0]);
+        $invoker = $this->getInvoker();
+        foreach ($data[0] as $key => $value) {
+            if (substr($key, 0, 6) == 'audit_') {
+                $key = substr($key, 6);
+                $invoker->$key = $value;
+            }
+        }
 
-
-        return $this->getInvoker();
+        return $invoker;
     }
 }

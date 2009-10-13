@@ -1332,6 +1332,12 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return $this->_identifier;
     }
 
+    public function getSingleIdentifier()
+    {
+        $identifier = (array) $this->_identifier;
+        return $identifier[0];
+    }
+
     /**
      * Retrieves the type of primary key.
      * 

@@ -78,7 +78,16 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 
             $record  = $event->getInvoker();
             $version = new $class();
-            $version->merge($record->toArray(), false);
+            foreach ($record as $key => $value) {
+                $fieldName = $record->getTable()->getFieldName($key);
+                if ($version->getTable()->hasField('audit_' . $fieldName)) {
+                    $version->set('audit_' . $fieldName, $value);
+                }
+            }
+            $version->version = $record['version'];
+            $relation = get_class($record);
+            $field = $version->getTable()->getRelation($relation)->getLocalFieldName();
+            $version->$field = current($record->identifier());
             $version->save();
         }
     }
@@ -132,7 +141,16 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
             $record->set($name, $this->_getNextVersion($record));
 
             $version = new $class();
-            $version->merge($record->toArray(), false);
+            foreach ($record as $key => $value) {
+                $fieldName = $record->getTable()->getFieldName($key);
+                if ($version->getTable()->hasField('audit_' . $fieldName)) {
+                    $version->set('audit_' . $fieldName, $value);
+                }
+            }
+            $version->version = $record['version'];
+            $relation = get_class($record);
+            $field = $version->getTable()->getRelation($relation)->getLocalFieldName();
+            $version->$field = current($record->identifier());
             $version->save();
         }
     }
