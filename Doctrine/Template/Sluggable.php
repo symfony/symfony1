@@ -51,6 +51,7 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
         'uniqueIndex'   =>  true,
         'canUpdate'     =>  false,
         'builder'       =>  array('Doctrine_Inflector', 'urlize'),
+        'provider'      =>  null,
         'indexName'     =>  'sluggable'
     );
 
