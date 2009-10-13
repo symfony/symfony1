@@ -99,6 +99,10 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     {
         return trim($str);
     }
+    public static function nowImpl()
+    {
+        return date('Y-m-d h:i:s');
+    }
 
     /**
      * returns the regular expression operator
