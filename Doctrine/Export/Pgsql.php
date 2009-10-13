@@ -371,4 +371,21 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         return $sql;
     }
 
+     /**
+     * Get the stucture of a field into an array.
+     * 
+     * @param string    $table         name of the table on which the index is to be created
+     * @param string    $name          name of the index to be created
+     * @param array     $definition    associative array that defines properties of the index to be created.
+     * @see Doctrine_Export::createIndex()
+     * @return string
+     */
+    public function createIndexSql($table, $name, array $definition)
+    {
+		$query = parent::createIndexSql($table, $name, $definition);
+		if (isset($definition['where'])) {
+			return $query . ' WHERE ' . $definition['where'];
+		}
+        return $query;
+    }
 }
