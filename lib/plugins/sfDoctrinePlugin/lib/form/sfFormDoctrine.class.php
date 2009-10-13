@@ -79,9 +79,17 @@ abstract class sfFormDoctrine extends sfFormObject
     $class = $this->getI18nFormClass();
     foreach ($cultures as $culture)
     {
-      $i18nObject = $this->getObject()->Translation[$culture];
+      $i18nObject = $this->object->Translation[$culture];
       $i18n = new $class($i18nObject);
-      unset($i18n['id'], $i18n['lang']);
+      $i18nIdentifier = (array) $i18nObject->getTable()->getIdentifier();
+      $identifier = (array) $this->object->getTable()->getIdentifier();
+      unset(
+        $i18n[$i18nIdentifier[0]],
+        $i18n['lang']
+      );
+      foreach ($identifier as $id) {
+          unset($i18n['parent_' . $id]);
+      }
 
       $this->embedForm($culture, $i18n, $decorator);
     }
