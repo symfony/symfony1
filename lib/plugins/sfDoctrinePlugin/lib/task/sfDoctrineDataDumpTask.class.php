@@ -51,7 +51,7 @@ The task dumps the database data in [data/fixtures/%target%|COMMENT].
 The dump file is in the YML format and can be reimported by using
 the [doctrine:data-load|INFO] task.
 
-  [./symfony doctrine:data-load frontend|INFO]
+  [./symfony doctrine:data-load|INFO]
 EOF;
   }
 
@@ -61,29 +61,32 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
-
     $config = $this->getCliConfig();
-    $dir = sfConfig::get('sf_data_dir') . DIRECTORY_SEPARATOR . 'fixtures';
-    Doctrine_Lib::makeDirectories($dir);
 
-    $args = array();
-    if (isset($arguments['target']))
+    $args = array(
+      'data_fixtures_path' => $config['data_fixtures_path'][0],
+    );
+
+    if (!is_dir($args['data_fixtures_path']))
+    {
+      $this->getFilesystem()->mkdirs($args['data_fixtures_path']);
+    }
+
+    if ($arguments['target'])
     {
       $filename = $arguments['target'];
 
       if (!sfToolkit::isPathAbsolute($filename))
       {
-        $filename = $dir . DIRECTORY_SEPARATOR . $filename;
+        $filename = $args['data_fixtures_path'].'/'.$filename;
       }
 
-      Doctrine_Lib::makeDirectories(dirname($filename));
+      $this->getFilesystem()->mkdirs(dirname($filename));
 
-      $args = array('data_fixtures_path' => array($filename));
-      $this->logSection('doctrine', sprintf('dumping data to fixtures to "%s"', $filename));
-    } else {
-      $this->logSection('doctrine', sprintf('dumping data to fixtures to "%s"', $config['data_fixtures_path'][0]));
+      $args['data_fixtures_path'] = $filename;
     }
 
+    $this->logSection('doctrine', sprintf('dumping data to fixtures to "%s"', $args['data_fixtures_path']));
     $this->callDoctrineCli('dump-data', $args);
   }
 }

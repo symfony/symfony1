@@ -38,7 +38,8 @@ class sfDoctrineGenerateMigrationsDiffTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Generate migration classes by producing a diff between your old and new schema.';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:generate-migrations-diff|INFO] task generates migration classes by producing a diff between your old and new schema.
+The [doctrine:generate-migrations-diff|INFO] task generates migration classes by
+producing a diff between your old and new schema.
 
   [./symfony doctrine:generate-migrations-diff|INFO]
 EOF;
@@ -52,11 +53,15 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $config = $this->getCliConfig();
 
+    $this->logSection('doctrine', 'generating migration diff');
+
     if (!is_dir($config['migrations_path']))
     {
       $this->getFilesystem()->mkdirs($config['migrations_path']);
     }
 
-    $this->callDoctrineCli('generate-migrations-diff');
+    $this->callDoctrineCli('generate-migrations-diff', array(
+      'yaml_schema_path' => $this->prepareSchemaFiles($config['yaml_schema_path']),
+    ));
   }
 }

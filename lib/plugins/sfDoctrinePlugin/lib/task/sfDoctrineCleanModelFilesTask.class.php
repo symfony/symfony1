@@ -32,6 +32,10 @@ class sfDoctrineCleanModelFilesTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Delete all generated model classes for models which no longer exist in your YAML schema';
 
     $this->detailedDescription = <<<EOF
+The [doctrine:clean-model-files|INFO] task deletes model classes that are not
+represented in project or plugin schema.yml files:
+
+  [./symfony doctrine:clean-model-files|INFO]
 EOF;
   }
 
@@ -40,7 +44,9 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    if ($modelsToRemove = array_diff($this->getFileModels(), $this->getYamlModels()))
+    $config = $this->getCliConfig();
+
+    if ($modelsToRemove = array_diff($this->getFileModels($config['models_path']), $this->getYamlModels($config['yaml_schema_path'])))
     {
       $deleteModelFiles = new sfDoctrineDeleteModelFilesTask($this->dispatcher, $this->formatter);
       $deleteModelFiles->setCommandApplication($this->commandApplication);
@@ -60,13 +66,12 @@ EOF;
    * 
    * @return array
    */
-  protected function getYamlModels()
+  protected function getYamlModels($yamlSchemaPath)
   {
-    $finder = sfFinder::type('file')->name('*.yml');
-    $paths = array_merge(array(sfConfig::get('sf_config_dir').'/doctrine'), $this->configuration->getPluginSubpaths('/config/doctrine'));
-
     $models = array();
-    foreach ($finder->in($paths) as $file)
+
+    $finder = sfFinder::type('file')->name('*.yml');
+    foreach ($finder->in($this->prepareSchemaFiles($yamlSchemaPath)) as $file)
     {
       $models = array_merge($models, array_keys((array) sfYaml::load($file)));
     }
@@ -79,9 +84,9 @@ EOF;
    * 
    * @return array
    */
-  protected function getFileModels()
+  protected function getFileModels($modelsPath)
   {
-    Doctrine_Core::loadModels(sfConfig::get('sf_lib_dir').'/model/doctrine');
+    Doctrine_Core::loadModels($modelsPath);
     return Doctrine_Core::getLoadedModels();
   }
 }

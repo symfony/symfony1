@@ -107,7 +107,7 @@ EOF;
       'singular'              => $options['singular'],
       'plural'                => $options['plural'],
       'route_prefix'          => $options['route-prefix'],
-      'with_doctrine_route'     => $options['with-doctrine-route'],
+      'with_doctrine_route'   => $options['with-doctrine-route'],
     ));
 
     $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
@@ -197,7 +197,7 @@ EOF;
     singular:              %s
     plural:                %s
     route_prefix:          %s
-    with_doctrine_route:     %s
+    with_doctrine_route:   %s
 EOF
     ,
       $arguments['model'],
@@ -207,7 +207,7 @@ EOF
       $options['singular'] ? $options['singular'] : '~',
       $options['plural'] ? $options['plural'] : '~',
       $options['route-prefix'] ? $options['route-prefix'] : '~',
-      $options['with-doctrine-route'] ? $options['with-doctrine-route'] : 'false'
+      $options['with-doctrine-route'] ? 'true' : 'false'
     );
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
   }

@@ -43,7 +43,7 @@ The [doctrine:build-model|INFO] task creates model classes from the schema:
   [./symfony doctrine:build-model|INFO]
 
 The task read the schema information in [config/doctrine/*.yml|COMMENT]
-from the project and all installed plugins.
+from the project and all enabled plugins.
 
 The model classes files are created in [lib/model/doctrine|COMMENT].
 
@@ -60,36 +60,6 @@ EOF;
     $this->logSection('doctrine', 'generating model classes');
 
     $config = $this->getCliConfig();
-
-    $tmpPath = sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'tmp';
-
-    if (!file_exists($tmpPath))
-    {
-      Doctrine_Lib::makeDirectories($tmpPath);
-    }
-
-    $plugins = $this->configuration->getPlugins();
-    foreach ($this->configuration->getAllPluginPaths() as $plugin => $path)
-    {
-      if (!in_array($plugin, $plugins))
-      {
-        continue;
-      }
-      $schemas = sfFinder::type('file')->name('*.yml')->in($path.'/config/doctrine');
-      foreach ($schemas as $schema)
-      {
-        $tmpSchemaPath = $tmpPath.DIRECTORY_SEPARATOR.$plugin.'-'.basename($schema);
-
-        $models = Doctrine_Parser::load($schema, 'yml');
-        if (!isset($models['package']))
-        {
-          $models['package'] = $plugin.'.lib.model.doctrine';
-          $models['package_custom_path'] = $path.'/lib/model/doctrine';
-        }
-        Doctrine_Parser::dump($models, 'yml', $tmpSchemaPath);
-      }
-    }
-
     $builderOptions = $this->configuration->getPluginConfiguration('sfDoctrinePlugin')->getModelBuilderOptions();
 
     $finder = sfFinder::type('file')->maxdepth(0)->name('*'.$builderOptions['suffix']);
@@ -97,7 +67,7 @@ EOF;
 
     $import = new Doctrine_Import_Schema();
     $import->setOptions($builderOptions);
-    $import->importSchema(array($tmpPath, $config['yaml_schema_path']), 'yml', $config['models_path']);
+    $import->importSchema($this->prepareSchemaFiles($config['yaml_schema_path']), 'yml', $config['models_path']);
 
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
     $this->getFilesystem()->replaceTokens(array_diff($finder->in($config['models_path']), $before), '', '', array(

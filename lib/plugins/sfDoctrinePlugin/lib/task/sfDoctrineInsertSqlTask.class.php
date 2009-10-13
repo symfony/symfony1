@@ -43,7 +43,7 @@ The [doctrine:insert-sql|INFO] task creates database tables:
   [./symfony doctrine:insert-sql|INFO]
 
 The task connects to the database and creates tables for all the
-[lib/model/doctrine/*.php|COMMENT] files.
+[lib/model/doctrine/*.class.php|COMMENT] files.
 EOF;
   }
 
@@ -55,7 +55,9 @@ EOF;
     $this->logSection('doctrine', 'created tables successfully');
 
     $databaseManager = new sfDatabaseManager($this->configuration);
-    Doctrine_Core::loadModels(sfConfig::get('sf_lib_dir') . '/model/doctrine', Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
+    $config = $this->getCliConfig();
+
+    Doctrine_Core::loadModels($config['models_path'], Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
     Doctrine_Core::createTablesFromArray(Doctrine_Core::getLoadedModels());
   }
 }

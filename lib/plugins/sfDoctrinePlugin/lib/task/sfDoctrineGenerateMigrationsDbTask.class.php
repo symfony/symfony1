@@ -38,9 +38,10 @@ class sfDoctrineGenerateMigrationsDbTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Generate migration classes from existing database connections';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:generate-migration|INFO] task generates migration classes from existing database connections
+The [doctrine:generate-migrations-db|INFO] task generates migration classes from
+existing database connections:
 
-  [./symfony doctrine:generate-migration|INFO]
+  [./symfony doctrine:generate-migrations-db|INFO]
 EOF;
   }
 
@@ -59,6 +60,8 @@ EOF;
       $this->getFilesystem()->mkdirs($config['migrations_path']);
     }
 
-    $this->callDoctrineCli('generate-migrations-db');
+    $this->callDoctrineCli('generate-migrations-db', array(
+      'yaml_schema_path' => $this->prepareSchemaFiles($config['yaml_schema_path']),
+    ));
   }
 }
