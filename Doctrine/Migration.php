@@ -35,6 +35,7 @@
 class Doctrine_Migration
 {
     protected $_migrationTableName = 'migration_version',
+              $_migrationTableCreated = false,
               $_connection,
               $_migrationClassesDirectory = array(),
               $_migrationClasses = array(),
@@ -74,14 +75,17 @@ class Doctrine_Migration
             $this->_migrationClassesDirectory = $directory;
 
             $this->loadMigrationClassesFromDirectory();
-
-            $this->_createMigrationTable();
         }
     }
 
     public function getConnection()
     {
         return $this->_connection;
+    }
+
+    public function setConnection(Doctrine_Connection $conn)
+    {
+        $this->_connection = $conn;
     }
 
     /**
@@ -234,6 +238,8 @@ class Doctrine_Migration
      */
     public function getCurrentVersion()
     {
+        $this->_createMigrationTable();
+
         $result = $this->_connection->fetchColumn("SELECT version FROM " . $this->_migrationTableName);
 
         return isset($result[0]) ? $result[0]:0;
@@ -246,6 +252,8 @@ class Doctrine_Migration
      */
     public function hasMigrated()
     {
+        $this->_createMigrationTable();
+
         $result = $this->_connection->fetchColumn("SELECT version FROM " . $this->_migrationTableName);
 
         return isset($result[0]) ? true:false;
@@ -454,6 +462,8 @@ class Doctrine_Migration
      */
     protected function _doMigrate($to)
     {
+        $this->_createMigrationTable();
+
         $from = $this->getCurrentVersion();
 
         if ($from == $to) {
@@ -533,6 +543,12 @@ class Doctrine_Migration
      */
     protected function _createMigrationTable()
     {
+        if ($this->_migrationTableCreated) {
+            return true;
+        }
+
+        $this->_migrationTableCreated = true;
+
         try {
             $this->_connection->export->createTable($this->_migrationTableName, array('version' => array('type' => 'integer', 'size' => 11)));
 
