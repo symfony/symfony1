@@ -33,13 +33,16 @@
 class Doctrine_Migration_Process
 {
     protected
-        $_migration,
-        $_connection;
+        $_migration;
 
     public function __construct(Doctrine_Migration $migration)
     {
         $this->_migration = $migration;
-        $this->_connection = $migration->getConnection();
+    }
+
+    public function getConnection()
+    {
+        return $this->_migration->getConnection();
     }
 
     /**
@@ -50,7 +53,7 @@ class Doctrine_Migration_Process
      */
     public function processCreatedTable(array $table)
     {
-        $this->_connection->export->createTable($table['tableName'], $table['fields'], $table['options']);
+        $this->getConnection()->export->createTable($table['tableName'], $table['fields'], $table['options']);
     }
 
     /**
@@ -61,7 +64,7 @@ class Doctrine_Migration_Process
      */
     public function processDroppedTable(array $table)
     {
-        $this->_connection->export->dropTable($table['tableName']);
+        $this->getConnection()->export->dropTable($table['tableName']);
     }
 
     /**
@@ -72,7 +75,7 @@ class Doctrine_Migration_Process
      */
     public function processRenamedTable(array $table)
     {
-        $this->_connection->export->alterTable($table['oldTableName'], array('name' => $table['newTableName']));
+        $this->getConnection()->export->alterTable($table['oldTableName'], array('name' => $table['newTableName']));
     }
 
     /**
@@ -83,7 +86,7 @@ class Doctrine_Migration_Process
      */
     public function processCreatedColumn(array $column)
     {
-        $this->_connection->export->alterTable($column['tableName'], array('add' => array($column['columnName'] => $column)));
+        $this->getConnection()->export->alterTable($column['tableName'], array('add' => array($column['columnName'] => $column)));
     }
 
     /**
@@ -94,7 +97,7 @@ class Doctrine_Migration_Process
      */
     public function processDroppedColumn(array $column)
     {
-        $this->_connection->export->alterTable($column['tableName'], array('remove' => array($column['columnName'] => array())));
+        $this->getConnection()->export->alterTable($column['tableName'], array('remove' => array($column['columnName'] => array())));
     }
 
     /**
@@ -105,9 +108,9 @@ class Doctrine_Migration_Process
      */
     public function processRenamedColumn(array $column)
     {
-        $columnList = $this->_connection->import->listTableColumns($column['tableName']);
+        $columnList = $this->getConnection()->import->listTableColumns($column['tableName']);
         if (isset($columnList[$column['oldColumnName']])) {
-            $this->_connection->export->alterTable($column['tableName'], array('rename' => array($column['oldColumnName'] => array('name' => $column['newColumnName'], 'definition' => $columnList[$column['oldColumnName']]))));
+            $this->getConnection()->export->alterTable($column['tableName'], array('rename' => array($column['oldColumnName'] => array('name' => $column['newColumnName'], 'definition' => $columnList[$column['oldColumnName']]))));
         }
     }
 
@@ -123,7 +126,7 @@ class Doctrine_Migration_Process
         $options = $column['options'];
         $options['type'] = $column['type'];
     
-        $this->_connection->export->alterTable($column['tableName'], array('change' => array($column['columnName'] => array('definition' => $options))));
+        $this->getConnection()->export->alterTable($column['tableName'], array('change' => array($column['columnName'] => array('definition' => $options))));
     }
 
     /**
@@ -134,7 +137,7 @@ class Doctrine_Migration_Process
      */
     public function processCreatedIndex(array $index)
     {
-        $this->_connection->export->createIndex($index['tableName'], $index['indexName'], $index['definition']);
+        $this->getConnection()->export->createIndex($index['tableName'], $index['indexName'], $index['definition']);
     }
 
     /**
@@ -145,7 +148,7 @@ class Doctrine_Migration_Process
      */
     public function processDroppedIndex(array $index)
     {
-        $this->_connection->export->dropIndex($index['tableName'], $index['indexName']);
+        $this->getConnection()->export->dropIndex($index['tableName'], $index['indexName']);
     }
 
     /**
@@ -156,7 +159,7 @@ class Doctrine_Migration_Process
      */
     public function processCreatedConstraint(array $constraint)
     {
-        $this->_connection->export->createConstraint($constraint['tableName'], $constraint['constraintName'], $constraint['definition']);
+        $this->getConnection()->export->createConstraint($constraint['tableName'], $constraint['constraintName'], $constraint['definition']);
     }
 
     /**
@@ -167,7 +170,7 @@ class Doctrine_Migration_Process
      */
     public function processDroppedConstraint(array $constraint)
     {
-        $this->_connection->export->dropConstraint($constraint['tableName'], $constraint['constraintName'], isset($constraint['definition']['primary']) && $constraint['definition']['primary']);
+        $this->getConnection()->export->dropConstraint($constraint['tableName'], $constraint['constraintName'], isset($constraint['definition']['primary']) && $constraint['definition']['primary']);
     }
 
     /**
@@ -178,7 +181,7 @@ class Doctrine_Migration_Process
      */
     public function processCreatedForeignKey(array $foreignKey)
     {
-        $this->_connection->export->createForeignKey($foreignKey['tableName'], $foreignKey['definition']);
+        $this->getConnection()->export->createForeignKey($foreignKey['tableName'], $foreignKey['definition']);
     }
 
     /**
@@ -189,6 +192,6 @@ class Doctrine_Migration_Process
      */
     public function processDroppedForeignKey(array $foreignKey)
     {
-        $this->_connection->export->dropForeignKey($foreignKey['tableName'], $foreignKey['definition']['name']);
+        $this->getConnection()->export->dropForeignKey($foreignKey['tableName'], $foreignKey['definition']['name']);
     }
 }
