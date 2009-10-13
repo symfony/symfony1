@@ -499,6 +499,9 @@ class Doctrine_Migration
 
             if ($migration->getNumChanges() > 0) {
                 $changes = $migration->getChanges();
+                if ($direction == 'down' && method_exists($migration, 'migrate')) {
+                    $changes = array_reverse($changes);
+                }
                 foreach ($changes as $value) {
                     list($type, $change) = $value;
                     $funcName = 'process' . Doctrine_Inflector::classify($type);
