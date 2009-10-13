@@ -281,7 +281,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             return $this->conn->quoteIdentifier($name, true) 
                  . ' ' . $dec . $charset . $default . $notnull . $comment . $unique . $check . $collation;
         } catch (Exception $e) {
-            throw new Doctrine_Exception('Around field ' . $name . ': ' . $e->getMessage());
+            throw new Doctrine_Exception('Around field ' . $name . ': ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . "\n\n");
         }
     }
 
