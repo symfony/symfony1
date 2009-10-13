@@ -56,8 +56,16 @@ class sfYamlInline
    */
   static public function dump($value)
   {
-    $trueValues = '1.1' == sfYaml::getSpecVersion() ? array('true', 'on', '+', 'yes', 'y') : array('true');
-    $falseValues = '1.1' == sfYaml::getSpecVersion() ? array('false', 'off', '-', 'no', 'n') : array('false');
+    if ('1.1' === sfYaml::getSpecVersion())
+    {
+      $trueValues = array('true', 'on', '+', 'yes', 'y');
+      $falseValues = array('false', 'off', '-', 'no', 'n');
+    }
+    else
+    {
+      $trueValues = array('true');
+      $falseValues = array('false');
+    }
 
     switch (true)
     {
@@ -364,8 +372,16 @@ class sfYamlInline
   {
     $scalar = trim($scalar);
 
-    $trueValues = '1.1' == sfYaml::getSpecVersion() ? array('true', 'on', '+', 'yes', 'y') : array('true');
-    $falseValues = '1.1' == sfYaml::getSpecVersion() ? array('false', 'off', '-', 'no', 'n') : array('false');
+    if ('1.1' === sfYaml::getSpecVersion())
+    {
+      $trueValues = array('true', 'on', '+', 'yes', 'y');
+      $falseValues = array('false', 'off', '-', 'no', 'n');
+    }
+    else
+    {
+      $trueValues = array('true');
+      $falseValues = array('false');
+    }
 
     switch (true)
     {
