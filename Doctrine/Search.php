@@ -133,15 +133,15 @@ class Doctrine_Search extends Doctrine_Record_Generator
         $q = Doctrine_Query::create()->delete()
                                      ->from($class);
         foreach ((array) $identifier as $id) {
-            $q->addWhere('parent_' . $id . ' = ?', array($data[$id]));
+            $q->addWhere($id . ' = ?', array($data[$id]));
         }
         $q->execute();
 
         if ($this->_options['batchUpdates'] === true) {
             $index = new $class(); 
 
-            foreach ((array) $identifier as $id) {
-                $index->{'parent_' . $id} = $data[$id];
+            foreach ((array) $this->_options['table']->getIdentifier() as $id) {
+                $index->$id = $data[$id];
             }
 
             $index->save();
@@ -159,7 +159,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
                     $index->position = $pos;
                     $index->field = $field;
                     foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-                        $index->{'parent_' . $id} = $data[$id];
+                        $index->$id = $data[$id];
                     }
 
                     $index->save();
@@ -290,14 +290,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
         $columns = array('keyword'  => array('type'    => 'string',
                                              'length'  => 200,
-                                             'primary' => false,
+                                             'primary' => true,
                                              ),
                          'field'    => array('type'    => 'string',
                                              'length'  => 50,
-                                             'primary' => false),
+                                             'primary' => true),
                          'position' => array('type'    => 'integer',
                                              'length'  => 8,
-                                             'primary' => false,
+                                             'primary' => true,
                                              ));
 
         $this->hasColumns($columns);

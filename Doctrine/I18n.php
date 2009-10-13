@@ -95,7 +95,7 @@ class Doctrine_I18n extends Doctrine_Record_Generator
 
         $options = $this->_options['options'];
         $options['fixed'] = true;
-        $options['primary'] = false;
+        $options['primary'] = true;
 
         $this->hasColumn('lang', $this->_options['type'], $this->_options['length'], $options);
 

@@ -39,20 +39,14 @@ class Doctrine_Template_Geographical extends Doctrine_Template
      *
      * @var string
      */
-    protected $_options = array(
-        'latitude' =>  array(
-            'name'     =>  'latitude',
-            'type'     =>  'float',
-            'size'     =>  null,
-            'options'  =>  array()
-        ),
-        'longitude' => array(
-            'name'     =>  'longitude',
-            'type'     =>  'float',
-            'size'     =>  null,
-            'options'  =>  array()
-        )
-    );
+    protected $_options = array('latitude' =>  array('name'     =>  'latitude',
+                                                     'type'     =>  'float',
+                                                     'size'     =>  null,
+                                                     'options'  =>  array()),
+                                'longitude' => array('name'     =>  'longitude',
+                                                     'type'     =>  'float',
+                                                     'size'     =>  null,
+                                                     'options'  =>  array()));
 
     /**
      * Set table definition for Geographical behavior

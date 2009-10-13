@@ -38,15 +38,11 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
      *
      * @var string
      */
-    protected $_options = array(
-        'name'          =>  'deleted_at',
-        'type'          =>  'timestamp',
-        'length'        =>  null,
-        'options'       =>  array(
-            'default' => null,
-            'notnull' => false
-        )
-    );
+    protected $_options = array('name'          =>  'deleted_at',
+                                'type'          =>  'timestamp',
+                                'length'        =>  null,
+                                'options'       =>  array('default' => null,
+                                                          'notnull' => false));
 
     /**
      * Set table definition for SoftDelete behavior
