@@ -37,17 +37,15 @@ class sfDoctrineBuildFiltersTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Creates filter form classes for the current model';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:build-filters|INFO] task creates filter form classes from the schema:
+The [doctrine:build-filters|INFO] task creates form filter classes from the schema:
 
   [./symfony doctrine:build-filters|INFO]
 
-The task read the schema information in [config/*schema.xml|COMMENT] and/or
-[config/*schema.yml|COMMENT] from the project and all installed plugins.
+This task creates form filter classes based on the model. The classes are
+created in [lib/doctrine/filter|COMMENT].
 
-The model filter form classes files are created in [lib/filter|COMMENT].
-
-This task never overrides custom classes in [lib/filter|COMMENT].
-It only replaces base classes generated in [lib/filter/base|COMMENT].
+This task never overrides custom classes in [lib/doctrine/filter|COMMENT].
+It only replaces base classes generated in [lib/doctrine/filter/base|COMMENT].
 EOF;
   }
 

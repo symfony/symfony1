@@ -36,6 +36,10 @@ class sfDoctrineDeleteModelFilesTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Delete all the related auto generated files for a given model name.';
 
     $this->detailedDescription = <<<EOF
+The [doctrine:delete-model-files|INFO] task deletes all files associated with certain
+models:
+
+  [./symfony doctrine:delete-model-files Article Author|INFO]
 EOF;
   }
 

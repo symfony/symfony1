@@ -38,9 +38,10 @@ class sfDoctrineGenerateMigrationsModelsTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Generate migration classes from an existing set of models';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:generate-migration|INFO] task generates migration classes from an existing set of models
+The [doctrine:generate-migrations-models|INFO] task generates migration classes
+from an existing set of models:
 
-  [./symfony doctrine:generate-migration|INFO]
+  [./symfony doctrine:generate-migrations-models|INFO]
 EOF;
   }
 

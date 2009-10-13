@@ -46,7 +46,7 @@ The [doctrine:rebuild-db|INFO] task creates the database:
 
   [./symfony doctrine:rebuild-db|INFO]
 
-The task read connection information in [config/doctrine/databases.yml|COMMENT]:
+The task read connection information in [config/databases.yml|COMMENT]:
 
 Include the [--migrate|COMMENT] option if you would like to run your application's
 migrations rather than inserting the Doctrine SQL.

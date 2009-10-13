@@ -41,13 +41,11 @@ The [doctrine:build-forms|INFO] task creates form classes from the schema:
 
   [./symfony doctrine:build-forms|INFO]
 
-The task read the schema information in [config/*schema.xml|COMMENT] and/or
-[config/*schema.yml|COMMENT] from the project and all installed plugins.
+This task creates form classes based on the model. The classes are created
+in [lib/doctrine/form|COMMENT].
 
-The model form classes files are created in [lib/form|COMMENT].
-
-This task never overrides custom classes in [lib/form|COMMENT].
-It only replaces base classes generated in [lib/form/base|COMMENT].
+This task never overrides custom classes in [lib/doctrine/form|COMMENT].
+It only replaces base classes generated in [lib/doctrine/form/base|COMMENT].
 EOF;
   }
 

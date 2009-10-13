@@ -12,7 +12,7 @@
 require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
 
 /**
- * Creates a schema.xml from an existing database.
+ * Creates a schema.yml from an existing database.
  *
  * @package    symfony
  * @subpackage doctrine

@@ -43,7 +43,7 @@ The [doctrine:drop-db|INFO] task drops the database:
 
   [./symfony doctrine:drop-db|INFO]
 
-The task read connection information in [config/doctrine/databases.yml|COMMENT]:
+The task read connection information in [config/databases.yml|COMMENT]:
 EOF;
   }
 

@@ -44,8 +44,8 @@ class sfDoctrineReloadDataTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Reloads databases and fixtures for your project';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:reload-data|INFO] task drops the database, recreates it and loads fixtures
-Call it with:
+The [doctrine:reload-data|INFO] task drops the database, recreates it and loads
+fixtures:
 
   [php symfony doctrine:reload-data|INFO]
   
