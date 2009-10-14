@@ -241,7 +241,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
         }
 
 
-        $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
+        $notnull = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : ' NULL';
         //$unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
         // MSSQL does not support the UNSIGNED keyword
         $unsigned = '';
