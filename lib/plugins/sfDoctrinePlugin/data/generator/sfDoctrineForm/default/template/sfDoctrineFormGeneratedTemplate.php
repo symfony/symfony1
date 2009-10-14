@@ -3,6 +3,8 @@
 /**
  * <?php echo $this->modelName ?> form base class.
  *
+ * @method <?php echo $this->modelName ?> getObject() Returns the current form's model object
+ *
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     ##AUTHOR_NAME##
