@@ -56,7 +56,7 @@ class Doctrine_Relation_LocalKey extends Doctrine_Relation
             }
         } else {
             $dql  = 'FROM ' . $this->getTable()->getComponentName()
-                 . ' WHERE ' . $this->getCondition();
+                 . ' WHERE ' . $this->getCondition() . $this->getOrderBy(null, false);
 
             $related = $this->getTable()
                             ->getConnection()

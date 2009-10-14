@@ -58,7 +58,7 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
                 $related = $this->getTable()->create();
             } else {
                 $dql  = 'FROM ' . $this->getTable()->getComponentName()
-                      . ' WHERE ' . $this->getCondition();
+                      . ' WHERE ' . $this->getCondition() . $this->getOrderBy(null, false);
 
                 $coll = $this->getTable()->getConnection()->query($dql, $id);
                 $related = $coll[0];

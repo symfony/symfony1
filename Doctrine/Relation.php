@@ -70,7 +70,8 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'cascade'     => array(), // application-level cascades
                                   'owningSide'  => false, // whether this is the owning side
                                   'refClassRelationAlias' => null,
-                                  'foreignKeyName' => null
+                                  'foreignKeyName' => null,
+                                  'orderBy' => null
                                   );
 
     /**
@@ -346,7 +347,8 @@ abstract class Doctrine_Relation implements ArrayAccess
 
         $dql  = 'FROM ' . $component
               . ' WHERE ' . $component . '.' . $this->definition['foreign']
-              . ' IN (' . substr(str_repeat('?, ', $count), 0, -2) . ')';
+              . ' IN (' . substr(str_repeat('?, ', $count), 0, -2) . ')'
+              . $this->getOrderBy($component);
 
         return $dql;
     }
@@ -372,6 +374,51 @@ abstract class Doctrine_Relation implements ArrayAccess
             return $this->definition['foreignKeyName'];
         }
         return $this['localTable']->getConnection()->generateUniqueRelationForeignKeyName($this);
+    }
+
+    /**
+     * Get the relationship orderby SQL/DQL
+     *
+     * @param string $alias        The alias to use
+     * @param boolean $columnNames Whether or not to use column names instead of field names
+     * @return string $orderBy
+     */
+    public function getOrderBy($alias = null, $columnNames = false)
+    {
+        if ( ! $alias) {
+           $alias = $this->getTable()->getComponentName();
+        }
+
+        if ($orderBy = $this->getOrderByStatement($alias, $columnNames)) {
+            return ' ORDER BY ' . $orderBy;
+        }
+    }
+
+    /**
+     * Get the relationship orderby statement
+     *
+     * @param string $alias        The alias to use
+     * @param boolean $columnNames Whether or not to use column names instead of field names
+     * @return string $orderByStatement
+     */
+    public function getOrderByStatement($alias = null, $columnNames = false)
+    {
+        if ( ! $alias) {
+           $alias = $this->getTable()->getComponentName();
+        }
+
+        if (isset($this->definition['orderBy'])) {
+            $orderBy = $alias . '.' . $this->definition['orderBy'];
+
+            if ($columnNames) {
+                $e = explode(' ', $orderBy);
+                $e2 = explode('.', $e[0]);
+                $e2[1] = $this->getTable()->getColumnName($e2[1]);
+                return $e2[0] . '.' . $e2[1] . ' ' . $e[1];
+            } else {
+                return $orderBy;
+            }
+        }
     }
 
     /**

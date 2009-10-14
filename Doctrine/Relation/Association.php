@@ -66,11 +66,13 @@ class Doctrine_Relation_Association extends Doctrine_Relation
                 $dql .= '.' . $component;
                 $dql .= ' WHERE ' . $this->getTable()->getComponentName()
                 . '.' . $component . '.' . $this->getLocalRefColumnName() . ' IN (' . $sub . ')';
+                $dql .= $this->getOrderBy($this->getTable()->getComponentName(), false);
                 break;
             case "collection":
                 $sub  = substr(str_repeat("?, ", $count),0,-2);
                 $dql  = 'FROM ' . $component . '.' . $this->getTable()->getComponentName();
                 $dql .= ' WHERE ' . $component . '.' . $this->getLocalRefColumnName() . ' IN (' . $sub . ')';
+                $dql .= $this->getOrderBy($component, false);
                 break;
         }
 

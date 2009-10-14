@@ -434,6 +434,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     $a[] = '\'owningSide\' => ' . $this->varExport($relation['owningSide']);
                 }
 
+                if (isset($relation['foreignKeyName']) && $relation['foreignKeyName']) {
+                    $a[] = '\'foreignKeyName\' => ' . $this->varExport($relation['foreignKeyName']);
+                }
+
+                if (isset($relation['orderBy']) && $relation['orderBy']) {
+                    $a[] = '\'orderBy\' => ' . $this->varExport($relation['orderBy']);
+                }
+
                 if ( ! empty($a)) {
                     $ret[$i] .= ', ' . 'array(' . PHP_EOL . str_repeat(' ', 13);
                     $length = strlen($ret[$i]);
@@ -458,7 +466,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        $code = "parent::setUp();" . PHP_EOL . '    ' . $code;
+        $code = "parent::setUp();" . PHP_EOL . '        ' . $code;
 
         // If we have some code for the function then lets define it and return it
         if ($code) {

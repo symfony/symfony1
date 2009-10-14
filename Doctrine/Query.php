@@ -1281,6 +1281,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             //   .  (($limitSubquerySql == '' && count($this->_sqlParts['where']) == 1) ? substr($where, 1, -1) : $where);
         }
 
+        // Add the orderBy statements defined in the relationships
+        $added = array();
+        foreach ($this->_queryComponents as $alias => $map) {
+            if (isset($map['relation']) && ! in_array($map['relation'], $added)) {
+                if ($orderBy = $map['relation']->getOrderByStatement($this->getSqlTableAlias($alias), true)) {
+                    $added[] = $map['relation'];
+                    $this->_sqlParts['orderby'][] = $orderBy;
+                }
+            }
+        }
+
         $q .= ( ! empty($this->_sqlParts['groupby'])) ? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])  : '';
         $q .= ( ! empty($this->_sqlParts['having'])) ?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']): '';
         $q .= ( ! empty($this->_sqlParts['orderby'])) ? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
