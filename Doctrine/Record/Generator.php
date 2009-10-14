@@ -150,9 +150,10 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
 
         $this->_options['table'] = $table;
 
-        $this->_options['className'] = str_replace('%CLASS%',
-                                                   $this->_options['table']->getComponentName(),
-                                                   $this->_options['className']);
+        $className = $this->_options['className'];
+        $ownerClassName = $this->_options['table']->getComponentName();
+        $ownerTableName = $this->_options['table']->getTableName();
+        $this->_options['className'] = str_replace('%CLASS%', $ownerClassName, $className);
 
         // check that class doesn't exist (otherwise we cannot create it)
         if ($this->_options['generateFiles'] === false && class_exists($this->_options['className'], false)) {
@@ -170,12 +171,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $this->setTableDefinition();
         $this->setUp();
 
-        $definition = array();
-        $definition['columns'] = $this->_table->getColumns();
-        $definition['tableName'] = $this->_table->getTableName();
-        $definition['actAs'] = $this->_table->getTemplates();
-
-        $this->generateClass($definition);
+        $this->generateClassFromTable($this->_table);
 
         $this->buildChildDefinitions();
 
@@ -408,8 +404,24 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      */
     public function buildRelation()
     {
-    	$this->buildForeignRelation();
+        $this->buildForeignRelation();
         $this->buildLocalRelation();
+    }
+
+    /**
+     * Generate a Doctrine_Record from a populated Doctrine_Table instance
+     *
+     * @param Doctrine_Table $table
+     * @return void
+     */
+    public function generateClassFromTable(Doctrine_Table $table)
+    {
+        $definition = array();
+        $definition['columns'] = $table->getColumns();
+        $definition['tableName'] = $table->getTableName();
+        $definition['actAs'] = $table->getTemplates();
+      
+        return $this->generateClass($definition);
     }
 
     /**
