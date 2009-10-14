@@ -95,7 +95,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
       $plugin = $this->configuration->getPluginConfiguration($name);
       foreach ($finder->in($plugin->getRootDir().'/config/doctrine') as $schema)
       {
-        $pluginModels = sfYaml::load($schema);
+        $pluginModels = (array) sfYaml::load($schema);
         $globals = $this->filterSchemaGlobals($pluginModels);
 
         foreach ($pluginModels as $model => $definition)
@@ -119,7 +119,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
     // project models
     foreach ($finder->in($yamlSchemaPath) as $schema)
     {
-      $projectModels = sfYaml::load($schema);
+      $projectModels = (array) sfYaml::load($schema);
       $globals = $this->filterSchemaGlobals($projectModels);
 
       foreach ($projectModels as $model => $definition)
@@ -142,7 +142,9 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
    *
    * @param array $models An array of model definitions
    *
-   * @return array
+   * @return array An array of globals
+   * 
+   * @see Doctrine_Import_Schema::getGlobalDefinitionKeys()
    */
   protected function filterSchemaGlobals(& $models)
   {
