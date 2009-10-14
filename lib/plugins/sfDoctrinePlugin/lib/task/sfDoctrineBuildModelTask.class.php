@@ -67,7 +67,7 @@ EOF;
 
     $import = new Doctrine_Import_Schema();
     $import->setOptions($builderOptions);
-    $import->importSchema($this->prepareSchemaFiles($config['yaml_schema_path']), 'yml', $config['models_path']);
+    $import->importSchema($this->prepareSchemaFile($config['yaml_schema_path']), 'yml', $config['models_path']);
 
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
     $this->getFilesystem()->replaceTokens(array_diff($finder->in($config['models_path']), $before), '', '', array(

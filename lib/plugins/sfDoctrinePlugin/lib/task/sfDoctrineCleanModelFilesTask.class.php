@@ -71,7 +71,7 @@ EOF;
     $models = array();
 
     $finder = sfFinder::type('file')->name('*.yml');
-    foreach ($finder->in($this->prepareSchemaFiles($yamlSchemaPath)) as $file)
+    foreach ($finder->in($this->prepareSchemaFile($yamlSchemaPath)) as $file)
     {
       $models = array_merge($models, array_keys((array) sfYaml::load($file)));
     }

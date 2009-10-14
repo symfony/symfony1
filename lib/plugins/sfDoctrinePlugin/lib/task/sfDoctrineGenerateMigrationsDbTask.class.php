@@ -61,7 +61,7 @@ EOF;
     }
 
     $this->callDoctrineCli('generate-migrations-db', array(
-      'yaml_schema_path' => $this->prepareSchemaFiles($config['yaml_schema_path']),
+      'yaml_schema_path' => $this->prepareSchemaFile($config['yaml_schema_path']),
     ));
   }
 }

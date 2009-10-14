@@ -65,56 +65,99 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
   }
 
   /**
-   * Copies schema files in a temporary directory and preps them for Doctrine.
-   * 
-   * @return string The directory where the schema files are saved to
+   * Merges all project and plugin schema files into one.
+   *
+   * Schema files are merged similar to how other configuration files are in
+   * symfony, utilizing a configuration cascade. Files later in the cascade
+   * can change values from earlier in the cascade.
+   *
+   * The order in which schema files are processed is like so:
+   *
+   *  1. Plugin schema files
+   *    * Plugins are processed in the order which they were enabled in ProjectConfiguration
+   *    * Each plugin's schema files are processed in alphabetical order
+   *  2. Project schema files
+   *    * Project schema files are processed in alphabetical order
+   *
+   * A schema file is any file saved in a plugin or project's config/doctrine/
+   * directory that matches the "*.yml" glob.
+   *
+   * @return string Absolute path to the consolidated schema file
    */
-  protected function prepareSchemaFiles($yamlSchemaPath)
+  protected function prepareSchemaFile($yamlSchemaPath)
   {
-    if (!file_exists($directory = sys_get_temp_dir().'/sfDoctrinePlugin/'.md5(sfConfig::get('sf_root_dir')).'/yaml_schema_files'))
-    {
-      $this->getFilesystem()->mkdirs($directory);
-    }
+    $models = array();
+    $finder = sfFinder::type('file')->name('*.yml')->sort_by_name();
 
-    // clear the tmp directory
-    $finder = sfFinder::type('file')->name('*.yml');
-    $this->getFilesystem()->remove($finder->in($directory));
-
-    // copy and markup plugin schema files
-    $i = 1;
+    // plugin models
     foreach ($this->configuration->getPlugins() as $name)
     {
       $plugin = $this->configuration->getPluginConfiguration($name);
-      $schemas = $finder->in($plugin->getRootDir().'/config/doctrine');
-
-      if (count($schemas))
+      foreach ($finder->in($plugin->getRootDir().'/config/doctrine') as $schema)
       {
-        foreach ($schemas as $schema)
+        $pluginModels = sfYaml::load($schema);
+        $globals = $this->filterSchemaGlobals($pluginModels);
+
+        foreach ($pluginModels as $model => $definition)
         {
-          $models = Doctrine_Parser::load($schema, 'yml');
+          // merge globals
+          $definition = array_merge($globals, $definition);
 
-          if (!isset($models['package']))
+          // merge this model into the schema
+          $models[$model] = isset($models[$model]) ? sfToolkit::arrayDeepMerge($models[$model], $definition) : $definition;
+
+          // the first plugin to define this model gets the package
+          if (!isset($models[$model]['package']))
           {
-            $models['package'] = $plugin->getName().'.lib.model.doctrine';
-            $models['package_custom_path'] = $plugin->getRootDir().'/lib/model/doctrine';
+            $models[$model]['package'] = $plugin->getName().'.lib.model.doctrine';
+            $models[$model]['package_custom_path'] = $plugin->getRootDir().'/lib/model/doctrine';
           }
-
-          $file = sprintf('%s/%03d_%s-%s', $directory, $i, $plugin->getName(), basename($schema));
-          $this->logSection('file+', $file);
-
-          Doctrine_Parser::dump($models, 'yml', $file);
         }
-
-        $i++;
       }
     }
 
-    // copy project schema files
+    // project models
     foreach ($finder->in($yamlSchemaPath) as $schema)
     {
-      $this->getFilesystem()->copy($schema, sprintf('%s/%03d_project-%s', $directory, $i, basename($schema)));
+      $projectModels = sfYaml::load($schema);
+      $globals = $this->filterSchemaGlobals($projectModels);
+
+      foreach ($projectModels as $model => $definition)
+      {
+        $definition = array_merge($globals, $definition);
+        $models[$model] = isset($models[$model]) ? sfToolkit::arrayDeepMerge($models[$model], $definition) : $definition;
+      }
     }
 
-    return $directory;
+    // create one consolidated schema file
+    $file = tempnam(sys_get_temp_dir(), 'doctrine_schema_').'.yml';
+    $this->logSection('file+', $file);
+    file_put_contents($file, sfYaml::dump($models, 4));
+
+    return $file;
+  }
+
+  /**
+   * Removes and returns globals from the supplied array of models.
+   *
+   * @param array $models An array of model definitions
+   *
+   * @return array
+   */
+  protected function filterSchemaGlobals(& $models)
+  {
+    $globals = array();
+    $globalKeys = Doctrine_Import_Schema::getGlobalDefinitionKeys();
+
+    foreach ($models as $key => $value)
+    {
+      if (in_array($key, $globalKeys))
+      {
+        $globals[$key] = $value;
+        unset($models[$key]);
+      }
+    }
+
+    return $globals;
   }
 }
