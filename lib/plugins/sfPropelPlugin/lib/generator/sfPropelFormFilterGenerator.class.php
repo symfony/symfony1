@@ -63,12 +63,12 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
 
     // create the project base class for all forms
-    $file = sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.class.php';
+    $file = sfConfig::get('sf_lib_dir').'/filter/BaseFormFilterPropel.class.php';
     if (!file_exists($file))
     {
-      if (!is_dir(sfConfig::get('sf_lib_dir').'/filter/base'))
+      if (!is_dir($directory = dirname($file)))
       {
-        mkdir(sfConfig::get('sf_lib_dir').'/filter/base', 0777, true);
+        mkdir($directory, 0777, true);
       }
 
       file_put_contents($file, $this->evalTemplate('sfPropelFormFilterBaseTemplate.php'));
