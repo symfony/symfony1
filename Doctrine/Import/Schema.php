@@ -39,7 +39,16 @@ class Doctrine_Import_Schema
      *
      * @var array
      */
-    protected static $_globalDefinitionKeys = array();
+    protected static $_globalDefinitionKeys = array(
+        'connection',
+        'attributes',
+        'templates',
+        'actAs',
+        'options',
+        'package',
+        'package_custom_path',
+        'inheritance',
+        'detect_relations');
 
     /**
      * _relations
