@@ -124,6 +124,16 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
+     * Check if this template has a generator plugin
+     *
+     * @return boolean
+     */
+    public function hasPlugin()
+    {
+        return isset($this->_plugin) ? true : false;
+    }
+
+    /**
      * getOptions
      * returns all options of this template and the associated values
      *

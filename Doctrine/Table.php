@@ -209,6 +209,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     protected $_generators     = array();
 
     /**
+     * Generator instance responsible for constructing this table
+     *
+     * @see Doctrine_Record_Generator
+     * @var Doctrine_Record_Generator $generator
+     */
+    protected $_generator;
+
+    /**
      * @var array $_invokedMethods              method invoker cache
      */
     protected $_invokedMethods = array();
@@ -933,6 +941,32 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $options['type'] = $type;
 
         $this->_parser->bind($args[0], $options);
+    }
+
+    /**
+     * Binds One-to-One aggregate relation
+     *
+     * @param string $componentName     the name of the related component
+     * @param string $options           relation options
+     * @see Doctrine_Relation::_$definition
+     * @return Doctrine_Record          this object
+     */
+    public function hasOne()
+    {
+        $this->bind(func_get_args(), Doctrine_Relation::ONE);
+    }
+
+    /**
+     * Binds One-to-Many / Many-to-Many aggregate relation
+     *
+     * @param string $componentName     the name of the related component
+     * @param string $options           relation options
+     * @see Doctrine_Relation::_$definition
+     * @return Doctrine_Record          this object
+     */
+    public function hasMany()
+    {
+        $this->bind(func_get_args(), Doctrine_Relation::MANY);
     }
 
     /**
@@ -2409,6 +2443,37 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $this->_generators[$name] = $generator;
         }
         return $this;
+    }
+
+    /**
+     * Set the generator responsible for creating this table
+     *
+     * @param Doctrine_Record_Generator $generator
+     * @return void
+     */
+    public function setGenerator(Doctrine_Record_Generator $generator)
+    {
+        $this->_generator = $generator;
+    }
+
+    /**
+     * Check whether this table was created by a record generator or not
+     *
+     * @return boolean
+     */
+    public function isGenerator()
+    {
+        return isset($this->_generator) ? true : false;
+    }
+
+    /**
+     * Get the parent generator responsible for this table instance
+     *
+     * @return Doctrine_Record_Generator
+     */
+    public function getParentGenerator()
+    {
+        return $this->_generator;
     }
 
     /**

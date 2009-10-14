@@ -233,8 +233,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * hasOne
-     * binds One-to-One aggregate relation
+     * Binds One-to-One aggregate relation
      *
      * @param string $componentName     the name of the related component
      * @param string $options           relation options
@@ -249,8 +248,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * hasMany
-     * binds One-to-Many / Many-to-Many aggregate relation
+     * Binds One-to-Many / Many-to-Many aggregate relation
      *
      * @param string $componentName     the name of the related component
      * @param string $options           relation options
@@ -265,8 +263,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     }
 
     /**
-     * hasColumn
-     * sets a column definition
+     * Sets a column definition
      *
      * @param string $name
      * @param string $type
