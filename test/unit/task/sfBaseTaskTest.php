@@ -43,7 +43,7 @@ $dispatcher = new sfEventDispatcher();
 $configuration = new ProjectConfiguration($rootDir, $dispatcher);
 $autoload = sfSimpleAutoload::getInstance();
 
-$t = new lime_test(null);
+$t = new lime_test(5);
 $task = new TestTask($dispatcher, new sfFormatter());
 
 // ->initializeAutoload()
