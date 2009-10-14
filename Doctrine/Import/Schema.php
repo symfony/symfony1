@@ -35,6 +35,13 @@
 class Doctrine_Import_Schema
 {
     /**
+     * Schema definition keys that can be applied at the global level.
+     *
+     * @var array
+     */
+    protected static $_globalDefinitionKeys = array();
+
+    /**
      * _relations
      *
      * Array of all relationships parsed from all schema files
@@ -133,6 +140,16 @@ class Doctrine_Import_Schema
                                                           'extends',
                                                           'keyField',
                                                           'keyValue'));
+
+    /**
+     * Returns an array of definition keys that can be applied at the global level.
+     * 
+     * @return array
+     */
+    public static function getGlobalDefinitionKeys()
+    {
+        return self::$_globalDefinitionKeys;
+    }
 
     /**
      * getOption
@@ -288,21 +305,10 @@ class Doctrine_Import_Schema
         
         $array = Doctrine_Parser::load($schema, $type);
 
-        // Go through the schema and look for global values so we can assign them to each table/class
-        $globals = array();
-        $globalKeys = array('connection',
-                            'attributes',
-                            'templates',
-                            'actAs',
-                            'options',
-                            'package',
-                            'package_custom_path',
-                            'inheritance',
-                            'detect_relations');
-
         // Loop over and build up all the global values and remove them from the array
+        $globals = array();
         foreach ($array as $key => $value) {
-            if (in_array($key, $globalKeys)) {
+            if (in_array($key, self::$_globalDefinitionKeys)) {
                 unset($array[$key]);
                 $globals[$key] = $value;
             }
