@@ -31,7 +31,8 @@ class sfSimpleAutoload
     $cacheChanged = false,
     $dirs         = array(),
     $files        = array(),
-    $classes      = array();
+    $classes      = array(),
+    $overriden    = array();
 
   protected function __construct($cacheFile = null)
   {
@@ -186,6 +187,11 @@ class sfSimpleAutoload
       $this->addFile($file);
     }
 
+    foreach ($this->overriden as $class => $path)
+    {
+      $this->classes[$class] = $path;
+    }
+
     $this->cacheLoaded = true;
     $this->cacheChanged = true;
   }
@@ -208,11 +214,11 @@ class sfSimpleAutoload
   {
     $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
 
-    if($dirs = glob($dir))
+    if ($dirs = glob($dir))
     {
       foreach ($dirs as $dir)
       {
-        if (false !== ($key = array_search($dir, $this->dirs)))
+        if (false !== $key = array_search($dir, $this->dirs))
         {
           unset($this->dirs[$key]);
           $this->dirs[] = $dir;
@@ -287,6 +293,12 @@ class sfSimpleAutoload
     }
   }
 
+  /**
+   * Sets the path for a particular class.
+   *
+   * @param string $class A PHP class name
+   * @param string $path  An absolute path
+   */
   public function setClassPath($class, $path)
   {
     $class = strtolower($class);
