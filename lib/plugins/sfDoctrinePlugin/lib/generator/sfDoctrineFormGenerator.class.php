@@ -600,8 +600,7 @@ class sfDoctrineFormGenerator extends sfGenerator
    */
   protected function loadModels()
   {
-    Doctrine_Core::loadModels($this->generatorManager->getConfiguration()->getModelDirs(),
-                                   Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
+    Doctrine_Core::loadModels($this->generatorManager->getConfiguration()->getModelDirs());
     $models = Doctrine_Core::getLoadedModels();
     $models =  Doctrine_Core::initializeModels($models);
     $models = Doctrine_Core::filterInvalidModels($models);

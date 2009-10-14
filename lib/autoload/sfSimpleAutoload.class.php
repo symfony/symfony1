@@ -99,6 +99,14 @@ class sfSimpleAutoload
   }
 
   /**
+   * Returns true if sfSimpleAutoload is registered as an autoloader.
+   */
+  static public function isRegistered()
+  {
+    return self::$registered;
+  }
+
+  /**
    * Handles autoloading of classes.
    *
    * @param  string $class A class name.
@@ -306,5 +314,12 @@ class sfSimpleAutoload
     $this->overriden[$class] = $path;
 
     $this->classes[$class] = $path;
+  }
+
+  public function getClassPath($class)
+  {
+    $class = strtolower($class);
+
+    return isset($this->classes[$class]) ? $this->classes[$class] : null;
   }
 }

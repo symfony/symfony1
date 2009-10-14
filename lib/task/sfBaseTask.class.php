@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -182,9 +182,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
         sfConfig::set('sf_environment', $env);
       }
 
-      $autoloader = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
-      $autoloader->addFiles(sfFinder::type('file')->prune('symfony')->follow_link()->name('*.php')->in(sfConfig::get('sf_lib_dir')));
-      $autoloader->register();
+      $this->initializeAutoload($configuration);
     }
 
     return $configuration;
@@ -206,21 +204,72 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   }
 
   /**
-   * Reloads autoloaders.
+   * Reloads all autoloaders.
    *
    * This method should be called whenever a task generates new classes that
    * are to be loaded by the symfony autoloader. It clears the autoloader
    * cache for all applications and environments and the current execution.
+   *
+   * @see initializeAutoload()
    */
   protected function reloadAutoload()
   {
-    $this->logSection('autoload', 'Reloading autoloaders');
+    $this->initializeAutoload($this->configuration, true);
+  }
 
-    $finder = sfFinder::type('file')->name('*autoload.yml.php');
-    $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_cache_dir')));
-    sfAutoload::getInstance()->reloadClasses(true);
+  /**
+   * Initializes autoloaders.
+   *
+   * @param sfProjectConfiguration $configuration The current project or application configuration
+   * @param boolean                $reload        If true, all autoloaders will be reloaded
+   */
+  protected function initializeAutoload(sfProjectConfiguration $configuration, $reload = false)
+  {
+    // sfAutoload
+    if ($reload)
+    {
+      $this->logSection('autoload', 'Resetting application autoloaders');
 
-    sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache')->reload();
+      $finder = sfFinder::type('file')->name('*autoload.yml.php');
+      $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_cache_dir')));
+      sfAutoload::getInstance()->reloadClasses(true);
+    }
+
+    // sfSimpleAutoload
+    if (!$configuration instanceof sfApplicationConfiguration)
+    {
+      $autoload = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
+
+      // plugins
+      if ($reload)
+      {
+        foreach ($configuration->getPlugins() as $name)
+        {
+          $configuration->getPluginConfiguration($name)->initializeAutoload();
+        }
+      }
+
+      // project
+      $files = array(sfConfig::get('sf_symfony_lib_dir').'/config/config/autoload.yml');
+      if (is_readable($file = sfConfig::get('sf_config_dir').'/autoload.yml'))
+      {
+        $files[] = $file;
+      }
+
+      $config = new sfAutoloadConfigHandler();
+      foreach ($config->evaluate($files) as $class => $file)
+      {
+        $autoload->setClassPath($class, $file);
+      }
+
+      if ($reload)
+      {
+        $this->logSection('autoload', 'Resetting CLI autoloader');
+        $autoload->reload();
+      }
+
+      $autoload->register();
+    }
   }
 
   /**
