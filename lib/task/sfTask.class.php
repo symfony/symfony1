@@ -150,7 +150,7 @@ abstract class sfTask
     {
       if (is_string($name))
       {
-        if (false === $value || null === $value || ($indexedOptions[$name]->isArray() && !$value))
+        if (false === $value || null === $value || (isset($indexedOptions[$name]) && $indexedOptions[$name]->isArray() && !$value))
         {
           unset($options[$name]);
           continue;
