@@ -129,7 +129,6 @@ class sfProjectConfiguration
       'sf_data_dir'    => $rootDir.DIRECTORY_SEPARATOR.'data',
       'sf_config_dir'  => $rootDir.DIRECTORY_SEPARATOR.'config',
       'sf_test_dir'    => $rootDir.DIRECTORY_SEPARATOR.'test',
-      'sf_doc_dir'     => $rootDir.DIRECTORY_SEPARATOR.'doc',
       'sf_plugins_dir' => $rootDir.DIRECTORY_SEPARATOR.'plugins',
     ));
 
