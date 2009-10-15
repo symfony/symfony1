@@ -86,8 +86,7 @@ EOF;
       $loadData = new sfPropelDataLoadTask($this->dispatcher, $this->formatter);
       $loadData->setCommandApplication($this->commandApplication);
       $loadData->setConfiguration($this->configuration);
-      $loadData->run(array(), array(
-        'dir'    => $options['dir'],
+      $loadData->run($options['dir'], array(
         'append' => $options['append'],
       ));
     }
