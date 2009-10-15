@@ -323,9 +323,10 @@ abstract class sfModelGeneratorConfiguration
     foreach ($form->getWidgetSchema()->getPositions() as $name)
     {
       $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+        array('type' => 'Text'),
         isset($config['default'][$name]) ? $config['default'][$name] : array(),
         isset($config['filter'][$name]) ? $config['filter'][$name] : array(),
-        array('is_real' => false, 'type' => 'Text')
+        array('is_real' => false)
       ));
     }
 
@@ -396,10 +397,11 @@ abstract class sfModelGeneratorConfiguration
     foreach ($form->getWidgetSchema()->getPositions() as $name)
     {
       $fields[$name] = new sfModelGeneratorConfigurationField($name, array_merge(
+        array('type' => 'Text'),
         isset($config['default'][$name]) ? $config['default'][$name] : array(),
         isset($config['form'][$name]) ? $config['form'][$name] : array(),
         isset($config[$context][$name]) ? $config[$context][$name] : array(),
-        array('is_real' => false, 'type' => 'Text')
+        array('is_real' => false)
       ));
     }
 
