@@ -52,6 +52,11 @@ class sfValidatorFile extends sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
+    if (!ini_get('file_uploads'))
+    {
+      throw new LogicException(sprintf('Unable to use a file validator as "file_uploads" is disabled in your php.ini file (%s)', get_cfg_var('cfg_file_path')));
+    }
+
     $this->addOption('max_size');
     $this->addOption('mime_types');
     $this->addOption('mime_type_guessers', array(
