@@ -367,6 +367,11 @@ class sfPropelFormGenerator extends sfGenerator
       $options[] = '\'required\' => false';
     }
 
+    if (null !== $column->getDefaultValue())
+    {
+      $options[] = sprintf('\'empty_value\' => \'%s\'', $column->getDefaultValue());
+    }
+
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
   }
 
