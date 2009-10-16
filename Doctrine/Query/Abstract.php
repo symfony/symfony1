@@ -118,6 +118,12 @@ abstract class Doctrine_Query_Abstract
      * @var Doctrine_Cache_Interface  The cache driver used for caching result sets.
      */
     protected $_resultCache;
+
+    /**
+     * @var string  Key to use for result cache entry in the cache driver
+     */
+    protected $_resultCacheHash;
+
     /**
      * @var boolean $_expireResultCache  A boolean value that indicates whether or not
      *                                   expire the result cache.
@@ -864,6 +870,22 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
+     * Get the result cache hash/key. Returns key set with useResultCache()
+     * or generates a unique key from the query automatically.
+     *
+     * @param array $params
+     * @return string $hash
+     */
+    public function getResultCacheHash($params = array())
+    {
+      if ($this->_resultCacheHash) {
+          return $this->_resultCacheHash;
+      } else {
+          return $this->calculateResultCacheHash($params);
+      }
+    }
+
+    /**
      * _execute
      *
      * @param array $params
@@ -972,7 +994,7 @@ abstract class Doctrine_Query_Abstract
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
-            $hash = $this->calculateResultCacheHash($params);
+            $hash = $this->getResultCacheHash($params);
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
 
             if ($cached === false) {
@@ -1809,19 +1831,47 @@ abstract class Doctrine_Query_Abstract
      *
      * @param Doctrine_Cache_Interface|bool $driver      cache driver
      * @param integer $timeToLive                        how long the cache entry is valid
+     * @param string $resultCacheHash                     The key to use for storing the queries result cache entry
      * @return Doctrine_Hydrate         this object
      */
-    public function useResultCache($driver = true, $timeToLive = null)
+    public function useResultCache($driver = true, $timeToLive = null, $resultCacheHash = null)
     {
         if ($driver !== null && $driver !== true && ! ($driver instanceOf Doctrine_Cache_Interface)) {
             $msg = 'First argument should be instance of Doctrine_Cache_Interface or null.';
             throw new Doctrine_Query_Exception($msg);
         }
         $this->_resultCache = $driver;
+        $this->_resultCacheHash = $resultCacheHash;
 
         if ($timeToLive !== null) {
             $this->setResultCacheLifeSpan($timeToLive);
         }
+        return $this;
+    }
+
+    /**
+     * Set the result cache hash to be used for storing the results in the cache driver
+     *
+     * @param string $resultCacheHash
+     * @return void
+     */
+    public function setResultCacheHash($resultCacheHash)
+    {
+        $this->_resultCacheHash = $resultCacheHash;
+
+        return $this;
+    }
+
+    /**
+     * Clear the result cache entry for this query
+     *
+     * @return void
+     */
+    public function clearResultCache()
+    {
+        $this->getResultCacheDriver()
+            ->delete($this->getResultCacheHash());
+
         return $this;
     }
 

@@ -1281,13 +1281,32 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             //   .  (($limitSubquerySql == '' && count($this->_sqlParts['where']) == 1) ? substr($where, 1, -1) : $where);
         }
 
-        // Add the orderBy statements defined in the relationships
+        // Fix the orderbys so we only have one orderby per value
+        foreach ($this->_sqlParts['orderby'] as $k => $orderBy) {
+            $e = explode(', ', $orderBy);
+            unset($this->_sqlParts['orderby'][$k]);
+            foreach ($e as $v) {
+                $this->_sqlParts['orderby'][] = $v;
+            }
+        }
+
+        // Add the default orderBy statements defined in the relationships and table classes
         $added = array();
         foreach ($this->_queryComponents as $alias => $map) {
-            if (isset($map['relation']) && ! in_array($map['relation'], $added)) {
-                if ($orderBy = $map['relation']->getOrderByStatement($this->getSqlTableAlias($alias), true)) {
-                    $added[] = $map['relation'];
-                    $this->_sqlParts['orderby'][] = $orderBy;
+            $sqlAlias = $this->getSqlTableAlias($alias);
+            if (isset($map['relation'])) {
+                $orderBy = $map['relation']->getOrderByStatement($sqlAlias, true);
+            } else {
+                $orderBy = $map['table']->getOrderByStatement($sqlAlias, true);
+            }
+
+            if ($orderBy) {
+                $e = explode(',', $orderBy);
+                $e = array_map('trim', $e);
+                foreach ($e as $v) {
+                    if ( ! in_array($v, $this->_sqlParts['orderby'])) {
+                        $this->_sqlParts['orderby'][] = $v;
+                    }
                 }
             }
         }

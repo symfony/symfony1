@@ -178,6 +178,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                      'queryParts'     => array(),
                                      'versioning'     => null,
                                      'subclasses'     => array(),
+                                     'orderBy'        => null
                                      );
 
     /**
@@ -1084,6 +1085,56 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             return $this->_options[$name];
         }
         return null;
+    }
+
+
+    /**
+     * Get the table orderby statement
+     *
+     * @param string $alias        The alias to use
+     * @param boolean $columnNames Whether or not to use column names instead of field names
+     * @return string $orderByStatement
+     */
+    public function getOrderByStatement($alias = null, $columnNames = false)
+    {
+        if (isset($this->_options['orderBy'])) {
+            return $this->processOrderBy($alias, $this->_options['orderBy']);
+        }
+    }
+
+    /**
+     * Process an order by statement to be prefixed with the passed alias and
+     * field names converted to column names if the 3rd argument is true.
+     *
+     * @param string $alias        The alias to prefix columns with
+     * @param string $orderBy      The order by to process
+     * @param string $columnNames  Whether or not to convert field names to column names
+     * @return string $orderBy
+     */
+    public function processOrderBy($alias, $orderBy, $columnNames = false)
+    {
+        if ( ! $alias) {
+           $alias = $this->getComponentName();
+        }
+   
+        $e1 = explode(',', $orderBy);
+        $e1 = array_map('trim', $e1);
+        foreach ($e1 as $k => $v) {
+            $e2 = explode(' ', $v);
+            if ($columnNames) {
+                $e2[0] = $this->getColumnName($e2[0]);
+            }
+            if ($this->hasField($this->getFieldName($e2[0]))) {
+                $e1[$k] = $alias . '.' . $e2[0];
+            } else {
+                $e1[$k] = $e2[0];
+            }
+            if (isset($e2[1])) {
+                $e1[$k] .=  ' ' . $e2[1];
+            }
+        }
+
+        return implode(', ', $e1);
     }
 
     /**

@@ -403,21 +403,17 @@ abstract class Doctrine_Relation implements ArrayAccess
      */
     public function getOrderByStatement($alias = null, $columnNames = false)
     {
+        $table = $this->getTable();
+
         if ( ! $alias) {
-           $alias = $this->getTable()->getComponentName();
+           $alias = $table->getComponentName();
         }
 
         if (isset($this->definition['orderBy'])) {
-            $orderBy = $alias . '.' . $this->definition['orderBy'];
 
-            if ($columnNames) {
-                $e = explode(' ', $orderBy);
-                $e2 = explode('.', $e[0]);
-                $e2[1] = $this->getTable()->getColumnName($e2[1]);
-                return $e2[0] . '.' . $e2[1] . ' ' . $e[1];
-            } else {
-                return $orderBy;
-            }
+            return $table->processOrderBy($alias, $this->definition['orderBy'], $columnNames);
+        } else {
+            return $table->getOrderByStatement($alias, $columnNames);
         }
     }
 
