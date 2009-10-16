@@ -65,7 +65,8 @@ class sfMailer extends Swift_Mailer
        ),
     ), $options);
 
-    $this->strategy = @constant('sfMailer::'.strtoupper($options['delivery_strategy']));
+    $constantName = 'sfMailer::'.strtoupper($options['delivery_strategy']);
+    $this->strategy = defined($constantName) ? constant($constantName) : false;
     if (!$this->strategy)
     {
       throw new InvalidArgumentException(sprintf('Unknown mail delivery strategy "%s" (should be one of realtime, spool, single_address, or none)', $options['delivery_strategy']));
