@@ -189,8 +189,8 @@ EOF;
 
       if (count($options['and-load']))
       {
-        $ret = $task->run(array(), array(
-          'dir' => in_array(array(), $options['and-load'], true) ? null : $options['and-load'],
+        $ret = $task->run(array(
+          'dir_or_file' => in_array(array(), $options['and-load'], true) ? null : $options['and-load'],
         ));
 
         if ($ret)
@@ -201,8 +201,9 @@ EOF;
 
       if (count($options['and-append']))
       {
-        $ret = $task->run(array(), array(
-          'dir'    => in_array(array(), $options['and-append'], true) ? null : $options['and-append'],
+        $ret = $task->run(array(
+          'dir_or_file' => in_array(array(), $options['and-append'], true) ? null : $options['and-append'],
+        ), array(
           'append' => true,
         ));
 

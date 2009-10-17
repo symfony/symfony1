@@ -48,7 +48,17 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $paths = array_merge(array(sfConfig::get('sf_lib_dir')), $this->configuration->getPluginSubPaths('/lib'));
+    $paths = array_merge(
+      array(
+        sfConfig::get('sf_lib_dir').'/model/doctrine',
+        sfConfig::get('sf_lib_dir').'/form/doctrine',
+        sfConfig::get('sf_lib_dir').'/filter/doctrine',
+      ),
+      $this->configuration->getPluginSubPaths('/lib/model/doctrine'),
+      $this->configuration->getPluginSubPaths('/lib/form/doctrine'),
+      $this->configuration->getPluginSubPaths('/lib/filter/doctrine')
+    );
+
     $total = 0;
 
     foreach ($arguments['name'] as $modelName)

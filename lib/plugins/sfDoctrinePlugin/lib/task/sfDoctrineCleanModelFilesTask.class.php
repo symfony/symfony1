@@ -68,15 +68,8 @@ EOF;
    */
   protected function getYamlModels($yamlSchemaPath)
   {
-    $models = array();
-
-    $finder = sfFinder::type('file')->name('*.yml');
-    foreach ($finder->in($this->prepareSchemaFile($yamlSchemaPath)) as $file)
-    {
-      $models = array_merge($models, array_keys((array) sfYaml::load($file)));
-    }
-
-    return array_unique($models);
+    $schema = (array) sfYaml::load($this->prepareSchemaFile($yamlSchemaPath));
+    return array_keys($schema);
   }
 
   /**
