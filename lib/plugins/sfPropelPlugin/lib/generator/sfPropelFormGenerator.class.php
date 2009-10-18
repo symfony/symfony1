@@ -359,6 +359,22 @@ class sfPropelFormGenerator extends sfGenerator
             $options[] = sprintf('\'max_length\' => %s', $column->getSize());
           }
           break;
+
+       case PropelColumnTypes::TINYINT:
+         $options[] = sprintf('\'min\' => %s, \'max\' => %s', -128, 127);
+         break;
+
+       case PropelColumnTypes::SMALLINT:
+         $options[] = sprintf('\'min\' => %s, \'max\' => %s', -32768, 32767);
+         break;
+
+       case PropelColumnTypes::INTEGER:
+         $options[] = sprintf('\'min\' => %s, \'max\' => %s', -2147483648, 2147483647);
+         break;
+
+       case PropelColumnTypes::BIGINT:
+         $options[] = sprintf('\'min\' => %s, \'max\' => %s', -9223372036854775808, 9223372036854775807);
+         break;
       }
     }
 
