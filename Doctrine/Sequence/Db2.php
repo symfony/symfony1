@@ -74,37 +74,13 @@ class Doctrine_Sequence_Db2 extends Doctrine_Sequence
      * @return integer
      * @throws Doctrine_Adapter_Db2_Exception
      */
-    public function lastSequenceId($sequenceName)
+    public function currId($sequenceName)
     {
         $sql = 'SELECT PREVVAL FOR '
              . $this->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName))
              . ' AS VAL FROM SYSIBM.SYSDUMMY1';
 
         $stmt   = $this->query($sql);
-        $result = $stmt->fetchAll(Doctrine_Core::FETCH_ASSOC);
-        if ($result) {
-            return $result[0]['VAL'];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Generate a new value from the specified sequence in the database, and return it.
-     * This is supported only on RDBMS brands that support sequences
-     * (e.g. Oracle, PostgreSQL, DB2).  Other RDBMS brands return null.
-     *
-     * @param string $sequenceName
-     * @return integer
-     * @throws Doctrine_Adapter_Db2_Exception
-     */
-    public function nextSequenceId($sequenceName)
-    {
-        $this->_connect();
-        $sql = 'SELECT NEXTVAL FOR '
-             . $this->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName))
-             . ' AS VAL FROM SYSIBM.SYSDUMMY1';
-        $stmt = $this->query($sql);
         $result = $stmt->fetchAll(Doctrine_Core::FETCH_ASSOC);
         if ($result) {
             return $result[0]['VAL'];
