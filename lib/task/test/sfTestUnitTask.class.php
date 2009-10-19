@@ -85,9 +85,10 @@ EOF;
     }
     else
     {
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php');
+      require_once dirname(__FILE__).'/sfLimeHarness.class.php';
 
-      $h = new lime_harness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
+      $h = new sfLimeHarness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
+      $h->addPlugins(array_map(array($this->configuration, 'getPluginConfiguration'), $this->configuration->getPlugins()));
       $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
       // filter and register unit tests

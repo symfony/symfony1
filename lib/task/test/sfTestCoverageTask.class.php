@@ -55,7 +55,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php');
+    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php';
 
     $coverage = $this->getCoverage($this->getTestHarness(), $options['detailed']);
 
@@ -73,7 +73,10 @@ EOF;
 
   protected function getTestHarness()
   {
-    $harness = new lime_harness(array('force_colors' => $options['color']));
+    require_once dirname(__FILE__).'/sfLimeHarness.class.php';
+
+    $harness = new sfLimeHarness(array('force_colors' => $options['color']));
+    $harness->addPlugins(array_map(array($this->configuration, 'getPluginConfiguration'), $this->configuration->getPlugins()));
     $harness->base_dir = sfConfig::get('sf_root_dir');
 
     return $harness;
