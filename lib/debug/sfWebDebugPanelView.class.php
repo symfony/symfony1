@@ -134,6 +134,8 @@ class sfWebDebugPanelView extends sfWebDebugPanel
   /**
    * Renders information about the passed template and its parameters.
    * 
+   * The rendered HTML for each parameter is filtered through the "debug.web.view.filter_parameter_html" event.
+   * 
    * @param  string $file       The template file path
    * @param  array  $parameters
    * @param  string $label
@@ -222,10 +224,21 @@ class sfWebDebugPanelView extends sfWebDebugPanel
 
     $i++;
 
+    if ($form->hasErrors() && sfLogger::NOTICE < $this->getStatus())
+    {
+      $this->setStatus(sfLogger::NOTICE);
+    }
+
     $html = array();
-    $html[] = $this->getParameterDescription($name, $form);
+    $html[] = $this->getParameterDescription($name, $form, $form->hasErrors() ? '<code class="sfWebDebugWarning">$%s</code>' : null);
     $html[] = $this->getToggler('sfWebDebugViewForm'.$i);
     $html[] = '<div id="sfWebDebugViewForm'.$i.'" style="display:none">';
+
+    foreach ($form->getGlobalErrors() as $error)
+    {
+      $html[] = sprintf('<p><span class="sfWebDebugWarning">%s</span></p>', $error);
+    }
+
     $html[] = '<ul>'.$this->formatFormFieldSchemaAsHtml($form->getFormFieldSchema(), $name.'[%s]').'</ul>';
     $html[] = '</div>';
 
@@ -253,7 +266,15 @@ class sfWebDebugPanelView extends sfWebDebugPanel
       }
       else
       {
-        $html[] = '<li>'.$this->getParameterDescription($name, $field->getWidget()).'</li>';
+        $html[] = '<li>';
+        $html[] = $this->getParameterDescription($name, $field->getWidget());
+
+        if ($field->hasError())
+        {
+          $html[] = sprintf('<p><span class="sfWebDebugWarning">%s</span></p>', $field->getError());
+        }
+
+        $html[] = '</li>';
       }
     }
 
@@ -268,9 +289,19 @@ class sfWebDebugPanelView extends sfWebDebugPanel
    * 
    * @return string
    */
-  protected function getParameterDescription($name, $parameter)
+  protected function getParameterDescription($name, $parameter, $nameFormat = null, $typeFormat = null)
   {
-    return sprintf('<code>$%s</code> <span class="sfWebDebugDataType">(%s)</span>', $name, is_object($parameter) ? $this->formatFileLink(get_class($parameter)) : gettype($parameter));
+    if (null === $nameFormat)
+    {
+      $nameFormat = '<code>$%s</code>';
+    }
+
+    if (null === $typeFormat)
+    {
+      $typeFormat = '<span class="sfWebDebugDataType">(%s)</span>';
+    }
+
+    return sprintf($nameFormat.' '.$typeFormat, $name, is_object($parameter) ? $this->formatFileLink(get_class($parameter)) : gettype($parameter));
   }
 
   /**
