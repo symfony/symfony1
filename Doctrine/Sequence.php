@@ -40,6 +40,7 @@ class Doctrine_Sequence extends Doctrine_Connection_Module
      * @param bool              when true missing sequences are automatic created
      *
      * @return integer          next id in the given sequence
+     * @throws Doctrine_Sequence_Exception
      */
     public function nextId($seqName, $ondemand = true)
     {

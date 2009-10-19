@@ -47,9 +47,7 @@ class Doctrine_Sequence_Mysql extends Doctrine_Sequence
         $query         = 'INSERT INTO ' . $sequenceName . ' (' . $seqcolName . ') VALUES (NULL)';
         
         try {
-
             $this->conn->exec($query);
-
         } catch(Doctrine_Connection_Exception $e) {
             if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 // Since we are creating the sequence on demand
@@ -60,10 +58,12 @@ class Doctrine_Sequence_Mysql extends Doctrine_Sequence
                 } catch(Doctrine_Exception $e) {
                     throw new Doctrine_Sequence_Exception('on demand sequence ' . $seqName . ' could not be created');
                 }
+
                 // First ID of a newly created sequence is 1
                 return 1;
+            } else {
+                throw new Doctrine_Sequence_Exception('sequence ' .$seqName . ' does not exist');
             }
-            throw $e;
         }
 
         $value = $this->lastInsertId();
@@ -71,13 +71,8 @@ class Doctrine_Sequence_Mysql extends Doctrine_Sequence
         if (is_numeric($value)) {
             $query = 'DELETE FROM ' . $sequenceName . ' WHERE ' . $seqcolName . ' < ' . $value;
             $this->conn->exec($query);
-            /**
-            TODO: is the following needed ?
-            if (PEAR::isError($result)) {
-                $this->warnings[] = 'nextID: could not delete previous sequence table values from '.$seq_name;
-            }
-            */
         }
+        
         return $value;
     }
 

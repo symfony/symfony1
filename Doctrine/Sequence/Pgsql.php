@@ -43,21 +43,24 @@ class Doctrine_Sequence_Pgsql extends Doctrine_Sequence
     public function nextId($seqName, $onDemand = true)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-
         $query = "SELECT NEXTVAL('" . $sequenceName . "')";
+
         try {
             $result = (int) $this->conn->fetchOne($query);
         } catch(Doctrine_Connection_Exception $e) {
             if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
-
                 try {
                     $result = $this->conn->export->createSequence($seqName);
                 } catch(Doctrine_Exception $e) {
                     throw new Doctrine_Sequence_Exception('on demand sequence ' . $seqName . ' could not be created');
                 }
+
                 return $this->nextId($seqName, false);
+            } else {
+                throw new Doctrine_Sequence_Exception('sequence ' .$seqName . ' does not exist');
             }
         }
+
         return $result;
     }
 

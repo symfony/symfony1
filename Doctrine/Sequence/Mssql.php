@@ -54,9 +54,7 @@ class Doctrine_Sequence_Mssql extends Doctrine_Sequence
         }
         
         try {
-
             $this->conn->exec($query);
-
         } catch(Doctrine_Connection_Exception $e) {
             if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 // Since we are creating the sequence on demand
@@ -79,6 +77,7 @@ class Doctrine_Sequence_Mssql extends Doctrine_Sequence
                 
                 return 1;
             }
+            
             throw $e;
         }
         
@@ -90,9 +89,11 @@ class Doctrine_Sequence_Mssql extends Doctrine_Sequence
             try {
                 $this->conn->exec($query);
             } catch (Doctrine_Connection_Exception $e) {
-                throw new Doctrine_Sequence_Exception('Could not delete previous sequence from ' . $sequenceName . 
-                                                      ' at ' . __FILE__ . ' in ' . __FUNCTION__ . ' with the message: ' .
-                                                      $e->getMessage());
+                throw new Doctrine_Sequence_Exception(
+                    'Could not delete previous sequence from ' . 
+                    $sequenceName . ' at ' . __FILE__ . ' in ' . 
+                    __FUNCTION__ . ' with the message: ' . $e->getMessage()
+                );
             }
         }
         return $value;
