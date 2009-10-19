@@ -83,6 +83,8 @@ a secret with the [csrf-secret|COMMENT] option:
 
   [./symfony generate:app frontend --csrf-secret=UniqueSecret|INFO]
 
+You can customize the default skeleton used by the task by creating a
+[%sf_data_dir%/skeleton/app|COMMENT] directory.
 EOF;
   }
 
@@ -106,9 +108,18 @@ EOF;
       throw new sfCommandException(sprintf('The application "%s" already exists.', $appDir));
     }
 
+    if (is_readable(sfConfig::get('sf_data_dir').'/skeleton/app'))
+    {
+      $skeletonDir = sfConfig::get('sf_data_dir').'/skeleton/app';
+    }
+    else
+    {
+      $skeletonDir = dirname(__FILE__).'/skeleton/app';
+    }
+
     // Create basic application structure
     $finder = sfFinder::type('any')->discard('.sf');
-    $this->getFilesystem()->mirror(dirname(__FILE__).'/skeleton/app/app', $appDir, $finder);
+    $this->getFilesystem()->mirror($skeletonDir.'/app', $appDir, $finder);
 
     // Create $app.php or index.php if it is our first app
     $indexName = 'index';
@@ -131,8 +142,8 @@ EOF;
       'ESCAPING_STRATEGY' => sfYamlInline::dump((boolean) sfYamlInline::parseScalar($options['escaping-strategy'])),
     ));
 
-    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');
-    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
+    $this->getFilesystem()->copy($skeletonDir.'/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');
+    $this->getFilesystem()->copy($skeletonDir.'/web/index.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
 
     $this->getFilesystem()->replaceTokens(sfConfig::get('sf_web_dir').'/'.$indexName.'.php', '##', '##', array(
       'APP_NAME'    => $app,
