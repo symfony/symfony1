@@ -598,24 +598,24 @@ class lime_colorizer
 {
   static public $styles = array();
 
-  protected $colorsSupported = false;
+  protected $colors_supported = false;
 
   public function __construct($force_colors = false)
   {
     if ($force_colors)
     {
-      $this->colorsSupported = true;
+      $this->colors_supported = true;
     }
     else
     {
-      // colors are spported on windows with ansicon or on tty consoles
+      // colors are supported on windows with ansicon or on tty consoles
       if (DIRECTORY_SEPARATOR == '\\')
       {
-        $this->colorsSupported = null !== getenv('ANSICON');
+        $this->colors_supported = null !== getenv('ANSICON');
       }
       else
       {
-        $this->colorsSupported = function_exists('posix_isatty') && @posix_isatty(STDOUT);
+        $this->colors_supported = function_exists('posix_isatty') && @posix_isatty(STDOUT);
       }
     }
   }
@@ -628,7 +628,7 @@ class lime_colorizer
   public function colorize($text = '', $parameters = array())
   {
 
-    if (!$this->colorsSupported)
+    if (!$this->colors_supported)
     {
       return $text;
     }
