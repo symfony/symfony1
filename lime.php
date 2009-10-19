@@ -598,11 +598,26 @@ class lime_colorizer
 {
   static public $styles = array();
 
-  protected $force_colors = false;
+  protected $colorsSupported = false;
 
   public function __construct($force_colors = false)
   {
-    $this->force_colors = $force_colors;
+    if ($force_colors)
+    {
+      $this->colorsSupported = true;
+    }
+    else
+    {
+      // colors are spported on windows with ansicon or on tty consoles
+      if (DIRECTORY_SEPARATOR == '\\')
+      {
+        $this->colorsSupported = null !== getenv('ANSICON');
+      }
+      else
+      {
+        $this->colorsSupported = function_exists('posix_isatty') && @posix_isatty(STDOUT);
+      }
+    }
   }
 
   public static function style($name, $options = array())
@@ -612,8 +627,8 @@ class lime_colorizer
 
   public function colorize($text = '', $parameters = array())
   {
-    // disable colors if not supported (windows or non tty console)
-    if (!$this->force_colors && (DIRECTORY_SEPARATOR == '\\' || !function_exists('posix_isatty') || !@posix_isatty(STDOUT)))
+
+    if (!$this->colorsSupported)
     {
       return $text;
     }
