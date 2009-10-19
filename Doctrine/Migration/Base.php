@@ -32,6 +32,13 @@
  */
 abstract class Doctrine_Migration_Base
 {
+    /**
+     * The default options for tables created using Doctrine_Migration_Base::createTable()
+     * 
+     * @var array
+     */
+    private static $defaultTableOptions = array();
+
     protected $_changes = array();
 
     protected static $_opposites = array('created_table'       => 'dropped_table',
@@ -82,6 +89,26 @@ abstract class Doctrine_Migration_Base
     }
 
     /**
+     * Sets the default options for tables created using Doctrine_Migration_Base::createTable()
+     * 
+     * @param array $options
+     */
+    public static function setDefaultTableOptions(array $options)
+    {
+        self::$defaultTableOptions = $options;
+    }
+
+    /**
+     * Returns the default options for tables created using Doctrine_Migration_Base::createTable()
+     * 
+     * @return array
+     */
+    public static function getDefaultTableOptions()
+    {
+        return self::$defaultTableOptions;
+    }
+
+    /**
      * Add a create or drop table change.
      *
      * @param string $upDown     Whether to add the up(create) or down(drop) table change.
@@ -107,7 +134,7 @@ abstract class Doctrine_Migration_Base
      */
     public function createTable($tableName, array $fields = array(), array $options = array())
     {
-        $this->table('up', $tableName, $fields, $options);
+        $this->table('up', $tableName, $fields, array_merge(self::getDefaultTableOptions(), $options));
     }
 
     /**
