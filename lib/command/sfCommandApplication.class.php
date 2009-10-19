@@ -617,7 +617,7 @@ abstract class sfCommandApplication
    *
    * Colorization is disabled if not supported by the stream:
    *
-   *  -  windows
+   *  -  windows without ansicon
    *  -  non tty consoles
    *
    * @param  mixed  $stream  A stream
@@ -626,7 +626,14 @@ abstract class sfCommandApplication
    */
   protected function isStreamSupportsColors($stream)
   {
-    return DIRECTORY_SEPARATOR != '\\' && function_exists('posix_isatty') && @posix_isatty($stream);
+    if (DIRECTORY_SEPARATOR == '\\')
+    {
+      return null !== getenv('ANSICON');
+    }
+    else
+    {
+      return function_exists('posix_isatty') && @posix_isatty($stream);
+    }
   }
 
   /**
