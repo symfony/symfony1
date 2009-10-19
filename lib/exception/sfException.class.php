@@ -120,6 +120,7 @@ class sfException extends Exception
     $code   = '500';
     $text   = 'Internal Server Error';
 
+    $response = null;
     if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse()))
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
