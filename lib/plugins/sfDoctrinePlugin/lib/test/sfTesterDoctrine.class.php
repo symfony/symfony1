@@ -168,7 +168,7 @@ class sfTesterDoctrine extends sfTester
         echo $event->getQuery()."\n";
         echo '  Parameters: '.sfYaml::dump(sfDoctrineConnectionProfiler::fixParams($event->getParams()), 0)."\n";
         echo '  Connection: '.$conn->getName()."\n";
-        echo '  Time:       '.number_format($event->getElapsedSecs(), 2)."s\n";
+        echo '  Time:       '.number_format($event->getElapsedSecs(), 2)."s\n\n";
       }
     }
 
