@@ -8,7 +8,8 @@
  * @author     ##AUTHOR_NAME##
  * @version    SVN: $Id: actions.class.php 12474 2008-10-31 10:41:27Z fabien $
  */
-class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
+class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass() ?>
+
 {
 <?php include dirname(__FILE__).'/../../parts/indexAction.php' ?>
 

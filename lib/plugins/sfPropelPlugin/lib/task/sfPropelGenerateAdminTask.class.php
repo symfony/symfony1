@@ -36,6 +36,7 @@ class sfPropelGenerateAdminTask extends sfPropelBaseTask
       new sfCommandOption('singular', null, sfCommandOption::PARAMETER_REQUIRED, 'The singular name', null),
       new sfCommandOption('plural', null, sfCommandOption::PARAMETER_REQUIRED, 'The plural name', null),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('actions-base-class', null, sfCommandOption::PARAMETER_REQUIRED, 'The base class for the actions', 'sfActions'),
     ));
 
     $this->namespace = 'propel';
@@ -169,6 +170,7 @@ EOF
       'non-verbose-templates' => true,
       'singular'              => $options['singular'],
       'plural'                => $options['plural'],
+      'actions-base-class'    => $options['actions-base-class'],
     ));
   }
 

@@ -11,7 +11,8 @@ require_once(dirname(__FILE__).'/../lib/Base<?php echo ucfirst($this->moduleName
  * @author     ##AUTHOR_NAME##
  * @version    SVN: $Id: actions.class.php 12493 2008-10-31 14:43:26Z fabien $
  */
-class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
+class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass() ?>
+
 {
   public function preExecute()
   {

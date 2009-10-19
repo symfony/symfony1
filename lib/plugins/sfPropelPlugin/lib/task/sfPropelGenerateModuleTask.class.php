@@ -41,6 +41,7 @@ class sfPropelGenerateModuleTask extends sfPropelBaseTask
       new sfCommandOption('route-prefix', null, sfCommandOption::PARAMETER_REQUIRED, 'The route prefix', null),
       new sfCommandOption('with-propel-route', null, sfCommandOption::PARAMETER_NONE, 'Whether you will use a Propel route'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('actions-base-class', null, sfCommandOption::PARAMETER_REQUIRED, 'The base class for the actions', 'sfActions'),
     ));
 
     $this->aliases = array('propel-generate-crud', 'propel:generate-crud');
@@ -67,6 +68,11 @@ The generator can use a customized theme by using the [--theme|COMMENT] option:
   [./symfony propel:generate-module --theme="custom" frontend article Article|INFO]
 
 This way, you can create your very own module generator with your own conventions.
+
+You can also change the default actions base class (default to sfActions) of
+the generated modules:
+
+  [./symfony propel:generate-module --actions-base-class="ProjectActions" frontend article Article|INFO]
 EOF;
   }
 
@@ -76,7 +82,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
-    
+
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $this->constants = array(
@@ -108,6 +114,7 @@ EOF;
       'plural'                => $options['plural'],
       'route_prefix'          => $options['route-prefix'],
       'with_propel_route'     => $options['with-propel-route'],
+      'actions_base_class'    => $options['actions-base-class'],
     ));
 
     $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
@@ -198,6 +205,7 @@ EOF;
     plural:                %s
     route_prefix:          %s
     with_propel_route:     %s
+    actions_base_class:    %s
 EOF
     ,
       $arguments['model'],
@@ -207,7 +215,8 @@ EOF
       $options['singular'] ? $options['singular'] : '~',
       $options['plural'] ? $options['plural'] : '~',
       $options['route-prefix'] ? $options['route-prefix'] : '~',
-      $options['with-propel-route'] ? $options['with-propel-route'] : 'false'
+      $options['with-propel-route'] ? $options['with-propel-route'] : 'false',
+      $options['actions-base-class']
     );
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
   }

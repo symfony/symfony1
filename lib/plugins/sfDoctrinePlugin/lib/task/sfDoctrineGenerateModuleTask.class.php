@@ -41,6 +41,7 @@ class sfDoctrineGenerateModuleTask extends sfDoctrineBaseTask
       new sfCommandOption('route-prefix', null, sfCommandOption::PARAMETER_REQUIRED, 'The route prefix', null),
       new sfCommandOption('with-doctrine-route', null, sfCommandOption::PARAMETER_NONE, 'Whether you will use a Doctrine route'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('actions-base-class', null, sfCommandOption::PARAMETER_REQUIRED, 'The base class for the actions', 'sfActions'),
     ));
 
     $this->aliases = array('doctrine-generate-crud', 'doctrine:generate-crud');
@@ -67,6 +68,11 @@ The generator can use a customized theme by using the [--theme|COMMENT] option:
   [./symfony doctrine:generate-module --theme="custom" frontend article Article|INFO]
 
 This way, you can create your very own module generator with your own conventions.
+
+You can also change the default actions base class (default to sfActions) of
+the generated modules:
+
+  [./symfony doctrine:generate-module --actions-base-class="ProjectActions" frontend article Article|INFO]
 EOF;
   }
 
@@ -198,6 +204,7 @@ EOF;
     plural:                %s
     route_prefix:          %s
     with_doctrine_route:   %s
+    actions_base_class:    %s
 EOF
     ,
       $arguments['model'],
@@ -207,7 +214,8 @@ EOF
       $options['singular'] ? $options['singular'] : '~',
       $options['plural'] ? $options['plural'] : '~',
       $options['route-prefix'] ? $options['route-prefix'] : '~',
-      $options['with-doctrine-route'] ? 'true' : 'false'
+      $options['with-doctrine-route'] ? 'true' : 'false',
+      $options['actions-base-class']
     );
     $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
   }
