@@ -46,6 +46,10 @@ class sfFormsUpgrade extends sfUpgrade
       $contents = preg_replace('/\bnew\s+sfWidgetFormInput\b/i', '\\0Text', $contents, -1, $count);
       $changed = $count || $changed;
 
+      // change signature of sfFormDoctrine::processValues()
+      $contents = preg_replace('/public\s+function\s+processValues\s*\(\s*\$\w+(\s*=\s*null\s*)\)/ie', "str_replace('$1', '', '$0')", $contents, -1, $count);
+      $changed = $count || $changed;
+
       if ($changed)
       {
         $this->logSection('form', 'Migrating '.$file);
