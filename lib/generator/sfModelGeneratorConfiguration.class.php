@@ -464,14 +464,15 @@ abstract class sfModelGeneratorConfiguration
    * Gets a new form object.
    *
    * @param  mixed $object
+   * @param  array $options An array of options to merge with the options returned by getFormOptions()
    *
    * @return sfForm
    */
-  public function getForm($object = null)
+  public function getForm($object = null, $options = array())
   {
     $class = $this->getFormClass();
 
-    return new $class($object, $this->getFormOptions());
+    return new $class($object, array_merge($this->getFormOptions(), $options));
   }
 
   public function getFormOptions()
