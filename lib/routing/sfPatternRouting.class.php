@@ -409,7 +409,7 @@ class sfPatternRouting extends sfRouting
    * Returned array contains:
    *
    *  - name:       name or alias of the route that matched
-   *  - route:      the actual matching route object
+   *  - pattern:    the compiled pattern of the route that matched
    *  - parameters: array containing key value pairs of the request parameters including defaults
    *
    * @param  string $url     URL to be parsed
