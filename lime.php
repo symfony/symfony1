@@ -611,7 +611,7 @@ class lime_colorizer
       // colors are supported on windows with ansicon or on tty consoles
       if (DIRECTORY_SEPARATOR == '\\')
       {
-        $this->colors_supported = null !== getenv('ANSICON');
+        $this->colors_supported = false !== getenv('ANSICON');
       }
       else
       {
