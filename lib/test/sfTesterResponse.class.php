@@ -41,7 +41,7 @@ class sfTesterResponse extends sfTester
     $this->domCssSelector = null;
     if (preg_match('/(x|ht)ml/i', $this->response->getContentType(), $matches))
     {
-      $this->dom = new DomDocument('1.0', $this->response->getCharset());
+      $this->dom = new DOMDocument('1.0', $this->response->getCharset());
       $this->dom->validateOnParse = true;
       if ('x' == $matches[1])
       {
@@ -156,6 +156,50 @@ class sfTesterResponse extends sfTester
           $this->tester->ok(false !== $pos, sprintf('response includes "%s" form "%s" field - "%s %s[name=%s]"', get_class($form), $field, $selector, $element->tagName, $element->getAttribute('name')));
         }
       }
+    }
+
+    return $this->getObjectToReturn();
+  }
+
+  /**
+   * Validates the response.
+   *
+   * @param boolean $checkDTD Whether to validate the response against its DTD
+   *
+   * @return sfTestFunctionalBase|sfTester
+   *
+   * @throws LogicException If the response is neither XML nor (X)HTML
+   */
+  public function isValid($checkDTD = false)
+  {
+    if (preg_match('/(x|ht)ml/i', $this->response->getContentType()))
+    {
+      $revert = libxml_use_internal_errors(true);
+
+      $dom = new DOMDocument('1.0', $this->response->getCharset());
+      $dom->validateOnParse = $checkDTD;
+      $dom->loadXML($this->response->getContent());
+
+      $message = $checkDTD ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
+
+      if (count($errors = libxml_get_errors()))
+      {
+        $this->tester->fail($message);
+        foreach ($errors as $error)
+        {
+          $this->tester->diag('    '.trim($error->message));
+        }
+      }
+      else
+      {
+        $this->tester->pass($message);
+      }
+
+      libxml_use_internal_errors($revert);
+    }
+    else
+    {
+      throw new LogicException(sprintf('Unable to validate responses of content type "%s"', $this->response->getContentType()));
     }
 
     return $this->getObjectToReturn();
