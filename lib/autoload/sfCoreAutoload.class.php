@@ -409,6 +409,7 @@ class sfCoreAutoload
     'sfformsupgrade' => 'task/project/upgrade1.3/sfFormsUpgrade.class.php',
     'sfpropelupgrade' => 'task/project/upgrade1.3/sfPropelUpgrade.class.php',
     'sftasksupgrade' => 'task/project/upgrade1.3/sfTasksUpgrade.class.php',
+    'sftestsupgrade' => 'task/project/upgrade1.3/sfTestsUpgrade.class.php',
     'sfupgrade' => 'task/project/upgrade1.3/sfUpgrade.class.php',
     'sfyamlupgrade' => 'task/project/upgrade1.3/sfYamlUpgrade.class.php',
     'sfbasetask' => 'task/sfBaseTask.class.php',

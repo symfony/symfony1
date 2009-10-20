@@ -238,8 +238,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     // sfSimpleAutoload
     if (!$configuration instanceof sfApplicationConfiguration)
     {
-      $autoload = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
-
       // plugins
       if ($reload)
       {
@@ -250,25 +248,18 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       }
 
       // project
-      $files = array(sfConfig::get('sf_symfony_lib_dir').'/config/config/autoload.yml');
-      if (is_readable($file = sfConfig::get('sf_config_dir').'/autoload.yml'))
-      {
-        $files[] = $file;
-      }
-
-      $config = new sfAutoloadConfigHandler();
-      foreach ($config->evaluate($files) as $class => $file)
-      {
-        $autoload->setClassPath($class, $file);
-      }
+      $autoload = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
+      $autoload->loadConfiguration(sfFinder::type('file')->name('autoload.yml')->in(array(
+        sfConfig::get('sf_symfony_lib_dir').'/config/config',
+        sfConfig::get('sf_config_dir'),
+      )));
+      $autoload->register();
 
       if ($reload)
       {
         $this->logSection('autoload', 'Resetting CLI autoloader');
         $autoload->reload();
       }
-
-      $autoload->register();
     }
   }
 

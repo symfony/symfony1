@@ -99,14 +99,6 @@ class sfSimpleAutoload
   }
 
   /**
-   * Returns true if sfSimpleAutoload is registered as an autoloader.
-   */
-  static public function isRegistered()
-  {
-    return self::$registered;
-  }
-
-  /**
    * Handles autoloading of classes.
    *
    * @param  string $class A class name.
@@ -316,10 +308,33 @@ class sfSimpleAutoload
     $this->classes[$class] = $path;
   }
 
+  /**
+   * Returns the path where a particular class can be found.
+   *
+   * @param string $class A PHP class name
+   *
+   * @return string|null An absolute path
+   */
   public function getClassPath($class)
   {
     $class = strtolower($class);
 
     return isset($this->classes[$class]) ? $this->classes[$class] : null;
+  }
+
+  /**
+   * Loads configuration from the supplied files.
+   *
+   * @param array $files An array of autoload.yml files
+   * 
+   * @see sfAutoloadConfigHandler
+   */
+  public function loadConfiguration(array $files)
+  {
+    $config = new sfAutoloadConfigHandler();
+    foreach ($config->evaluate($files) as $class => $file)
+    {
+      $this->setClassPath($class, $file);
+    }
   }
 }

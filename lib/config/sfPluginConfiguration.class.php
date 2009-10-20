@@ -113,14 +113,7 @@ abstract class sfPluginConfiguration
     if (is_readable($file = $this->rootDir.'/config/autoload.yml'))
     {
       $this->configuration->getEventDispatcher()->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
-
-      $config = new sfAutoloadConfigHandler();
-      $mappings = $config->evaluate(array($file));
-
-      foreach ($mappings as $class => $file)
-      {
-        $autoload->setClassPath($class, $file);
-      }
+      $autoload->loadConfiguration(array($file));
     }
     else
     {

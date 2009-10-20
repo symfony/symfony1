@@ -73,6 +73,12 @@ class sfAutoload
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
   }
 
+  /**
+   * Sets the path for a particular class.
+   *
+   * @param string $class A PHP class name
+   * @param string $path  An absolute path
+   */
   public function setClassPath($class, $path)
   {
     $class = strtolower($class);
@@ -82,6 +88,13 @@ class sfAutoload
     $this->classes[$class] = $path;
   }
 
+  /**
+   * Returns the path where a particular class can be found.
+   *
+   * @param string $class A PHP class name
+   *
+   * @return string|null An absolute path
+   */
   public function getClassPath($class)
   {
     $class = strtolower($class);
