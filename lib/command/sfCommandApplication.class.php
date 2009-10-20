@@ -628,7 +628,7 @@ abstract class sfCommandApplication
   {
     if (DIRECTORY_SEPARATOR == '\\')
     {
-      return null !== getenv('ANSICON');
+      return false !== getenv('ANSICON');
     }
     else
     {
