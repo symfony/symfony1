@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(153);
+$t = new lime_test(154);
 
 class FormTest extends sfForm
 {
@@ -573,6 +573,9 @@ $author->embedForm('company', $company);
 
 $output = '<input type="hidden" name="id" id="id" /><input type="hidden" name="company[id]" id="company_id" />';
 $t->is($author->renderHiddenFields(), $output, 'renderHiddenFields() renders hidden fields from embedded forms');
+
+$output = '<input type="hidden" name="id" id="id" />';
+$t->is($author->renderHiddenFields(false), $output, 'renderHiddenFields() does not render hidden fields from embedded forms if the first parameter is "false"');
 
 // ->embedForm()
 $t->diag('->embedForm()');

@@ -151,18 +151,15 @@ class sfForm implements ArrayAccess, Iterator, Countable
   /**
    * Renders hidden form fields.
    *
+   * @param boolean $recursive False will prevent hidden fields from embedded forms from rendering
+   *
    * @return string
+   * 
+   * @see sfFormFieldSchema
    */
-  public function renderHiddenFields()
+  public function renderHiddenFields($recursive = true)
   {
-    $output = '';
-
-    foreach ($this->getFormFieldSchema()->getHiddenFields() as $field)
-    {
-      $output .= $field->render();
-    }
-
-    return $output;
+    return $this->getFormFieldSchema()->renderHiddenFields($recursive);
   }
 
   /**

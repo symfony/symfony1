@@ -40,10 +40,29 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   }
 
   /**
+   * Renders hidden form fields.
+   *
+   * @param boolean $recursive False will prevent hidden fields from embedded forms from rendering
+   *
+   * @return string
+   */
+  public function renderHiddenFields($recursive = true)
+  {
+    $output = '';
+
+    foreach ($this->getHiddenFields($recursive) as $field)
+    {
+      $output .= $field->render();
+    }
+
+    return $output;
+  }
+
+  /**
    * Returns an array of hidden fields from the current schema.
-   * 
+   *
    * @param boolean $recursive Whether to recur through embedded schemas
-   * 
+   *
    * @return array
    */
   public function getHiddenFields($recursive = true)
