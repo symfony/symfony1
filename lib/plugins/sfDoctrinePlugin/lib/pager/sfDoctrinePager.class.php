@@ -175,12 +175,35 @@ class sfDoctrinePager extends sfPager implements Serializable
   /**
    * Get all the results for the pager instance
    *
-   * @param integer $hydrationMode Doctrine_Core::HYDRATE_* constants
+   * @param mixed $hydrationMode A hydration mode identifier
    *
    * @return Doctrine_Collection|array
    */
-  public function getResults($hydrationMode = Doctrine_Core::HYDRATE_RECORD)
+  public function getResults($hydrationMode = null)
   {
     return $this->getQuery()->execute(array(), $hydrationMode);
+  }
+
+  /**
+   * Returns an Iterator for the current pager's results.
+   *
+   * Depending on the hydration mode of the query object, the return value of
+   * {@link getResults()} may be either an object or an array.
+   *
+   * @see sfPager
+   */
+  public function getIterator()
+  {
+    $results = $this->getResults();
+    return $results instanceof IteratorAggregate ? $results->getIterator() : new ArrayIterator($results);
+  }
+
+  /**
+   * @see sfPager
+   */
+  public function count()
+  {
+    // there's no need to hydrate this result set
+    return count($this->getResults(Doctrine_Core::HYDRATE_NONE));
   }
 }
