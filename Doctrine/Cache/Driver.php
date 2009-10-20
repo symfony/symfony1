@@ -78,6 +78,19 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         return $this->_options[$option];
     }
 
+    public function deleteByRegex($regex)
+    {
+        $count = 0;
+        $keys = (array) $this->fetch('doctrine_cache_keys');
+        foreach ($keys as $key) {
+            if (preg_match($regex, $key)) {
+                $count++;
+                $this->delete($key);
+            }
+        }
+        return $count;
+    }
+
     /**
      * Get the hash key passing its suffix
      *
@@ -86,6 +99,34 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      */
     protected function _getKey($id)
     {
-        return (isset($this->_options['prefix']) ? $this->_options['prefix'] : '') . $id;
+        $prefix = isset($this->_options['prefix']) ? $this->_options['prefix'] : '';
+
+        if ( ! $prefix || strpos($id, $prefix) === 0) {
+            return $id;
+        } else {
+            return $prefix . $id;
+        }
+    }
+
+    protected function _saveKey($key)
+    {
+        $keys = $this->fetch('doctrine_cache_keys');
+        $keys[] = $key;
+
+        return $this->save('doctrine_cache_keys', $keys, null, false);
+    }
+
+    public function _deleteKey($key)
+    {
+        $keys = $this->fetch('doctrine_cache_keys');
+        if ($key = array_search($key, $keys)) {
+            unset($keys[$key]);
+
+            $this->save('doctrine_cache_keys', $keys, null, false);
+
+            return true;
+        }
+
+        return false;
     }
 }

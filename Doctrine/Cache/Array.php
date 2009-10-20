@@ -48,8 +48,9 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        if (isset($this->data[$id])) {
-            return $this->data[$id];
+        $key = $this->_getKey($id);
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
         }
         return false;
     }
@@ -73,11 +74,20 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      * @param string $data      data to cache
      * @param string $id        cache id
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false, $saveKey = true)
     {
-        $this->data[$this->_getKey($id)] = $data;
+        $key = $this->_getKey($id);
+
+        if ($saveKey) {
+            $this->_saveKey($key);
+        }
+
+        $this->data[$key] = $data;
+
+        return true;
     }
 
     /**
@@ -88,17 +98,11 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      */
     public function delete($id)
     {
-        unset($this->data[$this->_getKey($id)]);
-    }
+        $key = $this->_getKey($id);
+        $this->_deleteKey($key);
+        unset($this->data[$key]);
 
-    /**
-     * Remove all cache record
-     * 
-     * @return boolean true if no problem
-     */
-    public function deleteAll()
-    {
-        $this->data = array();
+        return true;
     }
 
     /**
@@ -108,6 +112,7 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      */
     public function count() 
     {
-        return count($this->data);
+        $count = count($this->data);
+        return $count ? $count - 1 : 0;
     }
 }

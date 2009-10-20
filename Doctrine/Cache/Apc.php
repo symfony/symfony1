@@ -78,11 +78,21 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param string $data      data to cache
      * @param string $id        cache id
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false, $saveKey = true)
     {
-        return (bool) apc_store($this->_getKey($id), $data, $lifeTime);
+        $key = $this->_getKey($id);
+        if (apc_store($key, $data, $lifeTime)) {
+            if ($saveKey) {
+                $this->_saveKey($key);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -93,6 +103,13 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function delete($id) 
     {
-        return apc_delete($this->_getKey($id));
+        $key = $this->_getKey($id);
+        if (apc_delete($key)) {
+            $this->_deleteKey($key);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

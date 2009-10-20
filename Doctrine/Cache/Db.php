@@ -136,10 +136,12 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      * @param string $id        cache id
      * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false, $saveKey = true)
     {
+        $key = $this->_getKey($id);
         if ($this->contains($id)) {
             //record is in database, do update
             $sql = 'UPDATE ' . $this->_options['tableName']
@@ -152,7 +154,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
                 $expire = NULL;
             }
 
-            $params = array(bin2hex(serialize($data)), $expire, $this->_getKey($id));
+            $params = array(bin2hex(serialize($data)), $expire, $key);
         } else {
             //record is not in database, do insert
             $sql = 'INSERT INTO ' . $this->_options['tableName']
@@ -164,10 +166,18 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
                 $expire = NULL;
             }
 
-            $params = array($this->_getKey($id), bin2hex(serialize($data)), $expire);
+            $params = array($key, bin2hex(serialize($data)), $expire);
         }
 
-        return (bool) $this->getConnection()->exec($sql, $params);
+        if ($this->getConnection()->exec($sql, $params)) {
+            if ($saveKey) {
+                $this->_saveKey($key);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -180,19 +190,14 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
     {
         $sql = 'DELETE FROM ' . $this->_options['tableName'] . ' WHERE id = ?';
 
-        return (bool) $this->getConnection()->exec($sql, array($this->_getKey($id)));
-    }
+        $key = $this->_getKey($id);
+        if ($this->getConnection()->exec($sql, array($key))) {
+            $this->_deleteKey($key);
 
-    /**
-     * Removes all cache records
-     *
-     * $return bool true on success, false on failure
-     */
-    public function deleteAll()
-    {
-        $sql = 'DELETE FROM ' . $this->_options['tableName'];
-        
-        return (bool) $this->getConnection()->exec($sql);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

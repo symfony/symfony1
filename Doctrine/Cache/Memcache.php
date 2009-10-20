@@ -102,9 +102,10 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $data      data to cache
      * @param string $id        cache id
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false)
+    public function save($id, $data, $lifeTime = false, $saveKey = true)
     {
         if ($this->_options['compression']) {
             $flag = MEMCACHE_COMPRESSED;
@@ -112,7 +113,17 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             $flag = 0;
         }
 
-        $result = $this->_memcache->set($this->_getKey($id), $data, $flag, $lifeTime);
+        $key = $this->_getKey($id);
+
+        if ($this->_memcache->set($key, $data, $flag, $lifeTime)) {
+            if ($saveKey) {
+                $this->_saveKey($key);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -123,6 +134,13 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      */
     public function delete($id) 
     {
-        return $this->_memcache->delete($this->_getKey($id));
+        $key = $this->_getKey($id);
+        if ($this->_memcache->delete($key)) {
+            $this->_deleteKey($key);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
