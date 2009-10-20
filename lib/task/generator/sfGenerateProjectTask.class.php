@@ -85,7 +85,7 @@ EOF;
       throw new sfCommandException(sprintf('A symfony project already exists in this directory (%s).', getcwd()));
     }
 
-    if (!in_array($options['orm'], array('Propel', 'Doctrine', 'none'), false))
+    if (!in_array(strtolower($options['orm']), array('propel', 'doctrine', 'none')))
     {
       throw new InvalidArgumentException(sprintf('Invalid ORM name "%s".', $options['orm']));
     }
@@ -94,6 +94,9 @@ EOF;
     {
       throw new InvalidArgumentException(sprintf('The installer "%s" does not exist.', $options['installer']));
     }
+
+    // clean orm option
+    $options['orm'] = ucfirst(strtolower($options['orm']));
 
     $this->arguments = $arguments;
     $this->options = $options;
@@ -117,9 +120,9 @@ EOF;
     $this->replaceTokens();
 
     // execute the choosen ORM installer script
-    if ('none' !== $options['orm'])
+    if (in_array($options['orm'], array('Doctrine', 'Propel')))
     {
-      include dirname(__FILE__).'/../../plugins/sf'.ucfirst(strtolower($options['orm'])).'Plugin/config/installer.php';
+      include dirname(__FILE__).'/../../plugins/sf'.$options['orm'].'Plugin/config/installer.php';
     }
 
     // execute a custom installer
