@@ -163,6 +163,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
                     }
 
                     $index->save();
+                    $index->free(true);
                 }
             }
         }
@@ -258,6 +259,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
                         }
     
                         $index->save();
+                        $index->free(true);
                     }
                 }
                 $conn->commit();
