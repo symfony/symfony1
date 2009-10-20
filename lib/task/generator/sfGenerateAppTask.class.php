@@ -140,6 +140,7 @@ EOF;
       'NO_SCRIPT_NAME'    => $firstApp ? 'true' : 'false',
       'CSRF_SECRET'       => sfYamlInline::dump(sfYamlInline::parseScalar($options['csrf-secret'])),
       'ESCAPING_STRATEGY' => sfYamlInline::dump((boolean) sfYamlInline::parseScalar($options['escaping-strategy'])),
+      'USE_DATABASE'      => sfConfig::has('sf_orm') ? 'true' : 'false',
     ));
 
     $this->getFilesystem()->copy($skeletonDir.'/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');

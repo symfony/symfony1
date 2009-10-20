@@ -22,11 +22,14 @@ test:
 all:
   .settings:
     # Form security secret (CSRF protection)
-    csrf_secret:       ##CSRF_SECRET##     # Unique secret to enable CSRF protection or false to disable
+    csrf_secret:            ##CSRF_SECRET##
 
     # Output escaping settings
-    escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: true, false.
-    escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
+    escaping_strategy:      ##ESCAPING_STRATEGY##
+    escaping_method:        ESC_SPECIALCHARS
 
     # Cache settings
-    lazy_cache_key:         true        # Delays creation of a cache key until after checking whether an action or partial is cacheable
+    lazy_cache_key:         true
+
+    # Enable the database manager
+    use_database:           ##USE_DATABASE##
