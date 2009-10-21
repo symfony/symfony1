@@ -97,10 +97,10 @@ class sfClassManipulator
    * Wraps an existing method with some code.
    *
    * @param string $method     The method name to change
-   * @param string $beforeCode The code to add at the beginning of the method
-   * @param string $endCode    The code to add at the end of the method
+   * @param string $topCode    The code to add at the top of the method
+   * @param string $bottomCode The code to add at the bottom of the method
    */
-  public function wrapMethod($method, $beforeCode = '', $afterCode = '')
+  public function wrapMethod($method, $topCode = '', $bottomCode = '')
   {
     $code = '';
     $insideSetup = -1;
@@ -126,7 +126,11 @@ class sfClassManipulator
         {
           if (!$parens)
           {
-            $code .= $beforeCode ? "$token\n    $beforeCode" : $token;
+            $code .= $topCode ? "$token\n    $topCode" : $token;
+          }
+          else
+          {
+            $code .= $token;
           }
 
           ++$parens;
@@ -139,7 +143,11 @@ class sfClassManipulator
           {
             $insideSetup = -1;
 
-            $code .= $afterCode ? "  $afterCode\n  $token" : $token;
+            $code .= $bottomCode ? "  $bottomCode\n  $token" : $token;
+          }
+          else
+          {
+            $code .= $token;
           }
         }
         else

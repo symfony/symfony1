@@ -19,7 +19,10 @@ class Foo
 {
   function foo()
   {
-    // some code
+    if (true)
+    {
+      return;
+    }
   }
 }
 EOF;
@@ -32,7 +35,10 @@ class Foo
   function foo()
   {
     // code before
-    // some code
+    if (true)
+    {
+      return;
+    }
   }
 }
 EOF;
@@ -44,7 +50,10 @@ class Foo
 {
   function foo()
   {
-    // some code
+    if (true)
+    {
+      return;
+    }
     // code after
   }
 }
@@ -58,7 +67,10 @@ class Foo
   function foo()
   {
     // code before
-    // some code
+    if (true)
+    {
+      return;
+    }
     // code after
   }
 }
