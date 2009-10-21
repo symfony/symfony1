@@ -29,6 +29,8 @@
  * @since       1.0
  * @version     $Revision: $
  * @author      Dmitry Bakaleinik (dima@snaiper.net)
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
 {
@@ -47,17 +49,16 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
     }
 
     /**
-     * Test if a cache is available for the given id and (if yes) return it (false else).
-     * 
+     * Test if a cache record exists for the passed id
+     *
      * @param string $id cache id
-     * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
     public function fetch($id, $testCacheValidity = true) 
     {
         $key = $this->_getKey($id);
 
-        return $this->contains($key) ? xcache_get($key) : false;
+        return $this->contains($id) ? xcache_get($key) : false;
     }
 
     /**
@@ -72,45 +73,28 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
     }
 
     /**
-     * Save some string datas into a cache record
+     * Save a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::save()
      *
-     * Note : $data is always saved as a string
-     *
-     * @param string $data      data to cache
      * @param string $id        cache id
+     * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
-     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false, $saveKey = true)
+    public function saveCache($id, $data, $lifeTime = false, $saveKey = true)
     {
-        $key = $this->_getKey($id);
-        if (xcache_set($key, $data, $lifeTime)) {
-            if ($saveKey) {
-                $this->_saveKey($key);
-            }
-
-            return true;
-        } else {
-            return false;
-        }
+        return xcache_set($id, $data, $lifeTime)
     }
 
     /**
-     * Remove a cache record
+     * Remove a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::delete()
      * 
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function delete($id) 
+    protected function delete($id) 
     {
-        $key = $this->_getKey($id);
-        if (xcache_unset($key)) {
-            $this->_saveKey($key);
-
-            return true;
-        } else {
-            return false;
-        }
+        return xcache_unset($id);
     }
 }

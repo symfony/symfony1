@@ -29,9 +29,17 @@
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
 {
+    /**
+     * The key used to store the index of cache keys in this cache driver instance
+     *
+     * @var string
+     */
+    protected $_cacheKeyIndexKey = 'doctrine_cache_keys';
+
     /**
      * @var array $_options      an array of options
      */
@@ -78,12 +86,128 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         return $this->_options[$option];
     }
 
+    /**
+     * Get the number of cache records stored in this cache driver instance
+     *
+     * @return integer $count
+     */
+    public function count() 
+    {
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
+        return $keys ? count($keys) : 0;
+    }
+
+    /**
+     * Save some string datas into a cache record
+     *
+     * @param string $id        cache id
+     * @param string $data      data to cache
+     * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @param boolean $saveKey  Whether or not to save the key in the cache key index
+     * @return boolean true if no problem
+     */
+    public function save($id, $data, $lifeTime = false, $saveKey = true)
+    {
+        $key = $this->_getKey($id);
+        if ($this->saveCache($key, $data, $lifeTime)) {
+            if ($saveKey) {
+                $this->_saveKey($key);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Remove a cache record
+     *
+     * Note: This method accepts wildcards with the * character
+     *
+     * @param string $id cache id
+     * @return boolean true if no problem
+     */
+    public function delete($id)
+    {
+        $key = $this->_getKey($id);
+
+        if (strpos($key, '*') !== false) {
+            return $this->deleteByRegex('/' . str_replace('*', '.*', $key) . '/');
+        }
+
+        if ($this->deleteCache($key)) {
+            $this->_deleteKey($key);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Delete all cache records from the cache driver
+     *
+     * @return void
+     */
+    public function deleteAll()
+    {
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
+        foreach ($keys as $key) {
+            $this->delete($key);
+        }
+    }
+
+    /**
+     * Delete cache entries where the key matches a PHP regular expressions
+     *
+     * @param string $regex
+     * @return integer $count The number of deleted cache entries
+     */
     public function deleteByRegex($regex)
     {
         $count = 0;
-        $keys = (array) $this->fetch('doctrine_cache_keys');
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
         foreach ($keys as $key) {
             if (preg_match($regex, $key)) {
+                $count++;
+                $this->delete($key);
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Delete cache entries where the key has the passed prefix
+     *
+     * @param string $prefix
+     * @return integer $count The number of deleted cache entries
+     */
+    public function deleteByPrefix($prefix)
+    {
+        $count = 0;
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
+        foreach ($keys as $key) {
+            if (strpos($key, $prefix) == 0) {
+                $count++;
+                $this->delete($key);
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Delete cache entries where the key has the passed suffix
+     *
+     * @param string $suffix 
+     * @return integer $count The number of deleted cache entries
+     */
+    public function deleteBySuffix($suffix)
+    {
+        $count = 0;
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
+        foreach ($keys as $key) {
+            if (substr($key, -1 * strlen($suffix)) == $suffix) {
                 $count++;
                 $this->delete($key);
             }
@@ -108,23 +232,34 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         }
     }
 
+    /**
+     * Save a cache key in the index of cache keys
+     *
+     * @param string $key
+     * @return boolean True if successful and false if something went wrong.
+     */
     protected function _saveKey($key)
     {
-        $keys = $this->fetch('doctrine_cache_keys');
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
         $keys[] = $key;
 
-        return $this->save('doctrine_cache_keys', $keys, null, false);
+        return $this->save($this->_cacheKeyIndexKey, $keys, null, false);
     }
 
+    /**
+     * Delete a cache key from the index of cache keys
+     *
+     * @param string $key
+     * @return boolean True if successful and false if something went wrong.
+     */
     public function _deleteKey($key)
     {
-        $keys = $this->fetch('doctrine_cache_keys');
-        if ($key = array_search($key, $keys)) {
+        $keys = $this->fetch($this->_cacheKeyIndexKey);
+        $key = array_search($key, $keys);
+        if ($key !== false) {
             unset($keys[$key]);
 
-            $this->save('doctrine_cache_keys', $keys, null, false);
-
-            return true;
+            return $this->save($this->_cacheKeyIndexKey, $keys, null, false);
         }
 
         return false;

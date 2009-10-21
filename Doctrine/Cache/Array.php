@@ -29,6 +29,7 @@
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
 {
@@ -38,10 +39,8 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
     protected $data;
 
     /**
-     * Test if a cache is available for the given id and (if yes) return it (false else)
-     * 
-     * Note : return value is always "string" (unserialization is done by the core not by the backend)
-     * 
+     * Fetch a cache record from this cache driver instance
+     *
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
      * @return string cached datas (or false)
@@ -56,7 +55,7 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * Test if a cache is available or not (for the given id)
+     * Test if a cache record exists for the passed id
      *
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
@@ -67,52 +66,32 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
     }
 
     /**
-     * Save some string datas into a cache record
+     * Save a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::save()
      *
-     * Note : $data is always saved as a string
-     *
-     * @param string $data      data to cache
      * @param string $id        cache id
+     * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
-     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false, $saveKey = true)
+    public function saveCache($id, $data, $lifeTime = false)
     {
-        $key = $this->_getKey($id);
-
-        if ($saveKey) {
-            $this->_saveKey($key);
-        }
-
-        $this->data[$key] = $data;
+        $this->data[$id] = $data;
 
         return true;
     }
 
     /**
-     * Remove a cache record
+     * Remove a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::delete()
      * 
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function delete($id)
+    public function deleteCache($id)
     {
-        $key = $this->_getKey($id);
-        $this->_deleteKey($key);
-        unset($this->data[$key]);
+        unset($this->data[$id]);
 
         return true;
-    }
-
-    /**
-     * count
-     *
-     * @return integer
-     */
-    public function count() 
-    {
-        $count = count($this->data);
-        return $count ? $count - 1 : 0;
     }
 }
