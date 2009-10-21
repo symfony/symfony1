@@ -11,7 +11,7 @@ class sfLimeHarness extends lime_harness
   {
     foreach ($plugins as $plugin)
     {
-      $this->plugins[$plugin->getRootDir().'/'] = '['.preg_replace('/Plugin$/i', '', $plugin->getName()).'] ';
+      $this->plugins[$plugin->getRootDir().DIRECTORY_SEPARATOR.'test'.DIRECTORY_SEPARATOR] = '['.preg_replace('/Plugin$/i', '', $plugin->getName()).'] ';
     }
   }
 
