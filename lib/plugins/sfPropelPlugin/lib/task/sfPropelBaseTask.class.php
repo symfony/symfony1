@@ -292,15 +292,18 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       foreach (sfPhingListener::getExceptions() as $exception)
       {
-        $messages[] = '  '.preg_replace('/^.*build\-propel\.xml/', 'build-propel.xml', $exception->getMessage());
+        $messages[] = '';
+        $messages[] = preg_replace('/^.*build\-propel\.xml/', 'build-propel.xml', $exception->getMessage());
+        $messages[] = '';
       }
 
       if (count(sfPhingListener::getErrors()))
       {
-        $messages[] = '  If the exception message is not clear enough, read the output of the task for more information';
+        $messages[] = 'If the exception message is not clear enough, read the output of the task for';
+        $messages[] = 'more information';
       }
 
-      $this->logBlock($messages, 'ERROR');
+      $this->logBlock($messages, 'ERROR_LARGE');
 
       $ret = false;
     }
