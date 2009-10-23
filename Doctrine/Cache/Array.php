@@ -45,11 +45,10 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
      * @return string cached datas (or false)
      */
-    public function fetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true) 
     {
-        $key = $this->_getKey($id);
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
+        if (isset($this->data[$id])) {
+            return $this->data[$id];
         }
         return false;
     }
@@ -60,9 +59,9 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function contains($id)
+    protected function _doContains($id)
     {
-        return isset($this->data[$this->_getKey($id)]);
+        return isset($this->data[$id]);
     }
 
     /**
@@ -74,7 +73,7 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function saveCache($id, $data, $lifeTime = false)
+    protected function _doSave($id, $data, $lifeTime = false)
     {
         $this->data[$id] = $data;
 
@@ -88,7 +87,7 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function deleteCache($id)
+    protected function _doDelete($id)
     {
         unset($this->data[$id]);
 

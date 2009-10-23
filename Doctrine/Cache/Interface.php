@@ -68,24 +68,4 @@ interface Doctrine_Cache_Interface
      * @return boolean true if no problem
      */
     public function delete($id);
-
-    /**
-     * Save a cache record directly. This method is implemented by the cache
-     * drivers and used in Doctrine_Cache_Driver::save()
-     *
-     * @param string $id        cache id
-     * @param string $data      data to cache
-     * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
-     * @return boolean true if no problem
-     */
-    public function saveCache($id, $data, $lifeTime = false);
-
-    /**
-     * Remove a cache record directly. This method is implemented by the cache
-     * drivers and used in Doctrine_Cache_Driver::delete()
-     * 
-     * @param string $id cache id
-     * @return boolean true if no problem
-     */
-    public function deleteCache($id);
 }

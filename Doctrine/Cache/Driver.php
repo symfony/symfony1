@@ -98,6 +98,31 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     }
 
     /**
+     * Fetch a cache record from this cache driver instance
+     *
+     * @param string $id cache id
+     * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
+     * @return string cached datas (or false)
+     */
+    public function fetch($id, $testCacheValidity = true)
+    {
+        $key = $this->_getKey($id);
+        return $this->_doFetch($key, $testCacheValidity);
+    }
+
+    /**
+     * Test if a cache record exists for the passed id
+     *
+     * @param string $id cache id
+     * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
+     */
+    public function contains($id)
+    {
+        $key = $this->_getKey($id);
+        return $this->_doContains($key);
+    }
+
+    /**
      * Save some string datas into a cache record
      *
      * @param string $id        cache id
@@ -109,7 +134,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     public function save($id, $data, $lifeTime = false, $saveKey = true)
     {
         $key = $this->_getKey($id);
-        if ($this->saveCache($key, $data, $lifeTime)) {
+        if ($this->_doSave($key, $data, $lifeTime)) {
             if ($saveKey) {
                 $this->_saveKey($key);
             }
@@ -136,7 +161,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
             return $this->deleteByRegex('/' . str_replace('*', '.*', $key) . '/');
         }
 
-        if ($this->deleteCache($key)) {
+        if ($this->_doDelete($key)) {
             $this->_deleteKey($key);
 
             return true;
@@ -264,4 +289,41 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
 
         return false;
     }
+
+    /**
+     * Fetch a cache record from this cache driver instance
+     *
+     * @param string $id cache id
+     * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
+     * @return string cached datas (or false)
+     */
+    abstract protected function _doFetch($id, $testCacheValidity = true);
+
+    /**
+     * Test if a cache record exists for the passed id
+     *
+     * @param string $id cache id
+     * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
+     */
+    abstract protected function _doContains($id);
+
+    /**
+     * Save a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::save()
+     *
+     * @param string $id        cache id
+     * @param string $data      data to cache
+     * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @return boolean true if no problem
+     */
+    abstract protected function _doSave($id, $data, $lifeTime = false);
+
+    /**
+     * Remove a cache record directly. This method is implemented by the cache
+     * drivers and used in Doctrine_Cache_Driver::delete()
+     * 
+     * @param string $id cache id
+     * @return boolean true if no problem
+     */
+    abstract protected function _doDelete($id);
 }

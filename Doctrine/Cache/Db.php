@@ -74,7 +74,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
      * @return string cached datas (or false)
      */
-    public function fetch($id, $testCacheValidity = true)
+    protected function _doFetch($id, $testCacheValidity = true)
     {
         $sql = 'SELECT data, expire FROM ' . $this->_options['tableName']
              . ' WHERE id = ?';
@@ -83,7 +83,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
             $sql .= " AND (expire is null OR expire > '" . date('Y-m-d H:i:s') . "')";
         }
 
-        $result = $this->getConnection()->execute($sql, array($this->_getKey($id)))->fetchAll(Doctrine_Core::FETCH_NUM);
+        $result = $this->getConnection()->execute($sql, array($id))->fetchAll(Doctrine_Core::FETCH_NUM);
 
         if ( ! isset($result[0])) {
             return false;
@@ -98,12 +98,12 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function contains($id) 
+    protected function _doContains($id) 
     {
         $sql = 'SELECT id, expire FROM ' . $this->_options['tableName']
              . ' WHERE id = ?';
 
-        $result = $this->getConnection()->fetchOne($sql, array($this->_getKey($id)));
+        $result = $this->getConnection()->fetchOne($sql, array($id));
 
         if (isset($result[0] )) {
             return time();
@@ -120,7 +120,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function saveCache($id, $data, $lifeTime = false, $saveKey = true)
+    protected function _doSave($id, $data, $lifeTime = false, $saveKey = true)
     {
         if ($this->contains($id)) {
             //record is in database, do update
@@ -159,7 +159,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver implements Countable
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function deleteCache($id) 
+    protected function _doDelete($id) 
     {
         $sql = 'DELETE FROM ' . $this->_options['tableName'] . ' WHERE id = ?';
         return $this->getConnection()->exec($sql, array($id));

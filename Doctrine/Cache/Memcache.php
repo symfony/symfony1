@@ -78,9 +78,9 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function fetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true) 
     {
-        return $this->_memcache->get($this->_getKey($id));
+        return $this->_memcache->get($id);
     }
 
     /**
@@ -89,9 +89,9 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function contains($id) 
+    protected function _doContains($id) 
     {
-        return (bool) $this->_memcache->get($this->_getKey($id));
+        return (bool) $this->_memcache->get($id);
     }
 
     /**
@@ -103,7 +103,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function saveCache($id, $data, $lifeTime = false)
+    protected function _doSave($id, $data, $lifeTime = false)
     {
         if ($this->_options['compression']) {
             $flag = MEMCACHE_COMPRESSED;
@@ -121,7 +121,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function deleteCache($id) 
+    protected function _doDelete($id) 
     {
         return $this->_memcache->delete($id);
     }

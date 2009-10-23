@@ -54,11 +54,9 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function fetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true) 
     {
-        $key = $this->_getKey($id);
-
-        return $this->contains($id) ? xcache_get($key) : false;
+        return $this->_doContains($id) ? xcache_get($id) : false;
     }
 
     /**
@@ -67,9 +65,9 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function contains($id) 
+    protected function _doContains($id) 
     {
-        return xcache_isset($this->_getKey($id));
+        return xcache_isset($id);
     }
 
     /**
@@ -81,9 +79,9 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function saveCache($id, $data, $lifeTime = false, $saveKey = true)
+    protected function _doSave($id, $data, $lifeTime = false, $saveKey = true)
     {
-        return xcache_set($id, $data, $lifeTime)
+        return xcache_set($id, $data, $lifeTime);
     }
 
     /**
@@ -93,7 +91,7 @@ class Doctrine_Cache_Xcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    protected function delete($id) 
+    protected function _doDelete($id) 
     {
         return xcache_unset($id);
     }

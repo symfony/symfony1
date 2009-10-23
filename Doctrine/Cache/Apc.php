@@ -53,11 +53,9 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
      * @return string cached datas (or false)
      */
-    public function fetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true) 
     {
-        $results = apc_fetch($this->_getKey($id));
-        $results = (array) $results;
-        return $results[0];
+        return apc_fetch($id);
     }
 
     /**
@@ -66,9 +64,11 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function contains($id) 
+    protected function _doContains($id) 
     {
-        return apc_fetch($this->_getKey($id)) === false ? false : true;
+        $found = false;
+        apc_fetch($id, $found);
+        return $found;
     }
 
     /**
@@ -80,7 +80,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
      * @return boolean true if no problem
      */
-    public function saveCache($id, $data, $lifeTime = false)
+    protected function _doSave($id, $data, $lifeTime = false)
     {
         return apc_store($id, $data, $lifeTime);
     }
@@ -92,7 +92,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    public function deleteCache($id) 
+    protected function _doDelete($id) 
     {
         return apc_delete($id);
     }
