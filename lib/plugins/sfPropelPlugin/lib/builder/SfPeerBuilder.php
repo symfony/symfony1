@@ -264,7 +264,7 @@ class SfPeerBuilder extends PHP5PeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoin:doSelectJoin') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
     }
 
 ";
@@ -285,7 +285,7 @@ class SfPeerBuilder extends PHP5PeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoinAll:doSelectJoinAll') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
     }
 
 ";
@@ -306,7 +306,7 @@ class SfPeerBuilder extends PHP5PeerBuilder
 
     foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoinAllExcept:doSelectJoinAllExcept') as \$callable)
     {
-      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
     }
 
 ";
@@ -466,7 +466,7 @@ EOF;
 	/**
 	 * Returns the number of rows matching criteria, joining the related ".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)." table
 	 *
-	 * @param      Criteria \$c
+	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
 	 * @param      PropelPDO \$con
 	 * @param      String    \$join_behavior the type of joins to use, defaults to $join_behavior
@@ -571,7 +571,7 @@ EOF;
 	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
-	 * @param      Criteria \$c
+	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
 	 * @param      PropelPDO \$con
 	 * @param      String    \$join_behavior the type of joins to use, defaults to $join_behavior
@@ -693,7 +693,7 @@ EOF;
 	/**
 	 * Returns the number of rows matching criteria, joining the related ".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)." table
 	 *
-	 * @param      Criteria \$c
+	 * @param      Criteria \$criteria
 	 * @param      boolean \$distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
 	 * @param      PropelPDO \$con
 	 * @param      String    \$join_behavior the type of joins to use, defaults to $join_behavior
