@@ -736,6 +736,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ($overwriteLocalChanges) {
             $this->_values = array_merge($this->_values, $this->cleanData($data));
             $this->_data = array_merge($this->_data, $data);
+            $this->_modified = array();
+            $this->_oldValues = array();
         } else {
             $this->_values = array_merge($this->cleanData($data), $this->_values);
             $this->_data = array_merge($data, $this->_data);
