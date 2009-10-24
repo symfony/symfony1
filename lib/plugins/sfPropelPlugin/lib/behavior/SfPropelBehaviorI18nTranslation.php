@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * Translation behavior.
- * 
+ *
  * @package     sfPropelPlugin
  * @subpackage  behavior
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
@@ -13,31 +21,6 @@ class SfPropelBehaviorI18nTranslation extends SfPropelBehaviorBase
   protected $parameters = array(
     'culture_column' => null,
   );
-
-  public function objectMethods()
-  {
-    $column = $this->getTable()->getColumn($this->getParameter('culture_column'));
-
-    return <<<EOF
-
-/**
- * Sets the culture of the current translation.
- */
-public function setSymfonyI18nCulture(\$culture)
-{
-  return \$this->set{$column->getPhpName()}(\$culture);
-}
-
-/**
- * Returns the culture of the current translation.
- */
-public function getSymfonyI18nCulture()
-{
-  return \$this->get{$column->getPhpName()}();
-}
-
-EOF;
-  }
 
   public function objectFilter(& $script)
   {
@@ -54,9 +37,9 @@ EOF;
 
   /**
    * Filters each line of the generated doSave method.
-   * 
+   *
    * @param string $line
-   * 
+   *
    * @return string
    */
   public function filterDoSave($line)
@@ -77,9 +60,9 @@ EOF;
 
   /**
    * Returns the foreign key that references the translated model.
-   * 
+   *
    * @return ForeignKey
-   * 
+   *
    * @throws LogicException If the foreign key cannot be found
    */
   public function getForeignKey()
@@ -98,7 +81,7 @@ EOF;
 
   /**
    * Returns the current table's culture column.
-   * 
+   *
    * @return Column
    */
   public function getCultureColumn()

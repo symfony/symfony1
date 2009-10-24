@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * Adds support for symfony's {@link sfMixer} behaviors.
- * 
+ *
  * @package     sfPropelPlugin
  * @subpackage  behavior
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
@@ -215,9 +223,9 @@ EOF;
 
   /**
    * Filters the generated doInsert method.
-   * 
+   *
    * @param string $line
-   * 
+   *
    * @return string
    */
   public function filterDoInsert($line)
@@ -242,9 +250,9 @@ EOF;
 
   /**
    * Filters the generated doUpdate method.
-   * 
+   *
    * @param string $line
-   * 
+   *
    * @return string
    */
   public function filterDoUpdate($line)
@@ -272,9 +280,9 @@ EOF;
 
   /**
    * Creates the current model's behaviors configuration file.
-   * 
+   *
    * Any existing behaviors file will be either deleted or overwritten.
-   * 
+   *
    * @return boolean Returns true if the model has behaviors
    */
   protected function createBehaviorsFile()
@@ -302,7 +310,7 @@ EOF;
 
   /**
    * Returns PHP code for including the current model's behaviors configuration file.
-   * 
+   *
    * @return string
    */
   protected function getBehaviorsInclude()
@@ -317,9 +325,9 @@ EOF;
 
   /**
    * Returns the path to the current model's behaviors configuration file.
-   * 
+   *
    * @param boolean $absolute
-   * 
+   *
    * @return string
    */
   protected function getBehaviorsFilePath($absolute = false)

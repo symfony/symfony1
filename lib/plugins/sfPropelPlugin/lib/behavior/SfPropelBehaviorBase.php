@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 require_once 'propel/engine/database/model/Behavior.php';
 
 /**
  * Base behavior class.
- * 
+ *
  * @package     sfPropelPlugin
  * @subpackage  behavior
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
@@ -17,9 +25,9 @@ abstract class SfPropelBehaviorBase extends Behavior
 
   /**
    * Returns a build property from propel.ini.
-   * 
+   *
    * @param string $name
-   * 
+   *
    * @return mixed
    */
   protected function getBuildProperty($name)
@@ -35,7 +43,7 @@ abstract class SfPropelBehaviorBase extends Behavior
 
   /**
    * Returns true if the current behavior has been disabled.
-   * 
+   *
    * @return boolean
    */
   protected function isDisabled()

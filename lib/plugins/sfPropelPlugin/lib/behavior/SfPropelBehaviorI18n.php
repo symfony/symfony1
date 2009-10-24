@@ -1,8 +1,18 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * Internationalizes Propel models.
- * 
+ *
+ * This behavior is intended to be applied at the database level.
+ *
  * @package     sfPropelPlugin
  * @subpackage  behavior
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
@@ -115,6 +125,7 @@ EOF;
     // add accessors and mutators for each of the i18nTable's columns
     $foreignKey = $this->getI18nTable()->getBehavior('symfony_i18n_translation')->getForeignKey();
     $refPhpName = $foreignKey->getRefPhpName() ? $foreignKey->getRefPhpName() : $this->getI18nTable()->getPhpName();
+
     foreach ($this->getI18nTable()->getColumns() as $column)
     {
       if ($column->isPrimaryKey())
@@ -169,7 +180,7 @@ public function getCurrent{$refPhpName}(\$culture = null)
     else
     {
       \$this->set{$refPhpName}ForCulture(new {$this->getI18nTable()->getPhpName()}(), \$culture);
-      \$this->current_i18n[\$culture]->setSymfonyI18nCulture(\$culture);
+      \$this->current_i18n[\$culture]->set{$this->getI18nTable()->getBehavior('symfony_i18n_translation')->getCultureColumn()->getPhpName()}(\$culture);
     }
   }
 
@@ -289,7 +300,7 @@ EOF;
 
   /**
    * Returns the current table's i18n translation table.
-   * 
+   *
    * @return Table
    */
   public function getI18nTable()
@@ -299,9 +310,9 @@ EOF;
 
   /**
    * Finds the supplied translation table's culture column.
-   * 
+   *
    * @return Column
-   * 
+   *
    * @throws InvalidArgumentException If there is not a column marked as "isCulture"
    */
   protected function getCultureColumn(Table $table)
@@ -319,7 +330,7 @@ EOF;
 
   /**
    * Returns the column on the current model referenced by the translation model.
-   * 
+   *
    * @return Column
    */
   protected function getLocalColumn()
@@ -330,7 +341,7 @@ EOF;
 
   /**
    * Returns the column on the translation table the references the current model.
-   * 
+   *
    * @return Column
    */
   protected function getForeignColumn()
