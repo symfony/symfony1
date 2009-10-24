@@ -198,9 +198,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $finder = sfFinder::type('file')->name('generated-*schema.xml')->name('*schema-transformed.xml');
       $this->getFilesystem()->remove($finder->in(array('config', 'plugins')));
-
-      $finder = sfFinder::type('file')->name('schema.xsl');
-      $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_config_dir')));
     }
   }
 
@@ -221,18 +218,10 @@ abstract class sfPropelBaseTask extends sfBaseTask
     $args = array();
     $bufferPhingOutput = null === $this->commandApplication || !$this->commandApplication->withTrace();
 
-    // create the xslt
-    $xsl = sfConfig::get('sf_config_dir').'/schema.xsl';
-    $this->getFilesystem()->copy(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/config/database.xsl', $xsl);
-    $this->getFilesystem()->replaceTokens($xsl, '##', '##', array(
-      'PROPEL_XSL' => realpath(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/resources/xsl/database.xsl'),
-    ));
-
     $properties = array_merge(array(
-      'build.properties'       => 'propel.ini',
-      'project.dir'            => sfConfig::get('sf_config_dir'),
-      'propel.output.dir'      => sfConfig::get('sf_root_dir'),
-      'propel.schema.xsl.file' => $xsl,
+      'build.properties'  => 'propel.ini',
+      'project.dir'       => sfConfig::get('sf_config_dir'),
+      'propel.output.dir' => sfConfig::get('sf_root_dir'),
     ), $properties);
     foreach ($properties as $key => $value)
     {
