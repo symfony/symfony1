@@ -28,8 +28,8 @@ class sfPropelBuildTask extends sfPropelBaseTask
     BUILD_DB      = 16,
 
     OPTION_MODEL       = 1,
-    OPTION_FORMS       = 2,
-    OPTION_FILTERS     = 4,
+    OPTION_FORMS       = 3, // model, forms
+    OPTION_FILTERS     = 5, // model, filters
     OPTION_SQL         = 8,
     OPTION_DB          = 24, // sql, db
     OPTION_ALL_CLASSES = 7,  // model, forms, filters
