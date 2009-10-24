@@ -241,7 +241,18 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
                     }
                 }
 
-                $result = $this->_stmt->execute($params);
+                $pos = 0;
+                foreach ($params as $key => $param) {
+                    $pos++;
+                    if (is_resource($param)) {
+                        $this->_stmt->bindParam($pos, $params[$key], Doctrine_Core::PARAM_LOB);
+                    } else {
+                        $this->_stmt->bindParam($pos, $params[$key]);
+                    }
+                }
+
+                $result = $this->_stmt->execute();
+
                 $this->_conn->incrementQueryCount();
             }
 
