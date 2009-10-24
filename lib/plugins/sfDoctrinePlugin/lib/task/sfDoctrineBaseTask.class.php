@@ -130,7 +130,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
     }
 
     // create one consolidated schema file
-    $file = tempnam(sys_get_temp_dir(), 'doctrine_schema_').'.yml';
+    $file = sys_get_temp_dir().'doctrine_schema_'.rand(11111, 99999).'.yml';
     $this->logSection('file+', $file);
     file_put_contents($file, sfYaml::dump($models, 4));
 
