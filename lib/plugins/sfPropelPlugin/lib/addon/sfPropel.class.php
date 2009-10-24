@@ -99,14 +99,22 @@ class sfPropel
   }
 
   /**
+   * Backward compatible.
+   */
+  static public function import($path)
+  {
+    return self::importClass($path);
+  }
+
+  /**
    * Include once a file specified in DOT notation and return unqualified classname.
    *
    * This method is the same as in Propel::import().
    * The only difference is that this one takes the autoloading into account.
    *
-   * @see Propel::import()
+   * @see Propel::importClass()
    */
-  public static function import($path)
+  public static function importClass($path)
   {
     // extract classname
     if (($pos = strrpos($path, '.')) === false)

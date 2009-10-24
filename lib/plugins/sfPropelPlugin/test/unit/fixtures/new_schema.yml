@@ -1,6 +1,9 @@
 connection:           propel
 defaultIdMethod:      none
 package:              lib.model
+propel_behaviors:
+  timestampable:
+    create_column: create_date
 
 classes:
   Group:

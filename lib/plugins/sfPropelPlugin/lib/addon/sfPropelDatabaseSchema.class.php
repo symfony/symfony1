@@ -112,7 +112,7 @@ class sfPropelDatabaseSchema
       $tmp = array_keys($schema);
       $connection_name = array_shift($tmp);
 
-      if(!empty($connection_name) && isset($schema[$connection_name]))
+      if (!empty($connection_name) && isset($schema[$connection_name]))
       {
         $new_schema['connection'] = $connection_name;
 
@@ -123,6 +123,11 @@ class sfPropelDatabaseSchema
           {
             // Database attributes
             $new_schema = array_merge($new_schema, $table_params);
+          }
+          else if ('_propel_behaviors' == $table)
+          {
+            // Database behaviors
+            $new_schema['propel_behaviors'] = $table_params;
           }
           else
           {
@@ -292,6 +297,13 @@ class sfPropelDatabaseSchema
       unset($schema['classes']);
     }
 
+    // Database behaviors
+    if (isset($schema['propel_behaviors']))
+    {
+      $database['_propel_behaviors'] = $schema['propel_behaviors'];
+      unset($schema['propel_behaviors']);
+    }
+
     // Database attributes
     if ($schema)
     {
@@ -311,6 +323,27 @@ class sfPropelDatabaseSchema
     $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
     $xml .= "<database name=\"$this->connection_name\"".$this->getAttributesFor($this->database).">\n";
+
+    if (isset($this->database['_propel_behaviors']))
+    {
+      foreach ($this->database['_propel_behaviors'] as $name => $parameters)
+      {
+        $xml .= "\n  <behavior name=\"$name\"";
+        if (is_array($parameters) && count($parameters))
+        {
+          $xml .= ">\n";
+          foreach ($parameters as $key => $value)
+          {
+            $xml .= "    <parameter name=\"$key\" value=\"$value\"/>\n";
+          }
+          $xml .= "  </behavior>\n";
+        }
+        else
+        {
+          $xml .= "/>\n";
+        }
+      }
+    }
 
     // tables
     foreach ($this->getChildren($this->database) as $tb_name => $table)

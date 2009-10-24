@@ -39,8 +39,7 @@ class sfClassManipulator
    */
   static public function fromFile($file)
   {
-    $class = __CLASS__;
-    $manipulator = new $class(file_get_contents($file));
+    $manipulator = new self(file_get_contents($file));
     $manipulator->setFile($file);
 
     return $manipulator;
@@ -155,6 +154,94 @@ class sfClassManipulator
           $code .= $token;
         }
       }
+    }
+
+    return $this->code = $code;
+  }
+
+  /**
+   * Filters each line of the given method through a callable.
+   * 
+   * @param string $method   The method name
+   * @param mixed  $callable A PHP callable that accepts and returns one line of PHP code
+   */
+  public function filterMethod($method, $callable)
+  {
+    $line = '';
+    $code = '';
+    $insideSetup = -1;
+    $parens = 0;
+    $break = false;
+
+    $tokens = token_get_all($this->code);
+    for ($i = 0; $i < count($tokens); $i++)
+    {
+      $token = $tokens[$i];
+
+      if (is_array($token))
+      {
+        $line .= $token[1];
+
+        if (-1 == $insideSetup && T_FUNCTION == $token[0])
+        {
+          $insideSetup = 0;
+        }
+        elseif (0 == $insideSetup && T_STRING == $token[0])
+        {
+          $insideSetup = $method == $token[1] ? 1 : -1;
+        }
+      }
+      else
+      {
+        if (1 == $insideSetup && '{' == $token)
+        {
+          ++$parens;
+        }
+        elseif (1 == $insideSetup && '}' == $token)
+        {
+          --$parens;
+
+          if (!$parens)
+          {
+            $break = true;
+          }
+        }
+
+        $line .= $token;
+      }
+
+      // detect EOL and filter
+      if ($break || false !== strpos($line, PHP_EOL))
+      {
+        $lines = explode(PHP_EOL, $line);
+
+        if ($break)
+        {
+          $line = '';
+          $eol = '';
+        }
+        else
+        {
+          $line = array_pop($lines);
+          $eol = PHP_EOL;
+        }
+
+        foreach ($lines as $l)
+        {
+          $code .= 1 != $insideSetup ? $l.$eol : call_user_func($callable, $l.$eol);
+        }
+      }
+
+      if ($break)
+      {
+        $insideSetup = -1;
+        $break = false;
+      }
+    }
+
+    if ($line)
+    {
+      $code .= $line;
     }
 
     return $this->code = $code;

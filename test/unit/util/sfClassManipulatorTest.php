@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(9);
+$t = new lime_test(12);
 
 $source = <<<EOF
 <?php
@@ -18,6 +18,14 @@ $source = <<<EOF
 class Foo
 {
   function foo()
+  {
+    if (true)
+    {
+      return;
+    }
+  }
+
+  function baz()
   {
     if (true)
     {
@@ -40,6 +48,14 @@ class Foo
       return;
     }
   }
+
+  function baz()
+  {
+    if (true)
+    {
+      return;
+    }
+  }
 }
 EOF;
 
@@ -55,6 +71,14 @@ class Foo
       return;
     }
     // code after
+  }
+
+  function baz()
+  {
+    if (true)
+    {
+      return;
+    }
   }
 }
 EOF;
@@ -72,6 +96,14 @@ class Foo
       return;
     }
     // code after
+  }
+
+  function baz()
+  {
+    if (true)
+    {
+      return;
+    }
   }
 }
 EOF;
@@ -114,3 +146,67 @@ $m->save();
 $t->is(file_get_contents($file), $sourceWithCodeAfter, '->save() saves the modified code if a file is associated with the instance');
 
 unlink($file);
+
+// ->filterMethod()
+$t->diag('->filterMethod()');
+
+class MethodFilterer
+{
+  public $lines = array();
+
+  public function filter1($line)
+  {
+    $this->lines[] = $line;
+    return $line;
+  }
+
+  public function filter2($line)
+  {
+    return str_replace(array(
+      'if (true)',
+      'function foo()',
+    ), array(
+      'if (false)',
+      'function foo($arg)',
+    ), $line);
+  }
+}
+$f = new MethodFilterer();
+
+$sourceFiltered = <<<EOF
+<?php
+
+class Foo
+{
+  function foo(\$arg)
+  {
+    if (false)
+    {
+      return;
+    }
+  }
+
+  function baz()
+  {
+    if (true)
+    {
+      return;
+    }
+  }
+}
+EOF;
+
+$m = new sfClassManipulator($source);
+$m->filterMethod('foo', array($f, 'filter1'));
+$t->is($m->getCode(), $source, '->filterMethod() does not change the code if the filter does nothing');
+$t->is_deeply($f->lines, array(
+  '  function foo()'.PHP_EOL,
+  '  {'.PHP_EOL,
+  '    if (true)'.PHP_EOL,
+  '    {'.PHP_EOL,
+  '      return;'.PHP_EOL,
+  '    }'.PHP_EOL,
+  '  }',
+), '->filterMethod() filters each line of the method');
+$m->filterMethod('foo', array($f, 'filter2'));
+$t->is($m->getCode(), $sourceFiltered, '->filterMethod() modifies the method');

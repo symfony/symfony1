@@ -1,5 +1,9 @@
 propel:
   _attributes:      { defaultIdMethod: none, package: lib.model }
+  _propel_behaviors:
+    timestampable:
+      create_column: create_date
+
   ab_group:
     _attributes:    { phpName: Group, package: foo.bar.lib.model }
     id:

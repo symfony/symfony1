@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="propel" defaultIdMethod="none" package="lib.model">
 
+  <behavior name="timestampable">
+    <parameter name="create_column" value="create_date"/>
+  </behavior>
+
   <table name="ab_group" phpName="Group" package="foo.bar.lib.model" isI18N="true" i18nTable="ab_group_i18n">
     <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
     <column name="name" type="varchar" size="50" />
