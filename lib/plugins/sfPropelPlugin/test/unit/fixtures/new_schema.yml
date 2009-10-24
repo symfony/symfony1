@@ -3,6 +3,7 @@ defaultIdMethod:      none
 package:              lib.model
 propel_behaviors:
   timestampable:
+    boolean:       true
     create_column: create_date
 
 classes:

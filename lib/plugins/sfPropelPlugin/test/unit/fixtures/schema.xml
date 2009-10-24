@@ -2,6 +2,7 @@
 <database name="propel" defaultIdMethod="none" package="lib.model">
 
   <behavior name="timestampable">
+    <parameter name="boolean" value="true"/>
     <parameter name="create_column" value="create_date"/>
   </behavior>
 

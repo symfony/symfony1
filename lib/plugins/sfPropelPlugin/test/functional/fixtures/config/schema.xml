@@ -46,6 +46,10 @@
   </table>
 
   <table name="author_article">
+    <behavior name="symfony">
+      <parameter name="form" value="false"/>
+      <parameter name="filter" value="false"/>
+    </behavior>
     <column name="author_id" type="integer" primaryKey="true" />
     <foreign-key foreignTable="author">
       <reference local="author_id" foreign="id" />

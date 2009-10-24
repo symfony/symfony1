@@ -2,6 +2,7 @@ propel:
   _attributes:      { defaultIdMethod: none, package: lib.model }
   _propel_behaviors:
     timestampable:
+      boolean: true
       create_column: create_date
 
   ab_group:

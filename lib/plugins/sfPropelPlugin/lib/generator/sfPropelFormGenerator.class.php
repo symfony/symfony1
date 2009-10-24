@@ -80,6 +80,12 @@ class sfPropelFormGenerator extends sfGenerator
     // create a form class for every Propel class
     foreach ($this->dbMap->getTables() as $tableName => $table)
     {
+      $behaviors = $table->getBehaviors();
+      if (isset($behaviors['symfony']['form']) && 'false' == $behaviors['symfony']['form'])
+      {
+        continue;
+      }
+
       $this->table = $table;
 
       // find the package to store forms in the same directory as the model classes

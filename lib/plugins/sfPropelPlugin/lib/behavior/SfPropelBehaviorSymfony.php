@@ -10,6 +10,11 @@
  */
 class SfPropelBehaviorSymfony extends SfPropelBehaviorBase
 {
+  protected $parameters = array(
+    'form'   => 'true',
+    'filter' => 'true',
+  );
+
   public function modifyDatabase()
   {
     foreach ($this->getDatabase()->getTables() as $table)

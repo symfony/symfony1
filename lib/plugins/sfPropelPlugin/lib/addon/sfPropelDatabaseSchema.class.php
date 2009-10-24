@@ -334,7 +334,7 @@ class sfPropelDatabaseSchema
           $xml .= ">\n";
           foreach ($parameters as $key => $value)
           {
-            $xml .= "    <parameter name=\"$key\" value=\"$value\"/>\n";
+            $xml .= "    <parameter name=\"$key\" value=\"{$this->fixXMLBoolean($value)}\"/>\n";
           }
           $xml .= "  </behavior>\n";
         }
@@ -1233,6 +1233,19 @@ class sfPropelDatabaseSchema
           $this->database[$table][$column] = null;
         }
       }
+    }
+  }
+
+  protected function fixXMLBoolean($value)
+  {
+    switch (true)
+    {
+      case true === $value:
+        return 'true';
+      case false === $value:
+        return 'false';
+      default:
+        return $value;
     }
   }
 

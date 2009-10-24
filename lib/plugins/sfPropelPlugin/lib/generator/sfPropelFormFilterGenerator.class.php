@@ -77,6 +77,12 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     // create a form class for every Propel class
     foreach ($this->dbMap->getTables() as $tableName => $table)
     {
+      $behaviors = $table->getBehaviors();
+      if (isset($behaviors['symfony']['filter']) && 'false' == $behaviors['symfony']['filter'])
+      {
+        continue;
+      }
+
       $this->table = $table;
 
       // find the package to store filter forms in the same directory as the model classes
