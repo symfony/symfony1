@@ -45,11 +45,9 @@ class sfTesterMailer extends sfTester
   }
 
   /**
-   * Tests a user attribute value.
+   * Tests if message was send and optional how many.
    *
-   * @param string $key
-   * @param string $value
-   * @param string $ns
+   * @param int $nb number of messages
    *
    * @return sfTestFunctionalBase|sfTester
    */
@@ -83,21 +81,26 @@ class sfTesterMailer extends sfTester
   /**
    * Changes the context to use the email corresponding to the given criteria.
    *
-   * Recognized criteria:
+   * @param string|array $to       the email or array(email => alias)
+   * @param int          $position address position
    *
-   *  * to
-   *  * position
-   *
-   * @param array   $criteria An array of criteria
-   *
-   * @param sfTester A sfTester instance
+   * @return sfTestFunctionalBase|sfTester
    */
   public function withMessage($to, $position = 1)
   {
+    $messageEmail = $to;
+    if(is_array($to))
+    {
+      $alias        = current($to);
+      $to           = key($to);
+      $messageEmail = sprintf('%s <%s>', $alias, $to);
+    }
+
     $matches = 0;
     foreach ($this->logger->getMessages() as $message)
     {
-      if (in_array($to, array_keys($message->getTo())))
+      $email = $message->getTo();
+      if ($to == key($email))
       {
         $matches++;
 
@@ -105,14 +108,19 @@ class sfTesterMailer extends sfTester
         {
           $this->message = $message;
 
-          $this->tester->pass(sprintf('switch context to the message number "%s" sent to "%s"', $position, $to));
+          if(isset($alias) AND $alias != current($email))
+          {
+            break;
+          }
+
+          $this->tester->pass(sprintf('switch context to the message number "%s" sent to "%s"', $position, $messageEmail));
 
           return $this;
         }
       }
     }
 
-    $this->tester->fail(sprintf('unable to find a message sent to "%s"', $to));
+    $this->tester->fail(sprintf('unable to find a message sent to "%s"', $messageEmail));
 
     return $this;
   }
@@ -120,7 +128,7 @@ class sfTesterMailer extends sfTester
   /**
    * Tests for a mail message body.
    *
-   * @param  string $value
+   * @param string $value regular expression or value
    *
    * @return sfTestFunctionalBase|sfTester
    */
@@ -188,8 +196,8 @@ class sfTesterMailer extends sfTester
   /**
    * Tests for a mail message header.
    *
-   * @param  string $key
-   * @param  string $value
+   * @param string $key   entry to test
+   * @param string $value regular expression or value
    *
    * @return sfTestFunctionalBase|sfTester
    */
