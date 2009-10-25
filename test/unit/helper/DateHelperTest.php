@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(592);
+$t = new lime_test(592, new lime_output_color());
 
 class sfUser
 {
@@ -31,9 +31,12 @@ require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/DateHelper.php');
 
+// get a fixed timestamp to test with
+$now = time();
+$t->diag('timestamp used for testing: '.$now);
+
 // distance_of_time_in_words()
 $t->diag('distance_of_time_in_words()');
-$now = time();
 $msg = 'distance_of_time_in_words() format a distance of time in words!';
 $t->is(distance_of_time_in_words($now - 2, $now), 'less than a minute', $msg);
 $t->is(distance_of_time_in_words($now - 8, $now), 'less than a minute', $msg);
@@ -72,18 +75,16 @@ $t->is(format_date(date('y-m-d')), date('d/m/y'), 'format_date() format a string
 $t->is(format_date('1789-07-14'), '14/07/89', 'format_date() formats pre-epoch dates');
 
 $context->user->culture = 'en';
-$time = time();
-$t->is(format_date($time, 'F'), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_date() takes a format string as its second argument');
+$t->is(format_date($now, 'F'), date('F j, Y g:i:s A', $now).' '.date('T', $now), 'format_date() takes a format string as its second argument');
 
 $context->user->culture = 'fr';
-$t->is(format_date($time, 'F', 'en'), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_date() takes a culture as its third argument');
+$t->is(format_date($now, 'F', 'en'), date('F j, Y g:i:s A', $now).' '.date('T', $now), 'format_date() takes a culture as its third argument');
 
 // format_datetime()
 $t->diag('format_datetime()');
 $context->user->culture = 'en';
-$time = time();
-$t->is(format_datetime($time), date('F j, Y g:i:s A', $time).' '.date('T'), 'format_datetime() format a numerical date time according to the user culture');
-$t->is(format_datetime(date('Y-m-d')), date('F j, Y').' 12:00:00 AM '.date('T'), 'format_datetime() format a string date time according to the user culture');
+$t->is(format_datetime($now), date('F j, Y g:i:s A', $now).' '.date('T', $now), 'format_datetime() format a numerical date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d', $now)), date('F j, Y', $now).' 12:00:00 AM '.date('T', $now), 'format_datetime() format a string date time according to the user culture');
 $t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('F j, Y g:i A', $now), 'formats timestamps correctly');
 
 $t->diag('sfDateFormat');
@@ -91,7 +92,7 @@ $df = new sfDateFormat('en_US');
 $t->is($df->format('7/14/1789', 'i', 'd'), '1789-07-14', 'pre-epoch date from en_US to iso');
 $t->is($df->format('7/14/1789 14:29', 'I', $df->getInputPattern('g')), '1789-07-14 14:29:00', 'pre-epoch date-time from en_US to iso with getInputPattern()');
 $df = new sfDateFormat('fr');
-$t->is($df->format(date('d/m/y'), 'i', 'd'), date('Y-m-d'), 'format two digit year from fr to iso');
+$t->is($df->format(date('d/m/y', $now), 'i', 'd'), date('Y-m-d', $now), 'format two digit year from fr to iso');
 
 $cultures = sfCultureInfo::getCultures();
 foreach ($cultures as $culture)
@@ -99,10 +100,8 @@ foreach ($cultures as $culture)
   if (sfCultureInfo::validCulture($culture))
   {
     $df = new sfDateFormat($culture);
-
     $shortDate = $df->format($now, 'd');
-    $t->is($df->format($shortDate, 'i', 'd'), date('Y-m-d'), sprintf('"%s": conversion "d" to "i"', $culture));
-
+    $t->is($df->format($shortDate, 'i', 'd'), date('Y-m-d', $now), sprintf('"%s": conversion "d" to "i"', $culture));
     $dateTime = $df->format($now, $df->getInputPattern('g'));
     $t->is($df->format($dateTime, 'I', $df->getInputPattern('g')), date('Y-m-d H:i:', $now).'00', sprintf('"%s": Conversion "g" to "I"', $culture));
   }
