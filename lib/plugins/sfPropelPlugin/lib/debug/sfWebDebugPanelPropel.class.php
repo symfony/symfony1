@@ -52,6 +52,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
   {
     return '
       <div id="sfWebDebugDatabaseLogs">
+        <p>Propel Version: '.Propel::VERSION.'</p>
         <ol>'.implode("\n", $this->getSqlLogs()).'</ol>
       </div>
     ';
