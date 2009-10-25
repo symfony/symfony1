@@ -83,6 +83,8 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
    * directory that matches the "*.yml" glob.
    *
    * @return string Absolute path to the consolidated schema file
+   *
+   * @throws RuntimeException if creation of the consolidated schema file is impossible
    */
   protected function prepareSchemaFile($yamlSchemaPath)
   {
@@ -130,9 +132,12 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
     }
 
     // create one consolidated schema file
-    $file = sys_get_temp_dir().'doctrine_schema_'.rand(11111, 99999).'.yml';
+    $file = realpath(sys_get_temp_dir().DIRECTORY_SEPARATOR.'doctrine_schema_'.rand(11111, 99999).'.yml');
+    if (!@file_put_contents($file, sfYaml::dump($models, 4)))
+    {
+      throw new RuntimeException(sprintf('Unable to create consolidated schema file in "%s"', $file));
+    }
     $this->logSection('file+', $file);
-    file_put_contents($file, sfYaml::dump($models, 4));
 
     return $file;
   }
