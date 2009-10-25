@@ -43,9 +43,7 @@ abstract class sfFilter
    * @param sfContext $context    The current application context
    * @param array     $parameters An associative array of initialization parameters
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Filter
+   * @return boolean true
    */
   public function initialize($context, $parameters = array())
   {
