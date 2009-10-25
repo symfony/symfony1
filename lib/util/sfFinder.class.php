@@ -127,9 +127,8 @@ class sfFinder
       return $str;
     }
 
-      return sfGlobToRegex::glob_to_regex($str);
-
-    }
+    return sfGlobToRegex::glob_to_regex($str);
+  }
 
   protected function args_to_array($arg_list, $not = false)
   {
