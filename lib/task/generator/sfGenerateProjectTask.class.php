@@ -37,6 +37,7 @@ class sfGenerateProjectTask extends sfGeneratorBaseTask
   {
     $this->addArguments(array(
       new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The project name'),
+      new sfCommandArgument('author', sfCommandArgument::OPTIONAL, 'The project author', 'Your name here'),
     ));
 
     $this->addOptions(array(
@@ -60,18 +61,23 @@ If the current directory already contains a symfony project,
 it throws a [sfCommandException|COMMENT].
 
 By default, the task configures Doctrine as the ORM. If you want to use
-Propel, use the [--orm|INFO] option:
+Propel, use the [--orm|COMMENT] option:
 
   [./symfony generate:project blog --orm=Propel|INFO]
 
-If you don't want to use an ORM, pass [none|INFO] to [--orm|INFO] option:
+If you don't want to use an ORM, pass [none|COMMENT] to [--orm|COMMENT] option:
 
   [./symfony generate:project blog --orm=none|INFO]
 
-You can also pass the [--installer|INFO] option to further customize the
+You can also pass the [--installer|COMMENT] option to further customize the
 project:
 
   [./symfony generate:project blog --installer=./installer.php|INFO]
+
+You can optionally include a second [author|COMMENT] argument to specify what name to
+use as author when symfony generates new classes:
+
+  [./symfony generate:project blog "Jack Doe"|INFO]
 EOF;
   }
 
@@ -114,6 +120,7 @@ EOF;
     $this->tokens = array(
       'ORM'          => $this->options['orm'],
       'PROJECT_NAME' => $this->arguments['name'],
+      'AUTHOR_NAME'  => $this->arguments['author'],
       'PROJECT_DIR'  => sfConfig::get('sf_root_dir'),
     );
 
