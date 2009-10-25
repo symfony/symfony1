@@ -479,7 +479,9 @@ class sfProjectConfiguration
   {
     $pluginPaths = array();
 
-    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->name('*Plugin');
+    // search for *Plugin directories representing plugins
+    // follow links and do not recurse. No need to exclude VC because they do not end with *Plugin
+    $finder = sfFinder::type('dir')->maxdepth(0)->ignore_version_control(false)->follow_link()->name('*Plugin');
     $dirs = array(
       sfConfig::get('sf_symfony_lib_dir').'/plugins',
       sfConfig::get('sf_plugins_dir'),
