@@ -9,7 +9,6 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-sfToolkit::addIncludePath(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor');
 
 $t = new lime_test(1);
 

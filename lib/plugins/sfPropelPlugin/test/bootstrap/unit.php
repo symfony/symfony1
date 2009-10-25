@@ -16,3 +16,5 @@ $autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
 $autoload->register();
 
 $_test_dir = realpath(dirname(__FILE__).'/..');
+
+sfToolkit::addIncludePath(realpath(dirname(__FILE__).'/../../lib/vendor'));
