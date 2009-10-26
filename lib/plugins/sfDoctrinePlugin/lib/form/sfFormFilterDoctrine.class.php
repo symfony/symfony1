@@ -206,7 +206,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($value))
     {
-      $query->orWhereIn(sprintf('%s.%s', $query->getRootAlias(), $fieldName), $value);
+      $query->andWhereIn(sprintf('%s.%s', $query->getRootAlias(), $fieldName), $value);
     }
     else
     {
