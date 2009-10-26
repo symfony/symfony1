@@ -137,7 +137,7 @@ static private function getMixerPreSelectHook(\$method)
 {
   if (preg_match('/^do(Select|Count)(Join(All(Except)?)?|Stmt)?/', \$method, \$match))
   {
-    return sprintf('Base{$this->getTable()->getPhpName()}:%s:%1$s', 'Count' == \$match[1] ? 'doCount' : \$match[0]);
+    return sprintf('Base{$this->getTable()->getPhpName()}:%s:%1\$s', 'Count' == \$match[1] ? 'doCount' : \$match[0]);
   }
 
   throw new LogicException(sprintf('Unrecognized function "%s"', \$method));
