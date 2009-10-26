@@ -1,3 +1,77 @@
+Version 1.3.0 beta1
+-------------------
+
+  * [23362] reverted r22731
+  * [23361] fixed sfFormFilterDoctrine uses wrong method when filtering a fk with multiple values (closes #7409, thanks aarjona)
+  * [23360] fixed plugin tests added multiple times (closes #7082)
+  * [23358] fixed hook names sent to sfMixer from base peer classes
+  * [23357] tagged custom propel builders as deprecated
+  * [23355] fixed possible creation of inconsistent new lines in class manipulator (refs #7442)
+  * [23350] fixed null transport service name call
+  * [23346] fixed bootstrapping propel unit tests with correct include path
+  * [23344] made DateHelperTest more robust by using a single timestamp rather than letting date() obtain them on their own
+  * [23343] fixed phpdoc of sfTesterMailer (closes #7391)
+  * [23342] fixed margin on admin generator fieldset headings
+  * [23338] updated phpDoc of sfFilter:initialize to correctly state that no exceptions are thrown and true is always returned (closes #7426)
+  * [23336] getAllPluginPaths does not need to exclude version control files. Excluding them is slightly slower without benefit (refs #7433)
+  * [23334] WebDebug panels from Doctrine and Propel list ORM Version. (refs #7432)
+  * [23327] fixed sfFinder phpDoc and type comparison (closes #7435)
+  * [23322] added optional author argument to generate:project task
+  * [23320] added "symfony" to autoloader excludes for better BC (closes #7424, closes #7401)
+  * [23317] fixed creation of consolidated doctrine schema file may fail under certain circumstances (refs #7428)
+  * [23314] added doc tags for sfDoctrineRecord magic methods (closes #7064)
+  * [23310] added copyright notices to propel behaviors, remove some unneeded generated methods
+  * [23309] removed xslt from propel integration in favor of new build property for adding default behaviors
+  * [23308] added build of model to propel form and filter builds in propel:build task
+  * [23307] added parameters to the "symfony" propel behavior to disable the generation of forms and/or filters (refs #7139)
+  * [23306] ported symfony's custom propel builders to propel's new behaviors system
+  * [23296] Fixing issues caused by latest changes in Doctrine 1.2
+  * [23292] fixed sfPeerBuilder refers to variable in behaviours but it has changed to in propel 1.4 (closes #7414)
+  * [23234] further shortened plugin paths shown in test harness
+  * [23232] fixed unexpected removal of tokens in class manipulator, renamed vars per js parlance
+  * [23227] cleaned up render of phing errors
+  * [23220] enhanced sfTesterResponse with isValid() method for testing whether a response is well-formed and (optionally) validates against its doctype
+  * [23218] fixed identity check for windows color support (closes #7395)
+  * [23214] refactored sfForm::renderHiddenFields() so rendering of embedded hidden fields can be switched off, updated admin generators to do so (closes #7394)
+  * [23207] made generate:project orm option case insensitive
+  * [23205] fixed project autoloading in unit tests
+  * [23204] fixed iteration over a sfDoctrinePager object (closes #7355)
+  * [23203] fix exception in freshly generated app in an orm-less project
+  * [23201] cleaned up doctrine query debug to be a little easier to read
+  * [23200] added custom lime harness to cleanup output of plugin paths
+  * [23199] added upgrade for changed sfFormDoctrine method signature
+  * [23196] added form errors to WDT view panel (closes #7371)
+  * [23194] added a --actions-base-class options to tasks that generate modules (closes #5995)
+  * [23193] enhanced generate:app task to check for a skeleton in the directory in the project, similar to how generate:module works already
+  * [23187] added a way to pass form options to the getForm() method of [Module]GeneratorConfiguration class (closes #6065)
+  * [23186] fixed a notice (closes #7384)
+  * [23183] added support for colorized output under windows with ansicon (closes #7359)
+  * [23180] fixed phpdoc return value for findRoute (closes #7380)
+  * [23169] added bound validation on integer types (closes #7370)
+  * [23156] fixed implementation of data loader task in build tasks, fixed use of merged schema file in doctrine clean task, made deletion of old doctrine model and form files more precise in delete task
+  * [23117] fixed empty_value for generated propel validators (closes #7363)
+  * [23113] added additional Constant checking for delivery strategy in mailer. (fixes #7362 patch by Pascal)
+  * [23081] removed sf_doc_dir constant
+  * [23080] fixed cache option "vary" with custom values creates wrong cacheKey (closes #7354)
+  * [23079] fixed wrong class name generated for filter if not specified in generator.yml (closes #7327)
+  * [23077] added a new default_params options for sfObjectRouteCollection (closes #7331, patch from nicolas)
+  * [23076] fixed propel:build-all-load task (refs #7346)
+  * [23075] fixed error when passing an option that does not exist (refs #7346)
+  * [23073] added an exception in sfValidatorFile when file_uploads is disable in php.ini (closes #7345)
+  * [23064] added type hints to generated form classes (closes #6344)
+  * [23063] rewrote task autoloader initialization and reloading so autoload.yml is respected and newly-generated classes are immediately available (closes #5093)
+  * [23062] fixed placement of `BaseFormFilterPropel` (closes #6117)
+  * [23060] reverted r22929, fixed overridden class paths in sfSimpleAutoload (refs #7142, refs #7299) this fix also prevents lib files from being scanned for classes after each reload in doctrine:build --all, for example
+  * [23059] fixed schema merging when a schema file is empty (closes #7349)
+  * [23048] added configuration cascade to the merging of plugin and project doctrine schema files (closes #7342, closes #7344)
+  * [23047] switched doctrine external back to HEAD
+  * [23020] corrected doctrine task documentation
+  * [23019] cleaned up use of cli config in doctrine tasks, added method to doctrine base task to prepare project and plugin schema files for doctrine (refs #7306)
+  * [23018] changed new "smart" form filter logic to use validators rather than widgets when building the query, ported enhancement to propel (refs #7139)
+  * [23003] pegged Doctrine 1.2 revision until a migration strategy for its revision 6493 is in place or that change is reverted
+  * [22987] updated all references from Doctrine:: to Doctrine_Core:: to reflect latest change in Doctrine 1.2. While Doctrie:: exists for BC we perform better by using the new (closes #7332 patch by lsmith)
+  * [22983] Fixes for latest changes in Doctrine 1.2
+
 Version 1.3.0 alpha2
 --------------------
 
