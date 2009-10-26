@@ -125,7 +125,7 @@ class sfClassManipulator
         {
           if (!$parens)
           {
-            $code .= $topCode ? "$token\n    $topCode" : $token;
+            $code .= $topCode ? $token.PHP_EOL.'    '.$topCode : $token;
           }
           else
           {
@@ -142,7 +142,7 @@ class sfClassManipulator
           {
             $insideSetup = -1;
 
-            $code .= $bottomCode ? "  $bottomCode\n  $token" : $token;
+            $code .= $bottomCode ? '  '.$bottomCode.PHP_EOL.'  '.$token : $token;
           }
           else
           {
