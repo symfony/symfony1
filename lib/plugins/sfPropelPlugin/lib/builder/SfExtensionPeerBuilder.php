@@ -15,6 +15,8 @@ require_once 'propel/engine/builder/om/php5/PHP5ExtensionPeerBuilder.php';
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
+ * 
+ * @deprecated since symfony 1.3
  */
 class SfExtensionPeerBuilder extends PHP5ExtensionPeerBuilder
 {

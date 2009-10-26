@@ -15,6 +15,8 @@ require_once 'propel/engine/builder/om/php5/PHP5ExtensionObjectBuilder.php';
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
+ * 
+ * @deprecated since symfony 1.3
  */
 class SfExtensionObjectBuilder extends PHP5ExtensionObjectBuilder
 {

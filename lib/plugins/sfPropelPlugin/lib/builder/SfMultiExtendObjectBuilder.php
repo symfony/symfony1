@@ -15,6 +15,8 @@ require_once 'propel/engine/builder/om/php5/PHP5MultiExtendObjectBuilder.php';
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
+ * 
+ * @deprecated since symfony 1.3
  */
 class SfMultiExtendObjectBuilder extends PHP5MultiExtendObjectBuilder
 {
