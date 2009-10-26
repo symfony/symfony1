@@ -24,8 +24,8 @@ class sfProjectOptimizeTask extends sfBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('env', sfCommandArgument::OPTIONAL, 'The environment name', 'prod'),
-      new sfCommandArgument('app', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'The application name'),
+      new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The server name'),
+      new sfCommandArgument('environment', sfCommandArgument::OPTIONAL, 'The server name', 'prod'),
     ));
 
     $this->namespace = 'project';
@@ -35,20 +35,10 @@ class sfProjectOptimizeTask extends sfBaseTask
     $this->detailedDescription = <<<EOF
 The [project:optimize|INFO] optimizes a project for better performance:
 
-  [./symfony project:optimize|INFO]
+  [./symfony project:optimizes frontend prod|INFO]
 
 This task should only be used on a production server. Don't forget to re-run
 the task each time the project changes.
-
-You can specify an environment other than [prod|COMMENT] by passing it as an
-argument:
-
-  [./symfony project:optimize staging|INFO]
-
-You can further specify one or more applications to optimize by passing
-additional arguments:
-
-  [./symfony project:optimize prod frontend|INFO]
 EOF;
   }
 
@@ -57,67 +47,33 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $applications = count($arguments['app']) ? $arguments['app'] : sfFinder::type('dir')->relative()->maxdepth(0)->in(sfConfig::get('sf_apps_dir'));
+    $data = array();
+    $modules = $this->findModules();
+    $target = sfConfig::get('sf_cache_dir').'/'.$arguments['application'].'/'.$arguments['environment'].'/config/configuration.php';
 
-    if (count($applications) > 1)
+    // remove existing optimization file
+    if (file_exists($target))
     {
-      // optimize each application in a separate process
-      foreach ($applications as $application)
-      {
-        try
-        {
-          $this->logSection('optimize', sprintf('Optimizing %s %s', $arguments['env'], $application));
-          $this->getFilesystem()->execute(sprintf('php symfony project:optimize %s %s', $arguments['env'], $application));
-        }
-        catch (Exception $e)
-        {
-          $this->logBlock(array_merge(array(
-            'Unable to optimize multiple applications. These must be optimized separately:',
-            '',
-          ), array_map(
-            create_function('$a', 'return \'  php symfony project:optimize '.$arguments['env'].' \'.$a;'),
-            $applications
-          )), 'ERROR_LARGE');
-
-          return 1;
-        }
-      }
+      unlink($target);
     }
-    else
+
+    // initialize the context
+    sfContext::createInstance($this->configuration);
+
+    // force cache generation for generated modules
+    foreach ($modules as $module)
     {
-      $application = current($applications);
-
-      $this->logSection('optimize', sprintf('Optimizing %s %s', $arguments['env'], $application));
-
-      $data = array();
-      $modules = $this->findModules();
-      $target = sfConfig::get('sf_cache_dir').'/'.$application.'/'.$arguments['env'].'/config/configuration.php';
-
-      // remove existing optimization file
-      if (file_exists($target))
-      {
-        $this->getFilesystem()->remove($target);
-      }
-
-      // initialize the application and context
-      $this->configuration = $this->createConfiguration($application, $arguments['env']);
-      sfContext::createInstance($this->configuration);
-
-      // force cache generation for generated modules
-      foreach ($modules as $module)
-      {
-        $this->configuration->getConfigCache()->import('modules/'.$module.'/config/generator.yml', false, true);
-      }
-
-      $templates = $this->findTemplates($modules);
-
-      $data['getTemplateDir'] = $this->optimizeGetTemplateDir($modules, $templates);
-      $data['getControllerDirs'] = $this->optimizeGetControllerDirs($modules);
-      $data['getPluginPaths'] = $this->configuration->getPluginPaths();
-
-      $this->logSection('file+', $target);
-      file_put_contents($target, '<?php return '.var_export($data, true).';');
+      $this->configuration->getConfigCache()->import('modules/'.$module.'/config/generator.yml', false, true);
     }
+
+    $templates = $this->findTemplates($modules);
+
+    // getTemplateDir() optimization
+    $data['getTemplateDir'] = $this->optimizeGetTemplateDir($modules, $templates);
+    $data['getControllerDirs'] = $this->optimizeGetControllerDirs($modules);
+    $data['getPluginPaths'] = $this->configuration->getPluginPaths();
+
+    file_put_contents($target, '<?php return '.var_export($data, true).';');
   }
 
   protected function optimizeGetControllerDirs($modules)
