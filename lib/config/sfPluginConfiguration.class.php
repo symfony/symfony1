@@ -205,7 +205,7 @@ abstract class sfPluginConfiguration
       $files = array_merge($files, $finder->in($directory.'/'.dirname($name)));
     }
 
-    return $files;
+    return array_unique($files);
   }
 
   /**
