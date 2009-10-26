@@ -135,9 +135,9 @@ EOF;
  */
 static private function getMixerPreSelectHook(\$method)
 {
-  if (preg_match('/^do(Select|Count)(Join(All)?|Stmt)?/', \$method, \$match))
+  if (preg_match('/^do(Select|Count)(Join(All(Except)?)?|Stmt)?/', \$method, \$match))
   {
-    return 'Count' == \$match[1] ? 'doCount' : \$match[0];
+    return sprintf('Base{$this->getTable()->getPhpName()}:%s:%1$s', 'Count' == \$match[1] ? 'doCount' : \$match[0]);
   }
 
   throw new LogicException(sprintf('Unrecognized function "%s"', \$method));
@@ -184,7 +184,7 @@ EOF;
 
     $doInsertPre = <<<EOF
 // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('{$this->getTable()->getPhpName()}:doInsert:pre') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doInsert:pre') as \$sf_hook)
     {
       if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con))
       {
@@ -195,7 +195,7 @@ EOF;
 EOF;
     $doUpdatePre = <<<EOF
 // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('{$this->getTable()->getPhpName()}:doUpdate:pre') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doUpdate:pre') as \$sf_hook)
     {
       if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con))
       {
@@ -234,7 +234,7 @@ EOF;
     {
       $doInsertPost = <<<EOF
     // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('{$this->getTable()->getPhpName()}:doInsert:post') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doInsert:post') as \$sf_hook)
     {
       call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con, \$pk);
     }
@@ -263,7 +263,7 @@ EOF;
       $doUpdatePost = <<<EOF
 
     // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('{$this->getTable()->getPhpName()}:doUpdate:post') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doUpdate:post') as \$sf_hook)
     {
       call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con, \$ret);
     }
