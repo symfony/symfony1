@@ -220,7 +220,7 @@ class sfDoctrinePager extends sfPager implements Serializable
   public function count()
   {
     // If an hydrated array was stored just count it
-    if (null === $this->objects)
+    if (null !== $this->objects)
     {
       return count($this->objects)
     }
