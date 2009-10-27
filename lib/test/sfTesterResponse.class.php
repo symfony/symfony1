@@ -201,7 +201,7 @@ class sfTesterResponse extends sfTester
           $message = sprintf('response validates per relaxNG schema "%s"', basename($checkDTD));
           break;
         default:
-          $message = $checkDTD ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
+          $message = $dom->validateOnParse ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
       }
 
       if (count($errors = libxml_get_errors()))
