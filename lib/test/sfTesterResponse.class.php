@@ -164,7 +164,8 @@ class sfTesterResponse extends sfTester
   /**
    * Validates the response.
    *
-   * @param boolean $checkDTD Whether to validate the response against its DTD
+   * @param mixed $checkDTD Either true to validate against the response DTD or
+   *                        provide the path to a *.xsd, *.rng or *.rnc schema
    *
    * @return sfTestFunctionalBase|sfTester
    *
@@ -176,18 +177,32 @@ class sfTesterResponse extends sfTester
     {
       $revert = libxml_use_internal_errors(true);
 
+      $dom = new DOMDocument('1.0', $this->response->getCharset());
       $content = $this->response->getContent();
-      if ($checkDTD)
+
+      if (true === $checkDTD)
       {
         $local = 'file://'.str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)).'/w3';
         $content = preg_replace('#(<!DOCTYPE[^>]+")http://www.w3.org(.*")#i', '\\1'.$local.'\\2', $content);
+        $dom->validateOnParse = $checkDTD;
       }
 
-      $dom = new DOMDocument('1.0', $this->response->getCharset());
-      $dom->validateOnParse = $checkDTD;
       $dom->loadXML($content);
 
-      $message = $checkDTD ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
+      switch (pathinfo($checkDTD, PATHINFO_EXTENSION))
+      {
+        case 'xsd':
+          $dom->schemaValidate($checkDTD);
+          $message = sprintf('response validates per XSD schema "%s"', basename($checkDTD));
+          break;
+        case 'rng';
+        case 'rnc';
+          $dom->relaxNGValidate($checkDTD);
+          $message = sprintf('response validates per relaxNG schema "%s"', basename($checkDTD));
+          break;
+        default:
+          $message = $checkDTD ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
+      }
 
       if (count($errors = libxml_get_errors()))
       {
