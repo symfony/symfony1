@@ -137,7 +137,7 @@ static private function getMixerPreSelectHook(\$method)
 {
   if (preg_match('/^do(Select|Count)(Join(All(Except)?)?|Stmt)?/', \$method, \$match))
   {
-    return sprintf('Base{$this->getTable()->getPhpName()}:%s:%1\$s', 'Count' == \$match[1] ? 'doCount' : \$match[0]);
+    return sprintf('Base{$this->getTable()->getPhpName()}Peer:%s:%1\$s', 'Count' == \$match[1] ? 'doCount' : \$match[0]);
   }
 
   throw new LogicException(sprintf('Unrecognized function "%s"', \$method));
@@ -156,7 +156,7 @@ EOF;
     return <<<EOF
 foreach (sfMixer::getCallables(self::getMixerPreSelectHook(__FUNCTION__)) as \$sf_hook)
 {
-  call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$criteria, \$con);
+  call_user_func(\$sf_hook, 'Base{$this->getTable()->getPhpName()}Peer', \$criteria, \$con);
 }
 
 EOF;
@@ -184,9 +184,9 @@ EOF;
 
     $doInsertPre = <<<EOF
 // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doInsert:pre') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}Peer:doInsert:pre') as \$sf_hook)
     {
-      if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con))
+      if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, 'Base{$this->getTable()->getPhpName()}Peer', \$values, \$con))
       {
         return \$sf_hook_retval;
       }
@@ -195,9 +195,9 @@ EOF;
 EOF;
     $doUpdatePre = <<<EOF
 // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doUpdate:pre') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}Peer:doUpdate:pre') as \$sf_hook)
     {
-      if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con))
+      if (false !== \$sf_hook_retval = call_user_func(\$sf_hook, 'Base{$this->getTable()->getPhpName()}Peer', \$values, \$con))
       {
         return \$sf_hook_retval;
       }
@@ -234,9 +234,9 @@ EOF;
     {
       $doInsertPost = <<<EOF
     // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doInsert:post') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}Peer:doInsert:post') as \$sf_hook)
     {
-      call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con, \$pk);
+      call_user_func(\$sf_hook, 'Base{$this->getTable()->getPhpName()}Peer', \$values, \$con, \$pk);
     }
 
 
@@ -263,9 +263,9 @@ EOF;
       $doUpdatePost = <<<EOF
 
     // symfony_behaviors behavior
-    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:doUpdate:post') as \$sf_hook)
+    foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}Peer:doUpdate:post') as \$sf_hook)
     {
-      call_user_func(\$sf_hook, '{$this->getTable()->getPhpName()}', \$values, \$con, \$ret);
+      call_user_func(\$sf_hook, 'Base{$this->getTable()->getPhpName()}Peer', \$values, \$con, \$ret);
     }
 
     return \$ret;
