@@ -356,8 +356,8 @@ function _call_component($moduleName, $componentName, $vars)
   // load component's module config file
   require($context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
 
-  // pass unescaped vars to the component
-  $componentInstance->getVarHolder()->add(sfOutputEscaper::unescape($vars));
+  // pass unescaped vars to the component if escaping_strategy is set to true
+  $componentInstance->getVarHolder()->add(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   // dispatch component
   $componentToRun = 'execute'.ucfirst($componentName);
