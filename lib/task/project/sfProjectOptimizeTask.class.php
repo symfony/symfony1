@@ -54,7 +54,7 @@ EOF;
     // remove existing optimization file
     if (file_exists($target))
     {
-      unlink($target);
+      $this->getFilesystem()->remove($target);
     }
 
     // initialize the context
@@ -73,6 +73,12 @@ EOF;
     $data['getControllerDirs'] = $this->optimizeGetControllerDirs($modules);
     $data['getPluginPaths'] = $this->configuration->getPluginPaths();
 
+    if (!file_exists($directory = dirname($target)))
+    {
+      $this->getFilesystem()->mkdirs($directory);
+    }
+
+    $this->logSection('file+', $target);
     file_put_contents($target, '<?php return '.var_export($data, true).';');
   }
 
