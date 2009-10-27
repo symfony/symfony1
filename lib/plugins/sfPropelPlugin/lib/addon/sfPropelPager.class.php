@@ -96,6 +96,12 @@ class sfPropelPager extends sfPager
    */
   protected function retrieveObject($offset)
   {
+    // if all results are known we can use the stored objects
+    if (null !== $this->objects)
+    {
+      return $this->objects[$offset-1];
+    }
+
     $criteriaForRetrieve = clone $this->getCriteria();
     $criteriaForRetrieve
       ->setOffset($offset - 1)
@@ -112,7 +118,11 @@ class sfPropelPager extends sfPager
    */
   public function getResults()
   {
-    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria());
+    if (null === $this->objects)
+    {
+      $this->objects = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria());
+    }
+    return $this->objects;
   }
 
   /**

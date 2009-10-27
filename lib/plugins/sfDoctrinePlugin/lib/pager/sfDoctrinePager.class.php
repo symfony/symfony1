@@ -54,6 +54,7 @@ class sfDoctrinePager extends sfPager implements Serializable
   {
     $vars = get_object_vars($this);
     unset($vars['query']);
+	unset($vars['objects']);
     return serialize($vars);
   }
 
@@ -161,6 +162,12 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   protected function retrieveObject($offset)
   {
+    // If all results are known we can use the stored objects
+    if (null !== $this->objects)
+    {
+      return $this->objects[$offset-1];
+    }
+
     $queryForRetrieve = clone $this->getQuery();
     $queryForRetrieve
       ->offset($offset - 1)
@@ -181,6 +188,15 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function getResults($hydrationMode = null)
   {
+    if (Doctrine_Core::HYDRATE_ARRAY === $hydrationMode)
+    {
+      // If we hydrate an array, we can store it fo later reuse
+      if (null === $this->objects)
+      {
+        $this->objects = $this->getQuery()->execute(array(), $hydrationMode);
+      }
+      return $this->objects;
+    }
     return $this->getQuery()->execute(array(), $hydrationMode);
   }
 
@@ -203,7 +219,12 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function count()
   {
-    // there's no need to hydrate this result set
+    // If an hydrated array was stored just count it
+    if (null === $this->objects)
+    {
+      return count($this->objects)
+    }
+    // Otherwise get results. There's no need to hydrate this result set for counting
     return count($this->getResults(Doctrine_Core::HYDRATE_NONE));
   }
 }
