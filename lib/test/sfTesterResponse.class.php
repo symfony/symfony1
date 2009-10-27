@@ -176,9 +176,16 @@ class sfTesterResponse extends sfTester
     {
       $revert = libxml_use_internal_errors(true);
 
+      $content = $this->response->getContent();
+      if ($checkDTD)
+      {
+        $local = 'file://'.str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)).'/w3';
+        $content = preg_replace('#(<!DOCTYPE[^>]+")http://www.w3.org(.*")#i', '\\1'.$local.'\\2', $content);
+      }
+
       $dom = new DOMDocument('1.0', $this->response->getCharset());
       $dom->validateOnParse = $checkDTD;
-      $dom->loadXML($this->response->getContent());
+      $dom->loadXML($content);
 
       $message = $checkDTD ? sprintf('response validates as "%s"', $dom->doctype->name) : 'response is well-formed "xml"';
 
