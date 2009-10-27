@@ -195,8 +195,8 @@ class sfTesterResponse extends sfTester
           $dom->schemaValidate($checkDTD);
           $message = sprintf('response validates per XSD schema "%s"', basename($checkDTD));
           break;
-        case 'rng';
-        case 'rnc';
+        case 'rng':
+        case 'rnc':
           $dom->relaxNGValidate($checkDTD);
           $message = sprintf('response validates per relaxNG schema "%s"', basename($checkDTD));
           break;
