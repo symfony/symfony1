@@ -54,7 +54,7 @@ class sfDoctrinePager extends sfPager implements Serializable
   {
     $vars = get_object_vars($this);
     unset($vars['query']);
-	unset($vars['objects']);
+    unset($vars['objects']);
     return serialize($vars);
   }
 
