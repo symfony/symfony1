@@ -222,7 +222,7 @@ class sfDoctrinePager extends sfPager implements Serializable
     // If an hydrated array was stored just count it
     if (null !== $this->objects)
     {
-      return count($this->objects)
+      return count($this->objects);
     }
     // Otherwise get results. There's no need to hydrate this result set for counting
     return count($this->getResults(Doctrine_Core::HYDRATE_NONE));
