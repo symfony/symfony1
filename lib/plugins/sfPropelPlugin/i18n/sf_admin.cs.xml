@@ -33,7 +33,15 @@
         <source>Cancel</source>
         <target>Zrušit</target>
       </trans-unit>
-
+      <trans-unit>
+        <source>Choose an action</source>
+        <target>Vybrat akci</target>
+      </trans-unit>
+      <trans-unit>
+        <source>go</source>
+        <target>ok</target>
+      </trans-unit>
+      
       <!-- Filters -->
       <trans-unit>
         <source>Reset</source>
@@ -65,7 +73,19 @@
         <source>desc</source>
         <target>sestupně</target>
       </trans-unit>
-
+      <trans-unit>
+        <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
+        <target>[0] žádné položky|[1] 1 položka|(1,+Inf] %1% položky</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Are you sure?</source>
+        <target>Jste si jist?</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Checked</source>
+        <target>Aktivováno</target>
+      </trans-unit>
+      
       <!-- Pagination -->
       <trans-unit>
         <source>First page</source>
