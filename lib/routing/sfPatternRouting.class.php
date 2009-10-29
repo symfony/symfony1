@@ -76,7 +76,7 @@ class sfPatternRouting extends sfRouting
    */
   public function loadConfiguration()
   {
-    if ($this->options['load_configuration'] && $config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
+    if ($this->options['load_configuration'] && $config = $this->getConfigFilename())
     {
       foreach (include($config) as $name => $route)
       {
@@ -85,6 +85,11 @@ class sfPatternRouting extends sfRouting
     }
 
     parent::loadConfiguration();
+  }
+
+  protected function getConfigFileName()
+  {
+    return sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true);
   }
 
   /**
