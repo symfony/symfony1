@@ -969,7 +969,7 @@ abstract class Doctrine_Query_Abstract
      * @param array $params
      * @return Doctrine_Collection            the root collection
      */
-    public function execute($params = array(), $hydrationMode = null, $hydrationPolicy = null)
+    public function execute($params = array(), $hydrationMode = null)
     {
         // Clean any possible processed params
         $this->_execParams = array();
@@ -984,10 +984,6 @@ abstract class Doctrine_Query_Abstract
 
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
-        }
-
-        if ($hydrationPolicy !== null) {
-            $this->_hydrator->setHydrationPolicy($hydrationPolicy);
         }
 
         $hydrationMode = $this->_hydrator->getHydrationMode();
@@ -1016,7 +1012,7 @@ abstract class Doctrine_Query_Abstract
             } else {
                 $this->_hydrator->setQueryComponents($this->_queryComponents);
                 if ($this->_type == self::SELECT && $hydrationMode == Doctrine_Core::HYDRATE_ON_DEMAND) {
-                    $hydrationDriver = $this->_hydrator->getHydratorDriver($stmt, $this->_tableAliasMap);
+                    $hydrationDriver = $this->_hydrator->getHydratorDriver($hydrationMode, $this->_tableAliasMap);
                     $result = new Doctrine_Collection_OnDemand($stmt, $hydrationDriver, $this->_tableAliasMap); 
                 } else {
                     $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
@@ -1780,12 +1776,6 @@ abstract class Doctrine_Query_Abstract
     public function setHydrationMode($hydrationMode)
     {
         $this->_hydrator->setHydrationMode($hydrationMode);
-        return $this;
-    }
-
-    public function setHydrationPolicy($hydrationPolicy)
-    {
-        $this->_hydrator->setHydrationPolicy($hydrationPolicy);
         return $this;
     }
 
