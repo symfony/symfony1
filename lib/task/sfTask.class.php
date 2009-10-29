@@ -545,7 +545,7 @@ abstract class sfTask
         $this->logBlock($error->getMessage(), 'ERROR');
       }
 
-      $value = $this->ask($question, null, $options['style']);
+      $value = $this->ask($question, $options['style'], null);
 
       try
       {
