@@ -26,7 +26,7 @@
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */
-class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, Countable, ArrayAccess
+class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, ArrayAccess
 {
   /**
    * The iterator to be used.
@@ -155,15 +155,5 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   public function offsetUnset($offset)
   {
     throw new sfException('Cannot unset values.');
-  }
-
-  /**
-   * Returns the size of the array (are required by the Countable interface).
-   *
-   * @return int The size of the array
-   */
-  public function count()
-  {
-    return count($this->value);
   }
 }

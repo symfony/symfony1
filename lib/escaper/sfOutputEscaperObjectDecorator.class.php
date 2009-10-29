@@ -18,7 +18,7 @@
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */
-class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
+class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator implements Countable
 {
   /**
    * Magic PHP method that intercepts method calls, calls them on the objects
@@ -96,5 +96,17 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
   public function __toString()
   {
     return $this->escape($this->escapingMethod, $this->value->__toString());
+  }
+
+  /**
+   * Returns the size of the object if it implements Countable (is required by the Countable interface).
+   *
+   * It returns 1 if other cases (which is the default PHP behavior in such a case).
+   *
+   * @return int The size of the object
+   */
+  public function count()
+  {
+    return count($this->value);
   }
 }

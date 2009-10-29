@@ -24,7 +24,7 @@ class sfException extends Exception
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(3);
+$t = new lime_test(5);
 
 class OutputEscaperTest
 {
@@ -56,3 +56,22 @@ $t->is($array[2], '&lt;strong&gt;escaped!&lt;/strong&gt;', 'The escaped object b
 $t->diag('__toString()');
 
 $t->is($escaped->__toString(), '&lt;strong&gt;escaped!&lt;/strong&gt;', 'The escaped object behaves like the real object');
+
+class Foo
+{
+}
+
+class FooCountable implements Countable
+{
+  public function count()
+  {
+    return 2;
+  }
+}
+
+// implements Countable
+$t->diag('implements Countable');
+$foo = sfOutputEscaper::escape('esc_entities', new Foo());
+$fooc = sfOutputEscaper::escape('esc_entities', new FooCountable());
+$t->is(count($foo), 1, '->count() returns 1 if the embedded object does not implement the Countable interface');
+$t->is(count($fooc), 2, '->count() returns the count() for the embedded object');
