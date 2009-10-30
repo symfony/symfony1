@@ -444,7 +444,7 @@ END;
         $length = $column['length'];
         $type = $column['type'];
         unset($column['length'], $column['type']);
-        return "        \$this->changeColumn('" . $tableName . "', '" . $columnName. "', '" . $length . "', '" . $type . "', " . $this->varExport($column) . ");";
+        return "        \$this->changeColumn('" . $tableName . "', '" . $columnName. "', '" . $type . "', '" . $length . "', " . $this->varExport($column) . ");";
     }
 
     /**
