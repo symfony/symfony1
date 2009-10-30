@@ -1520,7 +1520,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $localFieldName = $this->_table->getFieldName($rel->getLocal());
 
                 if ($value !== self::$_null) {
-                    $relatedTable = $value->getTable();
+                    $relatedTable = $rel->getTable();
                     $foreignFieldName = $relatedTable->getFieldName($rel->getForeign());
                 }
 
