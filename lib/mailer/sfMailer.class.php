@@ -307,7 +307,7 @@ class sfMailer extends Swift_Mailer
   {
     if (self::SPOOL != $this->strategy)
     {
-      throw new LogicException(sprintf('You cannot only send message in the spools if the delivery strategy is "spool" (%s is the current strategy).', $this->strategy));
+      throw new LogicException(sprintf('You can only send messages in the spool if the delivery strategy is "spool" (%s is the current strategy).', $this->strategy));
     }
 
     return $this->spool->flushQueue($this->realtimeTransport, $failedRecipients);
