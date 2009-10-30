@@ -539,6 +539,9 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             }
             $query->from($this->_table->getComponentName());
             $query->where($this->_table->getComponentName() . '.id IN (' . substr(str_repeat("?, ", count($list)),0,-2) . ')');
+            if ( ! $list) {
+                $query->where($this->_table->getComponentName() . '.id IN (' . substr(str_repeat("?, ", count($list)),0,-2) . ')', $list);
+            }
 
             return $query;
         }
@@ -556,6 +559,10 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
                     $list[] = $value;
                 }
             }
+        }
+
+        if ( ! $list) {
+            return;
         }
 
         $dql     = $rel->getRelationDql(count($list), 'collection');
