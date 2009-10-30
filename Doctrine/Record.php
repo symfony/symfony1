@@ -1005,11 +1005,17 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         if (is_null($name)) {
             foreach ($this->_table->getRelations() as $rel) {
-                $this->_references[$rel->getAlias()] = $rel->fetchRelatedFor($this);
+                $reference = $rel->fetchRelatedFor($this);
+                if ($reference instanceof Doctrine_Collection || ($reference && $reference->exists())) {
+                    $this->_references[$rel->getAlias()] = $reference;
+                }
             }
         } else {
             $rel = $this->_table->getRelation($name);
-            $this->_references[$name] = $rel->fetchRelatedFor($this);
+            $reference = $rel->fetchRelatedFor($this);
+            if ($reference instanceof Doctrine_Collection || ($reference && $reference->exists())) {
+                $this->_references[$name] = $reference;
+            }
         }
     }
 
