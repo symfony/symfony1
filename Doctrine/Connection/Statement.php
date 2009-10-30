@@ -242,12 +242,13 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
                 }
 
                 $pos = 0;
-                foreach ($params as $key => $param) {
+                foreach ($params as $key => $value) {
                     $pos++;
-                    if (is_resource($param)) {
-                        $this->_stmt->bindParam($pos, $params[$key], Doctrine_Core::PARAM_LOB);
+                    $param = is_numeric($key) ?  $pos : $key;
+                    if (is_resource($value)) {
+                        $this->_stmt->bindParam($param, $params[$key], Doctrine_Core::PARAM_LOB);
                     } else {
-                        $this->_stmt->bindParam($pos, $params[$key]);
+                        $this->_stmt->bindParam($param, $params[$key]);
                     }
                 }
 
