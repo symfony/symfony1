@@ -384,6 +384,8 @@ class Doctrine_Import extends Doctrine_Connection_Module
               $definition['tableName'] = $table;
               $definition['className'] = Doctrine_Inflector::classify($table);
               $definition['columns'] = $connection->import->listTableColumns($table);
+              $definition['connection'] = $connection->getName();
+              $definition['connectionClassName'] = $definition['className'];
 
               try {
                   $definition['relations'] = array();

@@ -69,6 +69,7 @@ class Doctrine_Export_Schema
             $data = $recordTable->getExportableFormat();
             
             $table = array();
+            $table['connection'] = $recordTable->getConnection()->getName();
             $remove = array('ptype', 'ntype', 'alltypes');
             // Fix explicit length in schema, concat it to type in this format: type(length)
             foreach ($data['columns'] AS $name => $column) {
