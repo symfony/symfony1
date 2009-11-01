@@ -111,19 +111,19 @@ EOF;
 // ->wrapMethod()
 $t->diag('->wrapMethod()');
 $m = new sfClassManipulator($source);
-$t->is($m->wrapMethod('bar', '// code before', '// code after'), $source, '->wrapMethod() does nothing if the method does not exist.');
+$t->is(fix_linebreaks($m->wrapMethod('bar', '// code before', '// code after')), fix_linebreaks($source), '->wrapMethod() does nothing if the method does not exist.');
 $m = new sfClassManipulator($source);
-$t->is($m->wrapMethod('foo', '// code before'), $sourceWithCodeBefore, '->wrapMethod() adds code before the beginning of a method.');
+$t->is(fix_linebreaks($m->wrapMethod('foo', '// code before')), fix_linebreaks($sourceWithCodeBefore), '->wrapMethod() adds code before the beginning of a method.');
 $m = new sfClassManipulator($source);
-$t->is($m->wrapMethod('foo', '', '// code after'), $sourceWithCodeAfter, '->wrapMethod() adds code after the end of a method.');
-$t->is($m->wrapMethod('foo', '// code before'), $sourceWithCodeBeforeAndAfter, '->wrapMethod() adds code to the previously manipulated code.');
+$t->is(fix_linebreaks($m->wrapMethod('foo', '', '// code after')), fix_linebreaks($sourceWithCodeAfter), '->wrapMethod() adds code after the end of a method.');
+$t->is(fix_linebreaks($m->wrapMethod('foo', '// code before')), fix_linebreaks($sourceWithCodeBeforeAndAfter), '->wrapMethod() adds code to the previously manipulated code.');
 
 // ->getCode()
 $t->diag('->getCode()');
 $m = new sfClassManipulator($source);
-$t->is($m->getCode(), $source, '->getCode() returns the source code when no manipulations has been done');
+$t->is(fix_linebreaks($m->getCode()), fix_linebreaks($source), '->getCode() returns the source code when no manipulations has been done');
 $m->wrapMethod('foo', '', '// code after');
-$t->is($m->getCode(), $sourceWithCodeAfter, '->getCode() returns the modified code');
+$t->is(fix_linebreaks($m->getCode()), fix_linebreaks($sourceWithCodeAfter), '->getCode() returns the modified code');
 
 // ->setFile() ->getFile()
 $t->diag('->setFile() ->getFile()');
@@ -143,7 +143,7 @@ $t->diag('->save()');
 $m = sfClassManipulator::fromFile($file);
 $m->wrapMethod('foo', '', '// code after');
 $m->save();
-$t->is(file_get_contents($file), $sourceWithCodeAfter, '->save() saves the modified code if a file is associated with the instance');
+$t->is(fix_linebreaks(file_get_contents($file)), fix_linebreaks($sourceWithCodeAfter), '->save() saves the modified code if a file is associated with the instance');
 
 unlink($file);
 
@@ -198,7 +198,7 @@ EOF;
 
 $m = new sfClassManipulator($source);
 $m->filterMethod('foo', array($f, 'filter1'));
-$t->is($m->getCode(), $source, '->filterMethod() does not change the code if the filter does nothing');
+$t->is(fix_linebreaks($m->getCode()), fix_linebreaks($source), '->filterMethod() does not change the code if the filter does nothing');
 $t->is_deeply($f->lines, array(
   '  function foo()'.PHP_EOL,
   '  {'.PHP_EOL,
