@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 ob_start();
-$plan = 15
+$plan = 15;
 $t = new lime_test($plan);
 
 if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite'))
