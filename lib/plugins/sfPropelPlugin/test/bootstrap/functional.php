@@ -8,8 +8,8 @@
  * file that was distributed with this source code.
  */
 
-// we need sqlite for functional tests
-if (!extension_loaded('SQLite'))
+// we need SQLite for functional tests
+if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite'))
 {
   return false;
 }

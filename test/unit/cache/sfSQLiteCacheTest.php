@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 $plan = 129;
 $t = new lime_test($plan);
 
-if (!extension_loaded('SQLite')) 
+if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite')) 
 {
   $t->skip('SQLite extension not loaded, skipping tests', $plan);
   return;

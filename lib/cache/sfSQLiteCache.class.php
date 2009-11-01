@@ -35,9 +35,9 @@ class sfSQLiteCache extends sfCache
    */
   public function initialize($options = array())
   {
-    if (!extension_loaded('sqlite'))
+    if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite'))
     {
-      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" extension to be loaded.');
+      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" or "pdo_sqlite" extension to be loaded.');
     }
 
     parent::initialize($options);
