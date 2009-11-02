@@ -24,8 +24,8 @@ class sfProjectOptimizeTask extends sfBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The server name'),
-      new sfCommandArgument('environment', sfCommandArgument::OPTIONAL, 'The server name', 'prod'),
+      new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The application name'),
+      new sfCommandArgument('environment', sfCommandArgument::OPTIONAL, 'The environment name', 'prod'),
     ));
 
     $this->namespace = 'project';
