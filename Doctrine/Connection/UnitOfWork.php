@@ -92,7 +92,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     }
                 
                     foreach ($record->getPendingUnlinks() as $alias => $ids) {
-                        if ($ids) {
+                        if ($ids === false) {
                             $record->unlinkInDb($alias, array());
                         } else if ($ids) {
                             $record->unlinkInDb($alias, array_keys($ids));
