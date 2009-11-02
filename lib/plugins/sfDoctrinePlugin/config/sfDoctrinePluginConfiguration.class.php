@@ -81,7 +81,6 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
     $options = array(
       'generateBaseClasses'  => true,
       'generateTableClasses' => true,
-      'packagesPath'         => sfConfig::get('sf_plugins_dir'),
       'packagesPrefix'       => 'Plugin',
       'suffix'               => '.class.php',
       'baseClassesDirectory' => 'base',
