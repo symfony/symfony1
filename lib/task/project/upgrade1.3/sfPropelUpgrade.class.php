@@ -87,12 +87,12 @@ class sfPropelUpgrade extends sfUpgrade
         {
           if (!$header)
           {
-            $contents = trim($contents).PHP_EOL.PHP_EOL.'; symfony 1.3 upgrade ('.date('Y/m/d H:i:s').')'.PHP_EOL;
+            $contents = rtrim($contents).PHP_EOL.PHP_EOL.'; symfony 1.3 upgrade ('.date('Y/m/d H:i:s').')'.PHP_EOL;
             $header = true;
           }
 
           // insert now
-          $contents = trim($contents).PHP_EOL.$key.' = '.$value.PHP_EOL;
+          $contents = $contents.$key.' = '.$value.PHP_EOL;
           $this->properties->setProperty($key, $value);
         }
       }
@@ -101,13 +101,13 @@ class sfPropelUpgrade extends sfUpgrade
         if (!$insert)
         {
           // remove now
-          $contents = preg_replace('/^'.preg_quote($key).'[\s=]/m', ';\\0', $contents).PHP_EOL;
+          $contents = preg_replace('/^'.preg_quote($key).'[\s=]/m', ';\\0', $contents);
           $this->properties->setProperty($key, null);
         }
       }
       else
       {
-        $failures[] = sprintf('%s (%s => %s)', $key, $current, $value);
+        $failures[] = $key;
       }
     }
 
