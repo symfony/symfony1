@@ -1822,7 +1822,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 if ($record->getTable()->getAttribute(Doctrine_Core::ATTR_HYDRATE_OVERWRITE)) {
                     $record->hydrate($this->_data);
                     if ($record->state() == Doctrine_Record::STATE_PROXY) {
-                        if (count($this->_data) >= $this->getColumnCount()) {
+                        if (!$record->isInProxyState()) {
                             $record->state(Doctrine_Record::STATE_CLEAN);
                         }
                     }
