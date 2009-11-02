@@ -73,6 +73,14 @@ EOF;
     $finder = sfFinder::type('file')->name('*.php');
     $this->getFilesystem()->replaceTokens($finder->in(sfConfig::get('sf_lib_dir').'/form/'), '##', '##', $constants);
 
+    // check for base form class
+    if (!class_exists('BaseForm'))
+    {
+      $file = sfConfig::get('sf_lib_dir').'/'.$options['form-dir-name'].'/BaseForm.class.php';
+      $this->getFilesystem()->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/project/lib/form/BaseForm.class.php', $file);
+      $this->getFilesystem()->replaceTokens($file, '##', '##', $constants);
+    }
+
     $this->reloadAutoload();
   }
 }
