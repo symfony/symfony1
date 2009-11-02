@@ -18,6 +18,29 @@
  */
 class sfPropelUpgrade extends sfUpgrade
 {
+  static protected
+    $inserts = array(
+      'propel.behavior.default'                        => 'symfony,symfony_i18n',
+      'propel.behavior.symfony.class'                  => 'plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorSymfony',
+      'propel.behavior.symfony_i18n.class'             => 'plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorI18n',
+      'propel.behavior.symfony_i18n_translation.class' => 'plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorI18nTranslation',
+      'propel.behavior.symfony_behaviors.class'        => 'plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorSymfonyBehaviors',
+      'propel.behavior.symfony_timestampable.class'    => 'plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorTimestampable',
+    ),
+    $removes = array(
+      'propel.builder.peer.class'              => 'plugins.sfPropelPlugin.lib.builder.SfPeerBuilder',
+      'propel.builder.object.class'            => 'plugins.sfPropelPlugin.lib.builder.SfObjectBuilder',
+      'propel.builder.objectstub.class'        => 'plugins.sfPropelPlugin.lib.builder.SfExtensionObjectBuilder',
+      'propel.builder.peerstub.class'          => 'plugins.sfPropelPlugin.lib.builder.SfExtensionPeerBuilder',
+      'propel.builder.objectmultiextend.class' => 'plugins.sfPropelPlugin.lib.builder.SfMultiExtendObjectBuilder',
+      'propel.builder.mapbuilder.class'        => 'plugins.sfPropelPlugin.lib.builder.SfMapBuilderBuilder',
+      'propel.builder.nestedset.class'         => 'plugins.sfPropelPlugin.lib.builder.SfNestedSetBuilder',
+      'propel.builder.nestedsetpeer.class'     => 'plugins.sfPropelPlugin.lib.builder.SfNestedSetPeerBuilder',
+    );
+
+  protected
+    $properties = null;
+
   public function upgrade()
   {
     if (
@@ -31,60 +54,71 @@ class sfPropelUpgrade extends sfUpgrade
 
     if (file_exists($file = sfConfig::get('sf_config_dir').'/propel.ini'))
     {
-      $original = file_get_contents($file);
+      // use phing to parse propel.ini
+      Phing::startup();
+      $this->properties = new Properties();
+      $this->properties->load(new PhingFile($file));
 
-      // remove custom builders
-      $remove = <<<EOF
+      $modified = $original = file_get_contents($file);
+      $modified = $this->upgradePropelIni($modified, self::$removes, false);
+      $modified = $this->upgradePropelIni($modified, self::$inserts, true);
 
-; builder settings
-propel.builder.peer.class              = plugins.sfPropelPlugin.lib.builder.SfPeerBuilder
-propel.builder.object.class            = plugins.sfPropelPlugin.lib.builder.SfObjectBuilder
-propel.builder.objectstub.class        = plugins.sfPropelPlugin.lib.builder.SfExtensionObjectBuilder
-propel.builder.peerstub.class          = plugins.sfPropelPlugin.lib.builder.SfExtensionPeerBuilder
-propel.builder.objectmultiextend.class = plugins.sfPropelPlugin.lib.builder.SfMultiExtendObjectBuilder
-propel.builder.mapbuilder.class        = plugins.sfPropelPlugin.lib.builder.SfMapBuilderBuilder
-
-EOF;
-
-      $insert = <<<EOF
-
-; behaviors
-propel.behavior.default                        = symfony,symfony_i18n
-propel.behavior.symfony.class                  = plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorSymfony
-propel.behavior.symfony_i18n.class             = plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorI18n
-propel.behavior.symfony_i18n_translation.class = plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorI18nTranslation
-propel.behavior.symfony_behaviors.class        = plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorSymfonyBehaviors
-propel.behavior.symfony_timestampable.class    = plugins.sfPropelPlugin.lib.behavior.SfPropelBehaviorTimestampable
-
-EOF;
-
-      // remove builders
-      $modified = str_replace($remove, '', $original);
-
-      if (false !== strpos($modified, 'plugins.sfPropelPlugin.lib.builder'))
+      if ($original != $modified)
       {
-        $temp = sfConfig::get('sf_config_dir').'/propel_new.ini';
+        $this->logSection('propel', 'Upgrading '.sfDebug::shortenFilePath($file));
+        file_put_contents($file, $modified);
+      }
+    }
+  }
 
-        $this->logSection('propel', 'You must update config/propel.ini manually', null, 'ERROR');
-        $this->logSection('propel', 'see '.$temp, null, 'ERROR');
+  protected function upgradePropelIni($contents, $directives, $insert = false)
+  {
+    static $header = false;
 
-        $this->logSection('file+', $temp);
-        file_put_contents($temp, $new);
+    $failures = array();
+
+    foreach ($directives as $key => $value)
+    {
+      $current = $this->properties->get($key);
+
+      if (null === $current)
+      {
+        if ($insert)
+        {
+          if (!$header)
+          {
+            $contents = trim($contents).PHP_EOL.PHP_EOL.'; symfony 1.3 upgrade ('.date('Y/m/d H:i:s').')'.PHP_EOL;
+            $header = true;
+          }
+
+          // insert now
+          $contents = trim($contents).PHP_EOL.$key.' = '.$value.PHP_EOL;
+          $this->properties->setProperty($key, $value);
+        }
+      }
+      else if ($value == $current)
+      {
+        if (!$insert)
+        {
+          // remove now
+          $contents = preg_replace('/^'.preg_quote($key).'[\s=]/m', ';\\0', $contents).PHP_EOL;
+          $this->properties->setProperty($key, null);
+        }
       }
       else
       {
-        // add behaviors
-        if (false === strpos($modified, 'propel.behavior.symfony'))
-        {
-          $modified .= $insert;
-        }
-
-        if ($original != $modified)
-        {
-          $this->logSection('file+', $file);
-          file_put_contents($file, $modified);
-        }
+        $failures[] = sprintf('%s (%s => %s)', $key, $current, $value);
       }
     }
+
+    if ($failures)
+    {
+      $this->logBlock(array_merge(
+        array(sprintf('Please %s or upgrade the following propel.ini directive(s):', $insert ? 'insert' : 'remove'), ''),
+        array_map(create_function('$v', 'return \' - \'.$v;'), $failures)
+      ), 'ERROR_LARGE');
+    }
+
+    return $contents;
   }
 }

@@ -44,11 +44,15 @@ EOF;
   {
     foreach ($this->getUpgradeClasses() as $class)
     {
+      $this->logSection('upgrade', strtolower(str_replace(array('sf', 'Upgrade'), '', $class)));
+
       $upgrader = new $class($this->dispatcher, $this->formatter);
       $upgrader->setCommandApplication($this->commandApplication);
       $upgrader->setConfiguration($this->configuration);
       $upgrader->upgrade();
     }
+
+    $this->logSection('upgrade', 'complete!');
   }
 
   protected function getUpgradeClasses()
