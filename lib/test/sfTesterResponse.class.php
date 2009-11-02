@@ -182,7 +182,20 @@ class sfTesterResponse extends sfTester
 
       if (true === $checkDTD)
       {
-        $local = 'file://'.str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__)).'/w3';
+        $cache = sfConfig::get('sf_cache_dir').'/sf_tester_response/w3';
+        $local = 'file://'.str_replace(DIRECTORY_SEPARATOR, '/', $cache);
+
+        if (!file_exists($cache.'/TR/xhtml11/DTD/xhtml11.dtd'))
+        {
+          $filesystem = new sfFilesystem();
+
+          $finder = sfFinder::type('any')->discard('.sf');
+          $filesystem->mirror(dirname(__FILE__).'/w3', $cache, $finder);
+
+          $finder = sfFinder::type('file');
+          $filesystem->replaceTokens($finder->in($cache), '##', '##', array('LOCAL_W3' => $local));
+        }
+
         $content = preg_replace('#(<!DOCTYPE[^>]+")http://www.w3.org(.*")#i', '\\1'.$local.'\\2', $content);
         $dom->validateOnParse = $checkDTD;
       }

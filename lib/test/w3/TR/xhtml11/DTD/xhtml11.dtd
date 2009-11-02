@@ -92,7 +92,7 @@
 <![%xhtml-inlstyle.module;[
 <!ENTITY % xhtml-inlstyle.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Inline Style 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlstyle-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-inlstyle-1.mod" >
 %xhtml-inlstyle.mod;]]>
 
 <!-- declare Document Model module instantiated in framework
@@ -106,7 +106,7 @@
 <![%xhtml-framework.module;[
 <!ENTITY % xhtml-framework.mod
      PUBLIC "-//W3C//ENTITIES XHTML Modular Framework 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-framework-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-framework-1.mod" >
 %xhtml-framework.mod;]]>
 
 <!-- Post-Framework Redeclaration placeholder  ................... -->
@@ -123,7 +123,7 @@
 <![%xhtml-text.module;[
 <!ENTITY % xhtml-text.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Text 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-text-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-text-1.mod" >
 %xhtml-text.mod;]]>
 
 <!-- Hypertext Module (required) ................................. -->
@@ -131,7 +131,7 @@
 <![%xhtml-hypertext.module;[
 <!ENTITY % xhtml-hypertext.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Hypertext 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-hypertext-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-hypertext-1.mod" >
 %xhtml-hypertext.mod;]]>
 
 <!-- Lists Module (required)  .................................... -->
@@ -139,7 +139,7 @@
 <![%xhtml-list.module;[
 <!ENTITY % xhtml-list.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Lists 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-list-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-list-1.mod" >
 %xhtml-list.mod;]]>
 
 <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
@@ -149,7 +149,7 @@
 <![%xhtml-edit.module;[
 <!ENTITY % xhtml-edit.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Editing Elements 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-edit-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-edit-1.mod" >
 %xhtml-edit.mod;]]>
 
 <!-- BIDI Override Module  ....................................... -->
@@ -157,7 +157,7 @@
 <![%xhtml-bdo.module;[
 <!ENTITY % xhtml-bdo.mod
      PUBLIC "-//W3C//ELEMENTS XHTML BIDI Override Element 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-bdo-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-bdo-1.mod" >
 %xhtml-bdo.mod;]]>
 
 <!-- Ruby Module  ................................................ -->
@@ -167,7 +167,7 @@
 <![%xhtml-ruby.module;[
 <!ENTITY % xhtml-ruby.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Ruby 1.0//EN"
-            "http://www.w3.org/TR/ruby/xhtml-ruby-1.mod" >
+            "##LOCAL_W3##/TR/ruby/xhtml-ruby-1.mod" >
 %xhtml-ruby.mod;]]>
 
 <!-- Presentation Module  ........................................ -->
@@ -175,7 +175,7 @@
 <![%xhtml-pres.module;[
 <!ENTITY % xhtml-pres.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Presentation 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-pres-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-pres-1.mod" >
 %xhtml-pres.mod;]]>
 
 <!-- Link Element Module  ........................................ -->
@@ -183,7 +183,7 @@
 <![%xhtml-link.module;[
 <!ENTITY % xhtml-link.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Link Element 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-link-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-link-1.mod" >
 %xhtml-link.mod;]]>
 
 <!-- Document Metainformation Module  ............................ -->
@@ -191,7 +191,7 @@
 <![%xhtml-meta.module;[
 <!ENTITY % xhtml-meta.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Metainformation 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-meta-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-meta-1.mod" >
 %xhtml-meta.mod;]]>
 
 <!-- Base Element Module  ........................................ -->
@@ -199,7 +199,7 @@
 <![%xhtml-base.module;[
 <!ENTITY % xhtml-base.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Base Element 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-base-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-base-1.mod" >
 %xhtml-base.mod;]]>
 
 <!-- Scripting Module  ........................................... -->
@@ -207,7 +207,7 @@
 <![%xhtml-script.module;[
 <!ENTITY % xhtml-script.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Scripting 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-script-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-script-1.mod" >
 %xhtml-script.mod;]]>
 
 <!-- Style Sheets Module  ......................................... -->
@@ -215,7 +215,7 @@
 <![%xhtml-style.module;[
 <!ENTITY % xhtml-style.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Style Sheets 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-style-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-style-1.mod" >
 %xhtml-style.mod;]]>
 
 <!-- Image Module  ............................................... -->
@@ -223,7 +223,7 @@
 <![%xhtml-image.module;[
 <!ENTITY % xhtml-image.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Images 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-image-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-image-1.mod" >
 %xhtml-image.mod;]]>
 
 <!-- Client-side Image Map Module  ............................... -->
@@ -231,7 +231,7 @@
 <![%xhtml-csismap.module;[
 <!ENTITY % xhtml-csismap.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Client-side Image Maps 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-csismap-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-csismap-1.mod" >
 %xhtml-csismap.mod;]]>
 
 <!-- Server-side Image Map Module  ............................... -->
@@ -239,7 +239,7 @@
 <![%xhtml-ssismap.module;[
 <!ENTITY % xhtml-ssismap.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Server-side Image Maps 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-ssismap-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-ssismap-1.mod" >
 %xhtml-ssismap.mod;]]>
 
 <!-- Param Element Module  ....................................... -->
@@ -247,7 +247,7 @@
 <![%xhtml-param.module;[
 <!ENTITY % xhtml-param.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Param Element 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-param-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-param-1.mod" >
 %xhtml-param.mod;]]>
 
 <!-- Embedded Object Module  ..................................... -->
@@ -255,7 +255,7 @@
 <![%xhtml-object.module;[
 <!ENTITY % xhtml-object.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Embedded Object 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-object-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-object-1.mod" >
 %xhtml-object.mod;]]>
 
 <!-- Tables Module ............................................... -->
@@ -263,7 +263,7 @@
 <![%xhtml-table.module;[
 <!ENTITY % xhtml-table.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Tables 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-table-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-table-1.mod" >
 %xhtml-table.mod;]]>
 
 <!-- Forms Module  ............................................... -->
@@ -271,7 +271,7 @@
 <![%xhtml-form.module;[
 <!ENTITY % xhtml-form.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Forms 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-form-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-form-1.mod" >
 %xhtml-form.mod;]]>
 
 <!-- Legacy Markup ............................................... -->
@@ -279,7 +279,7 @@
 <![%xhtml-legacy.module;[
 <!ENTITY % xhtml-legacy.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Legacy Markup 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-legacy-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-legacy-1.mod" >
 %xhtml-legacy.mod;]]>
 
 <!-- Document Structure Module (required)  ....................... -->
@@ -287,7 +287,7 @@
 <![%xhtml-struct.module;[
 <!ENTITY % xhtml-struct.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Document Structure 1.0//EN"
-            "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-struct-1.mod" >
+            "##LOCAL_W3##/TR/xhtml-modularization/DTD/xhtml-struct-1.mod" >
 %xhtml-struct.mod;]]>
 
 <!-- end of XHTML 1.1 DTD  ................................................. -->
