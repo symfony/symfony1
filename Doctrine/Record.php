@@ -2086,7 +2086,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 } else if ($reference instanceof Doctrine_Collection) {
                     foreach ($reference as $record) {
                         if ($modified = $record->isModified($deep)) {
-                            break;
+                            break 2;
                         }
                     }
                 }
