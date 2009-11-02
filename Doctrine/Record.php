@@ -1973,9 +1973,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 if (is_array($value)) {
                     if (isset($value[0]) && ! is_array($value[0])) {
                         $this->unlink($key, array(), false);
-                        foreach ($value as $id) {
-                            $this->link($key, $id, false);
-                        }
+                        $this->link($key, $value, false);
                     } else {
                         $this->$key->synchronizeWithArray($value);
                     }
@@ -2370,25 +2368,31 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->loadReference($alias);
         }		
 
+        $allIds = array();
         if (isset($this->_references[$alias])) {
-            foreach ($this->_references[$alias] as $k => $record) {
-                if (in_array(current($record->identifier()), $ids) || empty($ids)) {
-                    $this->_references[$alias]->remove($k);
+            if ($this->_references[$alias] instanceof Doctrine_Record) {
+                $allIds[] = $this->_references[$alias]->identifier();
+                if (in_array($this->_references[$alias]->identifier(), $ids) || empty($ids)) {
+                    unset($this->_references[$alias]);
                 }
+            } else {
+                $allIds = $this->get($alias)->getPrimaryKeys();
+                foreach ($this->_references[$alias] as $k => $record) {
+                    if (in_array(current($record->identifier()), $ids) || empty($ids)) {
+                        $this->_references[$alias]->remove($k);
+                    }
+                }
+                $this->_references[$alias]->takeSnapshot();
             }
-
-            $this->_references[$alias]->takeSnapshot();
         }
 
         if ( ! $this->exists() || $now === false) {
-            if (count($ids)) {
-                foreach ($ids as $id) {
-                    $this->_pendingUnlinks[$alias][$id] = true;
-                }
-            } else {
-                $this->_pendingUnlinks[$alias] = false;
+            if ( ! $ids) {
+                $ids = $allIds;
             }
-
+            foreach ($ids as $id) {
+                $this->_pendingUnlinks[$alias][$id] = true;
+            }
             return $this;
         } else {
             return $this->unlinkInDb($alias, $ids);
@@ -2454,7 +2458,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 ->execute();
 
             foreach ($records as $record) {
-                $this->$alias->add($record);
+                if ($this->$alias instanceof Doctrine_Record) {
+                    $this->$alias = $record;
+                } else {
+                    $this->$alias->add($record);
+                }
             }
 
             foreach ($ids as $id) {
