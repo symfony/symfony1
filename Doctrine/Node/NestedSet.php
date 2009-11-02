@@ -248,7 +248,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $baseAlias = $this->_tree->getBaseAlias();
         $q = $this->_tree->getBaseQuery();
         $q->addWhere("$baseAlias.lft < ? AND $baseAlias.rgt > ?", array($this->getLeftValue(), $this->getRightValue()))
-                ->addOrderBy("$baseAlias.rgt asc");
+          ->addWhere("$baseAlias.level >= ?", $this->record['level'] - 1)
+          ->addOrderBy("$baseAlias.rgt asc");
         $q = $this->_tree->returnQueryWithRootId($q, $this->getRootValue());
         $result = $q->execute();
         
