@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+require_once dirname(__FILE__).'/sfRichTextEditor.class.php';
+
 /**
  * sfRichTextEditorTinyMCE implements the TinyMCE rich text editor.
  *

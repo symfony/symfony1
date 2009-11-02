@@ -510,7 +510,11 @@ function textarea_tag($name, $content = null, $options = array())
 
     $editorClass = 'sfRichTextEditor'.$rich;
 
-    if (!class_exists($editorClass))
+    if (!class_exists($editorClass, false) && file_exists($file = dirname(__FILE__).'/'.$editorClass.'.class.php'))
+    {
+      require_once $file;
+    }
+    else if (!class_exists($editorClass))
     {
       throw new sfConfigurationException(sprintf('The rich text editor "%s" does not exist.', $editorClass));
     }
