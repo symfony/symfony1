@@ -53,11 +53,11 @@ class Doctrine_Expression
      */
     public function __construct($expr, $conn = null)
     {
-        $this->_tokenizer = new Doctrine_Query_Tokenizer();
-        $this->setExpression($expr);
         if ($conn !== null) {
             $this->_conn = $conn;
         }
+        $this->_tokenizer = new Doctrine_Query_Tokenizer();
+        $this->setExpression($expr);
     }
 
     /**

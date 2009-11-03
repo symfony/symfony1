@@ -99,7 +99,7 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 	        $event->getInvoker()->set($name, null);
 
             if ($this->_auditLog->getOption('deleteVersions')) {
-    	        $q = Doctrine_Query::create();
+    	        $q = Doctrine_Query::create($event->getInvoker()->getTable()->getConnection());
     	        foreach ((array) $this->_auditLog->getOption('table')->getIdentifier() as $id) {
     	            $conditions[] = 'obj.' . $id . ' = ?';
     	            $values[] = $event->getInvoker()->get($id);

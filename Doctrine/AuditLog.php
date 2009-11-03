@@ -94,9 +94,9 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         // the version column should be part of the primary key definition
         $this->hasColumn(
-	        $this->_options['version']['name'], 
-            $this->_options['version']['type'], 
-            $this->_options['version']['length'], 
+	        $this->_options['version']['name'],
+            $this->_options['version']['type'],
+            $this->_options['version']['length'],
             $this->_options['version']['options']);
     }
 
@@ -112,7 +112,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     public function getVersion(Doctrine_Record $record, $version, $hydrationMode = Doctrine_Core::HYDRATE_ARRAY, $asCollection = true)
     {
         $className = $this->_options['className'];
-        $method    = ($asCollection) ? 'execute' : 'fetchOne'; 
+        $method    = ($asCollection) ? 'execute' : 'fetchOne';
 
         $q = new Doctrine_Query();
 
@@ -147,7 +147,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             $values[] = $record->get($id);
         }
 
-        $q = Doctrine_Query::create()
+        $q = Doctrine_Query::create($record->getTable()->getConnection())
                 ->select($select)
                 ->from($className)
                 ->where(implode(' AND ',$conditions));
