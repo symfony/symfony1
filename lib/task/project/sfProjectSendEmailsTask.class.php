@@ -44,21 +44,8 @@ EOF;
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    $mailer = $this->initializeMailer();
-
-    $sent = $mailer->flushQueue();
+    $sent = $this->getMailer()->flushQueue();
 
     $this->logSection('project', sprintf('sent %s emails', $sent));
-  }
-
-  protected function initializeMailer()
-  {
-    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift.php';
-    Swift::registerAutoload();
-    sfMailer::initialize();
-
-    $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
-
-    return new $config['mailer']['class']($this->dispatcher, $config['mailer']['param']);
   }
 }

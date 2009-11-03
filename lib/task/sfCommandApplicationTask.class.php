@@ -19,6 +19,7 @@
 abstract class sfCommandApplicationTask extends sfTask
 {
   protected
+    $mailer = null,
     $commandApplication = null;
 
   /**
@@ -66,7 +67,7 @@ abstract class sfCommandApplicationTask extends sfTask
   {
     if (null === $this->commandApplication)
     {
-      throw new LogicException('No command application associated with this task yet.');
+      throw new LogicException('Unable to create a task as no command application is associated with this task yet.');
     }
 
     $task = $this->commandApplication->getTaskToExecute($name);
@@ -93,5 +94,26 @@ abstract class sfCommandApplicationTask extends sfTask
   protected function runTask($name, $arguments = array(), $options = array())
   {
     return $this->createTask($name)->run($arguments, $options);
+  }
+
+  protected function getMailer()
+  {
+    if (!$this->mailer)
+    {
+      $this->mailer = $this->initializeMailer();
+    }
+
+    return $this->mailer;
+  }
+
+  protected function initializeMailer()
+  {
+    require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/swiftmailer/classes/Swift.php';
+    Swift::registerAutoload();
+    sfMailer::initialize();
+
+    $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
+
+    return new $config['mailer']['class']($this->dispatcher, $config['mailer']['param']);
   }
 }
