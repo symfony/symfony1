@@ -54,7 +54,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
     {
        
         try {
-          $data = sfYaml::dump($array);
+          $data = sfYaml::dump($array, 6);
           
           return $this->doDump($data, $path);
           
