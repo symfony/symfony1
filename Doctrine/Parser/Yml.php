@@ -19,6 +19,13 @@
  * <http://www.phpdoctrine.org>.
  */
 
+if ( ! class_exists('sfYaml')) {
+    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYaml.php';
+    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlDumper.php';
+    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlInline.php';
+    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlParser.php';
+}
+
 /**
  * Doctrine_Parser_Yml
  *
@@ -47,7 +54,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
     {
        
         try {
-          $data = Doctrine_Parser_YamlSf::dump($array);
+          $data = sfYaml::dump($array);
           
           return $this->doDump($data, $path);
           
@@ -77,7 +84,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
            */ 
           $contents = $this->doLoad($path);
 
-          $array = Doctrine_Parser_YamlSf::load($contents);
+          $array = sfYaml::load($contents);
           
           return $array;
           
