@@ -46,7 +46,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      * @param Doctrine_Record $record
      * @return void
      */
-    public function saveGraph(Doctrine_Record $record)
+    public function saveGraph(Doctrine_Record $record, $replace = false)
     {
         $record->assignInheritanceValues();
 
@@ -74,11 +74,19 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 switch ($state) {
                     case Doctrine_Record::STATE_TDIRTY:
                     case Doctrine_Record::STATE_TCLEAN:
-                        $isValid = $this->insert($record);
+                        if ($replace) {
+                            $isValid = $this->replace($record);
+                        } else {
+                            $isValid = $this->insert($record);
+                        }
                         break;
                     case Doctrine_Record::STATE_DIRTY:
                     case Doctrine_Record::STATE_PROXY:
-                        $isValid = $this->update($record);
+                        if ($replace) {
+                            $isValid = $this->replace($record);
+                        } else {
+                            $isValid = $this->update($record);
+                        }
                         break;
                     case Doctrine_Record::STATE_CLEAN:
                         // do nothing
@@ -564,6 +572,40 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     }
 
     /**
+     * Replaces a record into database.
+     *
+     * @param Doctrine_Record $record   
+     * @return boolean                  false if record is not valid
+     */
+    public function replace(Doctrine_Record $record)
+    {
+        if ($record->exists()) {
+            return $this->update($record);
+        } else {
+            if ($record->isValid()) {
+                $this->_assignSequence($record);
+
+                $saveEvent = $record->invokeSaveHooks('pre', 'save');
+                $insertEvent = $record->invokeSaveHooks('pre', 'insert');
+
+                $table = $record->getTable();
+                $identifier = (array) $table->getIdentifier();
+                $data = $record->getPrepared();                
+                $result = $this->conn->replace($table, $data, $identifier);
+
+                $record->invokeSaveHooks('post', 'insert', $insertEvent);
+                $record->invokeSaveHooks('post', 'save', $saveEvent);
+
+                $this->_assignIdentifier($record);
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
      * Inserts a transient record in its table.
      *
      * This method inserts the data of a single record in its assigned table, 
@@ -584,37 +626,9 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
         }
 
-        $identifier = (array) $table->getIdentifier();
-
-        $seq = $record->getTable()->sequenceName;
-
-        if ( ! empty($seq)) {
-            $id = $this->conn->sequence->nextId($seq);
-            $seqName = $table->getIdentifier();
-            $fields[$seqName] = $id;
-
-            $record->assignIdentifier($id);
-        }
-
+        $this->_assignSequence($record);
         $this->conn->insert($table, $fields);
-
-        if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
-            $table->getIdentifierType() != Doctrine_Core::IDENTIFIER_NATURAL) {
-            if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
-                $seq = $table->getTableName() . '_' . $identifier[0];
-            } elseif ($driver == 'oracle') {
-                $seq = $table->getTableName();
-            }
-
-            $id = $this->conn->sequence->lastInsertId($seq);
-
-            if ( ! $id) {
-                throw new Doctrine_Connection_Exception("Couldn't get last insert identifier.");
-            }
-            $record->assignIdentifier($id);
-        } else {
-            $record->assignIdentifier(true);
-        }
+        $this->_assignIdentifier($record);
     }
 
     /**
@@ -877,5 +891,44 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         }
 
         return $dataSet;
+    }
+
+    protected function _assignSequence(Doctrine_Record $record)
+    {
+        $table = $record->getTable();
+        $seq = $table->sequenceName;
+
+        if ( ! empty($seq)) {
+            $id = $this->conn->sequence->nextId($seq);
+            $seqName = $table->getIdentifier();
+            $fields[$seqName] = $id;
+
+            $record->assignIdentifier($id);
+        }
+    }
+
+    protected function _assignIdentifier(Doctrine_Record $record)
+    {
+        $table = $record->getTable();
+        $identifier = (array) $table->getIdentifier();
+        $seq = $table->sequenceName;
+
+        if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
+            $table->getIdentifierType() != Doctrine_Core::IDENTIFIER_NATURAL) {
+            if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
+                $seq = $table->getTableName() . '_' . $identifier[0];
+            } elseif ($driver == 'oracle') {
+                $seq = $table->getTableName();
+            }
+
+            $id = $this->conn->sequence->lastInsertId($seq);
+
+            if ( ! $id) {
+                throw new Doctrine_Connection_Exception("Couldn't get last insert identifier.");
+            }
+            $record->assignIdentifier($id);
+        } else {
+            $record->assignIdentifier(true);
+        }
     }
 }

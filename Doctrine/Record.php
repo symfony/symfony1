@@ -1705,18 +1705,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ($conn === null) {
             $conn = $this->_table->getConnection();
         }
-
-        if ($this->exists()) {
-            return $this->save();
-        } else {
-            if ($this->isValid()) {
-                $identifier = (array) $this->getTable()->getIdentifier();
-                $data = $this->getPrepared();
-                return $conn->replace($this->_table, $data, $identifier);
-            } else {
-                return false;
-            }
-        }
+        return $conn->unitOfWork->saveGraph($this, true);
     }
 
     /**
