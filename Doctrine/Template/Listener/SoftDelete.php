@@ -54,6 +54,17 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     }
 
     /**
+     * Set the hard delete flag so that it is really deleted
+     *
+     * @param boolean $bool
+     * @return void
+     */
+    public function hardDelete($bool)
+    {
+        $this->_options['hardDelete'] = $bool;
+    }
+
+    /**
      * Skip the normal delete options so we can override it with our own
      *
      * @param Doctrine_Event $event
@@ -70,7 +81,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
             $invoker->$name = true;
         }
 
-        $event->skipOperation();
+        if ( ! $this->_options['hardDelete']) {
+            $event->skipOperation();
+        }
     }
 
     /**
