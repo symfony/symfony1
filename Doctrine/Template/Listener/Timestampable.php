@@ -119,7 +119,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
      * @param string $type 
      * @return void
      */
-    public function getTimestamp($type)
+    public function getTimestamp($type, $conn = null)
     {
         $options = $this->_options[$type];
 
