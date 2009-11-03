@@ -1405,6 +1405,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
 
         $orderby = $this->_sqlParts['orderby'];
+        $having = $this->_sqlParts['having'];
         if ($driverName == 'mysql' || $driverName == 'pgsql') {
             foreach ($this->_expressionMap as $dqlAlias => $expr) {
                 if (isset($expr[1])) {
@@ -1414,6 +1415,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         } else {
             foreach ($this->_expressionMap as $dqlAlias => $expr) {
                 if (isset($expr[1])) {
+                    foreach ($having as $k => $v) {
+                        $having[$k] = str_replace($this->_aggregateAliasMap[$dqlAlias], $expr[0], $v);
+                    }
                     foreach ($orderby as $k => $v) {
                         $e = explode(' ', $v);
                         if ($e[0] == $this->_aggregateAliasMap[$dqlAlias]) {
@@ -1442,7 +1446,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         // all conditions must be preserved in subquery
         $subquery .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' ', $this->_sqlParts['where'])  : '';
         $subquery .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby'])   : '';
-        $subquery .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
+        $subquery .= ( ! empty($having))?  ' HAVING '   . implode(' AND ', $having) : '';
         $subquery .= ( ! empty($orderby))? ' ORDER BY ' . implode(', ', $orderby)  : '';
 
         if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
