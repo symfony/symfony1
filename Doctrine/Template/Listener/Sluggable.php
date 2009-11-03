@@ -169,7 +169,11 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
                 $whereString .= ' AND r.'.$uniqueBy.' IS NULL';
             } else {
                 $whereString .= ' AND r.'.$uniqueBy.' = ?';
-                $whereParams[] =  $record->$uniqueBy;
+                $value = $record->$uniqueBy;
+                if ($value instanceof Doctrine_Record) {
+                    $value = current((array) $value->identifier());
+                }
+                $whereParams[] =  $value;
             }
         }
 
