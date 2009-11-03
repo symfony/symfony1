@@ -2045,6 +2045,21 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     $errorStack->add($fieldName, 'enum');
                 }
             }
+            if ($dataType == 'set') {
+                $values = $this->_columns[$fieldName]['values'];
+                // Convert string to array
+                if (is_string($value)) {
+                    $value = explode(',', $value);
+                    $value = array_map('trim', $value);
+                    $record->set($fieldName, $value);
+                }
+                // Make sure each set value is valid
+                foreach ($value as $k => $v) {
+                    if ( ! in_array($v, $values)) {
+                        $errorStack->add($fieldName, 'set');
+                    }
+                }
+            }
         }
 
         // Validate field length, if length validation is enabled
@@ -2295,6 +2310,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 break;
                 case 'enum':
                     return $this->enumValue($fieldName, $value);
+                break;
+                case 'set':
+                    return explode(',', $value);
                 break;
                 case 'boolean':
                     return (boolean) $value;

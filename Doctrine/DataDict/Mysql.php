@@ -152,6 +152,16 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 } else {
                     $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
                 }
+            case 'set':
+                if ($this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_SET)) {
+                    $values = array();
+                    foreach ($field['values'] as $value) {
+                        $values[] = $this->conn->quote($value, 'varchar');
+                    }
+                    return 'SET('.implode(', ', $values).')';
+                } else {
+                    $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
+                }
             case 'varchar':
             case 'array':
             case 'object':

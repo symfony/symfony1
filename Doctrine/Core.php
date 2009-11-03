@@ -206,6 +206,7 @@ class Doctrine_Core
     const ATTR_CASCADE_SAVES                = 174;
     const ATTR_COLLECTION_CLASS             = 175;
     const ATTR_TABLE_CLASS                  = 176;
+    const ATTR_USE_NATIVE_SET               = 177;
 
     /**
      * LIMIT CONSTANTS

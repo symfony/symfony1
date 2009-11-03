@@ -1781,6 +1781,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 case 'boolean':
                     $a[$field] = $this->getTable()->getConnection()->convertBooleans($this->_data[$field]);
                 break;
+                case 'set':
+                    if (is_array($this->_data[$field])) {
+                        $a[$field] = implode(',', $this->_data[$field]);
+                    } else {
+                        $a[$field] = $this->_data[$field];
+                    }
+                break;
                 default:
                     if ($this->_data[$field] instanceof Doctrine_Record) {
                         $a[$field] = $this->_data[$field]->getIncremented();
