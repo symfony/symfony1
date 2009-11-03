@@ -545,7 +545,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public function getConnectionForComponent($componentName)
     {
-        Doctrine_Core::autoload($componentName);
+        Doctrine_Core::modelsAutoload($componentName);
 
         if (isset($this->_bound[$componentName])) {
             return $this->getConnection($this->_bound[$componentName]);
@@ -553,7 +553,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
 
         return $this->getCurrentConnection();
     }
-    
+
     /**
      * Check if a component is bound to a connection
      *
