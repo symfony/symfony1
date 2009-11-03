@@ -19,7 +19,7 @@
  * <http://www.phpdoctrine.org>.
  */
 
-if ( ! class_exists('sfYaml')) {
+if ( ! class_exists('sfYaml', false)) {
     require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYaml.php';
     require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlDumper.php';
     require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlInline.php';
@@ -43,7 +43,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      * dumpData
      *
      * Dump an array of data to a specified path or return
-     * 
+     *
      * @throws Doctrine_Parser_Exception dumping error
      * @param  string $array Array of data to dump to yaml
      * @param  string $path  Path to dump the yaml to
@@ -52,16 +52,16 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      */
     public function dumpData($array, $path = null)
     {
-       
+
         try {
           $data = sfYaml::dump($array, 6);
-          
+
           return $this->doDump($data, $path);
-          
+
         } catch(InvalidArgumentException $e) {
           // rethrow the exceptions
           $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
-          
+
           throw $rethrowed_exception;
         }
     }
@@ -70,7 +70,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      * loadData
      *
      * Load and parse data from a yml file
-     * 
+     *
      * @throws Doctrine_Parser_Exception parsing error
      * @param  string  $path  Path to load yaml data from
      * @return array   $array Array of parsed yaml data
@@ -81,18 +81,18 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
           /*
            * I still use the doLoad method even if sfYaml can load yml from a file
            * since this way Doctrine can handle file on it own.
-           */ 
+           */
           $contents = $this->doLoad($path);
 
           $array = sfYaml::load($contents);
-          
+
           return $array;
-          
+
         } catch(InvalidArgumentException $e) {
           // rethrow the exceptions
           $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
-          
+
           throw $rethrowed_exception;
         }
-    }        
+    }
 }
