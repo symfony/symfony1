@@ -99,7 +99,7 @@ abstract class sfCommandApplicationTask extends sfTask
   /**
    * Returns a mailer instance.
    *
-   * Notice that you task should accept an application option.
+   * Notice that your task should accept an application option.
    * The mailer configuration is read from the current configuration
    * instance, which is automatically created according to the current
    * --application option.
@@ -125,5 +125,31 @@ abstract class sfCommandApplicationTask extends sfTask
     $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
 
     return new $config['mailer']['class']($this->dispatcher, $config['mailer']['param']);
+  }
+
+  /**
+   * Returns a routing instance.
+   *
+   * Notice that your task should accept an application option.
+   * The routing configuration is read from the current configuration
+   * instance, which is automatically created according to the current
+   * --application option.
+   *
+   * @return sfRouting A sfRouting instance
+   */
+  protected function getRouting()
+  {
+    $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
+    $params = array_merge($config['routing']['param'], array('load_configuration' => false, 'logging' => false));
+
+    $config = new sfRoutingConfigHandler();
+    $routes = $config->evaluate($this->configuration->getConfigPaths('config/routing.yml'));
+
+    $routing = new sfPatternRouting($this->dispatcher, null, $params);
+    $routing->setRoutes($routes);
+
+    $this->dispatcher->notify(new sfEvent($routing, 'routing.load_configuration'));
+
+    return $routing;
   }
 }
