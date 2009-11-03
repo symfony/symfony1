@@ -75,7 +75,6 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
      *
      * @param Doctrine_Connection $conn
      * @return integer $result Number of affected rows.
-     * @author Jonathan Wage
      */
     public function hardDelete($conn = null)
     {

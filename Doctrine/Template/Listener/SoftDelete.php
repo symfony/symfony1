@@ -94,7 +94,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      */
     public function postDelete(Doctrine_Event $event)
     {
-        $event->getInvoker()->save();
+        if ( ! $this->_options['hardDelete']) {
+            $event->getInvoker()->save();
+        }
     }
 
     /**
