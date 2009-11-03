@@ -96,6 +96,16 @@ abstract class sfCommandApplicationTask extends sfTask
     return $this->createTask($name)->run($arguments, $options);
   }
 
+  /**
+   * Returns a mailer instance.
+   *
+   * Notice that you task should accept an application option.
+   * The mailer configuration is read from the current configuration
+   * instance, which is automatically created according to the current
+   * --application option.
+   *
+   * @return sfMailer A sfMailer instance
+   */
   protected function getMailer()
   {
     if (!$this->mailer)
