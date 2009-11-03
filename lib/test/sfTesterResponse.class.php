@@ -219,10 +219,17 @@ class sfTesterResponse extends sfTester
 
       if (count($errors = libxml_get_errors()))
       {
+        $lines = explode(PHP_EOL, $this->response->getContent());
+
         $this->tester->fail($message);
         foreach ($errors as $error)
         {
           $this->tester->diag('    '.trim($error->message));
+          if (preg_match('/line (\d+)/', $error->message, $match) && $error->line != $match[1])
+          {
+            $this->tester->diag('      '.str_pad($match[1].':', 6).trim($lines[$match[1] - 1]));
+          }
+          $this->tester->diag('      '.str_pad($error->line.':', 6).trim($lines[$error->line - 1]));
         }
       }
       else
