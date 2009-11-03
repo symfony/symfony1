@@ -1012,7 +1012,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } catch (Doctrine_Adapter_Exception $e) {
         } catch (PDOException $e) { }
 
-        $this->rethrowException($e, $this);
+        $this->rethrowException($e, $this, $query);
     }
 
     /**
@@ -1048,7 +1048,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } catch (Doctrine_Adapter_Exception $e) {
         } catch (PDOException $e) { }
 
-        $this->rethrowException($e, $this);
+        $this->rethrowException($e, $this, $query);
     }
 
     /**
@@ -1056,7 +1056,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @throws Doctrine_Connection_Exception
      */
-    public function rethrowException(Exception $e, $invoker)
+    public function rethrowException(Exception $e, $invoker, $query = null)
     {
         $event = new Doctrine_Event($this, Doctrine_Event::CONN_ERROR);
 
@@ -1064,7 +1064,12 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         
         $name = 'Doctrine_Connection_' . $this->driverName . '_Exception';
 
-        $exc  = new $name($e->getMessage(), (int) $e->getCode());
+        $message = $e->getMessage();
+        if ($query) {
+            $message .= sprintf('. Failing Query: "%s"', $query);
+        }
+
+        $exc  = new $name($message, (int) $e->getCode());
         if ( ! isset($e->errorInfo) || ! is_array($e->errorInfo)) {
             $e->errorInfo = array(null, null, null, null);
         }
