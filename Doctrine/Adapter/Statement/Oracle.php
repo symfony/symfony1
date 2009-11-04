@@ -261,7 +261,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
     {
         if (is_array($params)) {
             foreach ($params as $var => $value) {
-                $this->bindValue($var, $value);
+                $this->bindValue($var+1, $value);
             }
         }
 
@@ -578,7 +578,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
         if (is_null($query)) {
             $query = $this->queryString;
         }
-        $bind_index = 0;
+        $bind_index = 1;
         // Replace ? bind-placeholders with :oci_b_var_ variables
         $query = preg_replace("/(\?)/e", '":oci_b_var_". $bind_index++' , $query);
 
