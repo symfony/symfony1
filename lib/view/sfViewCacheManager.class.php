@@ -967,8 +967,10 @@ class sfViewCacheManager
 
     $this->context->getConfiguration()->loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
 
+    $sf_cache_key = $this->generateCacheKey($event['uri']);
     $bgColor      = $event['new'] ? '#9ff' : '#ff9';
-    $lastModified = $this->getLastModified($event['uri']);
+    $lastModified = $this->cache->getLastModified($sf_cache_key);
+    $cacheKey     = $this->cache->getOption('prefix').$sf_cache_key;
     $id           = md5($event['uri']);
 
     return '
@@ -977,6 +979,7 @@ class sfViewCacheManager
       <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\'sub_main_info_'.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png', array('alt' => 'close')).'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="sub_main_info_'.$id.'">
         [uri]&nbsp;'.htmlspecialchars($event['uri'], ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
+        [key&nbsp;for&nbsp;cache]&nbsp;'.htmlspecialchars($cacheKey, ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
         [life&nbsp;time]&nbsp;'.$this->getLifeTime($event['uri']).'&nbsp;seconds<br />
         [last&nbsp;modified]&nbsp;'.(time() - $lastModified).'&nbsp;seconds<br />
         &nbsp;<br />&nbsp;
