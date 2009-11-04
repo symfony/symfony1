@@ -208,7 +208,7 @@ class sfException extends Exception
       $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
-    if ($response)
+    if (isset($response) && $response)
     {
       $response->sendHttpHeaders();
     }
