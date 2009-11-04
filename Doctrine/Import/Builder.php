@@ -180,7 +180,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     public function __construct()
     {
-        $this->_baseTableClassName = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
+        if ($tableClass = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS)) {
+            $this->_baseTableClassName = $tableClass;
+        }
         $this->loadTemplate();
     }
 
