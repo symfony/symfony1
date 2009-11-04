@@ -166,7 +166,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         } else {
             // Put an index on the key column
             $mapFieldName = array_keys(end($map));
-            $this->index($mapFieldName[0], array('fields' => array($mapFieldName[0])));
+            $this->index($this->getTable()->getTableName().'_'.$mapFieldName[0], array('fields' => array($mapFieldName[0])));
         }
 
         // Set the subclasses array for the parent class
