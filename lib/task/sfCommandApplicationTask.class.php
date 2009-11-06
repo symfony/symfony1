@@ -20,6 +20,7 @@ abstract class sfCommandApplicationTask extends sfTask
 {
   protected
     $mailer = null,
+    $routing = null,
     $commandApplication = null;
 
   /**
@@ -139,13 +140,23 @@ abstract class sfCommandApplicationTask extends sfTask
    */
   protected function getRouting()
   {
+    if (!$this->routing)
+    {
+      $this->routing = $this->initializeRouting();
+    }
+
+    return $this->routing;
+  }
+
+  protected function initializeRouting()
+  {
     $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
     $params = array_merge($config['routing']['param'], array('load_configuration' => false, 'logging' => false));
 
-    $config = new sfRoutingConfigHandler();
-    $routes = $config->evaluate($this->configuration->getConfigPaths('config/routing.yml'));
+    $handler = new sfRoutingConfigHandler();
+    $routes = $handler->evaluate($this->configuration->getConfigPaths('config/routing.yml'));
 
-    $routing = new sfPatternRouting($this->dispatcher, null, $params);
+    $routing = new $config['routing']['class']($this->dispatcher, null, $params);
     $routing->setRoutes($routes);
 
     $this->dispatcher->notify(new sfEvent($routing, 'routing.load_configuration'));
