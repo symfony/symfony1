@@ -340,7 +340,7 @@ class sfDoctrineFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => %s', $column->getForeignTable()->getOption('name'), $column->isNotNull() ? 'false' : 'true');
+      $options[] = sprintf('\'model\' => $this->getRelatedModelName(\'%s\'), \'add_empty\' => %s', $column->getRelationKey('alias'), $column->isNotNull() ? 'false' : 'true');
     }
     else
     {
@@ -431,7 +431,7 @@ class sfDoctrineFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\'', $column->getForeignTable()->getOption('name'));
+      $options[] = sprintf('\'model\' => $this->getRelatedModelName(\'%s\')', $column->getRelationKey('alias'));
     }
     else if ($column->isPrimaryKey())
     {

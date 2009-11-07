@@ -288,6 +288,29 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
   {
   }
 
+  /**
+   * Returns the name of the related model.
+   * 
+   * @param string $alias A relation alias
+   * 
+   * @return string
+   * 
+   * @throws InvalidArgumentException If no relation with the supplied alias exists on the current model
+   */
+  protected function getRelatedModelName($alias)
+  {
+    $table = Doctrine_Core::getTable($this->getModelName());
+
+    if (!$table->hasRelation($alias))
+    {
+      throw new InvalidArgumentException(sprintf('The "%s" model has to "%s" relation.', $this->getModelName(), $alias));
+    }
+
+    $relation = $table->getRelation($alias);
+
+    return $relation['class'];
+  }
+
   protected function getColName($field)
   {
     return $this->getTable()->getColumnName($field);

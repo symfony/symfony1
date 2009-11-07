@@ -182,7 +182,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
 
     if ($column->isForeignKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => true', $column->getForeignTable()->getOption('name'));
+      $options[] = sprintf('\'model\' => $this->getRelatedModelName(\'%s\'), \'add_empty\' => true', $column->getRelationKey('alias'));
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
@@ -249,7 +249,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
         }
       }
 
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getForeignTable()->getOption('name'), $column->getForeignTable()->getFieldName($name));
+      $options[] = sprintf('\'model\' => $this->getRelatedModelName(\'%s\'), \'column\' => \'%s\'', $column->getRelationKey('alias'), $column->getForeignTable()->getFieldName($name));
     }
     else if ($column->isPrimaryKey())
     {
