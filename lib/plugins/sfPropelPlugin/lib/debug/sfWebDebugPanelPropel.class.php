@@ -94,7 +94,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
       foreach ($parts as $i => $part)
       {
         // is this a key-glue-value fragment ?
-        if (preg_match('/^(\w+)'.preg_quote($innerGlue).'(.*)/', $part, $match))
+        if (preg_match('/^(\w+)'.preg_quote($innerGlue, '/').'(.*)/', $part, $match))
         {
           $details[] = $part;
           unset($parts[$i]);
