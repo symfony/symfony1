@@ -50,7 +50,7 @@ $t->like($content, '/aText like &#039; | foo&#039;/', '->getPanelContent() works
 $t->like($content, '/sfWebDebugWarning/', '->getPanelContent() contains a slow query warning');
 
 $logger = new sfVarLogger($dispatcher);
-$logger->log('{sfPropelLogger} time/ 3.42 secxxmem/ 2.8 MB / SELECT * FROM foo WHERE bar == 42');
+$logger->log('{sfPropelLogger} time/ 3.42 secxxmem/ 2.8 MBxxSELECT * FROM foo WHERE bar == 42');
 $panel = new sfWebDebugPanelPropelTestDifferentGlue(new sfWebDebug($dispatcher, $logger));
 $content = $panel->getPanelContent();
 $t->like($content, '/time\/ 3.42 sec, mem\/ 2.8 MB/', '->getPanelContent() works with strange glue strings');
