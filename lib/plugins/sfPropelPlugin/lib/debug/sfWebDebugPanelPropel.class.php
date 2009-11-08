@@ -87,22 +87,21 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         continue;
       }
 
-      // parse log message for details
-      $details = array();
-      $class = '';
+      $details = explode($outerGlue, $log['message']);
+      // query is last element of the details
+      $query = array_pop($details);
 
-      $parts = explode($outerGlue, $log['message']);
-      foreach ($parts as $i => $part)
+      $slowQuery = false;
+      foreach ($details as $detail)
       {
-        if (preg_match('/^(\w+)'.$innerGlue.'(.*)/', $part, $match))
-        {
-          $details[] = $part;
-          unset($parts[$i]);
+        list($key, $value) = explode($innerGlue, $detail);
 
-          // check for slow query
-          if ('time' == $match[1] && $flagSlow && (float) $match[2] > $threshold)
+        // check for slow query
+        if ('time' == $key)
+        {
+          if ($flagSlow && (float) $value > $threshold)
           {
-            $class = 'sfWebDebugWarning';
+            $slowQuery = true;
             if ($this->getStatus() > sfLogger::NOTICE)
             {
               $this->setStatus(sfLogger::NOTICE);
@@ -110,7 +109,6 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
           }
         }
       }
-      $query = join($outerGlue, $parts);
 
       $query = $this->formatSql(htmlspecialchars($query, ENT_QUOTES, sfConfig::get('sf_charset')));
       $backtrace = isset($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : '';
@@ -120,7 +118,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
           <p class="sfWebDebugDatabaseQuery">%s</p>
           <div class="sfWebDebugDatabaseLogInfo">%s%s</div>
         </li>',
-        $class,
+        $slowQuery ? 'sfWebDebugWarning' : '',
         $query,
         implode(', ', $details),
         $backtrace
