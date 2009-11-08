@@ -23,7 +23,13 @@
 class sfDoctrineLogger extends Doctrine_EventListener
 {
   protected $connection = null,
-            $encoding = 'UTF8';
+            $encoding = 'UTF8', 
+            $timer = null;
+
+  public function __construct()
+  {
+    $this->timer = sfTimerManager::getTimer('Database (Doctrine)');
+  }
 
   /**
    * Log a query before it is executed
@@ -33,7 +39,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function preExecute(Doctrine_Event $event)
   {
-    $this->sfLogQuery('executeQuery : ', $event);
+    $this->timer->startTimer();
   }
 
   /**
@@ -44,7 +50,18 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function postExecute(Doctrine_Event $event)
   {
-    $this->sfAddTime();
+    $this->sfLogQuery("executeQuery : ", $event, $this->timer->addTime());
+  }
+
+  /**
+   * Add the time before a query is prepared
+   *
+   * @param Doctrine_Event $event
+   * @return void
+   */
+  public function prePrepare(Doctrine_Event $event)
+  {
+    $this->timer->startTimer();
   }
 
   /**
@@ -55,7 +72,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function postPrepare(Doctrine_Event $event)
   {
-    $this->sfAddTime();
+    $this->timer->addTime();
   }
 
   /**
@@ -66,7 +83,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function preStmtExecute(Doctrine_Event $event)
   {
-    $this->sfLogQuery('executeQuery : ', $event);
+    $this->timer->startTimer();
   }
 
   /**
@@ -77,7 +94,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function postStmtExecute(Doctrine_Event $event)
   {
-    $this->sfAddTime();
+    $this->sfLogQuery('executeQuery : ', $event, $this->timer->addTime());
   }
 
   /**
@@ -88,7 +105,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function preQuery(Doctrine_Event $event)
   {
-    $this->sfLogQuery('executeQuery : ', $event);
+    $this->timer->startTimer();
   }
 
   /**
@@ -99,7 +116,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    */
   public function postQuery(Doctrine_Event $event)
   {
-    $this->sfAddTime();
+    $this->sfLogQuery('executeQuery : ', $event, $this->timer->addTime());
   }
 
   /**
@@ -109,7 +126,7 @@ class sfDoctrineLogger extends Doctrine_EventListener
    * @param string $event
    * @return void
    */
-  protected function sfLogQuery($message, $event)
+  protected function sfLogQuery($message, $event, $time)
   {
     $message .= $event->getQuery();
 
@@ -126,23 +143,13 @@ class sfDoctrineLogger extends Doctrine_EventListener
       }
       $message .= ' - ('.implode(', ', $params) . ' )';
     }
-
-    $message = '{sfDoctrineLogger} ' . $message;
+    
+    $message = sprintf('{sfDoctrineLogger} [%.2f ms] %s', $time * 1000, $message);
     if (sfContext::hasInstance())
     {
       sfContext::getInstance()->getLogger()->log($message);
     }
 
     $sqlTimer = sfTimerManager::getTimer('Database (Doctrine)');
-  }
-
-  /**
-   * Add the time to the log
-   *
-   * @return void
-   */
-  protected function sfAddTime()
-  {
-    sfTimerManager::getTimer('Database (Doctrine)')->addTime();
   }
 }
