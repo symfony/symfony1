@@ -129,6 +129,10 @@ class sfPropelDatabase extends sfPDODatabase
       $this->setParameter('options', $options);
     }
 
+    if ($this->hasParameter('debug'))
+    {
+      self::$config['propel']['debugpdo']['logging'] = $this->getParameter('debug');
+    }
     self::$config['propel']['datasources'][$this->getParameter('datasource')] = array(
       'adapter'       => $this->getParameter('phptype'),
       'connection'    => array(
