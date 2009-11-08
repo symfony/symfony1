@@ -73,7 +73,11 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    */
   protected function getSqlLogs()
   {
-    $threshold = $this->getSlowQueryThreshold();
+    $config    = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+    $outerGlue = $config->getParameter('debugpdo.logging.outerglue', ' | ');
+    $innerGlue = $config->getParameter('debugpdo.logging.innerglue', ': ');
+    $flagSlow  = $config->getParameter('debugpdo.logging.details.slow.enabled', false);
+    $threshold = $config->getParameter('debugpdo.logging.details.slow.threshold', DebugPDO::DEFAULT_SLOW_THRESHOLD);
 
     $html = array();
     foreach ($this->webDebug->getLogger()->getLogs() as $log)
@@ -87,16 +91,16 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
       $details = array();
       $class = '';
 
-      $parts = explode(' | ', $log['message']);
+      $parts = explode($outerGlue, $log['message']);
       foreach ($parts as $i => $part)
       {
-        if (preg_match('/^(\w+):\s+(.*)/', $part, $match))
+        if (preg_match('/^(\w+)'.$innerGlue.'(.*)/', $part, $match))
         {
           $details[] = $part;
           unset($parts[$i]);
 
           // check for slow query
-          if ('time' == $match[1] && (float) $match[2] > $threshold)
+          if ('time' == $match[1] && $flagSlow && (float) $match[2] > $threshold)
           {
             $class = 'sfWebDebugWarning';
             if ($this->getStatus() > sfLogger::NOTICE)
@@ -106,7 +110,10 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
           }
         }
       }
-      $query = join(' | ', $parts);
+      $query = join($outerGlue, $parts);
+
+      $query = $this->formatSql(htmlspecialchars($query, ENT_QUOTES, sfConfig::get('sf_charset')));
+      $backtrace = isset($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : '';
 
       $html[] = sprintf('
         <li class="%s">
@@ -114,22 +121,13 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
           <div class="sfWebDebugDatabaseLogInfo">%s%s</div>
         </li>',
         $class,
-        $this->formatSql(htmlspecialchars($query, ENT_QUOTES, sfConfig::get('sf_charset'))),
+        $query,
         implode(', ', $details),
-        count($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : ''
+        $backtrace
       );
     }
 
     return $html;
   }
 
-  /**
-   * Returns the slow query threshold.
-   * 
-   * @return integer|null
-   */
-  protected function getSlowQueryThreshold()
-  {
-    return Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT)->getParameter('debugpdo.logging.details.slow.threshold');
-  }
 }
