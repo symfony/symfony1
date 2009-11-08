@@ -93,6 +93,6 @@ try
 }
 catch (sfValidatorError $e)
 {
-  $t->pass('->clean() throws an sfValidatorError if less than the minimum number of values are not selected');
+  $t->pass('->clean() throws an sfValidatorError if more than the maximum number of values are selected');
   $t->is($e->getCode(), 'max', '->clean() throws a sfValidatorError');
 }
