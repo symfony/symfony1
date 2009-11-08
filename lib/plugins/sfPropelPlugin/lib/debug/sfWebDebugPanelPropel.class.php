@@ -73,7 +73,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
    */
   protected function getSqlLogs()
   {
-    $config    = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+    $config    = $this->getPropelConfiguration();
     $outerGlue = $config->getParameter('debugpdo.logging.outerglue', ' | ');
     $innerGlue = $config->getParameter('debugpdo.logging.innerglue', ': ');
     $flagSlow  = $config->getParameter('debugpdo.logging.details.slow.enabled', false);
@@ -128,4 +128,13 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     return $html;
   }
 
+  /**
+   * Returns the current PropelConfiguration.
+   *
+   * @return PropelConfiguration
+   */
+  protected function getPropelConfiguration()
+  {
+    return Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+  }
 }

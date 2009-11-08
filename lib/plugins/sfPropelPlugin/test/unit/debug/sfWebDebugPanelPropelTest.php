@@ -14,9 +14,9 @@ $t = new lime_test(1);
 
 class sfWebDebugPanelPropelTest extends sfWebDebugPanelPropel
 {
-  protected function getSlowQueryThreshold()
+  protected function getPropelConfiguration()
   {
-    return 0.01;
+    return new PropelConfiguration(array());
   }
 }
 
