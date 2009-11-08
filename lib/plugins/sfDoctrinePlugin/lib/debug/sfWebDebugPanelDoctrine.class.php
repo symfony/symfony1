@@ -52,7 +52,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
   {
     return '
       <div id="sfWebDebugDatabaseLogs">
-        <p>Doctrine Version: '.Doctrine_Core::VERSION.'</p>
+        <h3>Doctrine Version: '.Doctrine_Core::VERSION.'</h3>
         <ol>'.implode("\n", $this->getSqlLogs()).'</ol>
       </div>
     ';
