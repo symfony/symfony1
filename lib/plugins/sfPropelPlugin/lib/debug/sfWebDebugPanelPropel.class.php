@@ -87,28 +87,34 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         continue;
       }
 
-      $details = explode($outerGlue, $log['message']);
-      // query is last element of the details
-      $query = array_pop($details);
-
+      $details = array();
       $slowQuery = false;
-      foreach ($details as $detail)
-      {
-        list($key, $value) = explode($innerGlue, $detail);
 
-        // check for slow query
-        if ('time' == $key)
+      $parts = explode($outerGlue, $log['message']);
+      foreach ($parts as $i => $part)
+      {
+        // is this a key-glue-value fragment ?
+        if (preg_match('/^(\w+)'.$innerGlue.'(.*)/', $part, $match))
         {
-          if ($flagSlow && (float) $value > $threshold)
+          $details[] = $part;
+          unset($parts[$i]);
+
+          // check for slow query
+          if ('time' == $match[1])
           {
-            $slowQuery = true;
-            if ($this->getStatus() > sfLogger::NOTICE)
+            if ($flagSlow && (float) $match[2] > $threshold)
             {
-              $this->setStatus(sfLogger::NOTICE);
+              $slowQuery = true;
+              if ($this->getStatus() > sfLogger::NOTICE)
+              {
+                $this->setStatus(sfLogger::NOTICE);
+              }
             }
           }
         }
       }
+      // all stuff that has not been eaten by the loop should be the query string
+      $query = join($outerGlue, $parts);
 
       $query = $this->formatSql(htmlspecialchars($query, ENT_QUOTES, sfConfig::get('sf_charset')));
       $backtrace = isset($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : '';
