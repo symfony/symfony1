@@ -15,19 +15,7 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
   return;
 }
 
-class myBrowser extends sfBrowser
-{
-  public function getContext($forceReload = false)
-  {
-    parent::getContext($forceReload);
-
-    sfPropel::initialize($this->context->getEventDispatcher());
-
-    return $this->context;
-  }
-}
-
-$b = new sfTestBrowser(new myBrowser());
+$b = new sfTestBrowser(new sfBrowser());
 $b->setTester('propel', 'sfTesterPropel');
 
 // en

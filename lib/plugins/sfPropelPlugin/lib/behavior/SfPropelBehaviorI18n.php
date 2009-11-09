@@ -29,7 +29,7 @@ class SfPropelBehaviorI18n extends SfPropelBehaviorBase
    */
   public function modifyDatabase()
   {
-    $translationBehavior = sfPropel::importClass($this->getBuildProperty('propel.behavior.symfony_i18n_translation.class'));
+    $translationBehavior = Propel::importClass($this->getBuildProperty('propel.behavior.symfony_i18n_translation.class'));
 
     foreach ($this->getDatabase()->getTables() as $table)
     {

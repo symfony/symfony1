@@ -38,7 +38,7 @@ class SfPropelBehaviorSymfony extends SfPropelBehaviorBase
       // symfony behaviors
       if (!isset($behaviors['symfony_behaviors']) && $this->getBuildProperty('propel.builder.addBehaviors'))
       {
-        $class = sfPropel::importClass($this->getBuildProperty('propel.behavior.symfony_behaviors.class'));
+        $class = Propel::importClass($this->getBuildProperty('propel.behavior.symfony_behaviors.class'));
         $behavior = new $class();
         $behavior->setName('symfony_behaviors');
         $table->addBehavior($behavior);
@@ -63,7 +63,7 @@ class SfPropelBehaviorSymfony extends SfPropelBehaviorBase
 
         if ($parameters)
         {
-          $class = sfPropel::importClass($this->getBuildProperty('propel.behavior.symfony_timestampable.class'));
+          $class = Propel::importClass($this->getBuildProperty('propel.behavior.symfony_timestampable.class'));
           $behavior = new $class();
           $behavior->setName('symfony_timestampable');
           $behavior->setParameters($parameters);

@@ -211,7 +211,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
     // Call phing targets
     sfToolkit::addIncludePath(array(
-      sfConfig::get('sf_root_dir'),
+      sfConfig::get('sf_symfony_lib_dir'),
       realpath(dirname(__FILE__).'/../vendor/propel-generator/classes'),
     ));
 
