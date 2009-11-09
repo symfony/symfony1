@@ -23,7 +23,7 @@ class sfPropelPluginConfiguration extends sfPluginConfiguration
 
     sfToolkit::addIncludePath(array(
       sfConfig::get('sf_root_dir'),
-      realpath(dirname(__FILE__).'/../lib/vendor'),
+      sfConfig::get('sf_propel_runtime_path', realpath(dirname(__FILE__).'/../lib/vendor')),
     ));
 
     require_once 'propel/Propel.php';
