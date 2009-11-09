@@ -320,8 +320,9 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Sends HTTP headers and cookies.
-   *
+   * Sends HTTP headers and cookies. Only the first invocation of this method will send the headers.
+   * Subsequent invocations will silently do nothing. This allows certain actions to send headers early,
+   * while still using the standard controller.
    */
   public function sendHttpHeaders()
   {
@@ -364,6 +365,8 @@ class sfWebResponse extends sfResponse
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send cookie "%s": "%s"', $cookie['name'], $cookie['value']))));
       }
     }
+    // prevent resending the headers
+    $this->options['send_http_headers'] = false;
   }
 
   /**
