@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(81);
+$t = new lime_test(83);
 
 class myWebResponse extends sfWebResponse
 {
@@ -96,6 +96,8 @@ foreach (array(
   array('my_header', 'My-Header'),
   array('MY_HEADER', 'My-Header'),
   array('my-header_is_very-long', 'My-Header-Is-Very-Long'),
+  array('Content-Type', 'Content-Type'),
+  array('content-type', 'Content-Type'),
 ) as $test)
 {
   $t->is($response->normalizeHeaderName($test[0]), $test[1], '->normalizeHeaderName() normalizes http header name');
