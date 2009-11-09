@@ -167,7 +167,7 @@ EOF;
     $this->clearBuffers();
   }
 
-  public function logOutput($output, $color = null)
+  public function logOutput($output)
   {
     if (false !== $pos = strpos($output, "\n"))
     {
