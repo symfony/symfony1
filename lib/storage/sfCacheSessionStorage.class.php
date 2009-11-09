@@ -13,7 +13,9 @@
 class sfCacheSessionStorage extends sfStorage
 {
   protected
+    $id          = null,
     $context     = null,
+    $dispatcher  = null,
     $request     = null,
     $response    = null,
     $cache       = null,
@@ -31,7 +33,7 @@ class sfCacheSessionStorage extends sfStorage
    *                        session_cookie_secure [required] send only if secure connection
    *                        session_cookie_http_only [required] accessible only via http protocol
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, when initialization completes successfully.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage.
    */
@@ -120,7 +122,7 @@ class sfCacheSessionStorage extends sfStorage
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Restored previous session')));
       }
     }
-
+    session_id($this->id);
     return true;
   }
 
@@ -217,7 +219,7 @@ class sfCacheSessionStorage extends sfStorage
                                $this->options['session_cookie_domain'],
                                $this->options['session_cookie_secure'],
                                $this->options['session_cookie_http_only']);
-
+    session_id($this->id);
     return true;
   }
 
