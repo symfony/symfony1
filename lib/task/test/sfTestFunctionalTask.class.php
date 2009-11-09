@@ -80,20 +80,19 @@ EOF;
       foreach ($arguments['controller'] as $controller)
       {
         $finder = sfFinder::type('file')->follow_link()->name(basename($controller).'Test.php');
-        $newFiles = $finder->in(sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.dirname($controller));
-        if ($newFiles)
-        {
-          $files = array_merge($files, $newFiles);
-        }
-        else
-        {
-          $this->logSection('functional', sprintf('controller named "%s" not found', basename($controller)), null, 'ERROR');
-        }
+        $files = array_merge($files, $finder->in(sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.dirname($controller)));
       }
 
-      foreach ($this->filterTestFiles($files, $arguments, $options) as $file)
+      if($allFiles = $this->filterTestFiles($files, $arguments, $options))
       {
-        include($file);
+        foreach ($allFiles as $file)
+        {
+          include($file);
+        }
+      }
+      else
+      {
+        $this->logSection('functional', 'no controller found', null, 'ERROR');
       }
     }
     else

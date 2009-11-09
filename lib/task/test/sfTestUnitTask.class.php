@@ -75,20 +75,19 @@ EOF;
       foreach ($arguments['name'] as $name)
       {
         $finder = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php');
-        $newFiles = $finder->in(sfConfig::get('sf_test_dir').'/unit/'.dirname($name));
-        if ($newFiles)
-        {
-          $files = array_merge($files, $newFiles);
-        }
-        else
-        {
-          $this->logSection('test', sprintf('test named "%s" not found', basename($name)), null, 'ERROR');
-        }
+        $files = array_merge($files, $finder->in(sfConfig::get('sf_test_dir').'/unit/'.dirname($name)));
       }
 
-      foreach ($this->filterTestFiles($files, $arguments, $options) as $file)
+      if($allFiles = $this->filterTestFiles($files, $arguments, $options))
       {
-        include($file);
+        foreach ($allFiles as $file)
+        {
+          include($file);
+        }
+      }
+      else
+      {
+        $this->logSection('test', 'no tests found', null, 'ERROR');
       }
     }
     else
