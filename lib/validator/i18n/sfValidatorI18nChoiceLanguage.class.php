@@ -23,7 +23,7 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
    *
    * Available options:
    *
-   *  * languages: An array of language codes to use (ISO 639-1)
+   *  * languages: An array of language codes to use
    *
    * @param array $options   An array of options
    * @param array $messages  An array of error messages

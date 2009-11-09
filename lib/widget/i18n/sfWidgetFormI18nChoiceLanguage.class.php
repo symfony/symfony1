@@ -24,7 +24,7 @@ class sfWidgetFormI18nChoiceLanguage extends sfWidgetFormChoice
    * Available options:
    *
    *  * culture:   The culture to use for internationalized strings
-   *  * languages: An array of language codes to use (ISO 639-1)
+   *  * languages: An array of language codes to use
    *  * add_empty: Whether to add a first empty value or not (false by default)
    *               If the option is not a Boolean, the value will be used as the text value
    *
