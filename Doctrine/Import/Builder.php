@@ -382,7 +382,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if (isset($definition['relations']) && is_array($definition['relations']) && ! empty($definition['relations'])) {
             foreach ($definition['relations'] as $name => $relation) {
                 $class = isset($relation['class']) ? $relation['class']:$name;
-                $alias = (isset($relation['alias']) && $relation['alias'] !== $relation['class']) ? ' as ' . $relation['alias'] : '';
+                $alias = (isset($relation['alias']) && $relation['alias'] !== $this->_classPrefix . $relation['class']) ? ' as ' . $relation['alias'] : '';
 
                 if ( ! isset($relation['type'])) {
                     $relation['type'] = Doctrine_Relation::ONE;
