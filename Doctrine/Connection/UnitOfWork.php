@@ -626,7 +626,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
         }
 
-        $this->_assignSequence($record);
+        $this->_assignSequence($record, $fields);
         $this->conn->insert($table, $fields);
         $this->_assignIdentifier($record);
     }
@@ -893,7 +893,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         return $dataSet;
     }
 
-    protected function _assignSequence(Doctrine_Record $record)
+    protected function _assignSequence(Doctrine_Record $record, &$fields = null)
     {
         $table = $record->getTable();
         $seq = $table->sequenceName;
@@ -901,9 +901,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         if ( ! empty($seq)) {
             $id = $this->conn->sequence->nextId($seq);
             $seqName = $table->getIdentifier();
-            $fields[$seqName] = $id;
+            if ($fields) {
+                $fields[$seqName] = $id;
+            }
 
             $record->assignIdentifier($id);
+
+            return $id;
         }
     }
 
