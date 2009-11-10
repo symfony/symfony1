@@ -66,7 +66,11 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
 
         $this->table->setColumn('lft', 'integer', 4);
         $this->table->setColumn('rgt', 'integer', 4);
-        $this->table->setColumn('level', 'integer', 2);
+        if ($level = $this->getAttribute('levelColumnName')) {
+            $this->table->setColumn($level . ' AS level', 'integer', 2);
+        } else {
+            $this->table->setColumn('level', 'integer', 2);
+        }
     }
 
     /**
