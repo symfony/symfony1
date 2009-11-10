@@ -1291,21 +1291,24 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
 
         // Add the default orderBy statements defined in the relationships and table classes
-        $added = array();
-        foreach ($this->_queryComponents as $alias => $map) {
-            $sqlAlias = $this->getSqlTableAlias($alias);
-            if (isset($map['relation'])) {
-                $orderBy = $map['relation']->getOrderByStatement($sqlAlias, true);
-            } else {
-                $orderBy = $map['table']->getOrderByStatement($sqlAlias, true);
-            }
+        // Only do this for SELECT queries
+        if ($this->_type === self::SELECT) {
+            $added = array();
+            foreach ($this->_queryComponents as $alias => $map) {
+                $sqlAlias = $this->getSqlTableAlias($alias);
+                if (isset($map['relation'])) {
+                    $orderBy = $map['relation']->getOrderByStatement($sqlAlias, true);
+                } else {
+                    $orderBy = $map['table']->getOrderByStatement($sqlAlias, true);
+                }
 
-            if ($orderBy) {
-                $e = explode(',', $orderBy);
-                $e = array_map('trim', $e);
-                foreach ($e as $v) {
-                    if ( ! in_array($v, $this->_sqlParts['orderby'])) {
-                        $this->_sqlParts['orderby'][] = $v;
+                if ($orderBy) {
+                    $e = explode(',', $orderBy);
+                    $e = array_map('trim', $e);
+                    foreach ($e as $v) {
+                        if ( ! in_array($v, $this->_sqlParts['orderby'])) {
+                            $this->_sqlParts['orderby'][] = $v;
+                        }
                     }
                 }
             }
