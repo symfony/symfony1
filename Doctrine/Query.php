@@ -2145,6 +2145,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     public function __clone()
     {
         $this->_parsers = array();
+        $class = get_class($this->_hydrator);
+        $this->_hydrator = new $class();
 
         // Subqueries share some information from the parent so it can intermingle
         // with the dql of the main query. So when a subquery is cloned we need to
