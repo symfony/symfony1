@@ -26,7 +26,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Constructor.
-   * 
+   *
    * @see sfPager
    */
   public function __construct($class, $maxPerPage = 10)
@@ -42,6 +42,8 @@ class sfPropelPager extends sfPager
    */
   public function init()
   {
+    $this->results = null;
+
     $hasMaxRecordLimit = ($this->getMaxRecordLimit() !== false);
     $maxRecordLimit = $this->getMaxRecordLimit();
 
@@ -96,12 +98,6 @@ class sfPropelPager extends sfPager
    */
   protected function retrieveObject($offset)
   {
-    // if all results are known we can use the stored objects
-    if (null !== $this->objects)
-    {
-      return $this->objects[$offset-1];
-    }
-
     $criteriaForRetrieve = clone $this->getCriteria();
     $criteriaForRetrieve
       ->setOffset($offset - 1)
@@ -118,16 +114,12 @@ class sfPropelPager extends sfPager
    */
   public function getResults()
   {
-    if (null === $this->objects)
-    {
-      $this->objects = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria());
-    }
-    return $this->objects;
+    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $this->getCriteria());
   }
 
   /**
    * Returns the peer method name.
-   * 
+   *
    * @return string
    */
   public function getPeerMethod()
@@ -137,7 +129,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Sets the peer method name.
-   * 
+   *
    * @param string $method A method on the current peer class
    */
   public function setPeerMethod($peer_method_name)
@@ -147,7 +139,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Returns the peer count method name.
-   * 
+   *
    * @return string
    */
   public function getPeerCountMethod()
@@ -157,7 +149,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Sets the peer count method name.
-   * 
+   *
    * @param string $peer_count_method_name
    */
   public function setPeerCountMethod($peer_count_method_name)
@@ -167,7 +159,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Returns the name of the current model class' peer class.
-   * 
+   *
    * @return string
    */
   public function getClassPeer()
@@ -177,7 +169,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Returns the current Criteria.
-   * 
+   *
    * @return Criteria
    */
   public function getCriteria()
@@ -187,7 +179,7 @@ class sfPropelPager extends sfPager
 
   /**
    * Sets the Criteria for the current pager.
-   * 
+   *
    * @param Criteria $criteria
    */
   public function setCriteria($criteria)

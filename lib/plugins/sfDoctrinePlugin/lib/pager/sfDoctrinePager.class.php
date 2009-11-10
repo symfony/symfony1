@@ -37,7 +37,7 @@ class sfDoctrinePager extends sfPager implements Serializable
   /**
    * Set the name of the table method used to retrieve the query object for the pager
    *
-   * @param string $tableMethodName 
+   * @param string $tableMethodName
    * @return void
    */
   public function setTableMethod($tableMethodName)
@@ -54,14 +54,13 @@ class sfDoctrinePager extends sfPager implements Serializable
   {
     $vars = get_object_vars($this);
     unset($vars['query']);
-    unset($vars['objects']);
     return serialize($vars);
   }
 
   /**
    * Unserialize a pager object
    *
-   * @param string $serialized 
+   * @param string $serialized
    */
   public function unserialize($serialized)
   {
@@ -75,7 +74,7 @@ class sfDoctrinePager extends sfPager implements Serializable
 
   /**
    * Returns a query for counting the total results.
-   * 
+   *
    * @return Doctrine_Query
    */
   public function getCountQuery()
@@ -94,6 +93,8 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function init()
   {
+    $this->results = null;
+
     $countQuery = $this->getCountQuery();
     $count = $countQuery->count();
 
@@ -162,12 +163,6 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   protected function retrieveObject($offset)
   {
-    // If all results are known we can use the stored objects
-    if (null !== $this->objects)
-    {
-      return $this->objects[$offset-1];
-    }
-
     $queryForRetrieve = clone $this->getQuery();
     $queryForRetrieve
       ->offset($offset - 1)
@@ -188,43 +183,6 @@ class sfDoctrinePager extends sfPager implements Serializable
    */
   public function getResults($hydrationMode = null)
   {
-    if (Doctrine_Core::HYDRATE_ARRAY === $hydrationMode)
-    {
-      // If we hydrate an array, we can store it fo later reuse
-      if (null === $this->objects)
-      {
-        $this->objects = $this->getQuery()->execute(array(), $hydrationMode);
-      }
-      return $this->objects;
-    }
     return $this->getQuery()->execute(array(), $hydrationMode);
-  }
-
-  /**
-   * Returns an Iterator for the current pager's results.
-   *
-   * Depending on the hydration mode of the query object, the return value of
-   * {@link getResults()} may be either an object or an array.
-   *
-   * @see sfPager
-   */
-  public function getIterator()
-  {
-    $results = $this->getResults();
-    return $results instanceof IteratorAggregate ? $results->getIterator() : new ArrayIterator($results);
-  }
-
-  /**
-   * @see sfPager
-   */
-  public function count()
-  {
-    // If an hydrated array was stored just count it
-    if (null !== $this->objects)
-    {
-      return count($this->objects);
-    }
-    // Otherwise get results. There's no need to hydrate this result set for counting
-    return count($this->getResults(Doctrine_Core::HYDRATE_NONE));
   }
 }
