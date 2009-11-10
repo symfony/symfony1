@@ -305,12 +305,17 @@ class sfMailer extends Swift_Mailer
    */
   public function flushQueue(&$failedRecipients = null)
   {
+    return $this->spool->flushQueue($this->realtimeTransport, $failedRecipients);
+  }
+
+  public function getSpool()
+  {
     if (self::SPOOL != $this->strategy)
     {
       throw new LogicException(sprintf('You can only send messages in the spool if the delivery strategy is "spool" (%s is the current strategy).', $this->strategy));
     }
 
-    return $this->spool->flushQueue($this->realtimeTransport, $failedRecipients);
+    return $this->spool;
   }
 
   static public function initialize()

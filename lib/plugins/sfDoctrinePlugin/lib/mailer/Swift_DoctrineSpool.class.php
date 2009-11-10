@@ -23,7 +23,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Swift_DoctrineSpool implements Swift_Spool
+class Swift_DoctrineSpool extends Swift_ConfigurableSpool
 {
   protected
     $model = null,
@@ -35,9 +35,9 @@ class Swift_DoctrineSpool implements Swift_Spool
    *
    * @param string The Doctrine model to use to store the messages (MailMessage by default)
    * @param string The column name to use for message storage (message by default)
-   * @param string The method to call to retrieve the messages to send (optional)
+   * @param string The method to call to retrieve the query to execute (optional)
    */
-  public function __construct($model = 'MailMessage', $column = 'message', $method = null)
+  public function __construct($model = 'MailMessage', $column = 'message', $method = 'createQuery')
   {
     $this->model = $model;
     $this->column = $column;
@@ -97,7 +97,7 @@ class Swift_DoctrineSpool implements Swift_Spool
   public function flushQueue(Swift_Transport $transport, &$failedRecipients = null)
   {
     $table = Doctrine_Core::getTable($this->model);
-    $objects = $this->method ? $table->{$this->method}() : $table->createQuery()->execute();
+    $objects = $table->{$this->method}()->limit($this->getMessageLimit())->execute();
 
     if (!$transport->isStarted())
     {
@@ -105,6 +105,7 @@ class Swift_DoctrineSpool implements Swift_Spool
     }
 
     $count = 0;
+    $time = time();
     foreach ($objects as $object)
     {
       $message = unserialize($object->{$this->column});
@@ -118,6 +119,11 @@ class Swift_DoctrineSpool implements Swift_Spool
       catch (Exception $e)
       {
         // TODO: What to do with errors?
+      }
+
+      if ($this->getTimeLimit() && (time() - $time) >= $this->getTimeLimit())
+      {
+        break;
       }
     }
 

@@ -26,6 +26,8 @@ class sfProjectSendEmailsTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('message-limit', null, sfCommandOption::PARAMETER_OPTIONAL, 'The maximum number of messages to send', 0),
+      new sfCommandOption('time-limit', null, sfCommandOption::PARAMETER_OPTIONAL, 'The time limit for sending messages (in seconds)', 0),
     ));
 
     $this->namespace = 'project';
@@ -37,12 +39,24 @@ class sfProjectSendEmailsTask extends sfBaseTask
 The [project:send-emails|INFO] sends emails stored in a queue:
 
   [php symfony project:send-emails|INFO]
+
+You can limit the number of messages to send:
+
+  [php symfony project:send-emails --message-limit=10|INFO]
+
+Or limit to time (in seconds):
+
+  [php symfony project:send-emails --time-limit=10|INFO]
 EOF;
   }
 
   protected function execute($arguments = array(), $options = array())
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
+
+    $spool = $this->getMailer()->getSpool();
+    $spool->setMessageLimit($options['message-limit']);
+    $spool->setTimeLimit($options['time-limit']);
 
     $sent = $this->getMailer()->flushQueue();
 

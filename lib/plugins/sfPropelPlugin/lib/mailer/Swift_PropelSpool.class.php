@@ -22,7 +22,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class Swift_PropelSpool implements Swift_Spool
+class Swift_PropelSpool extends Swift_ConfigurableSpool
 {
   protected
     $model = null,
@@ -36,7 +36,7 @@ class Swift_PropelSpool implements Swift_Spool
    * @param string The column name to use for message storage (message by default)
    * @param string The method to call to retrieve the messages to send (optional)
    */
-  public function __construct($model = 'MailMessage', $column = 'message', $method = null)
+  public function __construct($model = 'MailMessage', $column = 'message', $method = 'doSelect')
   {
     $this->model = $model;
     $this->column = $column;
@@ -98,8 +98,11 @@ class Swift_PropelSpool implements Swift_Spool
    */
   public function flushQueue(Swift_Transport $transport, &$failedRecipients = null)
   {
+    $criteria = new Criteria();
+    $criteria->setLimit($this->getMessageLimit());
+
     $model = constant($this->model.'::PEER');
-    $objects = $this->method ? call_user_func(array($model, $this->method)) : call_user_func(array($model, 'doSelect'), new Criteria());
+    $objects = call_user_func(array($model, $this->method), $criteria);
 
     if (!$transport->isStarted())
     {
@@ -108,6 +111,7 @@ class Swift_PropelSpool implements Swift_Spool
 
     $method = 'get'.call_user_func(array($model, 'translateFieldName'), $this->column, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $count = 0;
+    $time = time();
     foreach ($objects as $object)
     {
       $message = unserialize($object->$method());
@@ -121,6 +125,11 @@ class Swift_PropelSpool implements Swift_Spool
       catch (Exception $e)
       {
         // TODO: What to do with errors?
+      }
+
+      if ($this->getTimeLimit() && (time() - $time) >= $this->getTimeLimit())
+      {
+        break;
       }
     }
 
