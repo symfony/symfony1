@@ -106,7 +106,7 @@ class sfMailer extends Swift_Mailer
       }
       $arguments = isset($options['spool_arguments']) ? $options['spool_arguments'] : array();
 
-      if ($options)
+      if ($arguments)
       {
         $r = new ReflectionClass($options['spool_class']);
         $this->spool = $r->newInstanceArgs($arguments);
