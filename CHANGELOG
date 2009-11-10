@@ -1,3 +1,37 @@
+11/09/09: Version 1.3.0 beta2
+-----------------------------
+
+  * [23745] fixed issues in pagers, switched from IteratorAggregate to Iterator, simplified prevention of unnecessary queries, removed some whitespace
+  * [23744] refactored match_names in sfFinder so that it is more readable and perhaps even faster (fixes #6589, patch by Artyom Bisyarin)
+  * [23740] added errormessage when none of the tests passed to sfTestFunctionalTask or sfTestUnitTask are not found (fixes #6811)
+  * [23739] added hooks for specifying custom propel runtime and generator paths
+  * [23737] refactored propel initialization to `sfPropelPluginConfiguration`, cleaned up `sfPropelDatabase` to avoid creating multiple `PropelConfiguration` objects, removed Propel runtime classes from `sfAutoload` since Propel has its own autoloader, deprecated `sfPropel::import()` since `Propel::importClass()` allows autoloading
+  * [23720] preventing sendHttpHeaders to run multiple times. Once send the method will silently do nothing (closing #7553)
+  * [23709] added debug information for Propel in dev environment by default
+  * [23696] updated Propel sfWebDebugPanel to respect configuration done in DebugPDO
+  * [23692] now using propel 1.4.0 stable tag
+  * [23668] fixed doctrine form inheritance when the foreign key on one inheritance model references another inheritance model
+  * [23667] fixed default CRUD generate where file uploads were not taken care of
+  * [23651] made sfTask::getRouting() lazy
+  * [23600] added real cache key (including prefix) to the partial info panel to aid checking the cache. (closes #7520)
+  * [23568] added some more useful output to response tester's isValid method
+  * [23549] refactored the app:routes task to give a getRouting() method for all tasks
+  * [23545] refactor the project:send-emails task to give a getMailer() method for all tasks
+  * [23544] moved getMailer() method from sfAction to sfComponent
+  * [23539] Fix to Doctrine model building to allow packages
+  * [23527] cleaned up propel upgrade
+  * [23526] updated propel upgrade to be smarter and include consideration for nested set builders (closes #7475, closes #7476)
+  * [23520] references to external modules in bundled xhtml11 dtd
+  * [23518] fixed Cascade schema.yml across multiple plugins generates Plugin classes to wrong directory (closes #7481, thanks adrive)
+  * [23516] Added a test to check if the BaseForm class exists when building Doctrine or Propel forms (closes #7491)
+  * [23515] fixed Form Helper use of Rich Text Editors broken by changes in autoloader (closes #7498)
+  * [23437] fixed askAndValidate() typo (closes #7466)
+  * [23430] added hooks allowing to inject readymade config into routing
+  * [23394] fixed sfMixer hooks in propel peer classes
+  * [23382] added support for XSD and relaxNG to response validation
+  * [23380] bundled DTDs to avoid issuing requests to w3.org (closes #7445)
+  * [23378] added check for target directory before creating configuration cache in project:optimize, moved fs calls to filesystem object
+
 10/26/09: Version 1.3.0 beta1
 -----------------------------
 
@@ -60,7 +94,7 @@
   * [23073] added an exception in sfValidatorFile when file_uploads is disable in php.ini (closes #7345)
   * [23064] added type hints to generated form classes (closes #6344)
   * [23063] rewrote task autoloader initialization and reloading so autoload.yml is respected and newly-generated classes are immediately available (closes #5093)
-  * [23062] fixed placement of `BaseFormFilterPropel` (closes #6117)
+  * [23062] fixed placement of BaseFormFilterPropel (closes #6117)
   * [23060] reverted r22929, fixed overridden class paths in sfSimpleAutoload (refs #7142, refs #7299) this fix also prevents lib files from being scanned for classes after each reload in doctrine:build --all, for example
   * [23059] fixed schema merging when a schema file is empty (closes #7349)
   * [23048] added configuration cascade to the merging of plugin and project doctrine schema files (closes #7342, closes #7344)
