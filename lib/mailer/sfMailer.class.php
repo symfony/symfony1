@@ -305,7 +305,7 @@ class sfMailer extends Swift_Mailer
    */
   public function flushQueue(&$failedRecipients = null)
   {
-    return $this->spool->flushQueue($this->realtimeTransport, $failedRecipients);
+    return $this->getSpool()->flushQueue($this->realtimeTransport, $failedRecipients);
   }
 
   public function getSpool()
