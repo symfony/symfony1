@@ -51,6 +51,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $record->assignInheritanceValues();
 
         $conn = $this->getConnection();
+        $conn->connect();
 
         $state = $record->state();
         if ($state === Doctrine_Record::STATE_LOCKED || $state === Doctrine_Record::STATE_TLOCKED) {
