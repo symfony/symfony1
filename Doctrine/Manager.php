@@ -102,6 +102,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
 
     protected static $_instance;
 
+    private $_initialized = false;
+
     /**
      * constructor
      *
@@ -125,9 +127,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public function setDefaultAttributes()
     {
-        static $init = false;
-        if ( ! $init) {
-            $init = true;
+        if ( ! $this->_initialized) {
+            $this->_initialized = true;
             $attributes = array(
                         Doctrine_Core::ATTR_CACHE                        => null,
                         Doctrine_Core::ATTR_RESULT_CACHE                 => null,
@@ -216,6 +217,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         $this->_loadedValidatorsFromDisk = false;
         $this->_index = 0;
         $this->_currIndex = 0;
+        $this->_initialized = false;
     }
 
     /**
