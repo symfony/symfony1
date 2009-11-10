@@ -491,33 +491,22 @@ class sfFinder
   {
     if (!count($this->names)) return true;
 
-    // we must match one "not_name" rules to be ko
+    // Flags indicating that there was attempts to match
+    // at least one "not_name" or "name" rule respectively
+    // to following variables:
     $one_not_name_rule = false;
-    foreach ($this->names as $args)
-    {
-      list($not, $regex) = $args;
-      if ($not)
-      {
-        $one_not_name_rule = true;
-        if (preg_match($regex, $entry))
-        {
-          return false;
-        }
-      }
-    }
-
     $one_name_rule = false;
-    // we must match one "name" rules to be ok
+
     foreach ($this->names as $args)
     {
       list($not, $regex) = $args;
-      if (!$not)
+      $not ? $one_not_name_rule = true : $one_name_rule = true;
+      if (preg_match($regex, $entry))
       {
-        $one_name_rule = true;
-        if (preg_match($regex, $entry))
-        {
-          return true;
-        }
+        // We must match ONLY ONE "not_name" or "name" rule:
+        // if "not_name" rule matched then we return "false"
+        // if "name" rule matched then we return "true"
+        return $not ? false : true;
       }
     }
 
@@ -525,15 +514,14 @@ class sfFinder
     {
       return false;
     }
-    if ($one_not_name_rule)
+    else if ($one_not_name_rule)
     {
       return true;
     }
-    if ($one_name_rule)
+    else if ($one_name_rule)
     {
       return false;
     }
-
     return true;
   }
 
