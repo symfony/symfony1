@@ -131,11 +131,8 @@ class Doctrine_Migration
     {
         $directory = $directory ? $directory:$this->_migrationClassesDirectory;
 
-        if (isset(self::$_migrationClassesForDirectories[$directory])) {
-            $migrationClasses = (array) self::$_migrationClassesForDirectories[$directory];
-            $this->_migrationClasses = array_merge($migrationClasses, $this->_migrationClasses);
-        }
-
+        self::$_migrationClassesForDirectories = array();
+        $this->_migrationClasses = array();
         $classesToLoad = array();
         $classes = get_declared_classes();
         foreach ((array) $directory as $dir) {
