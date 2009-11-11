@@ -60,8 +60,8 @@ class sfConfigCache
       $this->mergeUserConfigHandlers();
     }
 
-    // handler key to call for this configuration file
-    $handlerKey = null;
+    // handler instance to call for this configuration file
+    $handlerInstance = null;
 
     $handler = str_replace(DIRECTORY_SEPARATOR, '/', $handler);
 
@@ -70,12 +70,12 @@ class sfConfigCache
     if (isset($this->handlers[$handler]))
     {
       // we have a handler associated with the full configuration path
-      $handlerKey = $handler;
+      $handlerInstance = $this->getHandler($handler);
     }
     else if (isset($this->handlers[$basename]))
     {
       // we have a handler associated with the configuration base name
-      $handlerKey = $basename;
+      $handlerInstance = $this->getHandler($basename);
     }
     else
     {
@@ -83,26 +83,29 @@ class sfConfigCache
       foreach (array_keys($this->handlers) as $key)
       {
         // replace wildcard chars in the configuration
-        $pattern = strtr($key, array('.' => '\.', '*' => '.*?'));
+        $pattern = strtr($key, array('.' => '\.', '*' => '(.*?)'));
+        $matches = array();
 
         // create pattern from config
-        if (preg_match('#'.$pattern.'$#', $handler))
+        if (preg_match('#'.$pattern.'$#', $handler, $matches))
         {
-          $handlerKey = $key;
+          $handlerInstance = $this->getHandler($key);
+          array_shift($matches);
+          $handlerInstance->getParameterHolder()->set('wildcardValues', $matches);
 
           break;
         }
       }
     }
 
-    if (!$handlerKey)
+    if (!$handlerInstance)
     {
       // we do not have a registered handler for this file
       throw new sfConfigurationException(sprintf('Configuration file "%s" does not have a registered handler.', implode(', ', $configs)));
     }
 
     // call the handler and retrieve the cache data
-    $data = $this->getHandler($handlerKey)->execute($configs);
+    $data = $handlerInstance->execute($configs);
 
     $this->writeCacheFile($handler, $cache, $data);
   }
