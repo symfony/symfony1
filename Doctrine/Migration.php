@@ -131,13 +131,17 @@ class Doctrine_Migration
     {
         $directory = $directory ? $directory:$this->_migrationClassesDirectory;
 
-        self::$_migrationClassesForDirectories = array();
-        $this->_migrationClasses = array();
         $classesToLoad = array();
         $classes = get_declared_classes();
         foreach ((array) $directory as $dir) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                 RecursiveIteratorIterator::LEAVES_ONLY);
+
+            if (isset(self::$_migrationClassesForDirectories[$dir])) {
+                foreach (self::$_migrationClassesForDirectories[$dir] as $num => $className) {
+                    $this->_migrationClasses[$num] = $className;
+                }
+            }
 
             foreach ($it as $file) {
                 $info = pathinfo($file->getFileName());
