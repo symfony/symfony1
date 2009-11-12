@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfUpgradeTo13Task.class.php 10628 2008-08-03 15:03:08Z fabien $
+ * @version    SVN: $Id$
  */
 class sfUpgradeTo13Task extends sfBaseTask
 {

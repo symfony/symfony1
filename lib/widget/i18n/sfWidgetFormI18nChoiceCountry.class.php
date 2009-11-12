@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nChoiceCountry.class.php 11842 2008-09-29 10:53:28Z fabien $
+ * @version    SVN: $Id$
  */
 class sfWidgetFormI18nChoiceCountry extends sfWidgetFormChoice
 {

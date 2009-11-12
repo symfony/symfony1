@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDoctrineGenerator.class.php 12507 2008-10-31 18:26:58Z fabien $
+ * @version    SVN: $Id$
  */
 class sfDoctrineGenerator extends sfModelGenerator
 {

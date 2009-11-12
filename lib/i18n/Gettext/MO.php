@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/TGettext.class.php';
  * GNU MO file reader and writer.
  *
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision$
+ * @version     $Revision: 9856 $
  * @access      public
  * @package System.I18N.core 
  */

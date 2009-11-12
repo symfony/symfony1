@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Pascal Borreli <pborreli@sqli.com>
- * @version    SVN: $Id: sfFormSymfonyUpgrade.class.php 12542 2008-11-01 15:38:31Z Pascal $
+ * @version    SVN: $Id$
  */
 class sfFormsUpgrade extends sfUpgrade
 {

@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfValidatorDoctrineChoiceMany.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id$
  */
 class sfValidatorDoctrineChoiceMany extends sfValidatorDoctrineChoice
 {

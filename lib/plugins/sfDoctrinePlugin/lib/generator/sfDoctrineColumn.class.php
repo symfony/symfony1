@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineAdminColumn.class.php 12356 2008-10-23 21:54:50Z Jonathan.Wage $
+ * @version    SVN: $Id$
  */
 class sfDoctrineColumn implements ArrayAccess
 {

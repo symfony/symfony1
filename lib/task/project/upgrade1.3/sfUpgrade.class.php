@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfUpgrade.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id$
  */
 abstract class sfUpgrade extends sfBaseTask
 {

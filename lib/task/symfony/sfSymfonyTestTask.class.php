@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestAllTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id$
  */
 class sfSymfonyTestTask extends sfTask
 {

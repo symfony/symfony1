@@ -19,7 +19,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllReloadTask.class.php 8743 2008-05-03 05:02:39Z Jonathan.Wage $
+ * @version    SVN: $Id$
  *
  * @deprecated Use doctrine:build and test:all instead
  */

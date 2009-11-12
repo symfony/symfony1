@@ -18,7 +18,7 @@
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id: JavascriptHelper.php 10078 2008-07-02 20:16:31Z FabianLange $
+ * @version    SVN: $Id$
  */
 
 /*

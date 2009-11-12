@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginAssetsUpgrade.class.php 12542 2008-11-01 15:38:31Z fabien $
+ * @version    SVN: $Id$
  */
 class sfAssetsUpgrade extends sfUpgrade
 {

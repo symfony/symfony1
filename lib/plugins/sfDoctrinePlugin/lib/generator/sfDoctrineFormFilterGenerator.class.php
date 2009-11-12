@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDoctrineFormFilterGenerator.class.php 11675 2008-09-19 15:21:38Z fabien $
+ * @version    SVN: $Id$
  */
 class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
 {

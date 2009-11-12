@@ -6,7 +6,7 @@
  * @package    symfony12
  * @subpackage articles
  * @author     Your name here
- * @version    SVN: $Id: actions.class.php 8507 2008-04-17 17:32:20Z fabien $
+ * @version    SVN: $Id$
  */
 class articlesActions extends sfActions
 {

@@ -5,7 +5,7 @@
  *
  * @package    filters
  * @subpackage AuthorInheritance *
- * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 11675 2008-09-19 15:21:38Z fabien $
+ * @version    SVN: $Id$
  */
 class AuthorInheritanceFormFilter extends BaseAuthorInheritanceFormFilter
 {

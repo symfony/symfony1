@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nChoiceLanguage.class.php 11842 2008-09-29 10:53:28Z fabien $
+ * @version    SVN: $Id$
  */
 class sfWidgetFormI18nChoiceTimezone extends sfWidgetFormChoice
 {

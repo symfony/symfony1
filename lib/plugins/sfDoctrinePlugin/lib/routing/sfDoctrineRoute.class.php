@@ -18,7 +18,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRoute.class.php 11475 2008-09-12 11:07:23Z fabien $
+ * @version    SVN: $Id$
  */
 class sfDoctrineRoute extends sfObjectRoute
 {

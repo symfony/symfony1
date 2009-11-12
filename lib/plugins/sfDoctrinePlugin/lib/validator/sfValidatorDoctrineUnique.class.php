@@ -20,7 +20,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfValidatorDoctrineUnique.class.php 8807 2008-05-06 14:12:28Z fabien $
+ * @version    SVN: $Id$
  */
 class sfValidatorDoctrineUnique extends sfValidatorSchema
 {

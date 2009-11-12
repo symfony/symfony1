@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectDeployTask.class.php 22080 2009-09-16 13:27:19Z fabien $
+ * @version    SVN: $Id$
  */
 class sfProjectOptimizeTask extends sfBaseTask
 {

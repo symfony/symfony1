@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nChoiceCurrency.class.php 16232 2009-03-12 08:37:50Z fabien $
+ * @version    SVN: $Id$
  */
 class sfWidgetFormI18nChoiceCurrency extends sfWidgetFormChoice
 {

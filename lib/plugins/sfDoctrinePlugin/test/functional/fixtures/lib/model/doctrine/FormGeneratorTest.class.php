@@ -8,7 +8,7 @@
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
  * @author     ##NAME## <##EMAIL##>
- * @version    SVN: $Id: Builder.php 5925 2009-06-22 21:27:17Z jwage $
+ * @version    SVN: $Id$
  */
 class FormGeneratorTest extends BaseFormGeneratorTest
 {
