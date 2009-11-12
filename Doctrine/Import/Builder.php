@@ -637,8 +637,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret[] = '@package    ' . $this->_phpDocPackage;
         $ret[] = '@subpackage ' . $this->_phpDocSubpackage;
         $ret[] = '@author     ' . $this->_phpDocName . ' <' . $this->_phpDocEmail . '>';
-
-        $fileName = $definition['className']  . $this->_suffix;
         $ret[] = '@version    SVN: $Id$';
 
         $ret = ' * ' . implode(PHP_EOL . ' * ', $ret);
@@ -1017,28 +1015,25 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if ($prefix = $this->_classPrefix) {
             $className = $prefix . $definition['tableClassName'];
             if ($this->_classPrefixFiles) {
-                $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;                
+                $fileName = $className . $this->_suffix;               
             } else {
-                $writePath = $path . DIRECTORY_SEPARATOR . $definition['tableClassName'] . $this->_suffix;
+                $fileName = $definition['tableClassName'] . $this->_suffix;
             }
+            $writePath = $path . DIRECTORY_SEPARATOR . $fileName;
         } else {
             $className = $definition['tableClassName'];
-            $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
+            $fileName = $className . $this->_suffix;
         }
-
-        $className = $definition['tableClassName'];
-        $content = $this->buildTableClassDefinition($className, $options);
-
-        Doctrine_Lib::makeDirectories($path);
 
         if ($this->_pearStyle) {
-            $writePath = str_replace('_', '/', $writePath);
+            $writePath = $path . DIRECTORY_SEPARATOR . str_replace('_', '/', $fileName);
+        } else {
+            $writePath = $path . DIRECTORY_SEPARATOR . $fileName;
         }
 
-        $dir = dirname($writePath);
-        if ( ! is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+        $content = $this->buildTableClassDefinition($className, $options);
+
+        Doctrine_Lib::makeDirectories(dirname($writePath));
 
         Doctrine_Core::loadModel($className, $writePath);
 
@@ -1085,6 +1080,10 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $fileName = $definition['className'] . $this->_suffix; 
         } else { 
             $fileName = $originalClassName . $this->_suffix; 
+        }
+
+        if ($this->_pearStyle) {
+            $fileName = str_replace('_', '/', $fileName);
         }
 
         $packagesPath = $this->_packagesPath ? $this->_packagesPath:$this->_path;
@@ -1148,14 +1147,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         $code .= PHP_EOL . $definitionCode;
 
-        if ($this->_pearStyle) {
-            $writePath = str_replace('_', '/', $writePath);
-        }
-
-        $dir = dirname($writePath);
-        if ( ! is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
+        Doctrine_Lib::makeDirectories(dirname($writePath));
 
         if (isset($definition['generate_once']) && $definition['generate_once'] === true) {
             if ( ! file_exists($writePath)) {
