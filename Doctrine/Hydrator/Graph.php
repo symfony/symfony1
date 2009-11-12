@@ -35,6 +35,8 @@
  */
 abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
 {
+    protected $_tables = array();
+
     /**
      * Gets the custom field used for indexing for the specified component alias.
      *
@@ -408,6 +410,13 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             }
         }
         
-        return $matchedComponents[count($matchedComponents)-1];
+        $matchedComponent = $matchedComponents[count($matchedComponents)-1];
+        
+        if ( ! isset($this->_tables[$matchedComponent])) {
+            $this->_tables[$matchedComponent] = Doctrine_Core::getTable($matchedComponent);
+            $this->_tables[$matchedComponent]->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, false);
+        }
+        
+        return $matchedComponent;
     }
 }
