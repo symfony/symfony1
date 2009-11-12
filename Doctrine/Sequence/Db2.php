@@ -50,7 +50,7 @@ class Doctrine_Sequence_Db2 extends Doctrine_Sequence
             $result = $this->conn->fetchOne($query);
             $result = ($result) ? $result['VAL'] : null; 
         } catch(Doctrine_Connection_Exception $e) {
-            if ($onDemand && $e->getPortableCode() == Doctrine::ERR_NOSUCHTABLE) {
+            if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 try {
                     $result = $this->conn->export->createSequence($seqName);
                 } catch(Doctrine_Exception $e) {
