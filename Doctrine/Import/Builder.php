@@ -356,7 +356,12 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         if (isset($definition['inheritance']['subclasses']) && ! empty($definition['inheritance']['subclasses'])) {
-            $ret[$i] = "        ".'$this->setSubClasses('. $this->varExport($definition['inheritance']['subclasses']).');';
+            $subClasses = array();
+            foreach ($definition['inheritance']['subclasses'] as $className => $def) {
+                $className = $this->_classPrefix . $className;
+                $subClasses[$className] = $def;
+            }
+            $ret[$i] = "        ".'$this->setSubClasses('. $this->varExport($subClasses).');';
             $i++;
         }
 
@@ -991,12 +996,16 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
     public function buildTableClassDefinition($className, $options = array())
     {
+        $extends = isset($options['extends']) ? $options['extends']:$this->_baseTableClassName;
+        if ($extends !== $this->_baseTableClassName) {
+            $extends = $this->_classPrefix . $extends;
+        }
         $content  = '<?php' . PHP_EOL;
         $content .= sprintf(self::$_tpl,
             null,
             false,
             $className,
-            isset($options['extends']) ? $options['extends']:$this->_baseTableClassName,
+            $extends,
             null,
             null,
             null
