@@ -377,7 +377,6 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
     {
         if ( ! isset($this->_tables[$component])) {
             $this->_tables[$component] = Doctrine_Core::getTable($component);
-            $this->_tables[$component]->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, false);
         }
         
         if ( ! ($subclasses = $this->_tables[$component]->getOption('subclasses'))) {
@@ -414,7 +413,6 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
         
         if ( ! isset($this->_tables[$matchedComponent])) {
             $this->_tables[$matchedComponent] = Doctrine_Core::getTable($matchedComponent);
-            $this->_tables[$matchedComponent]->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, false);
         }
         
         return $matchedComponent;

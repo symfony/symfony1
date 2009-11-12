@@ -117,9 +117,6 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
         foreach ($this->_collections as $key => $coll) {
             $coll->takeSnapshot();
         }
-        foreach ($this->_tables as $table) {
-            $table->setAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES, true);
-        }
         $this->_initializedRelations = null;
         $this->_collections = null;
         $this->_tables = null;
