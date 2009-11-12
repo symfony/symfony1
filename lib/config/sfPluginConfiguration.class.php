@@ -114,6 +114,7 @@ abstract class sfPluginConfiguration
     {
       $this->configuration->getEventDispatcher()->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
       $autoload->loadConfiguration(array($file));
+      $this->configuration->getEventDispatcher()->disconnect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
     }
     else
     {
