@@ -216,7 +216,7 @@ abstract class Doctrine_Migration_Base
         if ($direction == 'up') {
             $this->createPrimaryKey($tableName, $columnNames);
         } else {
-            $this->dropPrimaryKey($tableName, array_keys($columnNames));
+            $this->dropPrimaryKey($tableName, $columnNames);
         }
     }
 
@@ -283,10 +283,17 @@ abstract class Doctrine_Migration_Base
      * Convenience method for dropping primary keys.
      *
      *     [php]
-     *     $this->dropPrimaryKey('my_table', array('id'));
+     *     $columns = array(
+     *         'id' => array(
+     *             'type' => 'integer
+     *             'autoincrement' => true
+     *          )
+     *     );
+     *     $this->dropPrimaryKey('my_table', $columns);
      *
      * Equivalent to doing:
      *
+     *  * Change autoincrement column so it's not (changeColumn())
      *  * Remove primary constraint (dropConstraint())
      *  * Removing columns (removeColumn())
      *
@@ -296,11 +303,20 @@ abstract class Doctrine_Migration_Base
      */
     public function dropPrimaryKey($tableName, $columnNames)
     {
+        // un-autoincrement
+        foreach ((array) $columnNames as $columnName => $def) {
+            if (isset($def['autoincrement'])) {
+                $changeDef = $def;
+                unset($changeDef['autoincrement']);
+                $this->changeColumn($tableName, $columnName, $changeDef['type'], $changeDef['length'], $changeDef);
+            }
+        }
+
         // Remove primary constraint
         $this->dropConstraint($tableName, null, true);
 
         // Remove columns
-        foreach ((array) $columnNames as $columnName) {
+        foreach (array_keys((array) $columnNames) as $columnName) {
             $this->removeColumn($tableName, $columnName);
         }
     }
