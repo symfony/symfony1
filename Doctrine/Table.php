@@ -912,15 +912,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * database until you use @see export().
      *
      * @param array $fields     values are fieldnames
+     * @param array $options    array of options for unique validator
+     * @param bool $createUniqueIndex  Whether or not to create a unique index in the database
      * @return void
      */
-    public function unique($fields)
+    public function unique($fields, $options = array(), $createdUniqueIndex = true)
     {
-        $name = implode('_', $fields) . '_unqidx';
-        $definition = array('type' => 'unique', 'fields' => $fields);
-        $this->addIndex($name, $definition);
+        if ($createdUniqueIndex) {
+            $name = implode('_', $fields) . '_unqidx';
+            $definition = array('type' => 'unique', 'fields' => $fields);
+            $this->addIndex($name, $definition);
+        }
 
-        $this->_uniques[] = $fields;
+        $this->_uniques[] = array($fields, $options);
     }
 
     /**
@@ -2102,8 +2106,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $validator = Doctrine_Validator::getValidator('unique');
         $validator->invoker = $record;
 
-        foreach ($this->_uniques as $fields)
+        foreach ($this->_uniques as $unique)
         {
+            list($fields, $options) = $unique;
+            $validator->args = $options;
             $validator->field = $fields;
             $values = array();
             foreach ($fields as $field) {
