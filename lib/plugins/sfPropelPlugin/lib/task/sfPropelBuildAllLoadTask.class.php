@@ -69,8 +69,6 @@ EOF;
     // load Propel configuration before Phing
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    require_once dirname(__FILE__) . '/../addon/sfPropelAutoload.php';
-
     $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
     $buildAll->setConfiguration($this->configuration);
