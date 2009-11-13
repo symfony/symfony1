@@ -43,6 +43,16 @@ class sfPropelUpgrade extends sfUpgrade
 
   public function upgrade()
   {
+    if (!in_array('sfPropelPlugin', $this->configuration->getPlugins()))
+    {
+      if (file_exists($file = sfConfig::get('sf_config_dir').'/propel.ini'))
+      {
+        $this->getFilesystem()->remove($file);
+      }
+
+      return;
+    }
+
     if (
       file_exists($old = sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.class.php')
       &&
