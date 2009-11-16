@@ -60,7 +60,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */
     public function hasChildren()
     {
-        return (($this->getRightValue() - $this->getLeftValue() ) >1 );        
+        return (($this->getRightValue() - $this->getLeftValue()) > 1);        
     }
 
     /**
@@ -70,7 +70,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */
     public function hasParent()
     {
-        return !$this->isRoot();
+        return $this->isValidNode($this->getRecord()) && ! $this->isRoot();
     }
 
     /**
