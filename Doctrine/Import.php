@@ -382,7 +382,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;
-              $definition['className'] = Doctrine_Inflector::classify($table);
+              $definition['className'] = Doctrine_Inflector::classify(Doctrine_Inflector::tableize($table));
               $definition['columns'] = $connection->import->listTableColumns($table);
               $definition['connection'] = $connection->getName();
               $definition['connectionClassName'] = $definition['className'];
