@@ -749,6 +749,12 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
                 // Number of stack items
                 $l = count($stack);
 
+                // Check if we're dealing with different levels
+                while($l > 0 && $stack[$l - 1]['level'] >= $item['level']) {
+                    array_pop($stack->data);
+                    $l--;
+                }
+
                 // Stack is empty (we are inspecting the root)
                 if ($l == 0) {
                     // Assigning the root child
@@ -758,14 +764,11 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
                 } else {
                     // Add child to parent
                     $i = count($stack[$l - 1]['__children']);
-                    $children = $stack[$l - 1]['__children'];
-                    $children[$i] = $item;
-                    $stack[$l - 1]['__children'] = $children;
-                    $stack[] = $children[$i];
+                    $stack[$l - 1]['__children'][$i] = $item;
+                    $stack[] = $stack[$l - 1]['__children'][$i];
                 }
             }
         }
-
         return $trees;
     }
 
