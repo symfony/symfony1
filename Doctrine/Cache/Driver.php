@@ -213,7 +213,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         $count = 0;
         $keys = $this->fetch($this->_cacheKeyIndexKey);
         foreach ($keys as $key) {
-            if (strpos($key, $prefix) == 0) {
+            if (strpos($key, $prefix) === 0) {
                 $count++;
                 $this->delete($key);
             }
