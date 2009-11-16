@@ -1396,6 +1396,17 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
+     * Tests whether a mapped value exists
+     *
+     * @param string $name  the name of the property
+     * @return boolean
+     */
+    public function hasMappedValue($name)
+    {
+        return array_key_exists($name, $this->_values);
+    }
+
+    /**
      * alters mapped values, properties and related components.
      *
      * @param mixed $name                   name of the property or reference
