@@ -1324,25 +1324,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
         $q .= $this->_sqlParts['forUpdate'] === true ? ' FOR UPDATE ' : '';
 
-        // return to the previous state
-        if ( ! empty($string)) {
-            // We need to double pop if > 2
-            if (count($this->_sqlParts['where']) > 2) {
-                array_pop($this->_sqlParts['where']);
-            }
-
-            array_pop($this->_sqlParts['where']);
-        }
-
-        if ($needsSubQuery) {
-            // We need to double shift if > 2
-            if (count($this->_sqlParts['where']) > 2) {
-                array_shift($this->_sqlParts['where']);
-            }
-
-            array_shift($this->_sqlParts['where']);
-        }
-
         $this->_sql = $q;
 
         $this->clear();
@@ -2007,17 +1988,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
         // Build the from clause
         $from = $this->_buildSqlFromPart(true);
-
-        // Append column aggregation inheritance (if needed)
-        $string = $this->getInheritanceCondition($rootAlias);
-
-        if ( ! empty($string)) {
-            if ( ! empty($where)) {
-                $where[] = 'AND';
-            }
-
-            $where[] = $string;
-        }
 
         // Build the where clause
         $where = ( ! empty($where)) ? ' WHERE ' . implode(' ', $where) : '';
