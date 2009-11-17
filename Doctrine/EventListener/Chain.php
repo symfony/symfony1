@@ -272,6 +272,97 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
     }
 
     /**
+     * postSavepointCommit
+     * an event invoked after a Doctrine_Connection transaction with savepoint
+     * is committed
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function postSavepointCommit(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->postSavepointCommit($event);
+        }
+    }
+
+    /**
+     * preSavepointCommit
+     * an event invoked before a Doctrine_Connection transaction with savepoint
+     * is committed
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function preSavepointCommit(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preSavepointCommit($event);
+        }
+    }
+
+    /**
+     * postSavepointRollback
+     * an event invoked after a Doctrine_Connection transaction with savepoint
+     * is being rolled back
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function postSavepointRollback(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->postSavepointRollback($event);
+        }
+    }
+
+    /**
+     * preSavepointRollback
+     * an event invoked before a Doctrine_Connection transaction with savepoint
+     * is being rolled back
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function preSavepointRollback(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preSavepointRollback($event);
+        }
+    }
+
+    /**
+     * postSavepointCreate
+     * an event invoked after a Doctrine_Connection transaction with savepoint
+     * has been started
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function postSavepointCreate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->postSavepointCreate($event);
+        }
+    }
+
+    /**
+     * preSavepointCreate
+     * an event invoked before a Doctrine_Connection transaction with savepoint
+     * is being started
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
+    public function preSavepointCreate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preSavepointCreate($event);
+        }
+    }
+    // @end
+
+    /**
      * onCollectionDelete
      * an event invoked after a Doctrine_Collection is being deleted
      *
