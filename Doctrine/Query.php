@@ -1293,11 +1293,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         // Add the default orderBy statements defined in the relationships and table classes
         // Only do this for SELECT queries
         if ($this->_type === self::SELECT) {
-            $added = array();
             foreach ($this->_queryComponents as $alias => $map) {
                 $sqlAlias = $this->getSqlTableAlias($alias);
                 if (isset($map['relation'])) {
                     $orderBy = $map['relation']->getOrderByStatement($sqlAlias, true);
+                    if ($orderBy == $map['relation']['orderBy']) {
+                        if (isset($map['ref'])) {
+                            $orderBy = $map['relation']['refTable']->processOrderBy($sqlAlias, $map['relation']['orderBy'], true);
+                        } else {
+                            $orderBy = null;
+                        }
+                    }
                 } else {
                     $orderBy = $map['table']->getOrderByStatement($sqlAlias, true);
                 }
@@ -1734,7 +1740,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     $this->_queryComponents[$assocPath] = array(
                         'parent' => $prevPath,
                         'relation' => $relation,
-                        'table' => $asf);
+                        'table' => $asf,
+                        'ref' => true);
 
                     $assocAlias = $this->getSqlTableAlias($assocPath, $asf->getTableName());
 
