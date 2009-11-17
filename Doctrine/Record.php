@@ -1957,9 +1957,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 if (is_array($value)) {
                     if (isset($value[0]) && ! is_array($value[0])) {
                         $this->unlink($key, array(), false);
-                        foreach ($value as $id) {
-                            $this->link($key, $id, false);
-                        }
+                        $this->link($key, $value, false);
                     } else {
                         $this->$key->fromArray($value, $deep);
                     }
@@ -2421,7 +2419,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                         $this->_references[$alias]->remove($k);
                     }
                 }
-                $this->_references[$alias]->takeSnapshot();
             }
         }
 
