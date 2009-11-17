@@ -757,7 +757,7 @@ abstract class Doctrine_Query_Abstract
     public function getRootAlias()
     {
         if ( ! $this->_queryComponents) {
-            $this->getSqlQuery();
+            $this->getSqlQuery(array(), false);
         }
         
         return $this->_rootAlias;
@@ -1116,14 +1116,7 @@ abstract class Doctrine_Query_Abstract
         }
 
         $copy = $this->copy();
-        $copy->setParams(array(
-            'exec' => array(), 
-            'join' => array(), 
-            'set' => array(), 
-            'where' => array(), 
-            'having' => array()
-        ));
-        $copy->getSqlQuery($params);
+        $copy->getSqlQuery($params, false);
         $componentsAfter = $copy->getQueryComponents();
 
         $this->_rootAlias = $copy->getRootAlias();

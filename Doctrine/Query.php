@@ -1087,9 +1087,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      *
      * @param array $params             an array of prepared statement params (needed only in mysql driver
      *                                  when limit subquery algorithm is used)
+     * @param bool $limitSubquery Whether or not to try and apply the limit subquery algorithm
      * @return string                   the built sql query
      */
-    public function getSqlQuery($params = array())
+    public function getSqlQuery($params = array(), $limitSubquery = true)
     {
         // Assign building/execution specific params
         $this->_params['exec'] = $params;
@@ -1103,15 +1104,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             // Return compiled SQL
             return $this->_sql;
         }
-        return $this->buildSqlQuery();
+        return $this->buildSqlQuery($limitSubquery);
     }
 
     /**
      * Build the SQL query from the DQL
      *
+     * @param bool $limitSubquery Whether or not to try and apply the limit subquery algorithm
      * @return string $sql The generated SQL string
      */
-    public function buildSqlQuery()
+    public function buildSqlQuery($limitSubquery = true)
     {
         // reset the state
         if ( ! $this->isSubquery()) {
@@ -1232,7 +1234,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $modifyLimit = true;
         $limitSubquerySql = '';
 
-        if ( ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) && $needsSubQuery) {
+        if ( ( ! empty($this->_sqlParts['limit']) || ! empty($this->_sqlParts['offset'])) && $needsSubQuery && $limitSubquery) {
             $subquery = $this->getLimitSubquery();
 
             // what about composite keys?
@@ -1980,7 +1982,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     public function getCountSqlQuery()
     {
         // triggers dql parsing/processing
-        $this->getSqlQuery(); // this is ugly
+        $this->getSqlQuery(array(), false); // this is ugly
 
         // initialize temporary variables
         $where   = $this->_sqlParts['where'];
