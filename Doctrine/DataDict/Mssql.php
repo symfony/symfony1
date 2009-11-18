@@ -189,6 +189,16 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 $type[] = 'blob';
                 $length = null;
             break;
+            case 'uniqueidentifier':
+                $type[] = 'string';
+                $length = 36;
+            break;
+            case 'sql_variant':
+            case 'sysname':
+            case 'binary':
+                $type[] = 'string';
+                $length = null;
+            break;
             default:
                 $type[] = $field['type'];
                 $length = isset($field['length']) ? $field['length']:null;
