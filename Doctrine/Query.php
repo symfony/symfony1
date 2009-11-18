@@ -1451,9 +1451,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             // in the SELECT list when using DISTINCT. Hence we need to filter out the
             // primary keys with an additional DISTINCT subquery.
             // #1038
-            $subquery = 'SELECT doctrine_subquery_alias.' . $table->getColumnName($table->getIdentifier())
+            $quotedIdentifierColumnName = $this->_conn->quoteIdentifier($table->getColumnName($table->getIdentifier()));
+            $subquery = 'SELECT doctrine_subquery_alias.' . $quotedIdentifierColumnName
                     . ' FROM (' . $subquery . ') doctrine_subquery_alias'
-                    . ' GROUP BY doctrine_subquery_alias.' . $table->getColumnName($table->getIdentifier())
+                    . ' GROUP BY doctrine_subquery_alias.' . $quotedIdentifierColumnName
                     . ' ORDER BY MIN(ROWNUM)';
         }
 
