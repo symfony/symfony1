@@ -108,13 +108,13 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
                 $column = $column === null ? '*' : $this->quoteIdentifier($column);
                 if ($offset > 0) {
                     $min = $offset + 1;
-                    $query = 'SELECT b.'.$column.' FROM ('.
-                                 'SELECT a.*, ROWNUM AS doctrine_rownum FROM ('
-                                   . $query . ') a '.
-                              ') b '.
+                    $query = 'SELECT b.'.$column.' FROM ( '.
+                                 'SELECT a.*, ROWNUM AS doctrine_rownum FROM ( '
+                                   . $query . ' ) a '.
+                              ' ) b '.
                               'WHERE doctrine_rownum BETWEEN ' . $min .  ' AND ' . $max;
                 } else {
-                    $query = 'SELECT a.'.$column.' FROM (' . $query .') a WHERE ROWNUM <= ' . $max;
+                    $query = 'SELECT a.'.$column.' FROM ( ' . $query .' ) a WHERE ROWNUM <= ' . $max;
                 }
             }
         }
