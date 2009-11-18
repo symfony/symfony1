@@ -484,6 +484,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
      */
     public function getIntegerDeclaration($name, $field)
     {
+        $unique = (isset($field['unique']) && $field['unique']) ? ' UNIQUE' : '';
         $default = $autoinc = '';
         if ( ! empty($field['autoincrement'])) {
             $autoinc = ' AUTO_INCREMENT';
@@ -496,11 +497,6 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 ? 'NULL'
                 : $this->conn->quote($field['default']));
         }
-        /**
-        elseif (empty($field['notnull'])) {
-            $default = ' DEFAULT NULL';
-        }
-        */
 
         $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
         $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
