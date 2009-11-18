@@ -50,7 +50,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      * @return string $yaml
      * @return void
      */
-    public function dumpData($array, $path = null)
+    public function dumpData($array, $path = null, $charset = null)
     {
 
         try {

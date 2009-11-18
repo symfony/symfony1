@@ -39,12 +39,13 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
      *
      * @param  string $array Array of data to convert to xml
      * @param  string $path  Path to write xml data to
+     * @param string $charset The charset of the data being dumped
      * @return string $xml
      * @return void
      */
-    public function dumpData($array, $path = null)
+    public function dumpData($array, $path = null, $charset = null)
     {
-        $data = self::arrayToXml($array);
+        $data = self::arrayToXml($array, 'data', null, $charset);
         
         return $this->doDump($data, $path);
     }
@@ -57,7 +58,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
      * @param  string $xml          SimpleXmlElement
      * @return string $asXml        String of xml built from array
      */
-    public static function arrayToXml($array, $rootNodeName = 'data', $xml = null)
+    public static function arrayToXml($array, $rootNodeName = 'data', $xml = null, $charset = null)
     {
         if ($xml === null) {
             $xml = new SimpleXmlElement("<?xml version=\"1.0\" encoding=\"utf-8\"?><$rootNodeName/>");
@@ -81,8 +82,11 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
             } else if (is_int($key)) {               
                 $xml->addChild($value, 'true');
             } else {
+                $charset = $charset ? $charset : 'utf-8';
+                if (strcasecmp($charset, 'utf-8') !== 0 && strcasecmp($charset, 'utf8') !== 0) {
+                    $value = iconv($charset, 'UTF-8', $value);
+                }
                 $value = htmlentities($value);
-
                 $xml->addChild($key, $value);
             }
         }

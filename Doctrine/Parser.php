@@ -50,10 +50,11 @@ abstract class Doctrine_Parser
      *
      * @param string $array 
      * @param string $path 
+     * @param string $charset The charset of the data being dumped
      * @return void
      * @author Jonathan H. Wage
      */
-    abstract public function dumpData($array, $path = null);
+    abstract public function dumpData($array, $path = null, $charset = null);
 
     /**
      * getParser
@@ -96,14 +97,15 @@ abstract class Doctrine_Parser
      * @param string $array 
      * @param string $path 
      * @param string $type 
+     * @param string $charset The charset of the data being dumped
      * @return void
      * @author Jonathan H. Wage
      */
-    static public function dump($array, $type = 'xml', $path = null)
+    static public function dump($array, $type = 'xml', $path = null, $charset = null)
     {
         $parser = self::getParser($type);
 
-        return $parser->dumpData($array, $path);
+        return $parser->dumpData($array, $path, $charset);
     }
 
     /**

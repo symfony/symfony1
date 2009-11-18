@@ -39,10 +39,11 @@ class Doctrine_Parser_Json extends Doctrine_Parser
      * 
      * @param string $array Array of data to dump to json
      * @param string $path  Path to dump json data to
+     * @param string $charset The charset of the data being dumped
      * @return string $json
      * @return void
      */
-    public function dumpData($array, $path = null)
+    public function dumpData($array, $path = null, $charset = null)
     {
         $data = json_encode($array);
         
