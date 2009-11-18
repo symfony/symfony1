@@ -1372,26 +1372,30 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $subquery .= $this->_conn->quoteIdentifier($primaryKey);
 
         // pgsql & oracle need the order by fields to be preserved in select clause
-        if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
+        if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci' || $driverName == 'mssql' || $driverName == 'odbc') {
             foreach ($this->_sqlParts['orderby'] as $part) {
                 // Remove identifier quoting if it exists
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
-                $part_original = trim($e[0]);
-                $callback = create_function('$e', 'return trim($e, \'[]`"\');');
-                $part = trim(implode('.', array_map($callback, explode('.', $part_original))));
-
-                if (strpos($part, '.') === false) {
-                    continue;
-                }
-
-                // don't add functions
-                if (strpos($part, '(') !== false) {
-                    continue;
-                }
-
-                // don't add primarykey column (its already in the select clause)
-                if ($part !== $primaryKey) {
-                    $subquery .= ', ' . $part_original;
+                foreach ($e as $f) {
+                    if ($f == 0 || $f % 2 == 0) {
+                        $partOriginal = trim($f);
+                        $callback = create_function('$e', 'return trim($e, \'[]`"\');');
+                        $part = trim(implode('.', array_map($callback, explode('.', $partOriginal))));
+                
+                        if (strpos($part, '.') === false) {
+                            continue;
+                        }
+                
+                        // don't add functions
+                        if (strpos($part, '(') !== false) {
+                            continue;
+                        }
+                
+                        // don't add primarykey column (its already in the select clause)
+                        if ($part !== $primaryKey) {
+                            $subquery .= ', ' . $partOriginal;
+                        }
+                    }
                 }
             }
         }
