@@ -506,6 +506,6 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
         $name = $this->conn->quoteIdentifier($name, true);
 
         return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned 
-            . $default . $notnull . $autoinc . $comment;
+            . $default . $unique . $notnull . $autoinc . $comment;
     }
 }
