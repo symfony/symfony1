@@ -169,7 +169,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
         foreach ($result as $key => $val) {
             $val = array_change_key_case($val, CASE_LOWER);
 
-            if (strtolower($val['type']) === 'varchar') {
+            if (strtolower($val['type']) === 'character varying') {
                 // get length from varchar definition
                 $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
                 $val['length'] = $length;
