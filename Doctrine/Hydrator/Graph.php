@@ -328,6 +328,9 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             // So we know that all aggregate values will always be available in the root component
             if ($agg) {
                 $rowData[$this->_rootAlias][$fieldName] = $preparedValue;
+                if (isset($rowData[$dqlAlias])) {
+                    $rowData[$dqlAlias][$fieldName] = $preparedValue;
+                }
             } else {
                 $rowData[$dqlAlias][$fieldName] = $preparedValue;
             }
