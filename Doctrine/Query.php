@@ -1902,7 +1902,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     {
         // get the connection for the component
         $manager = Doctrine_Manager::getInstance();
-        if ($manager->hasConnectionForComponent($name)) {
+        if ( ! $this->_passedConn && $manager->hasConnectionForComponent($name)) {
             $this->_conn = $manager->getConnectionForComponent($name);
         }
 
@@ -1939,7 +1939,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     {
         // get the connection for the component
         $manager = Doctrine_Manager::getInstance();
-        if ($manager->hasConnectionForComponent($name)) {
+        if ( ! $this->_passedConn && $manager->hasConnectionForComponent($name)) {
             $this->_conn = $manager->getConnectionForComponent($name);
         }
 

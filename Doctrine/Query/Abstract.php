@@ -144,6 +144,10 @@ abstract class Doctrine_Query_Abstract
      */
     protected $_conn;
 
+    /**
+     * @var bool Whether or not a connection was passed to this query object to use
+     */
+    protected $_passedConn = false;
 
     /**
      * @var array $_sqlParts  The SQL query string parts. Filled during the DQL parsing process.
@@ -270,6 +274,8 @@ abstract class Doctrine_Query_Abstract
     {
         if ($connection === null) {
             $connection = Doctrine_Manager::getInstance()->getCurrentConnection();
+        } else {
+            $this->_passedConn = true;
         }
         if ($hydrator === null) {
             $hydrator = new Doctrine_Hydrator();
@@ -279,6 +285,18 @@ abstract class Doctrine_Query_Abstract
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
         $this->_resultCacheTTL = $this->_conn->getAttribute(Doctrine_Core::ATTR_RESULT_CACHE_LIFESPAN);
         $this->_queryCacheTTL = $this->_conn->getAttribute(Doctrine_Core::ATTR_QUERY_CACHE_LIFESPAN);
+    }
+
+    /**
+     * Set the connection this query object should use
+     *
+     * @param Doctrine_Connection $connection
+     * @return void
+     */
+    public function setConnection(Doctrine_Connection $connection)
+    {
+        $this->_passedConn = true;
+        $this->_conn = $connection;
     }
 
     /**
@@ -1157,7 +1175,7 @@ abstract class Doctrine_Query_Abstract
             $e = explode('.', $components['name']);
             if (count($e) === 1) {
                 $manager = Doctrine_Manager::getInstance(); 
-                if ($manager->hasConnectionForComponent($e[0])) { 
+                if ( ! $this->_passedConn && $manager->hasConnectionForComponent($e[0])) { 
                     $this->_conn = $manager->getConnectionForComponent($e[0]); 
                 }
                 $queryComponents[$alias]['table'] = $this->_conn->getTable($e[0]);
