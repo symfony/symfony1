@@ -187,9 +187,7 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
         case 'clob':
         case 'enum':
         case 'boolean':
-            $this->conn->connect();
-
-            return $this->conn->getDbh()->quote($input);
+        return "'" . str_replace("'","''",$input) . "'";
         }
     }
 
@@ -269,7 +267,7 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
      */
     public function getTableName($table)
     {
-        return sprintf($this->conn->getAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT),
-                $table);
+        $format = $this->conn->getAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT);
+        return sprintf($format, str_replace(sprintf($format, null), null, $table));
     }
 }
