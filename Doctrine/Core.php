@@ -639,14 +639,20 @@ class Doctrine_Core
                     $e = explode('.', $file->getFileName());
                     
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
-                        $className = $e[0];
+                        if ($modelLoading == Doctrine_Core::MODEL_LOADING_PEAR) {
+                            $className = str_replace($dir . DIRECTORY_SEPARATOR, null, $file->getPathName());
+                            $className = str_replace(DIRECTORY_SEPARATOR, '_', $className);
+                            $className = substr($className, 0, strpos($className, '.'));
+                        } else {
+                            $className = $e[0];
+                        }
 
                         if ($classPrefix) {
                             $className = $classPrefix . $className;
                         }
 
                         if ( ! class_exists($className, false)) {
-                            if ($modelLoading == Doctrine_Core::MODEL_LOADING_CONSERVATIVE) {
+                            if ($modelLoading == Doctrine_Core::MODEL_LOADING_CONSERVATIVE || $modelLoading == Doctrine_Core::MODEL_LOADING_PEAR) {
                                 self::loadModel($className, $file->getPathName());
 
                                 $loadedModels[$className] = $className;
