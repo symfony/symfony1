@@ -82,23 +82,23 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                 return 'BLOB';
             case 'integer':
             case 'int':
-                $length = (!empty($field['length'])) ? $field['length'] : false;
-                if ( $length && $length <= $this->conn->number_max_precision)  {
-                    if ($length <= 1) {
-                        return 'NUMBER(3)'; // TINYINT
-                    } elseif ($length == 2) {
-                        return 'NUMBER(5)'; // SMALLINT
-                    } elseif ($length == 3) {
-                        return 'NUMBER(8)'; // MEDIUMINT
-                    } elseif ($length == 4) {
-                        return 'NUMBER(10)'; // INTEGER
-                    } elseif ($length <= 8) {
-                        return 'NUMBER(20)'; // BIGINT
-                    } else {
-                        return 'NUMBER('.$length.')';
-                    }
-                }
-                return 'INT';
+            	$length = (!empty($field['length'])) ? $field['length'] : false;
+            	if ( $length && $length <= $this->conn->number_max_precision)  {
+            		if ($length <= 1) {
+            			return 'NUMBER(3)'; // TINYINT, unsigned max. 256
+            		} elseif ($length == 2) {
+            			return 'NUMBER(5)'; // SMALLINT, unsigend max. 65.536
+            		} elseif ($length == 3) {
+            			return 'NUMBER(8)'; // MEDIUMINT, unsigned max. 16.777.216
+            		} elseif ($length == 4) {
+            			return 'NUMBER(10)'; // INTEGER, unsigend max. 4.294.967.296
+            		} elseif ($length <= 8) {
+            			return 'NUMBER(20)'; // BIGINT, unsigend max. 18.446.744.073.709.551.616
+            		} else {
+            			return 'INTEGER';
+            		}
+            	}
+                return 'INTEGER';
             case 'boolean':
                 return 'NUMBER(1)';
             case 'date':
