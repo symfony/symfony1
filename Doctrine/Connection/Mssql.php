@@ -157,7 +157,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                 $orders = explode(',', $order);
 
                 for ($i = 0; $i < count($orders); $i++) {
-                    $sorts[$i] = (stripos($orders[$i], ' desc') !== false) ? 'desc' : 'asc';
+                    $sorts[$i] = (stripos($orders[$i], ' desc') !== false) ? 'DESC' : 'ASC';
                     $orders[$i] = trim(preg_replace('/\s+(ASC|DESC)$/i', '', $orders[$i]));
 
                     // find alias in query string
@@ -169,6 +169,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                     $field_array = explode(',', $fields_string);
                     $field_array = array_shift($field_array);
                     $aux2 = spliti(' as ', $field_array);
+                    $aux2 = explode('.', end($aux2));
 
                     $aliases[$i] = trim(end($aux2));
                 }
@@ -183,8 +184,13 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                 $selectReplace .= 'DISTINCT ';
             }
 
+            $fields_string = substr($query, strlen($selectReplace), strpos($query, ' FROM ') - strlen($selectReplace));
+            $field_array = explode(',', $fields_string);
+            $aux2 = explode('.', $field_array[0]);
+            $key_field = trim(end($aux2));
+
             $query = preg_replace('/^'.$selectRegExp.'/i', $selectReplace . 'TOP ' . ($count + $offset) . ' ', $query);
-            $query = 'SELECT * FROM (SELECT TOP ' . $count . ' * FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
+            $query = 'SELECT TOP ' . $count . ' ' . $this->quoteIdentifier('inner_tbl') . '.' . $key_field . ' FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
 
             if ($orderby !== false) {
                 $query .= ' ORDER BY '; 
@@ -198,25 +204,11 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                     $query .= (stripos($sorts[$i], 'asc') !== false) ? 'DESC' : 'ASC';
                 }
             }
-
-            $query .= ') AS ' . $this->quoteIdentifier('outer_tbl');
-
-            if ($orderby !== false) {
-                $query .= ' ORDER BY '; 
-
-                for ($i = 0, $l = count($orders); $i < $l; $i++) { 
-                    if ($i > 0) { // not first order clause 
-                        $query .= ', '; 
-                    } 
-
-                    $query .= $this->quoteIdentifier('outer_tbl') . '.' . $aliases[$i] . ' ' . $sorts[$i];
-                }
-            }
         }
 
         return $query;
     }
-    
+
     /**
      * return version information about the server
      *
