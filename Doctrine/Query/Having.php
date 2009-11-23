@@ -81,11 +81,12 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
                 $value = $this->query->getConnection()->quoteIdentifier($this->query->getSqlTableAlias($ref) . '.' . $field);
             } else {
                 $field = end($a);
-                $value = $this->query->getSqlAggregateAlias($field);
+                if ($this->query->hasSqlAggregateAlias($field)) {
+                    $value = $this->query->getSqlAggregateAlias($field);
+                }
             }
         }
-        
-        
+
         return $value;
     }
 
@@ -104,9 +105,7 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
         $value     = implode(' ', $tokens);
 
         // check the RHS for aggregate functions
-        if (strpos($value, '(') !== false) {
-          $value = $this->parseAggregateFunction($value);
-        }
+        $value = $this->parseAggregateFunction($value);
 
         $part .= ' ' . $operator . ' ' . $value;
 

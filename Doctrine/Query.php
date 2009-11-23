@@ -340,6 +340,21 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
     }
 
+    /**
+     * Check if a dql alias has a sql aggregate alias
+     *
+     * @param string $dqlAlias 
+     * @return boolean
+     */
+    public function hasSqlAggregateAlias($dqlAlias)
+    {
+        try {
+            $this->getSqlAggregateAlias($dqlAlias);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
     /**
      * Adjust the processed param index for "foo.bar IN ?" support
