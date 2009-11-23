@@ -19,13 +19,6 @@
  * <http://www.phpdoctrine.org>.
  */
 
-if ( ! class_exists('sfYaml', false)) {
-    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYaml.php';
-    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlDumper.php';
-    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlInline.php';
-    require_once dirname(__FILE__) . '/../../vendor/sfYaml/sfYamlParser.php';
-}
-
 /**
  * Doctrine_Parser_Yml
  *
