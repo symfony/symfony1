@@ -265,7 +265,10 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             $decimal = '';
         } else {
             $length = strtok('(), ');
-            $decimal = strtok('(), ') ? strtok('(), '):null;
+            $decimal = strtok('(), ');
+            if ( ! $decimal ) {
+                $decimal = null;
+            }
         }
         $type = array();
         $unsigned = $fixed = null;
