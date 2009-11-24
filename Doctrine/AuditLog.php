@@ -64,6 +64,12 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
+    public function buildRelation()
+    {
+        $this->buildForeignRelation('Version');
+        $this->buildLocalRelation();
+    }
+
     /**
      * Set the table definition for the audit log table
      *
