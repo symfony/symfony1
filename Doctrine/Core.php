@@ -852,7 +852,7 @@ class Doctrine_Core
 
         $export = new Doctrine_Export_Schema();
 
-        $result = $export->exportSchema($yamlPath, 'yml', $directory);
+        $result = $export->exportSchema($yamlPath, 'yml', $directory, array(), Doctrine_Core::MODEL_LOADING_AGGRESSIVE);
 
         Doctrine_Lib::removeDirectories($directory);
 
