@@ -79,7 +79,7 @@ class Doctrine_Hook
     public function __construct($query)
     {
         if (is_string($query)) {
-            $this->query = new Doctrine_Query();
+            $this->query = Doctrine_Query::create();
             $this->query->parseDqlQuery($query);
         } elseif ($query instanceof Doctrine_Query) {
             $this->query = $query;

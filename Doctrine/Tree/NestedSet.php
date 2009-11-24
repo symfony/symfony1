@@ -285,8 +285,9 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     private function _createBaseQuery()
     {
         $this->_baseAlias = "base";
-        $q = new Doctrine_Query();
-        $q->select($this->_baseAlias . ".*")->from($this->getBaseComponent() . " " . $this->_baseAlias);
+        $q = Doctrine_Core::getTable($this->getBaseComponent())
+            ->createQuery($this->_baseAlias)
+            ->select($this->_baseAlias . '.*');
         return $q;
     }
 

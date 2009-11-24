@@ -2444,24 +2444,24 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function unlinkInDb($alias, $ids = array())
     {
-        $q = new Doctrine_Query();
         $rel = $this->getTable()->getRelation($alias);
 
         if ($rel instanceof Doctrine_Relation_Association) {
-            $q->delete()
-              ->from($rel->getAssociationTable()->getComponentName())
-              ->where($rel->getLocal() . ' = ?', array_values($this->identifier()));
+            $q = $rel->getAssociationTable()
+                ->createQuery()
+                ->delete()
+                ->where($rel->getLocal() . ' = ?', array_values($this->identifier()));
 
             if (count($ids) > 0) {
                 $q->whereIn($rel->getForeign(), $ids);
             }
 
             $q->execute();
-
         } else if ($rel instanceof Doctrine_Relation_ForeignKey) {
-            $q->update($rel->getTable()->getComponentName())
-              ->set($rel->getForeign(), '?', array(null))
-              ->addWhere($rel->getForeign() . ' = ?', array_values($this->identifier()));
+            $q = $rel->getTable()->createQuery()
+                ->update()
+                ->set($rel->getForeign(), '?', array(null))
+                ->addWhere($rel->getForeign() . ' = ?', array_values($this->identifier()));
 
             if (count($ids) > 0) {
                 $q->whereIn($rel->getTable()->getIdentifier(), $ids);
@@ -2553,10 +2553,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $record->save();
             }
         } else if ($rel instanceof Doctrine_Relation_ForeignKey) {
-            $q = new Doctrine_Query();
-
-            $q->update($rel->getTable()->getComponentName())
-              ->set($rel->getForeign(), '?', array_values($this->identifier()));
+            $q = $rel->getTable()
+                ->createQuery()
+                ->update()
+                ->set($rel->getForeign(), '?', array_values($this->identifier()));
 
             if (count($ids) > 0) {
                 $q->whereIn($rel->getTable()->getIdentifier(), $ids);
@@ -2564,10 +2564,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             $q->execute();
         } else if ($rel instanceof Doctrine_Relation_LocalKey) {
-            $q = new Doctrine_Query();
-
-            $q->update($this->getTable()->getComponentName())
-              ->set($rel->getLocalFieldName(), '?', $ids);
+            $q = $this->getTable()
+                ->createQuery()
+                ->update()
+                ->set($rel->getLocalFieldName(), '?', $ids);
 
             if (count($ids) > 0) {
                 $q->whereIn($rel->getTable()->getIdentifier(), array_values($this->identifier()));

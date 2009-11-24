@@ -314,14 +314,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * Returns the SQL for a logical not.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $e = $q->expr;
-     * $q->select('*')->from('table')
-     *   ->where($e->eq('id', $e->not('null'));
-     * </code>
-     *
      * @return string a logical expression
      */
     public function not($expression)
@@ -362,16 +354,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must contain a value or an expression or an array with values or
      * expressions.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $e = $q->expr;
-     *
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($e->eq($e->add('id', 2), 12));
-     * </code>
-     *
      * @param string|array(string)
      * @return string an expression
      */
@@ -386,16 +368,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * subtract() accepts an arbitrary number of parameters. Each parameter
      * must contain a value or an expression or an array with values or
      * expressions.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $e = $q->expr;
-     *
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($e->eq($e->sub('id', 2), 12));
-     * </code>
      *
      * @param string|array(string)
      * @return string an expression
@@ -412,16 +384,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must contain a value or an expression or an array with values or
      * expressions.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $e = $q->expr;
-     *
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($e->eq($e->mul('id', 2), 12));
-     * </code>
-     *
      * @param string|array(string)
      * @return string an expression
      */
@@ -437,16 +399,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must contain a value or an expression or an array with values or
      * expressions.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $e = $q->expr;
-     *
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($e->eq($e->div('id', 2), 12));
-     * </code>
-     *
      * @param string|array(string)
      * @return string an expression
      */
@@ -457,14 +409,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
 
     /**
      * Returns the SQL to check if two values are equal.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->eq('id', 1));
-     * </code>
      *
      * @param string $value1 logical expression to compare
      * @param string $value2 logical expression to compare with
@@ -480,14 +424,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * Returns the SQL to check if two values are unequal.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->neq('id', 1));
-     * </code>
-     *
      * @param string $value1 logical expression to compare
      * @param string $value2 logical expression to compare with
      * @return string logical expression
@@ -501,14 +437,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
 
     /**
      * Returns the SQL to check if one value is greater than another value.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->gt('id', 1));
-     * </code>
      *
      * @param string $value1 logical expression to compare
      * @param string $value2 logical expression to compare with
@@ -525,14 +453,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * Returns the SQL to check if one value is greater than or equal to
      * another value.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->gte('id', 1));
-     * </code>
-     *
      * @param string $value1 logical expression to compare
      * @param string $value2 logical expression to compare with
      * @return string logical expression
@@ -546,14 +466,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
 
     /**
      * Returns the SQL to check if one value is less than another value.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->lt('id', 1));
-     * </code>
      *
      * @param string $value1        logical expression to compare
      * @param string $value2        logical expression to compare with
@@ -569,14 +481,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * Returns the SQL to check if one value is less than or equal to
      * another value.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->lte('id', 1));
-     * </code>
      *
      * @param string $value1        logical expression to compare
      * @param string $value2        logical expression to compare with
@@ -597,14 +501,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must always specify the value that should be matched against. Successive
      * must contain a logical expression or an array with logical expressions.
      * These expressions will be matched against the first parameter.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->in( 'id', array(1,2,3)));
-     * </code>
      *
      * @param string $column        the value that should be matched against
      * @param string|array(string)  values that will be matched against $column
@@ -627,14 +523,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * Returns SQL that checks if a expression is null.
      *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->isNull('id'));
-     * </code>
-     *
      * @param string $expression the expression that should be compared to null
      * @return string logical expression
      */
@@ -646,14 +534,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
 
     /**
      * Returns SQL that checks if a expression is not null.
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->isNotNull('id'));
-     * </code>
      *
      * @param string $expression the expression that should be compared to null
      * @return string logical expression
@@ -673,14 +553,6 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * Note: There is a slight difference in the way BETWEEN works on some databases.
      * http://www.w3schools.com/sql/sql_between.asp. If you want complete database
      * independence you should avoid using between().
-     *
-     * Example:
-     * <code>
-     * $q = new Doctrine_Query();
-     * $q->select('u.*')
-     *   ->from('User u')
-     *   ->where($q->expr->between('id', 1, 5));
-     * </code>
      *
      * @param string $expression the value to compare to
      * @param string $value1 the lower value to compare with

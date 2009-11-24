@@ -893,7 +893,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function query($query, array $params = array(), $hydrationMode = null)
     {
-        $parser = new Doctrine_Query($this);
+        $parser = Doctrine_Query::create();
         $res = $parser->query($query, $params, $hydrationMode);
         $parser->free();
 
@@ -950,7 +950,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function queryOne($query, array $params = array())
     {
-        $parser = new Doctrine_Query($this);
+        $parser = Doctrine_Query::create();
 
         $coll = $parser->query($query, $params);
         if ( ! $coll->contains(0)) {
@@ -1204,7 +1204,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function createQuery()
     {
-        return new Doctrine_Query($this);
+        return Doctrine_Query::create();
     }
 
     /**

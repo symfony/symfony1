@@ -114,7 +114,8 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
         $className = $this->_options['className'];
         $method    = ($asCollection) ? 'execute' : 'fetchOne';
 
-        $q = new Doctrine_Query();
+        $q = Doctrine_Core::getTable($className)
+            ->createQuery();
 
         $values = array();
         foreach ((array) $this->_options['table']->getIdentifier() as $id) {
@@ -126,7 +127,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         $values[] = $version;
 
-        $q->from($className)->where($where);
+        $q->where($where);
 
         return $q->$method($values, $hydrationMode);
     }
@@ -147,10 +148,10 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             $values[] = $record->get($id);
         }
 
-        $q = Doctrine_Query::create($record->getTable()->getConnection())
-                ->select($select)
-                ->from($className)
-                ->where(implode(' AND ',$conditions));
+        $q = Doctrine_Core::getTable($className)
+            ->createQuery()
+            ->select($select)
+            ->where(implode(' AND ',$conditions));
 
         $result = $q->execute($values, Doctrine_Core::HYDRATE_ARRAY);
 

@@ -137,8 +137,9 @@ class Doctrine_Search extends Doctrine_Record_Generator
         $conn   = $this->getOption('table')->getConnection();
         $identifier = $this->_options['table']->getIdentifier();
 
-        $q = Doctrine_Query::create($conn)->delete()
-                                     ->from($class);
+        $q = Doctrine_Core::getTable($class)
+            ->createQuery()
+            ->delete();
         foreach ((array) $identifier as $id) {
             $q->addWhere($id . ' = ?', array($data[$id]));
         }

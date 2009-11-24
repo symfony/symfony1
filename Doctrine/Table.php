@@ -1033,7 +1033,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         $class = $this->getAttribute(Doctrine_Core::ATTR_QUERY_CLASS);
 
-        return Doctrine_Query::create($this->_conn, $class)
+        return Doctrine_Query::create(null, $class)
             ->from($this->getComponentName() . $alias);
     }
 
@@ -1655,9 +1655,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function findByDql($dql, $params = array(), $hydrationMode = null)
     {
-        $parser = new Doctrine_Query($this->_conn);
-        $component = $this->getComponentName();
-        $query = 'FROM ' . $component . ' dctrn_find WHERE ' . $dql;
+        $parser = $this->createQuery();
+        $query = 'FROM ' . $this->getComponentName() . ' dctrn_find WHERE ' . $dql;
 
         return $parser->query($query, $params, $hydrationMode);
     }
@@ -1940,7 +1939,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function getQueryObject()
     {
-        $graph = new Doctrine_Query($this->getConnection());
+        $graph = $this->createQuery();
         $graph->load($this->getComponentName());
         return $graph;
     }

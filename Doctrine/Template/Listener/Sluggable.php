@@ -181,11 +181,11 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $originalIndexBy = $record->getTable()->getBoundQueryPart('indexBy');
         $record->getTable()->bindQueryPart('indexBy', null);
 
-        $query = Doctrine_Query::create($record->getTable()->getConnection())
-        ->select('r.'.$name)
-        ->from(get_class($record).' r')
-        ->where($whereString , $whereParams)
-        ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+        $query = $record->getTable()
+            ->createQuery('r')
+            ->select('r.' . $name)
+            ->where($whereString , $whereParams)
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
 
         // We need to introspect SoftDelete to check if we are not disabling unique records too
         if ($record->getTable()->hasTemplate('Doctrine_Template_SoftDelete')) {
