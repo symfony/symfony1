@@ -222,13 +222,11 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * hasConnection
-     *
-     * Returns true if a connection exists, false otherwise.
+     * Check wherther the connection to the database has been made yet
      *
      * @return boolean
      */
-    public static function hasConnection()
+    public function isConnected()
     {
         return $this->isConnected;
     }
