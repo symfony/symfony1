@@ -137,7 +137,7 @@ class Doctrine_Relation_Parser
         }
 
         if ($this->hasRelation($alias)) {
-            unset($this->relations[$alias]);
+            unset($this->_relations[$alias]);
             unset($this->_pending[$alias]);
         }
 
