@@ -331,7 +331,7 @@ class DebugPDO extends PropelPDO
 	{
 		$debug	= $this->getDebugSnapshot();
 		$args	= func_get_args();
-		$return	= call_user_func_array(array($this, 'parent::query'), $args);
+		$return	= call_user_func_array(array('parent', 'query'), $args);
 		
 		$sql = $args[0];
 		$this->log($sql, null, __METHOD__, $debug);
