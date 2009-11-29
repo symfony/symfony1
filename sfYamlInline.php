@@ -20,6 +20,8 @@ require_once dirname(__FILE__).'/sfYaml.php';
  */
 class sfYamlInline
 {
+  const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\']*(?:\'\'[^\']*)*)\')';
+
   /**
    * Convert a YAML string to a PHP array.
    *
@@ -156,9 +158,6 @@ class sfYamlInline
     {
       // quoted scalar
       $output = self::parseQuotedScalar($scalar, $i);
-
-      // skip next delimiter
-      ++$i;
     }
     else
     {
@@ -200,38 +199,24 @@ class sfYamlInline
    */
   static protected function parseQuotedScalar($scalar, &$i)
   {
-    $delimiter = $scalar[$i];
-    ++$i;
-    $buffer = '';
-    $len = strlen($scalar);
-    $escaped = '"' == $delimiter ? '\\"' : "''";
+    preg_match('/'.self::REGEX_QUOTED_STRING.'/A', substr($scalar, $i), $match);
 
-    while ($i < $len)
-    {
-      if (isset($scalar[$i + 1]) && $escaped == $scalar[$i].$scalar[$i + 1])
-      {
-        $buffer .= $delimiter;
-        ++$i;
-      }
-      else if ($delimiter == $scalar[$i])
-      {
-        break;
-      }
-      else
-      {
-        $buffer .= $scalar[$i];
-      }
+    $output = stripcslashes(substr($match[0], 1, strlen($match[0]) - 2));
 
-      ++$i;
-    }
-
-    if ('"' == $delimiter)
+    if ('"' == $scalar[$i])
     {
       // evaluate the string
-      $buffer = str_replace(array('\\n', '\\r'), array("\n", "\r"), $buffer);
+      $output = str_replace(array('\\n', '\\r'), array("\n", "\r"), $output);
+    }
+    else
+    {
+      // unescape '
+      $output = str_replace('\'\'', '\'', $output);
     }
 
-    return $buffer;
+    $i += strlen($match[0]);
+
+    return $output;
   }
 
   /**
