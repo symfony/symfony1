@@ -76,7 +76,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * Test if a cache record exists for the passed id
      *
      * @param string $id cache id
-     * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
+     * @return mixed  Returns either the cached data or false
      */
     protected function _doFetch($id, $testCacheValidity = true) 
     {

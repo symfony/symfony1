@@ -51,7 +51,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      *
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed  Returns either the cached data or false
      */
     protected function _doFetch($id, $testCacheValidity = true) 
     {

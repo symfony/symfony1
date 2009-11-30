@@ -102,7 +102,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      *
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed  Returns either the cached data or false
      */
     public function fetch($id, $testCacheValidity = true)
     {
@@ -295,7 +295,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      *
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed  Returns either the cached data or false
      */
     abstract protected function _doFetch($id, $testCacheValidity = true);
 
