@@ -630,6 +630,7 @@ class Doctrine_Core
 
         if ($directory !== null) {
             foreach ((array) $directory as $dir) {
+                $dir = rtrim($dir, '/');
                 if ( ! is_dir($dir)) {
                     throw new Doctrine_Exception('You must pass a valid path to a directory containing Doctrine models');
                 }
