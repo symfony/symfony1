@@ -207,6 +207,7 @@ class Doctrine_Core
     const ATTR_COLLECTION_CLASS             = 175;
     const ATTR_TABLE_CLASS                  = 176;
     const ATTR_USE_NATIVE_SET               = 177;
+    const ATTR_MODEL_CLASS_PREFIX           = 178;
 
     /**
      * LIMIT CONSTANTS
@@ -622,7 +623,8 @@ class Doctrine_Core
     {
         $manager = Doctrine_Manager::getInstance();
 
-        $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_LOADING):$modelLoading;
+        $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_LOADING) : $modelLoading;
+        $classPrefix = $classPrefix === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_CLASS_PREFIX) : null;
 
         $loadedModels = array();
 
