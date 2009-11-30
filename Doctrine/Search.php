@@ -298,6 +298,14 @@ class Doctrine_Search extends Doctrine_Record_Generator
             return false;
         }
 
+        // move any columns currently in the primary key to the end
+        // So that 'keyword' is the first field in the table
+        $previousIdentifier = array();
+        foreach ($this->_table->getIdentifier() as $name) {
+            $previousIdentifier[$name] = $this->_table->getColumnDefinition($name);
+            $this->_table->removeColumn($name);
+        }
+
         $columns = array('keyword'  => array('type'    => 'string',
                                              'length'  => 200,
                                              'primary' => true,
@@ -311,5 +319,6 @@ class Doctrine_Search extends Doctrine_Record_Generator
                                              ));
 
         $this->hasColumns($columns);
+        $this->hasColumns($previousIdentifier);
     }
 }
