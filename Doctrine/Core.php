@@ -624,7 +624,7 @@ class Doctrine_Core
         $manager = Doctrine_Manager::getInstance();
 
         $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_LOADING) : $modelLoading;
-        $classPrefix = $classPrefix === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_CLASS_PREFIX) : null;
+        $classPrefix = $classPrefix === null ? $manager->getAttribute(Doctrine_Core::ATTR_MODEL_CLASS_PREFIX) : $classPrefix;
 
         $loadedModels = array();
 
