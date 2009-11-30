@@ -1104,7 +1104,7 @@ class Doctrine_Core
     public static function autoload($className)
     {
         if (strpos($className, 'sfYaml') === 0) {
-            require dirname(__FILE__) . '/../vendor/sfYaml/' . $className . '.php';
+            require dirname(__FILE__) . '/Parser/sfYaml/' . $className . '.php';
         }
 
         if (0 !== stripos($className, 'Doctrine_') || class_exists($className, false) || interface_exists($className, false)) {
