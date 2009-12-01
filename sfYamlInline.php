@@ -199,7 +199,10 @@ class sfYamlInline
    */
   static protected function parseQuotedScalar($scalar, &$i)
   {
-    preg_match('/'.self::REGEX_QUOTED_STRING.'/A', substr($scalar, $i), $match);
+    if (!preg_match('/'.self::REGEX_QUOTED_STRING.'/A', substr($scalar, $i), $match))
+    {
+      throw new Exception(sprintf('Malformed inline YAML string (%s).', substr($scalar, $i)));
+    }
 
     $output = stripcslashes(substr($match[0], 1, strlen($match[0]) - 2));
 
