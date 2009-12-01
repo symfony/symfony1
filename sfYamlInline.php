@@ -87,7 +87,7 @@ class sfYamlInline
         return is_string($value) ? "'$value'" : (int) $value;
       case is_numeric($value):
         return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
-      case false !== strpos($value, "\n"):
+      case false !== strpos($value, "\n") || false !== strpos($value, "\r"):
         return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', '\r'), $value));
       case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \#] | \A[ - ? | < > = ! % @ ]/x', $value):
         return sprintf("'%s'", str_replace('\'', '\'\'', $value));
