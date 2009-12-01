@@ -55,7 +55,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
     protected $executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * @var array $bind_params          Array of parameters bounded to a statement
+     * @var array $bindParams          Array of parameters bounded to a statement
      */
     protected $bindParams = array();
 
@@ -186,7 +186,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function closeCursor()
     {
-        $this->bind_params = array();
+        $this->bindParams = array();
         return oci_free_statement($this->statement);
     }
 
