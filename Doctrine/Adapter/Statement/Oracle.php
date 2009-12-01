@@ -313,7 +313,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
             case Doctrine_Core::FETCH_NUM :
                 return oci_fetch_array($this->statement, OCI_NUM + OCI_RETURN_NULLS + OCI_RETURN_LOBS);
             break;
-            case FETCH_OBJ:
+            case Doctrine_Core::FETCH_OBJ:
                 return oci_fetch_object($this->statement, OCI_NUM + OCI_RETURN_NULLS + OCI_RETURN_LOBS);
             break;
             default:
