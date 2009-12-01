@@ -89,8 +89,10 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      */
     protected function _doDelete($id)
     {
+        $exists = isset($this->data[$id]);
+
         unset($this->data[$id]);
 
-        return true;
+        return $exists;
     }
 }
