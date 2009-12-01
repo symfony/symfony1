@@ -633,7 +633,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
                     $this->insertAsLastChildOf($dest);
                 break;
                 default:
-                    throw new Exception("Unknown move operation: $moveType.");
+                    throw new Doctrine_Node_Exception("Unknown move operation: $moveType.");
             }
 
             $diff = $oldRgt - $oldLft;

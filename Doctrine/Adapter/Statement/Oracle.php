@@ -98,7 +98,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function bindColumn($column, $param, $type = null)
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     /**
@@ -373,7 +373,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
                 $data[] = $row[$colnum];
             }
         } else {
-            throw new Exception("Unsupported mode: '" . $fetchStyle . "' ");
+            throw new Doctrine_Adapter_Exception("Unsupported mode: '" . $fetchStyle . "' ");
         }
 
         return $data;
@@ -491,7 +491,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function nextRowset()
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     /**
@@ -548,7 +548,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function setFetchMode($mode, $arg1 = null, $arg2 = null)
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     private function handleError($params=array())
