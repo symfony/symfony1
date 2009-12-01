@@ -393,6 +393,8 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
     {
         if ( ! is_integer($columnIndex)) {
             $this->handleError(array('message'=>"columnIndex parameter should be numeric"));
+
+            return false;
         }
         $row = $this->fetch(Doctrine_Core::FETCH_NUM);
         return $row[$columnIndex];
