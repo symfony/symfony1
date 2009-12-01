@@ -204,12 +204,12 @@ class sfYamlInline
       throw new Exception(sprintf('Malformed inline YAML string (%s).', substr($scalar, $i)));
     }
 
-    $output = stripcslashes(substr($match[0], 1, strlen($match[0]) - 2));
+    $output = substr($match[0], 1, strlen($match[0]) - 2);
 
     if ('"' == $scalar[$i])
     {
       // evaluate the string
-      $output = str_replace(array('\\n', '\\r'), array("\n", "\r"), $output);
+      $output = str_replace(array('\\"', '\\n', '\\r'), array('"', "\n", "\r"), $output);
     }
     else
     {
