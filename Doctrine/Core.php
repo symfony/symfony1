@@ -1106,6 +1106,8 @@ class Doctrine_Core
     {
         if (strpos($className, 'sfYaml') === 0) {
             require dirname(__FILE__) . '/Parser/sfYaml/' . $className . '.php';
+
+            return true;
         }
 
         if (0 !== stripos($className, 'Doctrine_') || class_exists($className, false) || interface_exists($className, false)) {
