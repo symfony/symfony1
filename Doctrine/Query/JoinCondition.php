@@ -122,7 +122,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 default:
                     $rightExpr = (($hasRightAggExpression) ? $rightMatches[1] . '(' : '')
                               . $value
-                              . (($hasRightAggExpression) ? $rightMatches[3] . ')' : '') ;
+                              . (($hasRightAggExpression) ? ')' . $rightMatches[3] : '') ;
 
                     $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
             }
