@@ -87,7 +87,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     public function createRoot(Doctrine_Record $record = null)
     {
         if ($this->getAttribute('hasManyRoots')) {
-            if ( ! $record || ( ! $record->exists() && $record->getNode()->getRootValue() <= 0)
+            if ( ! $record || ( ! $record->exists() && ! $record->getNode()->getRootValue())
                     || $record->getTable()->isIdentifierComposite()) {
                 throw new Doctrine_Tree_Exception("Node must have a root id set or must "
                         . " be persistent and have a single-valued numeric primary key in order to"
@@ -95,7 +95,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
                         . " transient/new records is no longer supported.");
             }
             
-            if ($record->exists() && $record->getNode()->getRootValue() <= 0) {
+            if ($record->exists() && ! $record->getNode()->getRootValue()) {
                 // Default: root_id = id
                 $identifier = $record->getTable()->getIdentifier();
                 $record->getNode()->setRootValue($record->get($identifier));
