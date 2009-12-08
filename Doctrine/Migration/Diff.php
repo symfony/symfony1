@@ -45,7 +45,8 @@ class Doctrine_Migration_Diff
                                 'created_indexes'     =>  array(),
                                 'dropped_indexes'     =>  array()),
               $_migration,
-              $_startingModelFiles = array();
+              $_startingModelFiles = array(),
+              $_tmpPath;
 
     protected static $_toPrefix   = 'ToPrfx',
                      $_fromPrefix = 'FromPrfx';
@@ -68,12 +69,27 @@ class Doctrine_Migration_Diff
         $this->_from = $from;
         $this->_to = $to;
         $this->_startingModelFiles = Doctrine_Core::getLoadedModelFiles();
+        $this->setTmpPath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . getmypid());
 
         if ($migration instanceof Doctrine_Migration) {
             $this->_migration = $migration;
         } else if (is_dir($migration)) {
             $this->_migration = new Doctrine_Migration($migration);
         }
+    }
+
+    /**
+     * Set the temporary path to store the generated models for generating diffs
+     *
+     * @param string $tmpPath
+     * @return void
+     */
+    public function setTmpPath($tmpPath)
+    {
+        if ( ! is_dir($tmpPath)) {
+            mkdir($tmpPath, 0777, true);
+        }
+        $this->_tmpPath = $tmpPath;
     }
 
     /**
@@ -301,7 +317,7 @@ class Doctrine_Migration_Diff
      */
     protected function _generateModels($prefix, $item)
     {
-        $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
+        $path = $this->_tmpPath . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
         $options = array(
             'classPrefix' => $prefix,
             'generateBaseClasses' => false
@@ -357,7 +373,7 @@ class Doctrine_Migration_Diff
         }
 
         // clean up tmp directories
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
     }
 }
