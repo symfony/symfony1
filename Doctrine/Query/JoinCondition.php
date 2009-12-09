@@ -101,7 +101,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
 
                     $value = '(' . implode(', ', $value) . ')';
                 }
-            } else {
+            } elseif ( ! $hasRightAggExpression) {
                 // Possible expression found (field1 AND field2)
                 // In relation to ticket #1488
                 $e     = $this->_tokenizer->bracketExplode($value, array(' AND ', ' \&\& '), '(', ')');
@@ -114,18 +114,14 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 $value = implode(' AND ', $value);
             }
 
-            switch ($operator) {
-                case '<':
-                case '>':
-                case '=':
-                case '!=':
-                default:
-                    $rightExpr = (($hasRightAggExpression) ? $rightMatches[1] . '(' : '')
-                              . $value
-                              . (($hasRightAggExpression) ? ')' . $rightMatches[3] : '') ;
-
-                    $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
+            if ($hasRightAggExpression) {
+                $rightExpr = $rightMatches[1] . '(' . $value . ')' . $rightMatches[3];
+                $rightExpr = $this->query->parseClause($rightExpr);
+            } else {
+                $rightExpr = $value;
             }
+
+            $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
 
             return $condition;
         }
