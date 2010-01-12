@@ -160,7 +160,12 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 
   public function getTableMapClass()
   {
-    return ($this->getTable()->isAbstract() ? '' : $this->getTable()->getPhpName()) . 'TableMap';
+    return $this->getTablePhpName() . 'TableMap';
+  }
+  
+  public function getTablePhpName()
+  {
+  	return ($this->getTable()->isAbstract() ? '' : $this->getStubObjectBuilder()->getClassname());
   }
 
 	/**
@@ -172,7 +177,7 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 	{
 		$dbName = $this->getDatabase()->getName();
 	  $tableName = $this->prefixTableName($this->getTable()->getName());
-	  $tablePhpName = $this->getTable()->isAbstract() ? '' : $this->getTable()->getPhpName();
+	  $tablePhpName = $this->getTablePhpName();
 		$script .= "
 	/** the default database name for this class */
 	const DATABASE_NAME = '$dbName';
