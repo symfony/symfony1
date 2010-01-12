@@ -1977,9 +1977,17 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					\$obj2->hydrate(\$row, \$startcol);
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj2, \$key2);
 				} // if obj2 already loaded
-
-				// Add the \$obj1 (".$this->getObjectClassname().") to \$obj2 (".$joinedTablePeerBuilder->getObjectClassname().")
-				\$obj2->".($fk->isLocalPrimaryKey() ? 'set' : 'add') . $joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);
+				
+				// Add the \$obj1 (".$this->getObjectClassname().") to \$obj2 (".$joinedTablePeerBuilder->getObjectClassname().")";
+					if ($fk->isLocalPrimaryKey()) {
+						$script .= "
+				// one to one relationship
+				\$obj1->set" . $joinedTablePeerBuilder->getObjectClassname() . "(\$obj2);";
+					} else {
+					$script .= "
+				\$obj2->add" . $joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);";
+					}
+					$script .= "
 
 			} // if joined row was not null
 
@@ -2228,10 +2236,15 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj$index, \$key$index);
 				} // if obj$index loaded
 
-				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")
-				".($fk->isLocalPrimaryKey() ?
-				"\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");" :
-				"\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);")."
+				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")";
+				if ($fk->isLocalPrimaryKey()) {
+					$script .= "
+				\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");";
+				} else {
+					$script .= "
+				\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);";
+				}
+				$script .= "
 			} // if joined row not null
 ";
 
@@ -2493,8 +2506,15 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj$index, \$key$index);
 				} // if \$obj$index already loaded
 
-				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")
-				\$obj".$index."->".($subfk->isLocalPrimaryKey() ? 'set' : 'add') . $joinedTableObjectBuilder->getRefFKPhpNameAffix($subfk, $plural = false)."(\$obj1);
+				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")";
+				if ($subfk->isLocalPrimaryKey()) {
+					$script .= "
+				\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");";
+				} else {
+					$script .= "
+				\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($subfk, $plural = false)."(\$obj1);";
+				}
+				$script .= "
 
 			} // if joined row is not null
 ";
