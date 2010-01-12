@@ -725,7 +725,15 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         // rewrite special case of actAs: [Behavior] which gave [0] => Behavior
         if (is_array($actAs) && isset($actAs[0]) && !is_array($actAs[0])) {
-            $actAs = array_flip($actAs);
+            $tmp = array();
+            foreach ($actAs as $key => $value) {
+                if (is_numeric($key)) {
+                    $tmp[(string)$value] = null;
+                } else {
+                    $tmp[$key] = $value;
+                }
+            }
+            $actAs = $tmp;
         }
 
         $build = '';
