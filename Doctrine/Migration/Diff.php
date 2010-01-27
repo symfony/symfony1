@@ -308,6 +308,33 @@ class Doctrine_Migration_Diff
     }
 
     /**
+     * Get the extension of the type of file contained in a directory.
+     * Used to determine if a directory contains YAML or PHP files.
+     *
+     * @param string $item
+     * @return string $extension
+     */
+    protected function _getItemExtension($item)
+    {
+        if (is_dir($item)) {
+            $files = glob($item . DIRECTORY_SEPARATOR . '*');
+        } else {
+            $files = array($item);
+        }
+
+        $extension = null;
+        if (isset($files[0])) {
+            if (is_dir($files[0])) {
+                $extension = $this->_getItemExtension($files[0]);
+            } else {
+                $pathInfo = pathinfo($files[0]);
+                $extension = $pathInfo['extension'];
+            }
+        }
+        return $extension;
+    }
+
+    /**
      * Generate a set of models for the schema information source
      *
      * @param  string $prefix  Prefix to generate the models with
@@ -324,16 +351,7 @@ class Doctrine_Migration_Diff
         );
 
         if (is_string($item) && file_exists($item)) {
-            if (is_dir($item)) {
-                $files = glob($item . DIRECTORY_SEPARATOR . '*.*');
-            } else {
-                $files = array($item);
-            }
-
-            if (isset($files[0])) {
-                $pathInfo = pathinfo($files[0]);
-                $extension = $pathInfo['extension'];
-            }
+            $extension = $this->_getItemExtension($item);
 
             if ($extension === 'yml') {
                 Doctrine_Core::generateModelsFromYaml($item, $path, $options);
