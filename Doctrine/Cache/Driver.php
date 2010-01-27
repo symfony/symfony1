@@ -50,7 +50,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      *
      * @param array $_options      an array of options
      */
-    public function __construct($options = array()) 
+    public function __construct($options = array())
     {
         $this->_options = $options;
     }
@@ -73,7 +73,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
 
     /**
      * Get value of option
-     * 
+     *
      * @param mixed $option     the option name
      * @return mixed            option value
      */
@@ -91,7 +91,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
      *
      * @return integer $count
      */
-    public function count() 
+    public function count()
     {
         $keys = $this->fetch($this->_cacheKeyIndexKey);
         return $keys ? count($keys) : 0;
@@ -178,8 +178,10 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     public function deleteAll()
     {
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        foreach ($keys as $key) {
-            $this->delete($key);
+        if (is_array($keys)) {
+            foreach (array_keys($keys) as $key) {
+                $this->delete($key);
+            }
         }
     }
 
@@ -193,10 +195,12 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     {
         $count = 0;
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        foreach ($keys as $key) {
-            if (preg_match($regex, $key)) {
-                $count++;
-                $this->delete($key);
+        if (is_array($keys)) {
+            foreach (array_keys($keys) as $key) {
+                if (preg_match($regex, $key)) {
+                    $count++;
+                    $this->delete($key);
+                }                
             }
         }
         return $count;
@@ -212,10 +216,12 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     {
         $count = 0;
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        foreach ($keys as $key) {
-            if (strpos($key, $prefix) === 0) {
-                $count++;
-                $this->delete($key);
+        if (is_array($keys)) {
+            foreach (array_keys($keys) as $key) {
+                if (strpos($key, $prefix) === 0) {
+                    $count++;
+                    $this->delete($key);
+                }
             }
         }
         return $count;
@@ -224,17 +230,19 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     /**
      * Delete cache entries where the key has the passed suffix
      *
-     * @param string $suffix 
+     * @param string $suffix
      * @return integer $count The number of deleted cache entries
      */
     public function deleteBySuffix($suffix)
     {
         $count = 0;
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        foreach ($keys as $key) {
-            if (substr($key, -1 * strlen($suffix)) == $suffix) {
-                $count++;
-                $this->delete($key);
+        if (is_array($keys)) {
+            foreach (array_keys($keys) as $key) {
+                if (substr($key, -1 * strlen($suffix)) == $suffix) {
+                    $count++;
+                    $this->delete($key);
+                }
             }
         }
         return $count;
@@ -266,7 +274,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     protected function _saveKey($key)
     {
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        $keys[] = $key;
+        $keys[$key] = true;
 
         return $this->save($this->_cacheKeyIndexKey, $keys, null, false);
     }
@@ -280,8 +288,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     public function _deleteKey($key)
     {
         $keys = $this->fetch($this->_cacheKeyIndexKey);
-        $key = array_search($key, $keys);
-        if ($key !== false) {
+        if (array_key_exists($key, $keys)) {
             unset($keys[$key]);
 
             return $this->save($this->_cacheKeyIndexKey, $keys, null, false);
@@ -321,7 +328,7 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     /**
      * Remove a cache record directly. This method is implemented by the cache
      * drivers and used in Doctrine_Cache_Driver::delete()
-     * 
+     *
      * @param string $id cache id
      * @return boolean true if no problem
      */
