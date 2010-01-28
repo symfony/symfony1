@@ -31,7 +31,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
-interface Doctrine_Cache_Interface 
+interface Doctrine_Cache_Interface
 {
     /**
      * Fetch a cache record from this cache driver instance
@@ -56,14 +56,13 @@ interface Doctrine_Cache_Interface
      * @param string $id        cache id
      * @param string $data      data to cache
      * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
-     * @param boolean $saveKey  Whether or not to save the key in the cache key index
      * @return boolean true if no problem
      */
-    public function save($id, $data, $lifeTime = false, $saveKey = true);
+    public function save($id, $data, $lifeTime = false);
 
     /**
      * Remove a cache record
-     * 
+     *
      * @param string $id cache id
      * @return boolean true if no problem
      */

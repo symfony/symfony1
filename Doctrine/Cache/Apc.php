@@ -35,11 +35,11 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
 {
     /**
      * constructor
-     * 
+     *
      * @param array $options    associative array of cache driver options
      */
     public function __construct($options = array())
-    {      
+    {
         if ( ! extension_loaded('apc')) {
             throw new Doctrine_Cache_Exception('The apc extension must be loaded for using this backend !');
         }
@@ -53,7 +53,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
      * @return mixed  Returns either the cached data or false
      */
-    protected function _doFetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true)
     {
         return apc_fetch($id);
     }
@@ -64,7 +64,7 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    protected function _doContains($id) 
+    protected function _doContains($id)
     {
         $found = false;
         apc_fetch($id, $found);
@@ -88,12 +88,28 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
     /**
      * Remove a cache record directly. This method is implemented by the cache
      * drivers and used in Doctrine_Cache_Driver::delete()
-     * 
+     *
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    protected function _doDelete($id) 
+    protected function _doDelete($id)
     {
         return apc_delete($id);
+    }
+
+    /**
+     * Fetch an array of all keys stored in cache
+     *
+     * @return array Returns the array of cache keys
+     */
+    protected function _getCacheKeys()
+    {
+        $ci = apc_cache_info('user');
+        $keys = array();
+
+        foreach ($ci['cache_list'] as $entry) {
+          $keys[] = $entry['info'];
+        }
+        return $keys;
     }
 }
