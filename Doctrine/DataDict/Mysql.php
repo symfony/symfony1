@@ -163,8 +163,6 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                     $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
                 }
             case 'varchar':
-            case 'array':
-            case 'object':
             case 'string':
             case 'gzip':
                 if ( ! isset($field['length'])) {
@@ -180,6 +178,8 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
 
                 return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
                     : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
+            case 'array':
+            case 'object':
             case 'clob':
                 if ( ! empty($field['length'])) {
                     $length = $field['length'];
