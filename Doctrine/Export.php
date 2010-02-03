@@ -1242,8 +1242,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         
         foreach ($models as $name) {
             $record = new $name();
-            $table  = $record->getTable();
-
+            $table = $record->getTable();
             $parents = $table->getOption('joinedParents');
 
             foreach ($parents as $parent) {
@@ -1272,6 +1271,10 @@ class Doctrine_Export extends Doctrine_Connection_Module
             if ($table->getAttribute(Doctrine_Core::ATTR_EXPORT) & Doctrine_Core::EXPORT_PLUGINS) {
                 $sql = array_merge($sql, $this->exportGeneratorsSql($table));
             }
+            
+            // DC-474: Remove dummy $record from repository to not pollute it during export
+            $table->getRepository()->evict($record->getOid());
+            unset($record);
         }
         
         $sql = array_unique($sql);
