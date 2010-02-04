@@ -338,8 +338,8 @@ abstract class OMBuilder extends DataModelBuilder {
       if(method_exists($behavior->$modifierGetter(), $hookName)) { 
         return true;
       }
-      return false;
     }
+    return false;
   }
 
   /**
