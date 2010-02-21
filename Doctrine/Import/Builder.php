@@ -989,7 +989,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             $baseClass = $definition;
-            $baseClass['className'] = $this->_baseClassPrefix . $baseClass['className'];
+            $baseClass['className'] = $this->_getBaseClassName($baseClass['className']);
             $baseClass['abstract'] = true;
             $baseClass['override_parent'] = false;
             $baseClass['is_base_class'] = true;
@@ -1004,6 +1004,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         } else {
             $this->writeDefinition($definition);
         }
+    }
+
+    protected function _getBaseClassName($className)
+    {
+        return $this->_baseClassPrefix . $className;
     }
 
     public function buildTableClassDefinition($className, $options = array())
@@ -1064,6 +1069,28 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     }
 
     /**
+     * Return the file name of the class to be generated.
+     *
+     * @param string $originalClassName
+     * @param array $definition
+     * @return string
+     */
+    protected function _getFileName($originalClassName, $definition)
+    {
+        if ($this->_classPrefixFiles) {
+            $fileName = $definition['className'] . $this->_suffix;
+        } else {
+            $fileName = $originalClassName . $this->_suffix;
+        }
+
+        if ($this->_pearStyle) {
+            $fileName = str_replace('_', '/', $fileName);
+        }
+
+        return $fileName;
+    }
+
+    /**
      * writeDefinition
      *
      * @param array $options
@@ -1097,15 +1124,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $definitionCode = str_replace("'refClass' => '", "'refClass' => '$prefix", $definitionCode);
         }
 
-        if ($this->_classPrefixFiles) { 
-            $fileName = $definition['className'] . $this->_suffix; 
-        } else { 
-            $fileName = $originalClassName . $this->_suffix; 
-        }
-
-        if ($this->_pearStyle) {
-            $fileName = str_replace('_', '/', $fileName);
-        }
+        $fileName = $this->_getFileName($originalClassName, $definition);
 
         $packagesPath = $this->_packagesPath ? $this->_packagesPath:$this->_path;
 
