@@ -26,7 +26,6 @@ if (!defined('PREG_BAD_UTF8_OFFSET_ERROR'))
 class sfYamlParser
 {
   protected
-    $value         = '',
     $offset        = 0,
     $lines         = array(),
     $currentLineNb = -1,
@@ -54,10 +53,9 @@ class sfYamlParser
    */
   public function parse($value)
   {
-    $this->value = $this->cleanup($value);
     $this->currentLineNb = -1;
     $this->currentLine = '';
-    $this->lines = explode("\n", $this->value);
+    $this->lines = explode("\n", $this->cleanup($value));
 
     $data = array();
     while ($this->moveToNextLine())
@@ -198,8 +196,7 @@ class sfYamlParser
       }
       else
       {
-        // one liner?
-        if (1 == count(explode("\n", rtrim($this->value, "\n"))))
+        if (1 == count($this->lines))
         {
           $value = sfYamlInline::load($this->lines[0]);
           if (is_array($value))
@@ -550,10 +547,8 @@ class sfYamlParser
   {
     $value = str_replace(array("\r\n", "\r"), "\n", $value);
 
-    if (!preg_match("#\n$#", $value))
-    {
-      $value .= "\n";
-    }
+    // remove trailing newlines
+    $value = rtrim($value, "\n");
 
     // strip YAML header
     preg_replace('#^\%YAML[: ][\d\.]+.*\n#s', '', $value);
