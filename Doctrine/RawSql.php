@@ -443,7 +443,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     public function calculateResultCacheHash($params = array())
     {
-        $sql = $this->getSql();
+        $sql = $this->getSqlQuery();
         $conn = $this->getConnection();
         $params = $this->getFlattenedParams($params);
         $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $sql . var_export($params, true));
