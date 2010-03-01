@@ -915,18 +915,23 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     protected function _assignIdentifier(Doctrine_Record $record)
     {
         $table = $record->getTable();
-        $identifier = (array) $table->getIdentifier();
+        $identifier = $table->getIdentifier();
         $seq = $table->sequenceName;
 
-        if (empty($seq) && count($identifier) == 1 && $identifier[0] == $table->getIdentifier() &&
+        if (empty($seq) && !is_array($identifier) &&
             $table->getIdentifierType() != Doctrine_Core::IDENTIFIER_NATURAL) {
-            if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
-                $seq = $table->getTableName() . '_' . $identifier[0];
-            } elseif ($driver == 'oracle') {
-                $seq = $table->getTableName();
+            $id = false;
+            if ($record->$identifier == null) { 
+                if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
+                    $seq = $table->getTableName() . '_' . $identifier;
+                } elseif ($driver == 'oracle') {
+                    $seq = $table->getTableName();
+                }
+    
+                $id = $this->conn->sequence->lastInsertId($seq);
+            } else {
+                $id = $record->$identifier;
             }
-
-            $id = $this->conn->sequence->lastInsertId($seq);
 
             if ( ! $id) {
                 throw new Doctrine_Connection_Exception("Couldn't get last insert identifier.");
