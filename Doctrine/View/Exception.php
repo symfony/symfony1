@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Validator_Exception
+ * Doctrine_View_Exception
  *
  * @package     Doctrine
  * @subpackage  View
