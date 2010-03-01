@@ -86,7 +86,7 @@ class Doctrine_Validator_Email extends Doctrine_Validator_Driver
     }
     
     /**
-     * Check DNA Records for MX type
+     * Check DNS Records for MX type
      *
      * @param string $host Host name
      * @return boolean
