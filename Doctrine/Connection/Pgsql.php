@@ -90,6 +90,7 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
     {
         $query = 'SET NAMES '.$this->quote($charset);
         $this->exec($query);
+        parent::setCharset($charset);
     }
 
     /**
