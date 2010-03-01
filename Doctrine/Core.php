@@ -612,6 +612,18 @@ class Doctrine_Core
     }
 
     /**
+     * Get the directory where your models are located for PEAR style naming
+     * convention autoloading
+     *
+     * @return void
+     * @author Jonathan Wage
+     */
+    public static function getModelsDirectory()
+    {
+        return self::$_modelsDirectory;
+    }
+
+    /**
      * Recursively load all models from a directory or array of directories
      *
      * @param  string   $directory      Path to directory of models or array of directory paths

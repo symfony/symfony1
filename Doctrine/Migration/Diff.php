@@ -130,6 +130,21 @@ class Doctrine_Migration_Diff
     }
 
     /**
+     * Initialize some Doctrine models at a given path.
+     *
+     * @param string $path 
+     * @return array $models
+     */
+    protected function _initializeModels($path)
+    {
+        $orig = Doctrine_Core::getModelsDirectory();
+        Doctrine_Core::setModelsDirectory($path);
+        $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
+        Doctrine_Core::setModelsDirectory($orig);
+        return $models;
+    }
+
+    /**
      * Generate a diff between the from and to schema information
      *
      * @param  string $from     Path to set of models to migrate from
@@ -139,8 +154,8 @@ class Doctrine_Migration_Diff
     protected function _diff($from, $to)
     {
         // Load the from and to models
-        $fromModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($from));
-        $toModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($to));
+        $fromModels = $this->_initializeModels($from);
+        $toModels = $this->_initializeModels($to);
 
         // Build schema information for the models
         $fromInfo = $this->_buildModelInformation($fromModels);
