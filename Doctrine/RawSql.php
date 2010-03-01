@@ -199,6 +199,8 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         $this->fixArrayParameterValues($this->_execParams);
 
         $select = array();
+        
+        $formatter = $this->getConnection()->formatter;
 
         foreach ($this->fields as $field) {
             $e = explode('.', $field);
@@ -218,13 +220,13 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
             
             if ($e[1] == '*') {
                 foreach ($this->_queryComponents[$componentAlias]['table']->getColumnNames() as $name) {
-                    $field = $e[0] . '.' . $name;
+                    $field = $formatter->quoteIdentifier($e[0]) . '.' . $formatter->quoteIdentifier($name);
 
-                    $select[$componentAlias][$field] = $field . ' AS ' . $e[0] . '__' . $name;
+                    $select[$componentAlias][$field] = $field . ' AS ' . $formatter->quoteIdentifier($e[0] . '__' . $name);
                 }
             } else {
-                $field = $e[0] . '.' . $e[1];
-                $select[$componentAlias][$field] = $field . ' AS ' . $e[0] . '__' . $e[1];
+                $field = $formatter->quoteIdentifier($e[0]) . '.' . $formatter->quoteIdentifier($e[1]);
+                $select[$componentAlias][$field] = $field . ' AS ' . $formatter->quoteIdentifier($e[0] . '__' . $e[1]);
             }
         }
 
@@ -234,10 +236,10 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
                 $map = $this->_queryComponents[$componentAlias];
 
                 foreach ((array) $map['table']->getIdentifierColumnNames() as $key) {
-                    $field = $tableAlias . '.' . $key;
+                    $field = $formatter->quoteIdentifier($tableAlias) . '.' . $formatter->quoteIdentifier($key);
 
                     if ( ! isset($this->_sqlParts['select'][$field])) {
-                        $select[$componentAlias][$field] = $field . ' AS ' . $tableAlias . '__' . $key;
+                        $select[$componentAlias][$field] = $field . ' AS ' . $formatter->quoteIdentifier($tableAlias . '__' . $key);
                     }
                 }
             }
