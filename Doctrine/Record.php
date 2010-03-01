@@ -2182,8 +2182,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ($deep) {
             foreach ($this->_references as $key => $value) {
                 if ($value instanceof Doctrine_Collection) {
-                    foreach ($value as $record) {
-                        $ret->{$key}[] = $record->copy($deep);
+                    foreach ($value as $valueKey => $record) {
+                        $ret->{$key}[$valueKey] = $record->copy($deep);
                     }
                 } else if ($value instanceof Doctrine_Record) {
                     $ret->set($key, $value->copy($deep));
