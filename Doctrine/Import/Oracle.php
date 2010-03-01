@@ -203,7 +203,7 @@ QEND;
      */
     public function listTables($database = null)
     {
-        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE'";
+        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE' and object_name in (select table_name from user_tables)";
         return $this->conn->fetchColumn($query);
     }
 
