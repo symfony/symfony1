@@ -160,7 +160,7 @@ class Doctrine_Migration
                 }
             }
         }
-        ksort($classesToLoad);
+        ksort($classesToLoad, SORT_NUMERIC);
         foreach ($classesToLoad as $class) {
             $this->loadMigrationClass($class['className'], $class['path']);
         }
