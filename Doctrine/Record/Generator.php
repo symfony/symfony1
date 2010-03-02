@@ -444,6 +444,9 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
     public function generateClass(array $definition = array())
     {
         $definition['className'] = $this->_options['className'];
+        if (isset($this->_options['listeners'])) {
+            $definition['listeners'] = $this->_options['listeners'];
+        }
 
         $builder = new Doctrine_Import_Builder();
         $builderOptions = isset($this->_options['builderOptions']) ? (array) $this->_options['builderOptions']:array();
