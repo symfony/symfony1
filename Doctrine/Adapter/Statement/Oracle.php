@@ -364,6 +364,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
 
         if ($fetchStyle == Doctrine_Core::FETCH_BOTH) {
             $flags = OCI_BOTH;
+            $numberOfRows = @oci_fetch_all($this->statement, $data, $skip, $maxrows, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC + OCI_RETURN_LOBS);
         } else if ($fetchStyle == Doctrine_Core::FETCH_ASSOC) {
             $numberOfRows = @oci_fetch_all($this->statement, $data, $skip, $maxrows, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC + OCI_RETURN_LOBS);
         } else if ($fetchStyle == Doctrine_Core::FETCH_NUM) {
