@@ -389,8 +389,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $i = 0;
 
         if (isset($definition['relations']) && is_array($definition['relations']) && ! empty($definition['relations'])) {
-            // canonicalize relation order
-            ksort($definition['relations']);
             foreach ($definition['relations'] as $name => $relation) {
                 $class = isset($relation['class']) ? $relation['class']:$name;
                 $alias = (isset($relation['alias']) && $relation['alias'] !== $this->_classPrefix . $relation['class']) ? ' as ' . $relation['alias'] : '';
