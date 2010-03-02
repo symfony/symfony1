@@ -439,8 +439,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 $assocTable = $rel->getAssociationTable();
                 foreach ($v->getDeleteDiff() as $r) {
                     $query = 'DELETE FROM ' . $assocTable->getTableName()
-                           . ' WHERE ' . $rel->getForeign() . ' = ?'
-                           . ' AND ' . $rel->getLocal() . ' = ?';
+                           . ' WHERE ' . $rel->getForeignRefColumnName() . ' = ?'
+                           . ' AND ' . $rel->getLocalRefColumnName() . ' = ?';
 
                     $this->conn->execute($query, array($r->getIncremented(), $record->getIncremented()));
                 }
