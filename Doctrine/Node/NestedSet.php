@@ -610,11 +610,6 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $this->setRootValue($newRoot);
             $this->record->save();
 
-            // Close gap in old tree
-            $first = $oldRgt + 1;
-            $delta = $oldLft - $oldRgt - 1;
-            $this->shiftRLValues($first, $delta, $oldRoot);
-
             // Insert this node as a new node
             $this->setRightValue(0);
             $this->setLeftValue(0);
@@ -659,6 +654,11 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
                 ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
+
+            // Close gap in old tree
+            $first = $oldRgt + 1;
+            $delta = $oldLft - $oldRgt - 1;
+            $this->shiftRLValues($first, $delta, $oldRoot);
 
             $conn->commit();
      
