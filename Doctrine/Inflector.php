@@ -60,7 +60,7 @@ class Doctrine_Inflector
 
         if (!isset($cache[$word])) {
             $word = preg_replace('/[$]/', '', $word);
-            $classify = preg_replace_callback('~(_?)(_)([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
+            $classify = preg_replace_callback('~(_?)([-_])([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
             $cache[$word] = $classify;
         }
         return $cache[$word];
