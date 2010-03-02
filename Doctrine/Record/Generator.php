@@ -193,7 +193,12 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
     {
         // Bind model 
         $conn = $this->_options['table']->getConnection();
-        $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
+        $bindConnName = $conn->getManager()->getConnectionForComponent($this->_options['table']->getComponentName())->getName();
+        if ($bindConnName) {
+            $conn->getManager()->bindComponent($this->_options['className'], $bindConnName);
+        } else {
+            $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
+        }
 
         // Create table
         $tableClass = $conn->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
