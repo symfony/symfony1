@@ -2496,9 +2496,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             foreach ($records as $record) {
                 if ($this->$alias instanceof Doctrine_Record) {
-                    $this->$alias = $record;
+                    $this->set($alias, $record);
                 } else {
-                    $this[$alias]->add($record);
+                    $this->get($alias)->add($record);
                 }
             }
 
