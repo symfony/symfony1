@@ -138,7 +138,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
      * @link http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html
      * @return string
      */
-    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false, $isSubQuery = false)
     {
         if ($limit > 0) {
             $count = intval($limit);
@@ -186,11 +186,18 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
 
             $fields_string = substr($query, strlen($selectReplace), strpos($query, ' FROM ') - strlen($selectReplace));
             $field_array = explode(',', $fields_string);
-            $aux2 = explode('.', $field_array[0]);
+            $field_array = array_shift($field_array);
+            $aux2 = spliti(' as ', $field_array);
+            $aux2 = explode('.', end($aux2));
             $key_field = trim(end($aux2));
 
             $query = preg_replace('/^'.$selectRegExp.'/i', $selectReplace . 'TOP ' . ($count + $offset) . ' ', $query);
-            $query = 'SELECT TOP ' . $count . ' ' . $this->quoteIdentifier('inner_tbl') . '.' . $key_field . ' FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
+
+            if ($isSubQuery === true) {
+                $query = 'SELECT TOP ' . $count . ' ' . $this->quoteIdentifier('inner_tbl') . '.' . $key_field . ' FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
+            } else {
+                $query = 'SELECT * FROM (SELECT TOP ' . $count . ' * FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
+            }
 
             if ($orderby !== false) {
                 $query .= ' ORDER BY '; 
@@ -204,11 +211,38 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                     $query .= (stripos($sorts[$i], 'asc') !== false) ? 'DESC' : 'ASC';
                 }
             }
+
+            if ($isSubQuery !== true) {
+                $query .= ') AS ' . $this->quoteIdentifier('outer_tbl');
+
+                if ($orderby !== false) {
+                    $query .= ' ORDER BY ';
+
+                    for ($i = 0, $l = count($orders); $i < $l; $i++) {
+                        if ($i > 0) { // not first order clause
+                            $query .= ', ';
+                        }
+
+                        $query .= $this->quoteIdentifier('outer_tbl') . '.' . $aliases[$i] . ' ' . $sorts[$i];
+                    }
+                }
+            }
         }
 
         return $query;
     }
 
+    /**
+     * Creates dbms specific LIMIT/OFFSET SQL for the subqueries that are used in the
+     * context of the limit-subquery algorithm.
+     *
+     * @return string
+     */
+    public function modifyLimitSubquery(Doctrine_Table $rootTable, $query, $limit = false, $offset = false, $isManip = false)
+    {
+        return $this->modifyLimitQuery($query, $limit, $offset, $isManip, true);
+    }
+    
     /**
      * return version information about the server
      *
