@@ -1234,6 +1234,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function setColumnOption($columnName, $option, $value)
     {
+        if ($option == 'primary') {
+            if (isset($this->_identifier)) {
+                $this->_identifier = (array) $this->_identifier;
+            }
+
+            if ($value &&  ! in_array($columnName, $this->_identifier)) {
+                $this->_identifier[] = $columnName;
+            } else if (!$value && in_array($columnName, $this->_identifier)) {
+                $key = array_search($columnName, $this->_identifier);
+                unset($this->_identifier[$key]);
+            }
+        }
+
         $columnName = $this->getColumnName($columnName);
         $this->_columns[$columnName][$option] = $value;
     }
