@@ -40,9 +40,6 @@ class Doctrine_Validator_Ip extends Doctrine_Validator_Driver
      */
     public function validate($value)
     {
-        if (is_null($value)) {
-            return true;
-        }
-        return (bool) ip2long(str_replace("\0", '', $value));
+        return is_null($value) ? true : (bool) filter_var($value, FILTER_VALIDATE_IP);
     }
 }
