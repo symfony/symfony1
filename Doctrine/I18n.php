@@ -40,6 +40,7 @@ class Doctrine_I18n extends Doctrine_Record_Generator
                             'table'         => false,
                             'pluginTable'   => false,
                             'children'      => array(),
+                            'i18nField'     => 'lang',
                             'type'          => 'string',
                             'length'        => 2,
                             'options'       => array(),
@@ -100,9 +101,9 @@ class Doctrine_I18n extends Doctrine_Record_Generator
         );
         $options = array_merge($defaultOptions, $this->_options['options']);
 
-        $this->hasColumn('lang', $this->_options['type'], $this->_options['length'], $options);
+        $this->hasColumn($this->_options['i18nField'], $this->_options['type'], $this->_options['length'], $options);
 
-        $this->bindQueryParts(array('indexBy' => 'lang'));
+        $this->bindQueryParts(array('indexBy' => $this->_options['i18nField']));
  
         // Rewrite any relations to our original table
         $originalName = $this->_options['table']->getClassnameToReturn();
