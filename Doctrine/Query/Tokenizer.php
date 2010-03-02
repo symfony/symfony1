@@ -298,7 +298,13 @@ class Doctrine_Query_Tokenizer
      * @return string
      */
     private function getSplitRegExpFromArray(array $d){
-        $d = array_map('preg_quote', $d);
+        foreach ($d as $key => $string) {
+            $escapedString = preg_quote($string);
+            if (preg_match('#^\w+$#', $string)) {
+                $escapedString = "\W$escapedString\W";
+            }
+            $d[$key] = $escapedString;
+        }
 
         if (in_array(' ', $d)) {
             $d[] = '\s';
