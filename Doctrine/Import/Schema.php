@@ -395,7 +395,17 @@ class Doctrine_Import_Schema
                     $colDesc['primary'] = isset($field['primary']) ? (bool) (isset($field['primary']) && $field['primary']):null;
                     $colDesc['default'] = isset($field['default']) ? $field['default']:null;
                     $colDesc['autoincrement'] = isset($field['autoincrement']) ? (bool) (isset($field['autoincrement']) && $field['autoincrement']):null;
-                    $colDesc['sequence'] = isset($field['sequence']) ? (string) $field['sequence']:null;
+
+                    if (isset($field['sequence'])) {
+                        if (true === $field['sequence']) {
+                            $colDesc['sequence'] = $tableName;
+                        } else {
+                            $colDesc['sequence'] = (string) $field['sequence'];
+                        }
+                    } else {
+                        $colDesc['sequence'] = null;
+                    }
+
                     $colDesc['values'] = isset($field['values']) ? (array) $field['values']:null;
 
                     // Include all the specified and valid validators in the colDesc
