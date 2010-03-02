@@ -367,7 +367,9 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                 }
             }
         }
-        
+        if (isset($options['sequenceName'])) {
+            $sql[] = $this->createSequenceSql($options['sequenceName']);
+        }
         return $sql;
     }
 
