@@ -1884,7 +1884,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $value = null;
             }
 
-            $columnValue = $this->get($column);
+            $columnValue = $this->get($column, false);
 
             if ($columnValue instanceof Doctrine_Record) {
                 $a[$column] = $columnValue->getIncremented();
