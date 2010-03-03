@@ -115,6 +115,12 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
         }
 
         do {
+            $table = $this->_queryComponents[$rootAlias]['table'];
+        
+            if ($table->getConnection()->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_RTRIM) {
+                array_map('rtrim', $data);
+            }
+        
             $id = $idTemplate; // initialize the id-memory
             $nonemptyComponents = array();
             $rowData = $this->_gatherRowData($data, $cache, $id, $nonemptyComponents);
@@ -133,7 +139,6 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             //
             // hydrate the data of the root component from the current row
             //
-            $table = $this->_queryComponents[$rootAlias]['table'];
             $componentName = $table->getComponentName();
             // Ticket #1115 (getInvoker() should return the component that has addEventListener)
             $event->setInvoker($table);
