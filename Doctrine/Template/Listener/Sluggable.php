@@ -114,6 +114,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             foreach ($this->_options['fields'] as $field) {
                 $value .= $record->$field . ' ';
             }
+            $value = substr($value, 0, -1);
         }
 
     	if ($this->_options['unique'] === true) {
