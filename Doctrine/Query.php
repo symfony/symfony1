@@ -1443,6 +1443,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             }
         }
 
+        // Add having fields that got stripped out of select
+        preg_match_all('/`[a-z0-9_]+`\.`[a-z0-9_]+`/i', implode(' ', $having), $matches, PREG_PATTERN_ORDER);
+        if (count($matches[0]) > 0) {
+            $subquery .= ', ' . implode(', ', array_unique($matches[0]));
+        }
+
         $subquery .= ' FROM';
 
         foreach ($this->_sqlParts['from'] as $part) {
@@ -2054,6 +2060,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     if (strpos($field, '(') !== false) {
                         $selectFields .= ', ' . $field;
                     }
+                }
+                // Add having fields that got stripped out of select
+                preg_match_all('/`[a-z0-9_]+`\.`[a-z0-9_]+`/i', $having, $matches, PREG_PATTERN_ORDER);
+                if (count($matches[0]) > 0) {
+                    $selectFields .= ', ' . implode(', ', array_unique($matches[0]));
                 }
             }
 
