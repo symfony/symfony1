@@ -103,6 +103,9 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
             return $newQuery;
         } else {
+            if ( ! isset($this->_options['connection'])) {
+                $this->_options['connection'] = $this->_table->getConnection();
+            }
             $q->query($string);
             return $this->_options['connection']->fetchAll($q->getSqlQuery(), $q->getParams());
         }
