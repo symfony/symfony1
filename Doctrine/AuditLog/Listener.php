@@ -61,7 +61,8 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
         $version = $this->_auditLog->getOption('version');
         $name = $version['alias'] === null ? $version['name'] : $version['alias'];
 
-        $event->getInvoker()->set($name, 1);
+        $record = $event->getInvoker();
+        $record->set($name, $this->_getInitialVersion($record));
     }
 
     /**
@@ -135,6 +136,17 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
             $version->merge($record->toArray(), false);
             $version->save();
         }
+    }
+
+    /**
+     * Get the initial version number for the audit log
+     *
+     * @param Doctrine_Record $record
+     * @return integer $initialVersion
+     */
+    protected function _getInitialVersion(Doctrine_Record $record)
+    {
+        return 1;
     }
 
     /**
