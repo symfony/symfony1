@@ -33,11 +33,11 @@
 class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
 {
     /**
-     * The multiplier to use on the float microtime value
-     * 
+     * The numher of digits to use from the float microtime value
+     *
      * @var int
      */
-    protected $accuracy = 1000000;
+    protected $accuracy = 9;
 
     /**
      * Get the initial version number for the audit log
@@ -47,17 +47,30 @@ class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
      */
     protected function _getInitialVersion(Doctrine_Record $record)
     {
-        return (int)(microtime(true) * $this->accuracy);
+        return $this->_microtime();
     }
 
     /**
      * Get the next version number for the audit log
      *
-     * @param Doctrine_Record $record 
+     * @param Doctrine_Record $record
      * @return integer $nextVersion
      */
     protected function _getNextVersion(Doctrine_Record $record)
     {
-        return (int)(microtime(true) * $this->accuracy);
+        return $this->_microtime();
     }
+
+    /**
+     * Compute a version out of microtime(true)
+     *
+     * @return string $version
+     */
+    protected function _microtime()
+    {
+        $version = microtime(true) - 1073741824; // 31 bits
+        $version = str_replace('.', '', (string)$version);
+        return substr($version, 0, $this->accuracy);
+    }
+
 }
