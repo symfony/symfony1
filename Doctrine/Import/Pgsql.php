@@ -276,7 +276,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
         $results = $this->conn->fetchAssoc($sql, $param);
         foreach ($results as $result) {
             preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $result['condef'], $values);
-            if ((strpos(',', $values[1]) === false) && (strpos(',', $values[3]) === false)) {
+            if ((strpos(',', $values[1]) === false) && (strpos(',', $values[2]) === false)) {
                 $tableName = trim($values[2], '"');
                 $relations[] = array('table'   => $tableName,
                                      'local'   => $values[1],
