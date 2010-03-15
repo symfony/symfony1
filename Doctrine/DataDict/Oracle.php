@@ -194,7 +194,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                     } elseif ( ! is_null($length) && (int)$length <= 5) { // SMALLINT
                         $length = 2;
                     } elseif ( ! is_null($length) && (int)$length <= 8) { // MEDIUMINT
-                        $lenght = 3;
+                        $length = 3;
                     } elseif ( ! is_null($length) && (int)$length <= 10) { // INT
                         $length = 4;
                     } elseif ( ! is_null($length) && (int)$length <= 20) { //BIGINT
