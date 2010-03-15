@@ -211,12 +211,7 @@ class Doctrine_Cache_Db extends Doctrine_Cache_Driver
             return $hex;
         }
 
-        $bin = '';
-        for ($a = 0; $a < strlen($hex); $a += 2) {
-            $bin .= chr(hexdec($hex{$a} . $hex{($a + 1)}));
-        }
-
-        return $bin;
+        return pack("H*", $hex);
     }
 
     /**
