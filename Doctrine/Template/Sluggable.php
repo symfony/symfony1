@@ -52,7 +52,7 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
         'canUpdate'     =>  false,
         'builder'       =>  array('Doctrine_Inflector', 'urlize'),
         'provider'      =>  null,
-        'indexName'     =>  'sluggable'
+        'indexName'     =>  null
     );
 
     /**
@@ -65,6 +65,9 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
         $name = $this->_options['name'];
         if ($this->_options['alias']) {
             $name .= ' as ' . $this->_options['alias'];
+        }
+        if ($this->_options['indexName'] === null) {
+            $this->_options['indexName'] = $this->getTable()->getTableName().'_sluggable';
         }
         $this->hasColumn($name, $this->_options['type'], $this->_options['length'], $this->_options['options']);
         
