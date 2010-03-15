@@ -201,6 +201,23 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
     }
 
     /**
+     * Delete all cache entries from the cache driver
+     * 
+     * @return integer $count The number of deleted cache entries
+     */
+    public function deleteAll() 
+    {
+        $count = 0;
+        if (is_array($keys = $this->_getCacheKeys())) {
+            foreach ($keys as $key) {
+                $count++;
+                $this->delete($key);
+            }
+        }
+        return $count;
+    }
+
+    /**
      * Get the hash key passing its suffix
      *
      * @param string $id  The hash key suffix
