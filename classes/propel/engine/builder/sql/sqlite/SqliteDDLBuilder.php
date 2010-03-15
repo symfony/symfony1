@@ -74,6 +74,10 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 			$lines[] = $this->getColumnDDL($col);
 		}
 
+		if ($table->hasPrimaryKey() && count($table->getPrimaryKey()) > 1) {
+			$lines[] = "PRIMARY KEY (".$this->getColumnList($table->getPrimaryKey()).")";
+		}
+
 		foreach ($table->getUnices() as $unique ) {
 			$lines[] = "UNIQUE (".$this->getColumnList($unique->getColumns()).")";
 		}
