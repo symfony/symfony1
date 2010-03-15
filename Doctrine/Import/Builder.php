@@ -116,6 +116,13 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_baseTableClassName = 'Doctrine_Table';
 
     /**
+     * Format to use for generating the model table classes
+     *
+     * @var string
+     */
+    protected $_tableClassFormat = '%sTable';
+
+    /**
      * Prefix to all generated classes
      *
      * @var string
@@ -994,14 +1001,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 $packageLevel['is_package_class'] = true;
                 unset($packageLevel['connection']);
 
-                $packageLevel['tableClassName'] = $packageLevel['className'] . 'Table';
-                $packageLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':$this->_baseTableClassName;
+                $packageLevel['tableClassName'] = sprintf($this->_tableClassFormat, $packageLevel['className']);
+                $packageLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? sprintf($this->_tableClassFormat, $definition['inheritance']['extends']):$this->_baseTableClassName;
 
-                $topLevel['tableClassName'] = $topLevel['topLevelClassName'] . 'Table';
-                $topLevel['inheritance']['tableExtends'] = $packageLevel['className'] . 'Table';
+                $topLevel['tableClassName'] = sprintf($this->_tableClassFormat, $topLevel['topLevelClassName']);
+                $topLevel['inheritance']['tableExtends'] = sprintf($this->_tableClassFormat, $packageLevel['className']);
             } else {
-                $topLevel['tableClassName'] = $topLevel['className'] . 'Table';
-                $topLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':$this->_baseTableClassName;
+                $topLevel['tableClassName'] = sprintf($this->_tableClassFormat, $topLevel['className']);
+                $topLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? sprintf($this->_tableClassFormat, $definition['inheritance']['extends']):$this->_baseTableClassName;
             }
 
             $baseClass = $definition;
