@@ -209,6 +209,7 @@ class Doctrine_Core
     const ATTR_USE_NATIVE_SET               = 177;
     const ATTR_MODEL_CLASS_PREFIX           = 178;
     const ATTR_TABLE_CLASS_FORMAT           = 179;
+    const ATTR_MAX_IDENTIFIER_LENGTH        = 180;
 
     /**
      * LIMIT CONSTANTS

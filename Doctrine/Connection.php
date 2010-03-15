@@ -1599,7 +1599,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', array_merge($parts, array($relation['onDelete']), array($relation['onUpdate'])));
         $format = $this->getAttribute(Doctrine_Core::ATTR_FKNAME_FORMAT);
 
-        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, $this->properties['max_identifier_length']);
+        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, $this->getAttribute(Doctrine_Core::ATTR_MAX_IDENTIFIER_LENGTH));
     }
 
     /**
@@ -1617,13 +1617,16 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', $parts);
         $format = $this->getAttribute(Doctrine_Core::ATTR_IDXNAME_FORMAT);
 
-        return $this->_generateUniqueName('indexes', $parts, $key, $format, $this->properties['max_identifier_length']);
+        return $this->_generateUniqueName('indexes', $parts, $key, $format, $this->getAttribute(Doctrine_Core::ATTR_MAX_IDENTIFIER_LENGTH));
     }
 
-    protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = 64)
+    protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = null)
     {
         if (isset($this->_usedNames[$type][$key])) {
             return $this->_usedNames[$type][$key];
+        }
+        if ($maxLength === null) {
+          $maxLength = $this->properties['max_identifier_length'];
         }
 
         $generated = implode('_', $parts);
