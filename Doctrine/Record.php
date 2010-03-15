@@ -1064,21 +1064,23 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function relatedExists($name)
     {
-        $newReference = false;
-        if ( ! $this->hasReference($name)) {
-            $newReference = true;
+        if ($this->hasReference($name) && $this->_references[$name] !== self::$_null) {
+            return true;
         }
 
         $reference = $this->$name;
-        if ( ! $reference instanceof Doctrine_Record) {
+        if ($reference instanceof Doctrine_Record) {
+            $exists = $reference->exists();
+        } elseif ($reference instanceof Doctrine_Collection) {
             throw new Doctrine_Record_Exception(
                 'You can only call relatedExists() on a relationship that '.
                 'returns an instance of Doctrine_Record'
             );
+        } else {
+            $exists = false;
         }
-        $exists = $reference->exists();
 
-        if ($newReference) {
+        if (!$exists) {
             $this->clearRelated($name);
         }
 
