@@ -74,6 +74,8 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'orderBy' => null
                                   );
 
+    protected $_isRefClass = null;
+
     /**
      * constructor
      *
@@ -414,6 +416,24 @@ abstract class Doctrine_Relation implements ArrayAccess
         } else {
             return $table->getOrderByStatement($alias, $columnNames);
         }
+    }
+
+    public function isRefClass()
+    {
+        if ($this->_isRefClass === null) {
+            $this->_isRefClass = false;
+            $table = $this->getTable();
+            foreach ($table->getRelations() as $name => $relation) {
+                foreach ($relation['table']->getRelations() as $relation) {
+                    if (isset($relation['refTable']) && $relation['refTable'] === $table) {
+                        $this->_isRefClass = true;
+                        break(2);
+                    }
+                }
+            }
+        }
+
+        return $this->_isRefClass;
     }
 
     /**
