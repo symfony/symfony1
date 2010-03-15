@@ -51,6 +51,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                                 'auditLog'          => true,
                                 'deleteVersions'    => true,
                                 'cascadeDelete'     => true,
+                                'excludeFields'     => array(),
                                 'appLevelDelete'    => false);
 
     /**
@@ -84,6 +85,9 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         // remove all sequence, autoincrement and unique constraint definitions and add to the behavior model
         foreach ($columns as $column => $definition) {
+            if (in_array($column, $this->_options['excludeFields'])) {
+                continue;
+            }
             unset($definition['autoincrement']);
             unset($definition['sequence']);
             unset($definition['unique']);
