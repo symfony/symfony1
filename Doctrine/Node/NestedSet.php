@@ -1070,18 +1070,18 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
 
         $qLeft  = Doctrine_Core::getTable($componentName)
             ->createQuery()
-            ->update();
+            ->update($componentName);
 
         $qRight = Doctrine_Core::getTable($componentName)
             ->createQuery()
-            ->update();
+            ->update($componentName);
 
         $qLeft = $qLeft->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
                        ->where($componentName . '.lft >= ?', $first);
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
 
         $resultLeft = $qLeft->execute();
-        
+
         // shift right columns
         $qRight = $qRight->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
                          ->where($componentName . '.rgt >= ?', $first);
