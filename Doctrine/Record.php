@@ -1150,14 +1150,16 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             $data = empty($data) ? $this->getTable()->find($id, Doctrine_Core::HYDRATE_ARRAY) : $data;
             
-            foreach ($data as $field => $value) {
-                if ( ! array_key_exists($field, $this->_data) || $this->_data[$field] === self::$_null) {
-                   $this->_data[$field] = $value;
-               }
+            if (is_array($data)) {
+                foreach ($data as $field => $value) {
+                    if ( ! array_key_exists($field, $this->_data) || $this->_data[$field] === self::$_null) {
+                       $this->_data[$field] = $value;
+                   }
+                }
             }
             
             if ($this->isModified()) {
-               $this->_state = Doctrine_Record::STATE_DIRTY;
+                $this->_state = Doctrine_Record::STATE_DIRTY;
             } else if (!$this->isInProxyState()) {
                 $this->_state = Doctrine_Record::STATE_CLEAN;
             }
