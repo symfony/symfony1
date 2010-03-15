@@ -313,6 +313,9 @@ class Doctrine_Migration
     public function migrate($to = null, $dryRun = false)
     {
         $this->clearErrors();
+
+        $this->_createMigrationTable();
+
         $this->_connection->beginTransaction();
 
         try {
@@ -463,8 +466,6 @@ class Doctrine_Migration
      */
     protected function _doMigrate($to)
     {
-        $this->_createMigrationTable();
-
         $from = $this->getCurrentVersion();
 
         if ($from == $to) {
