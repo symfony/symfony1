@@ -381,6 +381,9 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function saveRelatedLocalKeys(Doctrine_Record $record)
     {
+        $state = $record->state();
+        $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
+
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
             
@@ -409,6 +412,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
         }
+        $record->state($state);
     }
 
     /**
