@@ -919,6 +919,25 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     }
 
     /**
+     * buildToString
+     *
+     * @param array $definition
+     * @return string
+     */
+    public function buildToString(array $definition)
+    {
+        if ( empty($definition['toString'])) {
+            return '';
+        }
+
+        $ret = PHP_EOL . PHP_EOL . '    public function __toString()' . PHP_EOL;
+        $ret .= "    {" . PHP_EOL;
+        $ret .= "      return (string) \$this->".$definition['toString'].";" . PHP_EOL;
+        $ret .= "    }";
+        return $ret;
+    }
+
+    /**
      * buildDefinition
      *
      * @param array $definition
@@ -945,6 +964,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $setUpCode = $this->_eolStyle . $setUpCode;
         }
 
+        $setUpCode.= $this->buildToString($definition);
         
         $docs = $this->_eolStyle . $this->buildPhpDocs($definition);
 
