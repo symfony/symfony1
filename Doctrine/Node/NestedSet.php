@@ -734,10 +734,10 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     public function moveAsFirstChildOf(Doctrine_Record $dest)
     {
         if (
-		    $dest === $this->record ||
+		    $dest === $this->record || $this->isAncestorOf($dest) ||
 			($dest->exists() && $this->record->exists() && $dest->identifier() === $this->record->identifier())
 		) {
-            throw new Doctrine_Tree_Exception("Cannot move node as first child of itself");
+            throw new Doctrine_Tree_Exception("Cannot move node as first child of itself or into a descendant");
 
 			return false;
 		}
@@ -762,10 +762,10 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     public function moveAsLastChildOf(Doctrine_Record $dest)
     {
         if (
-		    $dest === $this->record ||
+		    $dest === $this->record || $this->isAncestorOf($dest) ||
 			($dest->exists() && $this->record->exists() && $dest->identifier() === $this->record->identifier())
 		) {
-            throw new Doctrine_Tree_Exception("Cannot move node as last child of itself");
+            throw new Doctrine_Tree_Exception("Cannot move node as last child of itself or into a descendant");
 
 			return false;
 		}
@@ -908,6 +908,18 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         return (($this->getLeftValue() >= $subj->getNode()->getLeftValue()) &&
                 ($this->getRightValue() <= $subj->getNode()->getRightValue()) &&
                 ($this->getRootValue() == $subj->getNode()->getRootValue()));
+    }
+
+    /**
+     * determines if node is ancestor of subject node
+     *
+     * @return bool            
+     */
+    public function isAncestorOf(Doctrine_Record $subj)
+    {
+        return (($subj->getNode()->getLeftValue() > $this->getLeftValue()) &&
+                ($subj->getNode()->getRightValue() < $this->getRightValue()) &&
+                ($subj->getNode()->getRootValue() == $this->getRootValue()));
     }
 
     /**
