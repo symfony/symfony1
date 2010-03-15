@@ -216,7 +216,10 @@ class Doctrine_Inflector
           // GBP (Pound) Sign
           chr(194).chr(163) => '',
           'Ä' => 'Ae', 'ä' => 'ae', 'Ü' => 'Ue', 'ü' => 'ue',
-          'Ö' => 'Oe', 'ö' => 'oe', 'ß' => 'ss');
+          'Ö' => 'Oe', 'ö' => 'oe', 'ß' => 'ss',
+          // Norwegian characters
+          'Å'=>'Aa','Æ'=>'Ae','Ø'=>'O','æ'=>'a','ø'=>'o','å','aa'
+          );
 
           $string = strtr($string, $chars);
         } else {
