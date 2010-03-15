@@ -308,7 +308,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         	$fields[] = $tableAlias . '.' . $key;
         }
 
-        $q = 'SELECT COUNT( DISTINCT '.implode(',',$fields).') as num_results';
+        $q = 'SELECT COUNT(*) as num_results FROM (SELECT DISTINCT '.implode(', ',$fields);
 
         $string = $this->getInheritanceCondition($this->getRootAlias());
         if ( ! empty($string)) {
@@ -319,6 +319,8 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         $q .= ( ! empty($this->_sqlParts['where']))?   ' WHERE '    . implode(' AND ', $this->_sqlParts['where']) : '';
         $q .= ( ! empty($this->_sqlParts['groupby']))? ' GROUP BY ' . implode(', ', $this->_sqlParts['groupby']) : '';
         $q .= ( ! empty($this->_sqlParts['having']))?  ' HAVING '   . implode(' AND ', $this->_sqlParts['having']) : '';
+
+        $q .= ') as results';
 
         if ( ! empty($string)) {
             array_pop($this->_sqlParts['where']);
