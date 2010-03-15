@@ -160,6 +160,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine_Core::ATTR_COLLECTION_CLASS             => 'Doctrine_Collection',
                         Doctrine_Core::ATTR_TABLE_CLASS                  => 'Doctrine_Table',
                         Doctrine_Core::ATTR_CASCADE_SAVES                => true,
+                        Doctrine_Core::ATTR_TABLE_CLASS_FORMAT           => '%sTable'
                         ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);

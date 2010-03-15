@@ -1116,7 +1116,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             return $this->tables[$name];
         }
 
-        $class = $name . 'Table';
+        $class = sprintf($this->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS_FORMAT), $name);
 
         if (class_exists($class, $this->getAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES)) &&
                 in_array('Doctrine_Table', class_parents($class))) {
