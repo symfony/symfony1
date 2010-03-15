@@ -1241,7 +1241,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function getAccessors()
     {
         $componentName = $this->_table->getComponentName();
-        return self::$_customAccessors[$componentName];
+        return isset(self::$_customAccessors[$componentName]) ? self::$_customAccessors[$componentName] : array();
     }
 
     /**
