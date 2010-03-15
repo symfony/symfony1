@@ -48,7 +48,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                     (SELECT oid FROM pg_namespace
                                                      WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema'",
                         'listSequences' => "SELECT
-                                                relname
+                                                regexp_replace(relname, '_seq$', '')
                                             FROM
                                                 pg_class
                                             WHERE relkind = 'S' AND relnamespace IN
