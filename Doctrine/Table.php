@@ -244,7 +244,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $this->_conn->addTable($this);
         
         $this->_parser = new Doctrine_Relation_Parser($this);
-        
+
+        if ($charset = $this->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_CHARSET)) {
+            $this->_options['charset'] = $charset;
+        }
+        if ($collate = $this->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_COLLATE)) {
+            $this->_options['collate'] = $collate;
+        }
+
         if ($initDefinition) {
             $this->record = $this->initDefinition();
 
@@ -264,13 +271,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         
         $this->_filters[]  = new Doctrine_Record_Filter_Standard();
         $this->_repository = new Doctrine_Table_Repository($this);
-
-        if ($charset = $this->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_CHARSET)) {
-            $this->_options['charset'] = $charset;
-        }
-        if ($collate = $this->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_COLLATE)) {
-            $this->_options['collate'] = $collate;
-        }
 
         $this->construct();
     }
