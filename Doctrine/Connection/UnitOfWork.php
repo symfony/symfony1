@@ -924,7 +924,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             if ($record->$identifier == null) { 
                 if (($driver = strtolower($this->conn->getDriverName())) == 'pgsql') {
                     $seq = $table->getTableName() . '_' . $identifier;
-                } elseif ($driver == 'oracle') {
+                } elseif ($driver == 'oracle' || $driver == 'mssql') {
                     $seq = $table->getTableName();
                 }
     

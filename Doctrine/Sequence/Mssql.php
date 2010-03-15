@@ -133,8 +133,12 @@ class Doctrine_Sequence_Mssql extends Doctrine_Sequence
             && ! is_null($serverInfo['major'])
             && $serverInfo['major'] >= 8) {
 
-            $query = 'SELECT SCOPE_IDENTITY()';
-
+            if (isset($table))
+            {
+                $query = 'SELECT IDENT_CURRENT(\'' . $this->conn->quoteIdentifier($table) . '\')';
+            } else {
+                $query = 'SELECT SCOPE_IDENTITY()';
+            }
         } else {
             $query = 'SELECT @@IDENTITY';
         }
