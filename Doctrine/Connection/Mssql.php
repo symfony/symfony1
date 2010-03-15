@@ -301,4 +301,105 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
         }
         return true;
     }
+
+    /**
+     * execute
+     * @param string $query     sql query
+     * @param array $params     query parameters
+     *
+     * @return PDOStatement|Doctrine_Adapter_Statement
+     */
+    public function execute($query, array $params = array())
+    {
+        if(! empty($params)) {
+            $query = $this->replaceBoundParamsWithInlineValuesInQuery($query, $params);
+        }
+
+        return parent::execute($query, array());
+    }
+
+    /**
+     * execute
+     * @param string $query     sql query
+     * @param array $params     query parameters
+     *
+     * @return PDOStatement|Doctrine_Adapter_Statement
+     */
+    public function exec($query, array $params = array())
+    {
+        if(! empty($params)) {
+            $query = $this->replaceBoundParamsWithInlineValuesInQuery($query, $params);
+        }
+
+        return parent::exec($query, array());
+    }
+
+    /**
+     * Replaces bound parameters and their placeholders with explicit values.
+     *
+     * Workaround for http://bugs.php.net/36561
+     *
+     * @param string $query
+     * @param array $params
+     */
+    protected function replaceBoundParamsWithInlineValuesInQuery($query, array $params) {
+
+        foreach($params as $key => $value) {
+            if(is_null($value)) {
+                $value = 'NULL';
+            }
+            else {
+                $value = $this->quote($value);
+            }
+
+            $re = '/([=,\(][^\\\']*)(\?)/iuU';
+
+            $query = preg_replace($re, "\\1 {$value}", $query, 1);
+
+        }
+
+        return $query;
+
+    }
+
+    /**
+     * Inserts a table row with specified data.
+     *
+     * @param Doctrine_Table $table     The table to insert data into.
+     * @param array $values             An associative array containing column-value pairs.
+     *                                  Values can be strings or Doctrine_Expression instances.
+     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
+     */
+    public function insert(Doctrine_Table $table, array $fields)
+    {
+        $identifiers = $table->getIdentifierColumnNames();
+
+        $settingNullIdentifier = false;
+        $fields = array_change_key_case($fields);
+        foreach($identifiers as $identifier) {
+            $lcIdentifier = strtolower($identifier);
+
+            if(array_key_exists($lcIdentifier, $fields)) {
+                if(is_null($fields[$lcIdentifier])) {
+                    $settingNullIdentifier = true;
+                    unset($fields[$lcIdentifier]);
+                }
+            }
+        }
+
+        // MSSQL won't allow the setting of identifier columns to null, so insert a default record and then update it
+        if ($settingNullIdentifier) {
+            $count = $this->exec('INSERT INTO ' . $this->quoteIdentifier($table->getTableName()) . ' DEFAULT VALUES');
+
+            if(! $count) {
+                return $count;
+            }
+
+            $id = $this->lastInsertId($table->getTableName());
+
+            return $this->update($table, $fields, array($id));
+        }
+
+        return parent::insert($table, $fields);
+    }
 }
