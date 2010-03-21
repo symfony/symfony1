@@ -28,7 +28,7 @@
  * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision$
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Lukas Smith <smith@pooteeweet.org>
  */
 class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
 {
