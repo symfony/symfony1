@@ -113,7 +113,7 @@ EOT;
   
   public function staticMethods()
   {
-  	return <<<EOT
+  	$script = "
 
 /**
  * Enable the soft_delete behavior for this model
@@ -139,7 +139,9 @@ public static function isSoftDeleteEnabled()
 {
 	return self::\$softDelete;
 }
-
+";
+	
+	$script .= "
 /**
  * Soft delete records, given a {$this->getTable()->getPhpName()} or Criteria object OR a primary key value.
  *
@@ -236,7 +238,8 @@ public static function doDeleteAll2(PropelPDO \$con = null)
 		return {$this->getTable()->getPhpName()}Peer::doForceDeleteAll(\$con);
 	}	
 }
-EOT;
+";
+	return $script;
   }
   
   public function peerFilter(&$script)
