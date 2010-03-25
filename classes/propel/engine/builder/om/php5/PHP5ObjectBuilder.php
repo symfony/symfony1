@@ -227,7 +227,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addHydrate($script);
 		$this->addEnsureConsistency($script);
 
-		$this->addManipulationMethods($script);
+		if (!$table->isReadOnly()) {
+			$this->addManipulationMethods($script);
+		}
 
     if ($this->isAddValidateMethod())
     {
