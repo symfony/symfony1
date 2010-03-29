@@ -205,7 +205,7 @@ class Doctrine_Search_Query
                 if ($k === 0) {
                     continue;
                 }
-                $where .= ' AND (position + ' . $k . ') = (SELECT position FROM ' . $this->_table->getTableName() . ' WHERE ' . $this->parseWord($word) . ')';
+                $where .= ' AND (position + ' . $k . ') IN (SELECT position FROM ' . $this->_table->getTableName() . ' WHERE ' . $this->parseWord($word) . ')';
             }
         }
         return $where;
