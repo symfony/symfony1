@@ -1617,9 +1617,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function contains($fieldName)
     {
-        if ($this->hasAccessor($fieldName)) {
-            return true;
-        }
         if (array_key_exists($fieldName, $this->_data)) {
             // this also returns true if the field is a Doctrine_Null.
             // imho this is not correct behavior.
