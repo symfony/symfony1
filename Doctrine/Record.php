@@ -1606,13 +1606,16 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * test whether a field (column, mapped value, related component) is accessible by @see get()
+     * test whether a field (column, mapped value, related component, accessor) is accessible by @see get()
      *
      * @param string $fieldName
      * @return boolean
      */
     public function contains($fieldName)
     {
+        if ($this->hasAccessor($fieldName)) {
+            return true;
+        }
         if (array_key_exists($fieldName, $this->_data)) {
             // this also returns true if the field is a Doctrine_Null.
             // imho this is not correct behavior.
