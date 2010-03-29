@@ -358,18 +358,18 @@ class Doctrine_Import extends Doctrine_Connection_Module
      * method for importing existing schema to Doctrine_Record classes
      *
      * @param string $directory
-     * @param array $databases
+     * @param array $connections Array of connection names to generate models for
      * @return array                the names of the imported classes
      */
-    public function importSchema($directory, array $databases = array(), array $options = array())
+    public function importSchema($directory, array $connections = array(), array $options = array())
     {
-        $connections = Doctrine_Manager::getInstance()->getConnections();
         $classes = array();
 
-        foreach ($connections as $name => $connection) {
-          // Limit the databases to the ones specified by $databases.
+        $manager = Doctrine_Manager::getInstance();
+        foreach ($manager as $name => $connection) {
+          // Limit the databases to the ones specified by $connections.
           // Check only happens if array is not empty
-          if ( ! empty($databases) && ! in_array($name, $databases)) {
+          if ( ! empty($connections) && ! in_array($name, $connections)) {
             continue;
           }
 
