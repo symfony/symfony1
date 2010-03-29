@@ -57,6 +57,12 @@ class sfYamlParser
     $this->currentLine = '';
     $this->lines = explode("\n", $this->cleanup($value));
 
+    if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2)
+    {
+      $mbEncoding = mb_internal_encoding();
+      mb_internal_encoding('ASCII');
+    }
+
     $data = array();
     while ($this->moveToNextLine())
     {
@@ -214,6 +220,11 @@ class sfYamlParser
             }
           }
 
+          if (isset($mbEncoding))
+          {
+            mb_internal_encoding($mbEncoding);
+          }
+
           return $value;
         }
 
@@ -245,6 +256,11 @@ class sfYamlParser
       {
         $this->refs[$isRef] = end($data);
       }
+    }
+
+    if (isset($mbEncoding))
+    {
+      mb_internal_encoding($mbEncoding);
     }
 
     return empty($data) ? null : $data;
