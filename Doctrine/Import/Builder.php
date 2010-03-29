@@ -144,11 +144,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     protected $_pearStyle = false;
 
     /**
-     * Allows to force a line-ending style, by default $this->_eolStyle will be used
+     * Allows to force a line-ending style, by default PHP_EOL will be used
      *
      * @var string
      */
-    protected $_eolStyle = PHP_EOL;
+    protected $_eolStyle = null;
 
     /**
      * The package name to use for the generated php docs
@@ -316,12 +316,12 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         self::$_tpl = '/**'
-                    . '%s' . $this->_eolStyle
-                    . ' */' . $this->_eolStyle
-                    . '%sclass %s extends %s' . $this->_eolStyle
+                    . '%s' . PHP_EOL
+                    . ' */' . PHP_EOL
+                    . '%sclass %s extends %s' . PHP_EOL
                     . '{'
-                    . '%s' . $this->_eolStyle
-                    . '%s' . $this->_eolStyle
+                    . '%s' . PHP_EOL
+                    . '%s' . PHP_EOL
                     . '}';
     }
 
@@ -386,10 +386,10 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $i++;
         }
 
-        $code = implode($this->_eolStyle, $ret);
+        $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        return $this->_eolStyle . "    public function setTableDefinition()" . $this->_eolStyle . '    {' . $this->_eolStyle . '        ' . $code . $this->_eolStyle . '    }';
+        return PHP_EOL . "    public function setTableDefinition()" . PHP_EOL . '    {' . PHP_EOL . '        ' . $code . PHP_EOL . '    }';
     }
 
     /**
@@ -471,12 +471,12 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
 
                 if ( ! empty($a)) {
-                    $ret[$i] .= ', ' . 'array(' . $this->_eolStyle . str_repeat(' ', 13);
+                    $ret[$i] .= ', ' . 'array(' . PHP_EOL . str_repeat(' ', 13);
                     $length = strlen($ret[$i]);
-                    $ret[$i] .= implode(',' . $this->_eolStyle . str_repeat(' ', 13), $a) . ')';
+                    $ret[$i] .= implode(',' . PHP_EOL . str_repeat(' ', 13), $a) . ')';
                 }
 
-                $ret[$i] .= ');'.$this->_eolStyle;
+                $ret[$i] .= ');'.PHP_EOL;
                 $i++;
             }
         }
@@ -491,14 +491,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $i++;
         }
 
-        $code = implode($this->_eolStyle, $ret);
+        $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        $code = "parent::setUp();" . $this->_eolStyle . '        ' . $code;
+        $code = "parent::setUp();" . PHP_EOL . '        ' . $code;
 
         // If we have some code for the function then lets define it and return it
         if ($code) {
-            return '    public function setUp()' . $this->_eolStyle . '    {' . $this->_eolStyle . '        ' . $code . $this->_eolStyle . '    }';
+            return '    public function setUp()' . PHP_EOL . '    {' . PHP_EOL . '        ' . $code . PHP_EOL . '    }';
         }
     }
 
@@ -512,7 +512,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $build = '';
         foreach ($checks as $check) {
-            $build .= "        \$this->check('" . $check . "');" . $this->_eolStyle;
+            $build .= "        \$this->check('" . $check . "');" . PHP_EOL;
         }
         return $build;
     }
@@ -582,7 +582,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 $build .= ', ' . $this->varExport($options);
             }
 
-            $build .= ');' . $this->_eolStyle;
+            $build .= ');' . PHP_EOL;
         }
 
         return $build;
@@ -608,16 +608,16 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret = '';
         foreach ($accessors as $name) {
             // getters
-            $ret .= $this->_eolStyle . '  public function get' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\$load = true)" . $this->_eolStyle;
-            $ret .= "  {" . $this->_eolStyle;
-            $ret .= "    return \$this->get('{$name}', \$load);" . $this->_eolStyle;
-            $ret .= "  }" . $this->_eolStyle;
+            $ret .= PHP_EOL . '  public function get' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\$load = true)" . PHP_EOL;
+            $ret .= "  {" . PHP_EOL;
+            $ret .= "    return \$this->get('{$name}', \$load);" . PHP_EOL;
+            $ret .= "  }" . PHP_EOL;
 
             // setters
-            $ret .= $this->_eolStyle . '  public function set' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\${$name}, \$load = true)" . $this->_eolStyle;
-            $ret .= "  {" . $this->_eolStyle;
-            $ret .= "    return \$this->set('{$name}', \${$name}, \$load);" . $this->_eolStyle;
-            $ret .= "  }" . $this->_eolStyle;
+            $ret .= PHP_EOL . '  public function set' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\${$name}, \$load = true)" . PHP_EOL;
+            $ret .= "  {" . PHP_EOL;
+            $ret .= "    return \$this->set('{$name}', \${$name}, \$load);" . PHP_EOL;
+            $ret .= "  }" . PHP_EOL;
         }
 
         return $ret;
@@ -681,7 +681,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret[] = '@author     ' . $this->_phpDocName . ' <' . $this->_phpDocEmail . '>';
         $ret[] = '@version    SVN: $Id$';
 
-        $ret = ' * ' . implode($this->_eolStyle . ' * ', $ret);
+        $ret = ' * ' . implode(PHP_EOL . ' * ', $ret);
         $ret = ' ' . trim($ret);
 
         return $ret;
@@ -702,7 +702,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if (class_exists("Doctrine_Template_$name", true)) {
             $classname = "Doctrine_Template_$name";
         }
-        return "        \$" . strtolower($name) . "$level = new $classname($option);". $this->_eolStyle;
+        return "        \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
     }
 
     /**
@@ -715,7 +715,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitAddChild($level, $parent, $name)
     {
-        return "        \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . $this->_eolStyle;
+        return "        \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -728,7 +728,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitActAs($level, $name)
     {
-        return "        \$this->actAs(\$" . strtolower($name) . "$level);" . $this->_eolStyle;
+        return "        \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -840,7 +840,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 ? '$this->getTable()->getOptions()' : 'array()';
             $class = ( ! empty($options) && isset($options['class'])) ? $options['class'] : $name;
 
-            $build .= "    \$this->addListener(new " . $class . "(" . $useOptions . "), '" . $name . "');" . $this->_eolStyle;
+            $build .= "    \$this->addListener(new " . $class . "(" . $useOptions . "), '" . $name . "');" . PHP_EOL;
         }
 
         return $build;
@@ -854,7 +854,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     public function buildAttributes(array $attributes)
     {
-        $build = $this->_eolStyle;
+        $build = PHP_EOL;
         foreach ($attributes as $key => $value) {
     
             $values = array();
@@ -877,7 +877,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
     
             $string = implode(' ^ ', $values);
-            $build .= "        \$this->setAttribute(Doctrine_Core::ATTR_" . strtoupper($key) . ", " . $string . ");" . $this->_eolStyle;
+            $build .= "        \$this->setAttribute(Doctrine_Core::ATTR_" . strtoupper($key) . ", " . $string . ");" . PHP_EOL;
         }
     
         return $build;
@@ -893,7 +893,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $build = '';
         foreach ($options as $name => $value) {
-            $build .= "        \$this->option('$name', " . $this->varExport($value) . ");" . $this->_eolStyle;
+            $build .= "        \$this->option('$name', " . $this->varExport($value) . ");" . PHP_EOL;
         }
 
         return $build;
@@ -910,7 +910,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
       $build = '';
 
       foreach ($indexes as $indexName => $definitions) {
-          $build .= $this->_eolStyle . "        \$this->index('" . $indexName . "'";
+          $build .= PHP_EOL . "        \$this->index('" . $indexName . "'";
           $build .= ', ' . $this->varExport($definitions);
           $build .= ');';
       }
@@ -961,12 +961,12 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         if ($tableDefinitionCode && $setUpCode) {
-            $setUpCode = $this->_eolStyle . $setUpCode;
+            $setUpCode = PHP_EOL . $setUpCode;
         }
 
         $setUpCode.= $this->buildToString($definition);
         
-        $docs = $this->_eolStyle . $this->buildPhpDocs($definition);
+        $docs = PHP_EOL . $this->buildPhpDocs($definition);
 
         $content = sprintf(self::$_tpl, $docs, $abstract,
                                        $className,
@@ -1085,9 +1085,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $docBlock[] = $className;
         $docBlock[] = '';
         $docBlock[] = 'This class has been auto-generated by the Doctrine ORM Framework';
-        $docBlock = $this->_eolStyle.' * ' . implode($this->_eolStyle . ' * ', $docBlock);
+        $docBlock = PHP_EOL.' * ' . implode(PHP_EOL . ' * ', $docBlock);
 
-        $content  = '<?php' . $this->_eolStyle.$this->_eolStyle;
+        $content  = '<?php' . PHP_EOL.PHP_EOL;
         $content .= sprintf(self::$_tpl,
             $docBlock,
             false,
@@ -1097,6 +1097,10 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $code,
             null
         );
+
+        if ($this->_eolStyle) {
+            $content = str_replace(PHP_EOL, $this->_eolStyle, $content);
+        }
 
         return $content;
     }
@@ -1248,14 +1252,18 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $writePath = $this->_path . DIRECTORY_SEPARATOR . $fileName;
         }
 
-        $code = "<?php" . $this->_eolStyle;
+        $code = "<?php" . PHP_EOL;
 
         if (isset($definition['connection']) && $definition['connection']) {
-            $code .= "// Connection Component Binding" . $this->_eolStyle;
-            $code .= "Doctrine_Manager::getInstance()->bindComponent('" . $definition['connectionClassName'] . "', '" . $definition['connection'] . "');" . $this->_eolStyle;
+            $code .= "// Connection Component Binding" . PHP_EOL;
+            $code .= "Doctrine_Manager::getInstance()->bindComponent('" . $definition['connectionClassName'] . "', '" . $definition['connection'] . "');" . PHP_EOL;
         }
 
-        $code .= $this->_eolStyle . $definitionCode;
+        $code .= PHP_EOL . $definitionCode;
+
+        if ($this->_eolStyle) {
+            $code = str_replace(PHP_EOL, $this->_eolStyle, $code);
+        }
 
         Doctrine_Lib::makeDirectories(dirname($writePath));
 
