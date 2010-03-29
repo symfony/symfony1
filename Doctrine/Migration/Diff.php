@@ -137,10 +137,16 @@ class Doctrine_Migration_Diff
      */
     protected function _initializeModels($path)
     {
-        $orig = Doctrine_Core::getModelsDirectory();
-        Doctrine_Core::setModelsDirectory($path);
-        $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
-        Doctrine_Core::setModelsDirectory($orig);
+        $manager = Doctrine_Manager::getInstance();
+        $modelLoading = $manager->getAttribute(Doctrine_Core::ATTR_MODEL_LOADING);
+        if ($modelLoading === Doctrine_Core::MODEL_LOADING_PEAR) {
+            $orig = Doctrine_Core::getModelsDirectory();
+            Doctrine_Core::setModelsDirectory($path);
+            $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
+            Doctrine_Core::setModelsDirectory($orig);
+        } else {
+            $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
+        }
         return $models;
     }
 
