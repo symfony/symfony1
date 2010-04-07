@@ -718,6 +718,30 @@ class Doctrine_Export_Mysql extends Doctrine_Export
     }
 
     /**
+     * Returns a character set declaration.
+     *
+     * @param string $charset A character set
+     *
+     * @return string A character set declaration
+     */
+    public function getCharsetFieldDeclaration($charset)
+    {
+        return $this->conn->dataDict->getCharsetFieldDeclaration($charset);
+    }
+
+    /**
+     * Returns a collation declaration.
+     *
+     * @param string $collation A collation
+     *
+     * @return string A collation declaration
+     */
+    public function getCollationFieldDeclaration($collation)
+    {
+        return $this->conn->dataDict->getCollationFieldDeclaration($collation);
+    }
+
+    /**
      * getAdvancedForeignKeyOptions
      * Return the FOREIGN KEY query section dealing with non-standard options
      * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
