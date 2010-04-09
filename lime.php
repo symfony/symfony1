@@ -1489,7 +1489,7 @@ class lime_registration
     $this->files = array_merge($this->files, $files);
   }
 
-  protected function strip_base_dir($file)
+  protected function get_relative_file($file)
   {
     return str_replace(DIRECTORY_SEPARATOR, '/', str_replace(array(realpath($this->base_dir).DIRECTORY_SEPARATOR, $this->extension), '', $file));
   }
