@@ -291,7 +291,11 @@ class lime_test
    */
   public function cmp_ok($exp1, $op, $exp2, $message = '')
   {
-    eval(sprintf("\$result = \$exp1 $op \$exp2;"));
+    $php = sprintf("\$result = \$exp1 $op \$exp2;");
+    // under some unknown conditions the sprintf() call causes a segmentation fault
+    // when placed directly in the eval() call
+    eval($php);
+    
     if (!$this->ok($result, $message))
     {
       $this->set_last_test_errors(array(sprintf("      %s", str_replace("\n", '', var_export($exp1, true))), sprintf("          %s", $op), sprintf("      %s", str_replace("\n", '', var_export($exp2, true)))));
