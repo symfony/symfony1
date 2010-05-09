@@ -121,7 +121,7 @@ class BuildPropelGenPEARPackageTask extends MatchingTask {
 		$package->setPackage('propel_generator');
 		$package->setSummary('Generator component of the Propel PHP object persistence layer');
 		$package->setDescription('Propel is an object persistence layer for PHP5 based on Apache Torque. This package provides the generator engine that builds PHP classes and SQL DDL based on an XML representation of your data model.');
-		$package->setChannel('pear.phpdb.org');
+		$package->setChannel('pear.propelorm.org');
 		$package->setPackageType('php');
 
 		$package->setReleaseVersion($this->version);
