@@ -38,7 +38,7 @@ class lime_test
       'force_colors'    => false,
       'output'          => null,
       'verbose'         => false,
-      'error_reporting' => true,
+      'error_reporting' => false,
     ), $options);
 
     $this->output = $this->options['output'] ? $this->options['output'] : new lime_output($this->options['force_colors']);
@@ -616,7 +616,7 @@ class lime_output
       $message .= sprintf("\n(in %s on line %s)", $file, $line);
     }
 
-  	// some error messages contain absolute file paths
+    // some error messages contain absolute file paths
     $message = $this->strip_base_dir($message);
 
     $space = $this->colorizer->colorize(str_repeat(' ', 71), 'RED_BAR')."\n";
