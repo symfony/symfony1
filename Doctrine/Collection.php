@@ -728,8 +728,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         $collection = $this;
         $table = $collection->getTable();
 
-        if ( ! $table->hasTemplate('NestedSet')) {
-            throw new Doctrine_Exception('Cannot hydrate model that does not have the NestedSet behavior enabled');
+        if ( ! $table->isTree() || ! $table->hasColumn('level')) {
+            throw new Doctrine_Exception('Cannot hydrate model that does not implements Tree behavior with `level` column');
         }
 
         // Trees mapped
