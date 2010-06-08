@@ -225,7 +225,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
         $id        = $table->getIdentifierColumnNames();
         $class     = $this->_options['className'];
         $fields    = $this->_options['fields'];
-        $conn      = $this->_options['connection'];
+        $conn      = $this->_options['table']->getConnection();
         
         for ($i = 0; $i < count($fields); $i++) {
             $fields[$i] = $table->getColumnName($fields[$i], $fields[$i]);
