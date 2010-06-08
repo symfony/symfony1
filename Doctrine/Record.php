@@ -2029,6 +2029,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                         $this->link($key, $value, false);
                     } else {
                         $this->$key->synchronizeWithArray($value);
+                        $this->$key = $this->$key;
                     }
                 }
             } else if ($this->getTable()->hasField($key) || array_key_exists($key, $this->_values)) {
