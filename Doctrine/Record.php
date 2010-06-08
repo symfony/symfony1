@@ -861,9 +861,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $manager    = Doctrine_Manager::getInstance();
         $connection = $manager->getConnectionForComponent(get_class($this));
 
-        $this->_oid = self::$_index;
-        self::$_index++;
-
         $this->_table = $connection->getTable(get_class($this));
         
         $this->preUnserialize($event);
@@ -891,7 +888,19 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
         }
 
+        // Remove existing record from the repository and table entity map.
+        $this->_table->setData($this->_data);
+        $existing_record = $this->_table->getRecord();
+        if ($existing_record->exists()) {
+            $this->_table->getRepository()->evict($existing_record->getOid());
+            $this->_table->removeRecord($existing_record);
+        }
+
+        // Add the unserialized record to repository and entity map.
+        $this->_oid = self::$_index;
+        self::$_index++;
         $this->_table->getRepository()->add($this);
+        $this->_table->addRecord($this);
 
         $this->cleanData($this->_data);
 
