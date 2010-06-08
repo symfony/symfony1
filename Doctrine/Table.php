@@ -1121,7 +1121,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
            $alias = $this->getComponentName();
         }
    
-        $e1 = explode(',', $orderBy);
+        if ( ! is_array($orderBy)) {
+            $e1 = explode(',', $orderBy);
+        } else {
+            $e1 = $orderBy;
+        }
         $e1 = array_map('trim', $e1);
         foreach ($e1 as $k => $v) {
             $e2 = explode(' ', $v);
