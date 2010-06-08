@@ -2514,7 +2514,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 if ($this->$alias instanceof Doctrine_Record) {
                     $this->set($alias, $record);
                 } else {
-                    $this->get($alias)->add($record);
+                    if ($c = $this->get($alias)) {
+                        $c->add($record);
+                    } else {
+                        $this->set($alias, $record);
+                    }
                 }
             }
 
