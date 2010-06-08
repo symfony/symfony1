@@ -148,7 +148,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function dropForeignKey($table, $name)
     {
-        return $this->dropConstraint($table, $name);
+        return $this->dropConstraint($table, $this->conn->formatter->getForeignKeyName($name));
     }
 
     /**
