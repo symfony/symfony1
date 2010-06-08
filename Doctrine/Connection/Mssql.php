@@ -65,6 +65,8 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                           'prepared_statements'   => 'emulated',
                           );
 
+        $this->properties['varchar_max_length'] = 8000;
+
         parent::__construct($manager, $adapter);
     }
 
