@@ -1344,7 +1344,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             if ($this->hasAccessor($fieldName) || method_exists($this, $accessor)) {
                 $this->hasAccessor($fieldName, $accessor);
-                return $this->$accessor($load);
+                return $this->$accessor($load, $fieldName);
             }
         }
         return $this->_get($fieldName, $load);
@@ -1450,7 +1450,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             if ($this->hasMutator($fieldName) || method_exists($this, $mutator)) {
                 $this->hasMutator($fieldName, $mutator);
-                return $this->$mutator($value, $load);
+                return $this->$mutator($value, $load, $fieldName);
             }
         }
         return $this->_set($fieldName, $value, $load);
