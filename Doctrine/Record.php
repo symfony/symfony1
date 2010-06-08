@@ -2179,8 +2179,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function copy($deep = false)
     {
         $data = $this->_data;
-
-        if ($this->_table->getIdentifierType() === Doctrine_Core::IDENTIFIER_AUTOINC) {
+        $idtype = $this->_table->getIdentifierType();
+        if ($idtype === Doctrine_Core::IDENTIFIER_AUTOINC || $idtype === Doctrine_Core::IDENTIFIER_SEQUENCE) {
             $id = $this->_table->getIdentifier();
 
             unset($data[$id]);
