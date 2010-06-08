@@ -347,7 +347,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     /**
      * Check if a dql alias has a sql aggregate alias
      *
-     * @param string $dqlAlias 
+     * @param string $dqlAlias
      * @return boolean
      */
     public function hasSqlAggregateAlias($dqlAlias)
@@ -616,7 +616,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             }
 
             $terms = $this->_tokenizer->sqlExplode($reference, ' ');
-
             $pos   = strpos($terms[0], '(');
 
             if (count($terms) > 1 || $pos !== false) {
@@ -627,7 +626,15 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     $alias = substr($expression, 0, $pos);
                 }
 
-                $componentAlias = $this->getExpressionOwner($expression);
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-706
+                if ($pos !== false && isset($terms[0]) && substr($terms[0], 0, 1) !== "'" && substr($terms[0], 0, $pos) == '') {
+                    $components = $this->_queryComponents;
+                    reset($components);
+                    $componentAlias = key($components);
+                } else {
+                    $componentAlias = $this->getExpressionOwner($expression);
+                }
+
                 $expression = $this->parseClause($expression);
 
                 $tableAlias = $this->getSqlTableAlias($componentAlias);
@@ -1391,7 +1398,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $subquery .= $this->_conn->quoteIdentifier($primaryKey);
 
         // pgsql & oracle need the order by fields to be preserved in select clause
-        if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci' || $driverName == 'oci8' || $driverName == 'mssql' || $driverName == 'odbc') {
+        if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci' || $driverName == 'mssql' || $driverName == 'odbc') {
             foreach ($this->_sqlParts['orderby'] as $part) {
                 // Remove identifier quoting if it exists
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
@@ -1400,16 +1407,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                         $partOriginal = str_replace(',', '', trim($f));
                         $callback = create_function('$e', 'return trim($e, \'[]`"\');');
                         $part = trim(implode('.', array_map($callback, explode('.', $partOriginal))));
-                
+
                         if (strpos($part, '.') === false) {
                             continue;
                         }
-                
+
                         // don't add functions
                         if (strpos($part, '(') !== false) {
                             continue;
                         }
-                
+
                         // don't add primarykey column (its already in the select clause)
                         if ($part !== $primaryKey) {
                             $subquery .= ', ' . $partOriginal;
@@ -1455,8 +1462,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
             // preserve LEFT JOINs only if needed
             if (substr($part, 0, 9) === 'LEFT JOIN') {
                 $e = explode(' ', $part);
-
-                if (empty($this->_sqlParts['orderby']) && empty($this->_sqlParts['where']) && empty($this->_sqlParts['having'])) {
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-706
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-594
+                if (empty($this->_sqlParts['orderby']) && empty($this->_sqlParts['where']) && empty($this->_sqlParts['having']) && empty($this->_sqlParts['groupby'])) {
                     continue;
                 }
             }
@@ -2107,7 +2115,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $params = $this->_conn->convertBooleans($params);
 
         if ($this->_resultCache) {
-            $conn = $this->getConnection(); 
+            $conn = $this->getConnection();
             $cacheDriver = $this->getResultCacheDriver();
             $hash = $this->getResultCacheHash($params).'_count';
             $cached = ($this->_expireResultCache) ? false : $cacheDriver->fetch($hash);
