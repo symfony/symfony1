@@ -582,16 +582,6 @@ class Doctrine_Core
     }
 
     /**
-     * Get all the loaded extension classes 
-     *
-     * @return array $extensionClasses
-     */
-    public static function getExtensionsClasses()
-    {
-        return Doctrine_Manager::getInstance()->getExtensionsClasses();
-    }
-
-    /**
      * Load an individual model name and path in to the model loading registry
      *
      * @return null
