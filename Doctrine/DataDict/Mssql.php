@@ -245,9 +245,16 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
 
-            $default = ' DEFAULT ' . (is_null($field['default'])
+            $value = (is_null($field['default'])
                 ? 'NULL'
                 : $this->conn->quote($field['default']));
+
+            // Name the constraint if a name has been supplied
+            if (array_key_exists('defaultConstraintName', $field)) {
+                $default .= ' CONSTRAINT ' . $field['defaultConstraintName'];
+            }
+
+            $default .= ' DEFAULT ' . $value;
         }
 
 
@@ -260,7 +267,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
 
         $name = $this->conn->quoteIdentifier($name, true);
 
-        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned 
+        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned
             . $default . $notnull . $autoinc . $comment;
     }
 }
