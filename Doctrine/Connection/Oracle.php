@@ -142,4 +142,21 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
     {
         return clone $this;
     }
+
+    /**
+     * Override quote behaviour for boolean to fix issues with quoting of
+     * boolean values.
+     */
+    public function quote($input, $type = null)
+    {
+        if ($type === 'boolean') {
+            if ($input === null) {
+                return null;
+            } else {
+                return $input ? 1 : 0;    
+            }
+        } else {
+            return parent::quote($input, $type);  
+        }
+    }
 }
