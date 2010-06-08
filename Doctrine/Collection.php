@@ -152,7 +152,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         $vars = get_object_vars($this);
 
         unset($vars['reference']);
-        unset($vars['reference_field']);
+        unset($vars['referenceField']);
         unset($vars['relation']);
         unset($vars['expandable']);
         unset($vars['expanded']);
