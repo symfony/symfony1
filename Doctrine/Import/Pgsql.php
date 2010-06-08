@@ -94,29 +94,24 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                             AND indisprimary != 't'
                                                         )",
                         'listTableColumns'     => "SELECT
-                                                        a.attnum,
-                                                        a.attname AS field,
-                                                        t.typname AS type,
-                                                        format_type(a.atttypid, a.atttypmod) AS complete_type,
-                                                        a.attnotnull AS isnotnull,
-                                                        (SELECT 't'
-                                                          FROM pg_index
-                                                          WHERE c.oid = pg_index.indrelid
-                                                          AND a.attnum = ANY (pg_index.indkey)
-                                                          AND pg_index.indisprimary = 't'
-                                                        ) AS pri,
-                                                        (SELECT pg_attrdef.adsrc
-                                                          FROM pg_attrdef
-                                                          WHERE c.oid = pg_attrdef.adrelid
-                                                          AND pg_attrdef.adnum=a.attnum
-                                                        ) AS default
-                                                  FROM pg_attribute a, pg_class c, pg_type t
-                                                  WHERE c.relname = %s
-                                                        AND a.attnum > 0
-                                                        AND a.attrelid = c.oid
-                                                        AND a.atttypid = t.oid
-                                                  ORDER BY a.attnum",
-                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
+                                                     ordinal_position as attnum,
+                                                     column_name as field,
+                                                     udt_name as type,
+                                                     data_type as complete_type,
+                                                     is_nullable as isnotnull,
+                                                     column_default as default,
+                                                     (
+                                                       SELECT 't'
+                                                         FROM pg_index, pg_attribute a, pg_class c, pg_type t
+                                                         WHERE c.relname = table_name AND a.attname = column_name
+                                                         AND a.attnum > 0 AND a.attrelid = c.oid AND a.atttypid = t.oid
+                                                         AND c.oid = pg_index.indrelid AND a.attnum = ANY (pg_index.indkey)
+                                                         AND pg_index.indisprimary = 't'
+                                                     ) as pri,
+                                                     character_maximum_length as length
+                                                   FROM information_schema.COLUMNS
+                                                   WHERE table_name = %s
+                                                   ORDER BY ordinal_position",                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
                                                           FROM pg_catalog.pg_constraint r
                                                           WHERE r.conrelid =
                                                           (
@@ -185,7 +180,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                 'length'    => $decl['length'],
                 'fixed'     => (bool) $decl['fixed'],
                 'unsigned'  => (bool) $decl['unsigned'],
-                'notnull'   => ($val['isnotnull'] == true),
+                'notnull'   => ($val['isnotnull'] == 'NO'),
                 'default'   => $val['default'],
                 'primary'   => ($val['pri'] == 't'),
             );
