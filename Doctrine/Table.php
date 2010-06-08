@@ -1033,7 +1033,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         $class = $this->getAttribute(Doctrine_Core::ATTR_QUERY_CLASS);
 
-        return Doctrine_Query::create(null, $class)
+        return Doctrine_Query::create($this->_conn, $class)
             ->from($this->getComponentName() . $alias);
     }
 
