@@ -42,6 +42,16 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
     {
         $pos = strpos($func, '(');
 
+        // Check for subqueries
+        if ($pos === 0 && substr($func, 1, 6) == 'SELECT') {
+            // This code is taken from WHERE.php
+            $sub = $this->_tokenizer->bracketTrim($func);
+            $q = $this->query->createSubquery()->parseDqlQuery($sub, false);
+            $sql = $q->getSqlQuery();
+            $q->free();
+            return '(' . $sql . ')';
+        }
+
         if ($pos !== false) {
             $funcs  = array();
 
