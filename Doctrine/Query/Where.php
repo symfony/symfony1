@@ -49,7 +49,7 @@ class Doctrine_Query_Where extends Doctrine_Query_Condition
         if (count($terms) > 1) {
             if (substr($where, 0, 6) == 'EXISTS') {
                 return $this->parseExists($where, true);
-            } elseif (substr($where, 0, 10) == 'NOT EXISTS') {
+            } elseif (preg_match('/^NOT\s+EXISTS\b/i', $where) !== 0) {
                 return $this->parseExists($where, false);
             }
         }
