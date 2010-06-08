@@ -267,7 +267,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     ' ' . $field['check'] : '';
 
         $comment   = (isset($field['comment']) && $field['comment']) ?
-                    " COMMENT '" . $field['comment'] . "'" : '';
+                    " COMMENT " . $this->conn->quote($field['comment'], 'text') : '';
 
         $method = 'get' . $field['type'] . 'Declaration';
 
