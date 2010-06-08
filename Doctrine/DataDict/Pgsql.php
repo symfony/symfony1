@@ -362,6 +362,12 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
         if ( ! isset($field['type'])) {
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
+
+        // Postgres enum type by name containing enum
+        if (strpos($field['type'], 'enum') !== false){
+            $field['type'] = 'enum';            
+        }
+
         switch ($field['type']) {
             case 'enum':
                 $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
@@ -454,14 +460,22 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
 
         $dbType = strtolower($field['type']);
 
+        // Default from field for enum support
+        $default = isset($field['default']) ? $field['default'] : null;
+        $enumName = null;
+        if (strpos($dbType, 'enum') !== false){
+            $enumName = $dbType;
+            $dbType = 'enum';
+        }
+
         switch ($dbType) {
-	    case 'inet':
-                $type[] = 'inet';
-		break;
-	    case 'bit':
-	    case 'varbit':
-                $type[] = 'bit';
-		break;
+    	    case 'inet':
+                    $type[] = 'inet';
+    		break;
+    	    case 'bit':
+    	    case 'varbit':
+                    $type[] = 'bit';
+    		break;
             case 'smallint':
             case 'int2':
                 $type[] = 'integer';
@@ -504,6 +518,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             case 'tsvector':
             case 'unknown':
             case 'char':
+            case 'character':
             case 'bpchar':
                 $type[] = 'string';
                 if ($length == '1') {
@@ -516,6 +531,13 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 }
                 if ($fixed !== false) {
                     $fixed = true;
+                }
+                break;
+            case 'enum':
+                $type[] = 'enum';
+                $length = $length ? $length :255;
+                if($default) {
+                    $default = preg_replace('/\'(\w+)\'.*/', '${1}', $default);
                 }
                 break;
             case 'date':
@@ -577,10 +599,19 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $length = isset($field['length']) ? $field['length']:null;
         }
 
-        return array('type'     => $type,
+        $ret = array('type'     => $type,
                      'length'   => $length,
                      'unsigned' => $unsigned,
                      'fixed'    => $fixed);
+
+        // If this is postgresql enum type we will have non-null values here
+        if ($default !== null) {
+            $ret['default'] = $default;
+        }
+        if ($enumName !== null) {
+            $ret['enumName'] = $enumName;
+        }
+        return $ret;
     }
 
     /**

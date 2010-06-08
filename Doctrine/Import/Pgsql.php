@@ -59,7 +59,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                             FROM pg_class c, pg_user u
                                             WHERE c.relowner = u.usesysid
                                                 AND c.relkind = 'r'
-                                                AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname)
+                                                AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname AND schemaname <> 'information_schema')
                                                 AND c.relname !~ '^(pg_|sql_)'
                                             UNION
                                             SELECT c.relname AS table_name
@@ -98,6 +98,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                      column_name as field,
                                                      udt_name as type,
                                                      data_type as complete_type,
+                                                     t.typtype AS typtype,
                                                      is_nullable as isnotnull,
                                                      column_default as default,
                                                      (
@@ -107,11 +108,13 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                          AND a.attnum > 0 AND a.attrelid = c.oid AND a.atttypid = t.oid
                                                          AND c.oid = pg_index.indrelid AND a.attnum = ANY (pg_index.indkey)
                                                          AND pg_index.indisprimary = 't'
+                                                         AND format_type(a.atttypid, a.atttypmod) NOT LIKE 'information_schema%%'
                                                      ) as pri,
                                                      character_maximum_length as length
                                                    FROM information_schema.COLUMNS
                                                    WHERE table_name = %s
-                                                   ORDER BY ordinal_position",                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
+                                                   ORDER BY ordinal_position",
+                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
                                                           FROM pg_catalog.pg_constraint r
                                                           WHERE r.conrelid =
                                                           (
@@ -164,7 +167,11 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
         foreach ($result as $key => $val) {
             $val = array_change_key_case($val, CASE_LOWER);
 
-            if (strtolower($val['type']) === 'character varying') {
+            if ($val['type'] == 'character varying') {
+                // get length from varchar definition
+                $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
+                $val['length'] = $length;
+            } else if (strpos($val['complete_type'], 'character varying') !== false) {
                 // get length from varchar definition
                 $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
                 $val['length'] = $length;
@@ -184,13 +191,28 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                 'default'   => $val['default'],
                 'primary'   => ($val['pri'] == 't'),
             );
-            
+
+            // If postgres enum type            
+            if ($val['typtype'] == 'e'){
+                $description['default'] = isset($decl['default']) ? $decl['default'] : null;
+                $t_result = $this->conn->fetchAssoc(sprintf('select enum_range(null::%s) as range ', $decl['enum_name']));                
+                if (isset($t_result[0])){
+                    $range =  $t_result[0]['range'];
+                    $range = str_replace('{','',$range);
+                    $range = str_replace('}','',$range);
+                    $range = explode(',',$range);
+                    $description['values'] = $range;
+                }
+            }
+
             $matches = array(); 
 
             if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", $description['default'], $matches)) { 
                 $description['sequence'] = $this->conn->formatter->fixSequenceName($matches[1]); 
                 $description['default'] = null; 
             } else if (preg_match("/^'(.*)'::character varying$/", $description['default'], $matches)) {
+                $description['default'] = $matches[1];
+            } else if (preg_match("/^(.*)::character varying$/", $description['default'], $matches)) {
                 $description['default'] = $matches[1];
             } else if ($description['type'] == 'boolean') {
                 if ($description['default'] === 'true') {
