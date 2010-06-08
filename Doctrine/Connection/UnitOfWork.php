@@ -595,7 +595,14 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                 $table = $record->getTable();
                 $identifier = (array) $table->getIdentifier();
-                $data = $record->getPrepared();                
+                $data = $record->getPrepared();       
+
+                foreach ($data as $key  => $value) {
+                    if ($value instanceof Doctrine_Expression) {
+                        $data[$key] = $value->getSql();
+                    }
+                }
+
                 $result = $this->conn->replace($table, $data, $identifier);
 
                 $record->invokeSaveHooks('post', 'insert', $insertEvent);
