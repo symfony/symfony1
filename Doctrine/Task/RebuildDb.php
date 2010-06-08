@@ -44,10 +44,10 @@ class Doctrine_Task_RebuildDb extends Doctrine_Task
         $this->createDb = new Doctrine_Task_CreateDb($this->dispatcher);
         $this->createTables = new Doctrine_Task_CreateTables($this->dispatcher);
 
-        $this->requiredArguments = array_merge($this->requiredArguments, $this->dropDb->requiredArguments, $this->buildAll->requiredArguments);
-        $this->optionalArguments = array_merge($this->optionalArguments, $this->dropDb->optionalArguments, $this->buildAll->optionalArguments);
+        $this->requiredArguments = array_merge($this->requiredArguments, $this->dropDb->requiredArguments, $this->createDb->requiredArguments, $this->createTables->requiredArguments);
+        $this->optionalArguments = array_merge($this->optionalArguments, $this->dropDb->optionalArguments, $this->createDb->optionalArguments, $this->createTables->optionalArguments);
     }
-    
+
     public function execute()
     {
         $this->dropDb->setArguments($this->getArguments());
