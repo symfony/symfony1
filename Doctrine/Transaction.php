@@ -259,7 +259,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
                  
             if ($this->_nestingLevel == 1 || $this->_internalNestingLevel == 1) {
                 if ( ! empty($this->invalid)) {
-                    if ($this->_internalNestingLevel == 1 || $this->_nestingLevel == 1) {
+                    if ($this->_internalNestingLevel == 1) {
                         $tmp = $this->invalid;
                         $this->invalid = array();
                         throw new Doctrine_Validator_Exception($tmp);
