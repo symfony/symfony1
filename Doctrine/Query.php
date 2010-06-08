@@ -627,10 +627,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 }
 
                 // Fix for http://www.doctrine-project.org/jira/browse/DC-706
-                if ($pos !== false && isset($terms[0]) && substr($terms[0], 0, 1) !== "'" && substr($terms[0], 0, $pos) == '') {
-                    $components = $this->_queryComponents;
-                    reset($components);
-                    $componentAlias = key($components);
+                if ($pos !== false && substr($expression, 0, 1) !== "'" && substr($expression, 0, $pos) == '') {
+                    $_queryComponents = $this->_queryComponents;
+                    reset($_queryComponents);
+                    $componentAlias = key($_queryComponents);
                 } else {
                     $componentAlias = $this->getExpressionOwner($expression);
                 }
