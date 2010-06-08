@@ -121,10 +121,10 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     public function enumValue($index)
     {
         if ($index instanceof Doctrine_Null) {
-            return $index;
+            return false;
         }
 
-        return isset($this->_definition['values'][$index]) ? $this->_definition['values'][$index] : $index;
+        return isset($this->_definition['values'][$index]) ? $this->_definition['values'][$index] : false;
     }
 
     /**
