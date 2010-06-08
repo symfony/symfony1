@@ -352,7 +352,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
                 $value = $this->quote($value);
             }
 
-            $re = '/([=,\(][^\\\']*)(\?)/iuU';
+            $re = '/([=,\(][^\\\']*)(\?)/iU';
 
             $query = preg_replace($re, "\\1 {$value}", $query, 1);
 
