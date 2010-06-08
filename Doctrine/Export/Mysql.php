@@ -160,6 +160,17 @@ class Doctrine_Export_Mysql extends Doctrine_Export
 
         // add all indexes
         if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            // Case Insensitive checking for duplicate indexes...
+            $dupes = array();
+            foreach ($options['indexes'] as $key => $index) {
+                if (in_array(strtolower($key), $dupes)) {
+                    unset($options['indexes'][$key]);
+                } else {
+                    $dupes[] = strtolower($key);
+                }
+            }
+            unset($dupes);
+
             foreach($options['indexes'] as $index => $definition) {
                 $queryFields .= ', ' . $this->getIndexDeclaration($index, $definition);
             }
