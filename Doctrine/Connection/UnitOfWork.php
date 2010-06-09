@@ -94,6 +94,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         break;
                 }
 
+                $aliasesUnlinkInDb = array();
+
                 if ($isValid) {
                     // NOTE: what about referential integrity issues?
                     foreach ($record->getPendingDeletes() as $pendingDelete) {
@@ -103,8 +105,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     foreach ($record->getPendingUnlinks() as $alias => $ids) {
                         if ($ids === false) {
                             $record->unlinkInDb($alias, array());
+                            $aliasesUnlinkInDb[] = $alias;
                         } else if ($ids) {
                             $record->unlinkInDb($alias, array_keys($ids));
+                            $aliasesUnlinkInDb[] = $alias;
                         }
                     }
                     $record->resetPendingUnlinks();
@@ -128,7 +132,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                             // check that the related object is not an instance of Doctrine_Null
                             if ($obj && ! ($obj instanceof Doctrine_Null)) {
-                                $obj->save($conn);
+                                $processDiff = !in_array($alias, $aliasesUnlinkInDb);
+                                $obj->save($conn, $processDiff);
                             }
                         }
                     }
