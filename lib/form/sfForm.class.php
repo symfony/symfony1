@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 14852 2009-01-17 23:27:45Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfForm.class.php 17023 2009-04-06 06:15:22Z fabien $
  */
 class sfForm implements ArrayAccess
 {
@@ -352,9 +352,10 @@ class sfForm implements ArrayAccess
 
     $this->defaults = array_merge($this->defaults, $form->getDefaults());
 
-    foreach ($form->getWidgetSchema()->getFields() as $field => $widget)
+    $widgets = $form->getWidgetSchema()->getFields();
+    foreach ($form->getWidgetSchema()->getPositions() as $field)
     {
-      $this->widgetSchema[$field] = $widget;
+      $this->widgetSchema[$field] = $widgets[$field];
     }
 
     foreach ($form->getValidatorSchema()->getFields() as $field => $validator)
@@ -362,8 +363,8 @@ class sfForm implements ArrayAccess
       $this->validatorSchema[$field] = $validator;
     }
 
-    $this->getWidgetSchema()->setLabels(array_merge($this->getWidgetSchema()->getLabels(),
-                                                    $form->getWidgetSchema()->getLabels()));
+    $this->getWidgetSchema()->setLabels(array_merge($this->getWidgetSchema()->getLabels(), $form->getWidgetSchema()->getLabels()));
+    $this->getWidgetSchema()->setHelps(array_merge($this->getWidgetSchema()->getHelps(), $form->getWidgetSchema()->getHelps()));
 
     $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
     $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
@@ -792,82 +793,43 @@ class sfForm implements ArrayAccess
    */
   static public function convertFileInformation(array $taintedFiles)
   {
-    return self::pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', self::arrayToPaths($taintedFiles)));
-  }
-
-  /**
-   * Converts a string of paths separated by newlines into an array.
-   *
-   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
-   * @author Shaun Inman (www.shauninman.com)
-   *
-   * @param  string $str A string representing an array
-   *
-   * @return Array  An array
-   */
-  static public function pathsToArray($str)
-  {
-    $array = array();
-    $lines = explode("\n", trim($str));
-
-    if (!empty($lines[0]))
+    $files = array();
+    foreach ($taintedFiles as $key => $data)
     {
-      foreach ($lines as $line)
-      {
-        list($path, $value) = explode(' = ', $line);
-
-        $steps = explode('/', $path);
-        array_shift($steps);
-
-        $insertion =& $array;
-
-        foreach ($steps as $step)
-        {
-          if (!isset($insertion[$step]))
-          {
-            $insertion[$step] = array();
-          }
-          $insertion =& $insertion[$step];
-        }
-        $insertion = ctype_digit($value) ? (int) $value : $value;
-      }
+      $files[$key] = self::fixPhpFilesArray($data);
     }
 
-    return $array;
+    return $files;
   }
 
-  /**
-   * Converts an array into a string containing the path to each of its values separated by a newline.
-   *
-   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
-   * @author Shaun Inman (www.shauninman.com)
-   *
-   * @param  Array  $array  An array
-   * @param  string $prefix Prefix for internal use
-   *
-   * @return string A string representing the array
-   */
-  static public function arrayToPaths($array = array(), $prefix = '')
+  static protected function fixPhpFilesArray($data)
   {
-    $str = '';
-    $freshPrefix = $prefix;
+    $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
+    $keys = array_keys($data);
+    sort($keys);
 
-    foreach ($array as $key => $value)
+    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
     {
-      $freshPrefix .= "/{$key}";
-
-      if (is_array($value))
-      {
-        $str .= self::arrayToPaths($value, $freshPrefix);
-        $freshPrefix = $prefix;
-      }
-      else
-      {
-        $str .= "{$prefix}/{$key} = {$value}\n";
-      }
+      return $data;
     }
 
-    return $str;
+    $files = $data;
+    foreach ($fileKeys as $k)
+    {
+      unset($files[$k]);
+    }
+    foreach (array_keys($data['name']) as $key)
+    {
+      $files[$key] = self::fixPhpFilesArray(array(
+        'error'    => $data['error'][$key],
+        'name'     => $data['name'][$key],
+        'type'     => $data['type'][$key],
+        'tmp_name' => $data['tmp_name'][$key],
+        'size'     => $data['size'][$key],
+      ));
+    }
+
+    return $files;
   }
 
   /**

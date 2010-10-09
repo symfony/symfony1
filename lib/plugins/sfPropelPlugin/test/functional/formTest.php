@@ -126,3 +126,29 @@ $b->
   click('submit', array('article' => array('title' => 'foo', 'category_id' => 1)))->
   checkResponseElement('.error_list li', 'An object with the same "title, category_id" already exist.')
 ;
+
+// sfValidatorPropelChoice
+
+// submit a form with an impossible choice validator
+$b->
+  get('/choice/article')->
+  isRequestParameter('module', 'choice')->
+  isRequestParameter('action', 'article')->
+  isStatusCode(200)->
+  click('submit', array('article' => array('title' => 'foobar', 'category_id' => 1, 'author_article_list' => array(1)), 'impossible_validator' => 1))->
+  checkResponseElement('.error_list li', 'Invalid category.')->
+  checkResponseElement('.error_list li', 1)
+;
+
+// sfValidatorPropelChoiceMany
+
+// submit a form with an impossible choice validator
+$b->
+  get('/choice/article')->
+  isRequestParameter('module', 'choice')->
+  isRequestParameter('action', 'article')->
+  isStatusCode(200)->
+  click('submit', array('article' => array('title' => 'foobar', 'category_id' => 1, 'author_article_list' => array(1)), 'impossible_validator_many' => 1))->
+  checkResponseElement('.error_list li', 'Invalid author.')->
+  checkResponseElement('.error_list li', 1)
+;

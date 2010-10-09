@@ -375,8 +375,8 @@ The following are other elements that may require translation:
 
   * Images, text documents, or any other type of assets can also vary according to the user culture. The best example is a piece of text with a special typography that is actually an image. For these, you can create subdirectories named after the user `culture`:
 
-    [php]
-    <?php echo image_tag($sf_user->getCulture().'/myText.gif') ?>
+        [php]
+        <?php echo image_tag($sf_user->getCulture().'/myText.gif') ?>
 
   * Error messages from validation files are automatically output by a `__()`, so you just need to add their translation to a dictionary to have them translated.
   * The default symfony pages (page not found, internal server error, restricted access, and so on) are in English and must be rewritten in an i18n application. You should probably create your own `default` module in your application and use `__()` in its templates. Refer to Chapter 19 to see how to customize these pages.

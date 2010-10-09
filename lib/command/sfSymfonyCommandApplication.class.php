@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 12499 2008-10-31 16:10:07Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 18734 2009-05-28 13:31:33Z fabien $
  */
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
@@ -50,6 +50,8 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    * Runs the current application.
    *
    * @param mixed $options The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($options = null)
   {
@@ -101,7 +103,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $dirs[] = sfConfig::get('sf_lib_dir').'/task';
 
     // require tasks
-    $finder = sfFinder::type('file')->name('*Task.class.php');
+    $finder = sfFinder::type('file')->sort_by_name()->name('*Task.class.php');
     foreach ($finder->in($dirs) as $task)
     {
       require_once $task;

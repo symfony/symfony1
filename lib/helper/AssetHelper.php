@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: AssetHelper.php 9101 2008-05-20 08:38:20Z FabianLange $
+ * @version    SVN: $Id: AssetHelper.php 17078 2009-04-07 11:10:14Z FabianLange $
  */
 
 /**
@@ -417,7 +417,7 @@ function include_metas()
  *    => <meta http-equiv="content-type" content="text/html; charset=utf-8" />
  * </code>
  *
- * <b>Note:</b> Modify the view.yml or use sfWebResponse::addMeta() to change, add or remove HTTP metas.
+ * <b>Note:</b> Modify the view.yml or use sfWebResponse::addHttpMeta() to change, add or remove HTTP metas.
  *
  * @return string XHTML compliant <meta> tag(s)
  * @see    include_metas

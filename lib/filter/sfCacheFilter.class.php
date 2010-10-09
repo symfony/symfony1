@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheFilter.class.php 13122 2008-11-18 11:14:40Z nicolas $
+ * @version    SVN: $Id: sfCacheFilter.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCacheFilter extends sfFilter
 {
@@ -28,8 +28,8 @@ class sfCacheFilter extends sfFilter
   /**
    * Initializes this Filter.
    *
-   * @param sfContext $context      The current application context
-   * @param array     $parameters   An associative array of initialization parameters
+   * @param sfContext $context    The current application context
+   * @param array     $parameters An associative array of initialization parameters
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -70,9 +70,6 @@ class sfCacheFilter extends sfFilter
 
   public function executeBeforeExecution()
   {
-    // register our cache configuration
-    $this->cacheManager->registerConfiguration($this->context->getModuleName());
-
     $uri = $this->routing->getCurrentInternalUri();
 
     if (is_null($uri))

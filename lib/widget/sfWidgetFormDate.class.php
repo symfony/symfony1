@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDate.class.php 15283 2009-02-05 15:19:29Z fabien $
+ * @version    SVN: $Id: sfWidgetFormDate.class.php 16259 2009-03-12 11:42:00Z fabien $
  */
 class sfWidgetFormDate extends sfWidgetForm
 {
@@ -25,6 +25,7 @@ class sfWidgetFormDate extends sfWidgetForm
    *
    *  * format:       The date format string (%month%/%day%/%year% by default)
    *  * years:        An array of years for the year select tag (optional)
+   *                  Be careful that the keys must be the years, and the values what will be displayed to the user
    *  * months:       An array of months for the month select tag (optional)
    *  * days:         An array of days for the day select tag (optional)
    *  * can_be_empty: Whether the widget accept an empty value (true by default)

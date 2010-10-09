@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectRadio.class.php 11541 2008-09-14 16:31:57Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSelectRadio.class.php 17068 2009-04-07 08:24:53Z fabien $
  */
 class sfWidgetFormSelectRadio extends sfWidgetForm
 {
@@ -106,7 +106,8 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
     if ($this->getOption('choices') instanceof sfCallable)
     {
       $callable = $this->getOption('choices')->getCallable();
-      if (is_array($callable))
+      $class = __CLASS__;
+      if (is_array($callable) && $callable[0] instanceof $class)
       {
         $callable[0] = $this;
         $this->setOption('choices', new sfCallable($callable));

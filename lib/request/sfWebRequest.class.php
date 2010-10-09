@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 13416 2008-11-27 12:45:18Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 17975 2009-05-06 09:04:00Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -32,7 +32,8 @@ class sfWebRequest extends sfRequest
     $postParameters         = null,
     $requestParameters      = null,
     $formats                = array(),
-    $format                 = null;
+    $format                 = null,
+    $fixedFileArray         = false;
 
   /**
    * Initializes this sfRequest.
@@ -177,7 +178,62 @@ class sfWebRequest extends sfRequest
    */
   public function getFiles($key = null)
   {
-    return is_null($key) ? $_FILES : (isset($_FILES[$key]) ? $_FILES[$key] : array());
+    if (false === $this->fixedFileArray)
+    {
+      $this->fixedFileArray = self::convertFileInformation($_FILES);
+    }
+
+    return is_null($key) ? $this->fixedFileArray : (isset($this->fixedFileArray[$key]) ? $this->fixedFileArray[$key] : array());
+  }
+
+  /**
+   * Converts uploaded file array to a format following the $_GET and $POST naming convention.
+   *
+   * It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
+   *
+   * @param  array $taintedFiles An array representing uploaded file information
+   *
+   * @return array An array of re-ordered uploaded file information
+   */
+  static public function convertFileInformation(array $taintedFiles)
+  {
+    $files = array();
+    foreach ($taintedFiles as $key => $data)
+    {
+      $files[$key] = self::fixPhpFilesArray($data);
+    }
+
+    return $files;
+  }
+
+  static protected function fixPhpFilesArray($data)
+  {
+    $fileKeys = array('error', 'name', 'size', 'tmp_name', 'type');
+    $keys = array_keys($data);
+    sort($keys);
+
+    if ($fileKeys != $keys || !isset($data['name']) || !is_array($data['name']))
+    {
+      return $data;
+    }
+
+    $files = $data;
+    foreach ($fileKeys as $k)
+    {
+      unset($files[$k]);
+    }
+    foreach (array_keys($data['name']) as $key)
+    {
+      $files[$key] = self::fixPhpFilesArray(array(
+        'error'    => $data['error'][$key],
+        'name'     => $data['name'][$key],
+        'type'     => $data['type'][$key],
+        'tmp_name' => $data['tmp_name'][$key],
+        'size'     => $data['size'][$key],
+      ));
+    }
+
+    return $files;
   }
 
   /**
@@ -452,10 +508,10 @@ class sfWebRequest extends sfRequest
       $protocol = 'http';
     }
 
-    $host = explode(":", $pathArray['HTTP_HOST']);
+    $host = explode(":", $this->getHost());
     if (count($host) == 1)
     {
-      $host[] = $pathArray['SERVER_PORT'];
+      $host[] = isset($pathArray['SERVER_PORT']) ? $pathArray['SERVER_PORT'] : '';
     }
 
     if ($host[1] == $standardPort || empty($host[1]))
@@ -811,8 +867,8 @@ class sfWebRequest extends sfRequest
   /**
    * Gets a cookie value.
    *
-   * @param  string $name     Cookie name
-   * @param  string $default  Default value returned when no cookie with given name is found
+   * @param  string $name          Cookie name
+   * @param  string $defaultValue  Default value returned when no cookie with given name is found
    *
    * @return mixed
    */

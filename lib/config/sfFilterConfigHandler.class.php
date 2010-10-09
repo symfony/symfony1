@@ -16,7 +16,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfFilterConfigHandler.class.php 9400 2008-06-02 00:47:11Z dwhittle $
+ * @version    SVN: $Id: sfFilterConfigHandler.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFilterConfigHandler extends sfYamlConfigHandler
 {
@@ -129,9 +129,9 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a filter statement to the data.
    *
-   * @param string $category    The category name
-   * @param string $class       The filter class name
-   * @param array  $parameters  Filter default parameters
+   * @param string $category   The category name
+   * @param string $class      The filter class name
+   * @param array  $parameters Filter default parameters
    *
    * @return string The PHP statement
    */

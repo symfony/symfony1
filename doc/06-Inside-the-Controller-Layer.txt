@@ -790,9 +790,9 @@ Listing 6-27 - Sample Validation Methods
     [php]
     class mymoduleActions extends sfActions
     {
-      public function validateMyAction($request)
+      public function validateMyAction()
       {
-        return $request->getParameter('id') > 0;
+        return $this->getRequestParameter('id') > 0;
       }
 
       public function handleErrorMyAction()
@@ -1050,4 +1050,4 @@ Summary
 
 In symfony, the controller layer is split into two parts: the front controller, which is the unique entry point to the application for a given environment, and the actions, which contain the page logic. An action has the ability to determine how its view will be executed, by returning one of the `sfView` constants. Inside an action, you can manipulate the different elements of the context, including the request object (`sfRequest`) and the current user session object (`sfUser`).
 
-Combining the power of the session object, the action object, and the security configuration provides a complete security system, with access restriction and credentials. Special `validate()` and `handleError()` methods in actions allow handling of request validation. And if the `preExecute()` and `postExecute()` methods are made for reusability of code inside a module, the filters authorize the same reusability for all the applications by making controller code executed for every request.
+Combining the power of the session object, the action object, and the security configuration, symfony provides a complete security system, with access restriction and credentials. Special `validate()` and `handleError()` methods in actions allow handling of request validation. And if the `preExecute()` and `postExecute()` methods are made for reusability of code inside a module, the filters authorize the same reusability for all the applications by making controller code executed for every request.

@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 11958 2008-10-05 16:51:39Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 18607 2009-05-24 20:41:09Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -121,10 +121,14 @@ class sfNumberFormat
       $number = $number * 100;
     }
 
-    $string = (string) $number;
+    // avoid conversion with exponents
+    // see http://trac.symfony-project.org/ticket/5715
+    $precision = ini_set('precision', 14);
+    $string = $this->fixFloat($number);
+    ini_set('precision', $precision);
 
     $decimal = $this->formatDecimal($string);
-    $integer = $this->formatInteger(abs($number));
+    $integer = $this->formatInteger($this->fixFloat(abs($number)));
 
     $result = (strlen($decimal) > 0) ? $integer.$decimal : $integer;
 
@@ -260,17 +264,20 @@ class sfNumberFormat
       }
       else if (is_int($decimalDigits))
       {
-        $string = $float = round((float) $string, $decimalDigits);
-        if (strpos((string) $float, '.') === false)
+        if (false === $pos = strpos($string, '.'))
         {
           $decimal = str_pad($decimal, $decimalDigits, '0');
         }
         else
         {
-          $decimal = substr($float, strpos($float,'.') + 1);
-          if (strlen($decimal)<$decimalDigits)
+          $decimal = substr($string, $pos + 1);
+          if (strlen($decimal) <= $decimalDigits)
           {
             $decimal = str_pad($decimal, $decimalDigits, '0');
+          }
+          else
+          {
+            $decimal = substr($decimal, 0, $decimalDigits);
           }
         }
       }
@@ -320,5 +327,21 @@ class sfNumberFormat
         $this->formatInfo->setPattern($pattern);
         break;
     }
+  }
+
+  protected function fixFloat($float)
+  {
+    $string = (string) $float;
+
+    if (false === strstr($float, 'E'))
+    {
+      return $string;
+    }
+
+    list($significand, $exp) = explode('E', $string);
+    list(, $decimal) = explode('.', $significand);
+    $exp = str_replace('+', '', $exp) - strlen($decimal);
+
+    return str_replace('.', '', $significand).str_repeat('0', $exp);
   }
 }

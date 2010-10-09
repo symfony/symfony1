@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidget.class.php 10985 2008-08-20 07:26:11Z dwhittle $
+ * @version    SVN: $Id: sfWidget.class.php 17473 2009-04-21 07:59:34Z fabien $
  */
 abstract class sfWidget
 {
@@ -37,14 +37,17 @@ abstract class sfWidget
   {
     $this->configure($options, $attributes);
 
+    $currentOptionKeys = array_keys($this->options);
+    $optionKeys = array_keys($options);
+
     // check option names
-    if ($diff = array_diff(array_keys($options), array_merge(array_keys($this->options), $this->requiredOptions)))
+    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_merge(array_keys($this->options), array_keys($options))))
+    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
     {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }

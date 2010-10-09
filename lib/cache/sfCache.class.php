@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCache.class.php 9084 2008-05-20 01:29:54Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfCache
 {
@@ -38,7 +38,7 @@ abstract class sfCache
   /**
    * Initializes this sfCache instance.
    *
-   * @param  array $options An array of options.
+   * @param array $options An array of options.
    *
    * Available options:
    *
@@ -66,17 +66,17 @@ abstract class sfCache
   /**
    * Gets the cache content for a given key.
    *
-   * @param  string $key      The cache key
-   * @param  mixed  $default  The default value is the key does not exist or not valid anymore
+   * @param string $key     The cache key
+   * @param mixed  $default The default value is the key does not exist or not valid anymore
    *
-   * @return mixed  The data of the cache
+   * @return mixed The data of the cache
    */
   abstract public function get($key, $default = null);
 
   /**
    * Returns true if there is a cache for the given key.
    *
-   * @param  string  $key  The cache key
+   * @param string $key The cache key
    *
    * @return Boolean true if the cache exists, false otherwise
    */
@@ -85,9 +85,9 @@ abstract class sfCache
   /**
    * Saves some data in the cache.
    *
-   * @param string $key       The cache key
-   * @param mixed  $data      The data to put in cache
-   * @param int    $lifetime  The lifetime
+   * @param string $key      The cache key
+   * @param mixed  $data     The data to put in cache
+   * @param int    $lifetime The lifetime
    *
    * @return Boolean true if no problem
    */
@@ -105,7 +105,7 @@ abstract class sfCache
   /**
    * Removes content from the cache that matches the given pattern.
    *
-   * @param  string  $pattern The cache key pattern
+   * @param string $pattern The cache key pattern
    *
    * @return Boolean true if no problem
    *
@@ -116,9 +116,9 @@ abstract class sfCache
   /**
    * Cleans the cache.
    *
-   * @param  string  $mode  The clean mode
-   *                        sfCache::ALL: remove all keys (default)
-   *                        sfCache::OLD: remove all expired keys
+   * @param string $mode The clean mode
+   *                     sfCache::ALL: remove all keys (default)
+   *                     sfCache::OLD: remove all expired keys
    *
    * @return Boolean true if no problem
    */
@@ -145,7 +145,7 @@ abstract class sfCache
   /**
    * Gets many keys at once.
    *
-   * @param  array $keys An array of keys
+   * @param array $keys An array of keys
    *
    * @return array An associative array of data from cache
    */
@@ -163,7 +163,7 @@ abstract class sfCache
   /**
    * Computes lifetime.
    *
-   * @param  integer $lifetime Lifetime in seconds
+   * @param integer $lifetime Lifetime in seconds
    *
    * @return integer Lifetime in seconds
    */
@@ -185,10 +185,10 @@ abstract class sfCache
   /**
    * Gets an option value.
    *
-   * @param  string $name     The option name
-   * @param  mixed  $default  The default value
+   * @param string $name    The option name
+   * @param mixed  $default The default value
    *
-   * @return mixed  The option value
+   * @return mixed The option value
    */
   public function getOption($name, $default = null)
   {
@@ -214,7 +214,7 @@ abstract class sfCache
    *  - * Matches a namespace (foo:*:bar)
    *  - ** Matches one or more namespaces (foo:**:bar)
    *
-   * @param  string $pattern  A pattern
+   * @param string $pattern A pattern
    *
    * @return string A regular expression
    */

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 8988 2008-05-15 20:24:26Z fabien $
+ * @version    SVN: $Id: sfYaml.class.php 18492 2009-05-20 14:19:35Z nicolas $
  */
 class sfYaml
 {
@@ -26,7 +26,7 @@ class sfYaml
    *
    *  Usage:
    *  <code>
-   *   $array = sfYAML::Load('config.yml');
+   *   $array = sfYaml::load('config.yml');
    *   print_r($array);
    *  </code>
    *
@@ -79,7 +79,8 @@ class sfYaml
    * The dump method, when supplied with an array, will do its best
    * to convert the array into friendly YAML.
    *
-   * @param array $array PHP array
+   * @param  array    $array   PHP array
+   * @param  integer  $inline  The level where you switch to inline YAML
    *
    * @return string
    */

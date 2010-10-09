@@ -18,7 +18,7 @@
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id: JavascriptHelper.php 9968 2008-06-29 08:08:39Z fabien $
+ * @version    SVN: $Id: JavascriptHelper.php 17385 2009-04-17 01:11:22Z dwhittle $
  */
 
 /*
@@ -91,7 +91,7 @@
     if ( isset($html_options['confirm']) )
     {
       $confirm = escape_javascript($html_options['confirm']);
-      $html_options['onclick'] = "if(confirm('$confirm')){ $function;}; return false;";
+      $html_options['onclick'] = "if(window.confirm('$confirm')){ $function;}; return false;";
     }
     else
     {

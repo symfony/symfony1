@@ -16,7 +16,7 @@
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfActions.class.php 9044 2008-05-19 06:18:41Z Carl.Vondrick $
+ * @version    SVN: $Id: sfActions.class.php 19911 2009-07-06 07:52:48Z FabianLange $
  */
 abstract class sfActions extends sfAction
 {
@@ -26,7 +26,7 @@ abstract class sfActions extends sfAction
    * This method try to execute the executeXXX() method of the current object where XXX is the
    * defined action name.
    *
-   * @param  sfRequest $request The current sfRequest object
+   * @param sfRequest $request The current sfRequest object
    *
    * @return string    A string containing the view name associated with this action
    *
@@ -38,6 +38,13 @@ abstract class sfActions extends sfAction
   {
     // dispatch action
     $actionToRun = 'execute'.ucfirst($this->getActionName());
+
+    if ($actionToRun === 'execute')
+    {
+      // no action given
+      throw new sfInitializationException(sprintf('sfAction initialization failed for module "%s". There was no action given.', $this->getModuleName()));
+    }
+
     if (!is_callable(array($this, $actionToRun)))
     {
       // action not found

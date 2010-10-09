@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 11700 2008-09-21 10:53:44Z fabien $
+ * @version    $Id: sfCultureInfo.class.php 19912 2009-07-06 08:04:41Z FabianLange $
  * @package    symfony
  * @subpackage i18n
  */
@@ -208,8 +208,8 @@ class sfCultureInfo
       $culture = 'en';
     }
 
-    $this->dataDir = $this->dataDir();
-    $this->dataFileExt = $this->fileExt();
+    $this->dataDir = self::dataDir();
+    $this->dataFileExt = self::fileExt();
 
     $this->setCulture($culture);
 

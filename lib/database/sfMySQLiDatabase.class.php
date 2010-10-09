@@ -19,9 +19,9 @@ class sfMySQLiDatabase extends sfMySQLDatabase
   /**
    * Returns the appropriate connect method.
    *
-   * @param  bool $persistent Whether persistent connections are use or not
-   *                          The MySQLi driver does not support persistent
-   *                          connections so this argument is ignored.
+   * @param bool $persistent Whether persistent connections are use or not
+   *                         The MySQLi driver does not support persistent
+   *                         connections so this argument is ignored.
    *
    * @return string name of connect method
    */
@@ -33,7 +33,7 @@ class sfMySQLiDatabase extends sfMySQLDatabase
   /**
    * Selects the database to be used in this connection
    *
-   * @param  string $database Name of database to be connected
+   * @param string $database Name of database to be connected
    *
    * @return bool true if this was successful
    */

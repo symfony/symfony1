@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorPropelChoiceMany.class.php 11616 2008-09-17 17:24:18Z nicolas $
+ * @version    SVN: $Id: sfValidatorPropelChoiceMany.class.php 15627 2009-02-19 13:35:10Z Kris.Wallsmith $
  */
 class sfValidatorPropelChoiceMany extends sfValidatorPropelChoice
 {
@@ -29,7 +29,7 @@ class sfValidatorPropelChoiceMany extends sfValidatorPropelChoice
     }
 
     $criteria = is_null($this->getOption('criteria')) ? new Criteria() : clone $this->getOption('criteria');
-    $criteria->add($this->getColumn(), $values, Criteria::IN);
+    $criteria->addAnd($this->getColumn(), $values, Criteria::IN);
 
     $objects = call_user_func(array($this->getOption('model').'Peer', 'doSelect'), $criteria, $this->getOption('connection'));
 

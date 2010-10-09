@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 13184 2008-11-20 11:27:28Z nicolas $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 16942 2009-04-03 14:48:17Z fabien $
  */
 class sfWebDebugLogger extends sfLogger
 {
@@ -93,7 +93,7 @@ class sfWebDebugLogger extends sfLogger
     if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
       $this->context->getRequest()->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
-      $response->getStatusCode() == 304 ||
+      '3' == substr($response->getStatusCode(), 0, 1) ||
       $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
       $response->isHeaderOnly()
     )

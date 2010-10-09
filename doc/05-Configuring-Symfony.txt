@@ -47,13 +47,18 @@ Listing 5-1 - YAML Files Forbid Tabs
       mail:
         webmaster: webmaster@example.com
 
-If your parameters are strings starting or ending with spaces, enclose the value in single quotes. If a string parameter contains special characters, also enclose the value in single quotes, as shown in Listing 5-2.
+If your parameters are strings starting or ending with spaces, 
+contain special characters (such as the "octothorpe" (#) or comma),
+or key words such as "no, false, off" (where a string is intended) you must
+enclose the value in single quotes, as shown in Listing 5-2.
 
 Listing 5-2 - Nonstandard Strings Should Be Enclosed in Single Quotes
 
     error1: This field is compulsory
     error2: '  This field is compulsory  '
     error3: 'Don''t leave this field blank'   # Single quotes must be doubled
+    error4: 'Enter a # symbol to define an extension number'
+    i18n:   'no' # if we left off the quotes here, a boolean false would be returned 
 
 You can define long strings in multiple lines, and also multiple-line strings, with the special string headers (> and |) plus an additional indentation. Listing 5-3 demonstrates this convention.
 
@@ -86,11 +91,15 @@ Listing 5-4 - YAML Array Syntax
       - Sammy Sosa
       - Ken Griffey
 
-To define a value as an associative array, or hash, enclose the elements in curly brackets and always insert a space between the key and the value in the `key: value` couple. You can also use the expanded syntax by adding indentation and a carriage return for every new key, as shown in Listing 5-5.
+To define a value as an associative array, or hash, enclose the elements in 
+curly brackets and always insert a spaces between the key and the value in the
+`key: value` pair, and any list items separated by commas. You can also use the
+expanded syntax by adding indentation and a carriage return for every new key,
+as shown in Listing 5-5.
 
 Listing 5-5 - YAML Associative Array Syntax
 
-    # Incorrect syntax, blanks are missing after the colon
+    # Incorrect syntax, blanks are missing after the colons and comma
     mail: {webmaster:webmaster@example.com,contact:contact@example.com}
 
     # Correct shorthand syntax for associative arrays
@@ -101,12 +110,14 @@ Listing 5-5 - YAML Associative Array Syntax
       webmaster: webmaster@example.com
       contact:   contact@example.com
 
-To give a Boolean value, use either `on`, `1`, or `true` for a positive value and `off`, `0`, or `false` for a negative one. Listing 5-6 shows the possible Boolean values.
+To give a Boolean value, you can choose from a number of representations.
+Listing 5-6 shows the complete listing of values that will be converted to
+boolean by the parser, provided they are not enclosed in quotes.
 
 Listing 5-6 - YAML Boolean Values Syntax
 
-    true_values:   [ on, 1, true ]
-    false_values:  [ off, 0, false ]
+    true_values:   [ on, true, +, yes, y ]
+    false_values:  [ off, false, -, no, n ]
 
 Don't hesitate to add comments (starting with the hash mark, `#`) and extra spaces to values to make your YAML files more readable, as shown in Listing 5-7.
 
@@ -243,7 +254,7 @@ If you want to change one of these values, you probably need an additional front
 The main application configuration is stored in files located in the `myproject/apps/frontend/config/` directory:
 
   * `app.yml`: This file should contain the application-specific configuration; that is, global variables defining business or applicative logic specific to an application, which don't need to be stored in a database. Tax rates, shipping fares, and e-mail addresses are often stored in this file. It is empty by default.
-  * `frontendConfiguration.class.php`: This class bootstraps the application, which means that it does all the very basic initializations to allow the application to start. This is where you can customize your directory structure or add application-specific constants (Chapter 19 provides more details). It inherits from the `ProjectConfiguration` class.
+  * `frontendConfiguration.class.php`: This class bootstraps the application, which means that it does all the very basic initializations to allow the application to start. This is where you can customize your directory structure or add application-specific constants (Chapter 19 provides more details). It inherits from the `sfApplicationConfiguration` class.
   * `factories.yml`: Symfony defines its own class to handle the view, the request, the response, the session, and so on. If you want to use your own classes instead, this is where you can specify them. Chapter 17 provides more information.
   * `filters.yml`: Filters are portions of code executed for every request. This file is where you define which filters are to be processed, and it can be overridden for each module. Chapter 6 discusses filters in more detail.
   * `routing.yml`: The routing rules, which allow transforming unreadable and unbookmarkable URLs into "smart" and explicit ones, are stored in this file. For new applications, a few default rules exist. Chapter 9 is all about links and routing.

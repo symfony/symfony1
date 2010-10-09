@@ -24,7 +24,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLogger.class.php 15485 2009-02-13 13:42:55Z fabien $
+ * @version    SVN: $Id: sfLogger.class.php 16344 2009-03-16 16:51:28Z fabien $
  */
 abstract class sfLogger
 {
@@ -112,7 +112,7 @@ abstract class sfLogger
    */
   public function log($message, $priority = self::INFO)
   {
-    if ($this->level < $priority)
+    if ($this->getLogLevel() < $priority)
     {
       return false;
     }

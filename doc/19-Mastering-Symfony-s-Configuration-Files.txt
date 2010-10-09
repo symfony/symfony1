@@ -364,7 +364,7 @@ In addition, use the `setWebDir()` method to change the public area from the usu
     [php]
     class ProjectConfiguration extends sfProjectConfiguration
     {
-      public function configure()
+      public function setup()
       {
         // ...
 

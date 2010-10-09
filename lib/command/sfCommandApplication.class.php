@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandApplication.class.php 9720 2008-06-21 08:04:18Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCommandApplication.class.php 19217 2009-06-13 09:15:28Z fabien $
  */
 abstract class sfCommandApplication
 {
@@ -93,7 +93,8 @@ abstract class sfCommandApplication
       $tasks = array();
       foreach (get_declared_classes() as $class)
       {
-        $r = new Reflectionclass($class);
+        $r = new ReflectionClass($class);
+
         if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
         {
           $tasks[] = new $class($this->dispatcher, $this->formatter);
@@ -163,6 +164,8 @@ abstract class sfCommandApplication
    * Runs the current application.
    *
    * @param mixed $options The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($options = null)
   {

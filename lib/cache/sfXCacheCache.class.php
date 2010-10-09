@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfXCacheCache.class.php 8846 2008-05-07 18:03:12Z fabien $
+ * @version    SVN: $Id: sfXCacheCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfXCacheCache extends sfCache
 {
@@ -47,7 +47,16 @@ class sfXCacheCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    return xcache_isset($this->getOption('prefix').$key) ? substr(xcache_get($this->getOption('prefix').$key), 12) : $default;
+    
+    $set = $this->getBaseValue($key);
+    
+    if (!is_array($set) || !array_key_exists('data', $set))
+    {
+      
+      return $default;
+    }
+    
+    return $set['data'];
   }
 
   /**
@@ -65,7 +74,13 @@ class sfXCacheCache extends sfCache
   {
     $lifetime = $this->getLifetime($lifetime);
 
-    return xcache_set($this->getOption('prefix').$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
+    $set = array(
+      'timeout' => time() + $lifetime,
+      'data'    => $data,
+      'ctime'   => time()
+    );
+    
+    return xcache_set($this->getOption('prefix').$key, $set, $lifetime);
   }
 
   /**
@@ -90,7 +105,7 @@ class sfXCacheCache extends sfCache
 
     for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
     {
-      if (!xcache_clear_cache(XC_TYPE_VAR, $i))
+      if (false === xcache_clear_cache(XC_TYPE_VAR, $i))
       {
         return false;
       }
@@ -104,17 +119,15 @@ class sfXCacheCache extends sfCache
    */
   public function getLastModified($key)
   {
-    if (!xcache_isset($this->getOption('prefix').$key))
+    $set = $this->getBaseValue($key);
+    
+    if (!is_array($set) || !array_key_exists('ctime', $set))
     {
+      
       return 0;
     }
-
-    if ($info = $this->getCacheInfo($key))
-    {
-      return $info['ctime'];
-    }
-
-    return 0;
+    
+    return $set['ctime'];
   }
 
   /**
@@ -122,9 +135,23 @@ class sfXCacheCache extends sfCache
    */
   public function getTimeout($key)
   {
-    return xcache_isset($this->getOption('prefix').$key) ? intval(substr(xcache_get($this->getOption('prefix').$key), 0, 12)) : 0;
+    
+    $set = $this->getBaseValue($key);
+    
+    if (!is_array($set) || !array_key_exists('timeout', $set))
+    {
+      
+      return 0;
+    }
+    
+    return $set['timeout'];
   }
-
+  
+  public function getBaseValue($key)
+  {
+    return xcache_isset($this->getOption('prefix').$key) ? xcache_get($this->getOption('prefix').$key) : null;
+  }
+  
   /**
    * @see sfCache
    */

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateAppTask.class.php 12426 2008-10-30 08:42:02Z FabianLange $
+ * @version    SVN: $Id: sfGenerateAppTask.class.php 17041 2009-04-06 13:37:11Z fabien $
  */
 class sfGenerateAppTask extends sfGeneratorBaseTask
 {
@@ -118,8 +118,8 @@ EOF;
     $finder = sfFinder::type('file')->name('settings.yml');
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
       'NO_SCRIPT_NAME'    => $firstApp ? 'on' : 'off',
-      'CSRF_SECRET'       => sfYamlInline::dump($options['csrf-secret']),
-      'ESCAPING_STRATEGY' => sfYamlInline::dump($options['escaping-strategy']),
+      'CSRF_SECRET'       => sfYamlInline::dump(sfYamlInline::parseScalar($options['csrf-secret'])),
+      'ESCAPING_STRATEGY' => sfYamlInline::dump((boolean) sfYamlInline::parseScalar($options['escaping-strategy'])),
     ));
 
     $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');

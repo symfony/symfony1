@@ -1,232 +1,195 @@
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'id' => '1',  'module' => 'validation',  'action' => 'edit',  'sf_culture' => 'en',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeEdit()"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.46 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=1
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.41 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.39 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (4988 o)
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '1',  'article' =>   array (    'title' => '',    'body' => '',    'online' => '1',    'excerpt' => 'foo excerpt',    'category_id' => '1',    'created_at' => '2009-02-16 16:31',    'end_date' => '',    'book_id' => '',  ),  'save' => 'save',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeSave()"
-Feb 16 16:31:32 symfony [info] {validationActions} Forward to action "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfValidationExecutionFilter} Action validation failed
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.32 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=1
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.25 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.23 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (5401 o)
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'id' => '2',  'module' => 'validation',  'action' => 'edit',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeEdit()"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.31 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=2
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.25 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.22 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (4978 o)
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '2',  'article' =>   array (    'title' => '',    'body' => '',    'excerpt' => 'foo excerpt',    'category_id' => '2',    'created_at' => '2009-02-16 16:31',    'end_date' => '',    'book_id' => '',    'online' => false,  ),  'save' => 'save',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeSave()"
-Feb 16 16:31:32 symfony [info] {validationActions} Forward to action "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfValidationExecutionFilter} Action validation failed
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.30 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=2
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.24 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.21 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (5383 o)
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'id' => '2',  'module' => 'validation',  'action' => 'edit',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeEdit()"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.28 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=2
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.22 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.20 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (4978 o)
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module"
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Initialization
-Feb 16 16:31:32 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '2',  'article' =>   array (    'title' => '',    'body' => '',    'excerpt' => 'foo excerpt',    'category_id' => '2',    'created_at' => '2009-02-16 16:31',    'end_date' => '',    'book_id' => '',    'online' => '1',  ),  'save' => 'save',)
-Feb 16 16:31:32 symfony [info] {sfContext} Initialization
-Feb 16 16:31:32 symfony [info] {sfFrontWebController} Dispatch request
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {validationActions} Call "validationActions->executeSave()"
-Feb 16 16:31:32 symfony [info] {validationActions} Forward to action "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
-Feb 16 16:31:32 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
-Feb 16 16:31:32 symfony [info] {sfValidatorManager} Validation execution
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
-Feb 16 16:31:32 symfony [info] {sfValidationExecutionFilter} Action validation failed
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=?
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.28 ms] SELECT article.ID, article.TITLE, article.BODY, article.ONLINE, article.EXCERPT, article.CATEGORY_ID, article.CREATED_AT, article.END_DATE, article.BOOK_ID FROM article WHERE article.ID=2
-Feb 16 16:31:32 symfony [info] {sfPHPView} Initialize view for "validation/edit"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.23 ms] SELECT category.ID, category.NAME FROM category
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} prepareStatement(): SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfDebugConnection} executeQuery(): [0.21 ms] SELECT book.ID, book.NAME FROM book
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
-Feb 16 16:31:32 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.7/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
-Feb 16 16:31:32 symfony [info] {sfWebResponse} Send content (5401 o)
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfWebRequest} Request parameters array (  'id' => '1',  'module' => 'validation',  'action' => 'edit',)
+Jul 06 19:58:57 symfony [info] {sfContext} Initialization
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:57 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:57 symfony [info] {validationActions} Call "validationActions->executeEdit()"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:57 symfony [info] {sfWebResponse} Send content (4988 o)
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '1',  'article' =>   array (    'title' => '',    'body' => '',    'online' => '1',    'excerpt' => 'foo excerpt',    'category_id' => '1',    'created_at' => '2009-07-06 19:58',    'end_date' => '',    'book_id' => '',  ),  'save' => 'save',)
+Jul 06 19:58:57 symfony [info] {sfContext} Initialization
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:57 symfony [info] {validationActions} Call "validationActions->executeSave()"
+Jul 06 19:58:57 symfony [info] {validationActions} Forward to action "validation/edit"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:57 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:57 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
+Jul 06 19:58:57 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
+Jul 06 19:58:57 symfony [info] {sfValidationExecutionFilter} Action validation failed
+Jul 06 19:58:57 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:57 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:57 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:57 symfony [info] {sfWebResponse} Send content (5401 o)
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:57 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:57 symfony [info] {sfWebRequest} Request parameters array (  'id' => '2',  'module' => 'validation',  'action' => 'edit',)
+Jul 06 19:58:57 symfony [info] {sfContext} Initialization
+Jul 06 19:58:57 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:57 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:57 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:57 symfony [info] {validationActions} Call "validationActions->executeEdit()"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfWebResponse} Send content (4978 o)
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '2',  'article' =>   array (    'title' => '',    'body' => '',    'excerpt' => 'foo excerpt',    'category_id' => '2',    'created_at' => '2009-07-06 19:58',    'end_date' => '',    'book_id' => '',    'online' => false,  ),  'save' => 'save',)
+Jul 06 19:58:58 symfony [info] {sfContext} Initialization
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:58 symfony [info] {validationActions} Call "validationActions->executeSave()"
+Jul 06 19:58:58 symfony [info] {validationActions} Forward to action "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:58 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
+Jul 06 19:58:58 symfony [info] {sfValidationExecutionFilter} Action validation failed
+Jul 06 19:58:58 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfWebResponse} Send content (5383 o)
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Request parameters array (  'id' => '2',  'module' => 'validation',  'action' => 'edit',)
+Jul 06 19:58:58 symfony [info] {sfContext} Initialization
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:58 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:58 symfony [info] {validationActions} Call "validationActions->executeEdit()"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfWebResponse} Send content (4978 o)
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/symfony/:action/*"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module"
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Connect "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Initialization
+Jul 06 19:58:58 symfony [info] {sfPatternRouting} Match route [default] for "/:module/:action/*"
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Request parameters array (  'module' => 'validation',  'action' => 'save',  'id' => '2',  'article' =>   array (    'title' => '',    'body' => '',    'excerpt' => 'foo excerpt',    'category_id' => '2',    'created_at' => '2009-07-06 19:58',    'end_date' => '',    'book_id' => '',    'online' => '1',  ),  'save' => 'save',)
+Jul 06 19:58:58 symfony [info] {sfContext} Initialization
+Jul 06 19:58:58 symfony [info] {sfFrontWebController} Dispatch request
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:58 symfony [info] {validationActions} Call "validationActions->executeSave()"
+Jul 06 19:58:58 symfony [info] {validationActions} Forward to action "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfFakeRenderingFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfCommonFilter"
+Jul 06 19:58:58 symfony [info] {sfFilterChain} Executing filter "sfValidationExecutionFilter"
+Jul 06 19:58:58 symfony [info] {sfValidatorManager} Validation execution
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Error in form for parameter "article{title}" (with message "required")
+Jul 06 19:58:58 symfony [info] {sfWebRequest} Error in form for parameter "article{body}" (with message "required")
+Jul 06 19:58:58 symfony [info] {sfValidationExecutionFilter} Action validation failed
+Jul 06 19:58:58 symfony [info] {sfPHPView} Initialize view for "validation/edit"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/editSuccess.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_header"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_header.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_messages"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_messages.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_form"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_form.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_actions"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_actions.php"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Initialize view for "validation/_edit_footer"
+Jul 06 19:58:58 symfony [info] {sfPartialView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/cache/backend/test/modules/autoValidation/templates/_edit_footer.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Decorate content with "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfPHPView} Render "/var/www/production/sfweb/www/cache/symfony-for-release/1.1.8/lib/plugins/sfPropelPlugin/test/functional/fixtures/apps/backend/templates/layout.php"
+Jul 06 19:58:58 symfony [info] {sfWebResponse} Send content (5401 o)

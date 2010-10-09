@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.1.7');
+define('SYMFONY_VERSION', '1.1.8');
 
 /**
  * sfCoreAutoload class.
@@ -22,7 +22,7 @@ define('SYMFONY_VERSION', '1.1.7');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 15529 2009-02-16 15:28:53Z nicolas $
+ * @version    SVN: $Id: sfCoreAutoload.class.php 19938 2009-07-06 16:40:09Z nicolas $
  */
 class sfCoreAutoload
 {
@@ -82,6 +82,7 @@ class sfCoreAutoload
   static public function unregister()
   {
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
+    self::$registered = false;
   }
 
   /**

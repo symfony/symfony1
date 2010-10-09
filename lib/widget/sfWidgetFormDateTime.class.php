@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDateTime.class.php 9173 2008-05-22 06:50:20Z dwhittle $
+ * @version    SVN: $Id: sfWidgetFormDateTime.class.php 15962 2009-03-03 16:02:15Z hartym $
  */
 class sfWidgetFormDateTime extends sfWidgetForm
 {
@@ -58,7 +58,6 @@ class sfWidgetFormDateTime extends sfWidgetForm
    */
   function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    // date
     $date = $this->getDateWidget($attributes)->render($name, $value);
 
     if (!$this->getOption('with_time'))

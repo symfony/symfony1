@@ -2,7 +2,11 @@ Chapter 10 - Forms
 ==================
 
 >**Caution**
->This chapter describes the way forms were implemented in symfony 1.0. For compatibility reason and because of the admin generator feature still uses this system, this information is also valuable for symfony 1.1. However, if you start a new project with symfony 1.1, you also want to read the "symfony Forms in Action" book for more information on the new form framework.
+>This chapter describes the way forms were implemented in symfony 1.0. For
+compatibility reasons and because the admin generator feature still uses
+this system, this information is also valuable for symfony 1.1. However, if
+you start a new project with symfony 1.1, you should also read the "symfony 
+Forms in Action" book for more information on the new forms framework.
 
 When writing templates, much of a developer's time is devoted to forms. Despite this, forms are generally poorly designed. Since much attention is required to deal with default values, formatting, validation, repopulation, and form handling in general, some developers tend to skim over some important details in the process. Accordingly, symfony devotes special attention to this topic. This chapter describes the tools that automate many of these requirements while speeding up forms development:
 

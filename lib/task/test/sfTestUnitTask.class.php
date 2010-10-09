@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestUnitTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfTestUnitTask.class.php 18136 2009-05-11 11:57:32Z fabien $
  */
 class sfTestUnitTask extends sfBaseTask
 {
@@ -76,7 +76,7 @@ EOF;
       $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
       $h->register($finder->in($h->base_dir));
 
-      $h->run();
+      return $h->run() ? 0 : 1;
     }
   }
 }

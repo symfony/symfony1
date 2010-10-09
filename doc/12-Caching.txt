@@ -304,6 +304,10 @@ Listing 12-8 - Clearing the Cache
     // Erase only the configuration cache of the frontend application and the prod environment
     > php symfony cache:clear --app=frontend --type=config --env=prod
 
+>**NOTE**
+> Under Microsoft Windows, you may have to encapsulate options into double-quotes:
+>     > php symfony cache:clear "--app=frontend"
+
 ### Clearing Selective Parts of the Cache
 
 When the database is updated, the cache of the actions related to the modified data must be cleared. You could clear the whole cache, but that would be a waste for all the existing cached actions that are unrelated to the model change. This is where the `remove()` method of the `sfViewCacheManager` object applies. It expects an internal URI as argument (the same kind of argument you would provide to a `link_to()`), and removes the related action cache.

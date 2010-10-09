@@ -199,7 +199,7 @@ Listing 15-3 - Testing Methods of the `lime_test` Object, in `test/unit/exampleT
     }
     catch (Exception $e)
     {
-      $t->pass('exception catched successfully');
+      $t->pass('exception caught successfully');
     }
 
     if (!isset($foobar))

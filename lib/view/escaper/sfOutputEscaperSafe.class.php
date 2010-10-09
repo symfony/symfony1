@@ -14,9 +14,9 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfOutputEscaperSafe.class.php 9047 2008-05-19 08:43:05Z FabianLange $
+ * @version    SVN: $Id: sfOutputEscaperSafe.class.php 16553 2009-03-24 16:49:06Z Kris.Wallsmith $
  */
-class sfOutputEscaperSafe
+class sfOutputEscaperSafe extends ArrayIterator
 {
   protected
     $value = null;
@@ -29,11 +29,41 @@ class sfOutputEscaperSafe
   public function __construct($value)
   {
     $this->value = $value;
+
+    if (is_array($value) || is_object($value))
+    {
+      parent::__construct($value);
+    }
   }
 
   public function __toString()
   {
-    return $this->value;
+    return (string) $this->value;
+  }
+
+  public function __get($key)
+  {
+    return $this->value->$key;
+  }
+
+  public function __set($key, $value)
+  {
+    $this->value->$key = $value;
+  }
+
+  public function __call($method, $arguments)
+  {
+    return call_user_func_array(array($this->value, $method), $arguments);
+  }
+
+  public function __isset($key)
+  {
+    return isset($this->value->$key);
+  }
+
+  public function __unset($key)
+  {
+    unset($this->value->$key);
   }
 
   /**

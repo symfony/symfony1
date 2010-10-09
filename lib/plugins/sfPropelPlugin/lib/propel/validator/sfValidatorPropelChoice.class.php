@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorPropelChoice.class.php 11616 2008-09-17 17:24:18Z nicolas $
+ * @version    SVN: $Id: sfValidatorPropelChoice.class.php 15627 2009-02-19 13:35:10Z Kris.Wallsmith $
  */
 class sfValidatorPropelChoice extends sfValidatorBase
 {
@@ -45,7 +45,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
   protected function doClean($value)
   {
     $criteria = is_null($this->getOption('criteria')) ? new Criteria() : clone $this->getOption('criteria');
-    $criteria->add($this->getColumn(), $value);
+    $criteria->addAnd($this->getColumn(), $value);
 
     $object = call_user_func(array($this->getOption('model').'Peer', 'doSelectOne'), $criteria, $this->getOption('connection'));
 

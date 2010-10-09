@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 11776 2008-09-25 10:11:40Z fabien $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 15805 2009-02-26 10:05:08Z fabien $
  */
 class sfProjectConfiguration
 {
@@ -49,7 +49,6 @@ class sfProjectConfiguration
     $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
 
     ini_set('magic_quotes_runtime', 'off');
-    ini_set('register_globals', 'off');
 
     sfConfig::set('sf_symfony_lib_dir', $this->symfonyLibDir);
 

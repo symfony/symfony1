@@ -18,7 +18,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
  * @author     Dustin Whittle <dustin.whittle@symfony-project.com>
- * @version    SVN: $Id: sfPDODatabase.class.php 9372 2008-05-29 18:35:54Z dwhittle $
+ * @version    SVN: $Id: sfPDODatabase.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfPDODatabase extends sfDatabase
 {
@@ -66,7 +66,7 @@ class sfPDODatabase extends sfDatabase
     }
 
     // lets generate exceptions instead of silent failures
-    if(sfConfig::get('sf_debug'))
+    if (sfConfig::get('sf_debug'))
     {
       $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
@@ -77,21 +77,21 @@ class sfPDODatabase extends sfDatabase
 
     // compatability
     $compatability = $this->getParameter('compat');
-    if($compatability)
+    if ($compatability)
     {
       $this->connection->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
     }
 
     // nulls
     $nulls = $this->getParameter('nulls');
-    if($nulls)
+    if ($nulls)
     {
       $this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);
     }
 
     // auto commit
     $autocommit = $this->getParameter('autocommit');
-    if($autocommit)
+    if ($autocommit)
     {
       $this->connection->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
     }

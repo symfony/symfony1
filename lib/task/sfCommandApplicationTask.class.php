@@ -14,13 +14,18 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandApplicationTask.class.php 9652 2008-06-18 21:38:48Z nicolas $
+ * @version    SVN: $Id: sfCommandApplicationTask.class.php 19112 2009-06-10 06:32:12Z fabien $
  */
 abstract class sfCommandApplicationTask extends sfTask
 {
   protected
     $commandApplication = null;
 
+  /**
+   * Sets the command application instance for this task.
+   *
+   * @param sfCommandApplication $commandApplication A sfCommandApplication instance
+   */
   public function setCommandApplication(sfCommandApplication $commandApplication = null)
   {
     $this->commandApplication = $commandApplication;

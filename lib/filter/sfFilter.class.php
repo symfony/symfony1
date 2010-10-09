@@ -16,7 +16,7 @@
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfFilter.class.php 9087 2008-05-20 02:00:40Z Carl.Vondrick $
+ * @version    SVN: $Id: sfFilter.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfFilter
 {
@@ -123,7 +123,7 @@ abstract class sfFilter
    *
    * <code>$this->getParameterHolder()->has()</code>
    *
-   * @param string $name  The key name
+   * @param string $name The key name
    *
    * @return boolean true if the given key exists, false otherwise
    *

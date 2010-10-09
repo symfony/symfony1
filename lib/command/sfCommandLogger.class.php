@@ -13,15 +13,15 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandLogger.class.php 15485 2009-02-13 13:42:55Z fabien $
+ * @version    SVN: $Id: sfCommandLogger.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCommandLogger extends sfConsoleLogger
 {
   /**
    * Initializes this logger.
    *
-   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
-   * @param  array             $options     An array of options.
+   * @param sfEventDispatcher $dispatcher A sfEventDispatcher instance
+   * @param array             $options    An array of options.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {

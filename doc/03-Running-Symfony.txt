@@ -113,11 +113,17 @@ The `_dir` variables are part of your PEAR configuration. To see their values, t
 
 ### Checking Out symfony from the SVN Repository
 
-For production servers, or when PEAR is not an option, you can download the latest version of the symfony libraries directly from the symfony Subversion repository by requesting a checkout:
+For production servers, or when PEAR is not an option, you can download the 
+latest version of the symfony libraries directly from the symfony Subversion
+repository by requesting a checkout:
 
     > mkdir /path/to/symfony
     > cd /path/to/symfony
     > svn checkout http://svn.symfony-project.com/tags/RELEASE_1_1_0/ .
+
+>**TIP**
+>For the latest stable bug-fix release on the 1.1 branch (1.1.x) refer to 
+>([http://www.symfony-project.org/installation/1_1](http://www.symfony-project.org/installation/1_1))
 
 The `symfony` command, available only for PEAR installations, is a call to the `/path/to/symfony/data/bin/symfony` script. So the following would be the equivalent to the `symfony -V` command for an SVN installation:
 
@@ -141,7 +147,9 @@ If you chose an SVN installation, you probably already have an existing symfony 
 Chapter 19 proposes other ways to link a project with a symfony installation (including symbolic links and relative paths).
 
 >**TIP**
->Alternatively, you can also download the PEAR package ([http://pear.symfony-project.com/get/symfony-1.1.0.tgz](http://pear.symfony-project.com/get/symfony-1.1.0.tgz)) and unpack it somewhere. You will have the same result as with a checkout.
+>Alternatively, you can also download the PEAR package. Refer to  
+>([http://www.symfony-project.org/installation/1_1](http://www.symfony-project.org/installation/1_1))
+>for latest 1.1 release. You will have the same result as with a checkout.
 
 Setting Up an Application
 -------------------------

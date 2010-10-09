@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileCache.class.php 15511 2009-02-16 08:31:53Z fabien $
+ * @version    SVN: $Id: sfFileCache.class.php 16899 2009-04-02 06:47:33Z fabien $
  */
 class sfFileCache extends sfCache
 {
@@ -268,7 +268,7 @@ class sfFileCache extends sfCache
       mkdir(dirname($path), 0777, true);
     }
 
-    $tmpFile = $path . '.' . getmypid();
+    $tmpFile = tempnam(dirname($path), basename($path));
 
     if (!$fp = @fopen($tmpFile, 'wb'))
     {
@@ -280,9 +280,18 @@ class sfFileCache extends sfCache
     @fwrite($fp, $data);
     @fclose($fp);
 
-    chmod($tmpFile, 0666);
-    @unlink($path);
-    rename($tmpFile, $path);
+    // Hack from Agavi (http://trac.agavi.org/changeset/3979)
+    // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
+    // so we simply assume that when rename() fails that we are on win32 and try to use copy()
+    if (!@rename($tmpFile, $path))
+    {
+      if (copy($tmpFile, $path))
+      {
+        unlink($tmpFile);
+      }
+    }
+
+    chmod($path, 0666);
     umask($current_umask);
 
     return true;

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPluginBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginInstallTask.class.php 10198 2008-07-10 11:55:29Z fabien $
+ * @version    SVN: $Id: sfPluginInstallTask.class.php 15796 2009-02-26 09:22:31Z fabien $
  */
 class sfPluginInstallTask extends sfPluginBaseTask
 {
@@ -73,10 +73,6 @@ You can specify another channel with the [channel|COMMENT] option:
 
   [./symfony plugin:install --channel=mypearchannel sfGuardPlugin|INFO]
   [./symfony plugin:install -c mypearchannel sfGuardPlugin|INFO]
-
-Or you can use the [channel/package|INFO] notation:
-
-  [./symfony plugin:install mypearchannel/sfGuardPlugin|INFO]
 
 You can also install PEAR packages hosted on a website:
 

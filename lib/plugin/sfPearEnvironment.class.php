@@ -16,7 +16,6 @@ require_once 'PEAR.php';
 require_once 'PEAR/Config.php';
 require_once 'PEAR/Registry.php';
 require_once 'PEAR/Command.php';
-require_once 'PEAR/Remote.php';
 require_once 'PEAR/PackageFile/v2/rw.php';
 require_once 'PEAR/Dependency2.php';
 require_once 'PEAR/Installer.php';
@@ -27,7 +26,7 @@ require_once 'PEAR/Installer.php';
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPearEnvironment.class.php 9131 2008-05-21 04:12:00Z Carl.Vondrick $
+ * @version    SVN: $Id: sfPearEnvironment.class.php 19914 2009-07-06 10:06:16Z fabien $
  */
 class sfPearEnvironment
 {

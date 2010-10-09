@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginManager.class.php 13634 2008-12-02 14:09:52Z fabien $
+ * @version    SVN: $Id: sfPluginManager.class.php 18030 2009-05-07 07:21:10Z fabien $
  */
 class sfPluginManager
 {
@@ -338,7 +338,7 @@ class sfPluginManager
         {
           try
           {
-            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel']));
+            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel'], 'install_deps' => true));
           }
           catch (sfException $e)
           {
@@ -348,7 +348,7 @@ class sfPluginManager
           continue;
         }
 
-        throw new sfPluginDependencyException(sprintf('Unable to install plugin "%s" (version %s) because it depends on plugin "%s" which is not installed.', $plugin, $version, $dependency['name']));
+        throw new sfPluginDependencyException(sprintf('Unable to install plugin "%s" (version %s) because it depends on plugin "%s" which is not installed (install dependencies by hand or use the --install_deps option for automatic installation).', $plugin, $version, $dependency['name']));
       }
     }
   }

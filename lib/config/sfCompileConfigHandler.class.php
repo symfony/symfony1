@@ -17,7 +17,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfCompileConfigHandler.class.php 9085 2008-05-20 01:53:23Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCompileConfigHandler.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCompileConfigHandler extends sfYamlConfigHandler
 {
@@ -66,7 +66,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
                                                      '/^\s*\?>/m'       => ''));
 
       // replace windows and mac format with unix format
-      $contents = str_replace("\r",  "\n", $contents);
+      $contents = str_replace("\r", "\n", $contents);
 
       // replace multiple new lines with a single newline
       $contents = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $contents);

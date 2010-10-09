@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfData.class.php 9083 2008-05-20 01:25:36Z Carl.Vondrick $
+ * @version    SVN: $Id: sfData.class.php 15803 2009-02-26 09:48:55Z fabien $
  */
 
 abstract class sfData
@@ -108,7 +108,7 @@ abstract class sfData
     }
     else if (is_dir($directory_or_file))
     {
-      $fixture_files = sfFinder::type('file')->name('*.yml')->in($directory_or_file);
+      $fixture_files = sfFinder::type('file')->name('*.yml')->sort_by_name()->in($directory_or_file);
     }
     else
     {

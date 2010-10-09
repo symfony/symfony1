@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 12813 2008-11-09 10:23:47Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 17587 2009-04-24 18:41:19Z Kris.Wallsmith $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -218,7 +218,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
-   * Sets the labels.
+   * Gets the labels.
    *
    * @return array An array of label names
    */
@@ -326,6 +326,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     if (is_null($widget = $this[$name]))
     {
       throw new InvalidArgumentException(sprintf('The field named "%s" does not exist.', $name));
+    }
+
+    if ($widget instanceof sfWidgetFormSchema && $errors && !$errors instanceof sfValidatorErrorSchema)
+    {
+      $errors = new sfValidatorErrorSchema($errors->getValidator(), array($errors));
     }
 
     // we clone the widget because we want to change the id format temporarily

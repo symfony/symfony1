@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandManager.class.php 9801 2008-06-23 15:12:05Z fabien $
+ * @version    SVN: $Id: sfCommandManager.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCommandManager
 {
@@ -205,7 +205,7 @@ class sfCommandManager
   /**
    * Returns the argument value for a given argument name.
    *
-   * @param  string $name The argument name
+   * @param string $name The argument name
    *
    * @return mixed The argument value
    */
@@ -232,7 +232,7 @@ class sfCommandManager
   /**
    * Returns the option value for a given option name.
    *
-   * @param  string $name The option name
+   * @param string $name The option name
    *
    * @return mixed The option value
    */
@@ -328,7 +328,7 @@ class sfCommandManager
   {
     if (false !== strpos($argument, '='))
     {
-      list($name, $value) = explode('=', $argument);
+      list($name, $value) = explode('=', $argument, 2);
 
       if (!$this->optionSet->hasOption($name))
       {

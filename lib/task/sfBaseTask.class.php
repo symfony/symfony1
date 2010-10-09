@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBaseTask.class.php 12867 2008-11-10 08:36:15Z fabien $
+ * @version    SVN: $Id: sfBaseTask.class.php 16558 2009-03-24 18:17:58Z Kris.Wallsmith $
  */
 abstract class sfBaseTask extends sfCommandApplicationTask
 {
@@ -26,7 +26,8 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    */
   protected function doRun(sfCommandManager $commandManager, $options)
   {
-    $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
+    $event = $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
+    $options = $event->getReturnValue();
 
     $this->process($commandManager, $options);
 
@@ -47,8 +48,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
       require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
 
-      $isDebug = $commandManager->getOptionSet()->hasOption('debug') ? $commandManager->getOptionValue('debug') : true;
-      $this->configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $isDebug, null, $this->dispatcher);
+      $this->configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, true, null, $this->dispatcher);
     }
     else
     {
