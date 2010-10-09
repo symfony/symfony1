@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatedFile.class.php 26264 2010-01-06 07:47:56Z fabien $
+ * @version    SVN: $Id: sfValidatedFile.class.php 30915 2010-09-15 17:10:37Z Kris.Wallsmith $
  */
 class sfValidatedFile
 {
@@ -573,6 +573,7 @@ class sfValidatedFile
       'image/x-bmp' => 'bmp',
       'image/x-cmu-raster' => 'ras',
       'image/x-freehand' => 'fh4',
+      'image/x-ms-bmp' => 'bmp',
       'image/x-png' => 'png',
       'image/x-portable-anymap' => 'pnm',
       'image/x-portable-bitmap' => 'pbm',

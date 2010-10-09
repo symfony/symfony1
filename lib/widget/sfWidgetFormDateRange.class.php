@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDateRange.class.php 24015 2009-11-16 13:33:34Z bschussek $
+ * @version    SVN: $Id: sfWidgetFormDateRange.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormDateRange extends sfWidgetForm
 {
@@ -42,6 +42,8 @@ class sfWidgetFormDateRange extends sfWidgetForm
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The date displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

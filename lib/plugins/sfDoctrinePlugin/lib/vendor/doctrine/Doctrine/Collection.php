@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Collection.php 7490 2010-03-29 19:53:27Z jwage $
+ *  $Id: Collection.php 7686 2010-08-24 16:54:40Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 7490 $
+ * @version     $Revision: 7686 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Collection extends Doctrine_Access implements Countable, IteratorAggregate, Serializable
@@ -152,7 +152,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         $vars = get_object_vars($this);
 
         unset($vars['reference']);
-        unset($vars['reference_field']);
+        unset($vars['referenceField']);
         unset($vars['relation']);
         unset($vars['expandable']);
         unset($vars['expanded']);
@@ -728,8 +728,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         $collection = $this;
         $table = $collection->getTable();
 
-        if ( ! $table->hasTemplate('NestedSet')) {
-            throw new Doctrine_Exception('Cannot hydrate model that does not have the NestedSet behavior enabled');
+        if ( ! $table->isTree() || ! $table->hasColumn('level')) {
+            throw new Doctrine_Exception('Cannot hydrate model that does not implements Tree behavior with `level` column');
         }
 
         // Trees mapped
@@ -908,6 +908,41 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
 
             foreach ($this->getData() as $key => $record) {
                 $record->save($conn);
+            }
+
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Replaces all records of this collection and processes the 
+     * difference of the last snapshot and the current data
+     *
+     * @param Doctrine_Connection $conn     optional connection parameter
+     * @return Doctrine_Collection
+     */
+    public function replace(Doctrine_Connection $conn = null, $processDiff = true)
+    {
+        if ($conn == null) {
+            $conn = $this->_table->getConnection();
+        }
+
+        try {
+            $conn->beginInternalTransaction();
+
+            $conn->transaction->addCollection($this);
+
+            if ($processDiff) {
+                $this->processDiff();
+            }
+
+            foreach ($this->getData() as $key => $record) {
+                $record->replace($conn);
             }
 
             $conn->commit();
