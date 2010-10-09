@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileCache.class.php 14288 2008-12-23 20:20:36Z FabianLange $
+ * @version    SVN: $Id: sfFileCache.class.php 15261 2009-02-04 17:51:00Z FabianLange $
  */
 class sfFileCache extends sfCache
 {
@@ -278,21 +278,21 @@ class sfFileCache extends sfCache
       mkdir(dirname($path), 0777, true);
     }
 
-    if (!$fp = @fopen($path, 'wb'))
+    $tmpFile = $path . '.' . getmypid();
+
+    if (!$fp = @fopen($tmpFile, 'wb'))
     {
-      throw new sfCacheException(sprintf('Unable to write cache file "%s".', $path));
+       throw new sfCacheException(sprintf('Unable to write cache file "%s".', $tmpFile));
     }
 
-    @flock($fp, LOCK_EX);
     @fwrite($fp, str_pad($timeout, 12, 0, STR_PAD_LEFT));
     @fwrite($fp, str_pad(time(), 12, 0, STR_PAD_LEFT));
     @fwrite($fp, $data);
-    @flock($fp, LOCK_UN);
     @fclose($fp);
 
-    // change file mode
-    chmod($path, 0666);
-
+    chmod($tmpFile, 0666);
+    @unlink($path);
+    rename($tmpFile, $path);
     umask($current_umask);
 
     return true;

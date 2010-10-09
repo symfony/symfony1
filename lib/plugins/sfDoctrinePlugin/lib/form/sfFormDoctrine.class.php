@@ -229,7 +229,7 @@ abstract class sfFormDoctrine extends sfForm
 
     foreach ($forms as $name => $form)
     {
-      if (!is_array($values[$name]))
+      if (!isset($values[$name]) || !is_array($values[$name]))
       {
         continue;
       }
@@ -389,8 +389,8 @@ abstract class sfFormDoctrine extends sfForm
     {
       if ($form instanceof sfFormDoctrine)
       {
-        $form->saveEmbeddedForms($con);
         $form->getObject()->save($con);
+        $form->saveEmbeddedForms($con);
       }
       else
       {

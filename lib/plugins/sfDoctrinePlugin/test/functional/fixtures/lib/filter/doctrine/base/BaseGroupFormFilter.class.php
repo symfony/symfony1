@@ -15,8 +15,8 @@ class BaseGroupFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'name'             => new sfWidgetFormFilterInput(),
-      'permissions_list' => new sfWidgetFormDoctrineSelectMany(array('model' => 'Permission')),
-      'users_list'       => new sfWidgetFormDoctrineSelectMany(array('model' => 'User')),
+      'permissions_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Permission')),
+      'users_list'       => new sfWidgetFormDoctrineChoiceMany(array('model' => 'User')),
     ));
 
     $this->setValidators(array(

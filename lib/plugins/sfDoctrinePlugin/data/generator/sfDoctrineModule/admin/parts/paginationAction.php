@@ -33,7 +33,11 @@
 <?php else: ?>
     $query = Doctrine::getTable('<?php echo $this->getModelClass() ?>')
       ->createQuery('a');
-    $query = Doctrine::getTable('<?php echo $this->getModelClass() ?>')->$tableMethod($query);
+
+    if ($tableMethod)
+    {
+      $query = Doctrine::getTable('<?php echo $this->getModelClass() ?>')->$tableMethod($query);
+    }
 <?php endif; ?>
 
     $this->addSortQuery($query);

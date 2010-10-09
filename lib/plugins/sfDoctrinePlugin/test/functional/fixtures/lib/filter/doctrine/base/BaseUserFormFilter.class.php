@@ -17,8 +17,8 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
       'username'         => new sfWidgetFormFilterInput(),
       'password'         => new sfWidgetFormFilterInput(),
       'test'             => new sfWidgetFormFilterInput(),
-      'groups_list'      => new sfWidgetFormDoctrineSelectMany(array('model' => 'Group')),
-      'permissions_list' => new sfWidgetFormDoctrineSelectMany(array('model' => 'Permission')),
+      'groups_list'      => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Group')),
+      'permissions_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Permission')),
     ));
 
     $this->setValidators(array(
