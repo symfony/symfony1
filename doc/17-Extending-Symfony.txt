@@ -291,7 +291,7 @@ Listing 17-12 - Replacing `callMixin()` by a Custom Loop
     [php]
     class Income
     {
-      protected $amout = 0;
+      protected $amount = 0;
 
       public function calculateTaxes($rate = 0)
       {

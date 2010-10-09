@@ -454,7 +454,7 @@ Listing 9-17 shows the process of changing the external URL format for an articl
 Listing 9-17 - Changing the External URL Format for an `article/read` Action
 
     [php]
-    <?php echo url_for('my article', 'article/read?id=123) ?>
+    <?php echo url_for('my article', 'article/read?id=123') ?>
      => /article/read/id/123       // Default formatting
 
     // To change it to /article/123, add a new rule at the beginning

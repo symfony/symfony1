@@ -111,7 +111,7 @@ Listing 10-2 - Standard Form Helpers Syntax
     // Dropdown list with multiple selection (selected values can be an array)
     <?php echo select_tag('payment', options_for_select(
       array('Visa' => 'Visa', 'Eurocard' => 'Eurocard', 'Mastercard' => 'Mastercard'),
-      array('Visa', 'Mastecard'),
+      array('Visa', 'Mastercard'),
     ), array('multiple' => true))) ?>
 
      => <select name="payment[]" id="payment" multiple="multiple">
@@ -122,7 +122,7 @@ Listing 10-2 - Standard Form Helpers Syntax
     // Drop-down list with multiple selection (selected values can be an array)
     <?php echo select_tag('payment', options_for_select(
       array('Visa' => 'Visa', 'Eurocard' => 'Eurocard', 'Mastercard' => 'Mastercard'),
-      array('Visa', 'Mastecard')
+      array('Visa', 'Mastercard')
     ), 'multiple=multiple') ?>
      => <select name="payment" id="payment" multiple="multiple">
           <option value="Visa" selected="selected">	
@@ -851,9 +851,9 @@ In this example, the validator will look in the database for a record of class `
 
     fields:
       image:
+        file:       True
         required:
           msg:      Please upload an image file
-          file:     True
         sfFileValidator:
           mime_types:
             - 'image/jpeg'

@@ -19,7 +19,7 @@ Listing 8-1 - Accessors Mask the Actual Table Structure in a Model Class
     [php]
     public function getName()
     {
-      return $this->getFirstName.' '.$this->getLastName();
+      return $this->getFirstName().' '.$this->getLastName();
     }
 
 All the repeated data-access functions and the business logic of the data itself can be kept in such objects. Suppose you have a `ShoppingCart` class in which you keep `Items` (which are objects). To get the full amount of the shopping cart for the checkout, write a custom method to encapsulate the actual calculation, as shown in Listing 8-2.
@@ -428,7 +428,7 @@ Listing 8-15 - Custom SQL Query with Creole
     $connection = Propel::getConnection();
     $query = 'SELECT MAX(%s) AS max FROM %s';
     $query = sprintf($query, ArticlePeer::CREATED_AT, ArticlePeer::TABLE_NAME);
-    $statement = $connnection->prepareStatement($query);
+    $statement = $connection->prepareStatement($query);
     $resultset = $statement->executeQuery();
     $resultset->next();
     $max = $resultset->getInt('max');
@@ -489,7 +489,7 @@ Listing 8-17 - Sample Database Connection Settings, in `myproject/config/databas
     prod:
       propel:
         param:
-          host:               mydataserver
+          hostspec:           mydataserver
           username:           myusername
           password:           xxxxxxxxxx
 
@@ -575,7 +575,7 @@ Listing 8-21 - Customizing the Model, in `lib/model/ArticlePeer.php`
       public static function getAllOrderedByDate()
       {
         $c = new Criteria();
-        $c->addAscendingOrderByColumn(self:CREATED_AT);
+        $c->addAscendingOrderByColumn(self::CREATED_AT);
         return self::doSelect($c);
 
       }
@@ -600,12 +600,18 @@ For instance, the `$article->getComments()` method returns an array of `Comment`
 Listing 8-23 - Overriding Existing Model Methods, in `lib/model/Article.php`
 
     [php]
-    public function getComments($criteria = null, $con = null )
+    public function getComments($criteria = null, $con = null)
     {
-      // Objects are passed by reference in PHP5, so to avoid modifying the original,
-      // you must clone it
-      $criteria = clone $criteria;
-      $criteria->addDescendingOrderByColumn(ArticlePeer::CREATED_AT);
+      if (is_null($criteria))
+      {
+        $criteria = new Criteria();
+      }
+      else
+      {
+        // Objects are passed by reference in PHP5, so to avoid modifying the original, you must clone it
+        $criteria = clone $criteria;
+      }
+      $criteria->addDescendingOrderByColumn(CommentPeer::CREATED_AT);
 
       return parent::getComments($criteria, $con);
     }

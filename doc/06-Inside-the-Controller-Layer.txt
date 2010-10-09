@@ -693,7 +693,7 @@ Listing 6-24 - Default Security Actions Are Defined in `apps/myapp/config/settin
 
 ### Granting Access
 
-To get access to restricted actions, users need to be authenticated and/or to have certain credentials. You can extend a user's privileges by calling methods of the `sfUser` object. The authenticated status of the user is set by the `setAuthenticated()` method. Listing 6-25 shows a simple example of user authentication.
+To get access to restricted actions, users need to be authenticated and/or to have certain credentials. You can extend a user's privileges by calling methods of the `sfUser` object. The authenticated status of the user is set by the `setAuthenticated()` method and can be checked with `isAuthenticated()`. Listing 6-25 shows a simple example of user authentication.
 
 Listing 6-25 - Setting the Authenticated Status of a User
 
@@ -710,7 +710,10 @@ Listing 6-25 - Setting the Authenticated Status of a User
 
       public function executeLogout()
       {
-        $this->getUser()->setAuthenticated(false);
+        if ($this->getUser()->isAuthenticated())
+        {
+          $this->getUser()->setAuthenticated(false);
+        }
       }
     }
 
@@ -764,7 +767,7 @@ Listing 6-27 - Dealing with User Credentials in a Template
 As for the authenticated status, credentials are often given to users during the login process. This is why the `sfUser` object is often extended to add login and logout methods, in order to set the security status of users in a central place.
 
 >**TIP**
->Among the symfony plug-ins, the `sfGuardPlugin` extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
+>Among the symfony plug-ins, the `sfGuardPlugin` (http://www.symfony-project.com/trac/wiki/sfGuardPlugin) extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
 
 ### Complex Credentials
 

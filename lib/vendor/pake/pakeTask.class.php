@@ -5,7 +5,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    see the LICENSE file included in the distribution
- * @version    SVN: $Id: pakeTask.class.php 1794 2006-08-24 05:37:10Z fabien $
+ * @version    SVN: $Id: pakeTask.class.php 4358 2007-06-25 10:04:03Z fabien $
  */
  
 /**
@@ -18,7 +18,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    see the LICENSE file included in the distribution
- * @version    SVN: $Id: pakeTask.class.php 1794 2006-08-24 05:37:10Z fabien $
+ * @version    SVN: $Id: pakeTask.class.php 4358 2007-06-25 10:04:03Z fabien $
  */
 class pakeTask
 {
@@ -149,7 +149,7 @@ class pakeTask
     return (count($flags)) ? '('.join(', ', $flags).')' : '';
   }
 
-  public function invoke($args)
+  public function invoke($args, $options)
   {
     if ($this->trace)
     {
@@ -167,7 +167,7 @@ class pakeTask
       $real_prerequisite = self::get_full_task_name($prerequisite);
       if (array_key_exists($real_prerequisite, $tasks))
       {
-        $tasks[$real_prerequisite]->invoke($args);
+        $tasks[$real_prerequisite]->invoke($args, $options);
       }
       else
       {
@@ -178,11 +178,11 @@ class pakeTask
     // only run if needed
     if ($this->is_needed())
     {
-      return $this->execute($args);
+      return $this->execute($args, $options);
     }
   }
 
-  public function execute($args)
+  public function execute($args, $options)
   {
     if ($this->dryrun)
     {
@@ -215,7 +215,7 @@ class pakeTask
     }
 
     // execute action
-    return call_user_func_array($function, array($this, $args));
+    return call_user_func_array($function, array($this, $args, $options));
   }
 
   public function is_needed()

@@ -249,7 +249,7 @@ In YAML, structure is shown through indentation, sequence items are denoted by a
       family: { name: Doe, parents: [John, Jane], children: [Paul, Mark, Simone] }
       address: { number: 34, street: Main Street, city: Nowheretown, zipcode: "12345" }
 
-YAML is an acronym for Yet Another Markup Language and pronounced "yamel." The format has been around since 2001, and YAML parsers exist for a large variety of languages.
+YAML is an acronym for "YAML Ain't Markup Language" and pronounced "yamel." The format has been around since 2001, and YAML parsers exist for a large variety of languages.
 
 >**TIP**
 >The specifications of the YAML format are available at [http://www.yaml.org/](http://www.yaml.org/).

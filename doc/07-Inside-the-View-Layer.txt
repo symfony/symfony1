@@ -65,7 +65,7 @@ Listing 7-3 - Declaring the Use of a Helper
 
     [php]
     // Use a specific helper group in this template
-    <?php echo use_helper('Text') ?>
+    <?php use_helper('Text') ?>
     ...
     <h1>Description</h1>
     <p><?php echo auto_link_text($description) ?></p>
@@ -96,8 +96,8 @@ Listing 7-4 - Common Default Helpers
 
     [php]
     // Helper group
-    <?php echo use_helper('HelperName') ?>
-    <?php echo use_helper('HelperName1', 'HelperName2', 'HelperName3') ?>
+    <?php use_helper('HelperName') ?>
+    <?php use_helper('HelperName1', 'HelperName2', 'HelperName3') ?>
 
     // Tag group
     <?php echo tag('input', array('name' => 'foo', 'type' => 'text')) ?>
@@ -559,7 +559,7 @@ The header setters are very powerful in symfony. Headers are sent as late as pos
 The status code of responses in symfony is compliant with the HTTP specification. Exceptions return a status 500, pages not found return a status 404, normal pages return a status 200, pages not modified can be reduced to a simple header with status code 304 (see Chapter 12 for details), and so on. But you can override these defaults by setting your own status code in the action with the `setStatusCode()` response method. You can specify a custom code and a custom message, or simply a custom code--in which case, symfony will add the most common message for this code.
 
     [php]
-    $response->setStatusCode(404, 'This page no longer exists');
+    $response->setStatusCode(404, 'This page does not exist');
 
 >**TIP**
 >Before sending the headers, symfony normalizes their names. So you don't need to bother about writing `content-language` instead of `Content-Language` in a call to `setHttpHeader()`, as symfony will understand the former and automatically transform it to the latter.
@@ -815,11 +815,10 @@ Listing 7-41 - Components Used by the 'sidebar' Slot, in `modules/bar/actions/co
 
       public function executeUser()
       {
-        $current_user = $this->getUser()->getCurrentUser();
+        $this->current_user = $this->getUser()->getCurrentUser();
         $c = new Criteria();
-        $c->add(ArticlePeer::AUTHOR_ID, $current_user->getId());
+        $c->add(ArticlePeer::AUTHOR_ID, $this->current_user->getId());
         $this->nb_articles = ArticlePeer::doCount($c);
-        $this->current_user = $current_user;
       }
     }
 

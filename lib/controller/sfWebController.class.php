@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfWebController.class.php 3204 2007-01-09 18:50:08Z fabien $
+ * @version    SVN: $Id: sfWebController.class.php 4763 2007-07-31 11:52:49Z fabien $
  */
 abstract class sfWebController extends sfController
 {
@@ -42,11 +42,11 @@ abstract class sfWebController extends sfController
     }
 
     $url = '';
-    if (!($sf_no_script_name = sfConfig::get('sf_no_script_name')))
+    if (!sfConfig::get('sf_no_script_name'))
     {
       $url = $this->getContext()->getRequest()->getScriptName();
     }
-    else if (($sf_relative_url_root = $this->getContext()->getRequest()->getRelativeUrlRoot()) && $sf_no_script_name)
+    else if ($sf_relative_url_root = $this->getContext()->getRequest()->getRelativeUrlRoot())
     {
       $url = $sf_relative_url_root;
     }

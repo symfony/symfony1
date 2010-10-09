@@ -876,7 +876,7 @@ Listing 14-32 - Defining a Custom Interaction
             _delete:      -
             addcomment:   { name: Add a comment, action: addComment, icon: backend/addcomment.png }
 
-Each article in the list will now show the `addcomment.png` button, as shown in Figure 14-24. Clicking it triggers a call to the `addComment` action in the current module. The primary key of the current object is automatically added to the request parameters.
+Each article in the list will now show the `web/images/addcomment.png` button, as shown in Figure 14-24. Clicking it triggers a call to the `addComment` action in the current module. The primary key of the current object is automatically added to the request parameters.
 
 Figure 14-24 - Custom interaction in the `list` view
 

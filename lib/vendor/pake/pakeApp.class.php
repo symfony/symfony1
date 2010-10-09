@@ -5,7 +5,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    see the LICENSE file included in the distribution
- * @version    SVN: $Id: pakeApp.class.php 2574 2006-10-31 06:44:28Z fabien $
+ * @version    SVN: $Id: pakeApp.class.php 4623 2007-07-16 12:34:38Z fabien $
  */
 
 /**
@@ -18,7 +18,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    see the LICENSE file included in the distribution
- * @version    SVN: $Id: pakeApp.class.php 2574 2006-10-31 06:44:28Z fabien $
+ * @version    SVN: $Id: pakeApp.class.php 4623 2007-07-16 12:34:38Z fabien $
  */
 class pakeApp
 {
@@ -123,6 +123,38 @@ class pakeApp
       $args = $this->opt->get_arguments();
       $task = array_shift($args);
 
+      $options = array();
+      for ($i = 0, $max = count($args); $i < $max; $i++)
+      {
+        if (0 === strpos($args[$i], '--'))
+        {
+          if (false !== $pos = strpos($args[$i], '='))
+          {
+            $key = substr($args[$i], 2, $pos - 2);
+            $value = substr($args[$i], $pos + 1);
+          }
+          else
+          {
+            $key = substr($args[$i], 2);
+            $value = true;
+          }
+          if ('[]' == substr($key, -2))
+          {
+            if (!isset($options[$key]))
+            {
+              $options[$key] = array();
+            }
+            $options[$key][] = $value;
+          }
+          else
+          {
+            $options[$key] = $value;
+          }
+          unset($args[$i]);
+        }
+      }
+      $args = array_values($args);
+
       $abbrev_options = $this->abbrev(array_keys(pakeTask::get_tasks()));
       $task = pakeTask::get_full_task_name($task);
       if (!$task)
@@ -140,7 +172,7 @@ class pakeApp
       }
       else
       {
-        return pakeTask::get($abbrev_options[$task][0])->invoke($args);
+        return pakeTask::get($abbrev_options[$task][0])->invoke($args, $options);
       }
     }
   }

@@ -356,10 +356,10 @@ Listing 11-15 - Periodically Calling a Remote Function with `periodically_call_r
         'frequency' => 60,
         'update'    => 'notification',
         'url'       => '@watch',
-        'with'      => "'param=' + $('mycontent').value",
+        'with'      => "'param=' + $F('mycontent')",
     )) ?>
 
-If you don't specify the number of seconds (`frequency`) to wait between two calls to the remote function, the default value of 10 seconds is used. Note that the `with` parameter is evaluated in JavaScript, so you can use Prototype functions in it, such as the dollar function, `$()`.
+If you don't specify the number of seconds (`frequency`) to wait between two calls to the remote function, the default value of 10 seconds is used. Note that the `with` parameter is evaluated in JavaScript, so you can use Prototype functions in it, such as the `$F()` function.
 
 Remote Call Parameters
 ----------------------
@@ -700,7 +700,7 @@ Listing 11-32 - Draggable Elements and Drop-Receiving Elements in a Shopping Car
       <?php echo draggable_element('item_2', array('revert' => true)) ?>
       <li id="item_3" class="food">Orange</li>
       <?php echo draggable_element('item_3', array('revert' => true)) ?>
-    </li>
+    </ul>
     <div id="cart">
       <p>Your cart is empty</p>
       <p>Drag items here to add them to your cart</p>
@@ -746,7 +746,7 @@ Listing 11-33 - Sortable List Example
     <?php echo sortable_element('order', array(
       'url'    => 'item/sort',
       'update' => 'feedback',
-      'only'   => 'sortable';
+      'only'   => 'sortable',
     )) ?>
 
 By the magic of the `sortable_element()` helper, the `<ul>` element is made sortable, which means that its children can be reordered by drag-and-drop. Each time the user drags an item and releases it to reorder the list, an Ajax request is made with the following parameters:

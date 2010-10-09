@@ -5,7 +5,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    see the LICENSE file included in the distribution
- * @version    SVN: $Id: pakePhingTask.class.php 4722 2007-07-26 16:27:13Z fabien $
+ * @version    SVN: $Id: pakePhingTask.class.php 4977 2007-09-05 09:14:45Z noel $
  */
 
 include_once 'phing/Phing.php';
@@ -47,10 +47,13 @@ class pakePhingTask
     {
       $args[] = $target;
     }
-
-    $args[] = '-logger';
-    $args[] = 'phing.listener.AnsiColorLogger';
-
+    
+    if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(STDOUT)))
+    {
+      $args[] = '-logger';
+      $args[] = 'phing.listener.AnsiColorLogger';
+    }
+    
     Phing::startup();
     Phing::setProperty('phing.home', getenv('PHING_HOME'));
 

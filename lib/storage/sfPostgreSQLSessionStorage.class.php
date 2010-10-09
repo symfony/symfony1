@@ -30,7 +30,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfPostgreSQLSessionStorage.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfPostgreSQLSessionStorage.class.php 4891 2007-08-23 15:49:41Z fabien $
  */
 class sfPostgreSQLSessionStorage extends sfSessionStorage
 {
@@ -138,7 +138,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.$lifetime;
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.$time;
 
     if (@pg_query($this->resource, $sql))
     {

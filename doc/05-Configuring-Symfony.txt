@@ -224,10 +224,10 @@ Listing 5-11 - The Default Production Front Controller
     [php]
     <?php
 
-    define('SF_ROOT_DIR',    dirname(__FILE__).'/..');
+    define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
     define('SF_APP',         'myapp');
     define('SF_ENVIRONMENT', 'prod');
-    define('SF_DEBUG',       true);
+    define('SF_DEBUG',       false);
 
     require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
