@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfComponent.class.php 3379 2007-02-01 06:49:58Z fabien $
+ * @version    SVN: $Id: sfComponent.class.php 5380 2007-10-05 13:46:22Z noel $
  */
 abstract class sfComponent
 {
@@ -208,7 +208,7 @@ abstract class sfComponent
    *
    * This is a proxy method equivalent to:
    *
-   * <code>$this->getContext()->getController()</code>
+   * <code>$this->getContext()->getUser()</code>
    *
    * @return sfUser The current sfUser implementation instance
    */

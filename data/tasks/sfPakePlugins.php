@@ -258,7 +258,8 @@ function _install_web_content($plugin_name)
   if (is_dir($web_dir))
   {
     pake_echo_action('plugin', 'installing web data for plugin');
-    pake_symlink($web_dir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$plugin_name, true);
+    $path_diff = _absolute_path_difference(sfConfig::get('sf_web_dir'), $web_dir);
+    pake_symlink($path_diff, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$plugin_name, true);
   }
 }
 
@@ -280,3 +281,35 @@ function _uninstall_web_content($plugin_name)
     }
   }
 }
+
+function _absolute_path_difference($source, $target)
+{
+  if (!sfToolkit::isPathAbsolute($source) || !sfToolkit::isPathAbsolute($target))
+  {
+
+    return $target;
+  }
+
+  $source = split(DIRECTORY_SEPARATOR, rtrim($source, DIRECTORY_SEPARATOR));
+  $target = split(DIRECTORY_SEPARATOR, rtrim($target, DIRECTORY_SEPARATOR));
+
+  if ($source == $target)
+  { 
+    return '.';
+  }
+
+  for ($i = 0; $i < count($source); $i++)
+  {
+    if (! isset($target[$i]) || $target[$i] != $source[$i])
+    {
+      $source_path_diff = array_fill(0, count($source) - $i, '..');
+      $target_path_diff = array_slice($target, $i);
+      $merge = array_merge($source_path_diff, $target_path_diff);
+
+      return join(DIRECTORY_SEPARATOR, $merge);
+    }
+  }
+
+  return join(DIRECTORY_SEPARATOR, array_slice($target, count($source)));
+}
+

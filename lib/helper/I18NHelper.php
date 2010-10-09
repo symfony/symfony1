@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: I18NHelper.php 3056 2006-12-16 16:08:24Z fabien $
+ * @version    SVN: $Id: I18NHelper.php 5141 2007-09-16 14:37:58Z fabien $
  */
 
 function __($text, $args = array(), $catalogue = 'messages')
@@ -32,6 +32,11 @@ function __($text, $args = array(), $catalogue = 'messages')
   }
   else
   {
+    if (empty($args))
+    {
+      $args = array();
+    }
+
     // replace object with strings
     foreach ($args as $key => $value)
     {

@@ -19,7 +19,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @version    SVN: $Id: sfFileCache.class.php 3541 2007-02-26 06:13:12Z fabien $
+ * @version    SVN: $Id: sfFileCache.class.php 5308 2007-09-29 06:51:43Z fabien $
  */
 class sfFileCache extends sfCache
 {
@@ -338,7 +338,13 @@ class sfFileCache extends sfCache
   {
     $namespace = str_replace('/', DIRECTORY_SEPARATOR, $namespace);
 
-    return $this->cleanDir($this->cacheDir.DIRECTORY_SEPARATOR.$namespace, $mode);
+    $dir = $this->cacheDir.DIRECTORY_SEPARATOR.$namespace;
+    if (!file_exists($dir))
+    {
+      return true;
+    }
+
+    return $this->cleanDir($dir, $mode);
   }
 
   /**

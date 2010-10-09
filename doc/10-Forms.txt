@@ -539,7 +539,7 @@ Listing 10-18 - Validating Request Parameters with Reusable Validators, in `modu
         'max'       => 100,
         'max_error' => 'This name is too long. (100 characters maximum)',
       ));
-      if (!$myValidator->execute($name))
+      if (!$myValidator->execute($name, $error))
       {
         return false;
       }
@@ -873,7 +873,7 @@ Be aware that the `file` attribute must be set to `True` for the field, and the 
     fields:
       account_number:
         sfCallbackValidator:
-          callback:      is_integer
+          callback:      is_numeric
           invalid_error: Please enter a number.
       credit_card_number:
         sfCallbackValidator:

@@ -12,9 +12,14 @@ function double_list_move(src, dest)
   }
 }
 
-function double_list_submit()
+function double_list_submit(form_name)
 {
-  var form = $('sf_admin_edit_form');
+  // default id to allow using a custom form id
+  if( ! form_name ) {
+    var form_name = 'sf_admin_edit_form';
+  }
+
+  var form = $(form_name);
   var element;
 
   // find multiple selects with name beginning 'associated_' and select all their options

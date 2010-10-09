@@ -563,7 +563,7 @@ Once it has made a first request, the `sfTestBrowser` object can give access to 
 >     $b->get('/foobar/show/id/1')->
 >         setField('name', 'dummy')->
 >         click('go');
->     $content = $b()->getResponse()->getContent();
+>     $content = $b->getResponse()->getContent();
 >     ...
 >
 >The `sfBrowser` object is a very useful tool for batch scripts, for instance, if you want to browse a list of pages to generate a cached version for each (refer to Chapter 18 for a detailed example).

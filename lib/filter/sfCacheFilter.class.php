@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheFilter.class.php 4559 2007-07-08 15:36:14Z fabien $
+ * @version    SVN: $Id: sfCacheFilter.class.php 5145 2007-09-16 14:59:51Z fabien $
  */
 class sfCacheFilter extends sfFilter
 {
@@ -150,7 +150,7 @@ class sfCacheFilter extends sfFilter
     if (sfConfig::get('sf_etag'))
     {
       $etag = md5($this->response->getContent());
-      $this->response->setHttpHeader('ETag', $etag);
+      $this->response->setHttpHeader('ETag', '"'.$etag.'"');
 
       if ($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
       {

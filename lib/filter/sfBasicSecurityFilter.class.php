@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfBasicSecurityFilter.class.php 3244 2007-01-12 14:46:11Z fabien $
+ * @version    SVN: $Id: sfBasicSecurityFilter.class.php 5001 2007-09-08 08:34:34Z fabien $
  */
 class sfBasicSecurityFilter extends sfSecurityFilter
 {
@@ -39,7 +39,11 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $actionInstance = $actionEntry->getActionInstance();
 
     // disable security on [sf_login_module] / [sf_login_action]
-    if ((sfConfig::get('sf_login_module') == $context->getModuleName()) && (sfConfig::get('sf_login_action') == $context->getActionName()))
+    if (
+      (sfConfig::get('sf_login_module') == $context->getModuleName()) && (sfConfig::get('sf_login_action') == $context->getActionName())
+      ||
+      (sfConfig::get('sf_secure_module') == $context->getModuleName()) && (sfConfig::get('sf_secure_action') == $context->getActionName())
+    )
     {
       $filterChain->execute();
 

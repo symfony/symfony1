@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 4941 2007-08-30 14:12:44Z fabien $
+ * @version    SVN: $Id: sfPropelData.class.php 5339 2007-10-01 07:35:33Z fabien $
  */
 class sfPropelData extends sfData
 {
@@ -100,7 +100,7 @@ class sfPropelData extends sfData
 
         if (!is_array($data))
         {
-          throw new Exception('You must give a name for each fixture data entry');
+          throw new Exception(sprintf('You must give a name for each fixture data entry (class %s)'), $class);
         }
 
         foreach ($data as $name => $value)

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: CacheHelper.php 2459 2006-10-20 08:15:03Z fabien $
+ * @version    SVN: $Id: CacheHelper.php 5085 2007-09-14 20:09:53Z fabien $
  */
 
 /* Usage
@@ -39,7 +39,7 @@ function cache($name, $lifeTime = 86400)
   $request = $context->getRequest();
   $cache   = $context->getViewCacheManager();
 
-  if ($request->getAttribute('cache_started') !== null)
+  if (!is_null($request->getAttribute('started', null, 'symfony/action/sfAction/cache')))
   {
     throw new sfCacheException('Cache already started');
   }
@@ -72,7 +72,7 @@ function cache_save()
 
   $request = $context->getRequest();
 
-  if ($request->getAttribute('started', null, 'symfony/action/sfAction/cache') === null)
+  if (is_null($request->getAttribute('started', null, 'symfony/action/sfAction/cache')))
   {
     throw new sfCacheException('Cache not started');
   }

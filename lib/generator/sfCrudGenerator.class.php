@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelCrudGenerator.class.php 2342 2006-10-06 07:19:22Z chtito $
+ * @version    SVN: $Id: sfCrudGenerator.class.php 5099 2007-09-15 06:44:50Z fabien $
  */
 abstract class sfCrudGenerator extends sfGenerator
 {

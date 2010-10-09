@@ -8,7 +8,22 @@
  * file that was distributed with this source code.
  */
 
-require_once((sfConfig::get('sf_ez_lib_dir') ? sfConfig::get('sf_ez_lib_dir').'/' : '').'Base/src/base.php');
+$sf_ez_lib_dir = sfConfig::get('sf_ez_lib_dir') ? sfConfig::get('sf_ez_lib_dir').'/' : '';
+
+if (file_exists($sf_ez_lib_dir.'Base/src/base.php'))
+{
+  // svn installation
+  require_once($sf_ez_lib_dir.'Base/src/base.php');
+}
+elseif (file_exists($sf_ez_lib_dir.'Base/base.php'))
+{
+  // pear installation
+  require_once($sf_ez_lib_dir.'Base/base.php');
+}
+else
+{
+  throw new sfAutoloadException('Invalid eZ component library path.');
+}
 
 /**
  * This class makes easy to use ez components classes within symfony
@@ -16,7 +31,7 @@ require_once((sfConfig::get('sf_ez_lib_dir') ? sfConfig::get('sf_ez_lib_dir').'/
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfEzComponentsBridge.class.php 1415 2006-06-11 08:33:51Z fabien $
+ * @version    SVN: $Id: sfEzComponentsBridge.class.php 5362 2007-10-04 06:40:04Z noel $
  */
 class sfEzComponentsBridge
 {

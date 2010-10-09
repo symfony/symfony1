@@ -287,14 +287,14 @@ If there is no view to call--for instance, in the case of an action executed in 
     [php]
     return sfView::NONE;
 
-No template will be executed in that case. It means that you can bypass completely the view layer and output HTML code directly from an action. As shown in Listing 6-10, symfony provides a specific `renderText()` method for this case. This can be useful when you need extreme responsiveness of the action, such as for Ajax interactions, which will be discussed in Chapter 11.
+No template will be executed in that case. It means that you can bypass completely the view layer and set the response HTML code directly from an action. As shown in Listing 6-10, symfony provides a specific `renderText()` method for this case. This can be useful when you need extreme responsiveness of the action, such as for Ajax interactions, which will be discussed in Chapter 11.
 
 Listing 6-10 - Bypassing the View by Echoing the Response and Returning `sfView::NONE`
 
     [php]
     public function executeIndex()
     {
-      echo "<html><body>Hello, World!</body></html>";
+      $this->getResponse()->setContent("<html><body>Hello, World!</body></html>");
 
       return sfView::NONE;
     }
@@ -888,7 +888,7 @@ Listing 6-31 - Default Filter Chain, in `myapp/config/filters.yml`
 
 These declarations have no parameter (the tilde character, `~`, means "null" in YAML), because they inherit the parameters defined in the symfony core. In the core, symfony defines `class` and `param` settings for each of these filters. For instance, Listing 6-32 shows the default parameters for the `rendering` filter.
 
-Listing 6-32 - Default Parameters of the rendering Filter, in $sf_symfony_data_dir/config/filters.yml
+Listing 6-32 - Default Parameters of the rendering Filter, in `$sf_symfony_data_dir/config/filters.yml`
 
     rendering:
       class: sfRenderingFilter   # Filter class
@@ -1062,13 +1062,13 @@ Listing 6-38 - Module Configuration, in `apps/myapp/modules/mymodule/config/modu
     all:                 # For all environments
       enabled:     true
       is_internal: false
-      view_name:   sfPHP
+      view_class:  sfPHP
 
 The enabled parameter allows you to disable all actions of a module. All actions are redirected to the `module_disabled_module`/`module_disabled_action` action (as defined in `settings.yml`).
 
 The is_internal parameter allows you to restrict the execution of all actions of a module to internal calls. For example, this is useful for mail actions that you must be able to call from another action, to send an e-mail message, but not from the outside.
 
-The view_name parameter defines the view class. It must inherit from `sfView`. Overriding this value allows you to use other view systems, with other templating engines, such as Smarty.
+The view_class parameter defines the view class. It must inherit from `sfView`. Overriding this value allows you to use other view systems, with other templating engines, such as Smarty.
 
 Summary
 -------

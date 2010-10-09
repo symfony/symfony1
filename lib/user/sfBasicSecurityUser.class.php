@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 3148 2007-01-04 19:34:28Z fabien $
+ * @version    SVN: $Id: sfBasicSecurityUser.class.php 5160 2007-09-16 16:05:28Z fabien $
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -233,7 +233,6 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
       }
       $this->setTimedOut();
-      $this->clearCredentials();
       $this->setAuthenticated(false);
     }
 
