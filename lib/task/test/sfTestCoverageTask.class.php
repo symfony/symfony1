@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestCoverageTask.class.php 24148 2009-11-18 17:16:34Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestCoverageTask.class.php 25036 2009-12-07 19:41:58Z Kris.Wallsmith $
  */
 class sfTestCoverageTask extends sfBaseTask
 {
@@ -57,7 +57,7 @@ EOF;
   {
     require_once sfConfig::get('sf_symfony_lib_dir').'/vendor/lime/lime.php';
 
-    $coverage = $this->getCoverage($this->getTestHarness(array('force_colors' => $options['color'])), $options['detailed']);
+    $coverage = $this->getCoverage($this->getTestHarness(array('force_colors' => isset($options['color']) && $options['color'])), $options['detailed']);
 
     $testFiles = $this->getFiles(sfConfig::get('sf_root_dir').'/'.$arguments['test_name']);
     $max = count($testFiles);

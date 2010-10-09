@@ -55,7 +55,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
     protected $executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * @var array $bind_params          Array of parameters bounded to a statement
+     * @var array $bindParams          Array of parameters bounded to a statement
      */
     protected $bindParams = array();
 
@@ -98,7 +98,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function bindColumn($column, $param, $type = null)
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     /**
@@ -186,7 +186,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function closeCursor()
     {
-        $this->bind_params = array();
+        $this->bindParams = array();
         return oci_free_statement($this->statement);
     }
 
@@ -313,7 +313,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
             case Doctrine_Core::FETCH_NUM :
                 return oci_fetch_array($this->statement, OCI_NUM + OCI_RETURN_NULLS + OCI_RETURN_LOBS);
             break;
-            case FETCH_OBJ:
+            case Doctrine_Core::FETCH_OBJ:
                 return oci_fetch_object($this->statement, OCI_NUM + OCI_RETURN_NULLS + OCI_RETURN_LOBS);
             break;
             default:
@@ -373,7 +373,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
                 $data[] = $row[$colnum];
             }
         } else {
-            throw new Exception("Unsupported mode: '" . $fetchStyle . "' ");
+            throw new Doctrine_Adapter_Exception("Unsupported mode: '" . $fetchStyle . "' ");
         }
 
         return $data;
@@ -393,6 +393,8 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
     {
         if ( ! is_integer($columnIndex)) {
             $this->handleError(array('message'=>"columnIndex parameter should be numeric"));
+
+            return false;
         }
         $row = $this->fetch(Doctrine_Core::FETCH_NUM);
         return $row[$columnIndex];
@@ -489,7 +491,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function nextRowset()
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     /**
@@ -546,7 +548,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
      */
     public function setFetchMode($mode, $arg1 = null, $arg2 = null)
     {
-        throw new Exception("Unsupported");
+        throw new Doctrine_Adapter_Exception("Unsupported");
     }
 
     private function handleError($params=array())

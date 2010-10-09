@@ -45,6 +45,10 @@ abstract class Doctrine_Record_Filter
         return $this->_table;
     }
 
+    public function init()
+    {
+    }
+
     /**
      * filterSet
      * defines an implementation for filtering the set() method of Doctrine_Record

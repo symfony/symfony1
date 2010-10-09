@@ -16,7 +16,7 @@
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfWebDebugPanelDoctrine.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanelDoctrine.class.php 24993 2009-12-06 20:56:49Z Kris.Wallsmith $
  */
 class sfWebDebugPanelDoctrine extends sfWebDebugPanel
 {
@@ -126,7 +126,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
       $backtrace = null;
       foreach ($logs as $i => $log)
       {
-        if (!$log['debug_backtrace'])
+        if (!isset($log['debug_backtrace']) || !count($log['debug_backtrace']))
         {
           // backtrace disabled
           break;
