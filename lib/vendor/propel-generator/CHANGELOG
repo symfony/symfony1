@@ -1,12 +1,16 @@
 
   P R O P E L    C H A N G E S
   ============================
-
- Feb ??, 2006 - 1.2.0
+ 
+ Mar 7, 2007 - 1.2.1
+ 
+  ChangeLog for 1.2.1 at http://propel.phpdb.org/trac/query?status=closed&milestone=1.2.1&resolution=fixed&order=priority
+ 
+ Aug 31, 2006 - 1.2.0
 
   Breaking Changes:
-  *** New API for accessors and settors (see API docs).  The methods are the same
-  but the default indexing has changed.
+  *** New API for generic accessors and settors (see API docs).  The methods are 
+  the same but the default indexing has changed.
   *** New API for validators (see Wiki / docs).
 
   Major Changes (for complete list see issue tracker at http://propel.phpdb.org):
@@ -23,8 +27,9 @@
   - Numerous improvements to validation framework, including new, cleaner API
   - Added doCountJoin*() methods to the generated Peer classes
   - Obj->save() calls now return the number of affected rows (if supported by db)
-  - ... & numerous bug fixes which can be seen on the site issue tracker.
-
+  - See http://propel.phpdb.org/trac/report/9 for complete list of closed tickets 
+  	by milestone.
+  
  April 7, 2005 - 1.1.0
 
   Big Changes:

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDebug.class.php 3492 2007-02-18 09:10:54Z fabien $
+ * @version    SVN: $Id: sfDebug.class.php 3785 2007-04-13 17:26:08Z fabien $
  */
 class sfDebug
 {
@@ -124,10 +124,13 @@ class sfDebug
         }
       }
 
-      $cookies = array();
-      foreach ($response->getCookies() as $key => $value)
+      if (method_exists($response, 'getCookies'))
       {
-        $values['cookies'][$key] = $value;
+        $cookies = array();
+        foreach ($response->getCookies() as $key => $value)
+        {
+          $values['cookies'][$key] = $value;
+        }
       }
     }
     else

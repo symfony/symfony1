@@ -59,12 +59,19 @@ You can define long strings in multiple lines, and also multiple-line strings, w
 
 Listing 5-3 - Defining Long and Multiline Strings
 
-    accomplishment: >           # Folded style, introduced by >
-      Mark set a major league   # Each line break is folded to a space
-      home run record in 1998.  # Makes YAML more readable
-    stats: |                    # Literal style, introduced by |
-      65 Home Runs              # All line breaks count
-      0.278 Batting Average     # Indentation doesn't appear in the resulting string
+    # Folded style, introduced by >
+    # Each line break is folded to a space
+    # Makes YAML more readable
+    accomplishment: >
+      Mark set a major league
+      home run record in 1998.
+
+    # Literal style, introduced by |
+    # All line breaks count
+    # Indentation doesn't appear in the resulting string
+    stats: |
+      65 Home Runs
+      0.278 Batting Average
 
 To define a value as an array, enclose the elements in square brackets or use the expanded syntax with dashes, as shown in Listing 5-4.
 
@@ -509,7 +516,7 @@ Listing 5-16 - Accessing Configuration Settings in PHP in the `dev` Environment
      => '1.5'
     echo sfConfig::get('app_tax');   // Remember that category headers are ignored
      => '19.6'
-    echo sfConfig::get('app_default_user_name);
+    echo sfConfig::get('app_default_user_name');
      => 'John Doe'
     echo sfConfig::get('app_mail_webmaster');
      => 'dummy@example.com'

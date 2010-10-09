@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasePeer.php 431 2006-08-21 14:06:10Z hans $
+ *  $Id: BasePeer.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,14 +36,14 @@ include_once 'propel/validator/ValidationFailed.php';
  * utility methods which ease execution of cross-database queries and
  * the implementation of concrete Peers.
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Kaspars Jaudzems <kaspars.jaudzems@inbox.lv> (Propel)
- * @author Frank Y. Kim <frank.kim@clearink.com> (Torque)
- * @author John D. McNally <jmcnally@collab.net> (Torque)
- * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
- * @author Stephen Haberman <stephenh@chase3000.com> (Torque)
- * @version $Revision: 431 $
- * @package propel.util
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Kaspars Jaudzems <kaspars.jaudzems@inbox.lv> (Propel)
+ * @author     Frank Y. Kim <frank.kim@clearink.com> (Torque)
+ * @author     John D. McNally <jmcnally@collab.net> (Torque)
+ * @author     Brett McLaughlin <bmclaugh@algx.net> (Torque)
+ * @author     Stephen Haberman <stephenh@chase3000.com> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.util
  */
 class BasePeer
 {
@@ -104,14 +104,14 @@ class BasePeer
 	 * Method to perform deletes based on values and keys in a
 	 * Criteria.
 	 *
-	 * @param Criteria $criteria The criteria to use.
-	 * @param Connection $con A Connection.
-	 * @return int	The number of rows affected by last statement execution.  For most
+	 * @param      Criteria $criteria The criteria to use.
+	 * @param      Connection $con A Connection.
+	 * @return     int	The number of rows affected by last statement execution.  For most
 	 * 				uses there is only one delete statement executed, so this number
 	 * 				will correspond to the number of rows affected by the call to this
 	 * 				method.  Note that the return value does require that this information
 	 * 				is returned (supported) by the Creole db driver.
-	 * @throws PropelException
+	 * @throws     PropelException
 	 */
 	public static function doDelete(Criteria $criteria, Connection $con)
 	{
@@ -199,12 +199,12 @@ class BasePeer
 	 * }
 	 * </code>
 	 *
-	 * @param string $tableName The name of the table to empty.
-	 * @param Connection $con A Connection.
-	 * @return int	The number of rows affected by the statement.  Note
+	 * @param      string $tableName The name of the table to empty.
+	 * @param      Connection $con A Connection.
+	 * @return     int	The number of rows affected by the statement.  Note
 	 * 				that the return value does require that this information
 	 * 				is returned (supported) by the Creole db driver.
-	 * @throws PropelException - wrapping SQLException caught from statement execution.
+	 * @throws     PropelException - wrapping SQLException caught from statement execution.
 	 */
 	public static function doDeleteAll($tableName, Connection $con)
 	{
@@ -236,11 +236,11 @@ class BasePeer
 	 * If no primary key is defined for the table the values will be
 	 * inserted as specified in Criteria and null will be returned.
 	 *
-	 * @param Criteria $criteria Object containing values to insert.
-	 * @param Connection $con A Connection.
-	 * @return mixed The primary key for the new row if (and only if!) the primary key
+	 * @param      Criteria $criteria Object containing values to insert.
+	 * @param      Connection $con A Connection.
+	 * @return     mixed The primary key for the new row if (and only if!) the primary key
 	 *				is auto-generated.  Otherwise will return <code>null</code>.
-	 * @throws PropelException
+	 * @throws     PropelException
 	 */
 	public static function doInsert(Criteria $criteria, Connection $con) {
 
@@ -330,17 +330,17 @@ class BasePeer
 	 * WHERE some_column = some value AND could_have_another_column =
 	 * another value AND so on.
 	 *
-	 * @param $selectCriteria A Criteria object containing values used in where
+	 * @param      $selectCriteria A Criteria object containing values used in where
 	 *		clause.
-	 * @param $updateValues A Criteria object containing values used in set
+	 * @param      $updateValues A Criteria object containing values used in set
 	 *		clause.
-	 * @param $con 	The Connection to use.
-	 * @return int	The number of rows affected by last update statement.  For most
+	 * @param      $con 	The Connection to use.
+	 * @return     int	The number of rows affected by last update statement.  For most
 	 * 				uses there is only one update statement executed, so this number
 	 * 				will correspond to the number of rows affected by the call to this
 	 * 				method.  Note that the return value does require that this information
 	 * 				is returned (supported) by the Creole db driver.
-	 * @throws PropelException
+	 * @throws     PropelException
 	 */
 	public static function doUpdate(Criteria $selectCriteria, Criteria $updateValues, Connection $con) {
 
@@ -418,11 +418,11 @@ class BasePeer
 	/**
 	 * Executes query build by createSelectSql() and returns ResultSet.
 	 *
-	 * @param Criteria $criteria A Criteria.
-	 * @param Connection $con A connection to use.
-	 * @return ResultSet The resultset.
-	 * @throws PropelException
-	 * @see createSelectSql()
+	 * @param      Criteria $criteria A Criteria.
+	 * @param      Connection $con A connection to use.
+	 * @return     ResultSet The resultset.
+	 * @throws     PropelException
+	 * @see        createSelectSql()
 	 */
 	public static function doSelect(Criteria $criteria, $con = null)
 	{
@@ -464,9 +464,9 @@ class BasePeer
 	/**
 	 * Applies any validators that were defined in the schema to the specified columns.
 	 *
-	 * @param string $dbName The name of the database
-	 * @param string $tableName The name of the table
-	 * @param array $columns Array of column names as key and column values as value.
+	 * @param      string $dbName The name of the database
+	 * @param      string $tableName The name of the table
+	 * @param      array $columns Array of column names as key and column values as value.
 	 */
 	public static function doValidate($dbName, $tableName, $columns)
 	{
@@ -493,10 +493,10 @@ class BasePeer
 	 * Helper method which returns the primary key contained
 	 * in the given Criteria object.
 	 *
-	 * @param Criteria $criteria A Criteria.
-	 * @return ColumnMap If the Criteria object contains a primary
+	 * @param      Criteria $criteria A Criteria.
+	 * @return     ColumnMap If the Criteria object contains a primary
 	 *		  key, or null if it doesn't.
-	 * @throws PropelException
+	 * @throws     PropelException
 	 */
 	private static function getPrimaryKey(Criteria $criteria)
 	{
@@ -538,10 +538,10 @@ class BasePeer
 	 * to be set before the statement is executed.  The reason we do it this way
 	 * is to let the Creole layer handle all escaping & value formatting.
 	 *
-	 * @param Criteria $criteria Criteria for the SELECT query.
-	 * @param array &$params Parameters that are to be replaced in prepared statement.
-	 * @return string
-	 * @throws PropelException Trouble creating the query string.
+	 * @param      Criteria $criteria Criteria for the SELECT query.
+	 * @param      array &$params Parameters that are to be replaced in prepared statement.
+	 * @return     string
+	 * @throws     PropelException Trouble creating the query string.
 	 */
 	public static function createSelectSql(Criteria $criteria, &$params) {
 
@@ -648,11 +648,11 @@ class BasePeer
 			$whereClause[] = $sb;
 
 		}
-		
+
 		// handle RIGHT (straight) joins
-		// Loop through the joins, 
+		// Loop through the joins,
 		// joins with a null join type will be added to the FROM clause and the condition added to the WHERE clause.
-		// joins of a specified type: the LEFT side will be added to the fromClause and the RIGHT to the joinClause 
+		// joins of a specified type: the LEFT side will be added to the fromClause and the RIGHT to the joinClause
 		// New Code.
 		foreach ((array) $criteria->getJoins() as $join) { // we'll only loop if there's actually something here
 
@@ -664,14 +664,14 @@ class BasePeer
 				$leftTableAlias = " $leftTable";
 				$leftTable = $realTable;
 			}
-			
+
 			$rightTable = $join->getRightTableName();
 			$rightTableAlias = '';
 			if ($realTable = $criteria->getTableForAlias($rightTable)) {
 				$rightTableAlias = " $rightTable";
 				$rightTable = $realTable;
 			}
-					
+
 			// determine if casing is relevant.
 			if ($ignoreCase = $criteria->isIgnoreCase()) {
 				$leftColType = $dbMap->getTable($leftTable)->getColumn($join->getLeftColumnName())->getType();
@@ -685,24 +685,24 @@ class BasePeer
 			} else {
 				$condition = $join->getLeftColumn() . '=' . $join->getRightColumn();
 			}
-					
-			// add 'em to the queues..  
-			if ($joinType = $join->getJoinType()) { 
+
+			// add 'em to the queues..
+			if ($joinType = $join->getJoinType()) {
 				if (!$fromClause) {
 					$fromClause[] = $leftTable . $leftTableAlias;
 				}
 				$joinTables[] = $rightTable . $rightTableAlias;
 				$joinClause[] = $join->getJoinType() . ' ' . $rightTable . $rightTableAlias . " ON ($condition)";
-			} else { 
+			} else {
 				$fromClause[] = $leftTable . $leftTableAlias;
 				$fromClause[] = $rightTable . $rightTableAlias;
 				$whereClause[] = $condition;
 			}
 		}
-		
+
 		// Unique from clause elements
 		$fromClause = array_unique($fromClause);
-				
+
 		// tables should not exist in both the from and join clauses
 		if ($joinTables && $fromClause) {
 			foreach ($fromClause as $fi => $ftable) {
@@ -760,7 +760,7 @@ class BasePeer
 					} // Join for loop
 				} // If Joins
 */
-		
+
 		// Add the GROUP BY columns
 		$groupByClause = $groupBy;
 
@@ -775,14 +775,14 @@ class BasePeer
 		 if (!empty($orderBy)) {
 
 			foreach($orderBy as $orderByColumn) {
-				
+
 				// Add function expression as-is.
-				
+
 				if (strpos($orderByColumn, '(') !== false) {
 					$orderByClause[] = $orderByColumn;
 					continue;
 				}
-				
+
 				// Split orderByColumn (i.e. "table.column DESC")
 
 				$dotPos = strpos($orderByColumn, '.');
@@ -832,7 +832,7 @@ class BasePeer
 		$sql =  "SELECT "
 				.($selectModifiers ? implode(" ", $selectModifiers) . " " : "")
 				.implode(", ", $selectClause)
-				." FROM ". ( (!empty($joinClause) && count($fromClause) > 1 && (substr(get_class($db), 0, 7) == 'DBMySQL')) ? "(" . implode(", ", $fromClause) . ")" : implode(", ", $fromClause) ) 
+				." FROM ". ( (!empty($joinClause) && count($fromClause) > 1 && (substr(get_class($db), 0, 7) == 'DBMySQL')) ? "(" . implode(", ", $fromClause) . ")" : implode(", ", $fromClause) )
 								.($joinClause ? ' ' . implode(' ', $joinClause) : '')
 				.($whereClause ? " WHERE ".implode(" AND ", $whereClause) : "")
 				.($groupByClause ? " GROUP BY ".implode(",", $groupByClause) : "")
@@ -848,9 +848,9 @@ class BasePeer
 	/**
 	 * Builds a params array, like the kind populated by Criterion::appendPsTo().
 	 * This is useful for building an array even when it is not using the appendPsTo() method.
-	 * @param array $columns
-	 * @param Criteria $values
-	 * @return array params array('column' => ..., 'table' => ..., 'value' => ...)
+	 * @param      array $columns
+	 * @param      Criteria $values
+	 * @return     array params array('column' => ..., 'table' => ..., 'value' => ...)
 	 */
 	private static function buildParams($columns, Criteria $values) {
 		$params = array();
@@ -866,10 +866,10 @@ class BasePeer
 	/**
 	 * Populates values in a prepared statement.
 	 *
-	 * @param PreparedStatement $stmt
-	 * @param array $params array('column' => ..., 'table' => ..., 'value' => ...)
-	 * @param DatabaseMap $dbMap
-	 * @return int The number of params replaced.
+	 * @param      PreparedStatement $stmt
+	 * @param      array $params array('column' => ..., 'table' => ..., 'value' => ...)
+	 * @param      DatabaseMap $dbMap
+	 * @return     int The number of params replaced.
 	 */
 	private static function populateStmtValues($stmt, $params, DatabaseMap $dbMap)
 	{
@@ -893,8 +893,8 @@ class BasePeer
 	* This function searches for the given validator $name under propel/validator/$name.php,
 	* imports and caches it.
 	*
-	* @param string $classname The dot-path name of class (e.g. myapp.propel.MyValidator)
-	* @return Validator object or null if not able to instantiate validator class (and error will be logged in this case)
+	* @param      string $classname The dot-path name of class (e.g. myapp.propel.MyValidator)
+	* @return     Validator object or null if not able to instantiate validator class (and error will be logged in this case)
 	*/
 	public static function getValidator($classname)
 	{
@@ -917,9 +917,9 @@ class BasePeer
 	 * myapp.propel.MyMapMapBuilder.  The MapBuilder instances are cached in
 	 * this class for speed.
 	 *
-	 * @param string $classname The dot-path name of class (e.g. myapp.propel.MyMapBuilder)
-	 * @return MapBuilder or null (and logs the error) if the MapBuilder was not found.
-	 * @todo -cBasePeer Consider adding app-level caching support for map builders.
+	 * @param      string $classname The dot-path name of class (e.g. myapp.propel.MyMapBuilder)
+	 * @return     MapBuilder or null (and logs the error) if the MapBuilder was not found.
+	 * @todo       -cBasePeer Consider adding app-level caching support for map builders.
 	 */
 	public static function getMapBuilder($classname)
 	{

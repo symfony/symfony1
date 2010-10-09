@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBAdapter.php 325 2006-01-17 19:12:40Z hans $
+ *  $Id: DBAdapter.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,12 +19,12 @@
  * and is licensed under the LGPL. For more information please see
  * <http://propel.phpdb.org>.
  */
- 
+
 include_once 'creole/Connection.php';
 
 /**
- * DBAdapter</code> defines the interface for a Propel database adapter.  
- * 
+ * DBAdapter</code> defines the interface for a Propel database adapter.
+ *
  * <p>Support for new databases is added by subclassing
  * <code>DBAdapter</code> and implementing its abstract interface, and by
  * registering the new database adapter and corresponding Creole
@@ -36,149 +36,149 @@ include_once 'creole/Connection.php';
  * transparent swapping of databases is theoretically supported with
  * <i>zero code change</i> and minimal configuration file
  * modifications.</p>
- * 
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Jon S. Stevens <jon@latchkey.com> (Torque)
- * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
- * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 325 $
- * @package propel.adapter
+ *
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Jon S. Stevens <jon@latchkey.com> (Torque)
+ * @author     Brett McLaughlin <bmclaugh@algx.net> (Torque)
+ * @author     Daniel Rall <dlr@finemaltcoding.com> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.adapter
  */
 abstract class DBAdapter {
-    
-    /**
-     * Creole driver to Propel adapter map.
-     * @var array
-     */
-    private static $adapters = array(
-                                    'mysql' => 'DBMySQL',
+
+	/**
+	 * Creole driver to Propel adapter map.
+	 * @var        array
+	 */
+	private static $adapters = array(
+								    'mysql' => 'DBMySQL',
 									'mysqli' => 'DBMySQLi',
-                                    'mssql' => 'DBMSSQL',
-                                    'sybase' => 'DBSyabase',
-                                    'oracle' => 'DBOracle',
-                                    'pgsql' => 'DBPostgres',
-                                    'sqlite' => 'DBSQLite',
-                                    '' => 'DBNone',
-                                );
+								    'mssql' => 'DBMSSQL',
+								    'sybase' => 'DBSybase',
+								    'oracle' => 'DBOracle',
+								    'pgsql' => 'DBPostgres',
+								    'sqlite' => 'DBSQLite',
+								    '' => 'DBNone',
+								);
 
-    /**
-     * Creates a new instance of the database adapter associated
-     * with the specified Creole driver.
-     *
-     * @param string $driver The name of the Propel/Creole driver to
-     * create a new adapter instance for or a shorter form adapter key.
-     * @return DBAdapter An instance of a Propel database adapter.
-     * @throws PropelException if the adapter could not be instantiated.
-     */
-    public static function factory($driver) {        
-        $adapterClass = isset(self::$adapters[$driver]) ? self::$adapters[$driver] : null;
-        if ($adapterClass !== null) {
-            require_once 'propel/adapter/'.$adapterClass.'.php';
-            $a = new $adapterClass();
-            return $a;
-        } else {
-            throw new PropelException("Unsupported Propel driver: " . $driver . ": Check your configuration file");
-        }
-    }
+	/**
+	 * Creates a new instance of the database adapter associated
+	 * with the specified Creole driver.
+	 *
+	 * @param      string $driver The name of the Propel/Creole driver to
+	 * create a new adapter instance for or a shorter form adapter key.
+	 * @return     DBAdapter An instance of a Propel database adapter.
+	 * @throws     PropelException if the adapter could not be instantiated.
+	 */
+	public static function factory($driver) {
+		$adapterClass = isset(self::$adapters[$driver]) ? self::$adapters[$driver] : null;
+		if ($adapterClass !== null) {
+			require_once 'propel/adapter/'.$adapterClass.'.php';
+			$a = new $adapterClass();
+			return $a;
+		} else {
+			throw new PropelException("Unsupported Propel driver: " . $driver . ": Check your configuration file");
+		}
+	}
 
-    /**
-     * This method is used to ignore case.
-     *
-     * @param in The string to transform to upper case.
-     * @return string The upper case string.
-     */
-    public abstract function toUpperCase($in);
+	/**
+	 * This method is used to ignore case.
+	 *
+	 * @param      in The string to transform to upper case.
+	 * @return     string The upper case string.
+	 */
+	public abstract function toUpperCase($in);
 
-    /**
-     * Returns the character used to indicate the beginning and end of
-     * a piece of text used in a SQL statement (generally a single
-     * quote).
-     *
-     * @return string The text delimeter.
-     */
-    public function getStringDelimiter()
-    {
-        return '\'';
-    }
-    
-    /**
-     * Locks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to lock.
-     * @return void
-     * @throws SQLException No Statement could be created or executed.
-     */
-    public abstract function lockTable(Connection $con, $table);
+	/**
+	 * Returns the character used to indicate the beginning and end of
+	 * a piece of text used in a SQL statement (generally a single
+	 * quote).
+	 *
+	 * @return     string The text delimeter.
+	 */
+	public function getStringDelimiter()
+	{
+		return '\'';
+	}
 
-    /**
-     * Unlocks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to unlock.
-     * @return void
-     * @throws SQLException No Statement could be created or executed.
-     */
-    public abstract function unlockTable(Connection $con, $table);
+	/**
+	 * Locks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to lock.
+	 * @return     void
+	 * @throws     SQLException No Statement could be created or executed.
+	 */
+	public abstract function lockTable(Connection $con, $table);
 
-    /**
-     * This method is used to ignore case.
-     *
-     * @param string $in The string whose case to ignore.
-     * @return string The string in a case that can be ignored.
-     */
-    public abstract function ignoreCase($in);
+	/**
+	 * Unlocks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to unlock.
+	 * @return     void
+	 * @throws     SQLException No Statement could be created or executed.
+	 */
+	public abstract function unlockTable(Connection $con, $table);
 
-    /**
-     * This method is used to ignore case in an ORDER BY clause.
-     * Usually it is the same as ignoreCase, but some databases
-     * (Interbase for example) does not use the same SQL in ORDER BY
-     * and other clauses.
-     *
-     * @param string $in The string whose case to ignore.
-     * @return string The string in a case that can be ignored.
-     */
-    public function ignoreCaseInOrderBy($in)
-    {
-        return $this->ignoreCase($in);
-    }      
+	/**
+	 * This method is used to ignore case.
+	 *
+	 * @param      string $in The string whose case to ignore.
+	 * @return     string The string in a case that can be ignored.
+	 */
+	public abstract function ignoreCase($in);
 
-    /**
-     * Returns SQL which concatenates the second string to the first.
-     *
-     * @param string String to concatenate.
-     * @param string String to append.
-     * @return string 
-     */
-    public abstract function concatString($s1, $s2);
+	/**
+	 * This method is used to ignore case in an ORDER BY clause.
+	 * Usually it is the same as ignoreCase, but some databases
+	 * (Interbase for example) does not use the same SQL in ORDER BY
+	 * and other clauses.
+	 *
+	 * @param      string $in The string whose case to ignore.
+	 * @return     string The string in a case that can be ignored.
+	 */
+	public function ignoreCaseInOrderBy($in)
+	{
+		return $this->ignoreCase($in);
+	}
 
-    /**
-     * Returns SQL which extracts a substring.
-     *
-     * @param string String to extract from.
-     * @param int Offset to start from.
-     * @param int Number of characters to extract.
-     * @return string 
-     */
-    public abstract function subString($s, $pos, $len);
+	/**
+	 * Returns SQL which concatenates the second string to the first.
+	 *
+	 * @param      string String to concatenate.
+	 * @param      string String to append.
+	 * @return     string
+	 */
+	public abstract function concatString($s1, $s2);
 
-    /**
-     * Returns SQL which calculates the length (in chars) of a string.
-     *
-     * @param string String to calculate length of.
-     * @return string 
-     */
-    public abstract function strLength($s);
-	
-	
+	/**
+	 * Returns SQL which extracts a substring.
+	 *
+	 * @param      string String to extract from.
+	 * @param      int Offset to start from.
+	 * @param      int Number of characters to extract.
+	 * @return     string
+	 */
+	public abstract function subString($s, $pos, $len);
+
+	/**
+	 * Returns SQL which calculates the length (in chars) of a string.
+	 *
+	 * @param      string String to calculate length of.
+	 * @return     string
+	 */
+	public abstract function strLength($s);
+
+
 	/**
 	 * Quotes database objec identifiers (table names, col names, sequences, etc.).
-	 * @param string $text The identifier to quote.
-	 * @return string The quoted identifier.
+	 * @param      string $text The identifier to quote.
+	 * @return     string The quoted identifier.
 	 */
 	public function quoteIdentifier($text)
 	{
 		return '"' . $text . '"';
 	}
-    
+
 }

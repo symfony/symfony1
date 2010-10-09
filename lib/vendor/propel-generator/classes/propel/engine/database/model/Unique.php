@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Unique.php 105 2005-06-04 23:21:07Z david $
+ *  $Id: Unique.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,42 +28,42 @@ include_once 'propel/engine/database/model/Index.php';
  * a column also creates an index on that column (this is known to be
  * true for MySQL and Oracle).
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
- * @author Daniel Rall <dlr@collab.net> (Torque)
- * @version $Revision: 105 $
- * @package propel.engine.database.model
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Jason van Zyl <jvanzyl@apache.org> (Torque)
+ * @author     Daniel Rall <dlr@collab.net> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.engine.database.model
  */
 class Unique extends Index {
 
-    /**
-     * Default constructor.
-     */
-    public function __construct(Table $table, $indexColumns = array())
-    {
-    }
+	/**
+	 * Default constructor.
+	 */
+	public function __construct(Table $table, $indexColumns = array())
+	{
+	}
 
-    /**
-     * Returns <code>true</code>.
-     */
-    public function isUnique()
-    {
-        return true;
-    }
+	/**
+	 * Returns <code>true</code>.
+	 */
+	public function isUnique()
+	{
+		return true;
+	}
 
-    /**
-     * String representation of the index. This is an xml representation.
-     */
-    public function toString()
-    {
-        $result = " <unique name=\"" . $this->getName() . "\">\n";        
-        $columns = $this->getColumns();
-        for ($i=0, $size=count($columns); $i < $size; $i++) {
-            $result .= "  <unique-column name=\""
-                . $columns[$i]
-                . "\"/>\n";
-        }
-        $result .= " </unique>\n";
-        return $result;
-    }
+	/**
+	 * String representation of the index. This is an xml representation.
+	 */
+	public function toString()
+	{
+		$result = " <unique name=\"" . $this->getName() . "\">\n";
+		$columns = $this->getColumns();
+		for ($i=0, $size=count($columns); $i < $size; $i++) {
+			$result .= "  <unique-column name=\""
+				. $columns[$i]
+				. "\"/>\n";
+		}
+		$result .= " </unique>\n";
+		return $result;
+	}
 }

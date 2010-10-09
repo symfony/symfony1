@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: ObjectBuilder.php 106 2005-06-07 03:18:28Z hans $
+ *  $Id: ObjectBuilder.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,68 +24,68 @@ require_once 'propel/engine/builder/om/OMBuilder.php';
 
 /**
  * Base class for Peer-building classes.
- * 
+ *
  * This class is designed so that it can be extended by a PHP4PeerBuilder in addition
  * to the "standard" PHP5PeerBuilder and PHP5ComplexOMPeerBuilder.  Hence, this class
- * should not have any actual template code in it -- simply basic logic & utility 
+ * should not have any actual template code in it -- simply basic logic & utility
  * methods.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
  */
 abstract class ObjectBuilder extends OMBuilder {
-	
+
 	/**
 	 * Constructs a new PeerBuilder subclass.
 	 */
 	public function __construct(Table $table) {
 		parent::__construct($table);
 	}
-		
+
 	/**
 	 * This method adds the contents of the generated class to the script.
-	 * 
+	 *
 	 * This method is abstract and should be overridden by the subclasses.
-	 * 
+	 *
 	 * Hint: Override this method in your subclass if you want to reorganize or
 	 * drastically change the contents of the generated peer class.
-	 * 
-	 * @param string &$script The script will be modified in this method.
+	 *
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	abstract protected function addClassBody(&$script);
-	
+
 	/**
 	 * Adds the getter methods for the column values.
 	 * This is here because it is probably generic enough to apply to templates being generated
 	 * in different langauges (e.g. PHP4 and PHP5).
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addColumnAccessorMethods(&$script)
 	{
 		$table = $this->getTable();
-		
+
 		foreach ($table->getColumns() as $col) {
-			
-			if ($col->getType() === PropelTypes::DATE || $col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) { 
+
+			if ($col->getType() === PropelTypes::DATE || $col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
 				$this->addTemporalAccessor($script, $col);
 			} else {
 				$this->addGenericAccessor($script, $col);
 			}
 			if ($col->isLazyLoad()) {
-			    $this->addLazyLoader($script, $col);
+				$this->addLazyLoader($script, $col);
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds the mutator (setter) methods for setting column values.
 	 * This is here because it is probably generic enough to apply to templates being generated
 	 * in different langauges (e.g. PHP4 and PHP5).
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addColumnMutatorMethods(&$script)
 	{
 		foreach ($this->getTable()->getColumns() as $col) {
-			
+
 			if ($col->isLob()) {
 				$this->addLobMutator($script, $col);
 			} elseif ($col->getType() === PropelTypes::DATE || $col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
@@ -95,34 +95,34 @@ abstract class ObjectBuilder extends OMBuilder {
 			}
 		}
 	}
-	
-	
+
+
 	/**
-     * Gets the baseClass path if specified for table/db.  
-     * If not, will return 'propel.om.BaseObject'
-     * @return string
-     */
-    protected function getBaseClass() {
-        $class = $this->getTable()->getBaseClass();
-        if ($class === null) {
-            $class = "propel.om.BaseObject";
-        }
-        return $class;
-    }
-	
+	 * Gets the baseClass path if specified for table/db.
+	 * If not, will return 'propel.om.BaseObject'
+	 * @return     string
+	 */
+	protected function getBaseClass() {
+		$class = $this->getTable()->getBaseClass();
+		if ($class === null) {
+			$class = "propel.om.BaseObject";
+		}
+		return $class;
+	}
+
 	/**
-     * Gets the interface path if specified for current table.
-     * If not, will return 'propel.om.Persistent'.
-     * @return string
-     */
-    protected function getInterface() {
-        $interface = $this->getTable()->getInterface();
-        if ($interface === null && !$this->getTable()->isReadOnly()) {
-            $interface = "propel.om.Persistent";
-        }
-        return $interface;
-    }
-	
+	 * Gets the interface path if specified for current table.
+	 * If not, will return 'propel.om.Persistent'.
+	 * @return     string
+	 */
+	protected function getInterface() {
+		$interface = $this->getTable()->getInterface();
+		if ($interface === null && !$this->getTable()->isReadOnly()) {
+			$interface = "propel.om.Persistent";
+		}
+		return $interface;
+	}
+
 	/**
 	 * Whether to add the generic mutator methods (setByName(), setByPosition(), fromArray()).
 	 * This is based on the build property propel.addGenericMutators, and also whether the
@@ -130,10 +130,10 @@ abstract class ObjectBuilder extends OMBuilder {
 	 */
 	protected function isAddGenericMutators()
 	{
-		$table = $this->getTable();		
+		$table = $this->getTable();
 		return (!$table->isAlias() && $this->getBuildProperty('addGenericMutators') && !$table->isReadOnly());
 	}
-	
+
 	/**
 	 * Whether to add the generic accessor methods (getByName(), getByPosition(), toArray()).
 	 * This is based on the build property propel.addGenericAccessors, and also whether the
@@ -141,8 +141,8 @@ abstract class ObjectBuilder extends OMBuilder {
 	 */
 	protected function isAddGenericAccessors()
 	{
-		$table = $this->getTable();		
+		$table = $this->getTable();
 		return (!$table->isAlias() && $this->getBuildProperty('addGenericAccessors'));
 	}
-	
+
 }

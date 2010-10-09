@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicObjectBuilder.php 120 2005-06-17 02:18:41Z hans $
+ *  $Id: PHP5ExtensionNodeBuilder.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,53 +24,53 @@ require_once 'propel/engine/builder/om/ObjectBuilder.php';
 
 /**
  * Generates the empty PHP5 stub node object class for user object model (OM).
- * 
+ *
  * This class produces the empty stub class that can be customized with application
  * business logic, custom behavior, etc.
- * 
+ *
  * This class replaces the ExtensionNode.tpl, with the intent of being easier for users
  * to customize (through extending & overriding).
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.om.php5
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.om.php5
  */
-class PHP5ExtensionNodeBuilder extends ObjectBuilder {		
-	
+class PHP5ExtensionNodeBuilder extends ObjectBuilder {
+
 	/**
 	 * Returns the name of the current class being built.
-	 * @return string
+	 * @return     string
 	 */
 	public function getClassname()
 	{
 		return $this->getTable()->getPhpName() . 'Node';
 	}
-	
+
 	/**
 	 * Adds the include() statements for files that this class depends on or utilizes.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addIncludes(&$script)
 	{
-	
+
 		$script .= "
 require_once '".$this->getNodeBuilder()->getClassFilePath()."';
 ";
-		
+
 	} // addIncludes()
-	
+
 	/**
 	 * Adds class phpdoc comment and openning of class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addClassOpen(&$script)
 	{
-		
+
 		$table = $this->getTable();
 		$tableName = $table->getName();
 		$tableDesc = $table->getDescription();
-		
+
 		$baseClassname = $this->getNodeBuilder()->getClassname();
-		
+
 		$script .= "
 
 /**
@@ -91,34 +91,34 @@ require_once '".$this->getNodeBuilder()->getClassFilePath()."';
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  *
- * @package ".$this->getPackage()."
- */	
+ * @package    ".$this->getPackage()."
+ */
 class ".$this->getClassname()." extends $baseClassname {
 ";
 	}
-	
+
 	/**
 	 * Specifies the methods that are added as part of the stub object class.
-	 * 
+	 *
 	 * By default there are no methods for the empty stub classes; override this method
 	 * if you want to change that behavior.
-	 * 
-	 * @see ObjectBuilder::addClassBody()
+	 *
+	 * @see        ObjectBuilder::addClassBody()
 	 */
 	protected function addClassBody(&$script)
 	{
 		// there is no class body
 	}
-	
+
 	/**
 	 * Closes class.
-	 * @param string &$script The script will be modified in this method.
-	 */	
+	 * @param      string &$script The script will be modified in this method.
+	 */
 	protected function addClassClose(&$script)
 	{
 		$script .= "
 } // " . $this->getClassname() . "
 ";
 	}
-	
+
 } // PHP5ExtensionObjectBuilder

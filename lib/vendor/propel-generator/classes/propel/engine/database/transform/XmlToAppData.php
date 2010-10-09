@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: XmlToAppData.php 337 2006-02-15 14:41:54Z hans $
+ *  $Id: XmlToAppData.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,13 +30,13 @@ include_once 'phing/system/io/FileReader.php';
  * A class that is used to parse an input xml schema file and creates an AppData
  * PHP object.
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Leon Messerschmidt <leon@opticode.co.za> (Torque)
- * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
- * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @author Daniel Rall <dlr@collab.net> (Torque)
- * @version $Revision: 337 $
- * @package propel.engine.database.transform
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Leon Messerschmidt <leon@opticode.co.za> (Torque)
+ * @author     Jason van Zyl <jvanzyl@apache.org> (Torque)
+ * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
+ * @author     Daniel Rall <dlr@collab.net> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.engine.database.transform
  */
 class XmlToAppData extends AbstractHandler {
 
@@ -71,9 +71,9 @@ class XmlToAppData extends AbstractHandler {
 	/**
 	 * Creates a new instance for the specified database type.
 	 *
-	 * @param Platform $platform The type of database for the application.
-	 * @param string $defaultPackage the default PHP package used for the om
-	 * @param string $encoding The database encoding.
+	 * @param      Platform $platform The type of database for the application.
+	 * @param      string $defaultPackage the default PHP package used for the om
+	 * @param      string $encoding The database encoding.
 	 */
 	public function __construct(Platform $platform, $defaultPackage, $encoding = 'iso-8859-1')
 	{
@@ -83,13 +83,13 @@ class XmlToAppData extends AbstractHandler {
 		$this->firstPass = true;
 		$this->encoding = $encoding;
 	}
-	
+
 	/**
 	 * Parses a XML input file and returns a newly created and
 	 * populated AppData structure.
 	 *
-	 * @param string $xmlFile The input file to parse.
-	 * @return AppData populated by <code>xmlFile</code>.
+	 * @param      string $xmlFile The input file to parse.
+	 * @return     AppData populated by <code>xmlFile</code>.
 	 */
 	public function parseFile($xmlFile)
 	{
@@ -104,7 +104,7 @@ class XmlToAppData extends AbstractHandler {
 		// store current schema file path
 		$this->schemasTagsStack[$xmlFile] = array();
 
-		$this->currentXmlFile = $xmlFile;		
+		$this->currentXmlFile = $xmlFile;
 
 		try {
 			$fr = new FileReader($xmlFile);
@@ -135,12 +135,12 @@ class XmlToAppData extends AbstractHandler {
 	/**
 	 * Handles opening elements of the xml file.
 	 *
-	 * @param string $uri
-	 * @param string $localName The local name (without prefix), or the empty string if
+	 * @param      string $uri
+	 * @param      string $localName The local name (without prefix), or the empty string if
 	 *		 Namespace processing is not being performed.
-	 * @param string $rawName The qualified name (with prefix), or the empty string if
+	 * @param      string $rawName The qualified name (with prefix), or the empty string if
 	 *		 qualified names are not available.
-	 * @param string $attributes The specified or defaulted attributes
+	 * @param      string $attributes The specified or defaulted attributes
 	 */
 	public function startElement($name, $attributes) {
 
@@ -348,10 +348,10 @@ class XmlToAppData extends AbstractHandler {
 	/**
 	 * Handles closing elements of the xml file.
 	 *
-	 * @param uri
-	 * @param localName The local name (without prefix), or the empty string if
+	 * @param      uri
+	 * @param      localName The local name (without prefix), or the empty string if
 	 *		 Namespace processing is not being performed.
-	 * @param rawName The qualified name (with prefix), or the empty string if
+	 * @param      rawName The qualified name (with prefix), or the empty string if
 	 *		 qualified names are not available.
 	 */
 	public function endElement($name)
@@ -395,7 +395,7 @@ class XmlToAppData extends AbstractHandler {
 /**
  * Utility class used for objects with vendor data.
  *
- * @package propel.engine.database.transform
+ * @package    propel.engine.database.transform
  */
 class ObjectWithVendorSpecificData
 {

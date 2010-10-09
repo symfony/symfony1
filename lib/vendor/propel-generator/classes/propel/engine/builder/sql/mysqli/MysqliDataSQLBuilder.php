@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: MysqliDataSQLBuilder.php 497 2006-01-22 13:07:47Z fabien $
+ *  $Id: MysqliDataSQLBuilder.php 3752 2007-04-11 09:11:18Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,10 +24,10 @@ require_once 'propel/engine/builder/sql/DataSQLBuilder.php';
 
 /**
  * MySQL class for building data dump SQL.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.mysql
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.mysql
  */
 class MysqliDataSQLBuilder extends DataSQLBuilder {
-	
+
 }

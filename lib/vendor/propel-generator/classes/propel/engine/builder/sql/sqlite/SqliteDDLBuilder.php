@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: SqliteDDLBuilder.php 1310 2006-05-04 07:36:54Z fabien $
+ *  $Id: SqliteDDLBuilder.php 3752 2007-04-11 09:11:18Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,14 +26,14 @@ require_once 'propel/engine/builder/sql/DDLBuilder.php';
  * The SQL DDL-building class for SQLite.
  *
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.pgsql
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.pgsql
  */
 class SqliteDDLBuilder extends DDLBuilder {
 
 	/**
 	 *
-	 * @see parent::addDropStatement()
+	 * @see        parent::addDropStatement()
 	 */
 	protected function addDropStatements(&$script)
 	{
@@ -47,7 +47,7 @@ DROP TABLE ".$this->quoteIdentifier($table->getName()).";
 
 	/**
 	 *
-	 * @see parent::addColumns()
+	 * @see        parent::addColumns()
 	 */
 	protected function addTable(&$script)
 	{
@@ -76,7 +76,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 
 		foreach ($table->getUnices() as $unique ) {
 			$lines[] = "UNIQUE (".$this->getColumnList($unique->getColumns()).")";
-    	}
+		}
 
 		$sep = ",
 	";
@@ -88,7 +88,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 
 	/**
 	 * Adds CREATE INDEX statements for this table.
-	 * @see parent::addIndices()
+	 * @see        parent::addIndices()
 	 */
 	protected function addIndices(&$script)
 	{
@@ -108,7 +108,7 @@ CREATE ";
 
 	/**
 	 *
-	 * @see parent::addForeignKeys()
+	 * @see        parent::addForeignKeys()
 	 */
 	protected function addForeignKeys(&$script)
 	{

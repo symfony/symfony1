@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: UniqueValidator.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: UniqueValidator.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,35 +32,35 @@ require_once 'propel/validator/BasicValidator.php';
  *   </validator>
  * </code>
  *
- * @author Michael Aichler <aichler@mediacluster.de>
- * @version $Revision: 64 $
- * @package propel.validator
+ * @author     Michael Aichler <aichler@mediacluster.de>
+ * @version    $Revision: 536 $
+ * @package    propel.validator
  */
 class UniqueValidator implements BasicValidator
 {
 
-    /**
-     * @see BasicValidator::isValid()
-     */
-    public function isValid (ValidatorMap $map, $str)
-    {
-      $column = $map->getColumn();
+	/**
+	 * @see        BasicValidator::isValid()
+	 */
+	public function isValid (ValidatorMap $map, $str)
+	{
+	  $column = $map->getColumn();
 
-      $c = new Criteria();
-      $c->add($column->getFullyQualifiedName(), $str, Criteria::EQUAL);
+	  $c = new Criteria();
+	  $c->add($column->getFullyQualifiedName(), $str, Criteria::EQUAL);
 
-      $isValid = false;
+	  $isValid = false;
 
-      try {
+	  try {
 
-          $table = $column->getTable()->getPhpName();
-          $cmd = sprintf('$isValid = %sPeer::doCount($c) == 0;', $table);
-          eval($cmd);
+		  $table = $column->getTable()->getPhpName();
+		  $cmd = sprintf('$isValid = %sPeer::doCount($c) == 0;', $table);
+		  eval($cmd);
 
-      } catch(PropelException $e) {
-        /* what to do here ? */
-      }
+	  } catch(PropelException $e) {
+		/* what to do here ? */
+	  }
 
-      return $isValid;
-    }
+	  return $isValid;
+	}
 }

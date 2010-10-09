@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PropelException.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: PropelException.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,44 +18,44 @@
  * and is licensed under the LGPL. For more information please see
  * <http://propel.phpdb.org>.
  */
- 
+
 /**
  * The base class of all exceptions thrown by Propel.
- * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 64 $
- * @package propel
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @version    $Revision: 536 $
+ * @package    propel
  */
 class PropelException extends Exception {
-    
-    /** The nested "cause" exception. */
-    protected $cause;
-    
-    function __construct($p1, $p2 = null) {
-        
-        $cause = null;
-        
-        if ($p2 !== null) {
-            $msg = $p1;
-            $cause = $p2;
-        } else {
-            if ($p1 instanceof Exception) {
-                $msg = "";
-                $cause = $p1;
-            } else {
-                $msg = $p1;
-            }        
-        }
-        
-        parent::__construct($msg);
-        
-        if ($cause !== null) {
-            $this->cause = $cause;
-            $this->message .= " [wrapped: " . $cause->getMessage() ."]";
-        }
-    }
-    
-    function getCause() {
-        return $this->cause;
-    }
-    
+
+	/** The nested "cause" exception. */
+	protected $cause;
+
+	function __construct($p1, $p2 = null) {
+
+		$cause = null;
+
+		if ($p2 !== null) {
+			$msg = $p1;
+			$cause = $p2;
+		} else {
+			if ($p1 instanceof Exception) {
+				$msg = "";
+				$cause = $p1;
+			} else {
+				$msg = $p1;
+			}
+		}
+
+		parent::__construct($msg);
+
+		if ($cause !== null) {
+			$this->cause = $cause;
+			$this->message .= " [wrapped: " . $cause->getMessage() ."]";
+		}
+	}
+
+	function getCause() {
+		return $this->cause;
+	}
+
 }

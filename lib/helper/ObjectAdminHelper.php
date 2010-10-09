@@ -16,7 +16,7 @@ use_helper('Form', 'Javascript', 'Helper');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: ObjectAdminHelper.php 3311 2007-01-20 06:24:41Z fabien $
+ * @version    SVN: $Id: ObjectAdminHelper.php 3746 2007-04-11 08:08:38Z fabien $
  */
 
 function object_admin_input_file_tag($object, $method, $options = array())
@@ -195,7 +195,8 @@ function _get_propel_object_list($object, $method, $options)
 
 function _get_object_list($object, $method, $options, $callback)
 {
-  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+  $object = $object instanceof sfOutputEscaper ? $object->getRawValue() : $object;
+
   // the default callback is the propel one
   if (!$callback)
   {

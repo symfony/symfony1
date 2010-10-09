@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: SqliteDataSQLBuilder.php 137 2005-11-17 14:11:19Z fabien $
+ *  $Id: SqliteDataSQLBuilder.php 3752 2007-04-11 09:11:18Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,24 +24,24 @@ require_once 'propel/engine/builder/sql/DataSQLBuilder.php';
 
 /**
  * SQLite class for building data dump SQL.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.sqlite
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.sqlite
  */
 class SqliteDataSQLBuilder extends DataSQLBuilder {
-	
+
 	/**
-     * Returns string processed by sqlite_udf_encode_binary() to ensure that binary contents will be handled correctly by sqlite.
-	 * @param mixed $blob Blob or string
-	 * @return string encoded text
-     */
-    protected function getBlobSql($blob) 
-    {    
+	 * Returns string processed by sqlite_udf_encode_binary() to ensure that binary contents will be handled correctly by sqlite.
+	 * @param      mixed $blob Blob or string
+	 * @return     string encoded text
+	 */
+	protected function getBlobSql($blob)
+	{
 		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($blob)) {
-		    $blob = $blob->__toString();
+			$blob = $blob->__toString();
 		}
 		return "'" . sqlite_udf_encode_binary($blob) . "'";
-    }
-	
+	}
+
 }

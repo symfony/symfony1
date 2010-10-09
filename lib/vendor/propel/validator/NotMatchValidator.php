@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: NotMatchValidator.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: NotMatchValidator.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,37 +43,37 @@ require_once 'propel/validator/BasicValidator.php';
  *   </validator>
  * </code>
  *
- * @author Michael Aichler <aichler@mediacluster.de>
- * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 64 $
- * @package propel.validator
+ * @author     Michael Aichler <aichler@mediacluster.de>
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @version    $Revision: 536 $
+ * @package    propel.validator
  */
 class NotMatchValidator implements BasicValidator
 {
-    /**
-     * Prepares the regular expression entered in the XML
-     * for use with preg_match().
-     * @param string $exp
-     * @return string Prepared regular expession.
-     */
-    private function prepareRegexp($exp)
-    {
-        // remove surrounding '/' marks so that they don't get escaped in next step
-        if ($exp{0} !== '/' || $exp{strlen($exp)-1} !== '/' ) {
-            $exp = '/' . $exp . '/';
-        }
+	/**
+	 * Prepares the regular expression entered in the XML
+	 * for use with preg_match().
+	 * @param      string $exp
+	 * @return     string Prepared regular expession.
+	 */
+	private function prepareRegexp($exp)
+	{
+		// remove surrounding '/' marks so that they don't get escaped in next step
+		if ($exp{0} !== '/' || $exp{strlen($exp)-1} !== '/' ) {
+			$exp = '/' . $exp . '/';
+		}
 
-        // if they did not escape / chars; we do that for them
-        $exp = preg_replace('/([^\\\])\/([^$])/', '$1\/$2', $exp);
+		// if they did not escape / chars; we do that for them
+		$exp = preg_replace('/([^\\\])\/([^$])/', '$1\/$2', $exp);
 
-        return $exp;
-    }
+		return $exp;
+	}
 
-    /**
-     * Whether the passed string matches regular expression.
-     */
-    public function isValid (ValidatorMap $map, $str)
-    {
-        return (preg_match($this->prepareRegexp($map->getValue()), $str) == 0);
-    }
+	/**
+	 * Whether the passed string matches regular expression.
+	 */
+	public function isValid (ValidatorMap $map, $str)
+	{
+		return (preg_match($this->prepareRegexp($map->getValue()), $str) == 0);
+	}
 }

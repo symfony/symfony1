@@ -731,7 +731,7 @@ Listing 15-24 - Example of Complex CSS Selectors Accepted by `checkResponseEleme
 
 The `sfTestBrowser` object uses a special front controller, set to the `test` environment. The default configuration for this environment appears in Listing 15-25.
 
-Listing 15-25 - Default Test Environment Configuration, in `myapp/config/settings.php`
+Listing 15-25 - Default Test Environment Configuration, in `myapp/config/settings.yml`
 
     test:
       .settings:

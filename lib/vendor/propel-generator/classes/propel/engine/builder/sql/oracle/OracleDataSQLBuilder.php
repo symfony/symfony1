@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: OracleDataSQLBuilder.php 137 2005-11-17 14:11:19Z fabien $
+ *  $Id: OracleDataSQLBuilder.php 3752 2007-04-11 09:11:18Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,11 +24,11 @@ require_once 'propel/engine/builder/sql/DataSQLBuilder.php';
 
 /**
  * Oracle class for building data dump SQL.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.oracle
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.oracle
  */
 class OracleDataSQLBuilder extends DataSQLBuilder {
-	
-	
+
+
 }

@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfRequest.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfRequest.class.php 3692 2007-04-02 11:16:54Z fabien $
  */
 abstract class sfRequest
 {
@@ -105,12 +105,12 @@ abstract class sfRequest
     if (isset($this->errors[$name]))
     {
       $retval = $this->errors[$name];
-    }
 
-    // translate error message if needed
-    if (sfConfig::get('sf_i18n'))
-    {
-      $retval = $this->context->getI18N()->__($retval, null, $catalogue);
+      // translate error message if needed
+      if (sfConfig::get('sf_i18n'))
+      {
+        $retval = $this->context->getI18N()->__($retval, null, $catalogue);
+      }
     }
 
     return $retval;

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasicValidator.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: BasicValidator.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,27 +20,27 @@
  */
 
 /**
- * Basic Validator interface.  
- * 
+ * Basic Validator interface.
+ *
  * BasicValidator objects perform validation without any knowledge of column/table
  * context.  They are simply given an input and some value and asked whether the input
  * is valid.
  *
- * @author Michael Aichler <aichler@mediacluster.de>
- * @version $Revision: 64 $
- * @package propel.validator
+ * @author     Michael Aichler <aichler@mediacluster.de>
+ * @version    $Revision: 536 $
+ * @package    propel.validator
  */
 interface BasicValidator
 {
 
-    /**
-     * Determine whether a value meets the criteria specified
-     *
-     * @param ValidatorMap $map A column map object for the column to be validated.
-     * @param string $str a <code>String</code> to be tested
-     *
-     * @return mixed TRUE if valid, error message otherwise
-     */
-    public function isValid(ValidatorMap $map, $str);
+	/**
+	 * Determine whether a value meets the criteria specified
+	 *
+	 * @param      ValidatorMap $map A column map object for the column to be validated.
+	 * @param      string $str a <code>String</code> to be tested
+	 *
+	 * @return     mixed TRUE if valid, error message otherwise
+	 */
+	public function isValid(ValidatorMap $map, $str);
 
 }

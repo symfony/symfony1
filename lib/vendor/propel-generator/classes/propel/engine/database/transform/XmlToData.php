@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: XmlToData.php 262 2005-11-07 20:19:14Z hans $
+ *  $Id: XmlToData.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,164 +26,164 @@ require_once 'phing/parser/AbstractHandler.php';
  * A Class that is used to parse an input xml schema file and creates an
  * AppData object.
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Leon Messerschmidt <leon@opticode.co.za> (Torque)
- * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
- * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @author Fedor Karpelevitch <fedor.karpelevitch@home.com> (Torque)
- * @version $Revision: 262 $
- * @package propel.engine.database.transform
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Leon Messerschmidt <leon@opticode.co.za> (Torque)
+ * @author     Jason van Zyl <jvanzyl@apache.org> (Torque)
+ * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
+ * @author     Fedor Karpelevitch <fedor.karpelevitch@home.com> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.engine.database.transform
  */
 class XmlToData extends AbstractHandler {
 
-    private $database;
-    private $data;
+	private $database;
+	private $data;
 
-    private $encoding;
+	private $encoding;
 
-    public $parser;
+	public $parser;
 
-    const DEBUG = false;
+	const DEBUG = false;
 
-    /**
-     * Construct new XmlToData class.
-     *
-     * This class is passed the Database object so that it knows what to expect from
-     * the XML file.
-     *
-     * @param Database $database
-     */
-    public function __construct(Database $database, $encoding = 'iso-8859-1')
-    {
-        $this->database = $database;
-        $this->encoding = $encoding;
-    }
+	/**
+	 * Construct new XmlToData class.
+	 *
+	 * This class is passed the Database object so that it knows what to expect from
+	 * the XML file.
+	 *
+	 * @param      Database $database
+	 */
+	public function __construct(Database $database, $encoding = 'iso-8859-1')
+	{
+		$this->database = $database;
+		$this->encoding = $encoding;
+	}
 
-    /**
-     *
-     */
-    public function parseFile($xmlFile)
-    {
-        try {
+	/**
+	 *
+	 */
+	public function parseFile($xmlFile)
+	{
+		try {
 
-            $this->data = array();
-			
-            try {
-                $fr = new FileReader($xmlFile);
-            } catch (Exception $e) {
-                $f = new PhingFile($xmlFile);
-                throw new BuildException("XML File not found: " . $f->getAbsolutePath());
-            }
+			$this->data = array();
 
-            $br = new BufferedReader($fr);
+			try {
+				$fr = new FileReader($xmlFile);
+			} catch (Exception $e) {
+				$f = new PhingFile($xmlFile);
+				throw new BuildException("XML File not found: " . $f->getAbsolutePath());
+			}
 
-            $this->parser = new ExpatParser($br);
-            $this->parser->parserSetOption(XML_OPTION_CASE_FOLDING, 0);
-            $this->parser->setHandler($this);
+			$br = new BufferedReader($fr);
 
-            try {
-                $this->parser->parse();
-            } catch (Exception $e) {
-                print $e->getMessage() . "\n";
-                $br->close();
-            }
-            $br->close();
-        } catch (Exception $e) {
-            print $e->getMessage() . "\n";
-            print $e->getTraceAsString();
-        }
+			$this->parser = new ExpatParser($br);
+			$this->parser->parserSetOption(XML_OPTION_CASE_FOLDING, 0);
+			$this->parser->setHandler($this);
 
-        return $this->data;
-    }
+			try {
+				$this->parser->parse();
+			} catch (Exception $e) {
+				print $e->getMessage() . "\n";
+				$br->close();
+			}
+			$br->close();
+		} catch (Exception $e) {
+			print $e->getMessage() . "\n";
+			print $e->getTraceAsString();
+		}
 
-    /**
-     * Handles opening elements of the xml file.
-     */
-    public function startElement($name, $attributes)
-    {
-        try {
-            if ($name == "dataset") {
-                // we don't do anything w/ <dataset> tag right now.
-            } else {
-                $table = $this->database->getTableByPhpName($name);
+		return $this->data;
+	}
 
-                $this->columnValues = array();
-                foreach($attributes as $name => $value) {
-                    $col = $table->getColumnByPhpName($name);
-                    $this->columnValues[] = new ColumnValue($col, iconv('utf-8',$this->encoding, $value));
-                }
-                $this->data[] = new DataRow($table, $this->columnValues);
-            }
-        } catch (Exception $e) {
-            print $e;
-            throw $e;
-        }
-    }
+	/**
+	 * Handles opening elements of the xml file.
+	 */
+	public function startElement($name, $attributes)
+	{
+		try {
+			if ($name == "dataset") {
+				// we don't do anything w/ <dataset> tag right now.
+			} else {
+				$table = $this->database->getTableByPhpName($name);
+
+				$this->columnValues = array();
+				foreach($attributes as $name => $value) {
+					$col = $table->getColumnByPhpName($name);
+					$this->columnValues[] = new ColumnValue($col, iconv('utf-8',$this->encoding, $value));
+				}
+				$this->data[] = new DataRow($table, $this->columnValues);
+			}
+		} catch (Exception $e) {
+			print $e;
+			throw $e;
+		}
+	}
 
 
-    /**
-     * Handles closing elements of the xml file.
-     *
-     * @param $name The local name (without prefix), or the empty string if
-     *         Namespace processing is not being performed.
-     */
-    public function endElement($name)
-    {
-        if (self::DEBUG) {
-            print("endElement(" . $name . ") called\n");
-        }
-    }
+	/**
+	 * Handles closing elements of the xml file.
+	 *
+	 * @param      $name The local name (without prefix), or the empty string if
+	 *         Namespace processing is not being performed.
+	 */
+	public function endElement($name)
+	{
+		if (self::DEBUG) {
+			print("endElement(" . $name . ") called\n");
+		}
+	}
 
 } // XmlToData
 
-    /**
-     * "inner class"
-     * @package propel.engine.database.transform
-     */
-    class DataRow
-    {
-        private $table;
-        private $columnValues;
+	/**
+	 * "inner class"
+	 * @package    propel.engine.database.transform
+	 */
+	class DataRow
+	{
+		private $table;
+		private $columnValues;
 
-        public function __construct(Table $table, $columnValues)
-        {
-            $this->table = $table;
-            $this->columnValues = $columnValues;
-        }
+		public function __construct(Table $table, $columnValues)
+		{
+			$this->table = $table;
+			$this->columnValues = $columnValues;
+		}
 
-        public function getTable()
-        {
-            return $this->table;
-        }
+		public function getTable()
+		{
+			return $this->table;
+		}
 
-        public function getColumnValues()
-        {
-            return $this->columnValues;
-        }
-    }
+		public function getColumnValues()
+		{
+			return $this->columnValues;
+		}
+	}
 
-    /**
-     * "inner" class
-     * @package propel.engine.database.transform
-     */
-    class ColumnValue {
+	/**
+	 * "inner" class
+	 * @package    propel.engine.database.transform
+	 */
+	class ColumnValue {
 
-        private $col;
-        private $val;
+		private $col;
+		private $val;
 
-        public function __construct(Column $col, $val)
-        {
-            $this->col = $col;
-            $this->val = $val;
-        }
+		public function __construct(Column $col, $val)
+		{
+			$this->col = $col;
+			$this->val = $val;
+		}
 
-        public function getColumn()
-        {
-            return $this->col;
-        }
+		public function getColumn()
+		{
+			return $this->col;
+		}
 
-        public function getValue()
-        {
-            return $this->val;
-        }
-    }
+		public function getValue()
+		{
+			return $this->val;
+		}
+	}

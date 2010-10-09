@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: MysqliDDLBuilder.php 497 2006-01-22 13:07:47Z fabien $
+ *  $Id: MysqliDDLBuilder.php 3752 2007-04-11 09:11:18Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,10 +24,10 @@ require_once 'propel/engine/builder/sql/mysql/MysqlDDLBuilder.php';
 
 /**
  * DDL Builder class for MySQL, specifically using new mysqli API.
- * 
- * @author Hans Lellelid
- * @package propel.engine.builder.sql.mysql
+ *
+ * @author     Hans Lellelid
+ * @package    propel.engine.builder.sql.mysql
  */
 class MysqliDDLBuilder extends MysqlDDLBuilder {
-	
+
 }

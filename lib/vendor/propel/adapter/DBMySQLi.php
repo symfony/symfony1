@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBMySQLi.php 497 2006-01-22 13:07:47Z fabien $
+ *  $Id: DBMySQLi.php 3750 2007-04-11 08:39:43Z fabien $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,9 +25,9 @@ require_once 'propel/adapter/DBMySQL.php';
 /**
  * This is used in order to connect to a MySQL database using the new mysqli API.
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @version $Revision$
- * @package propel.adapter
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @version    $Revision: 536 $
+ * @package    propel.adapter
  */
 class DBMySQLi extends DBMySQL {
 
