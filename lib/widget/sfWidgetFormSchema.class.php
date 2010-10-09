@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 24963 2009-12-04 20:42:16Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 26870 2010-01-19 10:34:52Z fabien $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -753,8 +753,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function setPositions(array $positions)
   {
-    $positions = array_values($positions);
-    $current = array_keys($this->fields);
+    $positions = array_unique(array_values($positions));
+    $current   = array_keys($this->fields);
 
     if ($diff = array_diff($positions, $current))
     {

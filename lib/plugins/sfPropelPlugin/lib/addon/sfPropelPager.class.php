@@ -15,7 +15,7 @@
  * @package    sfPropelPlugin
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelPager.class.php 27747 2010-02-08 18:02:19Z Kris.Wallsmith $
  */
 class sfPropelPager extends sfPager
 {
@@ -42,7 +42,7 @@ class sfPropelPager extends sfPager
    */
   public function init()
   {
-    $this->results = null;
+    $this->resetIterator();
 
     $hasMaxRecordLimit = ($this->getMaxRecordLimit() !== false);
     $maxRecordLimit = $this->getMaxRecordLimit();

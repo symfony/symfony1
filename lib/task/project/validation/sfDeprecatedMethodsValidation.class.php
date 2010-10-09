@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDeprecatedMethodsValidation.class.php 24706 2009-12-01 19:38:44Z fabien $
+ * @version    SVN: $Id: sfDeprecatedMethodsValidation.class.php 25411 2009-12-15 15:31:29Z fabien $
  */
 class sfDeprecatedMethodsValidation extends sfValidation
 {
@@ -50,9 +50,9 @@ class sfDeprecatedMethodsValidation extends sfValidation
         'sfValidatorBase::setRequiredMessage',
         'debug_message',
         'sfContext::retrieveObjects',
-        '->getXDebugStack',
-        '->checkSymfonyVersion',
-        '->sh(',
+        'getXDebugStack',
+        'checkSymfonyVersion',
+        'sh',
       ), array(
         sfConfig::get('sf_apps_dir'),
         sfConfig::get('sf_lib_dir'),
@@ -61,7 +61,7 @@ class sfDeprecatedMethodsValidation extends sfValidation
       )),
 
       $this->doValidate(array(
-        '\-\>contains\(', 'responseContains', 'isRequestParameter', 'isResponseHeader',
+        'contains', 'responseContains', 'isRequestParameter', 'isResponseHeader',
         'isUserCulture', 'isRequestFormat', 'checkResponseElement',
       ), sfConfig::get('sf_test_dir')),
 
@@ -79,12 +79,12 @@ class sfDeprecatedMethodsValidation extends sfValidation
     $files = sfFinder::type('file')->name('*.php')->prune('vendor')->in($dir);
     foreach ($files as $file)
     {
-      $content = file_get_contents($file);
+      $content = sfToolkit::stripComments(file_get_contents($file));
 
       $matches = array();
       foreach ($methods as $method)
       {
-        if (false !== stripos($content, $method))
+        if (preg_match('#\b'.preg_quote($method, '#').'\b#', $content))
         {
           $matches[] = $method;
         }

@@ -6,7 +6,6 @@
  * @package    ##PROJECT_NAME##
  * @subpackage filter
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: sfPropelFormFilterGeneratedTemplate.php 24051 2009-11-16 21:08:08Z Kris.Wallsmith $
  */
 abstract class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormFilterPropel
 {

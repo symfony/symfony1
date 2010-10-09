@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: OMBuilder.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: OMBuilder.php 1450 2010-01-12 21:19:00Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -182,7 +182,7 @@ abstract class OMBuilder extends DataModelBuilder {
 			throw $e;
 		}
 		if ($classname === null) {
-			return $col->getConstantName();
+			return $this->getBuildProperty('classPrefix') . $col->getConstantName();
 		}
 		// was it overridden in schema.xml ?
 		if ($col->getPeerName()) {

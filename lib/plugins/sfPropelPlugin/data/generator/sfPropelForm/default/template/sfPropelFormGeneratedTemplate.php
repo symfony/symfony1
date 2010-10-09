@@ -8,7 +8,6 @@
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 24051 2009-11-16 21:08:08Z Kris.Wallsmith $
  */
 abstract class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
 {

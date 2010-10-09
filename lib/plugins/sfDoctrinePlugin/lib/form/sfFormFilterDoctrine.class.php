@@ -21,7 +21,7 @@
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfFormFilterDoctrine.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormFilterDoctrine.class.php 27748 2010-02-08 18:18:44Z Kris.Wallsmith $
  */
 abstract class sfFormFilterDoctrine extends sfFormFilter
 {
@@ -243,7 +243,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
     {
       $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
     }
-    else if (is_array($values) && isset($values['text']) && '' != $values['text'])
+    else if (is_array($values) && isset($values['text']) && '' !== $values['text'])
     {
       $query->addWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $fieldName), $values['text']);
     }

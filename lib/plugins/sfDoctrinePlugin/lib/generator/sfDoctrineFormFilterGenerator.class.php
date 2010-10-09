@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDoctrineFormFilterGenerator.class.php 24294 2009-11-23 21:45:03Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineFormFilterGenerator.class.php 27842 2010-02-10 19:42:03Z Kris.Wallsmith $
  */
 class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
 {
@@ -253,7 +253,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->table->getOption('name'), $this->table->getFieldName($columnName));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->table->getOption('name'), $column->getFieldName());
     }
     else
     {

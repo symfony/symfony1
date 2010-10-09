@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSymfonyPluginManager.class.php 25051 2009-12-07 22:00:55Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfSymfonyPluginManager.class.php 25218 2009-12-10 20:06:45Z Jonathan.Wage $
  */
 class sfSymfonyPluginManager extends sfPluginManager
 {
@@ -132,7 +132,7 @@ class sfSymfonyPluginManager extends sfPluginManager
    * @param string $plugin The name of the plugin
    * @param string $configDir The config directory
    */
-  static protected function disablePlugin($plugin, $configDir)
+  static public function disablePlugin($plugin, $configDir)
   {
     if (!$configDir)
     {

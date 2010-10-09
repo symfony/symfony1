@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: UrlHelper.php 27753 2010-02-08 19:24:39Z Kris.Wallsmith $
  */
 
 function link_to2($name, $routeName, $params, $options = array())
@@ -163,7 +163,7 @@ function link_to()
 {
   // for BC with 1.1
   $arguments = func_get_args();
-  if (empty($arguments[1]) || '@' == substr($arguments[1], 0, 1) || false !== strpos($arguments[1], '/'))
+  if (empty($arguments[1]) || is_array($arguments[1]) || '@' == substr($arguments[1], 0, 1) || false !== strpos($arguments[1], '/'))
   {
     return call_user_func_array('link_to1', $arguments);
   }
@@ -177,7 +177,7 @@ function link_to()
   }
 }
 
-function url_for_form(sfForm $form, $routePrefix)
+function url_for_form(sfFormObject $form, $routePrefix)
 {
   $format = '%s/%s';
   if ('@' == $routePrefix[0])

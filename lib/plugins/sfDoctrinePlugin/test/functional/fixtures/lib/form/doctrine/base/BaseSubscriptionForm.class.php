@@ -23,7 +23,7 @@ abstract class BaseSubscriptionForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'     => new sfValidatorDoctrineChoice(array('model' => $this->getModelName(), 'column' => 'id', 'required' => false)),
       'name'   => new sfValidatorString(array('max_length' => 255, 'required' => false)),
-      'status' => new sfValidatorChoice(array('choices' => array('New' => 'New', 'Active' => 'Active', 'Pending' => 'Pending', 'Expired' => 'Expired'), 'required' => false)),
+      'status' => new sfValidatorChoice(array('choices' => array(0 => 'New', 1 => 'Active', 2 => 'Pending', 3 => 'Expired'), 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('subscription[%s]');

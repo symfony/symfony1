@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: DebugPDO.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: DebugPDO.php 1343 2009-11-29 22:36:48Z david $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -331,7 +331,11 @@ class DebugPDO extends PropelPDO
 	{
 		$debug	= $this->getDebugSnapshot();
 		$args	= func_get_args();
-		$return	= call_user_func_array(array($this, 'parent::query'), $args);
+		if (version_compare(PHP_VERSION, '5.3', '<')) {
+			$return	= call_user_func_array(array($this, 'parent::query'), $args);
+		} else {
+			$return	= call_user_func_array('parent::query', $args);
+		}
 		
 		$sql = $args[0];
 		$this->log($sql, null, __METHOD__, $debug);
