@@ -1,0 +1,1329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
+<package version="1.0" packagerversion="1.7.1">
+ <name>sfPropelPlugin</name>
+ <summary>sfPropelPlugin adds support for Propel 1.3 for symfony 1.1.</summary>
+ <description>sfPropelPlugin adds support for Propel 1.3 for symfony 1.1.
+ </description>
+ <maintainers>
+  <maintainer>
+   <user>dwhittle</user>
+   <name>Dustin Whittle</name>
+   <email>dustin.whittle@symfony-project.com</email>
+   <role>lead</role>
+  </maintainer>
+  </maintainers>
+ <release>
+  <version>1.1.0.0</version>
+  <date>2008-08-03</date>
+  <license>MIT License</license>
+  <state>stable</state>
+  <notes>--
+  </notes>
+  <deps>
+   <dep type="php" rel="ge" version="5.2.0" optional="no"/>
+   <dep type="pkg" rel="ge" version="1.1.0" optional="no">symfony</dep>
+  </deps>
+  <filelist>
+   <dir name="/" baseinstalldir="/">
+    <dir name="config">
+     <file role="data" name="autoload.yml"/>
+     <file role="php" name="config.php"/>
+     <file role="data" name="databases.yml.example"/>
+     <file role="data" name="propel.ini.example"/>
+    </dir> <!-- /config -->
+    <dir name="data">
+     <dir name="generator">
+      <dir name="sfPropelAdmin">
+       <dir name="default">
+        <dir name="skeleton">
+         <dir name="actions">
+          <file role="php" name="actions.class.php"/>
+         </dir> <!-- /data/generator/sfPropelAdmin/default/skeleton/actions -->
+         <dir name="config">
+          <file role="data" name="generator.yml"/>
+         </dir> <!-- /data/generator/sfPropelAdmin/default/skeleton/config -->
+        </dir> <!-- /data/generator/sfPropelAdmin/default/skeleton -->
+        <dir name="template">
+         <dir name="actions">
+          <file role="php" name="actions.class.php"/>
+         </dir> <!-- /data/generator/sfPropelAdmin/default/template/actions -->
+         <dir name="templates">
+          <file role="php" name="editSuccess.php"/>
+          <file role="php" name="listSuccess.php"/>
+          <file role="php" name="_edit_actions.php"/>
+          <file role="php" name="_edit_footer.php"/>
+          <file role="php" name="_edit_form.php"/>
+          <file role="php" name="_edit_header.php"/>
+          <file role="php" name="_edit_messages.php"/>
+          <file role="php" name="_filters.php"/>
+          <file role="php" name="_list.php"/>
+          <file role="php" name="_list_actions.php"/>
+          <file role="php" name="_list_batch_actions.php"/>
+          <file role="php" name="_list_footer.php"/>
+          <file role="php" name="_list_header.php"/>
+          <file role="php" name="_list_messages.php"/>
+          <file role="php" name="_list_td_actions.php"/>
+          <file role="php" name="_list_td_batch_actions.php"/>
+          <file role="php" name="_list_td_stacked.php"/>
+          <file role="php" name="_list_td_tabular.php"/>
+          <file role="php" name="_list_th_stacked.php"/>
+          <file role="php" name="_list_th_tabular.php"/>
+         </dir> <!-- /data/generator/sfPropelAdmin/default/template/templates -->
+        </dir> <!-- /data/generator/sfPropelAdmin/default/template -->
+       </dir> <!-- /data/generator/sfPropelAdmin/default -->
+      </dir> <!-- /data/generator/sfPropelAdmin -->
+      <dir name="sfPropelCrud">
+       <dir name="default">
+        <dir name="skeleton">
+         <dir name="actions">
+          <file role="php" name="actions.class.php"/>
+         </dir> <!-- /data/generator/sfPropelCrud/default/skeleton/actions -->
+         <dir name="config">
+          <file role="data" name="generator.yml"/>
+         </dir> <!-- /data/generator/sfPropelCrud/default/skeleton/config -->
+        </dir> <!-- /data/generator/sfPropelCrud/default/skeleton -->
+        <dir name="template">
+         <dir name="actions">
+          <file role="php" name="actions.class.php"/>
+         </dir> <!-- /data/generator/sfPropelCrud/default/template/actions -->
+         <dir name="templates">
+          <file role="php" name="editSuccess.php"/>
+          <file role="php" name="indexSuccess.php"/>
+          <file role="php" name="showSuccess.php"/>
+         </dir> <!-- /data/generator/sfPropelCrud/default/template/templates -->
+        </dir> <!-- /data/generator/sfPropelCrud/default/template -->
+       </dir> <!-- /data/generator/sfPropelCrud/default -->
+      </dir> <!-- /data/generator/sfPropelCrud -->
+      <dir name="sfPropelForm">
+       <dir name="default">
+        <dir name="template">
+         <file role="php" name="sfPropelFormBaseTemplate.php"/>
+         <file role="php" name="sfPropelFormGeneratedTemplate.php"/>
+         <file role="php" name="sfPropelFormTemplate.php"/>
+        </dir> <!-- /data/generator/sfPropelForm/default/template -->
+       </dir> <!-- /data/generator/sfPropelForm/default -->
+      </dir> <!-- /data/generator/sfPropelForm -->
+     </dir> <!-- /data/generator -->
+    </dir> <!-- /data -->
+    <dir name="lib">
+     <dir name="creole">
+      <dir name="database">
+       <file role="php" name="sfCreoleDatabase.class.php"/>
+      </dir> <!-- /lib/creole/database -->
+      <dir name="drivers">
+       <file role="php" name="sfDebugConnection.php"/>
+      </dir> <!-- /lib/creole/drivers -->
+      <dir name="i18n">
+       <file role="php" name="sfMessageSource_Creole.class.php"/>
+      </dir> <!-- /lib/creole/i18n -->
+      <dir name="storage">
+       <file role="php" name="sfCreoleSessionStorage.class.php"/>
+      </dir> <!-- /lib/creole/storage -->
+     </dir> <!-- /lib/creole -->
+     <dir name="propel">
+      <dir name="addon">
+       <file role="php" name="sfMixer.class.php"/>
+       <file role="php" name="sfPropel.class.php"/>
+       <file role="php" name="sfPropelAutoload.php"/>
+       <file role="php" name="sfPropelBehavior.class.php"/>
+       <file role="php" name="sfPropelData.class.php"/>
+       <file role="php" name="sfPropelDatabaseSchema.class.php"/>
+       <file role="php" name="sfPropelManyToMany.class.php"/>
+       <file role="php" name="sfPropelPager.class.php"/>
+      </dir> <!-- /lib/propel/addon -->
+      <dir name="builder">
+       <file role="php" name="SfExtensionObjectBuilder.php"/>
+       <file role="php" name="SfExtensionPeerBuilder.php"/>
+       <file role="php" name="SfMapBuilderBuilder.php"/>
+       <file role="php" name="SfMultiExtendObjectBuilder.php"/>
+       <file role="php" name="SfNestedSetBuilder.php"/>
+       <file role="php" name="SfNestedSetPeerBuilder.php"/>
+       <file role="php" name="SfObjectBuilder.php"/>
+       <file role="php" name="SfPeerBuilder.php"/>
+      </dir> <!-- /lib/propel/builder -->
+      <dir name="database">
+       <file role="php" name="sfPropelDatabase.class.php"/>
+       <file role="php" name="sfPropelDataRetriever.class.php"/>
+      </dir> <!-- /lib/propel/database -->
+      <dir name="form">
+       <file role="php" name="sfFormPropel.class.php"/>
+      </dir> <!-- /lib/propel/form -->
+      <dir name="generator">
+       <file role="php" name="sfPropelAdminGenerator.class.php"/>
+       <file role="php" name="sfPropelCrudGenerator.class.php"/>
+       <file role="php" name="sfPropelFormGenerator.class.php"/>
+      </dir> <!-- /lib/propel/generator -->
+      <dir name="log">
+       <file role="php" name="sfPropelLogger.class.php"/>
+      </dir> <!-- /lib/propel/log -->
+      <dir name="migration">
+       <file role="php" name="sfPropelMigration.class.php"/>
+       <file role="php" name="sfPropelMigrationManager.class.php"/>
+      </dir> <!-- /lib/propel/migration -->
+      <dir name="validator">
+       <file role="php" name="sfPropelUniqueValidator.class.php"/>
+       <file role="php" name="sfValidatorPropelChoice.class.php"/>
+       <file role="php" name="sfValidatorPropelChoiceMany.class.php"/>
+       <file role="php" name="sfValidatorPropelUnique.class.php"/>
+      </dir> <!-- /lib/propel/validator -->
+      <dir name="widget">
+       <file role="php" name="sfWidgetFormPropelSelect.class.php"/>
+       <file role="php" name="sfWidgetFormPropelSelectMany.class.php"/>
+      </dir> <!-- /lib/propel/widget -->
+     </dir> <!-- /lib/propel -->
+     <dir name="task">
+      <dir name="skeleton">
+       <dir name="migration">
+        <file role="php" name="Migration.class.php"/>
+       </dir> <!-- /lib/task/skeleton/migration -->
+      </dir> <!-- /lib/task/skeleton -->
+      <file role="php" name="sfPhing.class.php"/>
+      <file role="php" name="sfPropelBaseTask.class.php"/>
+      <file role="php" name="sfPropelBuildAllLoadTask.class.php"/>
+      <file role="php" name="sfPropelBuildAllTask.class.php"/>
+      <file role="php" name="sfPropelBuildDbTask.class.php"/>
+      <file role="php" name="sfPropelBuildFormsTask.class.php"/>
+      <file role="php" name="sfPropelBuildModelTask.class.php"/>
+      <file role="php" name="sfPropelBuildSchemaTask.class.php"/>
+      <file role="php" name="sfPropelBuildSqlTask.class.php"/>
+      <file role="php" name="sfPropelDataDumpTask.class.php"/>
+      <file role="php" name="sfPropelDataLoadTask.class.php"/>
+      <file role="php" name="sfPropelGenerateCrudTask.class.php"/>
+      <file role="php" name="sfPropelGenerateMigrationTask.class.php"/>
+      <file role="php" name="sfPropelGraphvizTask.class.php"/>
+      <file role="php" name="sfPropelInitAdminTask.class.php"/>
+      <file role="php" name="sfPropelInsertSqlTask.class.php"/>
+      <file role="php" name="sfPropelMigrateTask.class.php"/>
+      <file role="php" name="sfPropelMigrationInfoTask.class.php"/>
+      <file role="php" name="sfPropelMigrationLogTask.class.php"/>
+      <file role="php" name="sfPropelMigrationStatusTask.class.php"/>
+      <file role="php" name="sfPropelSchemaToXmlTask.class.php"/>
+      <file role="php" name="sfPropelSchemaToYmlTask.class.php"/>
+     </dir> <!-- /lib/task -->
+     <dir name="vendor">
+      <dir name="creole">
+       <dir name="common">
+        <file role="php" name="ConnectionCommon.php"/>
+        <file role="php" name="PdoConnectionCommon.php"/>
+        <file role="php" name="PdoIdGeneratorCommon.php"/>
+        <file role="php" name="PdoPreparedStatementCommon.php"/>
+        <file role="php" name="PdoResultSetCommon.php"/>
+        <file role="php" name="PdoStatementCommon.php"/>
+        <file role="php" name="PreparedStatementCommon.php"/>
+        <file role="php" name="ResultSetCommon.php"/>
+        <file role="php" name="StatementCommon.php"/>
+       </dir> <!-- /lib/vendor/creole/common -->
+       <dir name="contrib">
+        <file role="php" name="DebugConnection.php"/>
+       </dir> <!-- /lib/vendor/creole/contrib -->
+       <dir name="drivers">
+        <dir name="ldap">
+         <dir name="metadata">
+          <file role="php" name="LdapDatabaseInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/ldap/metadata -->
+         <file role="php" name="LdapConnection.php"/>
+         <file role="php" name="LdapPreparedStatement.php"/>
+         <file role="php" name="LdapResultSet.php"/>
+         <file role="php" name="LdapStatement.php"/>
+         <file role="php" name="LdapTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/ldap -->
+        <dir name="mssql">
+         <dir name="metadata">
+          <file role="php" name="MSSQLDatabaseInfo.php"/>
+          <file role="php" name="MSSQLTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/mssql/metadata -->
+         <file role="php" name="MSSQLCallableStatement.php"/>
+         <file role="php" name="MSSQLConnection.php"/>
+         <file role="php" name="MSSQLIdGenerator.php"/>
+         <file role="php" name="MSSQLPreparedStatement.php"/>
+         <file role="php" name="MSSQLResultSet.php"/>
+         <file role="php" name="MSSQLStatement.php"/>
+         <file role="php" name="MSSQLTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/mssql -->
+        <dir name="mysql">
+         <dir name="metadata">
+          <file role="php" name="MySQLDatabaseInfo.php"/>
+          <file role="php" name="MySQLDatabaseInfoBase.php"/>
+          <file role="php" name="MySQLTableInfo.php"/>
+          <file role="php" name="MySQLTableInfoBase.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/mysql/metadata -->
+         <file role="php" name="MySQLConnection.php"/>
+         <file role="php" name="MySQLIdGenerator.php"/>
+         <file role="php" name="MySQLPreparedStatement.php"/>
+         <file role="php" name="MySQLResultSet.php"/>
+         <file role="php" name="MySQLStatement.php"/>
+         <file role="php" name="MySQLTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/mysql -->
+        <dir name="mysqli">
+         <dir name="metadata">
+          <file role="php" name="MySQLiDatabaseInfo.php"/>
+          <file role="php" name="MySQLiTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/mysqli/metadata -->
+         <file role="php" name="MySQLiConnection.php"/>
+         <file role="php" name="MySQLiIdGenerator.php"/>
+         <file role="php" name="MySQLiPreparedStatement.php"/>
+         <file role="php" name="MySQLiResultSet.php"/>
+         <file role="php" name="MySQLiStatement.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/mysqli -->
+        <dir name="odbc">
+         <dir name="adapters">
+          <file role="php" name="CodeBaseAdapter.php"/>
+          <file role="php" name="MySQLAdapter.php"/>
+          <file role="php" name="ODBCAdapter.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/odbc/adapters -->
+         <dir name="metadata">
+          <file role="php" name="ODBCDatabaseInfo.php"/>
+          <file role="php" name="ODBCTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/odbc/metadata -->
+         <file role="php" name="ODBCCachedResultSet.php"/>
+         <file role="php" name="ODBCConnection.php"/>
+         <file role="php" name="ODBCIdGenerator.php"/>
+         <file role="php" name="ODBCPreparedStatement.php"/>
+         <file role="php" name="ODBCResultSet.php"/>
+         <file role="php" name="ODBCResultSetCommon.php"/>
+         <file role="php" name="ODBCStatement.php"/>
+         <file role="php" name="ODBCTypes.php"/>
+         <file role="data" name="README"/>
+        </dir> <!-- /lib/vendor/creole/drivers/odbc -->
+        <dir name="oracle">
+         <dir name="metadata">
+          <file role="php" name="OCI8DatabaseInfo.php"/>
+          <file role="php" name="OCI8TableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/oracle/metadata -->
+         <file role="php" name="OCI8Connection.php"/>
+         <file role="php" name="OCI8IdGenerator.php"/>
+         <file role="php" name="OCI8PreparedStatement.php"/>
+         <file role="php" name="OCI8ResultSet.php"/>
+         <file role="php" name="OCI8Statement.php"/>
+         <file role="php" name="OCI8Types.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/oracle -->
+        <dir name="pdosqlite">
+         <dir name="metadata">
+          <file role="php" name="PdoSQLiteDatabaseInfo.php"/>
+          <file role="php" name="PdoSQLiteTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/pdosqlite/metadata -->
+         <file role="php" name="PdoSQLiteConnection.php"/>
+         <file role="php" name="PdoSQLiteIdGenerator.php"/>
+         <file role="php" name="PdoSQLitePreparedStatement.php"/>
+         <file role="php" name="PdoSQLiteResultSet.php"/>
+         <file role="php" name="PdoSQLiteResultSetIterator.php"/>
+         <file role="php" name="PdoSQLiteStatement.php"/>
+         <file role="php" name="PdoSQLiteTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/pdosqlite -->
+        <dir name="pgsql">
+         <dir name="metadata">
+          <file role="php" name="PgSQLDatabaseInfo.php"/>
+          <file role="php" name="PgSQLTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/pgsql/metadata -->
+         <file role="php" name="PgSQLConnection.php"/>
+         <file role="php" name="PgSQLIdGenerator.php"/>
+         <file role="php" name="PgSQLPreparedStatement.php"/>
+         <file role="php" name="PgSQLResultSet.php"/>
+         <file role="php" name="PgSQLResultSetIterator.php"/>
+         <file role="php" name="PgSQLStatement.php"/>
+         <file role="php" name="PgSQLTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/pgsql -->
+        <dir name="sqlite">
+         <dir name="metadata">
+          <file role="php" name="SQLiteDatabaseInfo.php"/>
+          <file role="php" name="SQLiteTableInfo.php"/>
+         </dir> <!-- /lib/vendor/creole/drivers/sqlite/metadata -->
+         <file role="php" name="SQLiteConnection.php"/>
+         <file role="php" name="SQLiteIdGenerator.php"/>
+         <file role="php" name="SQLitePreparedStatement.php"/>
+         <file role="php" name="SQLiteResultSet.php"/>
+         <file role="php" name="SQLiteResultSetIterator.php"/>
+         <file role="php" name="SQLiteStatement.php"/>
+         <file role="php" name="SQLiteTypes.php"/>
+        </dir> <!-- /lib/vendor/creole/drivers/sqlite -->
+       </dir> <!-- /lib/vendor/creole/drivers -->
+       <dir name="metadata">
+        <file role="php" name="ColumnInfo.php"/>
+        <file role="php" name="DatabaseInfo.php"/>
+        <file role="php" name="ForeignKeyInfo.php"/>
+        <file role="php" name="IndexInfo.php"/>
+        <file role="php" name="PrimaryKeyInfo.php"/>
+        <file role="php" name="TableInfo.php"/>
+       </dir> <!-- /lib/vendor/creole/metadata -->
+       <dir name="util">
+        <dir name="sql">
+         <file role="php" name="SQLStatementExtractor.php"/>
+        </dir> <!-- /lib/vendor/creole/util/sql -->
+        <file role="php" name="Blob.php"/>
+        <file role="php" name="Clob.php"/>
+        <file role="php" name="Lob.php"/>
+       </dir> <!-- /lib/vendor/creole/util -->
+       <file role="php" name="CallableStatement.php"/>
+       <file role="php" name="Connection.php"/>
+       <file role="php" name="Creole.php"/>
+       <file role="php" name="CreoleTypes.php"/>
+       <file role="php" name="IdGenerator.php"/>
+       <file role="php" name="PreparedStatement.php"/>
+       <file role="php" name="ResultSet.php"/>
+       <file role="php" name="ResultSetIterator.php"/>
+       <file role="php" name="SQLException.php"/>
+       <file role="php" name="Statement.php"/>
+      </dir> <!-- /lib/vendor/creole -->
+      <dir name="jargon">
+       <file role="php" name="DataSet.php"/>
+       <file role="php" name="DataSetException.php"/>
+       <file role="php" name="KeyDef.php"/>
+       <file role="php" name="PagedQuery.php"/>
+       <file role="php" name="Query.php"/>
+       <file role="php" name="QueryDataSet.php"/>
+       <file role="php" name="Record.php"/>
+       <file role="php" name="TableDataSet.php"/>
+      </dir> <!-- /lib/vendor/jargon -->
+      <dir name="phing">
+       <dir name="filters">
+        <dir name="util">
+         <file role="php" name="ChainReaderHelper.php"/>
+         <file role="php" name="IniFileTokenReader.php"/>
+        </dir> <!-- /lib/vendor/phing/filters/util -->
+        <file role="php" name="BaseFilterReader.php"/>
+        <file role="php" name="BaseParamFilterReader.php"/>
+        <file role="php" name="ChainableReader.php"/>
+        <file role="php" name="ExpandProperties.php"/>
+        <file role="php" name="HeadFilter.php"/>
+        <file role="php" name="LineContains.php"/>
+        <file role="php" name="LineContainsRegexp.php"/>
+        <file role="php" name="PrefixLines.php"/>
+        <file role="php" name="ReplaceRegexp.php"/>
+        <file role="php" name="ReplaceTokens.php"/>
+        <file role="php" name="StripLineBreaks.php"/>
+        <file role="php" name="StripLineComments.php"/>
+        <file role="php" name="StripPhpComments.php"/>
+        <file role="php" name="StripWhitespace.php"/>
+        <file role="php" name="TabToSpaces.php"/>
+        <file role="php" name="TailFilter.php"/>
+        <file role="php" name="TidyFilter.php"/>
+        <file role="php" name="TranslateGettext.php"/>
+        <file role="php" name="XincludeFilter.php"/>
+        <file role="php" name="XsltFilter.php"/>
+       </dir> <!-- /lib/vendor/phing/filters -->
+       <dir name="input">
+        <file role="php" name="DefaultInputHandler.php"/>
+        <file role="php" name="InputHandler.php"/>
+        <file role="php" name="InputRequest.php"/>
+        <file role="php" name="MultipleChoiceInputRequest.php"/>
+        <file role="php" name="PropertyFileInputHandler.php"/>
+        <file role="php" name="YesNoInputRequest.php"/>
+       </dir> <!-- /lib/vendor/phing/input -->
+       <dir name="lib">
+        <file role="php" name="Capsule.php"/>
+        <file role="php" name="Zip.php"/>
+       </dir> <!-- /lib/vendor/phing/lib -->
+       <dir name="listener">
+        <file role="php" name="AnsiColorLogger.php"/>
+        <file role="php" name="DefaultLogger.php"/>
+        <file role="data" name="defaults.properties"/>
+        <file role="php" name="NoBannerLogger.php"/>
+        <file role="php" name="PearLogListener.php"/>
+        <file role="php" name="StreamRequiredBuildLogger.php"/>
+        <file role="php" name="XmlLogger.php"/>
+       </dir> <!-- /lib/vendor/phing/listener -->
+       <dir name="mappers">
+        <file role="php" name="FileNameMapper.php"/>
+        <file role="php" name="FlattenMapper.php"/>
+        <file role="php" name="GlobMapper.php"/>
+        <file role="php" name="IdentityMapper.php"/>
+        <file role="php" name="MergeMapper.php"/>
+        <file role="php" name="RegexpMapper.php"/>
+       </dir> <!-- /lib/vendor/phing/mappers -->
+       <dir name="parser">
+        <file role="php" name="AbstractHandler.php"/>
+        <file role="php" name="AbstractSAXParser.php"/>
+        <file role="php" name="DataTypeHandler.php"/>
+        <file role="php" name="ExpatParseException.php"/>
+        <file role="php" name="ExpatParser.php"/>
+        <file role="php" name="Location.php"/>
+        <file role="php" name="NestedElementHandler.php"/>
+        <file role="php" name="ProjectConfigurator.php"/>
+        <file role="php" name="ProjectHandler.php"/>
+        <file role="php" name="RootHandler.php"/>
+        <file role="php" name="TargetHandler.php"/>
+        <file role="php" name="TaskHandler.php"/>
+       </dir> <!-- /lib/vendor/phing/parser -->
+       <dir name="system">
+        <dir name="io">
+         <file role="php" name="BufferedReader.php"/>
+         <file role="php" name="BufferedWriter.php"/>
+         <file role="php" name="ConsoleReader.php"/>
+         <file role="php" name="FileInputStream.php"/>
+         <file role="php" name="FileOutputStream.php"/>
+         <file role="php" name="FileReader.php"/>
+         <file role="php" name="FileSystem.php"/>
+         <file role="php" name="FileWriter.php"/>
+         <file role="php" name="FilterReader.php"/>
+         <file role="php" name="InputStream.php"/>
+         <file role="php" name="InputStreamReader.php"/>
+         <file role="php" name="IOException.php"/>
+         <file role="php" name="OutputStream.php"/>
+         <file role="php" name="OutputStreamWriter.php"/>
+         <file role="php" name="PhingFile.php"/>
+         <file role="php" name="Reader.php"/>
+         <file role="php" name="StringReader.php"/>
+         <file role="php" name="UnixFileSystem.php"/>
+         <file role="php" name="Win32FileSystem.php"/>
+         <file role="php" name="WinNTFileSystem.php"/>
+         <file role="php" name="Writer.php"/>
+        </dir> <!-- /lib/vendor/phing/system/io -->
+        <dir name="lang">
+         <file role="php" name="Character.php"/>
+         <file role="php" name="EventObject.php"/>
+         <file role="php" name="FileNotFoundException.php"/>
+         <file role="php" name="NullPointerException.php"/>
+         <file role="php" name="SecurityException.php"/>
+        </dir> <!-- /lib/vendor/phing/system/lang -->
+        <dir name="util">
+         <file role="php" name="Message.php"/>
+         <file role="php" name="Properties.php"/>
+         <file role="php" name="Register.php"/>
+         <file role="php" name="Timer.php"/>
+        </dir> <!-- /lib/vendor/phing/system/util -->
+       </dir> <!-- /lib/vendor/phing/system -->
+       <dir name="tasks">
+        <dir name="ext">
+         <dir name="coverage">
+          <file role="php" name="CoverageMerger.php"/>
+          <file role="php" name="CoverageMergerTask.php"/>
+          <file role="php" name="CoverageReportTask.php"/>
+          <file role="php" name="CoverageReportTransformer.php"/>
+          <file role="php" name="CoverageSetupTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/coverage -->
+         <dir name="creole">
+          <file role="php" name="CreoleSQLExecTask.php"/>
+          <file role="php" name="CreoleTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/creole -->
+         <dir name="dbdeploy">
+          <file role="php" name="DbDeployTask.php"/>
+          <file role="php" name="DbmsSyntax.php"/>
+          <file role="php" name="DbmsSyntaxFactory.php"/>
+          <file role="php" name="DbmsSyntaxMsSql.php"/>
+          <file role="php" name="DbmsSyntaxMysql.php"/>
+          <file role="php" name="DbmsSyntaxSQLite.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/dbdeploy -->
+         <dir name="ioncube">
+          <file role="php" name="IoncubeComment.php"/>
+          <file role="php" name="IoncubeEncoderTask.php"/>
+          <file role="php" name="IoncubeLicenseTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/ioncube -->
+         <dir name="pdo">
+          <file role="php" name="PDOResultFormatter.php"/>
+          <file role="php" name="PDOSQLExecFormatterElement.php"/>
+          <file role="php" name="PDOSQLExecTask.php"/>
+          <file role="php" name="PDOTask.php"/>
+          <file role="php" name="PlainPDOResultFormatter.php"/>
+          <file role="php" name="XMLPDOResultFormatter.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/pdo -->
+         <dir name="pearpackage">
+          <file role="php" name="Fileset.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/pearpackage -->
+         <dir name="phpdoc">
+          <file role="php" name="PhingPhpDocumentorSetup.php"/>
+          <file role="php" name="PhpDocumentorExternalTask.php"/>
+          <file role="php" name="PhpDocumentorTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/phpdoc -->
+         <dir name="phpunit">
+          <dir name="phpunit2">
+           <file role="php" name="PHPUnit2ResultFormatter.php"/>
+           <file role="php" name="PlainPHPUnit2ResultFormatter.php"/>
+           <file role="php" name="SummaryPHPUnit2ResultFormatter.php"/>
+           <file role="php" name="XMLPHPUnit2ResultFormatter.php"/>
+          </dir> <!-- /lib/vendor/phing/tasks/ext/phpunit/phpunit2 -->
+          <dir name="phpunit3">
+           <file role="php" name="PHPUnit3ResultFormatter.php"/>
+           <file role="php" name="PlainPHPUnit3ResultFormatter.php"/>
+           <file role="php" name="SummaryPHPUnit3ResultFormatter.php"/>
+           <file role="php" name="XMLPHPUnit3ResultFormatter.php"/>
+          </dir> <!-- /lib/vendor/phing/tasks/ext/phpunit/phpunit3 -->
+          <file role="php" name="BatchTest.php"/>
+          <file role="php" name="FormatterElement.php"/>
+          <file role="php" name="PHPUnitReportTask.php"/>
+          <file role="php" name="PHPUnitTask.php"/>
+          <file role="php" name="PHPUnitTestRunner.php"/>
+          <file role="php" name="PHPUnitUtil.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/phpunit -->
+         <dir name="simpletest">
+          <file role="php" name="SimpleTestCountResultFormatter.php"/>
+          <file role="php" name="SimpleTestFormatterElement.php"/>
+          <file role="php" name="SimpleTestPlainResultFormatter.php"/>
+          <file role="php" name="SimpleTestResultFormatter.php"/>
+          <file role="php" name="SimpleTestSummaryResultFormatter.php"/>
+          <file role="php" name="SimpleTestTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/simpletest -->
+         <dir name="svn">
+          <file role="php" name="SvnBaseTask.php"/>
+          <file role="php" name="SvnCheckoutTask.php"/>
+          <file role="php" name="SvnExportTask.php"/>
+          <file role="php" name="SvnLastRevisionTask.php"/>
+          <file role="php" name="SvnUpdateTask.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/ext/svn -->
+         <file role="php" name="CapsuleTask.php"/>
+         <file role="php" name="ExtractBaseTask.php"/>
+         <file role="php" name="FtpDeployTask.php"/>
+         <file role="php" name="JslLintTask.php"/>
+         <file role="php" name="MailTask.php"/>
+         <file role="php" name="ManifestTask.php"/>
+         <file role="php" name="PackageAsPathTask.php"/>
+         <file role="php" name="PearPackage2Task.php"/>
+         <file role="php" name="PearPackageTask.php"/>
+         <file role="php" name="PhpCodeSnifferTask.php"/>
+         <file role="php" name="PhpLintTask.php"/>
+         <file role="php" name="ScpSendTask.php"/>
+         <file role="php" name="SmartyTask.php"/>
+         <file role="php" name="TarTask.php"/>
+         <file role="php" name="UntarTask.php"/>
+         <file role="php" name="UnzipTask.php"/>
+         <file role="php" name="XmlLintTask.php"/>
+         <file role="php" name="ZendCodeAnalyzerTask.php"/>
+         <file role="php" name="ZipTask.php"/>
+        </dir> <!-- /lib/vendor/phing/tasks/ext -->
+        <dir name="system">
+         <dir name="condition">
+          <file role="php" name="AndCondition.php"/>
+          <file role="php" name="Condition.php"/>
+          <file role="php" name="ConditionBase.php"/>
+          <file role="php" name="ContainsCondition.php"/>
+          <file role="php" name="EqualsCondition.php"/>
+          <file role="php" name="IsFalseCondition.php"/>
+          <file role="php" name="IsSetCondition.php"/>
+          <file role="php" name="IsTrueCondition.php"/>
+          <file role="php" name="NotCondition.php"/>
+          <file role="php" name="OrCondition.php"/>
+          <file role="php" name="OsCondition.php"/>
+          <file role="php" name="ReferenceExistsCondition.php"/>
+         </dir> <!-- /lib/vendor/phing/tasks/system/condition -->
+         <file role="php" name="AdhocTask.php"/>
+         <file role="php" name="AdhocTaskdefTask.php"/>
+         <file role="php" name="AdhocTypedefTask.php"/>
+         <file role="php" name="AppendTask.php"/>
+         <file role="php" name="AvailableTask.php"/>
+         <file role="php" name="ChmodTask.php"/>
+         <file role="php" name="ChownTask.php"/>
+         <file role="php" name="ConditionTask.php"/>
+         <file role="php" name="CopyTask.php"/>
+         <file role="php" name="CvsPassTask.php"/>
+         <file role="php" name="CvsTask.php"/>
+         <file role="php" name="DeleteTask.php"/>
+         <file role="php" name="EchoTask.php"/>
+         <file role="php" name="ExecTask.php"/>
+         <file role="php" name="ExitTask.php"/>
+         <file role="php" name="ForeachTask.php"/>
+         <file role="php" name="IfTask.php"/>
+         <file role="php" name="IncludePathTask.php"/>
+         <file role="php" name="InputTask.php"/>
+         <file role="php" name="MatchingTask.php"/>
+         <file role="php" name="MkdirTask.php"/>
+         <file role="php" name="MoveTask.php"/>
+         <file role="php" name="PhingCallTask.php"/>
+         <file role="php" name="PhingTask.php"/>
+         <file role="php" name="PhpEvalTask.php"/>
+         <file role="php" name="PropertyPromptTask.php"/>
+         <file role="php" name="PropertyTask.php"/>
+         <file role="php" name="ReflexiveTask.php"/>
+         <file role="php" name="ResolvePathTask.php"/>
+         <file role="php" name="SequentialTask.php"/>
+         <file role="php" name="TaskdefTask.php"/>
+         <file role="php" name="TouchTask.php"/>
+         <file role="php" name="TstampTask.php"/>
+         <file role="php" name="TypedefTask.php"/>
+         <file role="php" name="UpToDateTask.php"/>
+         <file role="php" name="WarnTask.php"/>
+         <file role="php" name="XsltTask.php"/>
+        </dir> <!-- /lib/vendor/phing/tasks/system -->
+        <file role="data" name="defaults.properties"/>
+       </dir> <!-- /lib/vendor/phing/tasks -->
+       <dir name="types">
+        <dir name="selectors">
+         <file role="php" name="AndSelector.php"/>
+         <file role="php" name="BaseExtendSelector.php"/>
+         <file role="php" name="BaseSelector.php"/>
+         <file role="php" name="BaseSelectorContainer.php"/>
+         <file role="php" name="ContainsRegexpSelector.php"/>
+         <file role="php" name="ContainsSelector.php"/>
+         <file role="php" name="DateSelector.php"/>
+         <file role="php" name="DependSelector.php"/>
+         <file role="php" name="DepthSelector.php"/>
+         <file role="php" name="ExtendFileSelector.php"/>
+         <file role="php" name="ExtendSelector.php"/>
+         <file role="php" name="FilenameSelector.php"/>
+         <file role="php" name="FileSelector.php"/>
+         <file role="php" name="MajoritySelector.php"/>
+         <file role="php" name="NoneSelector.php"/>
+         <file role="php" name="NotSelector.php"/>
+         <file role="php" name="OrSelector.php"/>
+         <file role="php" name="PresentSelector.php"/>
+         <file role="php" name="SelectorContainer.php"/>
+         <file role="php" name="SelectorScanner.php"/>
+         <file role="php" name="SelectorUtils.php"/>
+         <file role="php" name="SelectSelector.php"/>
+         <file role="php" name="SizeSelector.php"/>
+         <file role="php" name="TypeSelector.php"/>
+        </dir> <!-- /lib/vendor/phing/types/selectors -->
+        <file role="php" name="AbstractFileSet.php"/>
+        <file role="php" name="Commandline.php"/>
+        <file role="php" name="DataType.php"/>
+        <file role="data" name="defaults.properties"/>
+        <file role="php" name="Description.php"/>
+        <file role="php" name="DirSet.php"/>
+        <file role="php" name="FileList.php"/>
+        <file role="php" name="FileSet.php"/>
+        <file role="php" name="FilterChain.php"/>
+        <file role="php" name="Mapper.php"/>
+        <file role="php" name="Parameter.php"/>
+        <file role="php" name="Parameterizable.php"/>
+        <file role="php" name="Path.php"/>
+        <file role="php" name="PatternSet.php"/>
+        <file role="php" name="PhingFilterReader.php"/>
+        <file role="php" name="Reference.php"/>
+        <file role="php" name="RegularExpression.php"/>
+        <file role="php" name="TokenReader.php"/>
+        <file role="php" name="TokenSource.php"/>
+       </dir> <!-- /lib/vendor/phing/types -->
+       <dir name="util">
+        <dir name="regexp">
+         <file role="php" name="PregEngine.php"/>
+         <file role="php" name="Regexp.php"/>
+         <file role="php" name="RegexpEngine.php"/>
+        </dir> <!-- /lib/vendor/phing/util/regexp -->
+        <file role="php" name="DirectoryScanner.php"/>
+        <file role="php" name="ExtendedFileStream.php"/>
+        <file role="php" name="FileUtils.php"/>
+        <file role="php" name="LogWriter.php"/>
+        <file role="php" name="PathTokenizer.php"/>
+        <file role="php" name="SourceFileScanner.php"/>
+        <file role="php" name="StringHelper.php"/>
+       </dir> <!-- /lib/vendor/phing/util -->
+       <file role="php" name="BuildEvent.php"/>
+       <file role="php" name="BuildException.php"/>
+       <file role="php" name="BuildListener.php"/>
+       <file role="php" name="BuildLogger.php"/>
+       <file role="php" name="ConfigurationException.php"/>
+       <file role="php" name="IntrospectionHelper.php"/>
+       <file role="php" name="Phing.php"/>
+       <file role="php" name="Project.php"/>
+       <file role="php" name="ProjectComponent.php"/>
+       <file role="php" name="RuntimeConfigurable.php"/>
+       <file role="php" name="Target.php"/>
+       <file role="php" name="Task.php"/>
+       <file role="php" name="TaskAdapter.php"/>
+       <file role="php" name="TaskContainer.php"/>
+       <file role="php" name="UnknownElement.php"/>
+      </dir> <!-- /lib/vendor/phing -->
+      <dir name="propel">
+       <dir name="adapter">
+        <file role="php" name="DBAdapter.php"/>
+        <file role="php" name="DBMSSQL.php"/>
+        <file role="php" name="DBMySQL.php"/>
+        <file role="php" name="DBNone.php"/>
+        <file role="php" name="DBOracle.php"/>
+        <file role="php" name="DBPostgres.php"/>
+        <file role="php" name="DBSQLite.php"/>
+       </dir> <!-- /lib/vendor/propel/adapter -->
+       <dir name="logger">
+        <file role="php" name="BasicLogger.php"/>
+        <file role="php" name="MojaviLogAdapter.php"/>
+       </dir> <!-- /lib/vendor/propel/logger -->
+       <dir name="map">
+        <file role="php" name="ColumnMap.php"/>
+        <file role="php" name="DatabaseMap.php"/>
+        <file role="php" name="MapBuilder.php"/>
+        <file role="php" name="TableMap.php"/>
+        <file role="php" name="ValidatorMap.php"/>
+       </dir> <!-- /lib/vendor/propel/map -->
+       <dir name="om">
+        <file role="php" name="BaseObject.php"/>
+        <file role="php" name="NestedSetRecursiveIterator.php"/>
+        <file role="php" name="NodeObject.php"/>
+        <file role="php" name="Persistent.php"/>
+        <file role="php" name="PreOrderNodeIterator.php"/>
+       </dir> <!-- /lib/vendor/propel/om -->
+       <dir name="util">
+        <file role="php" name="BasePeer.php"/>
+        <file role="php" name="Criteria.php"/>
+        <file role="php" name="DebugPDO.php"/>
+        <file role="php" name="DebugPDOStatement.php"/>
+        <file role="php" name="NodePeer.php"/>
+        <file role="php" name="PropelColumnTypes.php"/>
+        <file role="php" name="PropelDateTime.php"/>
+        <file role="php" name="PropelPager.php"/>
+        <file role="php" name="PropelPDO.php"/>
+       </dir> <!-- /lib/vendor/propel/util -->
+       <dir name="validator">
+        <file role="php" name="BasicValidator.php"/>
+        <file role="php" name="MatchValidator.php"/>
+        <file role="php" name="MaxLengthValidator.php"/>
+        <file role="php" name="MaxValueValidator.php"/>
+        <file role="php" name="MinLengthValidator.php"/>
+        <file role="php" name="MinValueValidator.php"/>
+        <file role="php" name="NotMatchValidator.php"/>
+        <file role="php" name="RequiredValidator.php"/>
+        <file role="php" name="TypeValidator.php"/>
+        <file role="php" name="UniqueValidator.php"/>
+        <file role="php" name="ValidationFailed.php"/>
+        <file role="php" name="ValidValuesValidator.php"/>
+       </dir> <!-- /lib/vendor/propel/validator -->
+       <file role="php" name="Propel.php"/>
+       <file role="php" name="PropelException.php"/>
+      </dir> <!-- /lib/vendor/propel -->
+      <dir name="propel-generator">
+       <dir name="bin">
+        <file role="data" name="propel-gen"/>
+        <file role="data" name="propel-gen.bat"/>
+       </dir> <!-- /lib/vendor/propel-generator/bin -->
+       <dir name="classes">
+        <dir name="propel">
+         <dir name="engine">
+          <dir name="builder">
+           <dir name="om">
+            <dir name="php5">
+             <file role="php" name="PHP5ExtensionNodeBuilder.php"/>
+             <file role="php" name="PHP5ExtensionNodePeerBuilder.php"/>
+             <file role="php" name="PHP5ExtensionObjectBuilder.php"/>
+             <file role="php" name="PHP5ExtensionPeerBuilder.php"/>
+             <file role="php" name="PHP5InterfaceBuilder.php"/>
+             <file role="php" name="PHP5MapBuilderBuilder.php"/>
+             <file role="php" name="PHP5MultiExtendObjectBuilder.php"/>
+             <file role="php" name="PHP5NestedSetBuilder.php"/>
+             <file role="php" name="PHP5NestedSetPeerBuilder.php"/>
+             <file role="php" name="PHP5NodeBuilder.php"/>
+             <file role="php" name="PHP5NodePeerBuilder.php"/>
+             <file role="php" name="PHP5ObjectBuilder.php"/>
+             <file role="php" name="PHP5PeerBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/om/php5 -->
+            <file role="php" name="ClassTools.php"/>
+            <file role="php" name="ObjectBuilder.php"/>
+            <file role="php" name="OMBuilder.php"/>
+            <file role="php" name="PeerBuilder.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/om -->
+           <dir name="sql">
+            <dir name="mssql">
+             <file role="php" name="MssqlDataSQLBuilder.php"/>
+             <file role="php" name="MssqlDDLBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql/mssql -->
+            <dir name="mysql">
+             <file role="php" name="MysqlDataSQLBuilder.php"/>
+             <file role="php" name="MysqlDDLBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql/mysql -->
+            <dir name="oracle">
+             <file role="php" name="OracleDataSQLBuilder.php"/>
+             <file role="php" name="OracleDDLBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql/oracle -->
+            <dir name="pgsql">
+             <file role="php" name="PgsqlDataSQLBuilder.php"/>
+             <file role="php" name="PgsqlDDLBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql/pgsql -->
+            <dir name="sqlite">
+             <file role="php" name="SqliteDataSQLBuilder.php"/>
+             <file role="php" name="SqliteDDLBuilder.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql/sqlite -->
+            <file role="php" name="DataSQLBuilder.php"/>
+            <file role="php" name="DDLBuilder.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/sql -->
+           <dir name="util">
+            <dir name="transform">
+             <file role="php" name="XmlToDataSQL.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/util/transform -->
+            <file role="php" name="DefaultEnglishPluralizer.php"/>
+            <file role="php" name="Pluralizer.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder/util -->
+           <file role="php" name="DataModelBuilder.php"/>
+          </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/builder -->
+          <dir name="database">
+           <dir name="model">
+            <file role="php" name="AppData.php"/>
+            <file role="php" name="Column.php"/>
+            <file role="php" name="ColumnDefaultValue.php"/>
+            <file role="php" name="ConstraintNameGenerator.php"/>
+            <file role="php" name="Database.php"/>
+            <file role="php" name="Domain.php"/>
+            <file role="php" name="ForeignKey.php"/>
+            <file role="php" name="IDMethod.php"/>
+            <file role="php" name="IdMethodParameter.php"/>
+            <file role="php" name="Index.php"/>
+            <file role="php" name="Inheritance.php"/>
+            <file role="php" name="NameFactory.php"/>
+            <file role="php" name="NameGenerator.php"/>
+            <file role="php" name="PhpNameGenerator.php"/>
+            <file role="php" name="PropelTypes.php"/>
+            <file role="php" name="Rule.php"/>
+            <file role="php" name="Table.php"/>
+            <file role="php" name="Unique.php"/>
+            <file role="php" name="Validator.php"/>
+            <file role="php" name="VendorInfo.php"/>
+            <file role="php" name="XMLElement.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/model -->
+           <dir name="reverse">
+            <dir name="mssql">
+             <file role="php" name="MssqlSchemaParser.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/reverse/mssql -->
+            <dir name="mysql">
+             <file role="php" name="MysqlSchemaParser.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/reverse/mysql -->
+            <dir name="pgsql">
+             <file role="php" name="PgsqlSchemaParser.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/reverse/pgsql -->
+            <dir name="sqlite">
+             <file role="php" name="SqliteSchemaParser.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/reverse/sqlite -->
+            <file role="php" name="BaseSchemaParser.php"/>
+            <file role="php" name="SchemaParser.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/reverse -->
+           <dir name="transform">
+            <file role="php" name="XmlToAppData.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database/transform -->
+          </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/database -->
+          <dir name="platform">
+           <file role="php" name="DefaultPlatform.php"/>
+           <file role="php" name="MssqlPlatform.php"/>
+           <file role="php" name="MysqlPlatform.php"/>
+           <file role="php" name="OraclePlatform.php"/>
+           <file role="php" name="PgsqlPlatform.php"/>
+           <file role="php" name="Platform.php"/>
+           <file role="php" name="SqlitePlatform.php"/>
+          </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine/platform -->
+          <file role="php" name="EngineException.php"/>
+          <file role="php" name="GeneratorConfig.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/classes/propel/engine -->
+         <dir name="phing">
+          <file role="php" name="AbstractPropelDataModelTask.php"/>
+          <file role="php" name="PropelConvertConfTask.php"/>
+          <file role="php" name="PropelCreoleTransformTask.php"/>
+          <file role="php" name="PropelDataDTDTask.php"/>
+          <file role="php" name="PropelDataDumpTask.php"/>
+          <file role="php" name="PropelDataModelTemplateTask.php"/>
+          <file role="php" name="PropelDataSQLTask.php"/>
+          <file role="php" name="PropelGraphvizTask.php"/>
+          <file role="php" name="PropelOMTask.php"/>
+          <file role="php" name="PropelSchemaReverseTask.php"/>
+          <file role="php" name="PropelSQLExec.php"/>
+          <file role="php" name="PropelSQLTask.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/classes/propel/phing -->
+        </dir> <!-- /lib/vendor/propel-generator/classes/propel -->
+       </dir> <!-- /lib/vendor/propel-generator/classes -->
+       <dir name="pear">
+        <file role="data" name="build-pear-package.xml"/>
+        <file role="data" name="build.properties"/>
+        <file role="php" name="BuildPropelGenPEARPackageTask.php"/>
+        <file role="data" name="pear-build.xml"/>
+        <file role="data" name="pear-propel-gen"/>
+        <file role="data" name="pear-propel-gen.bat"/>
+       </dir> <!-- /lib/vendor/propel-generator/pear -->
+       <dir name="projects">
+        <dir name="bookstore">
+         <file role="data" name="build.properties"/>
+         <file role="data" name="cms-schema.xml"/>
+         <file role="data" name="runtime-conf.xml"/>
+         <file role="data" name="schema.xml"/>
+        </dir> <!-- /lib/vendor/propel-generator/projects/bookstore -->
+        <dir name="bookstore-packaged">
+         <file role="data" name="author.schema.xml"/>
+         <file role="data" name="book.schema.xml"/>
+         <file role="data" name="book_club_list.schema.xml"/>
+         <file role="data" name="build.properties"/>
+         <file role="data" name="log.schema.xml"/>
+         <file role="data" name="media.schema.xml"/>
+         <file role="data" name="publisher.schema.xml"/>
+         <file role="data" name="review.schema.xml"/>
+         <file role="data" name="runtime-conf.xml"/>
+        </dir> <!-- /lib/vendor/propel-generator/projects/bookstore-packaged -->
+        <dir name="nestedset">
+         <file role="data" name="build.properties"/>
+         <file role="data" name="nestedset-schema.xml"/>
+         <file role="data" name="runtime-conf.xml"/>
+        </dir> <!-- /lib/vendor/propel-generator/projects/nestedset -->
+        <dir name="treetest">
+         <file role="data" name="build.properties"/>
+         <file role="data" name="runtime-conf.xml"/>
+         <file role="data" name="treetest-schema.xml"/>
+        </dir> <!-- /lib/vendor/propel-generator/projects/treetest -->
+       </dir> <!-- /lib/vendor/propel-generator/projects -->
+       <dir name="resources">
+        <dir name="dtd">
+         <file role="data" name="database.dtd"/>
+        </dir> <!-- /lib/vendor/propel-generator/resources/dtd -->
+        <dir name="xsd">
+         <file role="data" name="custom_datatypes.xsd"/>
+         <file role="data" name="database.xsd"/>
+        </dir> <!-- /lib/vendor/propel-generator/resources/xsd -->
+        <dir name="xsl">
+         <file role="data" name="database.xsl"/>
+        </dir> <!-- /lib/vendor/propel-generator/resources/xsl -->
+       </dir> <!-- /lib/vendor/propel-generator/resources -->
+       <dir name="test">
+        <dir name="classes">
+         <dir name="bookstore">
+          <dir name="validator">
+           <file role="php" name="ISBNValidator.php"/>
+          </dir> <!-- /lib/vendor/propel-generator/test/classes/bookstore/validator -->
+          <file role="php" name="BookstoreDataPopulator.php"/>
+          <file role="php" name="BookstoreTestBase.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/classes/bookstore -->
+         <dir name="cms">
+          <file role="php" name="CmsDataPopulator.php"/>
+          <file role="php" name="CmsTestBase.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/classes/cms -->
+         <dir name="propel">
+          <dir name="engine">
+           <dir name="database">
+            <dir name="model">
+             <file role="php" name="ColumnTest.php"/>
+             <file role="php" name="NameFactoryTest.php"/>
+             <file role="php" name="TableTest.php"/>
+            </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/engine/database/model -->
+           </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/engine/database -->
+           <dir name="platform">
+            <file role="php" name="DefaultPlatformTest.php"/>
+            <file role="php" name="PlatformTestBase.php"/>
+            <file role="php" name="SqlitePlatformTest.php"/>
+           </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/engine/platform -->
+          </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/engine -->
+          <dir name="util">
+           <file role="php" name="BasePeerTest.php"/>
+           <file role="php" name="CriteriaTest.php"/>
+           <file role="php" name="PropelDateTimeTest.php"/>
+           <file role="php" name="PropelPDOTest.php"/>
+          </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/util -->
+          <dir name="validator">
+           <file role="php" name="ValidatorTest.php"/>
+          </dir> <!-- /lib/vendor/propel-generator/test/classes/propel/validator -->
+          <file role="php" name="BaseTestCase.php"/>
+          <file role="php" name="CharacterEncodingTest.php"/>
+          <file role="php" name="FieldnameRelatedTest.php"/>
+          <file role="php" name="GeneratedNestedSetObjectTest.php"/>
+          <file role="php" name="GeneratedNestedSetPeerTest.php"/>
+          <file role="php" name="GeneratedNestedSetTest.php"/>
+          <file role="php" name="GeneratedObjectLobTest.php"/>
+          <file role="php" name="GeneratedObjectRelTest.php"/>
+          <file role="php" name="GeneratedObjectTest.php"/>
+          <file role="php" name="GeneratedPeerTest.php"/>
+          <file role="php" name="Ticket520Test.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/classes/propel -->
+        </dir> <!-- /lib/vendor/propel-generator/test/classes -->
+        <dir name="etc">
+         <dir name="lob">
+          <file role="data" name="propel.gif"/>
+          <file role="data" name="tin_drum.gif"/>
+          <file role="data" name="tin_drum.txt"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/etc/lob -->
+         <dir name="schema">
+          <file role="data" name="tabletest-schema.xml"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/etc/schema -->
+         <dir name="xsl">
+          <file role="data" name="coverage-frames.xsl"/>
+          <file role="data" name="log.xsl"/>
+          <file role="data" name="phpunit2-noframes.xsl"/>
+          <file role="data" name="str.replace.function.xsl"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/etc/xsl -->
+        </dir> <!-- /lib/vendor/propel-generator/test/etc -->
+        <dir name="tools">
+         <dir name="phing">
+          <file role="php" name="DefineTask.php"/>
+         </dir> <!-- /lib/vendor/propel-generator/test/tools/phing -->
+        </dir> <!-- /lib/vendor/propel-generator/test/tools -->
+        <file role="php" name="bookstore-packaged-test.php"/>
+        <file role="php" name="bookstore-test.php"/>
+        <file role="data" name="README"/>
+        <file role="data" name="test.xml"/>
+        <file role="php" name="tree-test.php"/>
+       </dir> <!-- /lib/vendor/propel-generator/test -->
+       <file role="data" name="build-propel.xml"/>
+       <file role="data" name="build.properties-sample"/>
+       <file role="data" name="build.xml"/>
+       <file role="data" name="build.xml-local"/>
+       <file role="data" name="default.properties"/>
+      </dir> <!-- /lib/vendor/propel-generator -->
+     </dir> <!-- /lib/vendor -->
+    </dir> <!-- /lib -->
+    <dir name="test">
+     <dir name="bootstrap">
+      <file role="php" name="functional.php"/>
+      <file role="php" name="unit.php"/>
+     </dir> <!-- /test/bootstrap -->
+     <dir name="functional">
+      <dir name="crud">
+       <file role="php" name="crud1Test.php"/>
+       <file role="php" name="crud2Test.php"/>
+       <file role="php" name="crud3Test.php"/>
+       <file role="php" name="crud4Test.php"/>
+       <file role="php" name="crud5Test.php"/>
+       <file role="php" name="crud6Test.php"/>
+       <file role="php" name="crud7Test.php"/>
+       <file role="php" name="crud8Test.php"/>
+       <file role="php" name="crud9Test.php"/>
+       <file role="php" name="crudBrowser.class.php"/>
+      </dir> <!-- /test/functional/crud -->
+      <dir name="fixtures">
+       <dir name="apps">
+        <dir name="backend">
+         <dir name="config">
+          <file role="data" name="app.yml"/>
+          <file role="php" name="backendConfiguration.class.php"/>
+          <file role="data" name="cache.yml"/>
+          <file role="data" name="factories.yml"/>
+          <file role="data" name="filters.yml"/>
+          <file role="data" name="routing.yml"/>
+          <file role="data" name="security.yml"/>
+          <file role="data" name="settings.yml"/>
+          <file role="data" name="view.yml"/>
+         </dir> <!-- /test/functional/fixtures/apps/backend/config -->
+         <dir name="lib">
+          <file role="php" name="myUser.class.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/backend/lib -->
+         <dir name="modules">
+          <dir name="article">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/article/actions -->
+           <dir name="config">
+            <file role="data" name="generator.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/article/config -->
+           <dir name="templates">
+            <file role="php" name="_body.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/article/templates -->
+          </dir> <!-- /test/functional/fixtures/apps/backend/modules/article -->
+          <dir name="error">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/error/actions -->
+           <dir name="config">
+            <file role="data" name="generator.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/error/config -->
+          </dir> <!-- /test/functional/fixtures/apps/backend/modules/error -->
+          <dir name="inheritance">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/inheritance/actions -->
+           <dir name="config">
+            <file role="data" name="generator.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/inheritance/config -->
+          </dir> <!-- /test/functional/fixtures/apps/backend/modules/inheritance -->
+          <dir name="validation">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/validation/actions -->
+           <dir name="config">
+            <file role="data" name="generator.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/validation/config -->
+           <dir name="validate">
+            <file role="data" name="edit.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/backend/modules/validation/validate -->
+          </dir> <!-- /test/functional/fixtures/apps/backend/modules/validation -->
+         </dir> <!-- /test/functional/fixtures/apps/backend/modules -->
+         <dir name="templates">
+          <file role="php" name="layout.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/backend/templates -->
+        </dir> <!-- /test/functional/fixtures/apps/backend -->
+        <dir name="crud">
+         <dir name="config">
+          <file role="data" name="app.yml"/>
+          <file role="data" name="cache.yml"/>
+          <file role="php" name="crudConfiguration.class.php"/>
+          <file role="data" name="factories.yml"/>
+          <file role="data" name="filters.yml"/>
+          <file role="data" name="routing.yml"/>
+          <file role="data" name="security.yml"/>
+          <file role="data" name="settings.yml"/>
+          <file role="data" name="view.yml"/>
+         </dir> <!-- /test/functional/fixtures/apps/crud/config -->
+         <dir name="lib">
+          <file role="php" name="myUser.class.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/crud/lib -->
+         <dir name="modules">
+          <dir name="error">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/crud/modules/error/actions -->
+           <dir name="config">
+            <file role="data" name="generator.yml"/>
+           </dir> <!-- /test/functional/fixtures/apps/crud/modules/error/config -->
+          </dir> <!-- /test/functional/fixtures/apps/crud/modules/error -->
+         </dir> <!-- /test/functional/fixtures/apps/crud/modules -->
+         <dir name="templates">
+          <file role="php" name="layout.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/crud/templates -->
+        </dir> <!-- /test/functional/fixtures/apps/crud -->
+        <dir name="frontend">
+         <dir name="config">
+          <file role="data" name="app.yml"/>
+          <file role="data" name="cache.yml"/>
+          <file role="data" name="factories.yml"/>
+          <file role="data" name="filters.yml"/>
+          <file role="php" name="frontendConfiguration.class.php"/>
+          <file role="data" name="routing.yml"/>
+          <file role="data" name="security.yml"/>
+          <file role="data" name="settings.yml"/>
+          <file role="data" name="view.yml"/>
+         </dir> <!-- /test/functional/fixtures/apps/frontend/config -->
+         <dir name="lib">
+          <file role="php" name="myUser.class.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/frontend/lib -->
+         <dir name="modules">
+          <dir name="attachment">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/attachment/actions -->
+           <dir name="templates">
+            <file role="php" name="indexSuccess.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/attachment/templates -->
+          </dir> <!-- /test/functional/fixtures/apps/frontend/modules/attachment -->
+          <dir name="i18n">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/i18n/actions -->
+           <dir name="templates">
+            <file role="php" name="indexSuccess.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/i18n/templates -->
+          </dir> <!-- /test/functional/fixtures/apps/frontend/modules/i18n -->
+          <dir name="unique">
+           <dir name="actions">
+            <file role="php" name="actions.class.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/unique/actions -->
+           <dir name="templates">
+            <file role="php" name="articleSuccess.php"/>
+            <file role="php" name="categorySuccess.php"/>
+           </dir> <!-- /test/functional/fixtures/apps/frontend/modules/unique/templates -->
+          </dir> <!-- /test/functional/fixtures/apps/frontend/modules/unique -->
+         </dir> <!-- /test/functional/fixtures/apps/frontend/modules -->
+         <dir name="templates">
+          <file role="php" name="layout.php"/>
+         </dir> <!-- /test/functional/fixtures/apps/frontend/templates -->
+        </dir> <!-- /test/functional/fixtures/apps/frontend -->
+       </dir> <!-- /test/functional/fixtures/apps -->
+       <dir name="config">
+        <file role="data" name="databases.yml"/>
+        <file role="php" name="ProjectConfiguration.class.php"/>
+        <file role="data" name="propel.ini"/>
+        <file role="data" name="properties.ini"/>
+        <file role="data" name="rsync_exclude.txt"/>
+        <file role="data" name="schema-transformed.xml"/>
+        <file role="data" name="schema.xml"/>
+       </dir> <!-- /test/functional/fixtures/config -->
+       <dir name="data">
+        <dir name="fixtures">
+         <file role="data" name="fixtures.yml"/>
+        </dir> <!-- /test/functional/fixtures/data/fixtures -->
+        <dir name="migrations">
+         <file role="php" name="Migration001.class.php"/>
+         <file role="php" name="Migration002.class.php"/>
+        </dir> <!-- /test/functional/fixtures/data/migrations -->
+        <file role="data" name="environment.migrated"/>
+       </dir> <!-- /test/functional/fixtures/data -->
+       <dir name="lib">
+        <dir name="form">
+         <file role="php" name="ArticleForm.class.php"/>
+         <file role="php" name="AttachmentForm.class.php"/>
+         <file role="php" name="AuthorArticleForm.class.php"/>
+         <file role="php" name="AuthorForm.class.php"/>
+         <file role="php" name="BaseFormPropel.class.php"/>
+         <file role="php" name="BookForm.class.php"/>
+         <file role="php" name="CategoryForm.class.php"/>
+         <file role="php" name="MovieForm.class.php"/>
+         <file role="php" name="MovieI18nForm.class.php"/>
+         <file role="php" name="ProductForm.class.php"/>
+         <file role="php" name="ProductI18nForm.class.php"/>
+        </dir> <!-- /test/functional/fixtures/lib/form -->
+        <dir name="model">
+         <file role="php" name="Article.php"/>
+         <file role="php" name="ArticlePeer.php"/>
+         <file role="php" name="Attachment.php"/>
+         <file role="php" name="AttachmentPeer.php"/>
+         <file role="php" name="Author.php"/>
+         <file role="php" name="AuthorArticle.php"/>
+         <file role="php" name="AuthorArticlePeer.php"/>
+         <file role="php" name="AuthorPeer.php"/>
+         <file role="php" name="Book.php"/>
+         <file role="php" name="BookPeer.php"/>
+         <file role="php" name="Category.php"/>
+         <file role="php" name="CategoryPeer.php"/>
+         <file role="php" name="Movie.php"/>
+         <file role="php" name="MovieI18n.php"/>
+         <file role="php" name="MovieI18nPeer.php"/>
+         <file role="php" name="MoviePeer.php"/>
+         <file role="php" name="Product.php"/>
+         <file role="php" name="ProductI18n.php"/>
+         <file role="php" name="ProductI18nPeer.php"/>
+         <file role="php" name="ProductPeer.php"/>
+        </dir> <!-- /test/functional/fixtures/lib/model -->
+       </dir> <!-- /test/functional/fixtures/lib -->
+       <dir name="test">
+        <dir name="bootstrap">
+         <file role="php" name="functional.php"/>
+         <file role="php" name="unit.php"/>
+        </dir> <!-- /test/functional/fixtures/test/bootstrap -->
+        <dir name="functional">
+         <dir name="frontend">
+          <file role="php" name="attachmentActionsTest.php"/>
+          <file role="php" name="i18nActionsTest.php"/>
+         </dir> <!-- /test/functional/fixtures/test/functional/frontend -->
+        </dir> <!-- /test/functional/fixtures/test/functional -->
+       </dir> <!-- /test/functional/fixtures/test -->
+       <dir name="web">
+        <dir name="css">
+         <file role="data" name="main.css"/>
+        </dir> <!-- /test/functional/fixtures/web/css -->
+        <file role="php" name="backend_dev.php"/>
+        <file role="php" name="crud.php"/>
+        <file role="php" name="crud_dev.php"/>
+        <file role="php" name="frontend.php"/>
+        <file role="php" name="frontend_dev.php"/>
+        <file role="php" name="index.php"/>
+        <file role="data" name="robots.txt"/>
+       </dir> <!-- /test/functional/fixtures/web -->
+       <file role="data" name="symfony"/>
+      </dir> <!-- /test/functional/fixtures -->
+      <file role="php" name="backendTestBrowser.class.php"/>
+      <file role="php" name="batchActionsTest.php"/>
+      <file role="php" name="browseTest.php"/>
+      <file role="php" name="customizationTest.php"/>
+      <file role="php" name="editfieldnameTest.php"/>
+      <file role="php" name="filterTest.php"/>
+      <file role="php" name="formTest.php"/>
+      <file role="php" name="i18nTest.php"/>
+      <file role="php" name="inheritanceTest.php"/>
+      <file role="php" name="m2mTest.php"/>
+      <file role="php" name="maxperpageTest.php"/>
+      <file role="php" name="partialTest.php"/>
+      <file role="php" name="timeTest.php"/>
+      <file role="php" name="validationTest.php"/>
+     </dir> <!-- /test/functional -->
+     <dir name="unit">
+      <dir name="database">
+       <file role="php" name="sfPropelDatabaseTest.php"/>
+      </dir> <!-- /test/unit/database -->
+      <dir name="fixtures">
+       <file role="data" name="new_schema.yml"/>
+       <file role="data" name="schema.xml"/>
+       <file role="data" name="schema.yml"/>
+      </dir> <!-- /test/unit/fixtures -->
+      <dir name="migration">
+       <file role="php" name="sfPropelMigrationManagerTest.php"/>
+       <file role="php" name="sfPropelMigrationTest.php"/>
+      </dir> <!-- /test/unit/migration -->
+      <file role="php" name="sfMixerTest.php"/>
+      <file role="php" name="sfPropelDatabaseSchemaTest.php"/>
+     </dir> <!-- /test/unit -->
+    </dir> <!-- /test -->
+    <file role="data" name="LICENSE"/>
+    <file role="data" name="LICENSE.Agavi"/>
+    <file role="data" name="LICENSE.famfamfam"/>
+    <file role="data" name="LICENSE.phing"/>
+    <file role="data" name="LICENSE.Propel"/>
+    <file role="php" name="package.php"/>
+    <file role="data" name="README"/>
+   </dir> <!-- / -->
+  </filelist>
+ </release>
+ <changelog>
+   <release>
+    <version>1.1.0.0</version>
+    <date>2008-08-03</date>
+    <license>MIT License</license>
+    <state>stable</state>
+    <notes>--
+    </notes>
+   </release>
+ </changelog>
+</package>
