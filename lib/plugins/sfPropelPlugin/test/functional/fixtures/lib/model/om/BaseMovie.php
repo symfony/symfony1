@@ -594,7 +594,7 @@ abstract class BaseMovie extends BaseObject  implements Persistent {
 
     if (!isset($this->current_i18n[$culture]))
     {
-      $obj = MovieI18nPeer::retrieveByPK($this->getId(), $culture);
+      $obj = $this->isNew() ? null : MovieI18nPeer::retrieveByPK($this->getId(), $culture);
       if ($obj)
       {
         $this->setMovieI18nForCulture($obj, $culture);

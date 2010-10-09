@@ -24,9 +24,9 @@
  * @package    symfony
  * @subpackage view
  * @author     Mike Squire <mike@somosis.co.uk>
- * @version    SVN: $Id: sfOutputEscaperIteratorDecorator.class.php 9158 2008-05-21 20:32:00Z FabianLange $
+ * @version    SVN: $Id: sfOutputEscaperIteratorDecorator.class.php 23436 2009-10-29 16:10:39Z fabien $
  */
-class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, Countable, ArrayAccess
+class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, ArrayAccess
 {
   /**
    * The iterator to be used.
@@ -155,15 +155,5 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   public function offsetUnset($offset)
   {
     throw new sfException('Cannot unset values.');
-  }
-
-  /**
-   * Returns the size of the array (are required by the Countable interface).
-   *
-   * @return int The size of the array
-   */
-  public function count()
-  {
-    return count($this->value);
   }
 }

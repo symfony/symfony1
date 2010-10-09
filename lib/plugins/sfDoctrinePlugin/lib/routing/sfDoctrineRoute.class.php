@@ -78,7 +78,7 @@ class sfDoctrineRoute extends sfObjectRoute
 
   protected function getObjectsForParameters($parameters)
   {
-    $this->options['model'] = Doctrine::getTable($this->options['model']);
+    $this->options['model'] = Doctrine::getTable($this->options['object_model']);
 
     $variables = array();
     $values = array();
@@ -142,10 +142,7 @@ class sfDoctrineRoute extends sfObjectRoute
       return parent::doConvertObjectToArray($object);
     }
 
-    $className = $this->options['model'];
-
     $parameters = array();
-
     foreach ($this->getRealVariables() as $variable)
     {
       try {

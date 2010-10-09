@@ -594,7 +594,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
     if (!isset($this->current_i18n[$culture]))
     {
-      $obj = ProductI18nPeer::retrieveByPK($this->getId(), $culture);
+      $obj = $this->isNew() ? null : ProductI18nPeer::retrieveByPK($this->getId(), $culture);
       if ($obj)
       {
         $this->setProductI18nForCulture($obj, $culture);

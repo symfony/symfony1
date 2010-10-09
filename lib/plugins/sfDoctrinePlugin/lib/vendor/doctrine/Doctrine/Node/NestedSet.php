@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 6380 2009-09-17 22:29:14Z kriswallsmith $
+ *    $Id: NestedSet.php 6614 2009-11-02 22:48:22Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       www.phpdoctrine.org
  * @since      1.0
- * @version    $Revision: 6380 $
+ * @version    $Revision: 6614 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -248,7 +248,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $baseAlias = $this->_tree->getBaseAlias();
         $q = $this->_tree->getBaseQuery();
         $q->addWhere("$baseAlias.lft < ? AND $baseAlias.rgt > ?", array($this->getLeftValue(), $this->getRightValue()))
-                ->addOrderBy("$baseAlias.rgt asc");
+          ->addWhere("$baseAlias.level >= ?", $this->record['level'] - 1)
+          ->addOrderBy("$baseAlias.rgt asc");
         $q = $this->_tree->returnQueryWithRootId($q, $this->getRootValue());
         $result = $q->execute();
         

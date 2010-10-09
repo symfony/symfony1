@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 11544 2008-09-14 17:40:07Z fabien $
+ * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 22869 2009-10-08 12:31:07Z fabien $
  */
 class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 {
@@ -99,7 +99,7 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   {
     if ($this->getOption('is_image'))
     {
-      return false !== $this->getOption('file_src') ? $this->renderTag('img', array_merge(array('src' => $this->getOption('file_src'))), $attributes) : '';
+      return false !== $this->getOption('file_src') ? $this->renderTag('img', array_merge(array('src' => $this->getOption('file_src')), $attributes)) : '';
     }
     else
     {

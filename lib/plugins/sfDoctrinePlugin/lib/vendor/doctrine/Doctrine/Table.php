@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Table.php 6405 2009-09-24 18:56:54Z guilhermeblanco $
+ *  $Id: Table.php 6469 2009-10-09 20:54:33Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Table
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 6405 $
+ * @version     $Revision: 6469 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -1010,7 +1010,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         // extract column name & field name
         if (stripos($name, ' as '))
         {
-            if (strpos($name, ' as')) {
+            if (strpos($name, ' as ')) {
                 $parts = explode(' as ', $name);
             } else {
                 $parts = explode(' AS ', $name);

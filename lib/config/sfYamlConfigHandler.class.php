@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlConfigHandler.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfYamlConfigHandler.class.php 22876 2009-10-08 15:24:02Z fabien $
  */
 abstract class sfYamlConfigHandler extends sfConfigHandler
 {
@@ -34,7 +34,17 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     $config = array();
     foreach ($configFiles as $configFile)
     {
-      $config = sfToolkit::arrayDeepMerge($config, self::parseYaml($configFile));
+      // the first level is an environment and its value must be an array
+      $values = array();
+      foreach (self::parseYaml($configFile) as $env => $value)
+      {
+        if (null !== $value)
+        {
+          $values[$env] = $value;
+        }
+      }
+
+      $config = sfToolkit::arrayDeepMerge($config, $values);
     }
 
     return $config;

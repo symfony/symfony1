@@ -862,7 +862,7 @@ Listing 6-29 - Default Filter Chain, in `frontend/config/filters.yml`
 
 These declarations have no parameter (the tilde character, `~`, means "null" in YAML), because they inherit the parameters defined in the symfony core. In the core, symfony defines `class` and `param` settings for each of these filters. For instance, Listing 6-30 shows the default parameters for the `rendering` filter.
 
-Listing 6-30 - Default Parameters of the rendering Filter, in `$sf_symfony_lib_dir/config/config/filters.yml`
+Listing 6-30 - Default Parameters of the rendering Filter, in `sfConfig::get('sf_symfony_lib_dir')/config/config/filters.yml`
 
     rendering:
       class: sfRenderingFilter   # Filter class

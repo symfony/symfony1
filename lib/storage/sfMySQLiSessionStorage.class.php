@@ -20,7 +20,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
  * @author     Julien Garand <julien.garand@gmail.com>
- * @version    SVN: $Id: sfMySQLiSessionStorage.class.php 15545 2009-02-16 21:47:19Z dwhittle $
+ * @version    SVN: $Id: sfMySQLiSessionStorage.class.php 24590 2009-11-30 18:28:13Z FabianLange $
  */
 class sfMySQLiSessionStorage extends sfMySQLSessionStorage
 {
@@ -66,5 +66,15 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
   protected function db_fetch_row($result)
   {
     return $result->fetch_row();
+  }
+
+  /**
+   * Returns the text of the error message from previous database operation
+   *
+   * @return string The error text from the last database function
+   */
+  protected function db_error()
+  {
+    return mysqli_error($this->db);
   }
 }

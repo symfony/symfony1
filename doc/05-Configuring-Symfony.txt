@@ -278,7 +278,7 @@ Note that the activation of the i18n features is set in the `settings.yml` file.
 
 #### Additional Application Configuration
 
-A second set of configuration files is in the symfony installation directory (in `$sf_symfony_lib_dir/config/config/`) and doesn't appear in the configuration directory of your applications. The settings defined there are defaults that seldom need to be modified, or that are global to all projects. However, if you need to modify them, just create an empty file with the same name in your `myproject/apps/frontend/config/` directory, and override the settings you want to change. The settings defined in an application always have precedence over the ones defined in the framework. The following are the configuration files in the symfony installation config/ directory:
+A second set of configuration files is in the symfony installation directory (in `sfConfig::get('sf_symfony_lib_dir')/config/config/`) and doesn't appear in the configuration directory of your applications. The settings defined there are defaults that seldom need to be modified, or that are global to all projects. However, if you need to modify them, just create an empty file with the same name in your `myproject/apps/frontend/config/` directory, and override the settings you want to change. The settings defined in an application always have precedence over the ones defined in the framework. The following are the configuration files in the symfony installation config/ directory:
 
   * `autoload.yml`: This file contains the settings of the autoloading feature. This feature exempts you from requiring custom classes in your code if they are located in specific directories. It is described in detail in Chapter 19.
   * `core_compile.yml` and `bootstrap_compile.yml`: These are lists of classes to be included to start an application (in `bootstrap_compile.yml`) and to process a request (in `core_compile.yml`). These classes are actually concatenated into an optimized PHP file without comments, which will accelerate the execution by minimizing the file access operations (one file is loaded instead of more than forty for each request). This is especially useful if you don't use a PHP accelerator. Optimization techniques are described in Chapter 18.
@@ -387,9 +387,9 @@ Listing 5-12 - The Structure of Symfony Configuration Files
     all:
       ...
 
-In addition, the framework itself defines default values in files that are not located in the project tree structure, but in the `$sf_symfony_lib_dir/config/config/` directory of your symfony installation. The default configuration is set in these files as shown in Listing 5-13. These settings are inherited by all applications.
+In addition, the framework itself defines default values in files that are not located in the project tree structure, but in the `sfConfig::get('sf_symfony_lib_dir')/config/config/` directory of your symfony installation. The default configuration is set in these files as shown in Listing 5-13. These settings are inherited by all applications.
 
-Listing 5-13 - The Default Configuration, in `$sf_symfony_lib_dir/config/config/settings.yml`
+Listing 5-13 - The Default Configuration, in `sfConfig::get('sf_symfony_lib_dir')/config/config/settings.yml`
 
      # Default settings:
      default:
@@ -456,7 +456,7 @@ You can access settings from within the application code through the `sfConfig` 
 
     [php]
     // Retrieve a setting
-    parameter = sfConfig::get('param_name', $default_value);
+    $parameter = sfConfig::get('param_name', $default_value);
 
 Note that you can also define, or override, a setting from within PHP code:
 

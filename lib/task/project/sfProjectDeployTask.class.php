@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectDeployTask.class.php 10956 2008-08-19 15:20:48Z fabien $
+ * @version    SVN: $Id: sfProjectDeployTask.class.php 23439 2009-10-29 16:21:03Z fabien $
  */
 class sfProjectDeployTask extends sfBaseTask
 {
@@ -76,10 +76,10 @@ you can pass a [rsync-dir|COMMENT] option:
 
   [./symfony project:deploy --go --rsync-dir=config/production production|INFO]
 
-Last, you can specify the options passed to the rsync executable, using the 
-[rsync-options|INFO] option (defaults are [-azC|INFO]):
+Last, you can specify the options passed to the rsync executable, using the
+[rsync-options|INFO] option (defaults are [-azC --force --delete --progress|INFO]):
 
-  [./symfony project:deploy --go --rsync-options=avz|INFO]
+  [./symfony project:deploy --go --rsync-options=-avz|INFO]
 EOF;
   }
 

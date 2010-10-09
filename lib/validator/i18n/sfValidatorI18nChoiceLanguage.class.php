@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorI18nChoiceLanguage.class.php 11700 2008-09-21 10:53:44Z fabien $
+ * @version    SVN: $Id: sfValidatorI18nChoiceLanguage.class.php 23734 2009-11-09 22:50:08Z FabianLange $
  */
 class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
 {
@@ -23,7 +23,7 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
    *
    * Available options:
    *
-   *  * languages: An array of language codes to use (ISO 639-1)
+   *  * languages: An array of language codes to use
    *
    * @param array $options   An array of options
    * @param array $messages  An array of error messages

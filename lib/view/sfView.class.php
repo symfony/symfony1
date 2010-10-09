@@ -18,7 +18,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfView.class.php 13572 2008-12-01 02:10:36Z dwhittle $
+ * @version    SVN: $Id: sfView.class.php 24208 2009-11-21 07:15:21Z fabien $
  */
 abstract class sfView
 {

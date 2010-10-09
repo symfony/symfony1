@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.2.9');
+define('SYMFONY_VERSION', '1.2.10');
 
 /**
  * sfCoreAutoload class.
@@ -22,7 +22,7 @@ define('SYMFONY_VERSION', '1.2.9');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 22509 2009-09-27 15:27:51Z FabianLange $
+ * @version    SVN: $Id: sfCoreAutoload.class.php 24648 2009-12-01 07:21:01Z FabianLange $
  */
 class sfCoreAutoload
 {
@@ -369,6 +369,7 @@ class sfCoreAutoload
   'sfProjectFreezeTask' => 'task/project',
   'sfProjectPermissionsTask' => 'task/project',
   'sfProjectUnfreezeTask' => 'task/project',
+  'sfProjectValidateTask' => 'task/project',
   'sfUpgradeTo11Task' => 'task/project',
   'sfUpgradeTo12Task' => 'task/project',
   'sfComponentUpgrade' => 'task/project/upgrade1.1',
@@ -391,6 +392,14 @@ class sfCoreAutoload
   'sfPluginAssetsUpgrade' => 'task/project/upgrade1.2',
   'sfPropel13Upgrade' => 'task/project/upgrade1.2',
   'sfPropelIniUpgrade' => 'task/project/upgrade1.2',
+  'sfDeprecatedClassesValidation' => 'task/project/validation',
+  'sfDeprecatedConfigurationFilesValidation' => 'task/project/validation',
+  'sfDeprecatedHelpersValidation' => 'task/project/validation',
+  'sfDeprecatedMethodsValidation' => 'task/project/validation',
+  'sfDeprecatedPluginsValidation' => 'task/project/validation',
+  'sfDeprecatedSettingsValidation' => 'task/project/validation',
+  'sfParameterHolderValidation' => 'task/project/validation',
+  'sfValidation' => 'task/project/validation',
   'sfBaseTask' => 'task',
   'sfCommandApplicationTask' => 'task',
   'sfFilesystem' => 'task',

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PartialHelper.php 18955 2009-06-05 10:27:40Z Kris.Wallsmith $
+ * @version    SVN: $Id: PartialHelper.php 23376 2009-10-27 07:53:11Z nicolas $
  */
 
 /**
@@ -354,8 +354,8 @@ function _call_component($moduleName, $componentName, $vars)
   // load component's module config file
   require($context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
 
-  // pass unescaped vars to the component
-  $componentInstance->getVarHolder()->add(sfOutputEscaper::unescape($vars));
+  // pass unescaped vars to the component if escaping_strategy is set to true
+  $componentInstance->getVarHolder()->add(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   // dispatch component
   $componentToRun = 'execute'.ucfirst($componentName);

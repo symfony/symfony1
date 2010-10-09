@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageFormat.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    $Id: sfMessageFormat.class.php 24622 2009-11-30 23:49:47Z FabianLange $
  * @package    symfony
  * @subpackage i18n
  */
@@ -158,6 +158,8 @@ class sfMessageFormat
    */
   public function format($string, $args = array(), $catalogue = null, $charset = null)
   {
+    // make sure that objects with __toString() are converted to strings
+    $string = (string) $string;
     if (empty($charset))
     {
       $charset = $this->getCharset();

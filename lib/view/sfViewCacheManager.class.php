@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 21979 2009-09-13 13:38:00Z FabianLange $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 24513 2009-11-28 23:34:54Z FabianLange $
  */
 class sfViewCacheManager
 {
@@ -169,10 +169,11 @@ class sfViewCacheManager
 
         foreach ($varyHeaders as $header)
         {
-          $vary .= $request->getHttpHeader($header).'|';
+          $vary .= $header . '_' . $request->getHttpHeader($header) . '_';
         }
 
-        $vary = $vary;
+        $vary = preg_replace('/[^a-z0-9]/i', '_', $vary);
+        $vary = preg_replace('/_+/', '_', $vary);
       }
       else
       {

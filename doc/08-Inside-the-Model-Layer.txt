@@ -480,7 +480,7 @@ Additionally, the getters for date columns accept a date format as an argument:
 >     public function executeShowPopularArticlesForTag($request)
 >     {
 >       $tag = TagPeer::retrieveByName($request->getParameter('tag'));
->       $this->foward404Unless($tag);
+>       $this->forward404Unless($tag);
 >       $this->articles = $tag->getPopularArticles(10);
 >     }
 >

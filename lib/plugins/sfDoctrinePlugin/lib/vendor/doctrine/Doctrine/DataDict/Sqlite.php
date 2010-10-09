@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Sqlite.php 6666 2009-11-04 19:40:25Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6666 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -73,7 +73,7 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
 
                 $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
 
-                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TEXTFLD_LENGTH).')')
+                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->options['default_text_field_length'].')')
                     : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
             case 'clob':
                 if ( ! empty($field['length'])) {

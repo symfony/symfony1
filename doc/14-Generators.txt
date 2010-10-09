@@ -29,6 +29,9 @@ Listing 14-1 - `schema.yml` of the Example Weblog Application
         id:          ~
         title:       varchar(255)
         content:     longvarchar
+		author_id:	 ~
+		category_id: ~
+		is_published: integer(1)
         created_at:  ~
       blog_comment:
         id:               ~
@@ -215,7 +218,7 @@ Listing 14-6 - Typical Complete Generator Configuration
           form:
             display:
               "Post":       [title, category_id, content]
-              "Workflow":   [author_id, is_published, created_on]
+              "Workflow":   [author_id, is_published, created_at]
             fields:
               published_at: { help: "Date of publication" }
               title:        { attributes: { style: "width: 350px" } }
@@ -387,7 +390,7 @@ For this to work, an `_article_link.php` partial must be created in the `modules
 Listing 14-15 - Example Partial for the `list` View, in `modules/comment/templates/_article_link.php`
 
     [php]
-    <?php echo link_to($form->getObject()->getBlogArticle()->getTitle(), '@article_edit', $form->getObject()->getBlogArticle()) ?>
+    <?php echo link_to($comment->getBlogArticle()->getTitle(), '@article_edit', $comment->getBlogArticle()) ?> 
 
 Notice that the partial template of a partial field has access to the current object through a variable named by the class (`$comment` in this example). For instance, for a module built for a class called `UserGroup`, the partial will have access to the current object through the `$user_group` variable.
 
@@ -576,7 +579,7 @@ Listing 14-24 - Customizing the Form Class used for Filtering
 >**TIP**
 >To disable filters altogether, you can just specify `false` as the `class` to use for the filters.
 
-You can also use partial filters to modify a filter that symfony. Each partial receives the `form` and the HTML `attributes` to use when rendering the form element. Listing 14-24 shows an example implementation to mimics the default behavior but with a partial.
+You can also use partial filters to implement custom filter logic. Each partial receives the `form` and the HTML `attributes` to use when rendering the form element. Listing 14-24 shows an example implementation that mimics the default behavior but with a partial.
 
 Listing 14-24 - Using a Partial Filter
 
@@ -874,9 +877,9 @@ There are other partials inherited from the framework that can be overridden in 
 
 The generator templates are cut into small parts that can be overridden independently, and the actions can also be changed one by one.
 
-However, if you want to override those for several modules in the same way, you should probably create a reusable theme. A theme is a sub-set of templates and actions that can be used by an administration module if specified in the theme value at the beginning of `generator.yml`. With the default theme, symfony uses the files defined in `$sf_symfony_lib_dir/plugins/sfPropelPlugin/data/generator/sfPropelModule/admin/`.
+However, if you want to override those for several modules in the same way, you should probably create a reusable theme. A theme is a sub-set of templates and actions that can be used by an administration module if specified in the theme value at the beginning of `generator.yml`. With the default theme, symfony uses the files defined in `sfConfig::get('sf_symfony_lib_dir')/plugins/sfPropelPlugin/data/generator/sfPropelModule/admin/`.
 
-The theme files must be located in a project tree structure, in a `data/generator/sfPropelModule/[theme_name]/` directory, and you can bootstrap a new theme by copying the files you want to override from the default theme (located in `$sf_symfony_lib_dir/plugins/sfPropelPlugin/data/generator/sfPropelModule/admin/` directory):
+The theme files must be located in a project tree structure, in a `data/generator/sfPropelModule/[theme_name]/` directory, and you can bootstrap a new theme by copying the files you want to override from the default theme (located in `sfConfig::get('sf_symfony_lib_dir')/plugins/sfPropelPlugin/data/generator/sfPropelModule/admin/` directory):
 
     // Partials, in [theme_name]/template/templates/
     _assets.php

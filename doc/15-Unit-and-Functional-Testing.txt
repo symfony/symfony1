@@ -286,7 +286,7 @@ Listing 15-6 - Including Classes in Unit Tests
     <?php
 
     include(dirname(__FILE__).'/../bootstrap/unit.php');
-    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
 
     $t = new lime_test(7, new lime_output_color());
 
@@ -309,12 +309,12 @@ Listing 15-6 - Including Classes in Unit Tests
 
 In unit tests, you need to instantiate not only the object you're testing, but also the object it depends upon. Since unit tests must remain unitary, depending on other classes may make more than one test fail if one class is broken. In addition, setting up real objects can be expensive, both in terms of lines of code and execution time. Keep in mind that speed is crucial in unit testing because developers quickly tire of a slow process.
 
-Whenever you start including many scripts for a unit test, you may need a simple autoloading system. For this purpose, the sfSimpleAutoload class (which must be manually included) provides an addDirectory() method which expects an absolute path as parameter and that can be called several times in case you need to include several directories on the search path. All the classes located under this path will be autoloaded. For instance, if you want to have all the classes located under `$sf_symfony_lib_dir/util/` autoloaded, start your unit test script as follows:
+Whenever you start including many scripts for a unit test, you may need a simple autoloading system. For this purpose, the sfSimpleAutoload class (which must be manually included) provides an addDirectory() method which expects an absolute path as parameter and that can be called several times in case you need to include several directories on the search path. All the classes located under this path will be autoloaded. For instance, if you want to have all the classes located under `sfConfig::get('sf_symfony_lib_dir')/util/` autoloaded, start your unit test script as follows:
 
     [php]
-    require_once($sf_symfony_lib_dir.'/autoload/sfSimpleAutoload.class.php');
-    $autoload = new sfSimpleAutoload();
-    $autoload->addDirectory($sf_symfony_lib_dir.'/util');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/autoload/sfSimpleAutoload.class.php');
+    $autoload = sfSimpleAutoload::getInstance();
+    $autoload->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/util');
     $autoload->register();
 
 Another good workaround for the autoloading issues is the use of stubs. A stub is an alternative implementation of a class where the real methods are replaced with simple canned data. It mimics the behavior of the real class, but without its cost. A good example of stubs is a database connection or a web service interface. In Listing 15-7, the unit tests for a mapping API rely on a `WebService` class. Instead of calling the real `fetch()` method of the actual web service class, the test uses a stub that returns test data.
@@ -378,8 +378,8 @@ Listing 15-8 - Using Fixture Files in Unit Tests
     <?php
 
     include(dirname(__FILE__).'/../bootstrap/unit.php');
-    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-    require_once($sf_symfony_lib_dir.'/yaml/sfYaml.class.php');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/yaml/sfYaml.class.php');
 
     $testCases = sfYaml::load(dirname(__FILE__).'/fixtures.yml');
 
@@ -839,7 +839,7 @@ For unit tests, a good practice is to group the tests by function or method, and
 Listing 15-30 - Example Unit Test Naming Practice
 
     [php]
-    // srttolower()
+    // strtolower()
     $t->diag('strtolower()');
     $t->isa_ok(strtolower('Foo'), 'string', 'strtolower() returns a string');
     $t->is(strtolower('FOO'), 'foo', 'strtolower() transforms the input to lowercase');

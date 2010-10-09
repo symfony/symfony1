@@ -12,7 +12,7 @@ As explained in Chapter 5, this file is environment-dependent, which means that 
 
 ### Default Modules and Actions
 
-Symfony provides default pages for special situations. In the case of a routing error, symfony executes an action of the `default` module, which is stored in the `$sf_symfony_lib_dir/controller/default/` directory. The `settings.yml` file defines which action is executed depending on the error:
+Symfony provides default pages for special situations. In the case of a routing error, symfony executes an action of the `default` module, which is stored in the `sfConfig::get('sf_symfony_lib_dir')/controller/default/` directory. The `settings.yml` file defines which action is executed depending on the error:
 
   * `error_404_module` and `error_404_action`: Action called when the URL entered by the user doesn't match any route or when an `sfError404Exception` occurs. The default value is `default/error404`.
   * `login_module` and `login_action`: Action called when a nonauthenticated user tries to access a page defined as `secure` in `security.yml` (see Chapter 6 for details). The default value is `default/login`.
@@ -30,7 +30,7 @@ You can override the default pages in two ways:
   * You can create your own default module in the application's `modules/` directory, override all the actions defined in the `settings.yml` file (`index`, `error404`, `login`, `secure`, `disabled`) and all the related templates (`indexSuccess.php`, `error404Success.php`, `loginSuccess.php`, `secureSuccess.php`, `disabledSuccess.php`).
   * You can change the default module and action settings of the `settings.yml` file to use pages of your application.
 
-Two other pages bear a symfony look and feel, and they also need to be customized before deployment to production. These pages are not in the `default` module, because they are called when symfony cannot run properly. Instead, you will find these default pages in the `$sf_symfony_lib_dir/exception/data/` directory:
+Two other pages bear a symfony look and feel, and they also need to be customized before deployment to production. These pages are not in the `default` module, because they are called when symfony cannot run properly. Instead, you will find these default pages in the `sfConfig::get('sf_symfony_lib_dir')/exception/data/` directory:
 
   * `error.html.php`: Page called when an internal server error occurs in the production environment. In other environments (where debug is set to `true`), when an error occurs, symfony displays the full execution stack and an explicit error message (see Chapter 16 for details).
   * `unavailable.php`: Page called when a user requests a page while the application is disabled (with the `disable` task). It is also called while the cache is being cleared (that is, between a call to the `php symfony cache:clear` task and the end of this task execution). On systems with a very large cache, the cache-clearing process can take several seconds. Symfony cannot execute a request with a partially cleared cache, so requests received before the end of the process are redirected to this page.
@@ -55,7 +55,7 @@ Parameter               | Description | Default Value
 `cache`                 | Enables template caching (see Chapter 12). Set it to `on` if one of your modules includes `cache.yml` file. The cache filter (`sfCacheFilter`) is enabled only if it is on. | `off` in development, `on` in production
 `web_debug`             | Enables the web debug toolbar for easy debugging (see Chapter 16). Set it to `on` to display the toolbar on every page. | `on` in development, `off` in production
 `check_symfony_version` | Enables the check of the symfony version for every request. Set it to on for automatic cache clearing after a framework upgrade. Leave it set to off if you always clear the cache after an upgrade. | `off`
-`check_lock`            | Enables the application lock system, triggered by the `cache:clear` and `project:disable` tasks (see the previous section). Set it to `on` to have all requests to disabled applications redirected to the `$sf_symfony_lib_dir/exception/data/unavailable.php` page. | `off`
+`check_lock`            | Enables the application lock system, triggered by the `cache:clear` and `project:disable` tasks (see the previous section). Set it to `on` to have all requests to disabled applications redirected to the `sfConfig::get('sf_symfony_lib_dir')/exception/data/unavailable.php` page. | `off`
 `compressed`            | Enables PHP response compression. Set it to `on` to compress the outgoing HTML via the PHP compression handler. | `off`
 
 ### Feature Configuration
@@ -219,11 +219,11 @@ By default, classes stored in the following directories in your projects benefit
   * `myproject/apps/frontend/lib/`
   * `myproject/apps/frontend/modules/mymodule/lib`
 
-There is no `autoload.yml` file in the default application configuration directory. If you want to modify the framework settings--for instance, to autoload classes stored somewhere else in your file structure--create an empty autoload.yml file and override the settings of `$sf_symfony_lib_dir/config/config/autoload.yml` or add your own.
+There is no `autoload.yml` file in the default application configuration directory. If you want to modify the framework settings--for instance, to autoload classes stored somewhere else in your file structure--create an empty autoload.yml file and override the settings of `sfConfig::get('sf_symfony_lib_dir')/config/config/autoload.yml` or add your own.
 
 The autoload.yml file must start with an autoload: key and list the locations where symfony should look for classes. Each location requires a label; this gives you the ability to override symfony's entries. For each location, provide a `name` (it will appear as a comment in `config_autoload.yml.php`) and an absolute `path`. Then define if the search must be `recursive`, which directs symfony to look in all the subdirectories for `.php` files, and `exclude` the subdirectories you want. Listing 19-4 shows the locations used by default and the file syntax.
 
-Listing 19-4 - Default Autoloading Configuration, in `$sf_symfony_lib_dir/config/config/autoload.yml`
+Listing 19-4 - Default Autoloading Configuration, in `sfConfig::get('sf_symfony_lib_dir')/config/config/autoload.yml`
 
     autoload:
       # plugins
@@ -430,9 +430,9 @@ Each configuration file has a handler. The job of configuration handlers is to m
 
 ### Default Configuration Handlers
 
-The default handler configuration is stored in `$sf_symfony_lib_dir/config/config/config_handlers.yml`. This file links the handlers to the configuration files according to a file path. Listing 19-9 shows an extract of this file.
+The default handler configuration is stored in `sfConfig::get('sf_symfony_lib_dir')/config/config/config_handlers.yml`. This file links the handlers to the configuration files according to a file path. Listing 19-9 shows an extract of this file.
 
-Listing 19-9 - Extract of `$sf_symfony_lib_dir/config/config/config_handlers.yml`
+Listing 19-9 - Extract of `sfConfig::get('sf_symfony_lib_dir')/config/config/config_handlers.yml`
 
     config/settings.yml:
       class:    sfDefineEnvironmentConfigHandler
@@ -471,7 +471,7 @@ Using a handler to deal with a configuration file provides two important benefit
   * The configuration file is transformed into executable PHP code, and this code is stored in the cache. This means that the configuration is parsed only once in production, and the performance is optimal.
   * The configuration file can be defined at different levels (project and application) and the final parameter values will result from a cascade. So you can define parameters at a project level and override them on a per-application basis.
 
-If you feel like writing your own configuration handler, follow the example of the structure used by the framework in the `$sf_symfony_lib_dir/config/` directory.
+If you feel like writing your own configuration handler, follow the example of the structure used by the framework in the `sfConfig::get('sf_symfony_lib_dir')/config/` directory.
 
 Let's suppose that your application contains a `myMapAPI` class, which provides an interface to a third-party web service delivering maps. This class needs to be initialized with a URL and a user name, as shown in Listing 19-10.
 

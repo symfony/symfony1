@@ -580,7 +580,7 @@ Listing 10-19 - Validating Request Parameters with Reusable Validators, in `modu
 If a user submits the form in Listing 10-18 with the value `a` in the `name` field, the `execute()` method of the `sfStringValidator` will return `false` (because the string length is less than the minimum of two characters). The `validateSend()` method will then fail, and the `handleErrorSend()` method will be called instead of the `executeSend()` method.
 
 >**TIP**
->The `setError()` method of the `sfRequest` method gives information to the template so that it can display an error message (as explained in the "Displaying the Error Messages in the Form" section later in this chapter). The validators set the errors internally, so you can define different errors for the different cases of nonvalidation. That's the purpose of the `min_error` and `max_error` initialization parameters of the `sfStringValidator`.
+>The `setError()` method of the `sfRequest` class gives information to the template so that it can display an error message (as explained in the "Displaying the Error Messages in the Form" section later in this chapter). The validators set the errors internally, so you can define different errors for the different cases of nonvalidation. That's the purpose of the `min_error` and `max_error` initialization parameters of the `sfStringValidator`.
 
 All the rules defined in the example can be translated into validators:
 
@@ -592,7 +592,7 @@ The fact that a field is required is not handled by a validator.
 
 ### Validation File
 
-You could easily implement the validation of the contact form with validators in the `validateSend()` method PHP, but that would imply repeating a lot of code. Symfony offers an alternative way to define validation rules for a form, and it involves YAML. For instance, Listing 10-20 shows the translation of the name field validation rules, and its results are equivalent to those of Listing 10-19.
+You could easily implement the validation of the contact form with validators in the `validateSend()` method, but that would imply repeating a lot of code. Symfony offers an alternative way to define validation rules for a form, and it involves YAML. For instance, Listing 10-20 shows the translation of the name field validation rules, and its results are equivalent to those of Listing 10-19.
 
 Listing 10-20 - Validation File, in `modules/contact/validate/send.yml`
 

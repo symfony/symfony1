@@ -456,7 +456,11 @@ abstract class sfFormDoctrine extends sfForm
 
     if (!$values[$field])
     {
-      return $this->object->$field;
+      // this is needed if the form is embedded, in which case 
+      // the parent form has already changed the value of the field
+      $oldValues = $this->getObject()->getModified(true, false);
+
+      return isset($oldValues[$field]) ? $oldValues[$field] : $this->object->$field;
     }
 
     // we need the base directory

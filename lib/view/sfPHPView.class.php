@@ -16,7 +16,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfPHPView.class.php 20606 2009-07-30 14:22:31Z fabien $
+ * @version    SVN: $Id: sfPHPView.class.php 24511 2009-11-28 22:57:36Z FabianLange $
  */
 class sfPHPView extends sfView
 {
@@ -75,7 +75,17 @@ class sfPHPView extends sfView
     // render
     ob_start();
     ob_implicit_flush(0);
-    require($_sfFile);
+
+    try
+    {
+      require($_sfFile);
+    }
+    catch (Exception $e)
+    {
+      // need to end output buffering before throwing the exception #7596
+      ob_end_clean();
+      throw $e;
+    }
 
     return ob_get_clean();
   }

@@ -318,7 +318,7 @@ Listing 12-9 - Clearing the Cache for a Given Action, in `modules/user/actions/a
       // Update a user
       $user_id = $request->getParameter('id');
       $user = UserPeer::retrieveByPk($user_id);
-      $this->foward404Unless($user);
+      $this->forward404Unless($user);
       $user->setName($request->getParameter('name'));
       ...
       $user->save();
@@ -508,7 +508,7 @@ HTTP 1.1 and Client-Side Caching
 
 The HTTP 1.1 protocol defines a bunch of headers that can be of great use to further speed up an application by controlling the browser's cache system.
 
-The HTTP 1.1 specifications of the World Wide Web Consortium (W3C, [http://www. w3.org/Protocols/rfc2616/rfc2616-sec14.html](http://www. w3.org/Protocols/rfc2616/rfc2616-sec14.html)) describe these headers in detail. If an action has caching enabled, and it uses the `with_layout` option, it can use one or more of the mechanisms described in the following sections.
+The HTTP 1.1 specifications of the World Wide Web Consortium (W3C, [http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)) describe these headers in detail. If an action has caching enabled, and it uses the `with_layout` option, it can use one or more of the mechanisms described in the following sections.
 
 Even if some of the browsers of your website's users may not support HTTP 1.1, there is no risk in using the HTTP 1.1 cache features. A browser receiving headers that it doesn't understand simply ignores them, so you are advised to set up the HTTP 1.1 cache mechanisms.
 

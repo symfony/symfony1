@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 19912 2009-07-06 08:04:41Z FabianLange $
+ * @version    $Id: sfCultureInfo.class.php 22878 2009-10-08 16:24:36Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -771,6 +771,8 @@ class sfCultureInfo
         $allCurrencies[$key] = $value[1];
       }
     }
+
+    asort($allCurrencies);
 
     return $allCurrencies;
   }

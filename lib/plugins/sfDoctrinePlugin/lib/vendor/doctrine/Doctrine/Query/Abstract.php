@@ -819,7 +819,7 @@ abstract class Doctrine_Query_Abstract
     public function getRootAlias()
     {
         if ( ! $this->_queryComponents) {
-          $this->getSql();
+            $this->getSql($this->getParams());
         }
 
         return $this->_rootAlias;

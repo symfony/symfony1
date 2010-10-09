@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Record.php 6403 2009-09-24 17:54:30Z jwage $
+ *  $Id: Record.php 6591 2009-10-30 17:30:29Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 6403 $
+ * @version     $Revision: 6591 $
  */
 abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate, Serializable
 {
@@ -887,11 +887,17 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     {
         if (is_null($name)) {
             foreach ($this->_table->getRelations() as $rel) {
-                $this->_references[$rel->getAlias()] = $rel->fetchRelatedFor($this);
+                $reference = $rel->fetchRelatedFor($this);
+                if ($reference instanceof Doctrine_Collection || ($reference && $reference->exists())) {
+                    $this->_references[$rel->getAlias()] = $reference;
+                }
             }
         } else {
             $rel = $this->_table->getRelation($name);
-            $this->_references[$name] = $rel->fetchRelatedFor($this);
+            $reference = $rel->fetchRelatedFor($this);
+            if ($reference instanceof Doctrine_Collection || ($reference && $reference->exists())) {
+                $this->_references[$name] = $reference;
+            }
         }
     }
 
@@ -1188,6 +1194,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     protected function _isValueModified($type, $old, $new)
     {
+        if ($new instanceof Doctrine_Expression) {
+            return true;
+        }
+
         if ($type == 'boolean' && (is_bool($old) || is_numeric($old)) && (is_bool($new) || is_numeric($new)) && $old == $new) {
             return false;
         } else if (in_array($type, array('decimal', 'float')) && is_numeric($old) && is_numeric($new)) {

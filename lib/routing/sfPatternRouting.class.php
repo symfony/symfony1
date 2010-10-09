@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPatternRouting.class.php 17746 2009-04-29 11:41:08Z fabien $
+ * @version    SVN: $Id: sfPatternRouting.class.php 23180 2009-10-19 07:19:52Z FabianLange $
  */
 class sfPatternRouting extends sfRouting
 {
@@ -486,7 +486,7 @@ class sfPatternRouting extends sfRouting
    * Returned array contains:
    *
    *  - name:       name or alias of the route that matched
-   *  - route:      the actual matching route object
+   *  - pattern:    the compiled pattern of the route that matched
    *  - parameters: array containing key value pairs of the request parameters including defaults
    *
    * @param  string $url     URL to be parsed

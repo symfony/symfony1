@@ -663,7 +663,7 @@ You can temporarily disable your application--for instance, when you need to upg
 
     > php symfony project:disable APPLICATION_NAME ENVIRONMENT_NAME
 
-By default, a disabled application displays the `$sf_symfony_lib_dir/exception/data/unavailable.php` page, but if you create your own `unavailable.php` file in your project's `config/` directory, symfony will use it instead.
+By default, a disabled application displays the `sfConfig::get('sf_symfony_lib_dir')/exception/data/unavailable.php` page, but if you create your own `unavailable.php` file in your project's `config/` directory, symfony will use it instead.
 
 The `project:enable` task reenables the application and clears the cache.
 

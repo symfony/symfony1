@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelInsertSqlTask.class.php 14299 2008-12-24 04:57:47Z dwhittle $
+ * @version    SVN: $Id: sfPropelInsertSqlTask.class.php 22691 2009-10-01 16:53:31Z FabianLange $
  */
 class sfPropelInsertSqlTask extends sfPropelBaseTask
 {
@@ -84,8 +84,6 @@ EOF;
 
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    register_shutdown_function(array($this, 'removeTmpDir'));
-
     $properties = $this->getProperties(sfConfig::get('sf_data_dir').'/sql/sqldb.map');
     $sqls = array();
     foreach ($properties as $file => $connection)
@@ -104,6 +102,7 @@ EOF;
     }
 
     $this->tmpDir = sfToolkit::getTmpDir().'/propel_insert_sql_'.rand(11111, 99999);
+    register_shutdown_function(array($this, 'removeTmpDir'));
     mkdir($this->tmpDir, 0777, true);
     foreach ($sqls as $connection => $files)
     {

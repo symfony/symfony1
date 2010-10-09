@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSQLiteCache.class.php 9084 2008-05-20 01:29:54Z Carl.Vondrick $
+ * @version    SVN: $Id: sfSQLiteCache.class.php 23501 2009-11-01 22:54:37Z FabianLange $
  */
 class sfSQLiteCache extends sfCache
 {
@@ -35,9 +35,9 @@ class sfSQLiteCache extends sfCache
    */
   public function initialize($options = array())
   {
-    if (!extension_loaded('sqlite'))
+    if (!extension_loaded('SQLite') && !extension_loaded('pdo_SQLite'))
     {
-      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" extension to be loaded.');
+      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" or "pdo_sqlite" extension to be loaded.');
     }
 
     parent::initialize($options);

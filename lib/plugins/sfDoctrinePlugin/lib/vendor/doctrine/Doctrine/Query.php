@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 6407 2009-09-24 21:38:36Z guilhermeblanco $
+ *  $Id: Query.php 6672 2009-11-04 20:17:03Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 6407 $
+ * @version     $Revision: 6672 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -326,6 +326,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $this->processPendingAggregates();
 
             return $this->getSqlAggregateAlias($dqlAlias);
+        } else if ( ! ($this->_conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_EXPR)){
+            return $dqlAlias;
         } else {
             throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
         }
@@ -1925,14 +1927,14 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     public function count($params = array())
     {
-        $q = $this->getCountQuery();
-
         if ( ! is_array($params)) {
             $params = array($params);
         }
 
         $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
         $params = $this->_conn->convertBooleans($params);
+
+        $q = $this->getCountQuery($params);
 
         $results = $this->getConnection()->fetchAll($q, $params);
 
