@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 7592 2008-02-23 23:11:03Z Carl.Vondrick $
+ * @version    SVN: $Id: sfWebDebug.class.php 8090 2008-03-26 06:28:21Z fabien $
  */
 class sfWebDebug
 {
@@ -431,7 +431,7 @@ class sfWebDebug
     $content = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid #f00">
       <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bg_color.'; border-right: 1px solid #f00; border-bottom: 1px solid #f00;">
-      <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\''.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
+      <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\'sub_main_info_'.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="sub_main_info_'.$id.'">
         [uri]&nbsp;'.htmlentities($internalUri, ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
         [life&nbsp;time]&nbsp;'.$cache->getLifeTime($internalUri).'&nbsp;seconds<br />

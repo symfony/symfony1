@@ -112,6 +112,9 @@ The schema is used to build the model classes of the ORM layer. To save executio
 
     > symfony propel-build-model
 
+>**TIP**
+>After building your model, you must remember to clear symfony's internal cache with `symfony cc` so symfony can find your newly created models.
+
 Typing this command will launch the analysis of the schema and the generation of base data model classes in the `lib/model/om/` directory of your project:
 
   * `BaseArticle.php`

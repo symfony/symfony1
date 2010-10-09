@@ -845,6 +845,9 @@ The `check` parameter contains the name of the field that the current field must
 
 In this example, the validator will look in the database for a record of class `User` where the `login` column has the same value as the field to validate.
 
+>**CAUTION**
+>sfPropelUniqueValidator is susceptible to race conditions.  Although unlikely, in multiuser environments, the result may change the instant it returns.  You should still be ready to handle a duplicate INSERT error.  
+
 #### File Validator
 
 `sfFileValidator` applies format (an array of mime-types) and size constraints to file upload fields.
@@ -1090,7 +1093,7 @@ So, if you change the configuration to that shown in Listing 10-36, the validati
 
 Listing 10-36 - Sample Validation File for a Form with Two Password Fields and a Group
 
-    fields:c
+    fields:
       password1:
         group:           password_group
       password2:

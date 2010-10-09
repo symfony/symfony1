@@ -23,11 +23,15 @@
  *                                                the value for this column already
  *                                                exists in the database.
  *
+ * Warning: sfPropelUniqueValidator is susceptible to race conditions.  Although
+ * unlikely, in multiuser environments, the result may change the instant it
+ * returns.  You should still be ready to handle a duplicate INSERT error.  
+ *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fédéric Coelho <frederic.coelho@symfony-project.com>
- * @version    SVN: $Id: sfPropelUniqueValidator.class.php 2995 2006-12-09 18:01:32Z fabien $
+ * @version    SVN: $Id: sfPropelUniqueValidator.class.php 8045 2008-03-22 16:04:43Z Carl.Vondrick $
  */
 class sfPropelUniqueValidator extends sfValidator
 {

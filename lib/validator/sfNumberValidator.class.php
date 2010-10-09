@@ -31,7 +31,7 @@
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfNumberValidator.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfNumberValidator.class.php 8052 2008-03-23 02:30:30Z Carl.Vondrick $
  */
 class sfNumberValidator extends sfValidator
 {
@@ -45,7 +45,7 @@ class sfNumberValidator extends sfValidator
    */
   public function execute(&$value, &$error)
   {
-    if (!preg_match('/^\d+(\.\d+)?$/', $value))
+    if (!preg_match('/^-?\d+(\.\d+)?$/', $value))
     {
       // it's NaN, what nerve!
       $error = $this->getParameterHolder()->get('nan_error');

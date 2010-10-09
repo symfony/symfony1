@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: TagHelper.php 7900 2008-03-15 12:34:54Z fabien $
+ * @version    SVN: $Id: TagHelper.php 8176 2008-04-01 08:30:35Z nicolas $
  */
 
 /**
@@ -71,7 +71,7 @@ function escape_javascript($javascript = '')
  */
 function escape_once($html)
 {
-  return fix_double_escape(htmlspecialchars($html, ENT_QUOTES, sfConfig::get('sf_charset')));
+  return fix_double_escape(htmlspecialchars($html, ENT_COMPAT, sfConfig::get('sf_charset')));
 }
 
 /**
