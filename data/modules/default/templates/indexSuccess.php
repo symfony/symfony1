@@ -19,7 +19,7 @@
     <ul class="sfTIconList">
       <li class="sfTDatabaseMessage">Create your data model</li>
       <li class="sfTColorMessage">Customize the layout of the generated templates</li>
-      <li class="sfTLinkMessage"><?php echo link_to('Learn more from the online documentation', 'http://www.symfony-project.com/content/documentation.html') ?></li>
+      <li class="sfTLinkMessage"><?php echo link_to('Learn more from the online documentation', 'http://www.symfony-project.org/doc') ?></li>
     </ul>
   </dd>
 </dl>

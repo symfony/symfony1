@@ -767,7 +767,7 @@ Listing 6-27 - Dealing with User Credentials in a Template
 As for the authenticated status, credentials are often given to users during the login process. This is why the `sfUser` object is often extended to add login and logout methods, in order to set the security status of users in a central place.
 
 >**TIP**
->Among the symfony plug-ins, the `sfGuardPlugin` (http://www.symfony-project.com/trac/wiki/sfGuardPlugin) extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
+>Among the symfony plug-ins, the `sfGuardPlugin` (http://trac.symfony-project.com/wiki/sfGuardPlugin) extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
 
 ### Complex Credentials
 
@@ -1050,7 +1050,7 @@ Listing 6-37 - Secure Communication Filter
       }
     }
 
-Filters are used extensively in plug-ins, as they allow you to extend the features of an application globally. Refer to Chapter 17 to learn more about plug-ins, and see the online wiki ([http://www.symfony-project.com/trac/wiki](http://www.symfony-project.com/trac/wiki)) for more filter examples.
+Filters are used extensively in plug-ins, as they allow you to extend the features of an application globally. Refer to Chapter 17 to learn more about plug-ins, and see the online wiki ([http://trac.symfony-project.com/](http://trac.symfony-project.com/)) for more filter examples.
 
 Module Configuration
 --------------------

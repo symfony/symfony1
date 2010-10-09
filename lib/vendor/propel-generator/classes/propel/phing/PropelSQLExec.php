@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelSQLExec.php 536 2007-01-10 14:30:38Z heltem $
+ *  $Id: PropelSQLExec.php 803 2007-11-13 21:24:21Z dwhittle $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,7 +36,7 @@ include_once 'creole/Connection.php';
  * @author     Tim Stephenson <tim.stephenson@sybase.com> (Torque)
  * @author     Jason van Zyl <jvanzyl@apache.org> (Torque)
  * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version    $Revision: 536 $
+ * @version    $Revision: 803 $
  * @package    propel.phing
  */
 class PropelSQLExec extends Task {
@@ -667,7 +667,7 @@ class PropelSQLExecTransaction {
 	{
 		if (!empty($this->tSqlCommand)) {
 			$this->parent->log("Executing commands", PROJECT_MSG_INFO);
-			$this->parent->runStatements($tSqlCommand, $out);
+			$this->parent->runStatements($this->tSqlCommand, $out);
 		}
 
 		if ($this->tSrcFile !== null) {

@@ -36,10 +36,10 @@ pake_desc('insert sql for current model');
 pake_task('propel-insert-sql', 'project_exists');
 
 pake_desc('generate propel model and sql and initialize database');
-pake_task('propel-build-all', 'project_exists');
+pake_task('propel-build-all', 'propel-build-model', 'propel-build-sql', 'propel-insert-sql');
 
 pake_desc('generate propel model and sql and initialize database, and load data');
-pake_task('propel-build-all-load', 'propel-build-all');
+pake_task('propel-build-all-load', 'propel-build-all', 'propel-load-data');
 
 function run_propel_convert_yml_schema($task, $args)
 {
@@ -156,15 +156,10 @@ function _propel_copy_xml_schema_from_plugins($prefix = '')
 
 function run_propel_build_all($task, $args)
 {
-  run_propel_build_model($task, $args);
-  run_propel_build_sql($task, $args);
-  run_propel_insert_sql($task, $args);
 }
 
 function run_propel_build_all_load($task, $args)
 {
-  run_propel_build_all($task, $args);
-  run_propel_load_data($task, $args);
 }
 
 function run_propel_build_model($task, $args)

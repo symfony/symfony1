@@ -620,7 +620,7 @@ Listing 9-24 - Defining a Rule in PHP
       array('id' => '\d+'),                             // Requirements
     );
 
-The sfRouting singleton has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()`, `getRoutesByName()`, and so on. Refer to the API documentation ([http://www.symfony-project.com/api/symfony.html](http://www.symfony-project.com/api/symfony.html)) to learn more.
+The sfRouting singleton has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()`, `getRoutesByName()`, and so on. Refer to the API documentation ([http://www.symfony-project.org/api/symfony.html](http://www.symfony-project.org/api/symfony.html)) to learn more.
 
 >**TIP**
 >Once you start to fully understand the concepts presented in this book, you can increase your understanding of the framework by browsing the online API documentation or, even better, the symfony source. Not all the tweaks and parameters of symfony can be described in this book. The online documentation, however, is limitless.

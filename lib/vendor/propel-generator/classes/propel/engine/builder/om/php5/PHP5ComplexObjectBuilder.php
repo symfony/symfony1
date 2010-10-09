@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ComplexObjectBuilder.php 536 2007-01-10 14:30:38Z heltem $
+ *  $Id: PHP5ComplexObjectBuilder.php 706 2007-10-11 10:02:27Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -376,10 +376,9 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 */
 	public function get".$this->getFKPhpNameAffix($fk, $plural = false)."(\$con = null)
 	{
-		// include the related Peer class
-		include_once '".$fkPeerBuilder->getClassFilePath()."';
-
 		if (\$this->$varName === null && ($conditional)) {
+			// include the related Peer class
+			include_once '".$fkPeerBuilder->getClassFilePath()."';
 ";
 		$script .= "
 			\$this->$varName = ".$fkPeerBuilder->getPeerClassname()."::".$fkPeerBuilder->getRetrieveMethodName()."($arglist, \$con);

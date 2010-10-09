@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfDateTimeFormatInfo.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    $Id: sfDateTimeFormatInfo.class.php 5772 2007-10-31 07:32:44Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -158,10 +158,10 @@ class sfDateTimeFormatInfo
   static function getInvariantInfo()
   {
     static $invariant;
+
     if (is_null($invariant))
     {
-      $culture = sfCultureInfo::getInvariantCulture();
-      $invariant = $culture->DateTimeFormat;
+      $invariant = sfCultureInfo::getInvariantCulture()->DateTimeFormat;
     }
 
     return $invariant;
@@ -182,15 +182,11 @@ class sfDateTimeFormatInfo
     }
     else if (is_string($culture))
     {
-      $cultureInfo = new sfCultureInfo($culture);
-
-      return $cultureInfo->DateTimeFormat;
+      return sfCultureInfo::getInstance($culture)->DateTimeFormat;
     }
     else
     {
-      $cultureInfo = sfCultureInfo::getInvariantCulture();
-
-      return $cultureInfo->DateTimeFormat;
+      return sfCultureInfo::getInvariantCulture()->DateTimeFormat;
     }
   }
 

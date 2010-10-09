@@ -12,7 +12,7 @@ That's why automated tests are a suggested, if not required, part of a successfu
 
 Automated tests can sometimes replace developer documentation since they can clearly illustrate what an application is supposed to do. A good test suite shows what output should be expected for a set of test inputs, and that is a good way to explain the purpose of a method.
 
-The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://www.symfony-project.com/trac/browser/trunk/test](http://www.symfony-project.com/trac/browser/trunk/test).
+The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.com/browser/trunk/test](http://trac.symfony-project.org/browser/trunk/test).
 
 ### Unit and Functional Tests
 

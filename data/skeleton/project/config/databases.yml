@@ -2,4 +2,4 @@
 #  propel:
 #    class:          sfPropelDatabase
 #    param:
-#      dsn:          mysql://root:@localhost/dbname
+#      dsn:          mysql://root@localhost/dbname

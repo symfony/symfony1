@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Table.php 536 2007-01-10 14:30:38Z heltem $
+ *  $Id: Table.php 803 2007-11-13 21:24:21Z dwhittle $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +40,7 @@ include_once 'propel/engine/database/model/Validator.php';
  * @author     John McNally <jmcnally@collab.net> (Torque)
  * @author     Daniel Rall <dlr@collab.net> (Torque)
  * @author     Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version    $Revision: 536 $
+ * @version    $Revision: 803 $
  * @package    propel.engine.database.model
  */
 class Table extends XMLElement implements IDMethod {
@@ -1015,7 +1015,7 @@ class Table extends XMLElement implements IDMethod {
 
 		if ($this->abstractValue) {
 			$result .= " abstract=\""
-				  . ($abstractValue ? "true" : "false")
+				  . ($this->abstractValue ? "true" : "false")
 				  . '"';
 		}
 

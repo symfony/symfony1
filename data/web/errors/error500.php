@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="sfTContainer">
-  <a title="symfony website" href="http://www.symfony-project.com/"><img alt="symfony PHP Framework" class="sfTLogo" src="<?php echo $path ?>/sf/sf_default/images/sfTLogo.png" height="39" width="186" /></a>
+  <a title="symfony website" href="http://www.symfony-project.org/"><img alt="symfony PHP Framework" class="sfTLogo" src="<?php echo $path ?>/sf/sf_default/images/sfTLogo.png" height="39" width="186" /></a>
   <div class="sfTMessageContainer sfTAlert">
     <img alt="page not found" class="sfTMessageIcon" src="<?php echo $path ?>/sf/sf_default/images/icons/tools48.png" height="48" width="48" />
     <div class="sfTMessageWrap">

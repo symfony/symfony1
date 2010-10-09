@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 4195 2007-06-10 08:35:09Z fabien $
+ * @version    SVN: $Id: UrlHelper.php 6203 2007-11-29 13:27:36Z fabien $
  */
 
 
@@ -364,7 +364,7 @@ function _convert_options_to_javascript($html_options, $internal_uri = '')
   {
     if ($onclick)
     {
-      $html_options['onclick'] = 'if ('._confirm_javascript_function($confirm).') {'.$onclick.'}';
+      $html_options['onclick'] = 'if ('._confirm_javascript_function($confirm).') { return '.$onclick.'} else return false;';
     }
     else
     {

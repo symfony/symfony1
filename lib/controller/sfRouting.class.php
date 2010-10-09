@@ -20,7 +20,7 @@
  * @package    symfony
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 4228 2007-06-15 13:43:24Z francois $
+ * @version    SVN: $Id: sfRouting.class.php 6125 2007-11-21 09:16:20Z noel $
  */
 class sfRouting
 {
@@ -449,13 +449,13 @@ class sfRouting
       if (!$found)
       {
         $error = 'Unable to find a matching routing rule to generate url for params "%s".';
-        $error = sprintf($error, var_export($params));
+        $error = sprintf($error, var_export($params, true));
 
         throw new sfConfigurationException($error);
       }
     }
 
-    $params = array_merge($defaults, $params);
+    $params = sfToolkit::arrayDeepMerge($defaults, $params);
 
     $real_url = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
 

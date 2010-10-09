@@ -298,7 +298,7 @@ The following sections explain in detail all the parameters that can be used in 
 Generator Configuration
 -----------------------
 
-The generator configuration file is very powerful, allowing you to alter the generated administration in many ways. But such capabilities come with a price: The overall syntax description is long to read and learn, making this chapter one of the longest in this book. The symfony website proposes an additional resource that will help you learn this syntax: the administration generator cheat sheet, reproduced in Figure 14-7. Download it from [http://www.symfony-project.com/uploads/assets/sfAdminGeneratorRefCard.pdf](http://www.symfony-project.com/uploads/assets/sfAdminGeneratorRefCard.pdf), and keep it close to you when you read the following examples of this chapter.
+The generator configuration file is very powerful, allowing you to alter the generated administration in many ways. But such capabilities come with a price: The overall syntax description is long to read and learn, making this chapter one of the longest in this book. The symfony website proposes an additional resource that will help you learn this syntax: the administration generator cheat sheet, reproduced in Figure 14-7. Download it from [http://www.symfony-project.org/uploads/assets/sfAdminGeneratorRefCard.pdf](http://www.symfony-project.org/uploads/assets/sfAdminGeneratorRefCard.pdf), and keep it close to you when you read the following examples of this chapter.
 
 The examples of this section will tweak the `article` administration module, as well as the `comment` administration module, based on the `Comment` class definition. Create the latter with the `propel-init-admin` task:
 

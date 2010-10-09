@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 4439 2007-06-27 14:24:44Z fabien $
+ * @version    $Id: sfCultureInfo.class.php 5776 2007-10-31 09:46:37Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -119,6 +119,23 @@ class sfCultureInfo
    * @var int
    */
   const SPECIFIC = 2;
+
+  /**
+   * Gets the sfCultureInfo that for this culture string.
+   *
+   * @return sfCultureInfo Invariant culture info is "en"
+   */
+  public static function getInstance($culture)
+  {
+    static $instances = array();
+
+    if (!isset($instances[$culture]))
+    {
+      $instances[$culture] = new sfCultureInfo($culture);
+    }
+
+    return $instances[$culture];
+  }
 
   /**
    * Displays the culture name.

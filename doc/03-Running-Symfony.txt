@@ -20,7 +20,7 @@ If you just want to see what symfony is capable of, you'll probably go for the f
 
 The sandbox is a simple archive of files. It contains an empty symfony project including all the required libraries (symfony, pake, lime, Creole, Propel, and Phing), a default application, and basic configuration. It will work out of the box, without specific server configuration or any additional packages.
 
-To install it, download the sandbox archive from [http://www.symfony-project.com/get/sf_sandbox.tgz](http://www.symfony-project.com/get/sf_sandbox.tgz). Unpack it under the root web directory configured for your server (usually `web/` or `www/`). For the purposes of uniformity, this chapter will assume you unpacked it to the directory `sf_sandbox/`.
+To install it, download the sandbox archive from [http://www.symfony-project.org/get/sf_sandbox.tgz](http://www.symfony-project.org/get/sf_sandbox.tgz). Unpack it under the root web directory configured for your server (usually `web/` or `www/`). For the purposes of uniformity, this chapter will assume you unpacked it to the directory `sf_sandbox/`.
 
 >**CAUTION**
 >Having all the files under the root web directory is fine for your own tests in a local host, but is a bad practice in a production server. It makes all the internals of your application visible to end users.
@@ -316,7 +316,7 @@ You should now be ready to browse your application. Check the congratulation pag
 >
 >Symfony is compatible with other server configurations. You can, for instance, access a symfony application using an alias instead of a virtual host. You can also run a symfony application with an IIS server. There are as many techniques as there are configurations, and it is not the purpose of this book to explain them all.
 >
->To find directions for a specific server configuration, refer to the symfony wiki ([http://www.symfony-project.com/trac/wiki](http://www.symfony-project.com/trac/wiki)), which contains many step-by-step tutorials.
+>To find directions for a specific server configuration, refer to the symfony wiki ([http://trac.symfony-project.com/](http://trac.symfony-project.com/)), which contains many step-by-step tutorials.
 
 Troubleshooting
 ---------------
@@ -353,9 +353,9 @@ If you are still having problems getting symfony running, check the following:
 
 You can check if your problem has already happened to someone else and find solutions in various places:
 
-  * The symfony installation forum ([http://www.symfony-project.com/forum/](http://www.symfony-project.com/forum/)) is full of installation questions about a given platform, environment, configuration, host, and so on.
+  * The symfony installation forum ([http://www.symfony-project.org/forum/](http://www.symfony-project.org/forum/)) is full of installation questions about a given platform, environment, configuration, host, and so on.
   * The archives of the users mailing-list ([http://groups.google.fr/group/symfony-users](http://groups.google.fr/group/symfony-users)) are also searchable. You may find similar experiences to your own there.
-  * The symfony wiki ([http://www.symfony-project.com/trac/wiki#Installingsymfony](http://www.symfony-project.com/trac/wiki#Installingsymfony)) contains step-by-step tutorials, contributed by symfony users, about installation.
+  * The symfony wiki ([http://trac.symfony-project.com/#Installingsymfony](http://trac.symfony-project.com/#Installingsymfony)) contains step-by-step tutorials, contributed by symfony users, about installation.
 
 If you don't find any answer, try posing your question to the symfony community. You can post your query in the forum, the mailing list, or even drop to the `#symfony` IRC channel to get feedback from the most active members of the community.
 

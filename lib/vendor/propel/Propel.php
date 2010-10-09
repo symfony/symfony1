@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Propel.php 601 2007-03-07 13:23:12Z hans $
+ *  $Id: Propel.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,7 +37,7 @@ include_once 'propel/adapter/DBAdapter.php';
  * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
  * @author     Henning P. Schmiedehausen <hps@intermeta.de> (Torque)
  * @author     Kurt Schrader <kschrader@karmalab.org> (Torque)
- * @version    $Revision: 601 $
+ * @version    $Revision: 536 $
  * @package    propel
  */
 class Propel {
@@ -90,7 +90,7 @@ class Propel {
 	/**
 	 * The Propel version.
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.2.1-dev';
 
 	/**
 	 * The db name that is specified as the default in the property file

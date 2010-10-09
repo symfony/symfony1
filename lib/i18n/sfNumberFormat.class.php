@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 5772 2007-10-31 07:32:44Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -204,7 +204,7 @@ class sfNumberFormat
         }
         else if ($multiGroup && $count >= 1)
         {
-          if ($i != 0 && ($i-$groupSize[0])%$groupSize[1] == 0)
+          if ($i != 0 && ($i - $groupSize[0]) % $groupSize[1] == 0)
           {
             $integer = $groupSeparator.$integer;
             $count++;

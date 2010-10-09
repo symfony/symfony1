@@ -88,7 +88,6 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
      */
     public function __construct(Connection $conn, $stmt)
     {
-        print " - > IN CONSTRUCTOR \n";
         $this->conn = $conn;
         $this->stmt = $stmt;
     }   

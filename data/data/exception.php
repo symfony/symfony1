@@ -35,7 +35,7 @@
   <h1>[<?php echo $name ?>]</h1>
   <h2 id="message"><?php echo $message ?></h2>
   <?php if ($error_reference): ?>
-    <p class="error"><a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a></p>
+    <p class="error"><a href='http://www.symfony-project.org/errors/<?php echo $error_reference ?>'>learn more about this issue</a></p>
   <?php endif; ?>
   <h2>stack trace</h2>
   <ul><li><?php echo implode('</li><li>', $traces) ?></li></ul>
@@ -54,7 +54,7 @@
 
   <p id="footer">
     symfony v.<?php echo file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION') ?> - php <?php echo PHP_VERSION ?><br />
-    for help resolving this issue, please visit <a href="http://www.symfony-project.com/">http://www.symfony-project.com/</a>.
+    for help resolving this issue, please visit <a href="http://www.symfony-project.org/">http://www.symfony-project.org/</a>.
   </p>
   </div></center>
 </body>

@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Mike Squire <mike@somosis.co.uk>
- * @version    SVN: $Id: sfOutputEscaperObjectDecorator.class.php 3232 2007-01-11 20:51:54Z fabien $
+ * @version    SVN: $Id: sfOutputEscaperObjectDecorator.class.php 5850 2007-11-04 15:53:01Z fabien $
  */
 class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
 {
@@ -99,7 +99,7 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
   {
     if (method_exists($this->value, '__toString'))
     {
-      return $this->value->__toString();
+      return $this->escape($this->escapingMethod, $this->value->__toString());
     }
     else
     {

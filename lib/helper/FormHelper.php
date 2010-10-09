@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 4387 2007-06-25 16:49:03Z fabien $
+ * @version    SVN: $Id: FormHelper.php 6014 2007-11-14 11:05:21Z fabien $
  */
 
 /**
@@ -530,7 +530,7 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
  */
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
+  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name.'[]', $value), 'value' => $value), _convert_options($options));
 
   if ($checked)
   {

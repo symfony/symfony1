@@ -69,7 +69,7 @@ For symfony to be a successful open source project, it needed to have extensive 
 
 ### The Symfony Community
 
-As soon as the symfony website ([http://www.symfony-project.com/](http://www.symfony-project.com/)) was launched, numerous developers from around the world downloaded and installed the framework, read the online documentation, and built their first application with symfony, and the buzz began to mount.
+As soon as the symfony website ([http://www.symfony-project.org/](http://www.symfony-project.org/)) was launched, numerous developers from around the world downloaded and installed the framework, read the online documentation, and built their first application with symfony, and the buzz began to mount.
 
 Web application frameworks were getting popular at that time, and the need for a full-featured framework in PHP was high. Symfony offered a compelling solution due to its impressive code quality and significant amount of documentation--two major advantages over the other players in the framework category. Contributors soon began to surface, proposing patches and enhancements, proofreading the documentation, and performing other much-needed roles.
 
@@ -204,7 +204,7 @@ And to make sure that the application still runs when it changes constantly, it 
 
 Symfony is the perfect tool for RAD. As a matter of fact, the framework was built by a web agency applying the RAD principle for its own projects. This means that learning to use symfony is not about learning a new language, but more about applying the right reflexes and the best judgment in order to build applications in a more effective way.
 
-The symfony project website proposes a step-by-step tutorial illustrating the development of an application in an agile way. It is called askeet ([http://www.symfony-project.com/askeet](http://www.symfony-project.com/askeet)), and is recommended reading for those who want to learn more about agile development.
+The symfony project website proposes a step-by-step tutorial illustrating the development of an application in an agile way. It is called askeet ([http://www.symfony-project.org/askeet](http://www.symfony-project.org/askeet)), and is recommended reading for those who want to learn more about agile development.
 
 ### YAML
 

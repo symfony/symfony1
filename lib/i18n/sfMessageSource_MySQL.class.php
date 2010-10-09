@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_MySQL.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    $Id: sfMessageSource_MySQL.class.php 5771 2007-10-31 07:16:16Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -154,7 +154,7 @@ class sfMessageSource_MySQL extends sfMessageSource
       $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
       if (!empty($dsninfo['port']))
       {
-        $dbhost = ':' . $dsninfo['socket'];
+        $dbhost .= ':'.$dsninfo['port'];
       }
     }
     $user = $dsninfo['username'];

@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: JavascriptHelper.php 4754 2007-07-31 09:08:30Z fabien $
+ * @version    SVN: $Id: JavascriptHelper.php 5847 2007-11-04 15:40:57Z fabien $
  */
 
 /*
@@ -900,7 +900,7 @@
     }
     if (isset ($options['with']))
     {
-      $js_options['callback'] = "function(element, value) { return".$options['with']."}";
+      $js_options['callback'] = "function(element, value) { return ".$options['with']."}";
     }
     if (isset($options['indicator']))
     {

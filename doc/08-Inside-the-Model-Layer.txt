@@ -405,7 +405,7 @@ The peer classes also provide `doDelete()`, `doInsert()`, and `doUpdate()` metho
 Finally, if you just want the first object returned, replace `doSelect()` with a `doSelectOne()` call. This may be the case when you know that a `Criteria` will return only one result, and the advantage is that this method returns an object rather than an array of objects.
 
 >**TIP**
->When a `doSelect()` query returns a large number of results, you might want to display only a subset of it in your response. Symfony provides a pager class called sfPropelPager, which automates the pagination of results. Check the pager documentation at [http://www.symfony-project.com/cookbook/trunk/pager](http://www.symfony-project.com/cookbook/trunk/pager) for more information and usage examples.
+>When a `doSelect()` query returns a large number of results, you might want to display only a subset of it in your response. Symfony provides a pager class called sfPropelPager, which automates the pagination of results. Check the pager documentation at [http://www.symfony-project.org/cookbook/trunk/pager](http://www.symfony-project.org/cookbook/trunk/pager) for more information and usage examples.
 
 ### Using Raw SQL Queries
 
@@ -637,7 +637,7 @@ There is no behavior bundled by default in symfony, but they can be installed vi
 
 After rebuilding the model, deleted `Article` objects will remain in the database, invisible to the queries using the ORM, unless you temporarily disable the behavior with `sfPropelParanoidBehavior::disable()`.
 
-Check the list of symfony plug-ins in the wiki to find behaviors ([http://www.symfony-project.com/trac/wiki/SymfonyPlugins#Propelbehaviorplugins](http://www.symfony-project.com/trac/wiki/SymfonyPlugins#Propelbehaviorplugins)). Each has its own documentation and installation guide.
+Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.com/wiki/SymfonyPlugins#Propelbehaviorplugins](http://trac.symfony-project.com/wiki/SymfonyPlugins#Propelbehaviorplugins)). Each has its own documentation and installation guide.
 
 Extended Schema Syntax
 ----------------------
