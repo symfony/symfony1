@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -36,7 +36,7 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLogger.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfLogger.class.php 7254 2008-02-01 00:37:38Z dwhittle $
  */
 class sfLogger
 {
@@ -102,7 +102,7 @@ class sfLogger
   {
     $this->level = $level;
   }
-  
+
   /**
    * Retrieves current loggers.
    *
@@ -112,11 +112,11 @@ class sfLogger
   {
     return $this->loggers;
   }
-  
+
   /**
    * Registers a logger.
    *
-   * @param string Logger name
+   * @param object The Logger object
    */
   public function registerLogger($logger)
   {

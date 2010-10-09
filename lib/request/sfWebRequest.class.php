@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004-2006 Sean Kerr.
+ * (c) 2004-2006 Sean Kerr <sean@code-box.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,8 +18,8 @@
  * @package    symfony
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfWebRequest.class.php 6768 2007-12-27 16:24:58Z fabien $
+ * @author     Sean Kerr <sean@code-box.org>
+ * @version    SVN: $Id: sfWebRequest.class.php 8019 2008-03-21 08:47:55Z noel $
  */
 class sfWebRequest extends sfRequest
 {
@@ -43,6 +43,8 @@ class sfWebRequest extends sfRequest
   protected $pathInfoArray = null;
 
   protected $relativeUrlRoot = null;
+
+  protected $filesInfos;
 
   /**
    * Retrieves an array of file information.
@@ -159,13 +161,13 @@ class sfWebRequest extends sfRequest
    */
   public function hasFile($name)
   {
-    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    if (strpos($name, '['))
     {
-      return isset($_FILES[$match[1]]['name'][$match[2]]);
+      return !is_null(sfToolkit::getArrayValueForPath($this->filesInfos, $name));
     }
     else
     {
-      return isset($_FILES[$name]);
+      return isset($this->filesInfos[$name]);
     }
   }
 
@@ -214,19 +216,14 @@ class sfWebRequest extends sfRequest
    *
    * @param string A file name
    * @param string Value to search in the file
-   * 
+   *
    * @return string File value
    */
   public function getFileValue($name, $key)
   {
-    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
-    {
-      return $_FILES[$match[1]][$key][$match[2]];
-    }
-    else
-    {
-      return $_FILES[$name][$key];
-    }
+    $fileInfos = $this->getFileValues($name);
+
+    return isset($fileInfos[$key]) ? $fileInfos[$key] : null;
   }
 
   /**
@@ -238,20 +235,28 @@ class sfWebRequest extends sfRequest
    */
   public function getFileValues($name)
   {
-    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    if (strpos($name, '['))
     {
-      return array(
-        'name'     => $_FILES[$match[1]]['name'][$match[2]],
-        'type'     => $_FILES[$match[1]]['type'][$match[2]],
-        'tmp_name' => $_FILES[$match[1]]['tmp_name'][$match[2]],
-        'error'    => $_FILES[$match[1]]['error'][$match[2]],
-        'size'     => $_FILES[$match[1]]['size'][$match[2]],
-      );
+      return sfToolkit::getArrayValueForPath($this->filesInfos, $name);
     }
     else
     {
-      return $_FILES[$name];
+      return isset($this->filesInfos[$name]) ? $this->filesInfos[$name] : null;
     }
+  }
+
+  /**
+   * Converts uploaded file array to a format following the $_GET and $POST naming convention.
+   *
+   * It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
+   *
+   * @param  array An array representing uploaded file information
+   *
+   * @return array An array of re-ordered uploaded file information
+   */
+  protected function convertFileInformation(array $taintedFiles)
+  {
+    return $this->pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', $this->arrayToPaths($taintedFiles)));
   }
 
   /**
@@ -509,6 +514,8 @@ class sfWebRequest extends sfRequest
         }
       }
     }
+
+    $this->filesInfos = $this->convertFileInformation($_FILES);
 
     // merge POST parameters
     if (get_magic_quotes_gpc())
@@ -866,5 +873,79 @@ class sfWebRequest extends sfRequest
     arsort($values);
 
     return array_keys($values);
+  }
+
+  /**
+   * Converts a string of paths separated by newlines into an array.
+   *
+   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
+   * @author Shaun Inman (www.shauninman.com)
+   *
+   * @param  string A string representing an array
+   *
+   * @return Array  An array
+   */
+  protected function pathsToArray($str)
+  {
+    $array = array();
+    $lines = explode("\n", trim($str));
+
+    if (!empty($lines[0]))
+    {
+      foreach ($lines as $line)
+      {
+        list($path, $value) = explode(' = ', $line);
+
+        $steps = explode('/', $path);
+        array_shift($steps);
+
+        $insertion =& $array;
+
+        foreach ($steps as $step)
+        {
+          if (!isset($insertion[$step]))
+          {
+            $insertion[$step] = array();
+          }
+          $insertion =& $insertion[$step];
+        }
+        $insertion = ctype_digit($value) ? (int) $value : $value;
+      }
+    }
+
+    return $array;
+  }
+
+  /**
+   * Converts an array into a string containing the path to each of its values separated by a newline.
+   *
+   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
+   * @author Shaun Inman (www.shauninman.com)
+   *
+   * @param  Array  An array
+   *
+   * @return string A string representing the array
+   */
+  protected function arrayToPaths($array = array(), $prefix = '')
+  {
+    $str = '';
+    $freshPrefix = $prefix;
+
+    foreach ($array as $key => $value)
+    {
+      $freshPrefix .= "/{$key}";
+
+      if (is_array($value))
+      {
+        $str .= $this->arrayToPaths($value, $freshPrefix);
+        $freshPrefix = $prefix;
+      }
+      else
+      {
+        $str .= "{$prefix}/{$key} = {$value}\n";
+      }
+    }
+
+    return $str;
   }
 }

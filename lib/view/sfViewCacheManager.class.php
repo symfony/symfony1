@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 4017 2007-05-16 11:07:18Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 8010 2008-03-20 22:02:34Z dwhittle $
  */
 class sfViewCacheManager
 {
@@ -156,9 +156,12 @@ class sfViewCacheManager
   public function addCache($moduleName, $actionName, $options = array())
   {
     // normalize vary headers
-    foreach ($options['vary'] as $key => $name)
+    if (isset($options['vary']))
     {
-      $options['vary'][$key] = strtr(strtolower($name), '_', '-');
+      foreach ($options['vary'] as $key => $name)
+      {
+        $options['vary'][$key] = strtr(strtolower($name), '_', '-');
+      }
     }
 
     $options['lifeTime'] = isset($options['lifeTime']) ? $options['lifeTime'] : 0;
@@ -169,7 +172,7 @@ class sfViewCacheManager
     $this->cacheConfig[$moduleName][$actionName] = array(
       'withLayout'     => isset($options['withLayout']) ? $options['withLayout'] : false,
       'lifeTime'       => $options['lifeTime'],
-      'clientLifeTime' => isset($options['clientLifeTime']) && $options['clientLifeTime'] ? $options['clientLifeTime'] : $options['lifeTime'],
+      'clientLifeTime' => isset($options['clientLifeTime']) ? $options['clientLifeTime'] : $options['lifeTime'],
       'contextual'     => isset($options['contextual']) ? $options['contextual'] : false,
       'vary'           => isset($options['vary']) ? $options['vary'] : array(),
     );

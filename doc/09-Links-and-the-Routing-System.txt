@@ -175,6 +175,7 @@ Listing 9-6 - Default Rewriting Rules for Apache, in `myproject/web/.htaccess`
       RewriteEngine On
 
       # we skip all files with .something
+      # comment the following 3 lines to allow periods in routes
       RewriteCond %{REQUEST_URI} \..+$
       RewriteCond %{REQUEST_URI} !\.html$
       RewriteRule .* - [L]
@@ -189,6 +190,9 @@ Listing 9-6 - Default Rewriting Rules for Apache, in `myproject/web/.htaccess`
     </IfModule>
 
 The web server inspects the shape of the URLs it receives. If the URL does not contain a suffix and if there is no cached version of the page available (Chapter 12 covers caching), then the request is handed to `index.php`.
+
+>**TIP**
+>To allow periods in your routes, simply comment the first two rewrite conditions and first rewrite rule in the .htaccess file.
 
 However, the `web/` directory of a symfony project is shared among all the applications and environments of the project. It means that there is usually more than one front controller in the web directory. For instance, a project having a `frontend` and a `backend` application, and a `dev` and `prod` environment, contains four front controller scripts in the `web/` directory:
 

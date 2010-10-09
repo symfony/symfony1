@@ -7,7 +7,7 @@
  * @subpackage <?php echo $this->getGeneratedModuleName() ?>
 
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: actions.class.php 3501 2007-02-18 10:28:17Z fabien $
+ * @version    SVN: $Id: actions.class.php 7997 2008-03-20 12:29:34Z noel $
  */
 class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
@@ -199,9 +199,9 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
 <?php foreach ($this->getColumns('edit.display', $category) as $name => $column): $type = $column->getCreoleType(); ?>
 <?php $name = $column->getName() ?>
-<?php if ($column->isPrimaryKey()) continue ?>
-<?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
 <?php $input_type = $this->getParameterValue('edit.fields.'.$column->getName().'.type') ?>
+<?php if ($column->isPrimaryKey() || $input_type == 'plain') continue ?>
+<?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
 <?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>
     if ($this->getUser()->hasCredential(<?php echo $credentials ?>))
     {

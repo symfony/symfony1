@@ -399,7 +399,7 @@ So you can use the `display` setting in two ways:
 
 As a matter of fact, the fields configured in `generator.yml` don't even need to correspond to actual columns defined in the schema. If the related class offers a custom getter, it can be used as a field for the `list` view; if there is a getter and/or a setter, it can also be used in the `edit` view. For instance, you can extend the `Article` model with a `getNbComments()` method similar to the one in Listing 14-10.
 
-Listing 14-10 - Adding a Custom Getter in the Model, in `lib/model/Article.class.php`
+Listing 14-10 - Adding a Custom Getter in the Model, in `lib/model/Article.php`
 
     [php]
     public function getNbComments()
@@ -767,7 +767,7 @@ Now, in order to use the value from this control to update the object in the act
 Listing 14-29 - Handling a Partial Field in the Action, in `modules/user/actions/actions.class.php`
 
     [php]
-    class userActions extends sfActions
+    class userActions extends autouserActions
     {
       protected function updateUserFromRequest()
       {
@@ -795,7 +795,7 @@ If your schema defines table relationships, the generated administration modules
 
 The 1-n table relationships are taken care of by the administration generator. As is depicted by Figure 14-1 earlier, the `blog_comment` table is related to the `blog_article` table through the `article_id` field. If you initiate the module of the `Comment` class with the administration generator, the `comment/edit` action will automatically display the `article_id` as a drop-down list showing the IDs of the available records of the `blog_article` table (check again Figure 14-9 for an illustration).
 
-In addition, if you define a `__toString()` method in the `Article` object, the text of the drop-down options use it instead of the primary keys.
+In addition, if you define a `__toString()` method in the `Article` class, the text of the drop-down options use it instead of the primary keys.
 
 If you need to display the list of comments related to an article in the `article` module (n-1 relationship), you will need to customize the module a little by way of a partial field.
 
@@ -925,7 +925,7 @@ Listing 14-35 - Syntax of the Generated Input Names
     <?php echo object_input_tag($article, 'getTitle', array('control_name' => 'article[title]')) ?>
 
     // Resulting HTML
-    <input type="text" name="article[title]" id="article[title]" value="My Title" />
+    <input type="text" name="article[title]" id="article_title" value="My Title" />
 
 This has plenty of advantages during the internal form-handling process. However, as explained in Chapter 10, it makes the form validation configuration a bit trickier, so you have to change square brackets, `[` `]`, to curly braces, `{` `}`, in the `fields` definition. Also, when using a field name as a parameter for a validator, you should use the name as it appears in the generated HTML code (that is, with the square brackets, but between quotes). Refer to Listing 14-36 for a detail of the special validator syntax for generated forms.
 
@@ -998,7 +998,7 @@ The `list` and `edit` views systematically include a header and footer partial. 
 
 For instance, if you want to add a custom header to the `article/edit` view, create a file called `_edit_header.php` as in Listing 14-39. It will work with no further configuration.
 
-Listing 14-39 - Example `edit` Header Partial, in `modules/articles/template/_edit_header.php`
+Listing 14-39 - Example `edit` Header Partial, in `modules/articles/templates/_edit_header.php`
 
     [php]
     <?php if ($article->getNbComments() > 0): ?>

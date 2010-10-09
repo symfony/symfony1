@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004, 2005 Sean Kerr <sean@code-box.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,8 +28,8 @@
  * @subpackage storage
  * @author     Mathew Toth <developer@poetryleague.com>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfPDOSessionStorage.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @author     Sean Kerr <sean@code-box.org>
+ * @version    SVN: $Id: sfPDOSessionStorage.class.php 7791 2008-03-09 21:57:09Z fabien $
  */
 class sfPDOSessionStorage extends sfSessionStorage
 {

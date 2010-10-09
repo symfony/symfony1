@@ -286,7 +286,7 @@ Figure 11-2 - Triggering a remote update with a form
 ![Triggering a remote update with a form](/images/book/F1102.png "Triggering a remote update with a form")
 
 >**CAUTION**
->Ajax forms can't be multipart. This is a limitation of the `XMLHttpRequest` object. This means you can't handle file uploads via an Ajax form. There are workarounds though--for instance, using a hidden `iframe` instead of an `XMLHttpRequest` (see an implementation at [http://www.air4web.com/files/upload/](http://www.air4web.com/files/upload/)).
+>Ajax forms can't be multipart. This is a limitation of the `XMLHttpRequest` object. This means you can't handle file uploads via an Ajax form. There are workarounds though--for instance, using a hidden `iframe` instead of an `XMLHttpRequest`.
 
 If you want to allow a form to work in both page mode and Ajax mode, the best solution is to define it like a regular form, but to provide, in addition to the normal submit button, a second button (`<input type="button" />`) to submit the form in Ajax. Symfony calls this button `submit_to_remote()`. This will help you build Ajax interactions that degrade gracefully. See an example in Listing 11-12.
 
@@ -377,7 +377,7 @@ Listing 11-16 - Handling a Conditional Update
     <div id="feedback"></div>
     <p>Hello, World!</p>
     <?php echo link_to_remote('Delete this post', array(
-        'update'   => array('success' => 'feedback', 'failure' => 'error')
+        'update'   => array('success' => 'feedback', 'failure' => 'error'),
         'url'      => 'post/delete?id='.$post->getId(),
     )) ?>
 
@@ -460,9 +460,10 @@ Listing 11-21 - Authorizing Script Execution in the Ajax Response
 
     [php]
     <div id="feedback"></div>
-    // If the response of the post/delete action contains JavaScript,
-    // allow it to be executed by the browser
-    <?php echo link_to_remote('Delete this post', array(
+    <?php
+      // If the response of the post/delete action contains JavaScript,
+      // allow it to be executed by the browser
+      echo link_to_remote('Delete this post', array(
         'update' => 'feedback',
         'url'    => 'post/delete?id='.$post->getId(),
         'script' => true,

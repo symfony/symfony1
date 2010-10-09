@@ -637,7 +637,7 @@ There is no behavior bundled by default in symfony, but they can be installed vi
 
 After rebuilding the model, deleted `Article` objects will remain in the database, invisible to the queries using the ORM, unless you temporarily disable the behavior with `sfPropelParanoidBehavior::disable()`.
 
-Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.com/wiki/SymfonyPlugins#Propelbehaviorplugins](http://trac.symfony-project.com/wiki/SymfonyPlugins#Propelbehaviorplugins)). Each has its own documentation and installation guide.
+Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors](http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors)). Each has its own documentation and installation guide.
 
 Extended Schema Syntax
 ----------------------
@@ -733,9 +733,9 @@ Listing 8-27 - Complex Column Attributes
 
     propel:
       blog_article:
-        id:       { type: integer, required: true,primaryKey: true, autoIncrement: true }
+        id:       { type: integer, required: true, primaryKey: true, autoIncrement: true }
         name:     { type: varchar(50), default: foobar, index: true }
-        group_id: { type: integer, foreignTable: db_group,foreignReference: id, onDelete: cascade }
+        group_id: { type: integer, foreignTable: db_group, foreignReference: id, onDelete: cascade }
 
 The column parameters are as follows:
 

@@ -110,7 +110,7 @@ symfony will complain that the `myActionSuccess.php` template is missing. That's
 >
 >Symfony knows how to parse and generate smart URLs for the user. The routing system automatically peels the request parameters from a smart URL and makes them available to the action. It also formats the hyperlinks included in the response so that they look "smart." You will learn more about this feature in Chapter 9.
 >
->Overall, this means that the way you name the actions of your applications should not be influenced by the way the URL used to call them should look, but by the actions' functions in the application. An action name explains what the action actually does, and it's often a verb in the infinitive form (like `show`, `list`, `edit`, and so on). Action names can be made totally invisible to the end user, so don't hesitate to use explicit action names (like `listByName` or `showWithComments`). You will economize on code comments to explain your action function, plus the code will be much easier to read.
+>Overall, this means that the way you name the actions of your applications should not be influenced by the way the URL used to call them should look, but by the actions' functions in the application. An action name explains what the action actually does, and it is often a verb in the infinitive form (like `show`, `list`, `edit`, and so on). Action names can be made totally invisible to the end user, so don't hesitate to use explicit action names (like `listByName` or `showWithComments`). You will economize on code comments to explain your action function, plus the code will be much easier to read.
 
 ### Adding a Template
 
@@ -172,7 +172,7 @@ Listing 4-7 - The Template Has Direct Access to the Action Attributes
     [php]
     <p>Hello, world!</p>
     <?php if ($hour >= 18): ?>
-    <p>Or should I say good evening? It's already <?php echo $hour ?>.</p>
+    <p>Or should I say good evening? It is already <?php echo $hour ?>.</p>
     <?php endif; ?>
 
 >**NOTE**
@@ -188,7 +188,7 @@ Listing 4-8 - Templates Can Include Usual HTML Code
     [php]
     <p>Hello, world!</p>
     <?php if ($hour >= 18): ?>
-    <p>Or should I say good evening? It's already <?php echo $hour ?>.</p>
+    <p>Or should I say good evening? It is already <?php echo $hour ?>.</p>
     <?php endif; ?>
     <form method="post" action="/myapp_dev.php/mymodule/anotherAction">
       <label for="name">What is your name?</label>
@@ -203,7 +203,7 @@ Listing 4-9 - It Is Faster and Easier to Use Helpers Than to Use HTML Tags
     [php]
     <p>Hello, world!</p>
     <?php if ($hour >= 18): ?>
-    <p>Or should I say good evening? It's already <?php echo $hour ?>.</p>
+    <p>Or should I say good evening? It is already <?php echo $hour ?>.</p>
     <?php endif; ?>
     <?php echo form_tag('mymodule/anotherAction') ?>
       <?php echo label_for('name', 'What is your name?') ?>
@@ -261,7 +261,7 @@ Listing 4-11 - The `link_to()` Helper
     [php]
     <p>Hello, world!</p>
     <?php if ($hour >= 18): ?>
-    <p>Or should I say good evening? It's already <?php echo $hour ?>.</p>
+    <p>Or should I say good evening? It is already <?php echo $hour ?>.</p>
     <?php endif; ?>
     <?php echo form_tag('mymodule/anotherAction') ?>
       <?php echo label_for('name', 'What is your name?') ?>

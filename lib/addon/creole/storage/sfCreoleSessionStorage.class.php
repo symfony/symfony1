@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004, 2005 Sean Kerr <sean@code-box.org>
  *
  * The original version the file is based on is licensed under the LGPL, but a special license was granted.
  * Please see the licenses/LICENSE.Agavi file
@@ -35,9 +35,9 @@
  * @package    symfony
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <skerr@mojavi.org>
+ * @author     Sean Kerr <sean@code-box.org>
  * @author     Veikko Mäkinen <mail@veikkomakinen.com>
- * @version    SVN: $Id: sfCreoleSessionStorage.class.php 2995 2006-12-09 18:01:32Z fabien $
+ * @version    SVN: $Id: sfCreoleSessionStorage.class.php 7791 2008-03-09 21:57:09Z fabien $
  */
 class sfCreoleSessionStorage extends sfSessionStorage
 {

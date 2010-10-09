@@ -284,14 +284,14 @@ function _uninstall_web_content($plugin_name)
 
 function _absolute_path_difference($source, $target)
 {
-  if (!sfToolkit::isPathAbsolute($source) || !sfToolkit::isPathAbsolute($target))
+  if (!function_exists('symlink') || !sfToolkit::isPathAbsolute($source) || !sfToolkit::isPathAbsolute($target))
   {
 
     return $target;
   }
 
-  $source = split(DIRECTORY_SEPARATOR, rtrim($source, DIRECTORY_SEPARATOR));
-  $target = split(DIRECTORY_SEPARATOR, rtrim($target, DIRECTORY_SEPARATOR));
+  $source = explode(DIRECTORY_SEPARATOR, rtrim($source, DIRECTORY_SEPARATOR));
+  $target = explode(DIRECTORY_SEPARATOR, rtrim($target, DIRECTORY_SEPARATOR));
 
   if ($source == $target)
   { 

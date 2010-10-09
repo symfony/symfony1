@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 7762 2008-03-07 13:51:16Z fabien $
  */
 class sfWebDebugLogger
 {
@@ -51,7 +51,9 @@ class sfWebDebugLogger
 
     // if we have xdebug, add some stack information
     $debug_stack = array();
-    if (function_exists('xdebug_get_function_stack'))
+
+    // disable xdebug when an HTTP debug session exists (crashes Apache, see #2438)
+    if (function_exists('xdebug_get_function_stack') && !isset($_GET['XDEBUG_SESSION_START']) && !isset($_COOKIE['XDEBUG_SESSION']))
     {
       foreach (xdebug_get_function_stack() as $i => $stack)
       {

@@ -78,7 +78,7 @@ class sfProcessCache
    *
    * @param string The key name
    * @param string The content to put in cache
-   * @param int The life time to keep the content in the cache
+   * @param int The life time to keep the content in the cache in seconds
    *
    * @return boolean true if ok
    */

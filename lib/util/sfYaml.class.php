@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 3378 2007-02-01 06:47:15Z fabien $
+ * @version    SVN: $Id: sfYaml.class.php 7888 2008-03-14 20:42:21Z fabien $
  */
 class sfYaml
 {
@@ -75,7 +75,7 @@ class sfYaml
 
     $spyc = new Spyc();
 
-    return $spyc->dump($array);
+    return $spyc->dump($array, false, 0);
   }
 
   protected static function getIncludeContents($input)

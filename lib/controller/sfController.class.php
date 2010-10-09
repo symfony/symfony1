@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004-2006 Sean Kerr.
+ * (c) 2004-2006 Sean Kerr <sean@code-box.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,8 +15,8 @@
  * @package    symfony
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfController.class.php 6766 2007-12-27 16:12:50Z fabien $
+ * @author     Sean Kerr <sean@code-box.org>
+ * @version    SVN: $Id: sfController.class.php 7993 2008-03-20 00:21:14Z Carl.Vondrick $
  */
 abstract class sfController
 {
@@ -533,8 +533,24 @@ abstract class sfController
       $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
     }
 
-    // forward to the mail action
-    $this->forward($module, $action);
+    try
+    {
+      // forward to the mail action
+      $this->forward($module, $action);
+    }
+    catch (Exception $e)
+    {
+      // put render mode back
+      $this->setRenderMode($renderMode);
+
+      // remove viewName
+      if ($viewName)
+      {
+        $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+      }
+
+      throw $e;
+    }
 
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);

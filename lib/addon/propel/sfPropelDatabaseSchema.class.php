@@ -330,7 +330,7 @@ class sfPropelDatabaseSchema
       {
         if (!in_array($key, array('foreignTable', 'foreignReference', 'onDelete', 'onUpdate', 'index', 'unique')))
         {
-          $attributes_string .= " $key=\"".htmlspecialchars($this->getCorrectValueFor($key, $value))."\"";
+          $attributes_string .= " $key=\"".htmlspecialchars($this->getCorrectValueFor($key, $value), ENT_QUOTES, sfConfig::get('sf_charset'))."\"";
         }
       }
       $attributes_string .= " />\n";
@@ -394,7 +394,7 @@ class sfPropelDatabaseSchema
     $attributes_string = '';
     foreach ($attributes as $key => $value)
     {
-      $attributes_string .= ' '.$key.'="'.htmlspecialchars($this->getCorrectValueFor($key, $value)).'"';
+      $attributes_string .= ' '.$key.'="'.htmlspecialchars($this->getCorrectValueFor($key, $value), ENT_QUOTES, sfConfig::get('sf_charset')).'"';
     }
 
     return $attributes_string;

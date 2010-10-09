@@ -518,7 +518,7 @@ In addition, HTTP 1.1 headers are also understood by proxies and caching servers
 
 When the ETag feature is enabled, the web server adds to the response a special header containing a signature of the response itself.
 
-    ETag: 1A2Z3E4R5T6Y7U
+    ETag: "1A2Z3E4R5T6Y7U"
 
 The user's browser will store this signature, and send it again together with the request the next time it needs the same page. If the new signature shows that the page didn't change since the first request, the server doesn't send the response back. Instead, it just sends a `304: Not modified` header. It saves CPU time (if gzipping is enabled for example) and bandwidth (page transfer) for the server, and time (page transfer) for the client. Overall, pages in a cache with an ETag are even faster to load than pages in a cache without an ETag.
 

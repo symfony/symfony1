@@ -16,7 +16,7 @@ use_helper('Form');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateFormHelper.php 3294 2007-01-16 06:53:15Z fabien $
+ * @version    SVN: $Id: DateFormHelper.php 7665 2008-02-28 10:50:53Z hartym $
  */
 
 /**
@@ -328,7 +328,14 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
   foreach ($tags as $k => $v)
   {
     // $tags['m|d|y'] = $m|$d|$y
-    $tags[$k] = $$v;
+    if (strlen($$v))
+    {
+      $tags[$k] = $$v;
+    }
+    else
+    {
+      unset($tags[$k]);
+    }
   }
 
   return implode($date_seperator, $tags);

@@ -69,7 +69,7 @@ Symfony integrates a few other packages:
   * lime is a unit testing utility.
   * Creole is a database abstraction engine. Just like PHP Data Objects (PDO), it provides an interface between your code and the database SQL code, and makes it possible to switch to another engine.
   * Propel is for ORM. It provides object persistence and query service.
-  * Phing is a CLI for Propel.
+  * Phing is a build system used by Propel to generate the model classes.
 
 Pake and lime are developed by the symfony team. Creole, Propel, and Phing come from another team and are released under the GNU Lesser Public General License (LGPL). All these packages are bundled with symfony.
 

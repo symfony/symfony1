@@ -8,6 +8,7 @@ Options +FollowSymLinks +ExecCGI
   #RewriteBase /
 
   # we skip all files with .something
+  # comment the following 3 lines to allow periods in routes
   RewriteCond %{REQUEST_URI} \..+$
   RewriteCond %{REQUEST_URI} !\.html$
   RewriteRule .* - [L]
