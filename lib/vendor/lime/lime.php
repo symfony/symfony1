@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 10846 2008-08-13 13:36:24Z fabien $
+ * @version    SVN: $Id: lime.php 11916 2008-10-02 16:35:33Z fabien $
  */
 class lime_test
 {
@@ -276,6 +276,16 @@ class lime_test
     $this->output->comment($message);
   }
 
+  public function info($message)
+  {
+    $this->output->info($message);
+  }
+
+  public function error($message)
+  {
+    $this->output->error($message);
+  }
+
   public static function get_temp_directory()
   {
     if ('\\' == DIRECTORY_SEPARATOR)
@@ -316,6 +326,16 @@ class lime_output
     echo "# $message\n";
   }
 
+  public function info($message)
+  {
+    echo "> $message\n";
+  }
+
+  public function error($message)
+  {
+    echo "> $message\n";
+  }
+
   public function echoln($message)
   {
     echo "$message\n";
@@ -353,6 +373,16 @@ class lime_output_color extends lime_output
   public function comment($message)
   {
     echo $this->colorizer->colorize(sprintf('# %s', $message), 'COMMENT')."\n";
+  }
+
+  public function info($message)
+  {
+    echo $this->colorizer->colorize(sprintf('> %s', $message), 'INFO_BAR')."\n";
+  }
+
+  public function error($message)
+  {
+    echo $this->colorizer->colorize(sprintf(' %s ', $message), 'RED_BAR')."\n";
   }
 
   public function echoln($message, $colorizer_parameter = null)
@@ -418,6 +448,7 @@ lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 
 lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
 lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
+lime_colorizer::style('INFO_BAR',  array('fg' => 'cyan', 'bold' => true));
 
 class lime_harness extends lime_registration
 {

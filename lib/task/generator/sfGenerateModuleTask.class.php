@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateModuleTask.class.php 8514 2008-04-17 18:25:39Z fabien $
+ * @version    SVN: $Id: sfGenerateModuleTask.class.php 11923 2008-10-03 13:46:30Z fabien $
  */
 class sfGenerateModuleTask extends sfGeneratorBaseTask
 {
@@ -70,9 +70,9 @@ EOF;
     $module = $arguments['module'];
 
     // Validate the module name
-    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $module))
     {
-      throw new sfCommandException(sprintf('The module name "%s" is invalid.', $app));
+      throw new sfCommandException(sprintf('The module name "%s" is invalid.', $module));
     }
 
     $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$module;

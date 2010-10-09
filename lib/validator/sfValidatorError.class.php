@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorError.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorError.class.php 11932 2008-10-03 19:45:54Z fabien $
  */
 class sfValidatorError extends Exception
 {
@@ -91,7 +91,12 @@ class sfValidatorError extends Exception
     $arguments = array();
     foreach ($this->arguments as $key => $value)
     {
-      $arguments["%$key%"] = $value;
+      if (is_array($value))
+      {
+        continue;
+      }
+
+      $arguments["%$key%"] = htmlspecialchars($value, ENT_QUOTES, sfValidatorBase::getCharset());
     }
 
     return $arguments;

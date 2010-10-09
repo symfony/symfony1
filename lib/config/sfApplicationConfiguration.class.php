@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 11593 2008-09-16 05:16:29Z fabien $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 11929 2008-10-03 18:48:51Z fabien $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -105,8 +105,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test') && !self::$coreLoaded)
     {
       $configCache->import('config/core_compile.yml', false);
-
-      self::$coreLoaded = true;
     }
 
     sfAutoload::getInstance()->register();
@@ -124,6 +122,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     sfWidget::setCharset(sfConfig::get('sf_charset'));
+    sfValidatorBase::setCharset(sfConfig::get('sf_charset'));
 
     // force setting default timezone if not set
     if ($default_timezone = sfConfig::get('sf_default_timezone'))
@@ -151,7 +150,12 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // compress output
-    ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+    if (!self::$coreLoaded)
+    {
+      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+    }
+
+    self::$coreLoaded = true;
   }
 
   /**
