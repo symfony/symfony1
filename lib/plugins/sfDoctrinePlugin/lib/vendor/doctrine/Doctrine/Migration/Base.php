@@ -377,7 +377,9 @@ abstract class Doctrine_Migration_Base
     public function column($upDown, $tableName, $columnName, $type = null, $length = null, array $options = array())
     {
         $options = get_defined_vars();
-        $options['options']['length'] = $length;
+        if ( ! isset($options['options']['length'])) {
+            $options['options']['length'] = $length;
+        }
         $options = array_merge($options, $options['options']);
         unset($options['options']);
 

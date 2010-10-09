@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: NestedSet.php 6799 2009-11-24 19:24:33Z jwage $
+ *  $Id: NestedSet.php 6889 2009-12-07 20:28:21Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 6799 $
+ * @version     $Revision: 6889 $
  * @author      Joe Simms <joe.simms@websites4.com>
  * @author      Roman Borschel <roman@code-factory.org>
  */
@@ -87,7 +87,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
     public function createRoot(Doctrine_Record $record = null)
     {
         if ($this->getAttribute('hasManyRoots')) {
-            if ( ! $record || ( ! $record->exists() && $record->getNode()->getRootValue() <= 0)
+            if ( ! $record || ( ! $record->exists() && ! $record->getNode()->getRootValue())
                     || $record->getTable()->isIdentifierComposite()) {
                 throw new Doctrine_Tree_Exception("Node must have a root id set or must "
                         . " be persistent and have a single-valued numeric primary key in order to"
@@ -95,7 +95,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
                         . " transient/new records is no longer supported.");
             }
             
-            if ($record->exists() && $record->getNode()->getRootValue() <= 0) {
+            if ($record->exists() && ! $record->getNode()->getRootValue()) {
                 // Default: root_id = id
                 $identifier = $record->getTable()->getIdentifier();
                 $record->getNode()->setRootValue($record->get($identifier));

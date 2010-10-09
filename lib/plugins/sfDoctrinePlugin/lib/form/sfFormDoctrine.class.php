@@ -18,7 +18,7 @@
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfFormDoctrine.class.php 24537 2009-11-30 05:06:09Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormDoctrine.class.php 24971 2009-12-05 15:05:03Z Kris.Wallsmith $
  */
 abstract class sfFormDoctrine extends sfFormObject
 {
@@ -309,9 +309,10 @@ abstract class sfFormDoctrine extends sfFormObject
       throw new LogicException(sprintf('You cannot remove the current file for field "%s" as the field is not a file.', $field));
     }
 
-    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->getObject()->$field))
+    $directory = $this->validatorSchema[$field]->getOption('path');
+    if ($directory && is_file($file = $directory.'/'.$this->getObject()->$field))
     {
-      unlink($directory.$this->getObject()->$field);
+      unlink($file);
     }
   }
 

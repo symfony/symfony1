@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRoutingConfigHandler.class.php 23993 2009-11-15 22:44:01Z FabianLange $
+ * @version    SVN: $Id: sfRoutingConfigHandler.class.php 24962 2009-12-04 20:39:41Z FabianLange $
  */
 class sfRoutingConfigHandler extends sfYamlConfigHandler
 {
@@ -41,7 +41,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
       foreach (sfPatternRouting::flattenRoutes($routes) as $name => $route)
       {
         $route->setDefaultOptions($options);
-        $data[] = sprintf('$this->routes[\'%s\'] = unserialize(\'%s\');', $name, serialize($route));
+        $data[] = sprintf('$this->routes[\'%s\'] = unserialize(%s);', $name, var_export(serialize($route), true));
       }
     }
 

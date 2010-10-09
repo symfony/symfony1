@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 24277 2009-11-23 15:16:24Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 24963 2009-12-04 20:42:16Z FabianLange $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -31,7 +31,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
   protected
     $formFormatters = array(),
-    $options        = array(),
     $fields         = array(),
     $positions      = array(),
     $helps          = array();
@@ -249,7 +248,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * If you are using the form framework with symfony, do not use a reserved word in the
    * name format.  If you do, symfony may act in an unexpected manner.
    *
-   * For symfony 1.1 and 1.2, the following words are reserved and must NOT be used as
+   * For symfony 1.1+, the following words are reserved and must NOT be used as
    * the name format:
    *
    *  * module    (example: module[%s])

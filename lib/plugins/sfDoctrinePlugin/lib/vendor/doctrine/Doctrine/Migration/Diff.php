@@ -93,6 +93,8 @@ class Doctrine_Migration_Diff
      */
     public function generateChanges()
     {
+        $this->_cleanup();
+
         $from = $this->_generateModels(self::$_fromPrefix, $this->_from);
         $to = $this->_generateModels(self::$_toPrefix, $this->_to);
 

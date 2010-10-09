@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDeprecatedMethodsValidation.class.php 24610 2009-11-30 22:07:34Z FabianLange $
+ * @version    SVN: $Id: sfDeprecatedMethodsValidation.class.php 24706 2009-12-01 19:38:44Z fabien $
  */
 class sfDeprecatedMethodsValidation extends sfValidation
 {
@@ -42,16 +42,17 @@ class sfDeprecatedMethodsValidation extends sfValidation
   {
     $found = array_merge(
       $this->doValidate(array(
-        'sfToolkit\:\:getTmpDir',
-        'sfToolkit\:\:removeArrayValueForPath',
-        'sfToolkit\:\:hasArrayValueForPath',
-        'sfToolkit\:\:getArrayValueForPathByRef',
-        'sfValidatorBase\:\:setInvalidMessage',
-        'sfValidatorBase\:\:setRequiredMessage',
+        'sfToolkit::getTmpDir',
+        'sfToolkit::removeArrayValueForPath',
+        'sfToolkit::hasArrayValueForPath',
+        'sfToolkit::getArrayValueForPathByRef',
+        'sfValidatorBase::setInvalidMessage',
+        'sfValidatorBase::setRequiredMessage',
         'debug_message',
-        'sfContext\:\:retrieveObjects',
-        '\-\>getXDebugStack',
-        '\-\>checkSymfonyVersion',
+        'sfContext::retrieveObjects',
+        '->getXDebugStack',
+        '->checkSymfonyVersion',
+        '->sh(',
       ), array(
         sfConfig::get('sf_apps_dir'),
         sfConfig::get('sf_lib_dir'),
@@ -61,11 +62,11 @@ class sfDeprecatedMethodsValidation extends sfValidation
 
       $this->doValidate(array(
         '\-\>contains\(', 'responseContains', 'isRequestParameter', 'isResponseHeader',
-        'isUserCulture', 'isRequestFormat', 'checkResponseElement', '\-\>sh\(',
+        'isUserCulture', 'isRequestFormat', 'checkResponseElement',
       ), sfConfig::get('sf_test_dir')),
 
       $this->doValidate(array(
-        'getDefaultView', 'handleError', 'validate', 'debugMessage', 'getController\(\)\-\>sendEmail'
+        'getDefaultView', 'handleError', 'validate', 'debugMessage', 'getController()->sendEmail'
       ), $this->getProjectActionDirectories())
     );
 

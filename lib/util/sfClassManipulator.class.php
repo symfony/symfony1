@@ -14,10 +14,20 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfClassManipulator.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfClassManipulator.class.php 25063 2009-12-08 06:02:07Z Kris.Wallsmith $
  */
 class sfClassManipulator
 {
+  static protected $signatureTokens = array(
+    T_FINAL,
+    T_ABSTRACT,
+    T_STATIC,
+    T_PUBLIC,
+    T_PROTECTED,
+    T_PRIVATE,
+    T_FUNCTION,
+  );
+
   protected $code = '', $file = false;
 
   /**
@@ -210,25 +220,24 @@ class sfClassManipulator
         $line .= $token;
       }
 
-      // detect EOL and filter
-      if ($break || false !== strpos($line, PHP_EOL))
+      $lines = preg_split('/(\r?\n)/', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+      if (count($lines) > 1 || $break)
       {
-        $lines = explode(PHP_EOL, $line);
+        $line = $break ? '' : array_pop($lines);
+        foreach (array_chunk($lines, 2) as $chunk)
+        {
+          list($l, $eol) = array_pad($chunk, 2, '');
 
-        if ($break)
-        {
-          $line = '';
-          $eol = '';
-        }
-        else
-        {
-          $line = array_pop($lines);
-          $eol = PHP_EOL;
-        }
-
-        foreach ($lines as $l)
-        {
-          $code .= 1 != $insideSetup ? $l.$eol : call_user_func($callable, $l.$eol);
+          if (1 == $insideSetup)
+          {
+            list($before, $setup) = $this->splitSetup($l);
+            $code .= $before;
+            $code .= call_user_func($callable, $setup.$eol);
+          }
+          else
+          {
+            $code .= $l.$eol;
+          }
         }
       }
 
@@ -245,5 +254,61 @@ class sfClassManipulator
     }
 
     return $this->code = $code;
+  }
+
+  protected function splitSetup($line)
+  {
+    $before = '';
+    $setup = '';
+
+    if ($line)
+    {
+      if (false === stripos($line, '<?php'))
+      {
+        // add a function so we can accurately slice
+        $tokens = token_get_all('<?php function'.$line);
+        $tokens = array_slice($tokens, 2);
+      }
+      else
+      {
+        $tokens = token_get_all($line);
+      }
+
+      // we're in reverse
+      $inSignature = false;
+      while ($token = array_pop($tokens))
+      {
+        $value = $this->getTokenValue($token);
+        if (is_array($token) && in_array($token[0], self::$signatureTokens))
+        {
+          $inSignature = true;
+        }
+        elseif ($inSignature && !preg_match('/\s+/', $value))
+        {
+          // clean up
+          preg_match('/^\s*/', $setup, $match);
+          $before = implode('', array_map(array($this, 'getTokenValue'), $tokens)).$value.$match[0];
+          $setup = substr($setup, strlen($match[0]));
+
+          return array($before, $setup);
+        }
+
+        $setup = $value.$setup;
+      }
+    }
+
+    return array($before, $setup);
+  }
+
+  /**
+   * Returns a token's string value.
+   *
+   * @param array|string $token
+   *
+   * @return string
+   */
+  protected function getTokenValue($token)
+  {
+    return is_array($token) ? $token[1] : $token;
   }
 }
