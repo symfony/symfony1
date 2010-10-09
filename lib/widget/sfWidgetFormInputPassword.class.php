@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputPassword.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormInputPassword.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInputPassword extends sfWidgetFormInput
 {
@@ -40,6 +40,8 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The password stored in this widget, will be masked by the browser.
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

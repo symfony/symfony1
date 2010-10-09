@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebController.class.php 28961 2010-04-01 14:17:52Z fabien $
+ * @version    SVN: $Id: sfWebController.class.php 30563 2010-08-06 11:22:44Z fabien $
  */
 abstract class sfWebController extends sfController
 {
@@ -193,7 +193,14 @@ abstract class sfWebController extends sfController
     $response = $this->context->getResponse();
     $response->clearHttpHeaders();
     $response->setStatusCode($statusCode);
-    $response->setHttpHeader('Location', $url);
+
+    // The Location header should only be used for status codes 201 and 3..
+    // For other code, only the refresh meta tag is used
+    if ($statusCode == 201 || ($statusCode >= 300 && $statusCode < 400))
+    {
+      $response->setHttpHeader('Location', $url);
+    }
+
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlspecialchars($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
     $response->send();
   }

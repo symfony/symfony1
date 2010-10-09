@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 27738 2010-02-08 15:07:33Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
 {
@@ -48,6 +48,8 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value selected in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

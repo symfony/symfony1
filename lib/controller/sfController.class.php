@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 29523 2010-05-19 12:50:54Z fabien $
+ * @version    SVN: $Id: sfController.class.php 30912 2010-09-15 11:10:46Z fabien $
  */
 abstract class sfController
 {
@@ -203,7 +203,12 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance);
 
     // include module configuration
+    $viewClass = sfConfig::get('mod_'.strtolower($moduleName).'_view_class', false);
     require($this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
+    if (false !== $viewClass)
+    {
+      sfConfig::set('mod_'.strtolower($moduleName).'_view_class', $viewClass);
+    }
 
     // module enabled?
     if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))

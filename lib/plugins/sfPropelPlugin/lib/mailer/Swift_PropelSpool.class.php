@@ -20,7 +20,7 @@
  * @package    symfony
  * @subpackage mailer
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: Swift_PropelSpool.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: Swift_PropelSpool.class.php 30529 2010-08-04 16:30:29Z fabien $
  */
 class Swift_PropelSpool extends Swift_ConfigurableSpool
 {
@@ -114,7 +114,14 @@ class Swift_PropelSpool extends Swift_ConfigurableSpool
     $time = time();
     foreach ($objects as $object)
     {
-      $message = unserialize($object->$method());
+      if (is_resource($object->getMessage()))
+      {
+        $message = unserialize(stream_get_contents($object->getMessage()));
+      }
+      else
+      {
+          $message = unserialize($object->getMessage());
+      }
 
       $object->delete();
 

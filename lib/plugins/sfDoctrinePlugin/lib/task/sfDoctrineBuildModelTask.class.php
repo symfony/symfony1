@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildModelTask.class.php 24745 2009-12-02 02:14:05Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineBuildModelTask.class.php 30901 2010-09-13 17:41:16Z Kris.Wallsmith $
  */
 class sfDoctrineBuildModelTask extends sfDoctrineBaseTask
 {
@@ -122,14 +122,6 @@ EOF;
     $baseFinder = sfFinder::type('file')->name('Base*'.$builderOptions['suffix']);
     $baseDirFinder = sfFinder::type('dir')->name('base');
     $this->getFilesystem()->replaceTokens($baseFinder->in($baseDirFinder->in($config['models_path'])), '', '', $tokens);
-
-    // cleanup new table classes
-    $tableFinder = sfFinder::type('file')->prune('base')->name('*Table'.$builderOptions['suffix']);
-    foreach (array_diff($tableFinder->in($config['models_path']), $before) as $file)
-    {
-      $contents = file_get_contents($file);
-      file_put_contents($file, sfToolkit::stripComments($contents));
-    }
 
     $this->reloadAutoload();
   }
