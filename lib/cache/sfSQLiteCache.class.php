@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSQLiteCache.class.php 3541 2007-02-26 06:13:12Z fabien $
+ * @version    SVN: $Id: sfSQLiteCache.class.php 3935 2007-05-06 10:07:08Z fabien $
  */
 class sfSQLiteCache extends sfCache
 {
@@ -142,7 +142,7 @@ class sfSQLiteCache extends sfCache
         [data] LONGVARCHAR,
         [created_at] TIMESTAMP
       )",
-      "CREATE INDEX [cache_unique] ON [cache] ([namespace], [id])",
+      "CREATE UNIQUE INDEX [cache_unique] ON [cache] ([namespace], [id])",
     );
 
     foreach ($statements as $statement)
@@ -240,7 +240,7 @@ class sfSQLiteCache extends sfCache
       }
     }
 
-    if (!$this->has($id, $namespace))
+    if (!$this->has($id, $namespace, true))
     {
       $statement = sprintf("INSERT INTO cache (id, namespace, data, created_at) VALUES ('%s', '%s', '%s', %d)", sqlite_escape_string($id), sqlite_escape_string($namespace), sqlite_escape_string($data), time());
     }

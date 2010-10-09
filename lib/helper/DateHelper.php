@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateHelper.php 3495 2007-02-18 09:30:24Z fabien $
+ * @version    SVN: $Id: DateHelper.php 3815 2007-04-18 16:44:39Z fabien $
  */
 
 function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null, $charset = null)
@@ -109,21 +109,21 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
       }
     }
   }
-  else if ($distance_in_minutes >= 2 && $distance_in_minutes <= 45)
+  else if ($distance_in_minutes >= 2 && $distance_in_minutes <= 44)
   {
     $string = '%minutes% minutes';
     $parameters['%minutes%'] = $distance_in_minutes;
   }
-  else if ($distance_in_minutes >= 46 && $distance_in_minutes <= 90)
+  else if ($distance_in_minutes >= 45 && $distance_in_minutes <= 89)
   {
     $string = 'about 1 hour';
   }
-  else if ($distance_in_minutes >= 90 && $distance_in_minutes <= 1440)
+  else if ($distance_in_minutes >= 90 && $distance_in_minutes <= 1439)
   {
     $string = 'about %hours% hours';
     $parameters['%hours%'] = round($distance_in_minutes / 60);
   }
-  else if ($distance_in_minutes >= 1441 && $distance_in_minutes <= 2880)
+  else if ($distance_in_minutes >= 1440 && $distance_in_minutes <= 2879)
   {
     $string = '1 day';
   }

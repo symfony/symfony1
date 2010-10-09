@@ -945,7 +945,7 @@ Listing 7-45 - Escaping Also Works for Arrays and Objects
     // In the template
     <?php foreach($test_array as $value): ?>
       <?php echo $value ?>
-    <?php enforeach; ?>
+    <?php endforeach; ?>
      => &amp; &lt; &gt;
     <?php echo $test_array_of_arrays[0][0] ?>
      => &amp;

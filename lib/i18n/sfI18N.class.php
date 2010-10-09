@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 2769 2006-11-20 14:47:55Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 4098 2007-05-24 14:53:10Z fabien $
  */
 class sfI18N
 {
@@ -50,8 +50,10 @@ class sfI18N
   {
     $this->messageSource = $this->createMessageSource($dir);
     $this->messageSource->setCulture($culture);
-
     $this->messageFormat = $this->createMessageFormat($this->messageSource);
+
+    $this->globalMessageSource->setCulture($culture);
+    $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);
   }
 
   public function createMessageSource($dir)
@@ -99,9 +101,11 @@ class sfI18N
     if ($this->messageSource)
     {
       $this->messageSource->setCulture($culture);
+      $this->messageFormat = $this->createMessageFormat($this->messageSource);
     }
 
     $this->globalMessageSource->setCulture($culture);
+    $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);
   }
 
   public function getMessageSource()

@@ -233,7 +233,7 @@ Listing 3-1 - Sample Apache Configuration, in `apache/conf/httpd.conf`
       </Directory>
     </VirtualHost>
 
-In the configuration in Listing 3-1, the `/path/to/symfony/data` placeholder must be replaced by the actual path. For example, for a PEAR installation in *nix, you should type something like this:
+In the configuration in Listing 3-1, the `$sf_symfony_data_dir` placeholder must be replaced by the actual path. For example, for a PEAR installation in *nix, you should type something like this:
 
         Alias /sf /usr/local/lib/php/data/symfony/web/sf
 

@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 3232 2007-01-11 20:51:54Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 4017 2007-05-16 11:07:18Z fabien $
  */
 class sfViewCacheManager
 {
@@ -182,10 +182,10 @@ class sfViewCacheManager
    */
   public function registerConfiguration($moduleName)
   {
-    if (!isset($loaded[$moduleName]))
+    if (!isset($this->loaded[$moduleName]))
     {
       require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml'));
-      $loaded[$moduleName] = true;
+      $this->loaded[$moduleName] = true;
     }
   }
 

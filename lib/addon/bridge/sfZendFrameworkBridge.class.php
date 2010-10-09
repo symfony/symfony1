@@ -24,7 +24,7 @@ else
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfZendFrameworkBridge.class.php 1415 2006-06-11 08:33:51Z fabien $
+ * @version    SVN: $Id: sfZendFrameworkBridge.class.php 3862 2007-04-24 11:49:42Z fabien $
  */
 class sfZendFrameworkBridge
 {
@@ -32,7 +32,14 @@ class sfZendFrameworkBridge
   {
     try
     {
-      Zend::loadClass($class);
+      if (class_exists('Zend_Version'))
+      {
+        Zend_Loader::loadClass($class);
+      }
+      else
+      {
+        Zend::loadClass($class);
+      }
     }
     catch (Zend_Exception $e)
     {
