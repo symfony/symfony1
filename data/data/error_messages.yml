@@ -1,6 +1,6 @@
 errors:
   err0001: |
-    Symfony enforces some `php.ini` values threw the `php.yml` configuration file (under `check` category).
+    Symfony enforces some `php.ini` values through the `php.yml` configuration file (under `check` category).
 
     It seems you have a key in your `php.ini` configuration file with a "un-authorized" value (according to the symfony `php.yml` configuration file).
 

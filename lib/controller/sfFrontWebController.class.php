@@ -18,7 +18,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfFrontWebController.class.php 3502 2007-02-18 18:28:28Z fabien $
+ * @version    SVN: $Id: sfFrontWebController.class.php 6610 2007-12-20 14:10:46Z noel $
  */
 class sfFrontWebController extends sfWebController
 {
@@ -66,7 +66,7 @@ class sfFrontWebController extends sfWebController
       try
       {
         // wrap non symfony exceptions
-        $sfException = new sfException();
+        $sfException = new sfException($e->getMessage());
         $sfException->printStackTrace($e);
       }
       catch (Exception $e)

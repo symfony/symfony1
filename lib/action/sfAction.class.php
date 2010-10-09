@@ -16,7 +16,7 @@
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfAction.class.php 3624 2007-03-17 10:57:03Z fabien $
+ * @version    SVN: $Id: sfAction.class.php 6607 2007-12-20 10:16:56Z fabien $
  */
 abstract class sfAction extends sfComponent
 {
@@ -35,7 +35,10 @@ abstract class sfAction extends sfComponent
     parent::initialize($context);
 
     // include security configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true));
+    if ($file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true))
+    {
+      require $file;
+    }
 
     return true;
   }

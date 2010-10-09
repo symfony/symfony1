@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileLogger.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfFileLogger.class.php 6432 2007-12-10 18:25:51Z fabien $
  */
 class sfFileLogger
 {
@@ -39,12 +39,17 @@ class sfFileLogger
       mkdir($dir, 0777, 1);
     }
 
-    if (!is_writable($dir) || (file_exists($options['file']) && !is_writable($options['file'])))
+    $fileExists = file_exists($options['file']);
+    if (!is_writable($dir) || ($fileExists && !is_writable($options['file'])))
     {
       throw new sfFileException(sprintf('Unable to open the log file "%s" for writing', $options['file']));
     }
 
     $this->fp = fopen($options['file'], 'a');
+    if (!$fileExists)
+    {
+      chmod($options['file'], 0666);
+    }
   }
 
   /**

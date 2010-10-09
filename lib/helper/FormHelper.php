@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 6014 2007-11-14 11:05:21Z fabien $
+ * @version    SVN: $Id: FormHelper.php 6374 2007-12-07 18:53:02Z fabien $
  */
 
 /**
@@ -228,6 +228,7 @@ function select_country_tag($name, $selected = null, $options = array())
   asort($countries);
 
   $option_tags = options_for_select($countries, $selected, $options);
+  unset($options['include_blank'], $options['include_custom']);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -275,6 +276,7 @@ function select_language_tag($name, $selected = null, $options = array())
   asort($languages);
 
   $option_tags = options_for_select($languages, $selected, $options);
+  unset($options['include_blank'], $options['include_custom']);
 
   return select_tag($name, $option_tags, $options);
 }

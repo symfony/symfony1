@@ -356,7 +356,7 @@ Listing 11-15 - Periodically Calling a Remote Function with `periodically_call_r
         'frequency' => 60,
         'update'    => 'notification',
         'url'       => '@watch',
-        'with'      => "'param=' + $F('mycontent')",
+        'with'      => "'param=' + \$F('mycontent')",
     )) ?>
 
 If you don't specify the number of seconds (`frequency`) to wait between two calls to the remote function, the default value of 10 seconds is used. Note that the `with` parameter is evaluated in JavaScript, so you can use Prototype functions in it, such as the `$F()` function.

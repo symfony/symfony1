@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 2728 2006-11-17 09:46:01Z chtito $
+ * @version    SVN: $Id: sfPropelPager.class.php 6466 2007-12-11 19:15:51Z fabien $
  */
 
 /**
@@ -22,7 +22,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 2728 2006-11-17 09:46:01Z chtito $
+ * @version    SVN: $Id: sfPropelPager.class.php 6466 2007-12-11 19:15:51Z fabien $
  */
 class sfPropelPager extends sfPager
 {
@@ -101,7 +101,7 @@ class sfPropelPager extends sfPager
 
     $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $cForRetrieve);
 
-    return $results[0];
+    return is_array($results) && isset($results[0]) ? $results[0] : null;
   }
 
   public function getResults()

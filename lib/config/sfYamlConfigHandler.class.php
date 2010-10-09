@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlConfigHandler.class.php 3203 2007-01-09 18:32:54Z fabien $
+ * @version    SVN: $Id: sfYamlConfigHandler.class.php 6367 2007-12-07 16:17:06Z fabien $
  */
 abstract class sfYamlConfigHandler extends sfConfigHandler
 {
@@ -25,9 +25,9 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   /**
    * Parses an array of YAMLs files and merges them in one configuration array.
    *
-   * @param array An array of configuration file paths
+   * @param  array An array of configuration file paths
    *
-   * @param array A merged configuration array
+   * @return array A merged configuration array
    */
   protected function parseYamls($configFiles)
   {

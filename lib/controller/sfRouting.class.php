@@ -20,7 +20,7 @@
  * @package    symfony
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 6125 2007-11-21 09:16:20Z noel $
+ * @version    SVN: $Id: sfRouting.class.php 6614 2007-12-20 14:51:15Z noel $
  */
 class sfRouting
 {
@@ -580,7 +580,14 @@ class sfRouting
 
               $found .= $pass[$i].'='.$pass[$i + 1].'&';
             }
+
             parse_str($found, $pass);
+
+            if (get_magic_quotes_gpc())
+            {
+              $pass = sfToolkit::stripslashesDeep((array) $pass);
+            }
+            
             foreach ($pass as $key => $value)
             {
               // we add this parameters if not in conflict with named url element (i.e. ':action')
