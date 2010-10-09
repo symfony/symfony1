@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormPropel.class.php 14507 2009-01-06 19:12:41Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormPropel.class.php 15033 2009-01-28 22:40:25Z FabianLange $
  */
 abstract class sfFormPropel extends sfForm
 {
@@ -339,7 +339,10 @@ abstract class sfFormPropel extends sfForm
    */
   public function renderFormTag($url, array $attributes = array())
   {
-    $attributes['method'] = $this->getObject()->isNew() ? 'post' : 'put';
+    if (!isset($attributes['method']))
+    {
+      $attributes['method'] = $this->getObject()->isNew() ? 'post' : 'put';
+    }
 
     return parent::renderFormTag($url, $attributes);
   }
@@ -477,7 +480,7 @@ abstract class sfFormPropel extends sfForm
     $column = call_user_func(array(constant(get_class($this->object).'::PEER'), 'translateFieldName'), $field, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
     $getter = 'get'.$column;
 
-    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.$this->object->$getter()))
+    if (($directory = $this->validatorSchema[$field]->getOption('path')) && is_file($directory.DIRECTORY_SEPARATOR.$this->object->$getter()))
     {
       unlink($directory.DIRECTORY_SEPARATOR.$this->object->$getter());
     }

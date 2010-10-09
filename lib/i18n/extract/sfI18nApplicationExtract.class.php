@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18nApplicationExtract.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    SVN: $Id: sfI18nApplicationExtract.class.php 14872 2009-01-19 08:32:06Z fabien $
  */
 class sfI18nApplicationExtract extends sfI18nExtract
 {
@@ -29,7 +29,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $moduleNames = sfFinder::type('dir')->maxdepth(0)->relative()->in(sfConfig::get('sf_app_module_dir'));
     foreach ($moduleNames as $moduleName)
     {
-      $this->extractObjects[] = new sfI18nModuleExtract($this->i18n, 'en', array('module' => $moduleName));
+      $this->extractObjects[] = new sfI18nModuleExtract($this->i18n, $this->culture, array('module' => $moduleName));
     }
   }
 

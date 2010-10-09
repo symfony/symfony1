@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectEnableTask.class.php 9890 2008-06-26 11:35:01Z fabien $
+ * @version    SVN: $Id: sfProjectEnableTask.class.php 15156 2009-01-31 21:44:54Z FabianLange $
  */
 class sfProjectEnableTask extends sfBaseTask
 {
@@ -59,7 +59,7 @@ EOF;
 
       $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
       $clearCache->setCommandApplication($this->commandApplication);
-      $clearCache->run();
+      $clearCache->run(array(), array('--app='.$app, '--env='.$env));
 
       $this->logSection('enable', sprintf('%s [%s] has been ENABLED', $app, $env));
     }

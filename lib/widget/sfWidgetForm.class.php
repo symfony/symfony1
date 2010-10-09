@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetForm.class.php 12518 2008-11-01 07:18:12Z fabien $
+ * @version    SVN: $Id: sfWidgetForm.class.php 15112 2009-01-30 17:34:34Z fabien $
  */
 abstract class sfWidgetForm extends sfWidget
 {
@@ -26,6 +26,8 @@ abstract class sfWidgetForm extends sfWidget
    *  * id_format:       The format for the generated HTML id attributes (%s by default)
    *  * is_hidden:       true if the form widget must be hidden, false otherwise (false by default)
    *  * needs_multipart: true if the form widget needs a multipart form, false otherwise (false by default)
+   *  * default:         The default value to use when rendering the widget
+   *  * label:           The label to use when the widget is rendered by a widget schema
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes

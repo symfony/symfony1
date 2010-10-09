@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 14286 2008-12-23 19:06:37Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 14815 2009-01-16 19:03:17Z Jonathan.Wage $
  */
 class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
 {
@@ -124,9 +124,10 @@ EOF;
     $insertSql->setCommandApplication($this->commandApplication);
     $insertSqlOptions = array();
     $insertSqlOptions[] = '--env=' . $options['env'];
-    if ($options['no-confirmation'])
+    $insertSqlOptions = array();
+    if (isset($options['application']) && $options['application'])
     {
-      $insertSqlOptions[] = '--no-confirmation';
+      $insertSqlOptions[] = '--application=' . $options['application'];
     }
     $ret = $insertSql->run(array(), $insertSqlOptions);
 

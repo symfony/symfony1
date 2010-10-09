@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineDatabase.class.php 12185 2008-10-14 18:38:07Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineDatabase.class.php 14977 2009-01-26 23:11:38Z Jonathan.Wage $
  */
 class sfDoctrineDatabase extends sfDatabase
 {
@@ -45,6 +45,11 @@ class sfDoctrineDatabase extends sfDatabase
   public function initialize($parameters = array())
   {
     parent::initialize($parameters);
+
+    if (!is_null($this->_doctrineConnection))
+    {
+      return;
+    }
 
     $dsn = $this->getParameter('dsn');
     $name = $this->getParameter('name');
@@ -119,6 +124,7 @@ class sfDoctrineDatabase extends sfDatabase
     if ($this->connection !== null)
     {
       $this->connection = null;
+      $this->_doctrineConnection = null;
     }
   }
 }

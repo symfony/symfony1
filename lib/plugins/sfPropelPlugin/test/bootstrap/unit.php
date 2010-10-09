@@ -11,8 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../test/bootstrap/unit.php');
 
 require_once(dirname(__FILE__).'/../../../../autoload/sfSimpleAutoload.class.php');
-$autoload = sfSimpleAutoload::getInstance();
-// $autoload = sfSimpleAutoload::getInstance(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_propel_%s.data', md5(__FILE__)));
+$autoload = sfSimpleAutoload::getInstance(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_propel_%s.data', md5(__FILE__)));
 $autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
 $autoload->register();
 

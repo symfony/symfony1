@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSimpleAutoload.class.php 13317 2008-11-24 20:54:45Z fabien $
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 14689 2009-01-13 16:33:49Z Kris.Wallsmith $
  */
 class sfSimpleAutoload
 {
@@ -94,6 +94,7 @@ class sfSimpleAutoload
   static public function unregister()
   {
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
+    self::$registered = false;
   }
 
   /**

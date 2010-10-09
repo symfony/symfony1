@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasePeer.php 1089 2008-12-16 14:41:49Z hans $
+ *  $Id: BasePeer.php 1092 2009-01-30 14:01:51Z ron $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,7 +35,7 @@
  * @author     John D. McNally <jmcnally@collab.net> (Torque)
  * @author     Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author     Stephen Haberman <stephenh@chase3000.com> (Torque)
- * @version    $Revision: 1089 $
+ * @version    $Revision: 1092 $
  * @package    propel.util
  */
 class BasePeer
@@ -557,7 +557,7 @@ class BasePeer
 
 				$stmt->bindValue(':p'.$i++, null, PDO::PARAM_NULL);
 
-			} else {
+			} elseif (isset($tableMap) ) {
 
 				$cMap = $dbMap->getTable($tableName)->getColumn($columnName);
 				$type = $cMap->getType();
@@ -591,6 +591,8 @@ class BasePeer
 				}
 
 				$stmt->bindValue(':p'.$i++, $value, $pdoType);
+			} else {
+				$stmt->bindValue(':p'.$i++, $value);
 			}
 		} // foreach
 	}

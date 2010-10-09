@@ -958,7 +958,7 @@ The generated SQL is also helpful to rebuild the database in another environment
 
 Symfony can use Propel to generate a `schema.yml` file from an existing database, thanks to introspection (the capability of databases to determine the structure of the tables on which they are operating). This can be particularly useful when you do reverse-engineering, or if you prefer working on the database before working on the object model.
 
-In order to do this, you need to make sure that the project `propel.ini` file points to the correct database and contains all connection settings, and then call the `propel:build-schema` command:
+In order to do this, you need to make sure that the project `databases.yml` file points to the correct database and contains all connection settings, and then call the `propel:build-schema` command:
 
     > php symfony propel:build-schema
 
@@ -972,13 +972,6 @@ Instead of generating a `schema.yml` file, this will create a `schema.xml` file 
 
 >**SIDEBAR**
 >The `propel.ini` Configuration
->
->The `propel:build-sql` and `propel:build-schema` tasks don't use the connection settings defined in the `databases.yml` file. Rather, these tasks use the connection settings in another file, called `propel.ini` and stored in the project `config/` directory:
->
->
->      propel.database.createUrl = mysql://login:passwd@localhost
->      propel.database.url       = mysql://login:passwd@localhost/blog
->
 >
 >This file contains other settings used to configure the Propel generator to make generated model classes compatible with symfony. Most settings are internal and of no interest to the user, apart from a few:
 >

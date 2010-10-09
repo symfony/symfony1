@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormGenerator.class.php 13927 2008-12-10 21:47:32Z FabianLange $
+ * @version    SVN: $Id: sfPropelFormGenerator.class.php 15134 2009-01-31 19:30:35Z Kris.Wallsmith $
  */
 class sfPropelFormGenerator extends sfGenerator
 {
@@ -262,6 +262,12 @@ class sfPropelFormGenerator extends sfGenerator
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
       $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => %s', $this->getForeignTable($column)->getClassname(), $column->isNotNull() ? 'false' : 'true');
+
+      $refColumn = $this->getForeignTable($column)->getColumn($column->getRelatedColumnName());
+      if (!$refColumn->isPrimaryKey())
+      {
+        $options[] = sprintf('\'key_method\' => \'get%s\'', $refColumn->getPhpName());
+      }
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
@@ -334,16 +340,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $map = call_user_func(array(constant($this->getForeignTable($column)->getClassname().'::PEER'), 'getTableMap'));
-      foreach ($map->getColumns() as $primaryKey)
-      {
-        if ($primaryKey->isPrimaryKey())
-        {
-          break;
-        }
-      }
-
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($primaryKey->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($column->getRelatedColumnName()));
     }
     else if ($column->isPrimaryKey())
     {

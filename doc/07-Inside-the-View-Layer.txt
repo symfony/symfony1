@@ -86,7 +86,7 @@ A few helpers are available by default in every template, without need for decla
 The list of the standard helpers, loaded by default for every template, is configurable in the `settings.yml` file. So if you know that you will not use the helpers of the `Cache` group, or that you will always use the ones of the Text group, modify the standard_helpers setting accordingly. This will speed up your application a bit. You cannot remove the first four helper groups in the preceding list (`Helper`, `Tag`, `Url`, and `Asset`), because they are compulsory for the templating engine to work properly. Consequently, they don't even appear in the list of standard helpers.
 
 >**TIP**
->If you ever need to use a helper outside a template, you can still load a helper group from anywhere by calling `sfLoader::loadHelpers($helpers)`, where `$helpers` is a helper group name or an array of helper group names. For instance, if you want to use `auto_link_text()` in an action, you need to call `sfLoader::loadHelpers('Text')` first.
+>If you ever need to use a helper outside a template, you can still load a helper group from anywhere by calling `sfProjectConfiguration::getActive()->loadHelpers($helpers)`, where `$helpers` is a helper group name or an array of helper group names. For instance, if you want to use `auto_link_text()` in an action, you need to call `sfProjectConfiguration::getActive()->loadHelpers('Text')` first.
 
 #### Frequently Used Helpers
 
@@ -307,7 +307,7 @@ Listing 7-10 - The Partial Can Now Use the Variable, in `mymodule/templates/_myp
 
 In Chapter 2, the first sample script was split into two parts to separate the logic from the presentation. Just like the MVC pattern applies to actions and templates, you may need to split a partial into a logic part and a presentation part. In such a case, you should use a component.
 
-A component is like an action, except it's much faster. The logic of a component is kept in a class inheriting from `sfComponents`, located in an `action/components.class.php` file. Its presentation is kept in a partial. Methods of the `sfComponents` class start with the word `execute`, just like actions, and they can pass variables to their presentation counterpart in the same way that actions can pass variables. Partials that serve as presentation for components are named by the component (without the leading `execute`, but with an underscore instead). Table 7-1 compares the naming conventions for actions and components.
+A component is like an action, except it's much faster. The logic of a component is kept in a class inheriting from `sfComponents`, located in an `actions/components.class.php` file. Its presentation is kept in a partial. Methods of the `sfComponents` class start with the word `execute`, just like actions, and they can pass variables to their presentation counterpart in the same way that actions can pass variables. Partials that serve as presentation for components are named by the component (without the leading `execute`, but with an underscore instead). Table 7-1 compares the naming conventions for actions and components.
 
 Table 7-1 - Action and Component Naming Conventions
 

@@ -11,7 +11,7 @@
 $app = 'frontend';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(13, new lime_output_color());
 
 // test for ticket #4935
 $user = new User();
@@ -49,3 +49,27 @@ $profileCount = Doctrine_Query::create()
   ->count();
 
 $t->is($profileCount, 1);
+
+$widget = new sfWidgetFormDoctrineChoice(array('model' => 'User'));
+$t->is($widget->getChoices(), array(1 => 1));
+
+$widget = new sfWidgetFormDoctrineChoice(array('model' => 'User', 'key_method' => 'getUsername', 'method' => 'getPassword'));
+$t->is($widget->getChoices(), array('jwage' => '4cb9c8a8048fd02294477fcb1a41191a'));
+
+$widget = new sfWidgetFormDoctrineChoice(array('model' => 'User', 'key_method' => 'getUsername', 'method' => 'getPassword'));
+$t->is($widget->getChoices(), array('jwage' => '4cb9c8a8048fd02294477fcb1a41191a'));
+
+$methods = array(
+  'widgetChoiceTableMethod1',
+  'widgetChoiceTableMethod2',
+  'widgetChoiceTableMethod3'
+);
+
+foreach ($methods as $method)
+{
+  $widget = new sfWidgetFormDoctrineChoice(array('model' => 'User', 'table_method' => $method));
+  $t->is($widget->getChoices(), array(1 => 1));
+}
+
+$widget = new sfWidgetFormDoctrineChoice(array('model' => 'User', 'table_method' => 'widgetChoiceTableMethod4'));
+$t->is($widget->getChoices(), array());

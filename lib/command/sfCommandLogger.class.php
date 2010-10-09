@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandLogger.class.php 9076 2008-05-19 23:19:44Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCommandLogger.class.php 15114 2009-01-30 17:41:21Z fabien $
  */
 class sfCommandLogger extends sfConsoleLogger
 {
@@ -38,7 +38,6 @@ class sfCommandLogger extends sfConsoleLogger
   public function listenToLogEvent(sfEvent $event)
   {
     $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
-    unset($event['priority']);
 
     $prefix = '';
     if ('application.log' == $event->getName())

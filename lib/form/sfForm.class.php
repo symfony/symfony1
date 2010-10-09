@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 14246 2008-12-22 15:28:31Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfForm.class.php 14852 2009-01-17 23:27:45Z Kris.Wallsmith $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -387,11 +387,11 @@ class sfForm implements ArrayAccess, Iterator, Countable
    * @param integer $n                The number of times to embed the form
    * @param string  $decorator        A HTML decorator for the main form around embedded forms
    * @param string  $innerDecorator   A HTML decorator for each embedded form
-   * @param array   $attributes       Attributes for schema
    * @param array   $options          Options for schema
+   * @param array   $attributes       Attributes for schema
    * @param array   $labels           Labels for schema
    */
-  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $attributes = array(), $options = array(), $labels = array())
+  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $options = array(), $attributes = array(), $labels = array())
   {
     if (true === $this->isBound() || true === $form->isBound())
     {
@@ -418,7 +418,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
     $innerDecorator = is_null($innerDecorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
-    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options), $decorator);
+
+    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $options, $attributes), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
     // generate labels
@@ -998,7 +999,14 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function offsetUnset($offset)
   {
-    unset($this->widgetSchema[$offset], $this->validatorSchema[$offset]);
+    unset(
+      $this->widgetSchema[$offset],
+      $this->validatorSchema[$offset],
+      $this->defaults[$offset],
+      $this->taintedValues[$offset],
+      $this->values[$offset],
+      $this->embeddedForms[$offset]
+    );
 
     $this->resetFormFields();
   }

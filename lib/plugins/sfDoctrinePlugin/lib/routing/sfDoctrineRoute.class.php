@@ -58,9 +58,14 @@ class sfDoctrineRoute extends sfObjectRoute
 
     // If query returned Doctrine_Collection with results inside then we
     // need to return the first Doctrine_Record
-    if ($results instanceof Doctrine_Collection && count($results))
+    if ($results instanceof Doctrine_Collection)
     {
-      $results = $results->getFirst();
+      if (count($results))
+      {
+        $results = $results->getFirst();
+      } else {
+        $results = null;
+      }
     }
     // If an object is returned then lets return it otherwise return null
     else if(!is_object($results))
@@ -143,7 +148,14 @@ class sfDoctrineRoute extends sfObjectRoute
 
     foreach ($this->getRealVariables() as $variable)
     {
-      $parameters[$variable] = $object->get($variable);
+      try {
+        $parameters[$variable] = $object->$variable;
+      } catch (Exception $e) {
+        try {
+          $method = 'get'.sfInflector::camelize($variable);
+          $parameters[$variable] = $object->$method;
+        } catch (Exception $e) {}
+      }
     }
 
     return $parameters;

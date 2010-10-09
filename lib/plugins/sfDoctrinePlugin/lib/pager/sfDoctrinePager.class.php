@@ -14,7 +14,7 @@
  *
  * @package    sfDoctrinePlugin
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrinePager.class.php 14256 2008-12-22 19:42:41Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrinePager.class.php 14793 2009-01-15 23:15:41Z Jonathan.Wage $
  */
 class sfDoctrinePager extends sfPager implements Serializable
 {
@@ -123,6 +123,8 @@ class sfDoctrinePager extends sfPager implements Serializable
       $method = $this->tableMethodName;
       $this->query = Doctrine::getTable($this->getClass())->$method($this->query);
       $this->tableMethodCalled = true;
+    } else if (!$this->query) {
+      $this->query = Doctrine::getTable($this->getClass())->createQuery();
     }
     return $this->query;
   }

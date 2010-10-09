@@ -46,6 +46,18 @@ User:
       refClass: UserPermission
       foreignAlias: Users
 
+UniqueTest:
+  columns:
+    unique_test1:
+      type: string(255)
+      unique: true
+    unique_test2: string(255)
+    unique_test3: string(255)
+  indexes:
+    unique_test:
+      fields: [unique_test1, unique_test2]
+      type: unique
+
 Profile:
   columns:
     user_id: integer

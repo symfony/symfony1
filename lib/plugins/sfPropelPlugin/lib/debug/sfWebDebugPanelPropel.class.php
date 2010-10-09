@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 14173 2008-12-18 12:49:57Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 15121 2009-01-30 21:58:33Z Kris.Wallsmith $
  */
 class sfWebDebugPanelPropel extends sfWebDebugPanel
 {
@@ -45,9 +45,15 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
 
   public function getPanelContent()
   {
+    $logs = array();
+    foreach ($this->getSqlLogs() as $log)
+    {
+      $logs[] = htmlspecialchars($log, ENT_QUOTES, sfConfig::get('sf_charset'));
+    }
+
     return '
       <div id="sfWebDebugDatabaseLogs">
-      <ol><li>'.implode("</li>\n<li>", $this->getSqlLogs()).'</li></ol>
+      <ol><li>'.implode("</li>\n<li>", $logs).'</li></ol>
       </div>
     ';
   }
