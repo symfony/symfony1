@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfParameterHolderValidation.class.php 24610 2009-11-30 22:07:34Z FabianLange $
+ * @version    SVN: $Id: sfParameterHolderValidation.class.php 25411 2009-12-15 15:31:29Z fabien $
  */
 class sfParameterHolderValidation extends sfValidation
 {
@@ -44,7 +44,7 @@ class sfParameterHolderValidation extends sfValidation
   public function validate()
   {
     $found = array();
-    $files = sfFinder::type('file')->name('*.class.php')->prune('vendor')->in(array(
+    $files = sfFinder::type('file')->name('*.php')->prune('vendor')->in(array(
       sfConfig::get('sf_apps_dir'),
       sfConfig::get('sf_lib_dir'),
       sfConfig::get('sf_test_dir'),
@@ -52,9 +52,9 @@ class sfParameterHolderValidation extends sfValidation
     ));
     foreach ($files as $file)
     {
-      $content = file_get_contents($file);
+      $content = sfToolkit::stripComments(file_get_contents($file));
 
-      if (preg_match('#(get|has|remove)(Request)*Parameter\(\s*[\'"][^\),]*?\[[^\),]#', $content))
+      if (preg_match('#\b(get|has|remove)(Request)*Parameter\(\s*[\'"][^\),]*?\[[^\),]#', $content))
       {
         $found[$file] = true;
       }

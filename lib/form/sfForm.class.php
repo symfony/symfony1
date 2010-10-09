@@ -23,7 +23,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 24278 2009-11-23 15:21:09Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfForm.class.php 27954 2010-02-12 16:12:44Z Kris.Wallsmith $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -827,7 +827,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     if ($this->isCSRFProtected())
     {
-      $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken(self::$CSRFSecret));
+      $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken($this->localCSRFSecret ? $this->localCSRFSecret : self::$CSRFSecret));
     }
 
     $this->resetFormFields();
@@ -897,7 +897,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     if (null === $secret)
     {
-      $secret = self::$CSRFSecret;
+      $secret = $this->localCSRFSecret ? $this->localCSRFSecret : self::$CSRFSecret;
     }
 
     return md5($secret.session_id().get_class($this));
@@ -938,7 +938,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function enableLocalCSRFProtection($secret = null)
   {
-    $this->localCSRFSecret = $secret;
+    $this->localCSRFSecret = null === $secret ? true : $secret;
   }
 
   /**

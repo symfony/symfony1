@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorDate.class.php 24628 2009-12-01 00:19:33Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfValidatorDate.class.php 26871 2010-01-19 10:43:09Z fabien $
  */
 class sfValidatorDate extends sfValidatorBase
 {
@@ -82,7 +82,7 @@ class sfValidatorDate extends sfValidatorBase
     }
 
     // convert timestamp to date number format
-    if (ctype_digit($value))
+    if (is_numeric($value))
     {
       $cleanTime = (integer) $value;
       $clean     = date('YmdHis', $cleanTime);
@@ -106,10 +106,10 @@ class sfValidatorDate extends sfValidatorBase
     if ($max = $this->getOption('max'))
     {
       // convert timestamp to date number format
-      if (ctype_digit($max))
+      if (is_numeric($max))
       {
-        $max      = date('YmdHis', $max);
         $maxError = date($this->getOption('date_format_range_error'), $max);
+        $max      = date('YmdHis', $max);
       }
       // convert string to date number
       else
@@ -129,10 +129,10 @@ class sfValidatorDate extends sfValidatorBase
     if ($min = $this->getOption('min'))
     {
       // convert timestamp to date number
-      if (ctype_digit($min))
+      if (is_numeric($min))
       {
-        $min      = date('YmdHis', $min);
         $minError = date($this->getOption('date_format_range_error'), $min);
+        $min      = date('YmdHis', $min);
       }
       // convert string to date number
       else

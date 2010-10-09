@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDeprecatedSettingsValidation.class.php 24610 2009-11-30 22:07:34Z FabianLange $
+ * @version    SVN: $Id: sfDeprecatedSettingsValidation.class.php 25410 2009-12-15 15:19:07Z fabien $
  */
 class sfDeprecatedSettingsValidation extends sfValidation
 {
@@ -56,7 +56,7 @@ class sfDeprecatedSettingsValidation extends sfValidation
     ));
     foreach ($files as $file)
     {
-      $content = file_get_contents($file);
+      $content = sfToolkit::stripComments(file_get_contents($file));
 
       $matches = array();
       foreach ($settings as $setting)

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 23922 2009-11-14 14:58:38Z fabien $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 27845 2010-02-10 19:46:03Z Kris.Wallsmith $
  */
 abstract class sfTestFunctionalBase
 {
@@ -108,7 +108,7 @@ abstract class sfTestFunctionalBase
   {
     if (null === $this->blockTester)
     {
-      throw new LogicException(sprintf('There is not current tester block to end.'));
+      throw new LogicException(sprintf('There is no current tester block to end.'));
     }
 
     $this->blockTester = null;

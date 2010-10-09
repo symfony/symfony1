@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Propel.php 1299 2009-11-08 13:39:31Z francois $
+ *  $Id: Propel.php 1452 2010-01-12 22:39:15Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,7 +37,7 @@ require 'propel/util/PropelPDO.php';
  * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
  * @author     Henning P. Schmiedehausen <hps@intermeta.de> (Torque)
  * @author     Kurt Schrader <kschrader@karmalab.org> (Torque)
- * @version    $Revision: 1299 $
+ * @version    $Revision: 1452 $
  * @package    propel
  */
 class Propel
@@ -90,7 +90,7 @@ class Propel
 	/**
 	 * The Propel version.
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.4.1';
 
 	/**
 	 * The class name for a PDO object.
@@ -255,7 +255,7 @@ class Propel
 	}
 
 	/**
-	 * Configure Propel using an INI or PHP (array) config file.
+	 * Configure Propel using a PHP (array) config file.
 	 *
 	 * @param      string Path (absolute or relative to include_path) to config file.
 	 *
@@ -291,7 +291,7 @@ class Propel
 	}
 
 	/**
-	 * Initialization of Propel with an INI or PHP (array) configuration file.
+	 * Initialization of Propel with a PHP (array) configuration file.
 	 *
 	 * @param      string $c The Propel configuration file path.
 	 *

@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ObjectBuilder.php 1294 2009-11-07 23:21:49Z francois $
+ *  $Id: PHP5ObjectBuilder.php 1450 2010-01-12 21:19:00Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -1505,7 +1505,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			return \$startcol + $n; // $n = ".$this->getPeerClassname()."::NUM_COLUMNS - ".$this->getPeerClassname()."::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception \$e) {
-			throw new PropelException(\"Error populating ".$table->getPhpName()." object\", \$e);
+			throw new PropelException(\"Error populating ".$this->getStubObjectBuilder()->getClassname()." object\", \$e);
 		}";
 	}
 
@@ -2033,6 +2033,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			$this->applyBehaviorModifier('postDelete', $script, "				");
 			$script .= "
 				\$this->setDeleted(true);
+				\$con->commit();
+			} else {
 				\$con->commit();
 			}";
 		} else {
@@ -3587,10 +3589,12 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 				\$this->postSave(\$con);";
 				$this->applyBehaviorModifier('postSave', $script, "				");
 				$script .= "
-				\$con->commit();
 				".$this->getPeerClassname()."::addInstanceToPool(\$this);
-				return \$affectedRows;
-			}";
+			} else {
+				\$affectedRows = 0;
+			}
+			\$con->commit();
+			return \$affectedRows;";
 		} else {
 			// save without runtime hooks
 	    $this->applyBehaviorModifier('preSave', $script, "			");

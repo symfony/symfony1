@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectOptimizeTask.class.php 24039 2009-11-16 17:52:14Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfProjectOptimizeTask.class.php 27511 2010-02-03 19:39:44Z FabianLange $
  */
 class sfProjectOptimizeTask extends sfBaseTask
 {
@@ -49,7 +49,7 @@ EOF;
   {
     $data = array();
     $modules = $this->findModules();
-    $target = sfConfig::get('sf_cache_dir').'/'.$arguments['application'].'/'.$arguments['environment'].'/config/configuration.php';
+    $target = sfConfig::get('sf_cache_dir').'/'.$arguments['application'].'/'.$arguments['env'].'/config/configuration.php';
 
     // remove existing optimization file
     if (file_exists($target))

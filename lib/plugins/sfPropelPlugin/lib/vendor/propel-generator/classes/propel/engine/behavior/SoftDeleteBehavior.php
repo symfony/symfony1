@@ -59,7 +59,7 @@ class SoftDeleteBehavior extends Behavior
   public function preDelete()
   {
   	return <<<EOT
-if ({$this->getTable()->getPhpName()}Peer::isSoftDeleteEnabled()) {
+if (!empty(\$ret) && {$this->getTable()->getPhpName()}Peer::isSoftDeleteEnabled()) {
 	\$this->{$this->getColumnSetter()}(time());
 	\$this->save();
 	\$con->commit();
@@ -218,9 +218,9 @@ public static function doSoftDeleteAll(PropelPDO \$con = null)
 public static function doDeleteAll2(PropelPDO \$con = null)
 {
 	if ({$this->getTable()->getPhpName()}Peer::isSoftDeleteEnabled()) {
-		return {$this->getTable()->getPhpName()}Peer::doSoftDeleteAll(\$values, \$con);
+		return {$this->getTable()->getPhpName()}Peer::doSoftDeleteAll(\$con);
 	} else {
-		return {$this->getTable()->getPhpName()}Peer::doForceDeleteAll(\$values, \$con);
+		return {$this->getTable()->getPhpName()}Peer::doForceDeleteAll(\$con);
 	}	
 }
 EOT;

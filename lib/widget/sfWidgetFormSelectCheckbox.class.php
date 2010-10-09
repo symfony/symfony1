@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 23994 2009-11-15 22:55:24Z bschussek $
+ * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 27738 2010-02-08 15:07:33Z Kris.Wallsmith $
  */
 class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
 {
@@ -107,7 +107,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
 
       $inputs[$id] = array(
         'input' => $this->renderTag('input', array_merge($baseAttributes, $attributes)),
-        'label' => $this->renderContentTag('label', $option, array('for' => $id)),
+        'label' => $this->renderContentTag('label', self::escapeOnce($option), array('for' => $id)),
       );
     }
 

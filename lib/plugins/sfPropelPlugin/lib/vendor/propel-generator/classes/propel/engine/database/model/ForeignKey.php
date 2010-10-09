@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ForeignKey.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: ForeignKey.php 1448 2010-01-12 18:02:08Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'propel/engine/database/model/XMLElement.php';
  * @author     Hans Lellelid <hans@xmpl.org>
  * @author     Fedor <fedor.karpelevitch@home.com>
  * @author     Daniel Rall <dlr@finemaltcoding.com>
- * @version    $Revision: 1262 $
+ * @version    $Revision: 1448 $
  * @package    propel.engine.database.model
  */
 class ForeignKey extends XMLElement {
@@ -385,17 +385,20 @@ class ForeignKey extends XMLElement {
 	 */
 	public function isMatchedByInverseFK()
 	{
+		return (bool) $this->getInverseFK();
+	}
+	
+	public function getInverseFK()
+	{
 		$foreignTable = $this->getForeignTable();
 		$map = $this->getForeignLocalMapping();
 
 		foreach ($foreignTable->getForeignKeys() as $refFK) {
 			$fkMap = $refFK->getLocalForeignMapping();
 			if ( ($refFK->getTableName() == $this->getTableName()) && ($map == $fkMap) ) { // compares keys and values, but doesn't care about order, included check to make sure it's the same table (fixes #679)
-				return true;
+				return $refFK;
 			}
 		}
-
-		return false;
 	}
 
 	/**

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormFilterPropel.class.php 23018 2009-10-13 22:44:18Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormFilterPropel.class.php 27748 2010-02-08 18:18:44Z Kris.Wallsmith $
  */
 abstract class sfFormFilterPropel extends sfFormFilter
 {
@@ -213,7 +213,7 @@ abstract class sfFormFilterPropel extends sfFormFilter
       $criterion->addOr($criteria->getNewCriterion($colname, null, Criteria::ISNULL));
       $criteria->add($criterion);
     }
-    else if (is_array($values) && isset($values['text']) && '' != $values['text'])
+    else if (is_array($values) && isset($values['text']) && '' !== $values['text'])
     {
       $criteria->add($colname, $values['text']);
     }

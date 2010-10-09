@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatedFile.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfValidatedFile.class.php 26264 2010-01-06 07:47:56Z fabien $
  */
 class sfValidatedFile
 {
@@ -33,6 +33,7 @@ class sfValidatedFile
    * @param string $type          The file content type
    * @param string $tempName      The absolute temporary path to the file
    * @param int    $size          The file size (in bytes)
+   * @param string $path          The path to save the file (optional).
    */
   public function __construct($originalName, $type, $tempName, $size, $path = null)
   {

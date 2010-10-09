@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfVarLogger.class.php 23922 2009-11-14 14:58:38Z fabien $
+ * @version    SVN: $Id: sfVarLogger.class.php 26989 2010-01-21 12:43:21Z FabianLange $
  */
 class sfVarLogger extends sfLogger
 {
@@ -96,7 +96,7 @@ class sfVarLogger extends sfLogger
     $priorities = array();
     foreach ($this->logs as $log)
     {
-      if (!in_array($log['priority'], $types))
+      if (!in_array($log['priority'], $priorities))
       {
         $priorities[] = $log['priority'];
       }

@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormPropel.class.php 24068 2009-11-17 06:39:35Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormPropel.class.php 27915 2010-02-11 18:12:56Z Kris.Wallsmith $
  */
 abstract class sfFormPropel extends sfFormObject
 {
@@ -191,11 +191,11 @@ abstract class sfFormPropel extends sfFormObject
     // update defaults for the main object
     if ($this->isNew())
     {
-      $this->setDefaults(array_merge($this->getObject()->toArray(BasePeer::TYPE_FIELDNAME), $this->getDefaults()));
+      $this->setDefaults($this->getDefaults() + $this->getObject()->toArray(BasePeer::TYPE_FIELDNAME));
     }
     else
     {
-      $this->setDefaults(array_merge($this->getDefaults(), $this->getObject()->toArray(BasePeer::TYPE_FIELDNAME)));
+      $this->setDefaults($this->getObject()->toArray(BasePeer::TYPE_FIELDNAME) + $this->getDefaults());
     }
   }
 

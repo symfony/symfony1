@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfValidatorDoctrineChoice.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfValidatorDoctrineChoice.class.php 27736 2010-02-08 14:50:13Z Kris.Wallsmith $
  */
 class sfValidatorDoctrineChoice extends sfValidatorBase
 {
@@ -53,6 +53,15 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
    */
   protected function doClean($value)
   {
+    if ($query = $this->getOption('query'))
+    {
+      $query = clone $query;
+    }
+    else
+    {
+      $query = Doctrine_Core::getTable($this->getOption('model'))->createQuery();
+    }
+
     if ($this->getOption('multiple'))
     {
       if (!is_array($value))
@@ -77,10 +86,6 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
         throw new sfValidatorError($this, 'max', array('count' => $count, 'max' => $this->getOption('max')));
       }
 
-      if (!$query = $this->getOption('query'))
-      {
-        $query = Doctrine_Core::getTable($this->getOption('model'))->createQuery();
-      }
       $query->andWhereIn(sprintf('%s.%s', $query->getRootAlias(), $this->getColumn()), $value);
 
       if ($query->count() != count($value))
@@ -90,10 +95,6 @@ class sfValidatorDoctrineChoice extends sfValidatorBase
     }
     else
     {
-      if (!$query = $this->getOption('query'))
-      {
-        $query = Doctrine_Core::getTable($this->getOption('model'))->createQuery();
-      }
       $query->andWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $this->getColumn()), $value);
 
       if (!$query->count())
