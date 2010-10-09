@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 10841 2008-08-13 12:51:18Z noel $
  */
 class sfI18N
 {
@@ -156,8 +156,10 @@ class sfI18N
   // Return timestamp from a date formatted with a given culture
   public static function getTimestampForCulture($date, $culture)
   {
-    list($d, $m, $y) = self::getDateForCulture($date, $culture);
-    return mktime(0, 0, 0, $m, $d, $y);
+    list($d, $m, $y)     = self::getDateForCulture($date, $culture);
+    list($hour, $minute) = self::getTimeForCulture($date, $culture);
+
+    return mktime($hour, $minute, 0, $m, $d, $y);
   }
 
   // Return a d, m and y from a date formatted with a given culture
@@ -195,4 +197,54 @@ class sfI18N
       return null;
     }
   }
+
+  /**
+   * Returns the hour, minute from a date formatted with a given culture.
+   *
+   * @param  string  $date    The formatted date as string
+   * @param  string  $culture The culture
+   *
+   * @return array   An array with the hour and minute
+   */
+  protected static function getTimeForCulture($time, $culture)
+  {
+    if (!$time) return 0;
+
+    $culture = is_null($culture) ? $this->culture : $culture;
+
+    $timeFormatInfo = @sfDateTimeFormatInfo::getInstance($culture);
+    $timeFormat = $timeFormatInfo->getShortTimePattern();
+
+    // We construct the regexp based on time format
+    $timeRegexp = preg_replace(array('/[^hm:]+/i', '/[hm]+/i'), array('', '(\d+)'), $timeFormat);
+
+    // We parse time format to see where things are (h, m)
+    $a = array(
+      'h' => strpos($timeFormat, 'H') !== false ? strpos($timeFormat, 'H') : strpos($timeFormat, 'h'),
+      'm' => strpos($timeFormat, 'm')
+    );
+    $tmp = array_flip($a);
+    ksort($tmp);
+    $i = 0;
+    $c = array();
+
+    foreach ($tmp as $value)
+    {
+      $c[++$i] = $value;
+    }
+
+    $timePositions = array_flip($c);
+
+    // We find all elements
+    if (preg_match("~$timeRegexp~", $time, $matches))
+    {
+      // We get matching timestamp
+      return array($matches[$timePositions['h']], $matches[$timePositions['m']]);
+    }
+    else
+    {
+      return null;
+    }
+  }
+
 }

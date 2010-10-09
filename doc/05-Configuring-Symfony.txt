@@ -307,7 +307,7 @@ By default, a module has no specific configuration. But, if required, you can ov
 As you may have guessed, module configuration files must be located in a `myproject/apps/myapp/modules/mymodule/config/` directory. These files are as follows:
 
   * `generator.yml`: For modules generated according to a database table (scaffoldings and administrations), this file defines how the interface displays rows and fields, and which interactions are proposed to the user (filters, sorting, buttons, and so on). Chapter 14 will tell you more about it.
-  * `module.yml`: This file contains custom parameters specific to a module (equivalent to the `app.`yml, but at the module level) and action configuration. Chapter 6 provides more details.
+  * `module.yml`: This file contains custom parameters specific to a module (equivalent to the `app.yml`, but at the module level) and action configuration. Chapter 6 provides more details.
   * `security.yml`: This file sets access restrictions for actions. This is where you specify that a page can be viewed only by registered users or by a subset of registered users with special permissions. Chapter 6 will tell you more about it.
   * `view.yml`: This file contains configuration for the views of one or all of the actions of a module. It overrides the application `view.yml` and is described in Chapter 7.
   * Data validation files: Although located in the `validate/` directory instead of the `config/` one, the YAML data validation files, used to control the data entered in forms, are also module configuration files. You will learn how to use them in Chapter 10.
@@ -467,7 +467,7 @@ There is an important consequence of this mechanism. If you change the configura
 Accessing the Configuration from Code
 -------------------------------------
 
-All the configuration files are eventually transformed into PHP, and many of the settings they contain are automatically used by the framework, without further intervention. However, you sometimes need to access some of the settings defined in the configuration files from your code (in actions, templates, custom classes, and so on). The settings defined in settings.yml, app.yml, module.yml, logging.yml, and i18n.yml are available through a special class called sfConfig.
+All the configuration files are eventually transformed into PHP, and many of the settings they contain are automatically used by the framework, without further intervention. However, you sometimes need to access some of the settings defined in the configuration files from your code (in actions, templates, custom classes, and so on). The settings defined in `settings.yml`, `app.yml`, `module.yml`, `logging.yml`, and `i18n.yml` are available through a special class called `sfConfig`.
 
 ### The sfConfig Class
 
@@ -491,7 +491,7 @@ The parameter name is the concatenation of several elements, separated by unders
 
 The environment is not included, since your PHP code will have access only to the values defined for the environment in which it's executed.
 
-For instance, if you need to access the values defined in the app.yml file shown in Listing 5-15, you will need the code shown in Listing 5-16.
+For instance, if you need to access the values defined in the `app.yml` file shown in Listing 5-15, you will need the code shown in Listing 5-16.
 
 Listing 5-15 - Sample `app.yml` Configuration
 
@@ -586,7 +586,7 @@ To know if the `fake` credit cards are accepted in the current environment, get 
 >     )
 
 >**TIP**
->Each time you are tempted to define a constant or a setting in one of your scripts, think about if it would be better located in the app.yml file. This is a very convenient place to store all application settings.
+>Each time you are tempted to define a constant or a setting in one of your scripts, think about if it would be better located in the `app.yml` file. This is a very convenient place to store all application settings.
 
 When your need for custom parameters becomes hard to handle with the `app.yml` syntax, you may need to define a syntax of your own. In that case, you can store the configuration in a new file, interpreted by a new configuration handler. Refer to Chapter 19 for more information about configuration handlers.
 
@@ -608,7 +608,7 @@ Listing 5-20 - Using Constants in YAML Files, Example from `autoload.yml`
         recursive:      on
         exclude:        [vendor]
 
-The path parameter will take the value returned by sfConfig::get('sf_symfony_lib_dir'). If you want one configuration file to rely on another, you need to make sure that the file you rely on is already parsed (look in the symfony source to find out the order in which the configuration files are parsed). `app.yml` is one of the last files parsed, so you may rely on others in it.
+The path parameter will take the value returned by `sfConfig::get('sf_symfony_lib_dir')`. If you want one configuration file to rely on another, you need to make sure that the file you rely on is already parsed (look in the symfony source to find out the order in which the configuration files are parsed). `app.yml` is one of the last files parsed, so you may rely on others in it.
 
 ### Using Scriptable Configuration
 

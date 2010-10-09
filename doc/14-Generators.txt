@@ -1013,9 +1013,7 @@ Notice that an edit partial always has access to the current object through a va
 >The administration module actions can receive custom parameters using the `query_string` argument in a `link_to()` helper. For example, to extend the previous `_edit_header` partial with a link to the comments for the article, write this:
 >
 >     [php]
->     <?php if ($article->getNbComments() > 0): ?>
->       <h2>This article has <?php echo link_to($article->getNbComments().' comments', 'comment/list', array('query_string' => 'filter=filter&filters%5Barticle_id%5D='.$article->getId())) ?></h2>
->     <?php endif; ?>
+>     This article has <?php echo link_to($article->getNbComments().' comments', 'comment/list', array('query_string' => 'filter=filter&filters%5Barticle_id%5D='.$article->getId())) ?> comments.
 >
 >This query string parameter is an encoded version of the more legible
 >

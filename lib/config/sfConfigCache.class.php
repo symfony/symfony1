@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfConfigCache.class.php 9260 2008-05-26 10:18:04Z fabien $
+ * @version    SVN: $Id: sfConfigCache.class.php 10059 2008-07-02 05:38:45Z fabien $
  */
 class sfConfigCache
 {
@@ -313,7 +313,7 @@ class sfConfigCache
       }
 
       // close file pointer
-      fclose($fp);
+      closedir($fp);
     }
     else
     {

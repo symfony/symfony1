@@ -203,7 +203,7 @@ Listing 12-6 - Configuring the Cache in PHP, in `myapp/lib/conditionalCacheFilte
         {
           foreach ($this->getParameter('pages') as $page)
           {
-            $context->getViewCacheManager()->addCache($page['module'], $page['action'],array('lifeTime' => 86400));
+            $context->getViewCacheManager()->addCache($page['module'], $page['action'], array('lifeTime' => 86400));
           }
         }
 
@@ -241,7 +241,7 @@ The `addCache()` method of the `sfViewCacheManager` object expects a module name
 >**SIDEBAR**
 >Alternative Caching storage
 >
->By default, the symfony cache system stores data in files on the web server hard disk. You may want to store cache in memory (for instance, via memcache) or in a database (notably if you want to share your cache among several servers or speed up cache removal). You can easily alter symfony's default cache storage system because the cache class used by the symfony view cache manager is defined in `factories.yml`.
+>By default, the symfony cache system stores data in files on the web server hard disk. You may want to store cache in memory (for instance, via [memcached](http://www.danga.com/memcached/)) or in a database (notably if you want to share your cache among several servers or speed up cache removal). You can easily alter symfony's default cache storage system because the cache class used by the symfony view cache manager is defined in `factories.yml`.
 >
 >The default view cache storage factory is the `sfFileCache` class:
 >
@@ -251,7 +251,7 @@ The `addCache()` method of the `sfViewCacheManager` object expects a module name
 >           automaticCleaningFactor: 0
 >           cacheDir:                %SF_TEMPLATE_CACHE_DIR%
 >
->You can replace the `class` with your own cache storage class or with one of the symfony alternative classes (`sfSQLiteCache` for instance). The parameters defined under the `param` key are passed to the `initialize()` method of your class as an associative array. Any view cache storage class must imple- ment all methods found in the abstract `sfCache` class. Refer to the API documentation ([http://www. symfony-project.com/api/symfony.html](http://www. symfony-project.com/api/symfony.html)) for more information on this subject.
+>You can replace the `class` with your own cache storage class or with one of the symfony alternative classes (`sfSQLiteCache` for instance). The parameters defined under the `param` key are passed to the `initialize()` method of your class as an associative array. Any view cache storage class must implement all methods found in the abstract `sfCache` class. Refer to the API documentation ([http://www.symfony-project.com/api/symfony.html](http://www.symfony-project.com/api/symfony.html)) for more information on this subject.
 
 ### Using the Super Fast Cache
 
@@ -390,7 +390,7 @@ Listing 12-11 - Clearing Template Fragments from the Cache
 >
 >When you start using the HTML cache, you need to keep a clear view of the dependencies between the model and the actions, so that new errors don't appear because of a misunderstood relationship. Keep in mind that all the actions that modify the model should probably contain a bunch of calls to the `remove()` method if the HTML cache is used somewhere in the application.
 >
->And, if you don't want to damage your brain with too difficult an analysis, you can always clear the whole cache each time you update the database . . .
+>And, if you don't want to damage your brain with too difficult an analysis, you can always clear the whole cache each time you update the database...
 
 ### Cache Directory Structure
 

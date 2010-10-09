@@ -21,6 +21,10 @@ if (ini_get('zend.ze1_compatibility_mode'))
 // set magic_quotes_runtime to off
 ini_set('magic_quotes_runtime', 'Off');
 
+// force populating $argc and $argv in the case PHP does not automatically create them (fixes #2943)
+$argv = $_SERVER['argv'];
+$argc = $_SERVER['argc'];
+
 // check if we are using an old project
 if (file_exists('config/config.php') && !isset($sf_symfony_lib_dir))
 {

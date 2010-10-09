@@ -90,7 +90,7 @@ Notice that the name of the database itself (`blog`) doesn't appear in the `sche
 
 In a `schema.yml` file, the first key represents a connection name. It can contain several tables, each having a set of columns. According to the YAML syntax, the keys end with a colon, and the structure is shown through indentation (one or more spaces, but no tabulations).
 
-A table can have special attributes, including the `phpName` (the name of the class that will be generated). If you don't mention a phpName for a table, symfony creates it based on the camelCase version of the table name.
+A table can have special attributes, including the `phpName` (the name of the class that will be generated). If you don't mention a `phpName` for a table, symfony creates it based on the camelCase version of the table name.
 
 >**TIP**
 >The camelCase convention removes underscores from words, and capitalizes the first letter of inner words. The default camelCase versions of `blog_article` and `blog_comment` are `BlogArticle` and `BlogComment`. The name of this convention comes from the appearance of capitals inside a long word, suggestive of the humps of a camel.
@@ -514,7 +514,7 @@ For each environment, you can define many connections. Each connection refers to
 The permitted values of the `phptype` parameter are the ones of the database systems supported by Creole:
 
   * `mysql`
-  * `sqlserver`
+  * `mssql`
   * `pgsql`
   * `sqlite`
   * `oracle`
@@ -625,7 +625,7 @@ To enable behaviors in your model classes, you must modify one setting in the `c
 
     propel.builder.AddBehaviors = true     // Default value is false
 
-There is no behavior bundled by default in symfony, but they can be installed via plug-ins. Once a behavior plug-in is installed, you can assign the behavior to a class with a single line. For instance, if you install the sfPropelParanoidBehaviorPlugin in your application, you can extend an Article class with this behavior by adding the following at the end of the `Article.class.php`:
+There is no behavior bundled by default in symfony, but they can be installed via plug-ins. Once a behavior plug-in is installed, you can assign the behavior to a class with a single line. For instance, if you install the sfPropelParanoidBehaviorPlugin in your application, you can extend an `Article` class with this behavior by adding the following at the end of the `Article.class.php`:
 
     [php]
     sfPropelBehavior::add('Article', array(
@@ -634,7 +634,7 @@ There is no behavior bundled by default in symfony, but they can be installed vi
 
 After rebuilding the model, deleted `Article` objects will remain in the database, invisible to the queries using the ORM, unless you temporarily disable the behavior with `sfPropelParanoidBehavior::disable()`.
 
-Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors](http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors)). Each has its own documentation and installation guide.
+Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.org/wiki/SymfonyPlugins#Behaviors](http://trac.symfony-project.org/wiki/SymfonyPlugins#Behaviors)). Each has its own documentation and installation guide.
 
 Extended Schema Syntax
 ----------------------

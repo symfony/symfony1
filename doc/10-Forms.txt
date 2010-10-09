@@ -124,8 +124,8 @@ Listing 10-2 - Standard Form Helpers Syntax
       array('Visa' => 'Visa', 'Eurocard' => 'Eurocard', 'Mastercard' => 'Mastercard'),
       array('Visa', 'Mastercard')
     ), 'multiple=multiple') ?>
-     => <select name="payment" id="payment" multiple="multiple">
-          <option value="Visa" selected="selected">	
+     => <select name="payment[]" id="payment" multiple="multiple">
+          <option value="Visa" selected="selected">Visa</option>
           <option value="Eurocard">Eurocard</option>
           <option value="Mastercard" selected="selected">Mastercard</option>
         </select>
@@ -1066,7 +1066,7 @@ Listing 10-34 - Validation File for a Form with Array Syntax
 
 ### Executing a Validator on an Empty Field
 
-You may need to execute a validator on a field that is not required, on an empty value. For instance, this happens with a form where the user can (but may not) want to change his password, and in this case, a confirmation password must be entered. See the example in Listing 10-35.
+You may need to execute a validator on a field that is not required, on an empty value. For instance, this happens with a form where the user can change their password (but may not want to), and in this case, a confirmation password must be entered. See the example in Listing 10-35.
 
 Listing 10-35 - Sample Validation File for a Form with Two Password Fields
 

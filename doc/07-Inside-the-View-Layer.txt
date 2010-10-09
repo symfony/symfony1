@@ -231,7 +231,7 @@ But this is not a very clean way to package a fragment, mostly because you can h
 >**Note**
 >Another code fragment type, called a component slot, is to be used when the nature of the fragment depends on the context (for instance, if the fragment needs to be different for the actions of a given module). Component slots are described later in this chapter.
 
-The inclusion of these fragments is achieved by helpers of the Partial group. These helpers are available from any symfony template, without initial declaration.
+The inclusion of these fragments is achieved by helpers of the `Partial` group. These helpers are available from any symfony template, without initial declaration.
 
 ### Partials
 
@@ -549,7 +549,7 @@ Listing 7-18 - Actions Have Access to the `sfResponse` Object Methods
 
 In addition to the setter methods shown here, the `sfResponse` class has getters that return the current value of the response attributes.
 
-The header setters are very powerful in symfony. Headers are sent as late as possible (in the sfRenderingFilter), so you can alter them as much as you want and as late as you want. They also provide very useful shortcuts. For instance, if you don't specify a charset when you call `setContentType()`, symfony automatically adds the default charset defined in the `settings.yml` file.
+The header setters are very powerful in symfony. Headers are sent as late as possible (in the `sfRenderingFilter`), so you can alter them as much as you want and as late as you want. They also provide very useful shortcuts. For instance, if you don't specify a charset when you call `setContentType()`, symfony automatically adds the default charset defined in the `settings.yml` file.
 
     [php]
     $response->setContentType('text/xml');
@@ -568,7 +568,7 @@ The status code of responses in symfony is compliant with the HTTP specification
 
 You may have noticed that there are two kinds of view configuration settings:
 
-  * The ones that have a unique value (the value is a string in the view.yml file and the response uses a `set` method for those)
+  * The ones that have a unique value (the value is a string in the `view.yml` file and the response uses a `set` method for those)
   * The ones with multiple values (for which `view.yml` uses arrays and the response uses an `add` method)
 
 Keep in mind that the configuration cascade erases the unique value settings but piles up the multiple values settings. This will become more apparent as you progress through this chapter.
@@ -621,7 +621,7 @@ As a bonus, the HTTP header of the response is also impacted by the `http-metas:
 
 #### Title Configuration
 
-The page title is a key part to search engine indexing. It is also very useful with modern browsers that provide tabbed browsing. In HTML, the title is both a tag and meta information of the page, so the `view.yml` file sees the title: key as a child of the `metas:` key. Listing 7-22 shows the title definition in `view.yml`, and Listing 7-23 shows the definition in the action.
+The page title is a key part to search engine indexing. It is also very useful with modern browsers that provide tabbed browsing. In HTML, the title is both a tag and meta information of the page, so the `view.yml` file sees the `title:` key as a child of the `metas:` key. Listing 7-22 shows the title definition in `view.yml`, and Listing 7-23 shows the definition in the action.
 
 Listing 7-22 - Title Definition in `view.yml`
 
@@ -669,7 +669,7 @@ Listing 7-26 - File Inclusion Result--No Need for a Helper Call in the Layout
     </head>
 
 >**NOTE**
->Style sheet and JavaScript inclusions in the response are performed by a filter called sfCommonFilter. It looks for a `<head>` tag in the response, and adds the `<link>` and `<script>` just before the closing `</head>`. This means that the inclusion can't take place if there is no `<head>` tag in your layout or templates.
+>Style sheet and JavaScript inclusions in the response are performed by a filter called `sfCommonFilter`. It looks for a `<head>` tag in the response, and adds the `<link>` and `<script>` just before the closing `</head>`. This means that the inclusion can't take place if there is no `<head>` tag in your layout or templates.
 
 Remember that the configuration cascade principle applies, so any file inclusion defined in the application `view.yml` makes it appear in every page of the application. Listings 7-27, 7-28, and 7-29 demonstrate this principle.
 
@@ -959,7 +959,7 @@ As a matter of fact, the variables in the template are not of the type you might
     <?php echo get_class($test_object) ?>
      => sfOutputEscaperObjectDecorator
 
-This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can be still be accessed using `[]`, be traversed using foreach, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
+This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can be still be accessed using `[]`, be traversed using `foreach`, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
 
 You still have a way to retrieve the raw data through the `$sf_data` object. In addition, methods of escaped objects are altered to accept an additional parameter: an escaping method. So you can choose an alternative escaping method each time you display a variable in a template, or opt for the `ESC_RAW` helper to deactivate escaping. See Listing 7-46 for an example.
 

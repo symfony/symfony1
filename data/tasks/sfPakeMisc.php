@@ -199,14 +199,14 @@ function _safe_cache_remove($finder, $sub_dir, $lock_name)
   $sf_root_dir = sfConfig::get('sf_root_dir');
 
   // create a lock file
-  $lock_file = $sf_root_dir.'/'.$lock_name.'-cli.lck';
+  $lock_file = $sf_root_dir.DIRECTORY_SEPARATOR.$lock_name.'-cli.lck';
   pake_touch($lock_file, '');
 
   // change mode so the web user can remove it if we die
-  pake_chmod($lock_file, '', 0777);
+  pake_chmod($lock_file, $sf_root_dir, 0777);
 
   // remove cache files
-  pake_remove($finder, $sf_root_dir.'/'.$sub_dir);
+  pake_remove($finder, $sf_root_dir.DIRECTORY_SEPARATOR.$sub_dir);
 
   // release lock
   pake_remove($lock_file, '');

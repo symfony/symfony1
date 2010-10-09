@@ -53,7 +53,7 @@ function run_propel_convert_xml_schema($task, $args)
 
 function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 {
-  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.yml')->prune('doctrine');
   $dirs = array('config');
   if ($pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/config'))
   {
@@ -91,7 +91,7 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 
 function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 {
-  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->prune('doctrine');
 
   $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
   if ($check_schema && !count($schemas))
@@ -123,7 +123,7 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 
 function _propel_copy_xml_schema_from_plugins($prefix = '')
 {
-  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
+  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->prune('doctrine')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
 
   foreach ($schemas as $schema)
   {
@@ -350,7 +350,7 @@ function run_propel_load_data($task, $args)
 
 function _call_phing($task, $task_name, $check_schema = true)
 {
-  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->relative()->follow_link()->in('config');
+  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->prune('doctrine')->relative()->follow_link()->in('config');
   if ($check_schema && !$schemas)
   {
     throw new Exception('You must create a schema.yml or schema.xml file.');

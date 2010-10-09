@@ -362,9 +362,9 @@ Listing 6-12 - Use of the `forward404()` Method
     }
 
 >**TIP**
->If you are looking for the error 404 action and template, you will find them in the `$sf_symfony_ data_dir/modules/default/` directory. You can customize this page by adding a new `default` module to your application, overriding the one located in the framework, and by defining an `error404` action and an error404Success template inside. Alternatively, you can set the error_404_module and error_404_ action constants in the `settings.yml` file to use an existing action.
+>If you are looking for the error 404 action and template, you will find them in the `$sf_symfony_data_dir/modules/default/` directory. You can customize this page by adding a new `default` module to your application, overriding the one located in the framework, and by defining an `error404` action and an `error404Success` template inside. Alternatively, you can set the `error_404_module` and `error_404_action` constants in the `settings.yml` file to use an existing action.
 
-Experience shows that, most of the time, an action makes a redirect or a forward after testing something, such as in Listing 6-12. That's why the sfActions class has a few more methods, named `forwardIf()`, `forwardUnless()`, `forward404If()`, `forward404Unless()`, `redirectIf()`, and `redirectUnless()`. These methods simply take an additional parameter representing a condition that triggers the execution if tested true (for the `xxxIf()` methods) or false (for the `xxxUnless()` methods), as illustrated in Listing 6-13.
+Experience shows that, most of the time, an action makes a redirect or a forward after testing something, such as in Listing 6-12. That's why the `sfActions` class has a few more methods, named `forwardIf()`, `forwardUnless()`, `forward404If()`, `forward404Unless()`, `redirectIf()`, and `redirectUnless()`. These methods simply take an additional parameter representing a condition that triggers the execution if tested true (for the `xxxIf()` methods) or false (for the `xxxUnless()` methods), as illustrated in Listing 6-13.
 
 Listing 6-13 - Use of the `forward404If()` Method
 
@@ -386,11 +386,11 @@ Listing 6-13 - Use of the `forward404If()` Method
 Using these methods will not only keep your code short, but it will also make it more readable.
 
 >**TIP**
->When the action calls forward404() or its fellow methods, symfony throws an sfError404Exception that manages the 404 response. This means that if you need to display a 404 message from somewhere where you don't want to access the controller, you can just throw a similar exception.
+>When the action calls `forward404()` or its fellow methods, symfony throws an `sfError404Exception` that manages the 404 response. This means that if you need to display a 404 message from somewhere where you don't want to access the controller, you can just throw a similar exception.
 
 ### Repeating Code for Several Actions of a Module
 
-The convention to name actions `executeActionName()` (in the case of an `sfActions` class) or execute() (in the case of an sfAction class) guarantees that symfony will find the action method. It gives you the ability to add other methods of your own that will not be considered as actions, as long as they don't start with `execute`.
+The convention to name actions `executeActionName()` (in the case of an `sfActions` class) or `execute()` (in the case of an `sfAction` class) guarantees that symfony will find the action method. It gives you the ability to add other methods of your own that will not be considered as actions, as long as they don't start with `execute`.
 
 There is another useful convention for when you need to repeat several statements in each action before the actual action execution. You can then extract them into the `preExecute()` method of your action class. You can probably guess how to repeat statements after every action is executed: wrap them in a `postExecute()` method. The syntax of these methods is shown in Listing 6-14.
 
@@ -620,7 +620,7 @@ Listing 6-20 - Changing the Session Cookie Name, in `apps/myapp/config/factories
 >**TIP**
 >The session is started (with the PHP function `session_start()`) only if the `auto_start` parameter is set to true in factories.yml (which is the case by default). If you want to start the user session manually, disable this setting of the storage factory.
 
-Symfony's session handling is based on PHP sessions. This means that if you want the client-side management of sessions to be handled by URL parameters instead of cookies, you just need to change the use_trans_sid setting in your php.ini. Be aware that this is not recommended.
+Symfony's session handling is based on PHP sessions. This means that if you want the client-side management of sessions to be handled by URL parameters instead of cookies, you just need to change the `use_trans_sid` setting in your php.ini. Be aware that this is not recommended.
 
     session.use_trans_sid = 1
 
@@ -772,7 +772,7 @@ Listing 6-27 - Dealing with User Credentials in a Template
 As for the authenticated status, credentials are often given to users during the login process. This is why the `sfUser` object is often extended to add login and logout methods, in order to set the security status of users in a central place.
 
 >**TIP**
->Among the symfony plug-ins, the `sfGuardPlugin` (http://trac.symfony-project.com/wiki/sfGuardPlugin) extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
+>Among the symfony plug-ins, the `sfGuardPlugin` (http://trac.symfony-project.org/wiki/sfGuardPlugin) extends the session class to make login and logout easy. Refer to Chapter 17 for more information.
 
 ### Complex Credentials
 
@@ -1055,7 +1055,7 @@ Listing 6-37 - Secure Communication Filter
       }
     }
 
-Filters are used extensively in plug-ins, as they allow you to extend the features of an application globally. Refer to Chapter 17 to learn more about plug-ins, and see the online wiki ([http://trac.symfony-project.com/](http://trac.symfony-project.com/)) for more filter examples.
+Filters are used extensively in plug-ins, as they allow you to extend the features of an application globally. Refer to Chapter 17 to learn more about plug-ins, and see the online wiki ([http://trac.symfony-project.org/](http://trac.symfony-project.org/)) for more filter examples.
 
 Module Configuration
 --------------------
@@ -1071,9 +1071,9 @@ Listing 6-38 - Module Configuration, in `apps/myapp/modules/mymodule/config/modu
 
 The enabled parameter allows you to disable all actions of a module. All actions are redirected to the `module_disabled_module`/`module_disabled_action` action (as defined in `settings.yml`).
 
-The is_internal parameter allows you to restrict the execution of all actions of a module to internal calls. For example, this is useful for mail actions that you must be able to call from another action, to send an e-mail message, but not from the outside.
+The `is_internal` parameter allows you to restrict the execution of all actions of a module to internal calls. For example, this is useful for mail actions that you must be able to call from another action, to send an e-mail message, but not from the outside.
 
-The view_class parameter defines the view class. It must inherit from `sfView`. Overriding this value allows you to use other view systems, with other templating engines, such as Smarty.
+The `view_class` parameter defines the view class. It must inherit from `sfView`. Overriding this value allows you to use other view systems, with other templating engines, such as Smarty.
 
 Summary
 -------

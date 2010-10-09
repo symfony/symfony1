@@ -12,7 +12,7 @@ That's why automated tests are a suggested, if not required, part of a successfu
 
 Automated tests can sometimes replace developer documentation since they can clearly illustrate what an application is supposed to do. A good test suite shows what output should be expected for a set of test inputs, and that is a good way to explain the purpose of a method.
 
-The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.com/browser/branches/1.0/test](http://trac.symfony-project.com/browser/branches/1.0/test).
+The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.org/browser/branches/1.0/test](http://trac.symfony-project.org/browser/branches/1.0/test).
 
 ### Unit and Functional Tests
 
@@ -186,7 +186,7 @@ Listing 15-3 - Testing Methods of the `lime_test` Object, in `test/unit/exampleT
     $t->cmp_ok(1, '!==', true, 'one and true are not identical');
     $t->isa_ok('foobar', 'string', '\'foobar\' is a string');
     $t->isa_ok(new myObject(), 'myObject', 'new creates object of the right class');
-    $t->can_ok(new myObject(), 'myMethod', 'objects of class myObject do have amyMethod method');
+    $t->can_ok(new myObject(), 'myMethod', 'objects of class myObject do have a myMethod method');
     $array1 = array(1, 2, array(1 => 'foo', 'a' => '4'));
     $t->is_deeply($array1, array(1, 2, array(1 => 'foo', 'a' => '4')),
         'the first and the second array are the same');
@@ -662,7 +662,7 @@ Listing 15-19 - The Test Browser Gives Access to the Response Content As a DOM O
     $dom = $b->getResponseDom();
     $b->test()->is($dom->getElementsByTagName('input')->item(1)->getAttribute('type'),'text');
 
-But parsing an HTML document with the PHP DOM methods is still not fast and easy enough. If you are familiar with the CSS selectors, you know that they are an ever more powerful way to retrieve elements from an HTML document. Symfony provides a tool class called `sfDomCssSelector` that expects a DOM document as construction parameter. It has a getTexts() method that returns an array of strings according to a CSS selector, and a getElements() method that returns an array of DOM elements. See an example in Listing 15-20.
+But parsing an HTML document with the PHP DOM methods is still not fast and easy enough. If you are familiar with the CSS selectors, you know that they are an even more powerful way to retrieve elements from an HTML document. Symfony provides a tool class called `sfDomCssSelector` that expects a DOM document as construction parameter. It has a getTexts() method that returns an array of strings according to a CSS selector, and a getElements() method that returns an array of DOM elements. See an example in Listing 15-20.
 
 Listing 15-20 - The Test Browser Gives Access to the Response Content As an `sfDomCssSelector` Object
 
@@ -812,7 +812,7 @@ Listing 15-29 - Example Unit Test Naming Practice
     ok 1 - strtolower() returns a string
     ok 2 - strtolower() transforms the input to lowercase
 
-Functional tests should be grouped by page and start by a request. Listing 15-30 illustrates this practice.
+Functional tests should be grouped by page and start with a request. Listing 15-30 illustrates this practice.
 
 Listing 15-30 - Example Functional Test Naming Practice
 

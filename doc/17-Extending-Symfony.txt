@@ -325,7 +325,7 @@ Listing 17-12 - Replacing `callMixin()` by a Custom Loop
 >
 >The Propel objects corresponding to the tables of the database all have a delete() method, which deletes the related record from the database. But for an `Invoice` class, for which you can't delete a record, you may want to alter the `delete()` method to be able to keep the record in the database and change the value of an is_deleted attribute to true instead. Usual object retrieval methods (`doSelect()`, `retrieveByPk()`) would only consider the records for which `is_deleted` is false. You would also need to add another method called `forceDelete()`, which would allow you to really delete the record. In fact, all these modifications can be packaged into a new class, called `ParanoidBehavior`. The final `Invoice` class extends the Propel `BaseInvoice` class and has methods of the `ParanoidBehavior` mixed in.
 >
->So a behavior is a mixin on a Propel object. Actually, the term "behavior" in symfony covers one more thing: the fact that the mixin is packaged as a plug-in. The `ParanoidBehavior` class just mentioned corresponds to a real symfony plug-in called `sfPropelParanoidBehaviorPlugin`. Refer to the symfony wiki ([http://trac.symfony-project.com/wiki/sfPropelParanoidBehaviorPlugin](http://trac.symfony-project.com/wiki/sfPropelParanoidBehaviorPlugin)) for details on installation and use of this plug-in.
+>So a behavior is a mixin on a Propel object. Actually, the term "behavior" in symfony covers one more thing: the fact that the mixin is packaged as a plug-in. The `ParanoidBehavior` class just mentioned corresponds to a real symfony plug-in called `sfPropelParanoidBehaviorPlugin`. Refer to the symfony wiki ([http://trac.symfony-project.org/wiki/sfPropelParanoidBehaviorPlugin](http://trac.symfony-project.org/wiki/sfPropelParanoidBehaviorPlugin)) for details on installation and use of this plug-in.
 >
 >One last word about behaviors: To be able to support them, the generated Propel objects must contain quite a number of hooks. These may slow down execution a little and penalize performance if you don't use behaviors. That's why the hooks are not enabled by default. In order to add them and enable behavior support, you must first set the `propel.builder.addBehaviors` property to `true` in the `propel.ini` file and rebuild the model.
 
@@ -449,7 +449,7 @@ So, basically, a plug-in is a packaged extension for a symfony project. With plu
 
 The symfony project website contains a page dedicated to symfony plug-ins. It is in the symfony wiki and accessible with the following URL:
 
-    http://trac.symfony-project.com/wiki/SymfonyPlugins
+    http://trac.symfony-project.org/wiki/SymfonyPlugins
 
 Each plug-in listed there has its own page, with detailed installation instructions and documentation.
 
@@ -948,11 +948,11 @@ Test the way the plug-in behaves in your application. If it works well, you are 
 
 A symfony plug-in gets the broadest audience when distributed by the `symfony-project.com` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
 
-  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Wiki Formatting syntax ([http://trac.symfony-project.com/wiki/WikiFormatting](http://trac.symfony-project.com/wiki/WikiFormatting)).
+  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Wiki Formatting syntax ([http://trac.symfony-project.org/wiki/WikiFormatting](http://trac.symfony-project.org/wiki/WikiFormatting)).
   2. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
   3. Create a new page on the symfony wiki named `sfSamplePlugin` (`Plugin` is a mandatory suffix). In this page, describe the plug-in usage, the license, the dependencies, and the installation procedure. You can reuse the contents of the plug-in `README` file. Check the existing plug-ins' wiki pages and use them as an example.
   4. Attach your PEAR package to the wiki page (`sfSamplePlugin-1.0.0.tgz`).
-  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://trac.symfony-project.com/wiki/SymfonyPlugins](http://trac.symfony-project.com/wiki/SymfonyPlugins)).
+  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://trac.symfony-project.org/wiki/SymfonyPlugins](http://trac.symfony-project.org/wiki/SymfonyPlugins)).
 
 If you follow this procedure, users will be able to install your plug-in by simply typing the following command in a project directory:
 

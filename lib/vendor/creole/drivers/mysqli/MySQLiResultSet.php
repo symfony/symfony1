@@ -139,7 +139,7 @@ class MySQLiResultSet extends ResultSetCommon implements ResultSet {
             throw new SQLException("Invalid resultset column: " . (is_int($column) ? $column + 1 : $column));
         }
 
-        if ($this->fields[$column] === null) {
+        if ($this->fields[$column] === null || $this->fields[$column] == '0000-00-00 00:00:00') {
             return null;
         }
 
@@ -169,5 +169,23 @@ class MySQLiResultSet extends ResultSetCommon implements ResultSet {
         } else {
             return date($format, $ts);
         }
+    }
+
+    /**
+     * @see ResultSetCommon::getDate()
+     */
+    public function getDate($column, $format = '%X')
+    {
+        /* As of PHP 5.2.4, strftime() returns false for '0000-00-00' which
+           is impossible to tell apart from illegal dates. (Pre-PHP 5.2.4
+           even interpreted such dates incorrectly, see 
+           http://bugs.php.net/bug.php?id=41523).
+           We catch this special case and return null as the date here.
+           However, we need to know the exact format the DBMS returns this
+           date, which is why we make this decision here in the specific
+           driver before dispatching to the common implementation. */
+        $idx = (is_int($column) ? $column - 1 : $column);        
+        if (array_key_exists($idx, $this->fields) && $this->fields[$idx] == '0000-00-00') return null;
+        return parent::getDate($column, $format);
     }
 }
