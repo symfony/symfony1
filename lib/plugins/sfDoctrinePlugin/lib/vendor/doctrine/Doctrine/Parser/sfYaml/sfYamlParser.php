@@ -26,7 +26,6 @@ if (!defined('PREG_BAD_UTF8_OFFSET_ERROR'))
 class sfYamlParser
 {
   protected
-    $value         = '',
     $offset        = 0,
     $lines         = array(),
     $currentLineNb = -1,
@@ -54,10 +53,9 @@ class sfYamlParser
    */
   public function parse($value)
   {
-    $this->value = $this->cleanup($value);
     $this->currentLineNb = -1;
     $this->currentLine = '';
-    $this->lines = explode("\n", $this->value);
+    $this->lines = explode("\n", $this->cleanup($value));
 
     $data = array();
     while ($this->moveToNextLine())
@@ -74,7 +72,7 @@ class sfYamlParser
       }
 
       $isRef = $isInPlace = $isProcessed = false;
-      if (preg_match('#^\-(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
+      if (preg_match('#^\-((?P<leadspaces>\s+)(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
         if (isset($values['value']) && preg_match('#^&(?P<ref>[^ ]+) *(?P<value>.*)#', $values['value'], $matches))
         {
@@ -96,13 +94,30 @@ class sfYamlParser
           {
             $data[] = array($matches[1] => sfYamlInline::load($matches[2]));
           }
+          elseif (isset($values['leadspaces'])
+            && ' ' == $values['leadspaces']
+            && preg_match('#^(?P<key>'.sfYamlInline::REGEX_QUOTED_STRING.'|[^ \'"\{].*?) *\:(\s+(?P<value>.+?))?\s*$#', $values['value'], $matches))
+          {
+            // this is a compact notation element, add to next block and parse
+            $c = $this->getRealCurrentLineNb();
+            $parser = new sfYamlParser($c);
+            $parser->refs =& $this->refs;
+
+            $block = $values['value'];
+            if (!$this->isNextLineIndented())
+            {
+              $block .= "\n".$this->getNextEmbedBlock();
+            }
+
+            $data[] = $parser->parse($block);
+          }
           else
           {
             $data[] = $this->parseValue($values['value']);
           }
         }
       }
-      else if (preg_match('#^(?P<key>'.sfYamlInline::REGEX_QUOTED_STRING.'|[^ ].*?) *\:(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
+      else if (preg_match('#^(?P<key>'.sfYamlInline::REGEX_QUOTED_STRING.'|[^ \'"].*?) *\:(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
         $key = sfYamlInline::parseScalar($values['key']);
 
@@ -198,8 +213,8 @@ class sfYamlParser
       }
       else
       {
-        // one liner?
-        if (1 == count(explode("\n", rtrim($this->value, "\n"))))
+        // 1-liner followed by newline
+        if (2 == count($this->lines) && empty($this->lines[1]))
         {
           $value = sfYamlInline::load($this->lines[0]);
           if (is_array($value))
@@ -556,10 +571,18 @@ class sfYamlParser
     }
 
     // strip YAML header
-    preg_replace('#^\%YAML[: ][\d\.]+.*\n#s', '', $value);
+    $count = 0;
+    $value = preg_replace('#^\%YAML[: ][\d\.]+.*\n#s', '', $value, -1, $count);
+    $this->offset += $count;
 
-    // remove ---
-    $value = preg_replace('#^\-\-\-.*?\n#s', '', $value);
+    // remove leading comments and/or ---
+    $trimmedValue = preg_replace('#^((\#.*?\n)|(\-\-\-.*?\n))*#s', '', $value, -1, $count);
+    if ($count == 1)
+    {
+      // items have been removed, update the offset
+      $this->offset += substr_count($value, "\n") - substr_count($trimmedValue, "\n");
+      $value = $trimmedValue;
+    }
 
     return $value;
   }
