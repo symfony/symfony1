@@ -14,7 +14,7 @@ require_once 'propel/engine/builder/om/php5/PHP5PeerBuilder.php';
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: SfPeerBuilder.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: SfPeerBuilder.php 28393 2010-03-05 15:34:06Z fabien $
  * 
  * @deprecated since symfony 1.3
  */
@@ -225,7 +225,6 @@ class SfPeerBuilder extends PHP5PeerBuilder
       $script .= str_replace("return {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n",
         "\$res =  {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n".
         "    if (\$res !== true) {\n".
-        "        \$request = sfContext::getInstance()->getRequest();\n".
         "        foreach (\$res as \$failed) {\n".
         "            \$col = ".$this->getPeerClassname()."::translateFieldname(\$failed->getColumn(), BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);\n".
         "        }\n".

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Oracle.php 6793 2009-11-23 22:46:06Z jwage $
+ *  $Id: Oracle.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -24,8 +24,8 @@
  * @subpackage  DataDict
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision: 6793 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7490 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_DataDict_Oracle extends Doctrine_DataDict
@@ -194,7 +194,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                     } elseif ( ! is_null($length) && (int)$length <= 5) { // SMALLINT
                         $length = 2;
                     } elseif ( ! is_null($length) && (int)$length <= 8) { // MEDIUMINT
-                        $lenght = 3;
+                        $length = 3;
                     } elseif ( ! is_null($length) && (int)$length <= 10) { // INT
                         $length = 4;
                     } elseif ( ! is_null($length) && (int)$length <= 20) { //BIGINT

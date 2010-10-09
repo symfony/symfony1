@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @subpackage  Connection
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 1532 $
  */
@@ -233,9 +233,9 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
             $result = true;
             if ( ! $event->skipOperation) {
 
-                if ($this->_conn->getAttribute(Doctrine_Core::PORTABILITY_EMPTY_TO_NULL)) {
+                if ($this->_conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_EMPTY_TO_NULL) {
                     foreach ($params as $key => $value) {
-                        if ($value == '') {
+                        if ($value === '') {
                             $params[$key] = null;
                         }
                     }

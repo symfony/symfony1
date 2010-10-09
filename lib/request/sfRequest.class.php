@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfRequest.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfRequest.class.php 28641 2010-03-21 10:20:44Z fabien $
  */
 abstract class sfRequest implements ArrayAccess
 {
@@ -246,7 +246,7 @@ abstract class sfRequest implements ArrayAccess
   }
 
   /**
-   * Retrieves a paramater for the current request.
+   * Retrieves a parameter for the current request.
    *
    * @param string $name     Parameter name
    * @param string $default  Parameter default value
@@ -262,7 +262,7 @@ abstract class sfRequest implements ArrayAccess
    *
    * @param  string $name  Parameter name
    *
-   * @return bool true, if the paramater exists otherwise false
+   * @return bool true, if the parameter exists otherwise false
    */
   public function hasParameter($name)
   {

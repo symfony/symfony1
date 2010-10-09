@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18nPhpExtractor.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    SVN: $Id: sfI18nPhpExtractor.class.php 28843 2010-03-29 08:25:39Z fabien $
  */
 class sfI18nPhpExtractor implements sfI18nExtractorInterface
 {
@@ -75,6 +75,7 @@ class sfI18nPhpExtractor implements sfI18nExtractorInterface
             if ($buffer)
             {
               $strings[] = $buffer;
+              $buffer = '';
             }
             $i18n_function = 0;
             break;

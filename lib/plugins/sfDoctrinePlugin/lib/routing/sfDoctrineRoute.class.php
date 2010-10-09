@@ -18,7 +18,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRoute.class.php 24498 2009-11-28 14:00:37Z FabianLange $
+ * @version    SVN: $Id: sfDoctrineRoute.class.php 28633 2010-03-20 14:35:57Z Kris.Wallsmith $
  */
 class sfDoctrineRoute extends sfObjectRoute
 {
@@ -133,7 +133,7 @@ class sfDoctrineRoute extends sfObjectRoute
       } catch (Exception $e) {
         try {
           $method = 'get'.sfInflector::camelize($variable);
-          $parameters[$variable] = $object->$method;
+          $parameters[$variable] = $object->$method();
         } catch (Exception $e) {}
       }
     }

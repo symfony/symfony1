@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlUpgrade.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfYamlUpgrade.class.php 28988 2010-04-06 04:49:08Z Kris.Wallsmith $
  */
 class sfYamlUpgrade extends sfUpgrade
 {
@@ -31,8 +31,8 @@ class sfYamlUpgrade extends sfUpgrade
       // attempt to upgrade booleans
       $original = file_get_contents($file);
       $upgraded = sfToolkit::pregtr($original, array(
-        '/^([^:]+: +)(?:on|y(?:es)?|\+)(\s*)$/im' => '\\1true\\2',
-        '/^([^:]+: +)(?:off|no?|-)(\s*)$/im'      => '\\1false\\2',
+        '/^([^:]+: +)(?:on|y(?:es)?|\+)(\s*(#.*)?)$/im' => '\\1true\\2',
+        '/^([^:]+: +)(?:off|no?|-)(\s*(#.*)?)$/im'      => '\\1false\\2',
       ));
 
       try

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Hydrate
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -55,8 +55,8 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
                 }
                 // cache general information like the column name <-> field name mapping
                 $e = explode('__', $key);
-                $columnName = array_pop($e);              
-                $cache[$key]['dqlAlias'] = $this->_tableAliases[implode('__', $e)];
+                $columnName = strtolower(array_pop($e)); 
+                $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];
                 $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
                 // check whether it's an aggregate value or a regular field
                 if (isset($this->_queryComponents[$cache[$key]['dqlAlias']]['agg'][$columnName])) {

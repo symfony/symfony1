@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 26681 2010-01-15 15:28:37Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 28723 2010-03-23 16:37:43Z FabianLange $
  * @package    symfony
  * @subpackage i18n
  */
@@ -140,10 +140,6 @@ class sfNumberFormat
     else if ($number < 0)
     {
       $suffix = $this->formatInfo->NegativePattern;
-    }
-    else
-    {
-      $suffix = array('', '');
     }
 
     // append and prepend suffix

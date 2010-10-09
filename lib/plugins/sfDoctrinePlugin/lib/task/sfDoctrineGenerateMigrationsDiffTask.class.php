@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineGenerateMigrationsDiffTask.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineGenerateMigrationsDiffTask.class.php 28871 2010-03-29 17:28:03Z Jonathan.Wage $
  */
 class sfDoctrineGenerateMigrationsDiffTask extends sfDoctrineBaseTask
 {
@@ -59,6 +59,8 @@ EOF;
     {
       $this->getFilesystem()->mkdirs($config['migrations_path']);
     }
+
+    spl_autoload_register(array('Doctrine_Core', 'modelsAutoload'));
 
     $this->callDoctrineCli('generate-migrations-diff', array(
       'yaml_schema_path' => $this->prepareSchemaFile($config['yaml_schema_path']),

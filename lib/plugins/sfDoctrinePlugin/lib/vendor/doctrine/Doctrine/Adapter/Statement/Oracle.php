@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -28,7 +28,7 @@
  * @author      vadik56
  * @author      Miloslav Kmet <adrive-nospam@hip-hop.sk>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Rev$
  */
@@ -364,6 +364,7 @@ class Doctrine_Adapter_Statement_Oracle implements Doctrine_Adapter_Statement_In
 
         if ($fetchStyle == Doctrine_Core::FETCH_BOTH) {
             $flags = OCI_BOTH;
+            $numberOfRows = @oci_fetch_all($this->statement, $data, $skip, $maxrows, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC + OCI_RETURN_LOBS);
         } else if ($fetchStyle == Doctrine_Core::FETCH_ASSOC) {
             $numberOfRows = @oci_fetch_all($this->statement, $data, $skip, $maxrows, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC + OCI_RETURN_LOBS);
         } else if ($fetchStyle == Doctrine_Core::FETCH_NUM) {

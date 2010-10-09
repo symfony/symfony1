@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 27845 2010-02-10 19:46:03Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 28641 2010-03-21 10:20:44Z fabien $
  */
 abstract class sfTestFunctionalBase
 {
@@ -225,7 +225,7 @@ abstract class sfTestFunctionalBase
    *
    * @param  string $uri          URI to be invoked
    * @param  string $method       HTTP method used
-   * @param  array  $parameters   Additional paramaters
+   * @param  array  $parameters   Additional parameters
    * @param  bool   $changeStack  If set to false ActionStack is not changed
    *
    * @return sfTestFunctionalBase The current sfTestFunctionalBase instance

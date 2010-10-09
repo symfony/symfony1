@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfGeneratorConfigHandler.class.php 28366 2010-03-03 14:46:07Z fabien $
  */
 class sfGeneratorConfigHandler extends sfYamlConfigHandler
 {
@@ -65,7 +65,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $generatorParam = (isset($config['param']) ? $config['param'] : array());
 
     // hack to find the module name (look for the last /modules/ in path)
-    preg_match('#.*/modules/([^/]+)/#', $configFiles[0], $match);
+    preg_match('#.*/modules/([^/]+)/#', str_replace('\\', '/', $configFiles[0]), $match);
     $generatorParam['moduleName'] = $match[1];
 
     // compile data

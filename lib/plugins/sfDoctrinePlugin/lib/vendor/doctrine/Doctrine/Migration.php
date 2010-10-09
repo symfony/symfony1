@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @package     Doctrine
  * @subpackage  Migration
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -160,7 +160,7 @@ class Doctrine_Migration
                 }
             }
         }
-        ksort($classesToLoad);
+        ksort($classesToLoad, SORT_NUMERIC);
         foreach ($classesToLoad as $class) {
             $this->loadMigrationClass($class['className'], $class['path']);
         }
@@ -313,6 +313,9 @@ class Doctrine_Migration
     public function migrate($to = null, $dryRun = false)
     {
         $this->clearErrors();
+
+        $this->_createMigrationTable();
+
         $this->_connection->beginTransaction();
 
         try {
@@ -463,8 +466,6 @@ class Doctrine_Migration
      */
     protected function _doMigrate($to)
     {
-        $this->_createMigrationTable();
-
         $from = $this->getCurrentVersion();
 
         if ($from == $to) {

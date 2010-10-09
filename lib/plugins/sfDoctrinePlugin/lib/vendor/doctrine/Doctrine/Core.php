@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 6483 $
  */
@@ -35,7 +35,7 @@ class Doctrine_Core
     /**
      * VERSION
      */
-    const VERSION                   = '1.2.1';
+    const VERSION                   = '1.2.2';
 
     /**
      * ERROR CONSTANTS
@@ -208,6 +208,8 @@ class Doctrine_Core
     const ATTR_TABLE_CLASS                  = 176;
     const ATTR_USE_NATIVE_SET               = 177;
     const ATTR_MODEL_CLASS_PREFIX           = 178;
+    const ATTR_TABLE_CLASS_FORMAT           = 179;
+    const ATTR_MAX_IDENTIFIER_LENGTH        = 180;
 
     /**
      * LIMIT CONSTANTS
@@ -612,6 +614,18 @@ class Doctrine_Core
     }
 
     /**
+     * Get the directory where your models are located for PEAR style naming
+     * convention autoloading
+     *
+     * @return void
+     * @author Jonathan Wage
+     */
+    public static function getModelsDirectory()
+    {
+        return self::$_modelsDirectory;
+    }
+
+    /**
      * Recursively load all models from a directory or array of directories
      *
      * @param  string   $directory      Path to directory of models or array of directory paths
@@ -824,14 +838,14 @@ class Doctrine_Core
      * Method for importing existing schema to Doctrine_Record classes
      *
      * @param string $directory Directory to write your models to
-     * @param array $databases Array of databases to generate models for
+     * @param array $connections Array of connection names to generate models for
      * @param array $options Array of options
      * @return boolean
      * @throws Exception
      */
-    public static function generateModelsFromDb($directory, array $databases = array(), array $options = array())
+    public static function generateModelsFromDb($directory, array $connections = array(), array $options = array())
     {
-        return Doctrine_Manager::connection()->import->importSchema($directory, $databases, $options);
+        return Doctrine_Manager::connection()->import->importSchema($directory, $connections, $options);
     }
 
     /**
@@ -839,15 +853,16 @@ class Doctrine_Core
      * This should probably be fixed. We should write something to generate a yaml schema file directly from the database.
      *
      * @param string $yamlPath Path to write oyur yaml schema file to
+     * @param array $connections Array of connection names to generate yaml for
      * @param array  $options Array of options
      * @return void
      */
-    public static function generateYamlFromDb($yamlPath, array $databases = array(), array $options = array())
+    public static function generateYamlFromDb($yamlPath, array $connections = array(), array $options = array())
     {
         $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tmp_doctrine_models';
 
         $options['generateBaseClasses'] = isset($options['generateBaseClasses']) ? $options['generateBaseClasses']:false;
-        $result = Doctrine_Core::generateModelsFromDb($directory, $databases, $options);
+        $result = Doctrine_Core::generateModelsFromDb($directory, $connections, $options);
 
         if ( empty($result) && ! is_dir($directory)) {
             throw new Doctrine_Exception('No models generated from your databases');
