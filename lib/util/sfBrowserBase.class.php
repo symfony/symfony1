@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowserBase.class.php 27836 2010-02-10 19:00:00Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfBrowserBase.class.php 28702 2010-03-23 12:02:01Z fabien $
  */
 abstract class sfBrowserBase
 {
@@ -927,7 +927,7 @@ abstract class sfBrowserBase
       {
         $var = &$var[$tmp];
       }
-      if ($var)
+      if ($var && '[]' === substr($name, -2))
       {
         if (!is_array($var))
         {

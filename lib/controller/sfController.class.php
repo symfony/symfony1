@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 24265 2009-11-23 11:55:33Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfController.class.php 29000 2010-04-06 17:53:15Z Kris.Wallsmith $
  */
 abstract class sfController
 {
@@ -24,7 +24,8 @@ abstract class sfController
     $context           = null,
     $dispatcher        = null,
     $controllerClasses = array(),
-    $renderMode        = sfView::RENDER_CLIENT;
+    $renderMode        = sfView::RENDER_CLIENT,
+    $maxForwards       = 5;
 
   /**
    * Class constructor.
@@ -97,6 +98,9 @@ abstract class sfController
       {
         throw new sfConfigurationException(sprintf('The module "%s" is not enabled.', $moduleName));
       }
+
+      // check for a module generator config file
+      $this->context->getConfigCache()->import('modules/'.$moduleName.'/config/generator.yml', false, true);
 
       // one action per file or one file for all actions
       $classFile   = strtolower($extension);
@@ -172,7 +176,7 @@ abstract class sfController
     $moduleName = preg_replace('/[^a-z0-9_]+/i', '', $moduleName);
     $actionName = preg_replace('/[^a-z0-9_]+/i', '', $actionName);
 
-    if ($this->getActionStack()->getSize() >= 5)
+    if ($this->getActionStack()->getSize() >= $this->maxForwards)
     {
       // let's kill this party before it turns into cpu cycle hell
       throw new sfForwardException('Too many forwards have been detected for this request.');

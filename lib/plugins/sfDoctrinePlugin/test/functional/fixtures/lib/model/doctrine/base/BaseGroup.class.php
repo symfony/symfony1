@@ -19,7 +19,7 @@
  * @package    symfony12
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 6820 2009-11-30 17:27:49Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseGroup extends myDoctrineRecord
 {
@@ -28,7 +28,7 @@ abstract class BaseGroup extends myDoctrineRecord
         $this->setTableName('groups');
         $this->hasColumn('name', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
              ));
     }
 

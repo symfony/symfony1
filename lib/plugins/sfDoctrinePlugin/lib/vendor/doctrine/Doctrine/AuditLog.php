@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  AuditLog
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -51,6 +51,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                                 'auditLog'          => true,
                                 'deleteVersions'    => true,
                                 'cascadeDelete'     => true,
+                                'excludeFields'     => array(),
                                 'appLevelDelete'    => false);
 
     /**
@@ -84,6 +85,9 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
 
         // remove all sequence, autoincrement and unique constraint definitions and add to the behavior model
         foreach ($columns as $column => $definition) {
+            if (in_array($column, $this->_options['excludeFields'])) {
+                continue;
+            }
             unset($definition['autoincrement']);
             unset($definition['sequence']);
             unset($definition['unique']);

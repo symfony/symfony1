@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -114,6 +114,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             foreach ($this->_options['fields'] as $field) {
                 $value .= $record->$field . ' ';
             }
+            $value = substr($value, 0, -1);
         }
 
     	if ($this->_options['unique'] === true) {
@@ -151,7 +152,22 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
      */
     public function getUniqueSlug($record, $slugFromFields)
     {
-        $name = $record->getTable()->getFieldName($this->_options['name']);
+        /* fix for use with Column Aggregation Inheritance */
+        if ($record->getTable()->getOption('inheritanceMap')) {
+          $parentTable = $record->getTable()->getOption('parents');
+          $i = 0;
+          // Be sure that you do not instanciate an abstract class;
+          $reflectionClass = new ReflectionClass($parentTable[$i]);
+          while ($reflectionClass->isAbstract()) {
+            $i++;
+            $reflectionClass = new ReflectionClass($parentTable[$i]);
+          }
+          $table = Doctrine::getTable($parentTable[$i]);
+        } else {
+          $table = $record->getTable();
+        }
+
+        $name = $table->getFieldName($this->_options['name']);
         $proposal =  call_user_func_array($this->_options['builder'], array($slugFromFields, $record));
         $slug = $proposal;
 
@@ -160,7 +176,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 
         if ($record->exists()) {
             $identifier = $record->identifier();
-            $whereString .= ' AND r.' . implode(' != ? AND r.', $record->getTable()->getIdentifierColumnNames()) . ' != ?';
+            $whereString .= ' AND r.' . implode(' != ? AND r.', $table->getIdentifierColumnNames()) . ' != ?';
             $whereParams = array_merge($whereParams, array_values($identifier));
         }
 
@@ -178,18 +194,17 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         }
 
         // Disable indexby to ensure we get all records
-        $originalIndexBy = $record->getTable()->getBoundQueryPart('indexBy');
-        $record->getTable()->bindQueryPart('indexBy', null);
+        $originalIndexBy = $table->getBoundQueryPart('indexBy');
+        $table->bindQueryPart('indexBy', null);
 
-        $query = $record->getTable()
-            ->createQuery('r')
+        $query = $table->createQuery('r')
             ->select('r.' . $name)
             ->where($whereString , $whereParams)
             ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
 
         // We need to introspect SoftDelete to check if we are not disabling unique records too
-        if ($record->getTable()->hasTemplate('Doctrine_Template_SoftDelete')) {
-	        $softDelete = $record->getTable()->getTemplate('Doctrine_Template_SoftDelete');
+        if ($table->hasTemplate('Doctrine_Template_SoftDelete')) {
+	        $softDelete = $table->getTemplate('Doctrine_Template_SoftDelete');
 
 	        // we have to consider both situations here
             if ($softDelete->getOption('type') == 'boolean') {
@@ -208,22 +223,22 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $query->free();
 
         // Change indexby back
-        $record->getTable()->bindQueryPart('indexBy', $originalIndexBy);
+        $table->bindQueryPart('indexBy', $originalIndexBy);
 
         $similarSlugs = array();
         foreach ($similarSlugResult as $key => $value) {
-            $similarSlugs[$key] = $value[$name];
+            $similarSlugs[$key] = strtolower($value[$name]);
         }
 
         $i = 1;
-        while (in_array($slug, $similarSlugs)) {
+        while (in_array(strtolower($slug), $similarSlugs)) {
             $slug = call_user_func_array($this->_options['builder'], array($proposal.'-'.$i, $record));
             $i++;
         }
 
         // If slug is longer then the column length then we need to trim it
         // and try to generate a unique slug again
-        $length = $record->getTable()->getFieldLength($this->_options['name']);
+        $length = $table->getFieldLength($this->_options['name']);
         if (strlen($slug) > $length) {
             $slug = substr($slug, 0, $length - (strlen($i) + 1));
             $slug = $this->getUniqueSlug($record, $slug);

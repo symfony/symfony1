@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  *
  * @package     Doctrine
  * @subpackage  Import
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision: 1838 $
  * @author      Nicolas Bérard-Nault <nicobn@gmail.com>
@@ -395,7 +395,17 @@ class Doctrine_Import_Schema
                     $colDesc['primary'] = isset($field['primary']) ? (bool) (isset($field['primary']) && $field['primary']):null;
                     $colDesc['default'] = isset($field['default']) ? $field['default']:null;
                     $colDesc['autoincrement'] = isset($field['autoincrement']) ? (bool) (isset($field['autoincrement']) && $field['autoincrement']):null;
-                    $colDesc['sequence'] = isset($field['sequence']) ? (string) $field['sequence']:null;
+
+                    if (isset($field['sequence'])) {
+                        if (true === $field['sequence']) {
+                            $colDesc['sequence'] = $tableName;
+                        } else {
+                            $colDesc['sequence'] = (string) $field['sequence'];
+                        }
+                    } else {
+                        $colDesc['sequence'] = null;
+                    }
+
                     $colDesc['values'] = isset($field['values']) ? (array) $field['values']:null;
 
                     // Include all the specified and valid validators in the colDesc

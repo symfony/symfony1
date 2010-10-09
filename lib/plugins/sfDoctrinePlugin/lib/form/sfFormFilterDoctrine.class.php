@@ -21,7 +21,7 @@
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfFormFilterDoctrine.class.php 27748 2010-02-08 18:18:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFormFilterDoctrine.class.php 28992 2010-04-06 11:30:44Z Kris.Wallsmith $
  */
 abstract class sfFormFilterDoctrine extends sfFormFilter
 {
@@ -227,7 +227,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($values) && isset($values['is_empty']) && $values['is_empty'])
     {
-      $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
+      $query->addWhere(sprintf('(%s.%s IS NULL OR %1$s.%2$s = ?)', $query->getRootAlias(), $fieldName), array(''));
     }
     else if (is_array($values) && isset($values['text']) && '' != $values['text'])
     {
@@ -241,7 +241,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($values) && isset($values['is_empty']) && $values['is_empty'])
     {
-      $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
+      $query->addWhere(sprintf('(%s.%s IS NULL OR %1$s.%2$s = ?)', $query->getRootAlias(), $fieldName), array(''));
     }
     else if (is_array($values) && isset($values['text']) && '' !== $values['text'])
     {

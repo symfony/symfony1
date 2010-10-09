@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 24015 2009-11-16 13:33:34Z bschussek $
+ * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 28709 2010-03-23 13:57:27Z Kris.Wallsmith $
  */
 class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 {
@@ -29,12 +29,12 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
    *  * is_image:     Whether the file is a displayable image
    *  * with_delete:  Whether to add a delete checkbox or not
    *  * delete_label: The delete label used by the template
-   *  * template:     The HTML template to use to render this widget
+   *  * template:     The HTML template to use to render this widget when in edit mode
    *                  The available placeholders are:
-   *                    * input (the image upload widget)
-   *                    * delete (the delete checkbox)
-   *                    * delete_label (the delete label text)
-   *                    * file (the file tag)
+   *                    * %input% (the image upload widget)
+   *                    * %delete% (the delete checkbox)
+   *                    * %delete_label% (the delete label text)
+   *                    * %file% (the file tag)
    *
    * In edit mode, this widget renders an additional widget named after the
    * file upload widget with a "_delete" suffix. So, when creating a form,

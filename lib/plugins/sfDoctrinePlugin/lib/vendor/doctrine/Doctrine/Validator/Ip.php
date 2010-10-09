@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Ip.php 6468 2009-10-09 20:41:28Z jwage $
+ *  $Id: Ip.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6468 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Ip extends Doctrine_Validator_Driver
@@ -40,9 +40,6 @@ class Doctrine_Validator_Ip extends Doctrine_Validator_Driver
      */
     public function validate($value)
     {
-        if (is_null($value)) {
-            return true;
-        }
-        return (bool) ip2long(str_replace("\0", '', $value));
+        return is_null($value) ? true : (bool) filter_var($value, FILTER_VALIDATE_IP);
     }
 }

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Relation
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 1434 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -40,36 +40,37 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             return Doctrine_Collection::create($this->getTable());
         } else {
             $q = new Doctrine_RawSql($this->getTable()->getConnection());
+            $formatter = $q->getConnection()->formatter;
 
             $assocTable = $this->getAssociationFactory()->getTableName();
             $tableName  = $record->getTable()->getTableName();
             $identifierColumnNames = $record->getTable()->getIdentifierColumnNames();
-            $identifier = array_pop($identifierColumnNames);
+            $identifier = $formatter->quoteIdentifier(array_pop($identifierColumnNames));
 
-            $sub = 'SELECT ' . $this->getForeignRefColumnName()
-                 . ' FROM ' . $assocTable
-                 . ' WHERE ' . $this->getLocalRefColumnName()
+            $sub = 'SELECT ' . $formatter->quoteIdentifier($this->getForeignRefColumnName())
+                 . ' FROM '  . $formatter->quoteIdentifier($assocTable)
+                 . ' WHERE ' . $formatter->quoteIdentifier($this->getLocalRefColumnName())
                  . ' = ?';
 
-            $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub . ')';
-            $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getForeignRefColumnName();
+            $condition[] = $formatter->quoteIdentifier($tableName) . '.' . $identifier . ' IN (' . $sub . ')';
+            $joinCondition[] = $formatter->quoteIdentifier($tableName) . '.' . $identifier . ' = ' . $formatter->quoteIdentifier($assocTable) . '.' . $formatter->quoteIdentifier($this->getForeignRefColumnName());
 
             if ($this->definition['equal']) {
-                $sub2   = 'SELECT ' . $this->getLocalRefColumnName()
-                        . ' FROM '  . $assocTable
-                        . ' WHERE ' . $this->getForeignRefColumnName()
+                $sub2   = 'SELECT ' . $formatter->quoteIdentifier($this->getLocalRefColumnName())
+                        . ' FROM '  . $formatter->quoteIdentifier($assocTable)
+                        . ' WHERE ' . $formatter->quoteIdentifier($this->getForeignRefColumnName())
                         . ' = ?';
 
-                $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub2 . ')';
-                $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getLocalRefColumnName();
+                $condition[] = $formatter->quoteIdentifier($tableName) . '.' . $identifier . ' IN (' . $sub2 . ')';
+                $joinCondition[] = $formatter->quoteIdentifier($tableName) . '.' . $identifier . ' = ' . $formatter->quoteIdentifier($assocTable) . '.' . $formatter->quoteIdentifier($this->getLocalRefColumnName());
             }
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
-              ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
+              ->from($formatter->quoteIdentifier($tableName) . ' INNER JOIN ' . $formatter->quoteIdentifier($assocTable) . ' ON ' . implode(' OR ', $joinCondition))
               ->where(implode(' OR ', $condition));
             if ($orderBy = $this->getOrderByStatement($tableName, true)) {
                 $q->addOrderBy($orderBy);
             } else {
-                $q->addOrderBy($tableName . '.' . $identifier . ' ASC');
+                $q->addOrderBy($formatter->quoteIdentifier($tableName) . '.' . $identifier . ' ASC');
             }
             $q->addComponent($tableName,  $this->getClass());
 

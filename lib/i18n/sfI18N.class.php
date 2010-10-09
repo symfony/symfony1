@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 24039 2009-11-16 17:52:14Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfI18N.class.php 28703 2010-03-23 12:58:20Z Kris.Wallsmith $
  */
 class sfI18N
 {
@@ -61,7 +61,7 @@ class sfI18N
 
     if (isset($options['culture']))
     {
-      $this->culture = $options['culture'];
+      $this->setCulture($options['culture']);
       unset($options['culture']);
     }
 

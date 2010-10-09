@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -29,7 +29,7 @@
  * @package     Doctrine
  * @subpackage  Inflector
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 3189 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -56,8 +56,14 @@ class Doctrine_Inflector
      */
     public static function classify($word)
     {
-        $word = preg_replace('/[$]/', '', $word);
-        return preg_replace_callback('~(_?)(_)([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
+        static $cache = array();
+
+        if (!isset($cache[$word])) {
+            $word = preg_replace('/[$]/', '', $word);
+            $classify = preg_replace_callback('~(_?)([-_])([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
+            $cache[$word] = $classify;
+        }
+        return $cache[$word];
     }
 
     /**
@@ -210,7 +216,10 @@ class Doctrine_Inflector
           // GBP (Pound) Sign
           chr(194).chr(163) => '',
           'Ä' => 'Ae', 'ä' => 'ae', 'Ü' => 'Ue', 'ü' => 'ue',
-          'Ö' => 'Oe', 'ö' => 'oe', 'ß' => 'ss');
+          'Ö' => 'Oe', 'ö' => 'oe', 'ß' => 'ss',
+          // Norwegian characters
+          'Å'=>'Aa','Æ'=>'Ae','Ø'=>'O','æ'=>'a','ø'=>'o','å','aa'
+          );
 
           $string = strtr($string, $chars);
         } else {

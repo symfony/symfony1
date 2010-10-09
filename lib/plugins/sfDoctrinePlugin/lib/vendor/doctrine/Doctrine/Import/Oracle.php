@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Oracle.php 6484 2009-10-12 17:40:41Z jwage $
+ *  $Id: Oracle.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -24,8 +24,8 @@
  * @subpackage  Import
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision: 6484 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7490 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Import_Oracle extends Doctrine_Import
@@ -203,7 +203,7 @@ QEND;
      */
     public function listTables($database = null)
     {
-        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE'";
+        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE' and object_name in (select table_name from user_tables)";
         return $this->conn->fetchColumn($query);
     }
 

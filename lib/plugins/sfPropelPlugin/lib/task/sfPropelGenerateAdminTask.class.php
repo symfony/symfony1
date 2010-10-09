@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 24621 2009-11-30 23:42:50Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 28809 2010-03-26 17:19:58Z Jonathan.Wage $
  */
 class sfPropelGenerateAdminTask extends sfPropelBaseTask
 {
@@ -133,7 +133,11 @@ EOF
       , $name, $model, $module, isset($options['plural']) ? $options['plural'] : $module, $primaryKey).$content;
 
       $this->logSection('file+', $routing);
-      file_put_contents($routing, $content);
+
+      if (false === file_put_contents($routing, $content))
+      {
+        throw new sfCommandException(sprintf('Unable to write to file, %s.', $routing));
+      }
     }
 
     $arguments['route'] = $this->getRouteFromName($name);

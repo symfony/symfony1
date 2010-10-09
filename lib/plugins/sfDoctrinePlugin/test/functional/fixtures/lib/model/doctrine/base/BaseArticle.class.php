@@ -10,6 +10,7 @@
  * @property string $title
  * @property string $body
  * @property string $test_column
+ * @property integer $views
  * @property string $type
  * @property Author $Author
  * @property Doctrine_Collection $camelCase
@@ -19,6 +20,7 @@
  * @method string              getTitle()          Returns the current record's "title" value
  * @method string              getBody()           Returns the current record's "body" value
  * @method string              getTestColumn()     Returns the current record's "test_column" value
+ * @method integer             getViews()          Returns the current record's "views" value
  * @method string              getType()           Returns the current record's "type" value
  * @method Author              getAuthor()         Returns the current record's "Author" value
  * @method Doctrine_Collection getCamelCase()      Returns the current record's "camelCase" collection
@@ -27,6 +29,7 @@
  * @method Article             setTitle()          Sets the current record's "title" value
  * @method Article             setBody()           Sets the current record's "body" value
  * @method Article             setTestColumn()     Sets the current record's "test_column" value
+ * @method Article             setViews()          Sets the current record's "views" value
  * @method Article             setType()           Sets the current record's "type" value
  * @method Article             setAuthor()         Sets the current record's "Author" value
  * @method Article             setCamelCase()      Sets the current record's "camelCase" collection
@@ -34,7 +37,7 @@
  * @package    symfony12
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 6820 2009-11-30 17:27:49Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseArticle extends myDoctrineRecord
 {
@@ -50,15 +53,18 @@ abstract class BaseArticle extends myDoctrineRecord
         $this->hasColumn('title', 'string', 255, array(
              'type' => 'string',
              'unique' => true,
-             'length' => '255',
+             'length' => 255,
              ));
         $this->hasColumn('body', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
              ));
         $this->hasColumn('test_column', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
+             ));
+        $this->hasColumn('views', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('type', 'string', 255, array(
              'type' => 'string',

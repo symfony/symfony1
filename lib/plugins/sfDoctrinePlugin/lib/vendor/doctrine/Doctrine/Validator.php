@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Validator.php 6669 2009-11-04 19:50:10Z jwage $
+ *  $Id: Validator.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6669 $
+ * @version     $Revision: 7490 $
  * @author      Roman Borschel <roman@code-factory.org>
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
@@ -127,9 +127,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
      */
     public static function getStringLength($string)
     {
-        if (function_exists('iconv_strlen')) {
-            return iconv_strlen($string, 'UTF-8');
-        } else if (function_exists('mb_strlen')) {
+        if (function_exists('mb_strlen')) {
             return mb_strlen($string, 'utf8');
         } else {
             return strlen(utf8_decode($string));
@@ -167,9 +165,9 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
              case 'float':
              case 'double':
              case 'decimal':
-                 return (string)$var == strval(floatval($var));
+                 return (string) $var == strval(floatval($var));
              case 'integer':
-                 return (string)$var == strval(round(floatval($var)));
+                 return (string) $var == strval(round(floatval($var)));
              case 'string':
                  return is_string($var) || is_numeric($var);
              case 'blob':
