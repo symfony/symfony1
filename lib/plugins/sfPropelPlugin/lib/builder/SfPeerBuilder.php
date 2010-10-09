@@ -14,7 +14,7 @@ require_once 'propel/engine/builder/om/php5/PHP5PeerBuilder.php';
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: SfPeerBuilder.php 11911 2008-10-02 13:14:29Z Kris.Wallsmith $
+ * @version    SVN: $Id: SfPeerBuilder.php 14378 2008-12-29 20:04:39Z Kris.Wallsmith $
  */
 class SfPeerBuilder extends PHP5PeerBuilder
 {
@@ -416,7 +416,7 @@ class SfPeerBuilder extends PHP5PeerBuilder
       $behavior_include_script = <<<EOF
 
 
-if (ProjectConfiguration::getActive() instanceof sfApplicationConfiguration)
+if (sfProjectConfiguration::getActive() instanceof sfApplicationConfiguration)
 {
   include_once '%s';
 }

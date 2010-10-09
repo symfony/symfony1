@@ -72,6 +72,8 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
       file_put_contents($file, $this->evalTemplate('sfDoctrineFormFilterBaseTemplate.php'));
     }
 
+    $pluginPaths = $this->generatorManager->getConfiguration()->getAllPluginPaths();
+
     // create a form class for every Doctrine class
     foreach ($models as $model)
     {
@@ -95,7 +97,7 @@ class sfDoctrineFormFilterGenerator extends sfDoctrineFormGenerator
       file_put_contents($baseDir.'/base/Base'.$model.'FormFilter.class.php', $this->evalTemplate('sfDoctrineFormFilterGeneratedTemplate.php'));
       if ($isPluginModel)
       {
-        $pluginBaseDir = sfConfig::get('sf_plugins_dir') . '/' . $pluginName . '/lib/filter/doctrine';
+        $pluginBaseDir = $pluginPaths[$pluginName].'/lib/filter/doctrine';
         if (!file_exists($classFile = $pluginBaseDir.'/Plugin'.$model.'FormFilter.class.php'))
         {
             if (!is_dir($pluginBaseDir))

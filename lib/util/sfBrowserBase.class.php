@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowserBase.class.php 13486 2008-11-29 14:49:26Z fabien $
+ * @version    SVN: $Id: sfBrowserBase.class.php 14015 2008-12-13 21:54:33Z Kris.Wallsmith $
  */
 abstract class sfBrowserBase
 {
@@ -286,10 +286,11 @@ abstract class sfBrowserBase
     }
     if (strtoupper($method) == 'GET')
     {
-      $_GET  = $parameters;
+      $_GET = $parameters;
     }
 
     // handle input type="file" fields
+    $_FILES = array();
     if (count($this->files))
     {
       $_FILES = $this->files;

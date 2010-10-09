@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Exception.php 5132 2008-10-23 03:43:36Z guilhermeblanco $
+ *  $Id: Exception.php 5300 2008-12-17 21:59:39Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5132 $
+ * @version     $Revision: 5300 $
  */
 class Doctrine_Validator_Exception extends Doctrine_Exception implements Countable, IteratorAggregate
 {
@@ -62,24 +62,13 @@ class Doctrine_Validator_Exception extends Doctrine_Exception implements Countab
     }
 
     /**
-     * __toString
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-
-        return parent::__toString();
-    }
-
-    /**
      * Generate a message with all classes that have exceptions
      */
     private function generateMessage()
     {
-        $message = "";
+        $message = '';
         foreach ($this->invalid as $record) {
-           $message .= "Validation error in class " . get_class($record) . " ";
+            $message .= $record->getErrorStackAsString();
         }
         return $message;
     }

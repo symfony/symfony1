@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Doctrine.php 5283 2008-12-11 00:23:54Z pookey $
+ *  $Id: Doctrine.php 5335 2009-01-05 20:24:09Z pookey $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,14 +29,14 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5283 $
+ * @version     $Revision: 5335 $
  */
 final class Doctrine
 {
     /**
      * VERSION
      */
-    const VERSION                   = '1.0.5';
+    const VERSION                   = '1.0.6';
 
     /**
      * ERROR CONSTANTS

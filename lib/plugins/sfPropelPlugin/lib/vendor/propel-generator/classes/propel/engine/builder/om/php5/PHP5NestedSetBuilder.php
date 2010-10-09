@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PHP5NestedSetBuilder.php 1071 2008-08-06 14:40:43Z heltem $
+ *  $Id: PHP5NestedSetBuilder.php 1091 2009-01-07 11:13:06Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -268,8 +268,8 @@ abstract class ".$this->getClassname()." extends ".$this->getObjectBuilder()->ge
 		\$left = \$this->getLeftValue();
 		\$right = \$this->getRightValue();
 		if (empty(\$left) || empty(\$right)) {
-			\$root = $peerClassname::retrieveRoot(\$con);
-			$peerClassname::insertAsLastChildOf(\$root, \$this, \$con);
+			\$root = $peerClassname::retrieveRoot(\$this->getScopeIdValue(), \$con);
+			$peerClassname::insertAsLastChildOf(\$this, \$root, \$con);
 		}
 
 		return parent::save(\$con);
@@ -1042,13 +1042,16 @@ abstract class ".$this->getClassname()." extends ".$this->getObjectBuilder()->ge
 	/**
 	 * Wraps the getter for the scope value
 	 *
-	 * @return     int
+	 * @return     int or null if scope is disabled
 	 */
 	public function getScopeIdValue()
 	{";
 		if ($scope_col_getter_name) {
 			$script .= "
 		return \$this->$scope_col_getter_name();";
+		} else {
+			$script .= "
+		return null;";
 		}
 		$script .= "
 	}

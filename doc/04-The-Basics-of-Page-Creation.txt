@@ -188,7 +188,7 @@ Listing 4-10 - Hyperlinks, the Classic Way
       I never say my name
     </a>
 
-To avoid this hassle, you should always use the `link_to()` helper to create hyperlinks to your application's actions. And if you only want the generate the URL part, the `url_for()` is the helper you're looking for.
+To avoid this hassle, you should always use the `link_to()` helper to create hyperlinks to your application's actions. And if you only want to generate the URL part, the `url_for()` is the helper you're looking for.
 
 A helper is a PHP function defined by symfony that is meant to be used within templates. It outputs some HTML code and is faster to use than writing the actual HTML code by yourself. Listing 4-11 demonstrates the use of the hyperlink helpers.
 

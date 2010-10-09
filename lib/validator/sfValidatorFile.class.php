@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 13451 2008-11-28 04:43:03Z dwhittle $
+ * @version    SVN: $Id: sfValidatorFile.class.php 14484 2009-01-06 10:26:22Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -236,6 +236,8 @@ class sfValidatorFile extends sfValidatorBase
     passthru(sprintf('file -bi %s 2>/dev/null', escapeshellarg($file)), $return);
     if ($return > 0)
     {
+      ob_end_clean();
+
       return null;
     }
     $type = trim(ob_get_clean());
@@ -281,7 +283,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 13451 2008-11-28 04:43:03Z dwhittle $
+ * @version    SVN: $Id: sfValidatorFile.class.php 14484 2009-01-06 10:26:22Z fabien $
  */
 class sfValidatedFile
 {

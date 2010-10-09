@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBuildSqlTask.class.php 12141 2008-10-11 12:33:03Z fabien $
+ * @version    SVN: $Id: sfPropelBuildSqlTask.class.php 14299 2008-12-24 04:57:47Z dwhittle $
  */
 class sfPropelBuildSqlTask extends sfPropelBaseTask
 {

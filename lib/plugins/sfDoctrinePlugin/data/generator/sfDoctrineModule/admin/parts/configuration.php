@@ -59,6 +59,18 @@ class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorConfiguration ex
 
 <?php include dirname(__FILE__).'/sortingConfiguration.php' ?>
 
+  public function getTableMethod()
+  {
+    return '<?php echo isset($this->config['list']['table_method']) ? $this->config['list']['table_method'] : null ?>';
+<?php unset($this->config['list']['table_method']) ?>
+  }
+
+  public function getTableCountMethod()
+  {
+    return '<?php echo isset($this->config['list']['table_count_method']) ? $this->config['list']['table_count_method'] : null ?>';
+<?php unset($this->config['list']['table_count_method']) ?>
+  }
+
   public function getConnection()
   {
     return null;

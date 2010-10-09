@@ -3,6 +3,7 @@
     $pager = $this->configuration->getPager('<?php echo $this->getModelClass() ?>');
     $pager->setQuery($this->buildQuery());
     $pager->setPage($this->getPage());
+    $pager->setTableMethod($this->configuration->getTableMethod());
     $pager->init();
 
     return $pager;

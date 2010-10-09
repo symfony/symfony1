@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/FormHelper.php';
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateFormHelper.php 11783 2008-09-25 16:21:27Z fabien $
+ * @version    SVN: $Id: DateFormHelper.php 14264 2008-12-22 20:30:02Z FabianLange $
  */
 
 /**
@@ -62,7 +62,7 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -139,7 +139,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
     }
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -399,7 +399,7 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -452,7 +452,7 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -507,7 +507,7 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
     $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
-  return select_tag($name, options_for_select($select_options, $value), $html_options);
+  return select_tag($name, options_for_select($select_options, (int) $value), $html_options);
 }
 
 /**
@@ -830,69 +830,37 @@ function select_number_tag($name, $value, $options = array(), $html_options = ar
  */
 function select_timezone_tag($name, $selected = null, $options = array())
 {
-  if (!isset($options['display'])) $options['display'] = 'identifier';
-  
+  static $display_keys = array(
+    'identifier'        => 0,
+    'timezone'          => 1,
+    'timezone_abbr'     => 2,
+    'timezone_dst'      => 3,
+    'timezone_dst_abbr' => 4,
+    'city'              => 5,
+  );
+  $display = _get_option($options, 'display', 'identifier');
+  $display_key = isset($display_keys[$display]) ? $display_keys[$display] : 0;
+
   $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $timezone_groups = $c->getTimeZones();
-  
-  $display_key = 0;
-  
-  switch ($options['display'])
-  {
-    case "identifier":
-      $display_key = 0;
-      break;
-      
-    case "timezone":
-      $display_key = 1;
-      break;
-     
-    case "timezone_abbr":
-      $display_key = 2;
-      break;
-            
-    case "timezone_dst":
-      $display_key = 3;
-      break;
-      
-    case "timezone_dst_abbr":
-      $display_key = 3;
-      break;
-      
-    case "city":
-      $display_key = 4;
-      break;
-      
-    default:
-      $display_key = 0;
-      break;
-  }
-  
-  unset($options['display']);
-  
+
   $timezones = array();
-  foreach ($timezone_groups as $tz_group_key => $tz_group)
+  foreach ($timezone_groups as $tz_group)
   {
-    $array_key = null;
-    
-    foreach ($tz_group as $tz_key => $tz)
+    $array_key = isset($tz_group[0]) ? $tz_group[0] : null;
+    if (isset($tz_group[$display_key]) and !empty($tz_group[$display_key]))
     {
-      if ($tz_key == 0) $array_key = $tz;
-      if ($tz_key == $display_key AND !empty($tz)) $timezones[$array_key] = $tz;
+      $timezones[$array_key] = $tz_group[$display_key];
     }
   }
-  
-  // Remove duplicate values
-  $timezones = array_unique($timezones);
-  
+
   if ($timezone_option = _get_option($options, 'timezones'))
   {
-    $diff = array_diff_key($timezones, array_flip((array) $timezone_option));
-    foreach ($diff as $key => $v)
-    {
-      unset($timezones[$key]);
-    }
+    $timezones = array_intersect_key($timezones, array_flip((array) $timezone_option));
   }
+
+  // Remove duplicate values
+  $timezones = array_unique($timezones);
   
   asort($timezones);
 
@@ -925,7 +893,7 @@ function _parse_value_for_date($value, $key, $format_char)
   {
     return date($format_char, $value);
   }
-  else if ($value == '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
+  else if ($value === '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
   {
     return $value;
   }

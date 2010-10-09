@@ -83,6 +83,7 @@ class Doctrine_Import_Schema
                                                           'actAs',
                                                           'options',
                                                           'package',
+                                                          'package_custom_path',
                                                           'inheritance',
                                                           'detect_relations',
                                                           'listeners',
@@ -313,6 +314,7 @@ class Doctrine_Import_Schema
                             'actAs',
                             'options',
                             'package',
+                            'package_custom_path',
                             'inheritance',
                             'detect_relations');
 

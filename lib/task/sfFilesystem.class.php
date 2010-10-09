@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFilesystem.class.php 13320 2008-11-24 22:16:42Z FabianLange $
+ * @version    SVN: $Id: sfFilesystem.class.php 14523 2009-01-07 10:33:54Z FabianLange $
  */
 class sfFilesystem
 {
@@ -351,6 +351,9 @@ class sfFilesystem
    */ 
   protected function calculateRelativeDir($from, $to)
   {
+    $from = $this->canonicalizePath($from);
+    $to = $this->canonicalizePath($to);
+
     $commonLength = 0;
     $minPathLength = min(strlen($from), strlen($to));
     // count how many chars the strings have in common
@@ -359,6 +362,7 @@ class sfFilesystem
       if ($from[$i] != $to[$i]) break;
       if ($from[$i] == DIRECTORY_SEPARATOR) $commonLength = $i + 1;
     }
+
     if ($commonLength)
     {
       $levelUp = substr_count($from, DIRECTORY_SEPARATOR, $commonLength);
@@ -368,6 +372,29 @@ class sfFilesystem
       $relativeDir .= substr($to, $commonLength);
       return $relativeDir;
     }
+
     return $to;
+  }
+
+  protected function canonicalizePath($path)
+  {
+    if (empty($path)) return '';
+    $out=array();
+    foreach( explode(DIRECTORY_SEPARATOR, $path) as $i => $fold)
+    {
+      if ($fold=='' || $fold=='.') continue;
+      if ($fold=='..' && $i>0 && end($out)!='..')
+      {
+        array_pop($out);
+      }
+      else
+      {
+        $out[]= $fold;
+      }
+    }
+    $result = $path{0} == DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+    $result .= join(DIRECTORY_SEPARATOR, $out);
+    $result .= $path{strlen($path)-1} == DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : '';
+    return $result;
   }
 }

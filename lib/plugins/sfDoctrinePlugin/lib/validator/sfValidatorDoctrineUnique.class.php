@@ -89,6 +89,11 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
     foreach ($this->getOption('column') as $column)
     {
       $colName = $table->getColumnName($column);
+      if (!array_key_exists($column, $values))
+      {
+        // one of the column has be removed from the form
+        return $originalValues;
+      }
 
       $q->addWhere('a.' . $colName . ' = ?', $values[$column]);
     }
@@ -101,7 +106,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
       return $originalValues;
     }
 
-    $error = new sfValidatorError($this, 'invalid', array('column' => implode(', ', $this->getOption('column')), 'value' => implode (', ', $values)));
+    $error = new sfValidatorError($this, 'invalid', array('column' => implode(', ', $this->getOption('column'))));
 
     if ($this->getOption('throw_global_error'))
     {

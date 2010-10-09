@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineInsertSqlTask.class.php 13504 2008-11-30 00:12:22Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineInsertSqlTask.class.php 14255 2008-12-22 19:41:42Z Jonathan.Wage $
  */
 class sfDoctrineInsertSqlTask extends sfDoctrineBaseTask
 {
@@ -28,7 +28,7 @@ class sfDoctrineInsertSqlTask extends sfDoctrineBaseTask
   protected function configure()
   {
     $this->addOptions(array(
-      new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', null),
+      new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
@@ -42,8 +42,8 @@ The [doctrine:insert-sql|INFO] task creates database tables:
 
   [./symfony doctrine:insert-sql|INFO]
 
-The task connects to the database and executes all SQL statements
-found in [data/sql/*.sql|COMMENT] files.
+The task connects to the database and creates tables for all the
+[lib/model/doctrine/*.php|COMMENT] files.
 EOF;
   }
 

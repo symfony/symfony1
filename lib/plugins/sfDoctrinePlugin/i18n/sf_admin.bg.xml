@@ -33,6 +33,14 @@
         <source>Cancel</source>
         <target>Отказ</target>
       </trans-unit>
+      <trans-unit>
+        <source>Choose an action</source>
+        <target>Избери действие</target>
+      </trans-unit>
+      <trans-unit>
+        <source>go</source>
+        <target>ок</target>
+      </trans-unit>
 
       <!-- Filters -->
       <trans-unit>
@@ -64,6 +72,10 @@
       <trans-unit>
         <source>desc</source>
         <target>низходящ</target>
+      </trans-unit>
+      <trans-unit>
+        <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
+        <target>[0] няма резултати|[1] 1 резултат|(1,+Inf] %1% резултата</target>
       </trans-unit>
 
       <!-- Pagination -->

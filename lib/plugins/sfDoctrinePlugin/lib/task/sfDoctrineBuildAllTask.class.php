@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 12699 2008-11-06 18:29:12Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 14286 2008-12-23 19:06:37Z Jonathan.Wage $
  */
 class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
 {
@@ -33,7 +33,7 @@ class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Generates Doctrine model, SQL and initializes the database';
 
     $this->addOptions(array(
-      new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', null),
+      new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('no-confirmation', null, sfCommandOption::PARAMETER_NONE, 'Do not ask for confirmation'),
       new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms')
@@ -122,7 +122,13 @@ EOF;
 
     $insertSql = new sfDoctrineInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->setCommandApplication($this->commandApplication);
-    $ret = $insertSql->run(array(), $options['no-confirmation'] ? array('--no-confirmation') : array());
+    $insertSqlOptions = array();
+    $insertSqlOptions[] = '--env=' . $options['env'];
+    if ($options['no-confirmation'])
+    {
+      $insertSqlOptions[] = '--no-confirmation';
+    }
+    $ret = $insertSql->run(array(), $insertSqlOptions);
 
     return $ret;
   }

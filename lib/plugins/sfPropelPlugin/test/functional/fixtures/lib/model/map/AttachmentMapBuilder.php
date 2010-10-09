@@ -35,6 +35,8 @@ class AttachmentMapBuilder implements MapBuilder {
 
 		$tMap->addPrimaryKey('ID', 'Id', 'INTEGER', true, null);
 
+		$tMap->addForeignKey('ARTICLE_ID', 'ArticleId', 'INTEGER', 'article', 'ID', false, null);
+
 		$tMap->addColumn('NAME', 'Name', 'VARCHAR', false, 255);
 
 		$tMap->addColumn('FILE', 'File', 'VARCHAR', false, 255);

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mssql.php 5180 2008-11-17 13:34:50Z guilhermeblanco $
+ *  $Id: Mssql.php 5325 2008-12-30 16:10:26Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5180 $
+ * @version     $Revision: 5325 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -126,8 +126,17 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection
                 $order = trim(preg_replace('/ASC|DESC/i', '', $order));
                 $alias = trim(end(spliti(' as ', array_shift(explode(',', stristr($query,$order))))));
             }
-    
-            $query = preg_replace('/^SELECT\s/i', 'SELECT TOP ' . ($count+$offset) . ' ', $query);    
+
+            // Ticket #1259: Fix for limit-subquery in MSSQL
+            $selectRegExp = 'SELECT\s+';
+            $selectReplace = 'SELECT ';
+
+            if (preg_match('/^SELECT(\s+)DISTINCT/i',  $query)) {
+                $selectRegExp .= 'DISTINCT\s+';
+                $selectReplace .= 'DISTINCT ';
+            }
+
+            $query = preg_replace('/^'.$selectRegExp.'\s+/i', $selectReplace . 'TOP ' . ($count+$offset) . ' ', $query);    
             $query = 'SELECT * FROM (SELECT TOP ' . $count . ' * FROM (' . $query . ') AS ' . $this->quoteIdentifier('inner_tbl');
 
             if ($orderby !== false) {

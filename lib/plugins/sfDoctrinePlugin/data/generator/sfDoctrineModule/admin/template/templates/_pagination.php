@@ -11,7 +11,7 @@
     [?php if ($page == $pager->getPage()): ?]
       [?php echo $page ?]
     [?php else: ?]
-      <a href="<?php echo $this->getUrlForAction('list') ?>?page=[?php echo $page ?]">[?php echo $page ?]</a>
+      <a href="[?php echo url_for('<?php echo $this->getUrlForAction('list') ?>') ?]?page=[?php echo $page ?]">[?php echo $page ?]</a>
     [?php endif; ?]
   [?php endforeach; ?]
 

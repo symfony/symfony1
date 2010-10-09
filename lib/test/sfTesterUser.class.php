@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterUser.class.php 13059 2008-11-17 11:03:32Z dwhittle $
+ * @version    SVN: $Id: sfTesterUser.class.php 14486 2009-01-06 10:44:41Z fabien $
  */
 class sfTesterUser extends sfTester
 {
@@ -40,12 +40,13 @@ class sfTesterUser extends sfTester
    *
    * @param string $key
    * @param string $value
+   * @param string $ns
    *
    * @return sfTestFunctionalBase|sfTester
    */
-  public function isAttribute($key, $value)
+  public function isAttribute($key, $value, $ns = null)
   {
-    $this->tester->is($this->user->getAttribute($key), $value, sprintf('user attribute "%s" is "%s"', $key, $value));
+    $this->tester->is($this->user->getAttribute($key, null, $ns), $value, sprintf('user attribute "%s" is "%s"', $key, $value));
 
     return $this->getObjectToReturn();
   }

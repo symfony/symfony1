@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 13483 2008-11-29 14:43:54Z fabien $
+ * @version    SVN: $Id: sfForm.class.php 14246 2008-12-22 15:28:31Z Kris.Wallsmith $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -132,13 +132,6 @@ class sfForm implements ArrayAccess, Iterator, Countable
   public function renderUsing($formatterName, $attributes = array())
   {
     $currentFormatterName = $this->widgetSchema->getFormFormatterName();
-
-    $formatterClass = sprintf('sfWidgetFormSchemaFormatter%s', ucfirst($formatterName));
-
-    if (!class_exists($formatterClass))
-    {
-      throw new InvalidArgumentException(sprintf('Formatter "%s" (class "%s") does not exist', $formatterName, $formatterClass));
-    }
 
     $this->widgetSchema->setFormFormatterName($formatterName);
 

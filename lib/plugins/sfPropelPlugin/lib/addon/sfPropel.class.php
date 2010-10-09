@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropel.class.php 10331 2008-07-16 21:06:33Z dwhittle $
+ * @version    SVN: $Id: sfPropel.class.php 14025 2008-12-14 15:41:43Z Kris.Wallsmith $
  */
 class sfPropel
 {
@@ -136,5 +136,22 @@ class sfPropel
 
     // return qualified name
     return $class;
+  }
+
+  /**
+   * Clears all instance pools.
+   */
+  static public function clearAllInstancePools()
+  {
+    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
+    foreach ($files as $file)
+    {
+      $omClass = basename($file, 'MapBuilder.php');
+      if (class_exists($omClass) && is_subclass_of($omClass, 'BaseObject'))
+      {
+        $peer = constant($omClass.'::PEER');
+        call_user_func(array($peer, 'clearInstancePool'));
+      }
+    }
   }
 }

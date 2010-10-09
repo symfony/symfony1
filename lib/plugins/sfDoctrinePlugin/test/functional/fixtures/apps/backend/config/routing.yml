@@ -1,0 +1,64 @@
+doctrine_route_test1:
+  url:   /doctrine/route/test1
+  class: sfDoctrineRoute
+  options: { model: Article, type: object, method_for_query: retrieveArticle1 }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test2:
+  url:   /doctrine/route/test2
+  class: sfDoctrineRoute
+  options: { model: Article, type: object, method: retrieveArticle2 }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test3:
+  url:   /doctrine/route/test3
+  class: sfDoctrineRoute
+  options: { model: Article, type: list, method: retrieveArticle3 }
+  param: { module: doctrine_route_test, action: index }
+
+doctrine_route_test4:
+  url:   /doctrine/route/test4
+  class: sfDoctrineRoute
+  options: { model: Article, type: list, method: retrieveArticle4 }
+  param: { module: doctrine_route_test, action: index }
+
+user:
+  class: sfDoctrineRouteCollection
+  options:
+    model:               User
+    module:              users
+    prefix_path:         users
+    column:              id
+    with_wildcard_routes: true
+
+subscription:
+  class: sfDoctrineRouteCollection
+  options:
+    model:               Subscription
+    module:              subscriptions
+    prefix_path:         subscriptions
+    column:              id
+    with_wildcard_routes: true
+
+author:
+  class: sfDoctrineRouteCollection
+  options:
+    model:               Author
+    module:              authors
+    prefix_path:         authors
+    column:              id
+    with_wildcard_routes: true
+
+article:
+  class: sfDoctrineRouteCollection
+  options:
+    model:               Article
+    module:              articles
+    prefix_path:         articles
+    column:              id
+    with_wildcard_routes: true
+
+# default rules
+homepage:
+  url:   /
+  param: { module: default, action: index }

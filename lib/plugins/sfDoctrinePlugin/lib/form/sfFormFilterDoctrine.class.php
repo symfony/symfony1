@@ -71,7 +71,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
     {
       try
       {
-        $method = sprintf('convert%sValue', $field);
+        $method = sprintf('convert%sValue', self::camelize($field));
       }
       catch (Exception $e)
       {
@@ -111,14 +111,14 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' == $values[$field])
+      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
       {
         continue;
       }
 
       if ($this->getTable()->hasField($field))
       {
-        $method = sprintf('add%sColumnQuery', $this->getFieldName($field));
+        $method = sprintf('add%sColumnQuery', self::camelize($this->getFieldName($field)));
       } else {
         // not a "real" column
         if (!method_exists($this, $method = sprintf('add%sColumnQuery', self::camelize($field))))

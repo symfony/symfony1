@@ -8,3 +8,4 @@ all:
     class:  sfPropelDatabase
     param:
       dsn:  sqlite:%SF_DATA_DIR%/database.sqlite
+      pooling: true

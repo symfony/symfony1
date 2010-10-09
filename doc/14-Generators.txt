@@ -23,6 +23,7 @@ Throughout this chapter, the listings will demonstrate the capabilities of the s
 
 Listing 14-1 - `schema.yml` of the Example Weblog Application
 
+    [yml]
     propel:
       blog_article:
         id:          ~
@@ -300,6 +301,7 @@ The fields that you define in the `fields` section can be displayed, hidden, ord
 
 Listing 14-9 - Choosing the Fields to Display, in `modules/comment/config/generator.yml`
 
+    [yml]
     config:
       fields:
         article_id: { label: Article }
@@ -749,12 +751,13 @@ But you can also add a custom interaction, in which case you must specify a name
 
 Listing 14-32 - Defining a Custom Interaction
 
-        list:
-          title:          List of Articles
-          object_actions:
-            _edit:        -
-            _delete:      -
-            addcomment:   { label: Add a comment, action: addComment }
+    [yml]
+    list:
+      title:          List of Articles
+      object_actions:
+        _edit:        -
+        _delete:      -
+        addcomment:   { label: Add a comment, action: addComment }
 
 Each article in the list will now show the `Add a comment` link, as shown in Figure 14-24. Clicking it triggers a call to the `addComment` action in the current module. The primary key of the current object is automatically added to the request parameters.
 

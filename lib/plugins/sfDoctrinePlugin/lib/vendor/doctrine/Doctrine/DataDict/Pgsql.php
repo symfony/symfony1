@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 4778 2008-08-19 01:27:22Z guilhermeblanco $
+ *  $Id: Pgsql.php 5297 2008-12-17 20:44:10Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Paul Cooper <pgc@ucecom.com>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 4778 $
+ * @version     $Revision: 5297 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -550,6 +550,14 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             case 'longblob':
             case 'blob':
             case 'bytea':
+            case 'geometry':
+            case 'geometrycollection':
+            case 'point':
+            case 'multipoint':
+            case 'linestring':
+            case 'multilinestring':
+            case 'polygon':
+            case 'multipolygon':
                 $type[] = 'blob';
                 $length = null;
                 break;

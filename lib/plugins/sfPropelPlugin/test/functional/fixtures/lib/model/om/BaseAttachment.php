@@ -13,10 +13,16 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 	protected $id;
 
 	
+	protected $article_id;
+
+	
 	protected $name;
 
 	
 	protected $file;
+
+	
+	protected $aArticle;
 
 	
 	protected $alreadyInSave = false;
@@ -43,6 +49,12 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 	}
 
 	
+	public function getArticleId()
+	{
+		return $this->article_id;
+	}
+
+	
 	public function getName()
 	{
 		return $this->name;
@@ -64,6 +76,24 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		if ($this->id !== $v) {
 			$this->id = $v;
 			$this->modifiedColumns[] = AttachmentPeer::ID;
+		}
+
+		return $this;
+	} 
+	
+	public function setArticleId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->article_id !== $v) {
+			$this->article_id = $v;
+			$this->modifiedColumns[] = AttachmentPeer::ARTICLE_ID;
+		}
+
+		if ($this->aArticle !== null && $this->aArticle->getId() !== $v) {
+			$this->aArticle = null;
 		}
 
 		return $this;
@@ -111,8 +141,9 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->file = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->article_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+			$this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->file = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -121,7 +152,7 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 				$this->ensureConsistency();
 			}
 
-						return $startcol + 3; 
+						return $startcol + 4; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Attachment object", $e);
 		}
@@ -131,6 +162,9 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 	public function ensureConsistency()
 	{
 
+		if ($this->aArticle !== null && $this->article_id !== $this->aArticle->getId()) {
+			$this->aArticle = null;
+		}
 	} 
 	
 	public function reload($deep = false, PropelPDO $con = null)
@@ -156,6 +190,7 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		}
 		$this->hydrate($row, 0, true); 
 		if ($deep) {  
+			$this->aArticle = null;
 		} 	}
 
 	
@@ -242,6 +277,14 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		$affectedRows = 0; 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+												
+			if ($this->aArticle !== null) {
+				if ($this->aArticle->isModified() || $this->aArticle->isNew()) {
+					$affectedRows += $this->aArticle->save($con);
+				}
+				$this->setArticle($this->aArticle);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = AttachmentPeer::ID;
 			}
@@ -295,6 +338,14 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 			$failureMap = array();
 
 
+												
+			if ($this->aArticle !== null) {
+				if (!$this->aArticle->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aArticle->getValidationFailures());
+				}
+			}
+
+
 			if (($retval = AttachmentPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
@@ -323,9 +374,12 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getName();
+				return $this->getArticleId();
 				break;
 			case 2:
+				return $this->getName();
+				break;
+			case 3:
 				return $this->getFile();
 				break;
 			default:
@@ -339,8 +393,9 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		$keys = AttachmentPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getName(),
-			$keys[2] => $this->getFile(),
+			$keys[1] => $this->getArticleId(),
+			$keys[2] => $this->getName(),
+			$keys[3] => $this->getFile(),
 		);
 		return $result;
 	}
@@ -360,9 +415,12 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setName($value);
+				$this->setArticleId($value);
 				break;
 			case 2:
+				$this->setName($value);
+				break;
+			case 3:
 				$this->setFile($value);
 				break;
 		} 	}
@@ -373,8 +431,9 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		$keys = AttachmentPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setFile($arr[$keys[2]]);
+		if (array_key_exists($keys[1], $arr)) $this->setArticleId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setFile($arr[$keys[3]]);
 	}
 
 	
@@ -383,6 +442,7 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 		$criteria = new Criteria(AttachmentPeer::DATABASE_NAME);
 
 		if ($this->isColumnModified(AttachmentPeer::ID)) $criteria->add(AttachmentPeer::ID, $this->id);
+		if ($this->isColumnModified(AttachmentPeer::ARTICLE_ID)) $criteria->add(AttachmentPeer::ARTICLE_ID, $this->article_id);
 		if ($this->isColumnModified(AttachmentPeer::NAME)) $criteria->add(AttachmentPeer::NAME, $this->name);
 		if ($this->isColumnModified(AttachmentPeer::FILE)) $criteria->add(AttachmentPeer::FILE, $this->file);
 
@@ -415,6 +475,8 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 
+		$copyObj->setArticleId($this->article_id);
+
 		$copyObj->setName($this->name);
 
 		$copyObj->setFile($this->file);
@@ -444,10 +506,42 @@ abstract class BaseAttachment extends BaseObject  implements Persistent {
 	}
 
 	
+	public function setArticle(Article $v = null)
+	{
+		if ($v === null) {
+			$this->setArticleId(NULL);
+		} else {
+			$this->setArticleId($v->getId());
+		}
+
+		$this->aArticle = $v;
+
+						if ($v !== null) {
+			$v->addAttachment($this);
+		}
+
+		return $this;
+	}
+
+
+	
+	public function getArticle(PropelPDO $con = null)
+	{
+		if ($this->aArticle === null && ($this->article_id !== null)) {
+			$c = new Criteria(ArticlePeer::DATABASE_NAME);
+			$c->add(ArticlePeer::ID, $this->article_id);
+			$this->aArticle = ArticlePeer::doSelectOne($c, $con);
+			
+		}
+		return $this->aArticle;
+	}
+
+	
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
 		} 
+			$this->aArticle = null;
 	}
 
 

@@ -44,11 +44,9 @@ class Doctrine_Validator_Timestamp
             return true;
         }
 
-        if ( ! preg_match('/^ *\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(.\d{6}\+\d{2})? *$/', $value)) {
-            return false;
-        }
-
-        list($date, $time) = explode(' ', trim($value));
+        $e = explode(' ', trim($value));
+        $date = isset($e[0]) ? $e[0]:null;
+        $time = isset($e[1]) ? $e[1]:null;
 
         $dateValidator = Doctrine_Validator::getValidator('date');
         $timeValidator = Doctrine_Validator::getValidator('time');

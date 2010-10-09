@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Builder.php 5145 2008-10-31 14:15:44Z jwage $
+ *  $Id: Builder.php 5318 2008-12-19 20:44:54Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 5145 $
+ * @version     $Revision: 5318 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
@@ -1036,7 +1036,11 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
         // If is the package class then we need to make the path to the complete package
         else if (isset($definition['is_package_class']) && $definition['is_package_class']) {
-            $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
+            if (isset($definition['package_custom_path'])) {
+              $writePath = $definition['package_custom_path'];
+            } else {
+              $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
+            }
 
             if ($this->generateTableClasses()) {
                 $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormTime.class.php 13358 2008-11-26 18:27:49Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormTime.class.php 14261 2008-12-22 20:19:21Z FabianLange $
  */
 class sfWidgetFormTime extends sfWidgetForm
 {
@@ -77,7 +77,8 @@ class sfWidgetFormTime extends sfWidgetForm
       }
       else
       {
-        $value = array('hour' => date('G', $value), 'minute' => date('i', $value), 'second' => date('s', $value));
+        // int cast required to get rid of leading zeros
+        $value = array('hour' => (int) date('H', $value), 'minute' => (int) date('i', $value), 'second' => (int) date('s', $value));
       }
     }
 

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterRequest.class.php 12305 2008-10-21 22:11:15Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTesterRequest.class.php 14497 2009-01-06 17:30:36Z fabien $
  */
 class sfTesterRequest extends sfTester
 {
@@ -142,7 +142,7 @@ class sfTesterRequest extends sfTester
         $this->tester->like($_COOKIE[$name], $value, sprintf('cookie "%s" content matches regex "%s"', $name, $value));
       }
     }
-    else if (null !== $message)
+    else
     {
       $this->tester->is($_COOKIE[$name], $value, sprintf('cookie "%s" content is ok', $name));
     }

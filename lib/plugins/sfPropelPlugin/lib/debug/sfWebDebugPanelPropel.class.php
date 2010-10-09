@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 13723 2008-12-04 13:57:24Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 14173 2008-12-18 12:49:57Z Kris.Wallsmith $
  */
 class sfWebDebugPanelPropel extends sfWebDebugPanel
 {
@@ -83,7 +83,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
         continue;
       }
 
-      if (preg_match('/^.*?(\b(?:SELECT|INSERT|UPDATE|DELETE)\b.*)$/', $log['message'], $match))
+      if (preg_match('/^(?:prepare|exec|query): (.*)$/s', $log['message'], $match))
       {
         $logs[$i++] = $match[1];
         $bindings[$i - 1] = array();

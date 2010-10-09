@@ -273,6 +273,7 @@ class Doctrine_Search_Analyzer_Standard implements Doctrine_Search_Analyzer_Inte
     public function analyze($text)
     {
     	$text = preg_replace('/[\'`´"]/', '', $text);
+    	$text = Doctrine_Inflector::unaccent($text);
         $text = preg_replace('/[^A-Za-z0-9]/', ' ', $text);
         $text = str_replace('  ', ' ', $text);
 

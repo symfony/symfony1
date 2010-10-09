@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Table.php 5280 2008-12-08 23:18:33Z jwage $
+ *  $Id: Table.php 5317 2008-12-19 02:39:49Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Table
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 5280 $
+ * @version     $Revision: 5317 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -1024,6 +1024,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if ($length == null) {
             switch ($type) {
+                case 'decimal':
+                    $length = 18;
+                break;
                 case 'string':
                 case 'clob':
                 case 'float':
@@ -1675,8 +1678,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if ($value === self::$_null) {
             $value = null;
-        } else if ($value instanceof Doctrine_Record) {
+        } else if ($value instanceof Doctrine_Record && $value->exists()) {
             $value = $value->getIncremented();
+        } else if ($value instanceof Doctrine_Record && ! $value->exists()) {
+            foreach($this->getRelations() as $relation) {
+                if($fieldName == $relation->getLocalFieldName() && get_class($value) == $relation->getClass()) {
+                    return $errorStack;
+                }
+            }
         }
 
         $dataType = $this->getTypeOf($fieldName);

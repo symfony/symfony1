@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormatter.class.php 9076 2008-05-19 23:19:44Z Carl.Vondrick $
+ * @version    SVN: $Id: sfFormatter.class.php 14274 2008-12-23 09:40:12Z FabianLange $
  */
 class sfFormatter
 {
@@ -49,7 +49,7 @@ class sfFormatter
    */
   public function formatSection($section, $text, $size = null)
   {
-    return sprintf(">> %-$9s %s", $section, $this->excerpt($text, $size));
+    return sprintf(">> %-9s %s", $section, $this->excerpt($text, $size));
   }
 
   /**

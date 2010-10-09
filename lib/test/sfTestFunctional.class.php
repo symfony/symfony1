@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctional.class.php 11917 2008-10-02 16:35:40Z fabien $
+ * @version    SVN: $Id: sfTestFunctional.class.php 14485 2009-01-06 10:34:49Z fabien $
  */
 class sfTestFunctional extends sfTestFunctionalBase
 {
@@ -26,8 +26,10 @@ class sfTestFunctional extends sfTestFunctionalBase
    */
   public function __construct(sfBrowserBase $browser, lime_test $lime = null, $testers = array())
   {
-    $testers['view_cache'] = 'sfTesterViewCache';
-    $testers['form'] = 'sfTesterForm';
+    $testers = array_merge(array(
+      'view_cache' => 'sfTesterViewCache',
+      'form'       => 'sfTesterForm',
+    ), $testers);
 
     parent::__construct($browser, $lime, $testers);
   }

@@ -49,6 +49,12 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	private $lastAuthorArticleCriteria = null;
 
 	
+	protected $collAttachments;
+
+	
+	private $lastAttachmentCriteria = null;
+
+	
 	protected $alreadyInSave = false;
 
 	
@@ -403,6 +409,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$this->collAuthorArticles = null;
 			$this->lastAuthorArticleCriteria = null;
 
+			$this->collAttachments = null;
+			$this->lastAttachmentCriteria = null;
+
 		} 	}
 
 	
@@ -533,6 +542,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->collAttachments !== null) {
+				foreach ($this->collAttachments as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -591,6 +608,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 				if ($this->collAuthorArticles !== null) {
 					foreach ($this->collAuthorArticles as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collAttachments !== null) {
+					foreach ($this->collAttachments as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -788,6 +813,11 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 			foreach ($this->getAuthorArticles() as $relObj) {
 				if ($relObj !== $this) {  					$copyObj->addAuthorArticle($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getAttachments() as $relObj) {
+				if ($relObj !== $this) {  					$copyObj->addAttachment($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1015,6 +1045,108 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	}
 
 	
+	public function clearAttachments()
+	{
+		$this->collAttachments = null; 	}
+
+	
+	public function initAttachments()
+	{
+		$this->collAttachments = array();
+	}
+
+	
+	public function getAttachments($criteria = null, PropelPDO $con = null)
+	{
+		if ($criteria === null) {
+			$criteria = new Criteria(ArticlePeer::DATABASE_NAME);
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collAttachments === null) {
+			if ($this->isNew()) {
+			   $this->collAttachments = array();
+			} else {
+
+				$criteria->add(AttachmentPeer::ARTICLE_ID, $this->id);
+
+				AttachmentPeer::addSelectColumns($criteria);
+				$this->collAttachments = AttachmentPeer::doSelect($criteria, $con);
+			}
+		} else {
+						if (!$this->isNew()) {
+												
+
+				$criteria->add(AttachmentPeer::ARTICLE_ID, $this->id);
+
+				AttachmentPeer::addSelectColumns($criteria);
+				if (!isset($this->lastAttachmentCriteria) || !$this->lastAttachmentCriteria->equals($criteria)) {
+					$this->collAttachments = AttachmentPeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastAttachmentCriteria = $criteria;
+		return $this->collAttachments;
+	}
+
+	
+	public function countAttachments(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if ($criteria === null) {
+			$criteria = new Criteria(ArticlePeer::DATABASE_NAME);
+		} else {
+			$criteria = clone $criteria;
+		}
+
+		if ($distinct) {
+			$criteria->setDistinct();
+		}
+
+		$count = null;
+
+		if ($this->collAttachments === null) {
+			if ($this->isNew()) {
+				$count = 0;
+			} else {
+
+				$criteria->add(AttachmentPeer::ARTICLE_ID, $this->id);
+
+				$count = AttachmentPeer::doCount($criteria, $con);
+			}
+		} else {
+						if (!$this->isNew()) {
+												
+
+				$criteria->add(AttachmentPeer::ARTICLE_ID, $this->id);
+
+				if (!isset($this->lastAttachmentCriteria) || !$this->lastAttachmentCriteria->equals($criteria)) {
+					$count = AttachmentPeer::doCount($criteria, $con);
+				} else {
+					$count = count($this->collAttachments);
+				}
+			} else {
+				$count = count($this->collAttachments);
+			}
+		}
+		$this->lastAttachmentCriteria = $criteria;
+		return $count;
+	}
+
+	
+	public function addAttachment(Attachment $l)
+	{
+		if ($this->collAttachments === null) {
+			$this->initAttachments();
+		}
+		if (!in_array($l, $this->collAttachments, true)) { 			array_push($this->collAttachments, $l);
+			$l->setArticle($this);
+		}
+	}
+
+	
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
@@ -1023,8 +1155,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collAttachments) {
+				foreach ((array) $this->collAttachments as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} 
 		$this->collAuthorArticles = null;
+		$this->collAttachments = null;
 			$this->aCategory = null;
 			$this->aBook = null;
 	}

@@ -156,6 +156,10 @@ DROP TABLE [attachment];
 CREATE TABLE [attachment]
 (
 	[id] INTEGER  NOT NULL PRIMARY KEY,
+	[article_id] INTEGER,
 	[name] VARCHAR(255),
 	[file] VARCHAR(255)
 );
+
+-- SQLite does not support foreign keys; this is just for reference
+-- FOREIGN KEY ([article_id]) REFERENCES article ([id])

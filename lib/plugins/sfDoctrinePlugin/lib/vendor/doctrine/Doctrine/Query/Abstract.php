@@ -538,7 +538,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function getParams($params = array())
     {
-        return array_merge($params, $this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having']);
+        return array_merge((array) $params, $this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having']);
     }
 
     /**
@@ -960,8 +960,12 @@ abstract class Doctrine_Query_Abstract
                     $query = $this->_constructQueryFromCache($cached);
                 } else {
                     $query = $this->getSqlQuery($params);
-                    $serializedQuery = $this->getCachedForm($query);
-                    $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
+                    // Check again because getSqlQuery() above could have flipped the _queryCache flag
+                    // if this query contains the limit sub query algorithm we don't need to cache it
+                    if ($this->_queryCache !== false && ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE))) {
+                        $serializedQuery = $this->getCachedForm($query);
+                        $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
+                    }
                 }
             } else {
                 $query = $this->getSqlQuery($params);
@@ -1197,6 +1201,12 @@ abstract class Doctrine_Query_Abstract
             }
             if (isset($components['map'])) {
                 $componentInfo[$alias][] = $components['map'];
+            }
+        }
+
+        if ($customComponent instanceof Doctrine_Collection) {
+            foreach ($customComponent as $record) {
+                $record->serializeReferences(true);
             }
         }
 

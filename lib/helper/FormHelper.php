@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 13579 2008-12-01 10:48:55Z FabianLange $
+ * @version    SVN: $Id: FormHelper.php 14153 2008-12-17 22:40:08Z FabianLange $
  */
 
 /**
@@ -731,12 +731,14 @@ function input_date_tag($name, $value = null, $options = array())
 
   // register our javascripts and stylesheets
   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.$culture;
-  if((!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
-     (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
+  if((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
+     (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
+     (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/symfony/web/'.$langFile.'.js')))
   {
    $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.substr($culture,0,2);
-   if((!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
-      (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
+   if((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
+      (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
+      (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/symfony/web/'.$langFile.'.js')))
    {
      $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en';
    }

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBaseTask.class.php 13414 2008-11-27 12:31:06Z fabien $
+ * @version    SVN: $Id: sfPropelBaseTask.class.php 14299 2008-12-24 04:57:47Z dwhittle $
  */
 abstract class sfPropelBaseTask extends sfBaseTask
 {

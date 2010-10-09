@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Manager.php 5115 2008-10-21 18:15:59Z jwage $
+ *  $Id: Manager.php 5308 2008-12-18 00:20:38Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5115 $
+ * @version     $Revision: 5308 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Manager extends Doctrine_Configurable implements Countable, IteratorAggregate
@@ -246,6 +246,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                          'oracle'   => 'Doctrine_Connection_Oracle',
                          'mssql'    => 'Doctrine_Connection_Mssql',
                          'dblib'    => 'Doctrine_Connection_Mssql',
+                         'odbc'     => 'Doctrine_Connection_Mssql', 
                          'firebird' => 'Doctrine_Connection_Firebird',
                          'informix' => 'Doctrine_Connection_Informix',
                          'mock'     => 'Doctrine_Connection_Mock');

@@ -5,9 +5,9 @@
 <?php if (isset($this->params['route_prefix']) && $this->params['route_prefix']): ?>
 [?php echo form_tag_for($form, '@<?php echo $this->params['route_prefix'] ?>') ?]
 <?php else: ?>
-<form action="[?php echo url_for('<?php echo $this->getModuleName() ?>/'.($form->getObject()->isNew() ? 'create' : 'update').(!$form->getObject()->isNew() ? '?<?php echo $this->getPrimaryKeyUrlParams('$form->getObject()', true) ?> : '')) ?]" method="POST" [?php $form->isMultipart() and print 'enctype="multipart/form-data" ' ?]>
+<form action="[?php echo url_for('<?php echo $this->getModuleName() ?>/'.($form->getObject()->isNew() ? 'create' : 'update').(!$form->getObject()->isNew() ? '?<?php echo $this->getPrimaryKeyUrlParams('$form->getObject()', true) ?> : '')) ?]" method="post" [?php $form->isMultipart() and print 'enctype="multipart/form-data" ' ?]>
 [?php if (!$form->getObject()->isNew()): ?]
-<input type="hidden" name="sf_method" value="PUT" />
+<input type="hidden" name="sf_method" value="put" />
 [?php endif; ?]
 <?php endif;?>
   <table>

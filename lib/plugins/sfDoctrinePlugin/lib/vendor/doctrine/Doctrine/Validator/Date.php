@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Date.php 3884 2008-02-22 18:26:35Z jwage $
+ *  $Id: Date.php 5295 2008-12-17 05:18:38Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3884 $
+ * @version     $Revision: 5295 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Date
@@ -48,6 +48,8 @@ class Doctrine_Validator_Date
         if (count($e) !== 3) {
             return false;
         }
+        $e2 = explode(' ', $e[2]);
+        $e[2] = $e2[0];
         return checkdate($e[1], $e[2], $e[0]);
     }
 }

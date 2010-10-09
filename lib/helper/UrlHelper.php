@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 13484 2008-11-29 14:44:57Z fabien $
+ * @version    SVN: $Id: UrlHelper.php 14507 2009-01-06 19:12:41Z Kris.Wallsmith $
  */
 
 function link_to2($name, $routeName, $params, $options = array())
@@ -532,7 +532,7 @@ function _post_javascript_function()
 
 function _method_javascript_function($method)
 {
-  $function = "var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;";
+  $function = "var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;";
 
   if ('post' != strtolower($method))
   {

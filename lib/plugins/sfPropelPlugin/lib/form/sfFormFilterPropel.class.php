@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormFilterPropel.class.php 13459 2008-11-28 14:48:12Z fabien $
+ * @version    SVN: $Id: sfFormFilterPropel.class.php 14499 2009-01-06 18:15:39Z Jonathan.Wage $
  */
 abstract class sfFormFilterPropel extends sfFormFilter
 {
@@ -109,7 +109,7 @@ abstract class sfFormFilterPropel extends sfFormFilter
     $peer = constant($this->getModelName().'::PEER');
     foreach ($this->getFields() as $field => $type)
     {
-      if (!isset($values[$field]) || is_null($values[$field]) || '' == $values[$field])
+      if (!isset($values[$field]) || is_null($values[$field]) || '' === $values[$field])
       {
         continue;
       }

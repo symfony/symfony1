@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 5247 2008-12-03 20:14:59Z hobodave $
+ *  $Id: Query.php 5307 2008-12-18 00:15:10Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5247 $
+ * @version     $Revision: 5307 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -1128,6 +1128,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $idColumnName = $table->getColumnName($table->getIdentifier());
                 switch (strtolower($this->_conn->getDriverName())) {
                     case 'mysql':
+                        $this->useQueryCache(false);
                         // mysql doesn't support LIMIT in subqueries
                         $list = $this->_conn->execute($subquery, $params)->fetchAll(Doctrine::FETCH_COLUMN);
                         $subquery = implode(', ', array_map(array($this->_conn, 'quote'), $list));
@@ -1224,7 +1225,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         // pgsql & oracle need the order by fields to be preserved in select clause
         if ($driverName == 'pgsql' || $driverName == 'oracle' || $driverName == 'oci') {
             foreach ($this->_sqlParts['orderby'] as $part) {
-                $part = trim($part);
+                // Remove identifier quoting if it exists
+                $callback = create_function('$e', 'return trim($e, \'[]`"\');');
+                $part = trim(implode('.', array_map($callback, explode('.', $part))));
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
                 $part = trim($e[0]);
 

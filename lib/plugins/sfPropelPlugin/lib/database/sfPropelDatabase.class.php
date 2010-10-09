@@ -23,7 +23,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelDatabase.class.php 11987 2008-10-06 16:28:22Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelDatabase.class.php 14517 2009-01-06 21:35:25Z FabianLange $
  */
 class sfPropelDatabase extends sfPDODatabase
 {
@@ -140,7 +140,7 @@ class sfPropelDatabase extends sfPDODatabase
         'settings'    => array(
           'charset'   => array(
             'value'   => $this->getParameter('encoding', 'utf8')),
-            'queries' => $this->getParameter('queries', array()),
+          'queries'   => $this->getParameter('queries', array()),
     )));
   }
 
