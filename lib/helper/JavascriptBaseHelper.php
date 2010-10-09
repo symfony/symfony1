@@ -44,12 +44,10 @@
     if ( isset($html_options['confirm']) )
     {
       $confirm = escape_javascript($html_options['confirm']);
-      $html_options['onclick'] = "if(confirm('$confirm')){ $function;}; return false;";
+	  unset($html_options['confirm']);
+	  $function = "if(window.confirm('$confirm')){ $function;}";
     }
-    else
-    {
-      $html_options['onclick'] = $function.'; return false;';
-    }
+    $html_options['onclick'] = $function.'; return false;';
 
     return content_tag('a', $name, $html_options);
   }

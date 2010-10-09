@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfBasicSecurityUser.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -216,7 +216,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   /**
    * Returns the timestamp of the last user request.
    *
-   * @param  int
+   * @return  int
    */
   public function getLastRequestTime()
   {

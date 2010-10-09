@@ -130,12 +130,12 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
   {
     $values = $this->processValues($values);
 
-    $query = Doctrine::getTable($this->getModelName())->createQuery('r');
+    $query = $this->getTable()->createQuery('r');
 
     if ($this->tableMethodName)
     {
       $method = $this->tableMethodName;
-      $query = Doctrine::getTable($this->getModelName())->$method($query);
+      $query = $this->getTable()->$method($query);
     }
 
     foreach ($this->getFields() as $field => $type)
@@ -180,11 +180,11 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($value))
     {
-      $query->orWhereIn('r.' . $fieldName, $value);
+      $query->orWhereIn(sprintf('%s.%s', $query->getRootAlias(), $fieldName), $value);
     }
     else
     {
-      $query->addWhere('r.' . $fieldName . ' = ?', $value);
+      $query->addWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $fieldName), $value);
     }
   }
 
@@ -192,7 +192,7 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
   {
     $fieldName = $this->getFieldName($field);
 
-    $query->addWhere('r.' . $fieldName . ' = ?', $value);
+    $query->addWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $fieldName), $value);
   }
 
   protected function addTextQuery(Doctrine_Query $query, $field, $values)
@@ -201,11 +201,11 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($values) && isset($values['is_empty']) && $values['is_empty'])
     {
-      $query->addWhere('r.' . $fieldName . ' IS NULL');
+      $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
     }
     else if (is_array($values) && isset($values['text']) && '' != $values['text'])
     {
-      $query->addWhere('r.' . $fieldName . ' LIKE ?', '%' . $values['text'] . '%');
+      $query->addWhere(sprintf('%s.%s LIKE ?', $query->getRootAlias(), $fieldName), '%'.$values['text'].'%');
     }
   }
 
@@ -215,18 +215,18 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (is_array($values) && isset($values['is_empty']) && $values['is_empty'])
     {
-      $query->addWhere('r.' . $fieldName . ' IS NULL');
+      $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
     }
     else if (is_array($values) && isset($values['text']) && '' != $values['text'])
     {
-      $query->addWhere('r.' . $fieldName . ' = ?', $values['text']);
+      $query->addWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $fieldName), $values['text']);
     }
   }
 
   protected function addBooleanQuery(Doctrine_Query $query, $field, $value)
   {
     $fieldName = $this->getFieldName($field);
-    $query->addWhere('r.' . $fieldName . ' = ?', $value);
+    $query->addWhere(sprintf('%s.%s = ?', $query->getRootAlias(), $fieldName), $value);
   }
 
   protected function addDateQuery(Doctrine_Query $query, $field, $values)
@@ -235,23 +235,22 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
     if (isset($values['is_empty']) && $values['is_empty'])
     {
-      $query->addWhere('r.' . $fieldName . ' IS NULL');
+      $query->addWhere(sprintf('%s.%s IS NULL', $query->getRootAlias(), $fieldName));
     }
     else
     {
-      $criterion = null;
       if (!is_null($values['from']) && !is_null($values['to']))
       {
-        $query->andWhere('r.' . $fieldName . ' >= ?', $values['from']);
-        $query->andWhere('r.' . $fieldName . ' <= ?', $values['to']);
+        $query->andWhere(sprintf('%s.%s >= ?', $query->getRootAlias(), $fieldName), $values['from']);
+        $query->andWhere(sprintf('%s.%s <= ?', $query->getRootAlias(), $fieldName), $values['to']);
       }
       else if (!is_null($values['from']))
       {
-        $query->andWhere('r.' . $fieldName . ' >= ?', $values['from']);
+        $query->andWhere(sprintf('%s.%s >= ?', $query->getRootAlias(), $fieldName), $values['from']);
       }
       else if (!is_null($values['to']))
       {
-        $query->andWhere('r.' . $fieldName . ' <= ?', $values['to']);
+        $query->andWhere(sprintf('%s.%s <= ?', $query->getRootAlias(), $fieldName), $values['to']);
       }
     }
   }

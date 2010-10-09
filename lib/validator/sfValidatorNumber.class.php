@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorNumber.class.php 11476 2008-09-12 12:48:38Z fabien $
+ * @version    SVN: $Id: sfValidatorNumber.class.php 22018 2009-09-14 16:56:28Z fabien $
  */
 class sfValidatorNumber extends sfValidatorBase
 {
@@ -38,8 +38,8 @@ class sfValidatorNumber extends sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->addMessage('max', '"%value%" must be less than %max%.');
-    $this->addMessage('min', '"%value%" must be greater than %min%.');
+    $this->addMessage('max', '"%value%" must be at most %max%.');
+    $this->addMessage('min', '"%value%" must be at least %min%.');
 
     $this->addOption('min');
     $this->addOption('max');

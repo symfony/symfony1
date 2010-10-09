@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 19297 2009-06-16 07:08:53Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 20550 2009-07-28 07:41:19Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -209,6 +209,12 @@ class sfValidatorFile extends sfValidatorBase
 
     $type = $finfo->file($file);
 
+    // remove charset (added as of PHP 5.3)
+    if (false !== $pos = strpos($type, ';'))
+    {
+      $type = substr($type, 0, $pos);
+    }
+
     return $type;
   }
 
@@ -289,7 +295,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 19297 2009-06-16 07:08:53Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 20550 2009-07-28 07:41:19Z fabien $
  */
 class sfValidatedFile
 {
@@ -365,7 +371,7 @@ class sfValidatedFile
 
     if (!is_readable($directory))
     {
-      if ($create && !mkdir($directory, $dirMode, true))
+      if ($create && !@mkdir($directory, $dirMode, true))
       {
         // failed to create the directory
         throw new Exception(sprintf('Failed to create file upload directory "%s".', $directory));

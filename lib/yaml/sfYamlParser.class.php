@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfYamlInline.class.php');
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlParser.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfYamlParser.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 class sfYamlParser
 {
@@ -247,7 +247,7 @@ class sfYamlParser
   /**
    * Returns the next embed block of YAML.
    *
-   * @param string A YAML string
+   * @return string A YAML string
    */
   protected function getNextEmbedBlock()
   {

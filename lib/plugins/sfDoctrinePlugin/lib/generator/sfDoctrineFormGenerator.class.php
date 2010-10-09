@@ -290,12 +290,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     switch ($column->getDoctrineType())
     {
       case 'string':
-        if ($column->getLength() > 255)
-        {
-          $widgetSubclass = 'Textarea';
-        } else {
-          $widgetSubclass = 'Input';
-        }
+        $widgetSubclass = is_null($column->getLength()) || $column->getLength() > 255 ? 'Textarea' : 'Input';
         break;
       case 'boolean':
         $widgetSubclass = 'InputCheckbox';

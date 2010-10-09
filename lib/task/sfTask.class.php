@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTask.class.php 18135 2009-05-11 11:55:46Z fabien $
+ * @version    SVN: $Id: sfTask.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 abstract class sfTask
 {
@@ -168,7 +168,7 @@ abstract class sfTask
   /**
    * Returns the task namespace.
    *
-   * @param string The task namespace
+   * @return string The task namespace
    */
   public function getNamespace()
   {
@@ -248,7 +248,7 @@ abstract class sfTask
   /**
    * Returns the synopsis for the task.
    *
-   * @param string The synopsis
+   * @return string The synopsis
    */
   public function getSynopsis()
   {

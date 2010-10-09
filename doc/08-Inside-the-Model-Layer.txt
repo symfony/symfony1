@@ -215,9 +215,15 @@ Listing 8-8 - The `fromArray()` Method Is a Multiple Setter
 
     [php]
     $article->fromArray(array(
-      'title'   => 'My first article',
-      'content' => 'This is my very first article.\n Hope you enjoy it!',
+      'Title'   => 'My first article',
+      'Content' => 'This is my very first article.\n Hope you enjoy it!',
     ));
+
+>**NOTE**
+>fromArray() method has a second argument keyType. You can specify the key type of the array by additionally passing one
+>of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
+>BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
+>The default key type is the column's phpname (e.g. 'AuthorId')
 
 ### Retrieving Related Records
 
@@ -487,19 +493,19 @@ Database Connections
 
 The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to send requests to the project database is the name, the credentials, and the type of database.  These connection settings can be configured by passing a data source name (DSN) to the `configure:database` task:
 
-    > php symfony configure:database "mysql://login:passwd@localhost/blog"
+    > php symfony configure:database "mysql:host=localhost;dbname=blog" root mYsEcret
 
 The connection settings are environment-dependent. You can define distinct settings for the `prod`, `dev`, and `test` environments, or any other environment in your application by using the `env` option:
 
-    > php symfony --env=prod configure:database "mysql://login:passwd@localhost/blog"
+    > php symfony configure:database --env=dev "mysql:host=localhost;dbname=blog_dev" root mYsEcret
 
 This configuration can also be overridden per application. For instance, you can use this approach to have different security policies for a front-end and a back-end application, and define several database users with different privileges in your database to handle this:
 
-    > php symfony --app=frontend configure:database "mysql://login:passwd@localhost/blog"
+    > php symfony configure:database --app=frontend "mysql:host=localhost;dbname=blog" root mYsEcret
 
 For each environment, you can define many connections. Each connection refers to a schema being labeled with the same name. The default connection name used is `propel` and it refers to the `propel` schema in Listing 8-3. The `name` option allows you to create another connection:
 
-    > php symfony --name=main configure:database "mysql://login:passwd@localhost/blog"
+    > php symfony configure:database --name=main "mysql:host=localhost;dbname=example" root mYsEcret
 
 You can also enter these connection settings manually in the `databases.yml` file located in the `config/` directory. Listing 8-17 shows an example of such a file and Listing 8-18 shows the same example with the extended notation.
 

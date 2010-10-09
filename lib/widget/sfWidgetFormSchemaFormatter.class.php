@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 13844 2008-12-08 22:19:21Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 20301 2009-07-19 10:57:32Z fabien $
  */
 abstract class sfWidgetFormSchemaFormatter
 {
@@ -211,7 +211,8 @@ abstract class sfWidgetFormSchemaFormatter
    * Set an i18n catalogue name
    *
    * @param  string  $catalogue
-   * @throws InvalidArgumentException
+   *
+   * @throws InvalidArgumentException when the catalogue is not a string
    */
   public function setTranslationCatalogue($catalogue)
   {

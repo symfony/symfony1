@@ -18,7 +18,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfContext.class.php 16165 2009-03-11 07:16:24Z fabien $
+ * @version    SVN: $Id: sfContext.class.php 22003 2009-09-14 09:08:43Z FabianLange $
  */
 class sfContext
 {
@@ -381,7 +381,7 @@ class sfContext
   {
     if (!sfConfig::get('sf_i18n'))
     {
-      throw new sfConfigurationException('You must enabled i18n support in your settings.yml configuration file.');
+      throw new sfConfigurationException('You must enable i18n support in your settings.yml configuration file.');
     }
 
     return $this->factories['i18n'];

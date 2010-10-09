@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchemaDecorator.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchemaDecorator.class.php 20301 2009-07-19 10:57:32Z fabien $
  */
 class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 {
@@ -120,7 +120,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setLabels($labels)
+  public function setLabels(array $labels)
   {
     $this->widget->setLabels($labels);
   }
@@ -159,7 +159,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setHelps($helps)
+  public function setHelps(array $helps)
   {
     $this->widget->setHelps($helps);
   }
@@ -283,7 +283,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function setPositions($positions)
+  public function setPositions(array $positions)
   {
     $this->widget->setPositions($positions);
   }

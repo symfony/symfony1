@@ -23,7 +23,8 @@ abstract class BaseProfile extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasOne('User', array(
+        parent::setUp();
+    $this->hasOne('User', array(
              'local' => 'user_id',
              'foreign' => 'id'));
     }

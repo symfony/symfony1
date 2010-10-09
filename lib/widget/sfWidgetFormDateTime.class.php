@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDateTime.class.php 15962 2009-03-03 16:02:15Z hartym $
+ * @version    SVN: $Id: sfWidgetFormDateTime.class.php 20301 2009-07-19 10:57:32Z fabien $
  */
 class sfWidgetFormDateTime extends sfWidgetForm
 {
@@ -101,6 +101,8 @@ class sfWidgetFormDateTime extends sfWidgetForm
    * @param  string $type  The type (date or time)
    *
    * @return array  An array of options
+   *
+   * @throws InvalidArgumentException when option date|time type is not array
    */
   protected function getOptionsFor($type)
   {

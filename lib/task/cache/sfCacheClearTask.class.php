@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheClearTask.class.php 16656 2009-03-27 08:44:15Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfCacheClearTask.class.php 22180 2009-09-19 18:47:20Z FabianLange $
  */
 class sfCacheClearTask extends sfBaseTask
 {
@@ -158,21 +158,30 @@ EOF;
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
-    $this->cleanCacheFromFactoryConfig($config['i18n']['param']['cache']['class'], $config['i18n']['param']['cache']['param']);
+    if (isset($config['i18n']['param']['cache']))
+    {
+      $this->cleanCacheFromFactoryConfig($config['i18n']['param']['cache']);
+    }
   }
 
   protected function clearRoutingCache(sfApplicationConfiguration $appConfiguration)
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
-    $this->cleanCacheFromFactoryConfig($config['routing']['param']['cache']['class'], $config['routing']['param']['cache']['param']);
+    if (isset($config['routing']['param']['cache']))
+    {
+      $this->cleanCacheFromFactoryConfig($config['routing']['param']['cache']);
+    }
   }
 
   protected function clearTemplateCache(sfApplicationConfiguration $appConfiguration)
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
-    $this->cleanCacheFromFactoryConfig($config['view_cache']['class'], $config['view_cache']['param']);
+    if (isset($config['view_cache']))
+    {
+      $this->cleanCacheFromFactoryConfig($config['view_cache']);
+    }
   }
 
   protected function clearModuleCache(sfApplicationConfiguration $appConfiguration)
@@ -208,6 +217,19 @@ EOF;
   {
     if ($class)
     {
+      // the standard array with ['class'] and ['param'] can be passed as well
+      if (is_array($class))
+      {
+        if (!isset($class['class']))
+        {
+          return;
+        }
+        if (isset($class['param']))
+        {
+          $parameters = $class['param'];
+        }
+        $class = $class['class'];
+      }
       $cache = new $class($parameters);
       $cache->clean();
     }

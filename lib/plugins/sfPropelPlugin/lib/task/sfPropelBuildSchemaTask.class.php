@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBuildSchemaTask.class.php 13095 2008-11-18 06:10:38Z fabien $
+ * @version    SVN: $Id: sfPropelBuildSchemaTask.class.php 22278 2009-09-23 08:04:37Z fabien $
  */
 class sfPropelBuildSchemaTask extends sfPropelBaseTask
 {
@@ -71,7 +71,10 @@ EOF;
 
   protected function reverseDatabase($databaseManager, $connection, $options)
   {
+    $name = 'propel' == $connection ? 'schema' : $connection.'-schema';
+
     $properties = $this->getPhingPropertiesForConnection($databaseManager, $connection);
+    $properties['propel.default.schema.basename'] = $name;
 
     $ret = $this->callPhing('reverse', self::DO_NOT_CHECK_SCHEMA, $properties);
 
@@ -80,14 +83,14 @@ EOF;
       return 1;
     }
 
-    $xmlSchemaPath = sfConfig::get('sf_config_dir').'/schema.xml';
-    $ymlSchemaPath = sfConfig::get('sf_config_dir').'/schema.yml';
+    $xmlSchemaPath = sfConfig::get('sf_config_dir').'/'.$name.'.xml';
+    $ymlSchemaPath = sfConfig::get('sf_config_dir').'/'.$name.'.yml';
 
     // Fix database name
     if (file_exists($xmlSchemaPath))
     {
       $schema = file_get_contents($xmlSchemaPath);
-      $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="propel" package="lib.model"', $schema);
+      $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="'.$connection.'" package="lib.model"', $schema);
       file_put_contents($xmlSchemaPath, $schema);
     }
 

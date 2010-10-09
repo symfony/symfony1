@@ -18,7 +18,7 @@
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfException.class.php 18492 2009-05-20 14:19:35Z nicolas $
+ * @version    SVN: $Id: sfException.class.php 20802 2009-08-05 09:35:44Z fabien $
  */
 class sfException extends Exception
 {
@@ -71,7 +71,7 @@ class sfException extends Exception
         }
       }
 
-      ob_start();
+      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 
       header('HTTP/1.0 500 Internal Server Error');
     }

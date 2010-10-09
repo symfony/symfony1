@@ -112,7 +112,7 @@ There is one additional parameter related to routing, but this one is stored in 
 #### Form Validation Settings
 
 >**NOTE**
->The features described in this section are deprecated in symfony 1.1 and only work if you enable the `sfCompat10` plugin.
+>The features described in this section are deprecated since symfony 1.1 and only work if you enable the `sfCompat10` plugin.
 
 Form validation settings control the way error messages output by the `Validation` helpers look (see Chapter 10). These errors are included in `<div>` tags, and they use the `validation_error_ class` setting as a `class` attribute and the `validation_error_id_prefix` setting to build up the `id` attribute. The default values are `form_error` and `error_for_`, so the attributes output by a call to the `form_error()` helper for an input named `foobar` will be `class="form_error" id="error_for_foobar"`.
 
@@ -418,7 +418,7 @@ The same principle also applies if you choose to include the symfony files as a 
     myproject/
       lib/
         vendor/
-          svn:externals symfony http://svn.symfony-project.com/branches/1.1
+          svn:externals symfony http://svn.symfony-project.com/branches/1.2
 
 >**TIP**
 >Sometimes, the different servers running an application don't have the same path to the symfony libraries. One way to enable that is to exclude the `ProjectConfiguration.class.php` file from the synchronization (by adding it to `rsync_exclude.txt`). Another method is to keep the same paths in the development and production versions of `ProjectConfiguration.class.php`, but to have these paths point to symbolic links that can vary according to the server.
@@ -503,16 +503,16 @@ Listing 19-11 - A Custom Configuration Handler, in `frontend/lib/myMapConfigHand
         $config = $this->parseYamls($configFiles);
 
         $data  = "<?php\n";
-        $data. = "\$mapApi = new myMapAPI();\n";
+        $data .= "\$mapApi = new myMapAPI();\n";
 
         if (isset($config['api']['url'])
         {
-          $data. = sprintf("\$mapApi->setUrl('%s');\n", $config['api']['url']);
+          $data .= sprintf("\$mapApi->setUrl('%s');\n", $config['api']['url']);
         }
 
         if (isset($config['api']['user'])
         {
-          $data. = sprintf("\$mapApi->setUser('%s');\n", $config['api']['user']);
+          $data .= sprintf("\$mapApi->setUser('%s');\n", $config['api']['user']);
         }
 
         return $data;

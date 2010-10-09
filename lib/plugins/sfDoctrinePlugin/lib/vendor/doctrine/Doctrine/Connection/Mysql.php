@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Mysql.php 6374 2009-09-17 19:02:00Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6374 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -206,7 +206,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
             $params[] = $value;
         }
 
-        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+        $query = 'REPLACE INTO ' . $this->quoteIdentifier($table->getTableName()) . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
 
         return $this->exec($query, $params);
     }

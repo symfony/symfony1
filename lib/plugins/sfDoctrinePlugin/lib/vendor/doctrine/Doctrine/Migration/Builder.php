@@ -246,11 +246,20 @@ END;
         $code  = "\t\t\$this->createTable('" . $tableData['tableName'] . "', ";
         
         $code .= $this->varExport($tableData['columns'], true) . ", ";
-        
-        $code .= $this->varExport(array('indexes' => $tableData['options']['indexes'], 'primary' => $tableData['options']['primary']), true);
-        
+
+        $optionsWeNeed = array('type', 'indexes', 'primary', 'collate', 'charset');
+        $options = array();
+
+        foreach ($optionsWeNeed as $option) {
+            if (isset($tableData['options'][$option])) {
+                $options[$option] = $tableData['options'][$option];
+            }
+        }
+
+        $code .= $this->varExport($options, true);
+
         $code .= ");";
-        
+
         return $code;
     }
 

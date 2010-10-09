@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 19850 2009-07-03 14:58:22Z FabianLange $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 21979 2009-09-13 13:38:00Z FabianLange $
  */
 class sfViewCacheManager
 {
@@ -894,7 +894,7 @@ class sfViewCacheManager
     if (sfView::RENDER_VAR == $this->controller->getRenderMode())
     {
       $this->controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
-      $this->response->setContent('');
+      $this->context->getResponse()->setContent('');
     }
     else
     {

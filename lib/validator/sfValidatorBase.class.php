@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBase.class.php 17473 2009-04-21 07:59:34Z fabien $
+ * @version    SVN: $Id: sfValidatorBase.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 abstract class sfValidatorBase
 {
@@ -246,7 +246,7 @@ abstract class sfValidatorBase
   /**
    * Returns all required option names.
    *
-   * @param array An array of required option names
+   * @return array An array of required option names
    */
   public function getRequiredOptions()
   {

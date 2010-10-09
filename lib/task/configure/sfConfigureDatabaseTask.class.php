@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfConfigureDatabaseTask.class.php 14964 2009-01-26 12:43:21Z FabianLange $
+ * @version    SVN: $Id: sfConfigureDatabaseTask.class.php 20304 2009-07-19 11:11:16Z fabien $
  */
 class sfConfigureDatabaseTask extends sfBaseTask
 {
@@ -58,7 +58,7 @@ To change the configuration for a specific application, use the [app|COMMENT] op
 
 You can also specify the connection name and the database class name:
 
-  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql:host=localhost;dbname=example root|INFO]
+  [./symfony configure:database --name=main --class=sfDoctrineDatabase mysql:host=localhost;dbname=example root mYsEcret|INFO]
 
 WARNING: The [propel.ini|COMMENT] file is also updated when you use a [Propel|COMMENT] database
 and configure for [all|COMMENT] environments with no [app|COMMENT].

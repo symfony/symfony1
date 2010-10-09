@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 5844 2009-06-09 07:07:36Z jwage $
+ *    $Id: NestedSet.php 6380 2009-09-17 22:29:14Z kriswallsmith $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       www.phpdoctrine.org
  * @since      1.0
- * @version    $Revision: 5844 $
+ * @version    $Revision: 6380 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -809,12 +809,11 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $rootColName = $this->_tree->getAttribute('rootColumnName');
             $q = new Doctrine_Query($conn);
             $q = $q->update($componentName)
-                    ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
-                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
-                    ->set($componentName . '.level', $componentName.'.level - ?', $oldLevel)
-                    ->set($componentName . '.' . $rootColName, '?', $newRoot)
-                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                    array($oldLft, $oldRgt));
+                    ->set($componentName . '.lft', $componentName.'.lft + ?', array($diff))
+                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', array($diff))
+                    ->set($componentName . '.level', $componentName.'.level - ?', array($oldLevel))
+                    ->set($componentName . '.' . $rootColName, '?', array($newRoot))
+                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
             

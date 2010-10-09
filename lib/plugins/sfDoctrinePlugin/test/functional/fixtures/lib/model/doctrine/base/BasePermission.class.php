@@ -16,7 +16,8 @@ abstract class BasePermission extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasMany('User as Users', array(
+        parent::setUp();
+    $this->hasMany('User as Users', array(
              'refClass' => 'UserPermission',
              'local' => 'permission_id',
              'foreign' => 'user_id'));

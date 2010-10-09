@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormChoice.class.php 17068 2009-04-07 08:24:53Z fabien $
+ * @version    SVN: $Id: sfWidgetFormChoice.class.php 21991 2009-09-13 21:32:42Z FabianLange $
  */
 class sfWidgetFormChoice extends sfWidgetForm
 {
@@ -47,6 +47,19 @@ class sfWidgetFormChoice extends sfWidgetForm
     $this->addOption('renderer_class', false);
     $this->addOption('renderer_options', array());
     $this->addOption('renderer', false);
+  }
+
+  /**
+   * Sets the format for HTML id attributes. This is made avaiable to the renderer, 
+   * as this widget does not render itself, but delegates to the renderer instead.
+   *
+   * @param string $format  The format string (must contain a %s for the id placeholder)
+   *
+   * @see sfWidgetForm
+   */
+  public function setIdFormat($format)
+  {
+    $this->options['renderer_options']['id_format'] = $format;
   }
 
   /**

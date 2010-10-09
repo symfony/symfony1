@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 18694 2009-05-27 13:37:57Z fabien $
+ * @version    SVN: $Id: sfPropelData.class.php 21894 2009-09-11 09:28:54Z fabien $
  */
 class sfPropelData extends sfData
 {
@@ -388,7 +388,13 @@ class sfPropelData extends sfData
       }
       else
       {
-        $stmt = $this->con->query('SELECT * FROM '.constant(constant($tableName.'::PEER').'::TABLE_NAME'));
+        $in = array();
+        foreach ($tableMap->getColumns() as $column)
+        {
+          $in[] = strtolower($column->getName());
+        }
+        $stmt = $this->con->query(sprintf('SELECT %s FROM %s', implode(',', $in), constant(constant($tableName.'::PEER').'::TABLE_NAME')));
+
         $resultsSets[] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
         unset($stmt);

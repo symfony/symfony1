@@ -25,7 +25,8 @@ abstract class BaseUser extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasMany('Group as Groups', array(
+        parent::setUp();
+    $this->hasMany('Group as Groups', array(
              'refClass' => 'UserGroup',
              'local' => 'user_id',
              'foreign' => 'group_id'));

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidget.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfWidget.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 abstract class sfWidget
 {
@@ -32,6 +32,9 @@ abstract class sfWidget
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
+   *
+   * @throws InvalidArgumentException when a option is not supported
+   * @throws RuntimeException         when a required option is not given
    */
   public function __construct($options = array(), $attributes = array())
   {
@@ -102,7 +105,7 @@ abstract class sfWidget
   /**
    * Returns all required option names.
    *
-   * @param array An array of required option names
+   * @return array An array of required option names
    */
   public function getRequiredOptions()
   {
@@ -125,6 +128,8 @@ abstract class sfWidget
    *
    * @param string $name   The option name
    * @param mixed  $value  The value
+   *
+   * @throws InvalidArgumentException when a option is not supported
    */
   public function setOption($name, $value)
   {

@@ -276,8 +276,8 @@ Listing 2-9 - The View Logic Part of the View
     <?php
 
     $title = 'List of Posts';
-    $content = include('mytemplate.php');
-
+    $posts = getAllPosts();
+    
 Listing 2-10 - The Layout Part of the View
 
     [php]
@@ -286,7 +286,7 @@ Listing 2-10 - The Layout Part of the View
         <title><?php echo $title ?></title>
       </head>
       <body>
-        <?php echo $content ?>
+        <?php include('mytemplate.php'); ?>
       </body>
     </html>
 

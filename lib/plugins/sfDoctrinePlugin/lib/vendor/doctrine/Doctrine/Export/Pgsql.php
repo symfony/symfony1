@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Pgsql.php 6393 2009-09-21 21:04:43Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6393 $
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
@@ -88,7 +88,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         } else {
             $query .= ' NOT DEFERRABLE';
         }
-        if (isset($definition['feferred'])) {
+        if (isset($definition['deferred'])) {
             $query .= ' INITIALLY DEFERRED';
         } else {
             $query .= ' INITIALLY IMMEDIATE';

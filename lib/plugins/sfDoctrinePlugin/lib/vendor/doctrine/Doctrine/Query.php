@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 5874 2009-06-10 16:11:11Z piccoloprincipe $
+ *  $Id: Query.php 6407 2009-09-24 21:38:36Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5874 $
+ * @version     $Revision: 6407 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -473,12 +473,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $parent = $this->_conn->getTable($owner);
                 $columnName = $parent->getColumnName($fieldName);
                 $parentAlias = $this->getTableAlias($componentAlias . '.' . $parent->getComponentName());
-                $sql[] = $this->_conn->quoteIdentifier($parentAlias . '.' . $columnName)
+                $sql[] = $this->_conn->quoteIdentifier($parentAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
                        . ' AS '
                        . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
             } else {
                 $columnName = $table->getColumnName($fieldName);
-                $sql[] = $this->_conn->quoteIdentifier($tableAlias . '.' . $columnName)
+                $sql[] = $this->_conn->quoteIdentifier($tableAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
                        . ' AS '
                        . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
             }
@@ -1070,7 +1070,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $queryComponentsAfter = $this->getQueryComponents();
                 
                 // Root alias is the key of difference of query components
-                $this->_rootAlias = key(array_diff_key($queryComponentsAfter, $queryComponentsBefore));
+                $diffQueryComponents = array_diff_key($queryComponentsAfter, $queryComponentsBefore); 
+                $this->_rootAlias = key($diffQueryComponents);
             }
         }
         $this->_state = self::STATE_CLEAN;
@@ -1596,7 +1597,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                         $this->_subqueryAliases[] = $assocTableName;
                     }
 
-                    $assocPath = $prevPath . '.' . $asf->getComponentName();
+                    $assocPath = $prevPath . '.' . $asf->getComponentName() . $componentAlias;
 
                     $this->_queryComponents[$assocPath] = array(
                         'parent' => $prevPath,

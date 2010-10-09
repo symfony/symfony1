@@ -450,6 +450,15 @@ Listing 7-17 - Using `slot()` to define a short Value
     [php]
     <?php slot('title', 'The title value') ?>
 
+>**TIP**
+>If you need to set the value of a slot in an action, you can do so via the response object:
+>
+>     [PHP]
+>     $this->getResponse()->setSlot('mySlot', $myValue);
+>     $this->getResponse()->setSlot('myPartialSlot', $this->getPartial('myPartial'));
+
+-
+
 >**SIDEBAR**
 >Where to find template fragments
 >
@@ -677,13 +686,16 @@ Adding a specific style sheet or JavaScript file to a view is easy, as Listing 7
 
 Listing 7-26 - Asset File Inclusion
 
+    [yml]
     // In the view.yml
     indexSuccess:
       stylesheets: [mystyle1, mystyle2]
       javascripts: [myscript]
+      
+-
 
     [php]
-    // In the Action
+    // In the action
     $this->getResponse()->addStylesheet('mystyle1');
     $this->getResponse()->addStylesheet('mystyle2');
     $this->getResponse()->addJavascript('myscript');
@@ -755,10 +767,13 @@ You can be more accurate and define an additional parameter to force the positio
 
 Listing 7-33 - Defining the Position of the Included Asset
 
+    [yml]
     // In the view.yml
     indexSuccess:
       stylesheets: [special: { position: first }]
 
+-
+    
     [php]
     // In the action
     $this->getResponse()->addStylesheet('special', 'first');
@@ -770,10 +785,13 @@ Listing 7-33 - Defining the Position of the Included Asset
 
 Listing 7-34 - Style Sheet Inclusion with Raw Name
 
+    [yml]
     // In the view.yml
     indexSuccess:
       stylesheets: [main, paper: { raw_name: true }]
 
+-
+    
     [php]
     // In the Action
     $this->getResponse()->addStylesheet('main', '', array('raw_name' => true));
@@ -788,10 +806,13 @@ To specify media for a style sheet inclusion, you can change the default style s
 
 Listing 7-35 - Style Sheet Inclusion with Media
 
+    [yml]
     // In the view.yml
     indexSuccess:
       stylesheets: [main, paper: { media: print }]
 
+-
+    
     [php]
     // In the Action
     $this->getResponse()->addStylesheet('paper', '', array('media' => 'print'));
@@ -810,9 +831,12 @@ You have already seen that the default layout is `myproject/apps/frontend/templa
 
 Listing 7-36 - Layout Definition 
 
+    [yml]
     // In view.yml
     indexSuccess:
       layout: my_layout
+
+-
 
     [php]
     // In the action
@@ -825,10 +849,13 @@ Some views don't need any layout at all (for instance, plain text pages or RSS f
 
 Listing 7-37 - Layout Removal 
 
+    [yml]
     // In `view.yml`
     indexSuccess:
       has_layout: false
     
+-
+
     [php]
     // In the Action
     $this->setLayout(false);
@@ -1028,7 +1055,7 @@ As a matter of fact, the variables in the template are not of the type you might
     <?php echo get_class($test_object) ?>
      => sfOutputEscaperObjectDecorator
 
-This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can be still be accessed using `[]`, be traversed using `foreach`, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
+This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can still be accessed using `[]`, be traversed using `foreach`, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
 
 You still have a way to retrieve the raw data through the `$sf_data` object. In addition, methods of escaped objects are altered to accept an additional parameter: an escaping method. So you can choose an alternative escaping method each time you display a variable in a template, or opt for the `ESC_RAW` helper to deactivate escaping. See Listing 7-46 for an example.
 

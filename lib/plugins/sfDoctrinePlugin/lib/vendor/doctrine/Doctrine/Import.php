@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Import.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Import.php 5976 2009-07-01 04:04:33Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 5976 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  */
@@ -364,6 +364,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
         $connections = Doctrine_Manager::getInstance()->getConnections();
+        $classes = array();
 
         foreach ($connections as $name => $connection) {
           // Limit the databases to the ones specified by $databases.
@@ -377,7 +378,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
           $builder->setOptions($options);
 
           $definitions = array();
-          $classes = array();
+
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;

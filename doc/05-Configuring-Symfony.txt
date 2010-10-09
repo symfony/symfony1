@@ -119,7 +119,13 @@ Listing 5-6 - YAML Boolean Values Syntax
     true_values:   [ on, true, +, yes, y ]
     false_values:  [ off, false, -, no, n ]
 
-Don't hesitate to add comments (starting with the hash mark, `#`) and extra spaces to values to make your YAML files more readable, as shown in Listing 5-7.
+>**NOTE**
+>The above values are supported by the YAML parser, however it is highly
+>recommended to use only true or false to be compliant with current and
+>future YAML specifications.
+
+Don't hesitate to add comments (starting with the hash mark, `#`) and extra
+spaces to values to make your YAML files more readable, as shown in Listing 5-7.
 
 Listing 5-7 - YAML Comments Syntax and Value Alignment
 

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCallable.class.php 11534 2008-09-14 14:35:50Z fabien $
+ * @version    SVN: $Id: sfCallable.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 class sfCallable
 {
@@ -34,7 +34,7 @@ class sfCallable
   /**
    * Returns the current callable.
    *
-   * @param mixed The current callable
+   * @return mixed The current callable
    */
   public function getCallable()
   {

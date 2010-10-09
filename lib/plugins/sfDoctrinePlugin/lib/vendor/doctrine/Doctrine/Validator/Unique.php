@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Unique.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Unique.php 6398 2009-09-24 14:36:27Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6398 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Unique
@@ -69,7 +69,8 @@ class Doctrine_Validator_Unique
         if ( ! ($state == Doctrine_Record::STATE_TDIRTY || $state == Doctrine_Record::STATE_TCLEAN)) {
             foreach ((array) $table->getIdentifierColumnNames() as $pk) {
                 $sql .= ' AND ' . $conn->quoteIdentifier($pk) . ' != ?';
-                $values[] = $this->invoker->$pk;
+                $pkFieldName = $table->getFieldName($pk);
+                $values[] = $this->invoker->$pkFieldName;
             }
         }
         

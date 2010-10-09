@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 21895 2009-09-11 09:31:45Z fabien $
  */
 class sfProjectConfiguration
 {
@@ -537,6 +537,11 @@ class sfProjectConfiguration
     return sfProjectConfiguration::$active;
   }
 
+  /**
+   * Guesses the project root directory.
+   *
+   * @return string The project root directory
+   */
   static public function guessRootDir()
   {
     $r = new ReflectionClass('ProjectConfiguration');

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Builder.php 5818 2009-06-03 19:45:58Z jwage $
+ *  $Id: Builder.php 6401 2009-09-24 16:12:04Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 5818 $
+ * @version     $Revision: 6401 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
@@ -516,7 +516,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             // If the body of the function has contents and we are using inheritance
             // then we need call the parent::setUp() before the body of the function
             // Class table inheritance is the only one we shouldn't call parent::setUp() for
-            if ($code && isset($definition['inheritance']['type']) && $definition['inheritance']['type'] != 'class_table') {
+            if ( ! isset($definition['inheritance']['type']) || $definition['inheritance']['type'] != 'class_table') {
                 $code = "parent::setUp();" . PHP_EOL . '    ' . $code;
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: UnitOfWork.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: UnitOfWork.php 6124 2009-07-20 17:47:01Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +33,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6124 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
  */
@@ -762,8 +762,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                             continue;
                         }
 
-                        unset($flushList[$index]);
-                        array_splice($flushList, $index3, 0, $assocClassName);
+                        unset($flushList[$index3]);
+                        array_splice($flushList, $index - 1, 0, $assocClassName);
                         $index = $relatedCompIndex;
                     } else {
                         $flushList[] = $assocClassName;

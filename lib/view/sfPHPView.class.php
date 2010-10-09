@@ -16,7 +16,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfPHPView.class.php 11783 2008-09-25 16:21:27Z fabien $
+ * @version    SVN: $Id: sfPHPView.class.php 20606 2009-07-30 14:22:31Z fabien $
  */
 class sfPHPView extends sfView
 {
@@ -69,7 +69,8 @@ class sfPHPView extends sfView
     $this->loadCoreAndStandardHelpers();
 
     // EXTR_REFS can't be used (see #3595 and #3151)
-    extract($this->attributeHolder->toArray());
+    $vars = $this->attributeHolder->toArray();
+    extract($vars);
 
     // render
     ob_start();

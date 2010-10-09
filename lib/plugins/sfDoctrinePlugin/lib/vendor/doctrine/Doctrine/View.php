@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: View.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: View.php 6162 2009-07-24 19:39:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6162 $
  */
 class Doctrine_View
 {
@@ -129,7 +129,7 @@ class Doctrine_View
     {
         $sql = sprintf(self::CREATE, $this->_name, $this->_query->getQuery());
         try {
-            $this->_conn->execute($sql);
+            $this->_conn->execute($sql, $this->_query->getParams());
         } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }

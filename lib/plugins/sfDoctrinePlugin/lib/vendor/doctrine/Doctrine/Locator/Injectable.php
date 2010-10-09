@@ -29,7 +29,6 @@
  * @link        http://www.phpdoctrine.net
  * @author      Janne Vanhala <jpvanhal@cc.hut.fi>
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Eevert Saukkokoski <dmnEe0@gmail.com>
  * @version     $Revision$
  * @since       1.0
  */

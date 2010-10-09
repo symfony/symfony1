@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 19411 2009-06-20 11:54:04Z fabien $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 abstract class sfTestFunctionalBase
 {
@@ -86,7 +86,7 @@ abstract class sfTestFunctionalBase
   /**
    * Begins a block of test for the current tester.
    *
-   * @param sfTester The current sfTester instance
+   * @return sfTester The current sfTester instance
    */
   public function begin()
   {
@@ -101,7 +101,7 @@ abstract class sfTestFunctionalBase
   /**
    * End a block of test for the current tester.
    *
-   * @param sfTestFunctionalBase
+   * @return sfTestFunctionalBase
    */
   public function end()
   {

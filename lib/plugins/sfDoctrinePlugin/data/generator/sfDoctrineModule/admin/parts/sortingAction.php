@@ -29,3 +29,8 @@
 
     $this->getUser()->setAttribute('<?php echo $this->getModuleName() ?>.sort', $sort, 'admin_module');
   }
+
+  protected function isValidSortColumn($column)
+  {
+    return Doctrine::getTable('<?php echo $this->getModelClass() ?>')->hasColumn($column);
+  }

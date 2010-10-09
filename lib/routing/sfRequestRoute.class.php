@@ -16,10 +16,31 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRequestRoute.class.php 11794 2008-09-26 09:05:48Z fabien $
+ * @version    SVN: $Id: sfRequestRoute.class.php 20472 2009-07-24 19:25:20Z Kris.Wallsmith $
  */
 class sfRequestRoute extends sfRoute
 {
+  /**
+   * Constructor.
+   *
+   * Applies a default sf_method requirements of GET or HEAD.
+   *
+   * @see sfRoute
+   */
+  public function __construct($pattern, $defaults = array(), $requirements = array(), $options = array())
+  {
+    if (!isset($requirements['sf_method']))
+    {
+      $requirements['sf_method'] = array('get', 'head');
+    }
+    else
+    {
+      $requirements['sf_method'] = array_map('strtolower', (array) $requirements['sf_method']);
+    }
+
+    parent::__construct($pattern, $defaults, $requirements, $options);
+  }
+
   /**
    * Returns true if the URL matches this route, false otherwise.
    *
@@ -35,43 +56,29 @@ class sfRequestRoute extends sfRoute
       return false;
     }
 
-    if (!isset($this->requirements['sf_method']))
-    {
-      $this->requirements['sf_method'] = array('get', 'head');
-    }
-
     // enforce the sf_method requirement
-    $methods = is_array($this->requirements['sf_method']) ? $this->requirements['sf_method'] : array($this->requirements['sf_method']);
-    foreach ($methods as $method)
+    if (in_array(strtolower($context['method']), $this->requirements['sf_method']))
     {
-      if (0 == strcasecmp($method, $context['method']))
-      {
-        return $parameters;
-      }
+      return $parameters;
     }
 
     return false;
   }
 
   /**
-   * Returns true if the parameters matches this route, false otherwise.
+   * Returns true if the parameters match this route, false otherwise.
    *
    * @param  mixed   $params The parameters
    * @param  array   $context The context
    *
-   * @return Boolean         true if the parameters matches this route, false otherwise.
+   * @return Boolean true if the parameters match this route, false otherwise.
    */
   public function matchesParameters($params, $context = array())
   {
     if (isset($params['sf_method']))
     {
-      if (!isset($this->requirements['sf_method']))
-      {
-        $this->requirements['sf_method'] = 'get';
-      }
-
       // enforce the sf_method requirement
-      if ($this->requirements['sf_method'] != $params['sf_method'])
+      if (!in_array(strtolower($params['sf_method']), $this->requirements['sf_method']))
       {
         return false;
       }

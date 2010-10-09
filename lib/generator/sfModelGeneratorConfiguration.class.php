@@ -6,7 +6,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 19819 2009-07-02 11:45:11Z fabien $
+ * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 21864 2009-09-10 16:44:16Z fabien $
  */
 class sfModelGeneratorConfiguration
 {
@@ -311,6 +311,11 @@ class sfModelGeneratorConfiguration
 
       foreach ($fieldsets as $fieldset => $names)
       {
+        if (!$names)
+        {
+          continue;
+        }
+
         $fields[$fieldset] = array();
 
         foreach ($names as $name)

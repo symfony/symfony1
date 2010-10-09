@@ -19,7 +19,8 @@ abstract class BaseCamelCase extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasOne('Article', array(
+        parent::setUp();
+    $this->hasOne('Article', array(
              'local' => 'article_id',
              'foreign' => 'id'));
     }

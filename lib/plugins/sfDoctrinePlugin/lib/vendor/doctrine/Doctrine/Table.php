@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Table.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Table.php 6405 2009-09-24 18:56:54Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Table
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6405 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -640,21 +640,15 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                  'foreign'      => $relation->getForeignColumnName(),
                                  'foreignTable' => $relation->getTable()->getTableName());
 
-                    if (($key = array_search($def, $options['foreignKeys'])) === false) {
+                    if ($integrity !== $emptyIntegrity) {
+                        $def = array_merge($def, $integrity);
+                    }
+                    if (($key = $this->_checkForeignKeyExists($def, $options['foreignKeys'])) === false) {
                         $options['foreignKeys'][] = $def;
-                        if ($integrity !== $emptyIntegrity) {
-                            $constraints[] = $integrity;
-                        }
                     } else {
-                        if ($integrity !== $emptyIntegrity) {
-                            $constraints[$key] = $integrity;
-                        }
+                        $options['foreignKeys'][$key] = array_merge($options['foreignKeys'][$key], $def);
                     }
                 }
-            }
-
-            foreach ($constraints as $k => $def) {
-                $options['foreignKeys'][$k] = array_merge($options['foreignKeys'][$k], $def);
             }
         }
 
@@ -663,6 +657,24 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return array('tableName' => $this->getOption('tableName'),
                      'columns'   => $columns,
                      'options'   => array_merge($this->getOptions(), $options));
+    }
+
+    /**
+     * Check if a foreign definition already exists in the fks array for a 
+     * foreign table, local and foreign key
+     *
+     * @param  array $def          Foreign key definition to check for
+     * @param  array $foreignKeys  Array of existing foreign key definitions to check in
+     * @return boolean $result     Whether or not the foreign key was found
+     */
+    protected function _checkForeignKeyExists($def, $foreignKeys)
+    {
+        foreach ($foreignKeys as $key => $foreignKey) {
+            if ($def['local'] == $foreignKey['local'] && $def['foreign'] == $foreignKey['foreign'] && $def['foreignTable'] == $foreignKey['foreignTable']) {
+                return $key;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1029,6 +1041,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if ($length == null) {
             switch ($type) {
+                case 'integer':
+                    $length = 8;
+                break;
                 case 'decimal':
                     $length = 18;
                 break;
@@ -1040,8 +1055,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 case 'object':
                 case 'blob':
                 case 'gzip':
-                    // use php int max
-                    $length = 2147483647;
+                    //$length = 2147483647;
+                    
+                    //All the DataDict driver classes have work-arounds to deal
+                    //with unset lengths.
+                    $length = null;
                 break;
                 case 'boolean':
                     $length = 1;
@@ -2283,7 +2301,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         if (isset($by)) {
             if ( ! isset($arguments[0])) {
-                throw new Doctrine_Table_Exception('You must specify the value to findBy');
+                throw new Doctrine_Table_Exception('You must specify the value to ' . $method);
             }
 
             $fieldName = $this->_resolveFindByFieldName($by);

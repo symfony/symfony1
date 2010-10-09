@@ -16,7 +16,8 @@ abstract class BaseGroup extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasMany('Permission as Permissions', array(
+        parent::setUp();
+    $this->hasMany('Permission as Permissions', array(
              'refClass' => 'GroupPermission',
              'local' => 'group_id',
              'foreign' => 'permission_id'));

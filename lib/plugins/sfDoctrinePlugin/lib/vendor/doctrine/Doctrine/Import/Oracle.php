@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Oracle.php 5850 2009-06-09 08:52:35Z jwage $
+ *  $Id: Oracle.php 6151 2009-07-21 21:50:23Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  * @subpackage  Import
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision: 5850 $
+ * @version     $Revision: 6151 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -40,15 +40,8 @@ class Doctrine_Import_Oracle extends Doctrine_Import
         if ( ! $this->conn->getAttribute(Doctrine::ATTR_EMULATE_DATABASE)) {
             throw new Doctrine_Import_Exception('database listing is only supported if the "emulate_database" option is enabled');
         }
-        /**
-        if ($this->conn->options['database_name_prefix']) {
-            $query = 'SELECT SUBSTR(username, ';
-            $query.= (strlen($this->conn->getAttribute(['database_name_prefix'])+1);
-            $query.= ") FROM sys.dba_users WHERE username LIKE '";
-            $query.= $this->conn->options['database_name_prefix']."%'";
-        } else {
-        */
-        $query   = 'SELECT username FROM sys.dba_users';
+
+        $query   = 'SELECT username FROM sys.user_users';
 
         $result2 = $this->conn->standaloneQuery($query);
         $result  = $result2->fetchColumn();
@@ -76,7 +69,8 @@ class Doctrine_Import_Oracle extends Doctrine_Import
      */
     public function listTriggers($database = null)
     {
-
+        $query = "SELECT trigger_name FROM sys.user_triggers"; 
+        return $this->conn->fetchColumn($query);
     }
 
     /**
@@ -182,16 +176,17 @@ QEND;
     public function listTableRelations($table)
     {
         $relations = array();
-        $sql  = 'SELECT ac.table_name AS referenced_table_name, lcc.column_name AS local_column_name, rcc.column_name AS referenced_column_name '
-              . 'FROM all_constraints ac '
-              . 'JOIN all_cons_columns lcc ON ac.r_constraint_name = lcc.constraint_name '
-              . 'JOIN all_cons_columns rcc ON ac.constraint_name = rcc.constraint_name '
-              . "WHERE ac.constraint_type = 'R'" 
-              . "AND ac.r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE constraint_type IN ('P', 'U') AND table_name = :tableName)";
-        
+        $sql = 'SELECT '
+             . 'rcc.table_name AS referenced_table_name, '
+             . 'lcc.column_name AS local_column_name, '
+             . 'rcc.column_name AS referenced_column_name '
+             . 'FROM user_constraints ac '
+             . 'JOIN user_cons_columns rcc ON ac.r_constraint_name = rcc.constraint_name '
+             . 'JOIN user_cons_columns lcc ON ac.constraint_name = lcc.constraint_name '
+             . "WHERE ac.constraint_type = 'R' AND ac.table_name = :tableName";
+
         $results = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
-        foreach ($results as $result) 
-        {
+        foreach ($results as $result) {
             $result = array_change_key_case($result, CASE_LOWER);
             $relations[] = array('table'   => $result['referenced_table_name'],
                                  'local'   => $result['local_column_name'],
@@ -199,6 +194,7 @@ QEND;
         }
         return $relations;
     }
+
     /**
      * lists tables
      *
@@ -207,7 +203,7 @@ QEND;
      */
     public function listTables($database = null)
     {
-        $query = 'SELECT table_name FROM sys.user_tables';
+        $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE'";
         return $this->conn->fetchColumn($query);
     }
 
@@ -240,17 +236,7 @@ QEND;
      */
     public function listUsers()
     {
-        /**
-        if ($this->conn->options['emulate_database'] && $this->conn->options['database_name_prefix']) {
-            $query = 'SELECT SUBSTR(username, ';
-            $query.= (strlen($this->conn->options['database_name_prefix'])+1);
-            $query.= ") FROM sys.dba_users WHERE username NOT LIKE '";
-            $query.= $this->conn->options['database_name_prefix']."%'";
-        } else {
-        */
-
-        $query = 'SELECT username FROM sys.dba_users';
-        //}
+        $query = 'SELECT username FROM sys.all_users';
 
         return $this->conn->fetchColumn($query);
     }

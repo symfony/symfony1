@@ -75,13 +75,7 @@ default:
       logging:                          %SF_LOGGING_ENABLED%
       generate_shortest_url:            false
       extra_parameters_as_query_string: false
-      cache:
-        class: sfFileCache
-        param:
-          automatic_cleaning_factor: 0
-          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
-          lifetime:                  31556926
-          prefix:                    %SF_APP_DIR%/routing
+      cache:                            ~
 
   logger:
     class: sfAggregateLogger

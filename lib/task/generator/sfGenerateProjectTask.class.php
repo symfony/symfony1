@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateProjectTask.class.php 13588 2008-12-01 13:53:09Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfGenerateProjectTask.class.php 21897 2009-09-11 09:44:19Z fabien $
  */
 class sfGenerateProjectTask extends sfGeneratorBaseTask
 {
@@ -63,7 +63,7 @@ EOF;
   {
     if (file_exists('symfony'))
     {
-      throw new sfCommandException(sprintf('A project named "%s" already exists in this directory.', $arguments['name']));
+      throw new sfCommandException(sprintf('A symfony project already exists in this directory (%s).', getcwd()));
     }
 
     // create basic project structure

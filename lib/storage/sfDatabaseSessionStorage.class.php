@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 17519 2009-04-22 07:37:46Z dwhittle $
+ * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 20300 2009-07-19 10:48:26Z fabien $
  */
 abstract class sfDatabaseSessionStorage extends sfSessionStorage
 {
@@ -103,7 +103,7 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     $databaseClass = get_class($database);
     if($databaseClass == 'sfPropelDatabase')
     {
-      $this->db = Propel::getConnection();
+      $this->db = Propel::getConnection($database->getParameter('name'));
     }
     elseif($databaseClass == 'sfDoctrineDatabase')
     {

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mssql.php 5848 2009-06-09 08:15:56Z jwage $
+ *  $Id: Mssql.php 6049 2009-07-10 17:53:39Z dcousineau $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @author      Frank M. Kromann <frank@kromann.info> (PEAR MDB2 Mssql driver)
  * @author      David Coallier <davidc@php.net> (PEAR MDB2 Mssql driver)
- * @version     $Revision: 5848 $
+ * @version     $Revision: 6049 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -96,7 +96,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 return 'IMAGE';
             case 'integer':
             case 'int':
-                return 'INT';
+                return (isset($field['unsigned']) && $field['unsigned']) ? 'BIGINT' : 'INT';
             case 'boolean':
                 return 'BIT';
             case 'date':
@@ -242,7 +242,9 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
 
 
         $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
-        $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        //$unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        // MSSQL does not support the UNSIGNED keyword
+        $unsigned = '';
         $comment  = (isset($field['comment']) && $field['comment']) 
             ? " COMMENT '" . $field['comment'] . "'" : '';
 

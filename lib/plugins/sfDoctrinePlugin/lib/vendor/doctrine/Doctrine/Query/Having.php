@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Having.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Having.php 6360 2009-09-14 20:44:07Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 6360 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Having extends Doctrine_Query_Condition
@@ -67,11 +67,13 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
                     $map       = $this->query->load($reference, false);
                     $field     = $map['table']->getColumnName($field);
                     $func      = $this->query->getTableAlias($reference) . '.' . $field;
+
+                    return $this->query->getConnection()->quoteIdentifier($this->query->getTableAlias($reference) . '.' . $field);
                 } else {
                     $field = end($a);
-                    $func  = $this->query->getAggregateAlias($field);
+
+                    return $this->query->getAggregateAlias($field);
                 }
-                return $this->query->getConnection()->quoteIdentifier($func);
             } else {
                 return $this->query->getConnection()->quoteIdentifier($func);
             }

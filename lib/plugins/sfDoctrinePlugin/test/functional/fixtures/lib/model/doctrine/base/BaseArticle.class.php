@@ -30,7 +30,8 @@ abstract class BaseArticle extends myDoctrineRecord
 
     public function setUp()
     {
-        $this->hasOne('Author', array(
+        parent::setUp();
+    $this->hasOne('Author', array(
              'local' => 'author_id',
              'foreign' => 'id'));
 

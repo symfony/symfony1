@@ -97,17 +97,18 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getForeignRefColumnName();
 
             if ($this->definition['equal']) {
-                $sub2   = 'SELECT ' . $this->getLocalRefColumnName()
-                        . ' FROM '  . $assocTable
-                        . ' WHERE ' . $this->getForeignRefColumnName()
-                        . ' = ?';
+                $sub2 = 'SELECT ' . $this->getLocalRefColumnName()
+                      . ' FROM '  . $assocTable
+                      . ' WHERE ' . $this->getForeignRefColumnName()
+                      . ' = ?';
 
                 $condition[] = $tableName . '.' . $identifier . ' IN (' . $sub2 . ')';
                 $joinCondition[] = $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getLocalRefColumnName();
             }
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
-              ->where(implode(' OR ', $condition));
+              ->where(implode(' OR ', $condition))
+              ->orderBy($tableName . '.' . $identifier . ' ASC');
             $q->addComponent($tableName,  $this->getClass());
             
             $path = $this->getClass(). '.' . $this->getAssociationFactory()->getComponentName();

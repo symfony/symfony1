@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 20047 2009-07-09 09:37:17Z FabianLange $
+ * @version    SVN: $Id: sfWebRequest.class.php 21875 2009-09-11 05:54:39Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -882,7 +882,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the request context used.
    *
-   * @param array An array of values representing the current request
+   * @return array An array of values representing the current request
    */
   public function getRequestContext()
   {

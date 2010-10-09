@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfForm.class.php 20298 2009-07-19 10:43:11Z fabien $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -751,7 +751,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
   {
     $this->defaults = is_null($defaults) ? array() : $defaults;
 
-    if (self::$CSRFProtection)
+    if ($this->isCSRFProtected())
     {
       $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken(self::$CSRFSecret));
     }

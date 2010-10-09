@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelLoadDataTask.class.php 13140 2008-11-18 18:57:24Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelLoadDataTask.class.php 20545 2009-07-28 06:47:59Z fabien $
  */
 class sfPropelLoadDataTask extends sfPropelBaseTask
 {
@@ -86,6 +86,7 @@ EOF;
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);
 
+    $dirs = array();
     foreach ($fixturesDirs as $fixturesDir)
     {
       if (!is_readable($fixturesDir))
@@ -94,7 +95,9 @@ EOF;
       }
 
       $this->logSection('propel', sprintf('load data from "%s"', $fixturesDir));
-      $data->loadData($fixturesDir, $options['connection']);
+      $dirs[] = $fixturesDir;
     }
+
+    $data->loadData($dirs, $options['connection']);
   }
 }
