@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPearRestPlugin.class.php 11764 2008-09-24 14:27:54Z fabien $
+ * @version    SVN: $Id: sfPearRestPlugin.class.php 14829 2009-01-17 09:31:00Z dwhittle $
  */
 class sfPearRestPlugin extends sfPearRest11
 {
@@ -118,7 +118,7 @@ class sfPearRestPlugin extends sfPearRest11
       throw new sfPluginRestException(sprintf('Unable to get information for plugin "%s": %s', $plugin, $allreleases->getMessage()));
     }
 
-    if (!is_array($allreleases['r']) || !count($allreleases['r']))
+    if (!isset($allreleases['r']) || (isset($allreleases['r']) && !is_array($allreleases['r']) || !count($allreleases['r'])))
     {
       throw new sfPluginRestException(sprintf('No release available for plugin "%s"', $plugin));
     }

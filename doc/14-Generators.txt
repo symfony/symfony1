@@ -737,7 +737,7 @@ Figure 14-22 - Interactions in the `list` view
 
 In an `edit` view, as there is only one record edited at a time, there is only one set of actions to define (under `actions`). The `edit` interactions defined in Listing 14-31 render like in Figure 14-23. Both the `save` and the `save_and_add` actions save the current edits in the records, the difference being that the `save` action displays the `edit` view on the current record after saving, while the `save_and_add` action displays an empty `edit` view to add another record. The `save_and_add` action is a shortcut that you will find very useful when adding many records in rapid succession. As for the position of the `delete` action, it is separated from the other buttons so that users don't click it by mistake.
 
-The interaction names starting with an underscore (`_`) tell symfony to use the default icon and action corresponding to these interactions. The administration generator understands `_edit`, `_delete`, `_create`, `_list`, `_save`, `_save_and_add`, and `_create`.
+The interaction names starting with an underscore (`_`) tell symfony to use the default icon and action corresponding to these interactions. The administration generator understands `_edit`, `_delete`, `_list`, `_save`, `_save_and_add`, and `_create`.
 
 Figure 14-23 - Interactions in the `edit` view
 

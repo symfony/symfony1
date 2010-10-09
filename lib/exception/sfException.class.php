@@ -18,7 +18,7 @@
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfException.class.php 12751 2008-11-08 09:38:42Z fabien $
+ * @version    SVN: $Id: sfException.class.php 15223 2009-02-03 12:02:45Z fabien $
  */
 class sfException extends Exception
 {
@@ -215,7 +215,7 @@ class sfException extends Exception
    */
   static protected function formatArrayAsHtml($values)
   {
-    return '<pre>'.@sfYaml::Dump($values).'</pre>';
+    return '<pre>'.htmlspecialchars(@sfYaml::Dump($values), ENT_QUOTES, sfConfig::get('sf_charset', 'UTF-8')).'</pre>';
   }
 
   /**

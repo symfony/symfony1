@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 12216 2008-10-16 12:25:26Z fabien $
+ * @version    SVN: $Id: lime.php 13950 2008-12-11 16:10:13Z FabianLange $
  */
 class lime_test
 {
@@ -772,6 +772,7 @@ EOF;
     $total_covered_lines = 0;
     foreach ($files as $file)
     {
+      $file = realpath($file);
       $is_covered = isset($this->coverage[$file]);
       $cov = isset($this->coverage[$file]) ? $this->coverage[$file] : array();
       $covered_lines = array();

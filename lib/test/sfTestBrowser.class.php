@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestBrowser.class.php 12997 2008-11-14 06:48:24Z fabien $
+ * @version    SVN: $Id: sfTestBrowser.class.php 13699 2008-12-04 05:44:01Z fabien $
  */
 class sfTestBrowser extends sfBrowser
 {
@@ -517,19 +517,19 @@ function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
   switch ($errno)
   {
     case E_WARNING:
-      $msg = printf($msg, 'warning');
+      $msg = sprintf($msg, 'warning');
       throw new Exception($msg);
       break;
     case E_NOTICE:
-      $msg = printf($msg, 'notice');
-      throw new Exception();
+      $msg = sprintf($msg, 'notice');
+      throw new Exception($msg);
       break;
     case E_STRICT:
-      $msg = printf($msg, 'strict');
+      $msg = sprintf($msg, 'strict');
       throw new Exception($msg);
       break;
     case E_RECOVERABLE_ERROR:
-      $msg = printf($msg, 'catchable');
+      $msg = sprintf($msg, 'catchable');
       throw new Exception($msg);
       break;
   }

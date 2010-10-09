@@ -307,7 +307,7 @@ Listing 7-10 - The Partial Can Now Use the Variable, in `mymodule/templates/_myp
 
 In Chapter 2, the first sample script was split into two parts to separate the logic from the presentation. Just like the MVC pattern applies to actions and templates, you may need to split a partial into a logic part and a presentation part. In such a case, you should use a component.
 
-A component is like an action, except it's much faster. The logic of a component is kept in a class inheriting from `sfComponents`, located in an `action/components.class.php` file. Its presentation is kept in a partial. Methods of the `sfComponents` class start with the word `execute`, just like actions, and they can pass variables to their presentation counterpart in the same way that actions can pass variables. Partials that serve as presentation for components are named by the component (without the leading `execute`, but with an underscore instead). Table 7-1 compares the naming conventions for actions and components.
+A component is like an action, except it's much faster. The logic of a component is kept in a class inheriting from `sfComponents`, located in an `actions/components.class.php` file. Its presentation is kept in a partial. Methods of the `sfComponents` class start with the word `execute`, just like actions, and they can pass variables to their presentation counterpart in the same way that actions can pass variables. Partials that serve as presentation for components are named by the component (without the leading `execute`, but with an underscore instead). Table 7-1 compares the naming conventions for actions and components.
 
 Table 7-1 - Action and Component Naming Conventions
 

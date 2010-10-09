@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormGenerator.class.php 9534 2008-06-11 08:22:45Z fabien $
+ * @version    SVN: $Id: sfPropelFormGenerator.class.php 14728 2009-01-14 23:34:36Z Kris.Wallsmith $
  */
 class sfPropelFormGenerator extends sfGenerator
 {
@@ -333,16 +333,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $map = call_user_func(array($this->getForeignTable($column)->getPhpName().'Peer', 'getTableMap'));
-      foreach ($map->getColumns() as $primaryKey)
-      {
-        if ($primaryKey->isPrimaryKey())
-        {
-          break;
-        }
-      }
-
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getPhpName(), strtolower($primaryKey->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getPhpName(), strtolower($column->getRelatedColumnName()));
     }
     else if ($column->isPrimaryKey())
     {

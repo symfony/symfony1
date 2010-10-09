@@ -6,14 +6,15 @@
  * @package    form
  * @subpackage <?php echo $this->underscore($this->table->getPhpName()) ?>
 
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 8807 2008-05-06 14:12:28Z fabien $
+ * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 15484 2009-02-13 13:13:51Z fabien $
  */
 class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
 {
   public function setup()
   {
     $this->setWidgets(array(
-<?php foreach ($this->table->getColumns() as $column): ?>
+<?php $columns = $this->table->getColumns(); // PHP 5.1.2 bug ?>
+<?php foreach ($columns as $column): ?>
       '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
@@ -22,7 +23,8 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-<?php foreach ($this->table->getColumns() as $column): ?>
+<?php $columns = $this->table->getColumns(); // PHP 5.1.2 bug ?>
+<?php foreach ($columns as $column): ?>
       '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>

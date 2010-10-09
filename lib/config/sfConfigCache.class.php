@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfConfigCache.class.php 10059 2008-07-02 05:38:45Z fabien $
+ * @version    SVN: $Id: sfConfigCache.class.php 14481 2009-01-06 09:42:57Z fabien $
  */
 class sfConfigCache
 {
@@ -354,6 +354,7 @@ class sfConfigCache
    */
   public function registerConfigHandler($handler, $class, $params = array())
   {
+    class_exists($class);
     $this->userHandlers[$handler] = new $class($params);
   }
 

@@ -27,7 +27,7 @@ Listing 17-1 - Registering an Event Listener
       // do something with the user culture
     }
 
-All events and listener registrations are managed by a special object called the *event dispatcher*. This object is available from everywhere in symfony by way of the `sfContext` singleton, and most symfony objects offer a `getDispatcher()` method to get direct access to it. Using the dispatcher's `connect()` method, you can register any PHP callable (either a class method or a function) to be called when an event occurs. The first argument of `connect()` is the event identifier, which is a string composed of a namespace and a name. The second argument is a PHP callable.
+All events and listener registrations are managed by a special object called the *event dispatcher*. This object is available from everywhere in symfony by way of the `sfContext` singleton, and most symfony objects offer a `getEventDispatcher()` method to get direct access to it. Using the dispatcher's `connect()` method, you can register any PHP callable (either a class method or a function) to be called when an event occurs. The first argument of `connect()` is the event identifier, which is a string composed of a namespace and a name. The second argument is a PHP callable.
 
 Once the function registered in the event dispatcher, it sits and waits until the event is fired. The event dispatcher keeps a record of all event listeners, and knows which ones to call when an event is notified. When calling these methods or functions, the dispatcher passes them an `sfEvent` object as parameter.
 
@@ -503,7 +503,7 @@ So, basically, a plug-in is a packaged extension for a symfony project. With plu
 
 The symfony project website contains a page dedicated to symfony plug-ins. It is in the symfony wiki and accessible with the following URL:
 
-    http://trac.symfony-project.org/wiki/SymfonyPlugins
+    http://www.symfony-project.org/plugins/
 
 Each plug-in listed there has its own page, with detailed installation instructions and documentation.
 
@@ -719,20 +719,20 @@ Listing 17-20 - Example Schema Declaration in a Plug-In, in `myPlugin/config/sch
 >**TIP**: Registering routing rules in a Plug-in
 >A plug-in can add new rules to the routing system, but it cannot use a custom `routing.yml` configuration file for that. This is because the order in which rules are defined is very important, and the simple cascade configuration system of YAML files in symfony would mess this order up. Instead, plug-ins need to register an event listener on the `routing.load_configuration` event and manually prepend rules in the listener:
 >
->    [php]
->    // in plugins/myPlugin/config/config.php
->    $this->dispatcher->connect('routing.load_configuration', array('myPluginRouting', 'listenToRoutingLoadConfigurationEvent'));
->    
->    // in plugins/myPlugin/lib/myPluginRouting.php
->    class myPluginRouting
->    {
->      static public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
->      {
->        $routing = $event->getSubject();
->        // add plug-in routing rules on top of the existing ones
->        $routing->prependRoute('my_route', '/my_plugin/:action', array('module' => 'myPluginAdministrationInterface'));
->      }
->    }
+>     [php]
+>     // in plugins/myPlugin/config/config.php
+>     $this->dispatcher->connect('routing.load_configuration', array('myPluginRouting', 'listenToRoutingLoadConfigurationEvent'));
+>     
+>     // in plugins/myPlugin/lib/myPluginRouting.php
+>     class myPluginRouting
+>     {
+>       static public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
+>       {
+>         $routing = $event->getSubject();
+>         // add plug-in routing rules on top of the existing ones
+>         $routing->prependRoute('my_route', '/my_plugin/:action', array('module' => 'myPluginAdministrationInterface'));
+>       }
+>     }
 >
 
 #### Manual Plug-In Setup
@@ -1070,13 +1070,13 @@ Test the way the plug-in behaves in your application. If it works well, you are 
 
 #### Hosting Your Plug-In in the Symfony Project Website
 
-A symfony plug-in gets the broadest audience when distributed by the `symfony-project.com` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
+A symfony plug-in gets the broadest audience when distributed by the `symfony-project.org` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
 
-  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Wiki Formatting syntax ([http://trac.symfony-project.org/wiki/WikiFormatting](http://trac.symfony-project.org/wiki/WikiFormatting)).
-  2. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
-  3. Create a new page on the symfony wiki named `sfSamplePlugin` (`Plugin` is a mandatory suffix). In this page, describe the plug-in usage, the license, the dependencies, and the installation procedure. You can reuse the contents of the plug-in `README` file. Check the existing plug-ins' wiki pages and use them as an example.
-  4. Attach your PEAR package to the wiki page (`sfSamplePlugin-1.0.0.tgz`).
-  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://trac.symfony-project.org/wiki/SymfonyPlugins](http://trac.symfony-project.org/wiki/SymfonyPlugins)).
+  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Markdown Formatting syntax ([http://daringfireball.net/projects/markdown/syntax](http://daringfireball.net/projects/markdown/syntax)).
+  2. Create a symfony account (http://www.symfony-project.org/user/new) and create the plugin (http://www.symfony-project.org/plugins/new).
+  3. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
+  4. Upload your PEAR package (`sfSamplePlugin-1.0.0.tgz`).
+  5. Your plugin must now appear in the list of plugins ([http://www.symfony-project.org/plugins/](http://www.symfony-project.org/plugins/)).
 
 If you follow this procedure, users will be able to install your plug-in by simply typing the following command in a project directory:
 

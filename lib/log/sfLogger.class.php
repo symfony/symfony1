@@ -24,7 +24,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLogger.class.php 9081 2008-05-20 00:47:12Z Carl.Vondrick $
+ * @version    SVN: $Id: sfLogger.class.php 15485 2009-02-13 13:42:55Z fabien $
  */
 abstract class sfLogger
 {
@@ -216,11 +216,16 @@ abstract class sfLogger
   public function listenToLogEvent(sfEvent $event)
   {
     $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
-    unset($event['priority']);
+
     $subject  = $event->getSubject();
     $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
-    foreach ($event->getParameters() as $message)
+    foreach ($event->getParameters() as $key => $message)
     {
+      if ('priority' === $key)
+      {
+        continue;
+      }
+
       $this->log(sprintf('{%s} %s', $subject, $message), $priority);
     }
   }

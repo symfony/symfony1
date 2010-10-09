@@ -16,7 +16,7 @@ use_helper('Form');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateFormHelper.php 11700 2008-09-21 10:53:44Z fabien $
+ * @version    SVN: $Id: DateFormHelper.php 14121 2008-12-17 10:29:09Z FabianLange $
  */
 
 /**
@@ -831,60 +831,57 @@ function select_number_tag($name, $value, $options = array(), $html_options = ar
 function select_timezone_tag($name, $selected = null, $options = array())
 {
   if (!isset($options['display'])) $options['display'] = 'identifier';
-  
+
   $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $timezone_groups = $c->getTimeZones();
-  
+
   $display_key = 0;
-  
+
   switch ($options['display'])
   {
     case "identifier":
       $display_key = 0;
       break;
-      
+
     case "timezone":
       $display_key = 1;
       break;
-     
+
     case "timezone_abbr":
       $display_key = 2;
       break;
-            
+
     case "timezone_dst":
       $display_key = 3;
       break;
-      
+
     case "timezone_dst_abbr":
-      $display_key = 3;
-      break;
-      
-    case "city":
       $display_key = 4;
       break;
-      
+
+    case "city":
+      $display_key = 5;
+      break;
+
     default:
       $display_key = 0;
       break;
   }
   
   unset($options['display']);
-  
+
   $timezones = array();
   foreach ($timezone_groups as $tz_group_key => $tz_group)
   {
     $array_key = null;
-    
+
     foreach ($tz_group as $tz_key => $tz)
     {
       if ($tz_key == 0) $array_key = $tz;
       if ($tz_key == $display_key AND !empty($tz)) $timezones[$array_key] = $tz;
     }
   }
-  
-  // Remove duplicate values
-  $timezones = array_unique($timezones);
-  
+
   if ($timezone_option = _get_option($options, 'timezones'))
   {
     $diff = array_diff_key($timezones, array_flip((array) $timezone_option));
@@ -893,7 +890,10 @@ function select_timezone_tag($name, $selected = null, $options = array())
       unset($timezones[$key]);
     }
   }
-  
+
+  // Remove duplicate values
+  $timezones = array_unique($timezones);
+
   asort($timezones);
 
   $option_tags = options_for_select($timezones, $selected);

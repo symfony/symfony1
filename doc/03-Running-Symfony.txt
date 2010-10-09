@@ -268,7 +268,7 @@ Let's imagine that your shared host requires that the web folder is named `www/`
 
 In a symfony project, every path to a directory is configurable. Chapter 19 will tell you more about it, but in the meantime, you can still rename the `web` directory to `www` and have the application take it into account by changing the configuration, as shown in Listing 3-2. These lines are to be added to the end of the `config/ProjectConfiguration.class.php` file.
 
-Listing 3-2 - Changing the Default Directory Structure Settings, in `lib/ProjectConfiguration.class.php`
+Listing 3-2 - Changing the Default Directory Structure Settings, in `config/ProjectConfiguration.class.php`
 
     [php]
     class ProjectConfiguration extends sfProjectConfiguration

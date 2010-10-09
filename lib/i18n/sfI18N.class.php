@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 11700 2008-09-21 10:53:44Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 13482 2008-11-29 14:35:54Z fabien $
  */
 class sfI18N
 {
@@ -167,7 +167,11 @@ class sfI18N
     $this->culture = $culture;
 
     // change user locale for formatting, collation, and internal error messages
-    setlocale(LC_ALL, $culture.'.utf8');
+    setlocale(LC_ALL, 'en_US.utf8', 'en_US.UTF8', 'en_US.utf-8', 'en_US.UTF-8');
+    setlocale(LC_COLLATE, $culture.'.utf8', $culture.'.UTF8', $culture.'.utf-8', $culture.'.UTF-8');
+    setlocale(LC_CTYPE, $culture.'.utf8', $culture.'.UTF8', $culture.'.utf-8', $culture.'.UTF-8');
+    setlocale(LC_MONETARY, $culture.'.utf8', $culture.'.UTF8', $culture.'.utf-8', $culture.'.UTF-8');
+    setlocale(LC_TIME, $culture.'.utf8', $culture.'.UTF8', $culture.'.utf-8', $culture.'.UTF-8');
 
     if ($this->messageSource)
     {

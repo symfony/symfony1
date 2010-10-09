@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 13082 2008-11-17 21:19:56Z Jonathan.Wage $
+ * @version    SVN: $Id: sfForm.class.php 14852 2009-01-17 23:27:45Z Kris.Wallsmith $
  */
 class sfForm implements ArrayAccess
 {
@@ -293,11 +293,11 @@ class sfForm implements ArrayAccess
    * @param integer $n                The number of times to embed the form
    * @param string  $decorator        A HTML decorator for the main form around embedded forms
    * @param string  $innerDecorator   A HTML decorator for each embedded form
-   * @param array   $attributes       Attributes for schema
    * @param array   $options          Options for schema
+   * @param array   $attributes       Attributes for schema
    * @param array   $labels           Labels for schema
    */
-  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $attributes = array(), $options = array(), $labels = array())
+  public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $options = array(), $attributes = array(), $labels = array())
   {
     if (true === $this->isBound() || true === $form->isBound())
     {
@@ -326,7 +326,7 @@ class sfForm implements ArrayAccess
     $decorator = is_null($decorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $decorator;
     $innerDecorator = is_null($innerDecorator) ? $widgetSchema->getFormFormatter()->getDecoratorFormat() : $innerDecorator;
 
-    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options, $labels), $decorator);
+    $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $options, $attributes, $labels), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
     $this->resetFormFields();
@@ -749,13 +749,19 @@ class sfForm implements ArrayAccess
   /**
    * Removes a field from the form.
    *
-   * It removes the widget and the validator for the given field.
+   * It removes the widget, validator and any values stored for the given field.
    *
    * @param string $offset The field name
    */
   public function offsetUnset($offset)
   {
-    unset($this->widgetSchema[$offset], $this->validatorSchema[$offset]);
+    unset(
+      $this->widgetSchema[$offset],
+      $this->validatorSchema[$offset],
+      $this->defaults[$offset],
+      $this->taintedValues[$offset],
+      $this->values[$offset]
+    );
 
     $this->resetFormFields();
   }

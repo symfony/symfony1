@@ -5,7 +5,7 @@
  *
  * @package    form
  * @subpackage attachment
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 8807 2008-05-06 14:12:28Z fabien $
+ * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 15484 2009-02-13 13:13:51Z fabien $
  */
 class BaseAttachmentForm extends BaseFormPropel
 {

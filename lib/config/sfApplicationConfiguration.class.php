@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 13400 2008-11-27 11:13:14Z fabien $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 14219 2008-12-20 11:04:56Z fabien $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -403,7 +403,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    *
    * @return array An array of i18n directories
    */
-  public function getI18NDirsGlobalDirs()
+  public function getI18NGlobalDirs()
   {
     $dirs = array();
 
