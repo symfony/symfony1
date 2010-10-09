@@ -776,13 +776,13 @@ Listing 7-34 - Style Sheet Inclusion with Raw Name
 
     [php]
     // In the Action
-    $this->getResponse()->addStylesheet('paper', '', array('raw_name' => true));
+    $this->getResponse()->addStylesheet('main', '', array('raw_name' => true));
     
     // In the template
-    <?php use_stylesheet('paper', '', array('raw_name' => true)) ?>
+    <?php use_stylesheet('main', '', array('raw_name' => true)) ?>
     
     // Resulting View
-    <link rel="stylesheet" type="text/css" media="print" href="paper" />
+    <link rel="stylesheet" type="text/css" href="main" />
 
 To specify media for a style sheet inclusion, you can change the default style sheet tag options, as shown in Listing 7-35.
 

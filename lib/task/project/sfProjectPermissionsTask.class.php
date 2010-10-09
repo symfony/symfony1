@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectPermissionsTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfProjectPermissionsTask.class.php 13422 2008-11-27 13:30:24Z pookey $
  */
 class sfProjectPermissionsTask extends sfBaseTask
 {
@@ -40,9 +40,12 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    if (file_exists(sfConfig::get('sf_upload_dir')))
+    {
+      $this->getFilesystem()->chmod(sfConfig::get('sf_upload_dir'), 0777);
+    }
     $this->getFilesystem()->chmod(sfConfig::get('sf_cache_dir'), 0777);
     $this->getFilesystem()->chmod(sfConfig::get('sf_log_dir'), 0777);
-    $this->getFilesystem()->chmod(sfConfig::get('sf_upload_dir'), 0777);
     $this->getFilesystem()->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'symfony', 0777);
 
     $dirs = array(sfConfig::get('sf_cache_dir'), sfConfig::get('sf_upload_dir'), sfConfig::get('sf_log_dir'));

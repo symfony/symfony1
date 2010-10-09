@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 9325 2008-05-27 20:54:15Z FabianLange $
+ * @version    SVN: $Id: UrlHelper.php 13408 2008-11-27 11:51:22Z fabien $
  */
 
 
@@ -337,7 +337,10 @@ function button_to($name, $internal_uri ='', $options = array())
  *  echo mail_to('webmaster@example.com', 'send us an email');
  *    => <a href="mailto:webmaster@example.com">send us an email</a>
  *  echo mail_to('webmaster@example.com', 'send us an email', array('encode' => true));
- *    => <a href="&#x6d;a&#x69;&#x6c;&#x74;&#111;&#58;&#x77;&#x65;b&#x6d;as&#116;&#x65;&#114;&#64;&#101;&#x78;&#x61;&#x6d;&#x70;&#108;&#x65;&#46;&#99;&#x6f;&#109;">send us an email</a>
+ *    => <a href="
+            &#x6d;a&#x69;&#x6c;&#x74;&#111;&#58;&#x77;&#x65;b&#x6d;as&#116;&#x65;&#114;
+            &#64;&#101;&#x78;&#x61;&#x6d;&#x70;&#108;&#x65;&#46;&#99;&#x6f;&#109;
+          ">send us an email</a>
  * </code>
  *
  * @param  string $email          target email

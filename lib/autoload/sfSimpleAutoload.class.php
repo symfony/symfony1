@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSimpleAutoload.class.php 12676 2008-11-06 08:57:12Z fabien $
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 13317 2008-11-24 20:54:45Z fabien $
  */
 class sfSimpleAutoload
 {
@@ -137,7 +137,10 @@ class sfSimpleAutoload
   {
     if ($this->cacheChanged)
     {
-      file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
+      if (is_writable(dirname($this->cacheFile)))
+      {
+        file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
+      }
 
       $this->cacheChanged = false;
     }

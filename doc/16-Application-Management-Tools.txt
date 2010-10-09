@@ -57,8 +57,9 @@ Listing 16-3 - Changing the Log Format
       logger:
         param:
           sf_file_debug:
-            format:      %time% %type% [%priority%] %message%%EOL%
-            time_format: %b %d %H:%M:%S
+            param:
+              format:      %time% %type% [%priority%] %message%%EOL%
+              time_format: %b %d %H:%M:%S
 
 #### Symfony Log Level Configuration
 
@@ -616,7 +617,7 @@ Don't forget to clear the cache in the production server after synchronization.
 >     [php]
 >     $ php /path/to/symfony/data/bin/check_configuration.php
 >
->Even if you can use this utility from the command line, it's strongly recommended to launch it from the web by copying it under your web root directory as PHP can use different `php.ini` configuration files for the ommand line interface and the web.
+>Even if you can use this utility from the command line, it's strongly recommended to launch it from the web by copying it under your web root directory as PHP can use different `php.ini` configuration files for the command line interface and the web.
 
 -
 

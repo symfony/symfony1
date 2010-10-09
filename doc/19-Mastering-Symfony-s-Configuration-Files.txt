@@ -120,7 +120,7 @@ Two settings determine which characters precede and follow each error message: `
 
 #### Cache Settings
 
-Cache settings are defined in `cache.yml` for the most part, except for two in `settings.yml`: `cache` enables the template cache mechanism, and `etag` enables ETag handling on the server side (see Chapter 15). You can also specify which storage to use for two all cache systems (the view cache, the routing cache, and the i19n cache) in `factories.yml`. Listing 19-2 show the default view cache factory configuration.
+Cache settings are defined in `cache.yml` for the most part, except for two in `settings.yml`: `cache` enables the template cache mechanism, and `etag` enables ETag handling on the server side (see Chapter 15). You can also specify which storage to use for two all cache systems (the view cache, the routing cache, and the i18n cache) in `factories.yml`. Listing 19-2 show the default view cache factory configuration.
 
 Listing 19-2 - View Cache Configuration Settings, in `frontend/config/factories.yml`
 
@@ -135,7 +135,7 @@ Listing 19-2 - View Cache Configuration Settings, in `frontend/config/factories.
 The `class` can be any of `sfFileCache`, `sfAPCCache`, `sfEAcceleratorCache`, `sfXCacheCache`, `sfMemcacheCache`, and `sfSQLiteCache`. It can also be your own custom class, provided it extends `sfCache` and provides the same generic methods for setting, retrieving and deleting a key in the cache. The factory parameters depend on the class you choose, but there are constants:
 
   * `lifetime` defines the number of seconds after which a cache part is removed
-  * `prefix` is a prefix added to every cache key. Use the same prefix for two applications if you want their cache to be shared.
+  * `prefix` is a prefix added to every cache key (use the environment in the prefix to use different cache depending on the environment). Use the same prefix for two applications if you want their cache to be shared.
 
 Then, for each particular factory, you have to define the location of the cache storage.
 

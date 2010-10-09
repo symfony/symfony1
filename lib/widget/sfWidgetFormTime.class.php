@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormTime.class.php 9499 2008-06-09 17:40:10Z nicolas $
+ * @version    SVN: $Id: sfWidgetFormTime.class.php 13359 2008-11-26 18:28:14Z FabianLange $
  */
 class sfWidgetFormTime extends sfWidgetForm
 {
@@ -25,7 +25,7 @@ class sfWidgetFormTime extends sfWidgetForm
    *
    *  * format:                 The time format string (%hour%:%minute%:%second%)
    *  * format_without_seconds: The time format string without seconds (%hour%:%minute%)
-   *  * with_second:            Whether to include a select for seconds (false by default)
+   *  * with_seconds:           Whether to include a select for seconds (false by default)
    *  * hours:                  An array of hours for the hour select tag (optional)
    *  * minutes:                An array of minutes for the minute select tag (optional)
    *  * seconds:                An array of seconds for the second select tag (optional)

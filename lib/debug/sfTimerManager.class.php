@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTimerManager.class.php 12807 2008-11-09 08:24:40Z fabien $
+ * @version    SVN: $Id: sfTimerManager.class.php 13383 2008-11-27 07:38:21Z fabien $
  */
 class sfTimerManager
 {
@@ -35,6 +35,8 @@ class sfTimerManager
     {
       self::$timers[$name] = new sfTimer($name);
     }
+
+    self::$timers[$name]->startTimer();
 
     return self::$timers[$name];
   }

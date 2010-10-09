@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_XLIFF.class.php 9887 2008-06-26 10:04:22Z FabianLange $
+ * @version    $Id: sfMessageSource_XLIFF.class.php 13419 2008-11-27 13:15:14Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -81,12 +81,20 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    */
   protected function createDOMDocument($xml = null)
   {
-    $dom = new DOMDocument();
+    $domimp = new DOMImplementation();
+    $doctype = $domimp->createDocumentType('xliff', '-//XLIFF//DTD XLIFF//EN', 'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd');
+    $dom = $domimp->createDocument('', '', $doctype);
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
 
     if (!is_null($xml) && is_string($xml))
     {
+      // Add header for XML with UTF-8
+      if (!preg_match('/<\?xml/', $xml))
+      {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".$xml;
+      }
+
       $dom->loadXML($xml);
     }
 
@@ -200,7 +208,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $fileNode = $xpath->query('//file')->item(0);
     $fileNode->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
-    $dom = $this->createDOMDocument($dom->saveXML($dom->documentElement));
+    $dom = $this->createDOMDocument($dom->saveXML());
 
     // save it and clear the cache for this variant
     $dom->save($filename);
@@ -412,7 +420,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     $dom = $this->createDOMDocument($this->getTemplate($catalogue));
-    file_put_contents($file, $dom->saveXML($dom->documentElement));
+    file_put_contents($file, $dom->saveXML());
     chmod($file, 0777);
 
     return array($variant, $file);
@@ -424,17 +432,13 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 
     return <<<EOD
 <?xml version="1.0" ?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd" >
 <xliff version="1.0">
- <file
-  source-language="EN"
-  target-language="{$this->culture}"
-  datatype="plaintext"
-  original="$catalogue"
-  date="$date"
-  product-name="$catalogue">
-  <body>
-  </body>
- </file>
+  <file source-language="EN" target-language="{$this->culture}" datatype="plaintext" original="$catalogue" date="$date" product-name="$catalogue">
+    <header />
+    <body>
+    </body>
+   </file>
 </xliff>
 EOD;
   }

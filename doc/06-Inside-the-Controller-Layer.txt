@@ -204,7 +204,7 @@ Listing 6-7 - `sfActions` Common Methods
 >**SIDEBAR**
 >The context singleton
 >
->You already saw, in the front controller, a call to sfContext::getInstance(). In an action, the getContext() method returns the same singleton. It is a very useful object that stores a reference to all the symfony core objects related to a given request, and offers an accessor for each of them:
+>You already saw, in the front controller, a call to sfContext::createInstance(). In an action, the getContext() method returns the same singleton. It is a very useful object that stores a reference to all the symfony core objects related to a given request, and offers an accessor for each of them:
 >
 >`sfController`: The controller object (`->getController()`)
 >

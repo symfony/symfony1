@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectFreezeTask.class.php 8809 2008-05-06 14:27:30Z fabien $
+ * @version    SVN: $Id: sfProjectFreezeTask.class.php 13213 2008-11-21 19:54:33Z FabianLange $
  */
 class sfProjectFreezeTask extends sfBaseTask
 {
@@ -77,7 +77,7 @@ EOF;
       throw new sfCommandException(sprintf('The symfony data dir does not seem to be located at "%s".', $symfonyDataDir));
     }
 
-    $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfonyLibDir));
+    $this->logSection('freeze', sprintf('freezing lib found in "%s"', $symfonyLibDir));
     $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfonyDataDir));
 
     $this->getFilesystem()->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');

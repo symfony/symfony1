@@ -20,7 +20,7 @@ if (!defined('UPLOAD_ERR_EXTENSION'))
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 11326 2008-09-04 20:23:09Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 13387 2008-11-27 08:30:06Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -285,7 +285,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 11326 2008-09-04 20:23:09Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 13387 2008-11-27 08:30:06Z fabien $
  */
 class sfValidatedFile
 {
@@ -493,6 +493,7 @@ class sfValidatedFile
       'application/oda' => 'oda',
       'application/ogg' => 'ogg',
       'application/pdf' => 'pdf',
+      'application/x-pdf' => 'pdf',
       'application/pgp-encrypted' => '7bit',
       'application/pgp-keys' => '7bit',
       'application/pgp-signature' => 'sig',

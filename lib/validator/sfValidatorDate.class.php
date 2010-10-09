@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorDate.class.php 9897 2008-06-26 15:09:49Z fabien $
+ * @version    SVN: $Id: sfValidatorDate.class.php 13277 2008-11-23 15:04:14Z FabianLange $
  */
 class sfValidatorDate extends sfValidatorBase
 {
@@ -30,7 +30,7 @@ class sfValidatorDate extends sfValidatorBase
    *  * date_format_error:       The date format to use when displaying an error for a bad_format error (use date_format if not provided)
    *  * max:                     The maximum date allowed (as a timestamp)
    *  * min:                     The minimum date allowed (as a timestamp)
-   *  * date_format_range_error: The date format to use when displaying an error for min/max (default to m/d/Y H:i:s)
+   *  * date_format_range_error: The date format to use when displaying an error for min/max (default to d/m/Y H:i:s)
    *
    * Available error codes:
    *

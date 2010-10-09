@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMessageSource_Aggregate.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    SVN: $Id: sfMessageSource_Aggregate.class.php 13401 2008-11-27 11:18:39Z fabien $
  */
 class sfMessageSource_Aggregate extends sfMessageSource
 {
@@ -119,17 +119,17 @@ class sfMessageSource_Aggregate extends sfMessageSource
 
   public function append($message)
   {
-    // Append to the last message source only
-    if (($count = count($this->messageSources)) > 0)
+    // Append to the first message source only
+    if (count($this->messageSources))
     {
-      $this->messageSources[$count - 1]->append($message);
+      $this->messageSources[0]->append($message);
     }
   }
 
   public function update($text, $target, $comments, $catalogue = 'messages')
   {
     // Only update one message source
-    foreach (array_reverse($this->messageSources) as $messageSource)
+    foreach ($this->messageSources as $messageSource)
     {
       if ($messageSource->update($text, $target, $comments, $catalogue))
       {
