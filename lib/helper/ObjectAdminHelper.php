@@ -16,7 +16,7 @@ use_helper('Form', 'Javascript', 'Helper', 'I18N');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: ObjectAdminHelper.php 8838 2008-05-07 16:53:50Z nicolas $
+ * @version    SVN: $Id: ObjectAdminHelper.php 9176 2008-05-22 07:44:14Z FabianLange $
  */
 
 function object_admin_input_file_tag($object, $method, $options = array())
@@ -40,7 +40,7 @@ function object_admin_input_file_tag($object, $method, $options = array())
 
     if ($include_remove = _get_option($options, 'include_remove'))
     {
-      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($include_remove != true ? __($include_remove) : __('remove file'))."\n";
+      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($include_remove !== true ? __($include_remove) : __('remove file'))."\n";
     }
   }
 

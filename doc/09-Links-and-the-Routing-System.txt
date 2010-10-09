@@ -575,7 +575,7 @@ On the other hand, a disadvantage is that adding new hyperlinks becomes less sel
 The best choice depends on the project. In the long run, it's up to you.
 
 >**TIP**
->During your tests (in the `dev` environment), if you want to check which rule was matched for a given request in your browser, develop the "logs and msgs" section of the web debug toolbar and look for a line specifying "matched route XXX." You will find more information about the web debug mode in Chapter 16.
+>During your tests (in the `dev` environment), if you want to check which rule was matched for a given request in your browser, develop the "logs and msgs" section of the web debug toolbar and look for a line specifying "matched route XXX". You will find more information about the web debug mode in Chapter 16.
 
 ### Adding an .html Extension
 
@@ -624,7 +624,7 @@ Listing 9-24 - Defining a Rule in PHP
       array('id' => '\d+'),                             // Requirements
     );
 
-The sfRouting singleton has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()`, `getRoutesByName()`, and so on. Refer to the API documentation ([http://www.symfony-project.org/api/symfony.html](http://www.symfony-project.org/api/symfony.html)) to learn more.
+The sfRouting singleton has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()`, `getRoutesByName()`, and so on. Refer to the API documentation ([http://www.symfony-project.org/api/1_0/](http://www.symfony-project.org/api/1_0/)) to learn more.
 
 >**TIP**
 >Once you start to fully understand the concepts presented in this book, you can increase your understanding of the framework by browsing the online API documentation or, even better, the symfony source. Not all the tweaks and parameters of symfony can be described in this book. The online documentation, however, is limitless.

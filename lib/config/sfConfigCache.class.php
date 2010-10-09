@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfConfigCache.class.php 7830 2008-03-12 15:08:41Z fabien $
+ * @version    SVN: $Id: sfConfigCache.class.php 9260 2008-05-26 10:18:04Z fabien $
  */
 class sfConfigCache
 {
@@ -336,6 +336,7 @@ class sfConfigCache
   protected function writeCacheFile($config, $cache, &$data)
   {
     $fileCache = new sfFileCache(dirname($cache));
+    $fileCache->initialize(array('lifeTime' => 86400 * 365 * 10, 'automaticCleaningFactor' => 0));
     $fileCache->setWriteControl(true);
     $fileCache->setSuffix('');
 

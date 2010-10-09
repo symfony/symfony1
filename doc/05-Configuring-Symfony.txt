@@ -141,7 +141,7 @@ Listing 5-9 - Category Headers Look Like Keys, But Start with a Dot
       mail:
         webmaster:  webmaster@example.com
 
-In this example, `mail` is a key and `general` is only a category header. Everything works as if the category header didn't exist, as shown in Listing 5-10. The `tax` parameter is actually a direct child of the `all` key.
+In this example, `mail` is a key and `general` is only a category header. Everything works as if the category header didn't exist, as shown in Listing 5-10. The `tax` parameter is actually a direct child of the `all` key. However using categories helps symfony dealing with arrays that are beneath the `all` key.
 
 Listing 5-10 - Category Headers Are Only There for Readability and Are Actually Ignored
 
@@ -496,7 +496,6 @@ For instance, if you need to access the values defined in the app.yml file shown
 Listing 5-15 - Sample `app.yml` Configuration
 
     all:
-      version:        1.5
       .general:
         tax:          19.6
       default_user:
@@ -512,8 +511,6 @@ Listing 5-15 - Sample `app.yml` Configuration
 Listing 5-16 - Accessing Configuration Settings in PHP in the `dev` Environment
 
     [php]
-    echo sfConfig::get('app_version');
-     => '1.5'
     echo sfConfig::get('app_tax');   // Remember that category headers are ignored
      => '19.6'
     echo sfConfig::get('app_default_user_name');
@@ -568,6 +565,25 @@ To know if the `fake` credit cards are accepted in the current environment, get 
 
     [php]
     sfConfig::get('app_creditcards_fake');
+
+>**NOTE**
+>When you should require an PHP array directly beneath the `all` key you need to use a category header, otherwise symfony will make the values separately available as shown above.
+>
+>     all:
+>       .array:
+>         creditcards:
+>           fake:             off
+>           visa:             on
+>           americanexpress:  on
+>
+>     [php]
+>     print_r(sfConfig::get('app_creditcards'));
+>
+>     Array(
+>       [fake] => false
+>       [visa] => true
+>       [americanexpress] => true
+>     )
 
 >**TIP**
 >Each time you are tempted to define a constant or a setting in one of your scripts, think about if it would be better located in the app.yml file. This is a very convenient place to store all application settings.

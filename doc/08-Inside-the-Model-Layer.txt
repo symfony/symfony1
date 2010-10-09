@@ -98,7 +98,7 @@ A table can have special attributes, including the `phpName` (the name of the cl
 A table contains columns. The column value can be defined in three different ways:
 
   * If you define nothing, symfony will guess the best attributes according to the column name and a few conventions that will be described in the "Empty Columns" section later in this chapter. For instance, the `id` column in Listing 8-3 doesn't need to be defined. Symfony will make it an auto-incremented integer, primary key of the table. The article_id in the `blog_comment` table will be understood as a foreign key to the `blog_article` table (columns ending with `_id` are considered to be foreign keys, and the related table is automatically determined according to the first part of the column name). Columns called `created_at` are automatically set to the `timestamp` type. For all these columns, you don't need to specify any type. This is one of the reasons why `schema.yml` is so easy to write.
-  * If you define only one attribute, it is the column type. Symfony understands the usual column types: `boolean`, `integer`, `float`, `date`, `varchar(size)`, `longvarchar` (converted, for instance, to `text` in MySQL), and so on. For text content over 256 characters, you need to use the `longvarchar` type, which has no size (but cannot exceed 65KB in MySQL). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and cannot be set to a date prior to 1970-01-01. As you may need to set older dates (for instance, for dates of birth), a format of dates "before Unix" can be used with bu_date and `bu_timestamp`.
+  * If you define only one attribute, it is the column type. Symfony understands the usual column types: `boolean`, `integer`, `float`, `date`, `varchar(size)`, `longvarchar` (converted, for instance, to `text` in MySQL), and so on. For text content over 256 characters, you need to use the `longvarchar` type, which has no size (but cannot exceed 65KB in MySQL). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and cannot be set to a date prior to 1970-01-01. As you may need to set older dates (for instance, for dates of birth), a format of dates "before Unix" can be used with `bu_date` and `bu_timestamp`.
   * If you need to define other column attributes (like default value, required, and so on), you should write the column attributes as a set of `key: value`. This extended schema syntax is described later in the chapter.
 
 Columns can also have a `phpName` attribute, which is the capitalized version of the name (`Id`, `Title`, `Content`, and so on) and doesn't need overriding in most cases.
@@ -146,8 +146,6 @@ Listing 8-4 presents an example of a custom model class as created by the first 
 Listing 8-4 - Sample Model Class File, in `lib/model/Article.php`
 
     [php]
-    <?php
-
     class Article extends BaseArticle
     {
     }
@@ -408,7 +406,7 @@ The peer classes also provide `doDelete()`, `doInsert()`, and `doUpdate()` metho
 Finally, if you just want the first object returned, replace `doSelect()` with a `doSelectOne()` call. This may be the case when you know that a `Criteria` will return only one result, and the advantage is that this method returns an object rather than an array of objects.
 
 >**TIP**
->When a `doSelect()` query returns a large number of results, you might want to display only a subset of it in your response. Symfony provides a pager class called sfPropelPager, which automates the pagination of results. Check the pager documentation at [http://www.symfony-project.org/cookbook/trunk/pager](http://www.symfony-project.org/cookbook/trunk/pager) for more information and usage examples.
+>When a `doSelect()` query returns a large number of results, you might want to display only a subset of it in your response. Symfony provides a pager class called sfPropelPager, which automates the pagination of results. Check the pager documentation at [http://www.symfony-project.org/cookbook/1_0/pager](http://www.symfony-project.org/cookbook/1_0/pager) for more information and usage examples.
 
 ### Using Raw SQL Queries
 
@@ -556,8 +554,6 @@ For instance, for the `Article` object generated based on Listing 8-3, you can a
 Listing 8-20 - Customizing the Model, in `lib/model/Article.php`
 
     [php]
-    <?php
-
     class Article extends BaseArticle
     {
       public function __toString()
@@ -571,8 +567,6 @@ You can also extend the peer classes--for instance, to add a method to retrieve 
 Listing 8-21 - Customizing the Model, in `lib/model/ArticlePeer.php`
 
     [php]
-    <?php
-
     class ArticlePeer extends BaseArticlePeer
     {
       public static function getAllOrderedByDate()
@@ -786,7 +780,7 @@ Listing 8-29 - Foreign Key Alternative Syntax Applied to Multiple Reference Fore
 
 ### Indexes
 
-As an alternative to the `index` column attribute, you can add indexes under the `_indexes:` key in a table. If you want to define unique indexes, you must use the `_uniques:` header instead. Listing 8-30 shows the alternative syntax for indexes.
+As an alternative to the `index` column attribute, you can add indexes under the `_indexes:` key in a table. If you want to define unique indexes, you must use the `_uniques:` header instead. For columns that require a size, because they are text columns, the size of the index is specified the same way as the length of the column using parentheses. Listing 8-30 shows the alternative syntax for indexes.
 
 Listing 8-30 - Indexes and Unique Indexes Alternative Syntax
 
@@ -796,7 +790,7 @@ Listing 8-30 - Indexes and Unique Indexes Alternative Syntax
         title:            varchar(50)
         created_at:
         _indexes:
-          my_index:       [title, user_id]
+          my_index:       [title(10), user_id]
         _uniques:
           my_other_index: [created_at]
 

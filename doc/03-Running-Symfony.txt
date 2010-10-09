@@ -135,8 +135,8 @@ If you chose an SVN installation, you probably already have an existing symfony 
     [php]
     <?php
 
-    $sf_symfony_lib_dir  = '/path/to/symfony/lib/';
-    $sf_symfony_data_dir = '/path/to/symfony/data/';
+    $sf_symfony_lib_dir  = '/path/to/symfony/lib';
+    $sf_symfony_data_dir = '/path/to/symfony/data';
 
 Chapter 19 proposes other ways to link a project with a symfony installation (including symbolic links and relative paths).
 

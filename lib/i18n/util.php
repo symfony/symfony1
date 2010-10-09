@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: util.php 2757 2006-11-18 10:11:00Z fabien $
+ * @version    $Id: util.php 9189 2008-05-22 17:39:35Z FabianLange $
  * @package    symfony
  * @subpackage i18n
  */
@@ -151,8 +151,9 @@
     $from = strtoupper($from);
     if ($from != 'UTF-8')
     {
-      $s = iconv($from,'UTF-8',$string); //to UTF-8
-      return $s !== false ? $s : $string; //it could return false
+      $s = iconv($from,'UTF-8',$string);  // to UTF-8
+
+      return $s !== false ? $s : $string; // it could return false
     }
 
     return $string;
@@ -170,6 +171,7 @@
     if ($to != 'UTF-8')
     {
       $s = iconv('UTF-8', $to, $string);
+
       return $s !== false ? $s : $string;
     }
 

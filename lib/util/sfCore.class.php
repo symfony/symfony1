@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCore.class.php 6806 2007-12-29 07:53:10Z fabien $
+ * @version    SVN: $Id: sfCore.class.php 9893 2008-06-26 12:12:48Z fabien $
  */
 class sfCore
 {
@@ -94,7 +94,11 @@ class sfCore
   // check to see if we're not in a cache cleaning process
   static public function checkLock()
   {
-    if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
+    if (
+      sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'-cli.lck', 5)
+      ||
+      sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck')
+    )
     {
       // application is not available
       $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
@@ -203,7 +207,7 @@ class sfCore
         $trace = debug_backtrace();
         if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
         {
-          $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
+          $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh.', $class);
           $e = new sfAutoloadException($error);
 
           $e->printStackTrace();

@@ -12,7 +12,7 @@ That's why automated tests are a suggested, if not required, part of a successfu
 
 Automated tests can sometimes replace developer documentation since they can clearly illustrate what an application is supposed to do. A good test suite shows what output should be expected for a set of test inputs, and that is a good way to explain the purpose of a method.
 
-The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.com/browser/trunk/test](http://trac.symfony-project.com/browser/trunk/test).
+The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the standard symfony distribution, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.com/browser/branches/1.0/test](http://trac.symfony-project.com/browser/branches/1.0/test).
 
 ### Unit and Functional Tests
 
@@ -443,7 +443,7 @@ Listing 15-10 - Launching a Single Functional Test from the Command Line
     # Looks like you failed 1 tests of 4.
     1..4
 
-The generated functional tests for a new module don't pass by default. This is because in a newly created module, the `index` action forwards to a congratulations page (included in the symfony `default` module), which contains the sentence "This is a temporary page." As long as you don't modify the `index` action, the tests for this module will fail, and this guarantees that you cannot pass all tests with an unfinished module.
+The generated functional tests for a new module don't pass by default. This is because in a newly created module, the `index` action forwards to a congratulations page (included in the symfony `default` module), which contains the sentence "This is a temporary page". As long as you don't modify the `index` action, the tests for this module will fail, and this guarantees that you cannot pass all tests with an unfinished module.
 
 >**NOTE**
 >In functional tests, the autoloading is activated, so you don't have to include the files by hand.
@@ -492,7 +492,7 @@ The test browser handles a stack of calls, so the `back()` and `forward()` metho
 
 Among the interactions that most need to be tested, those associated with forms probably rank first. To simulate form input and submission, you have three choices. You can either make a POST request with the parameters you wish to send, call `click()` with the form parameters as an array, or fill in the fields one by one and click the submit button. They all result in the same POST request anyhow. Listing 15-13 shows an example.
 
-Listing 15-13 - Simulating Form Input with the `sfTe stBrowser` Object
+Listing 15-13 - Simulating Form Input with the `sfTestBrowser` Object
 
     [php]
     // Example template in modules/foobar/templates/editSuccess.php
@@ -844,7 +844,7 @@ The `test-unit` and `test-functional` tasks can launch a single test or a set of
 
 Listing 15-31 - Launching All Tests in a Test Harness
 
-    > symfony test-unit
+    > symfony test-all
 
     unit/myFunctionTest.php................ok
     unit/mySecondFunctionTest.php..........ok
@@ -903,7 +903,7 @@ Listing 15-34 - Populating a Database from a Test File
     );
     $data->loadDataFromArray($fixtures);
 
-Then, use the Propel objects as you would in a normal application, according to your testing needs. Remember to include their files in unit tests (you can use the sfCore:: sfSimpleAutoloading() method to automate it, as explained in a tip in the "Stubs, Fixtures, and Autoloading" section previously in this chapter). Propel objects are autoloaded in functional tests.
+Then, use the Propel objects as you would in a normal application, according to your testing needs. Remember to include their files in unit tests (you can use the sfCore::initSimpleAutoload() method to automate it, as explained in a tip in the "Stubs, Fixtures, and Autoloading" section previously in this chapter). Propel objects are autoloaded in functional tests.
 
 ### Testing the Cache
 

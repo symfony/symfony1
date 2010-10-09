@@ -108,7 +108,7 @@ symfony will complain that the `myActionSuccess.php` template is missing. That's
 >
 >     http://localhost/articles/tagged/finance+france+euro
 >
->Symfony knows how to parse and generate smart URLs for the user. The routing system automatically peels the request parameters from a smart URL and makes them available to the action. It also formats the hyperlinks included in the response so that they look "smart." You will learn more about this feature in Chapter 9.
+>Symfony knows how to parse and generate smart URLs for the user. The routing system automatically peels the request parameters from a smart URL and makes them available to the action. It also formats the hyperlinks included in the response so that they look "smart". You will learn more about this feature in Chapter 9.
 >
 >Overall, this means that the way you name the actions of your applications should not be influenced by the way the URL used to call them should look, but by the actions' functions in the application. An action name explains what the action actually does, and it is often a verb in the infinitive form (like `show`, `list`, `edit`, and so on). Action names can be made totally invisible to the end user, so don't hesitate to use explicit action names (like `listByName` or `showWithComments`). You will economize on code comments to explain your action function, plus the code will be much easier to read.
 

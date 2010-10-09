@@ -728,8 +728,8 @@ Listing 10-26 - Activating `fillin` to Repopulate the Form When Validation Fails
         name: test  # Form name, not needed if there is only one form in the page
         skip_fields:   [email]  # Do not repopulate these fields
         exclude_types: [hidden, password] # Do not repopulate these field types
-        check_types:   [text, checkbox, radio, password, hidden] # Do repopulate these
-        content_type:  html  # html is the tolerant default. Other option is xml
+        check_types:   [text, checkbox, radio, select, hidden] # Do repopulate these
+        content_type:  html  # html is the tolerant default. Other option is xml and xhtml (same as xml but without xml prolog)
 
 By default, the automatic repopulation works for text inputs, check boxes, radio buttons, text areas, and select components (simple and multiple), but it does not repopulate password or hidden tags. The `fillin` feature doesn't work for file tags.
 
@@ -737,6 +737,7 @@ By default, the automatic repopulation works for text inputs, check boxes, radio
 >The `fillin` feature works by parsing the response content in XML just before sending it to the user. By default `fillin` will output HTML.
 >
 >If you want to have `fillin` to output XHTML you have to set `param: content_type: xml`. If the response is not a strictly valid XHTML document `fillin` will not work.
+>The third available `content_type` is `xhtml` which is the same as `xml` but it removes the xml prolog from the response which causes quirks mode in IE6.
 
 You might want to transform the values entered by the user before writing them back in a form input. Escaping, URL rewriting, transformation of special characters into entities, and all the other transformations that can be called through a function can be applied to the fields of your form if you define the transformation under the `converters:` key, as shown in Listing 10-27.
 

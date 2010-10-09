@@ -1,20 +1,4 @@
 <?php
-/**
- * TGettext class file.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the BSD License.
- *
- * Copyright(c) 2004 by Qiang Xue. All rights reserved.
- *
- * To contact the author write to {@link mailto:qiang.xue@gmail.com Qiang Xue}
- * The latest version of PRADO can be obtained from:
- * {@link http://prado.sourceforge.net/}
- *
- * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 3152 $  $Date: 2007-01-05 07:16:57 +0100 (Fri, 05 Jan 2007) $
- * @package System.I18N.core
- */
 
 // +----------------------------------------------------------------------+
 // | PEAR :: File :: Gettext                                              |
@@ -28,7 +12,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: TGettext.class.php 3152 2007-01-05 06:16:57Z fabien $
+// $Id: TGettext.class.php 9858 2008-06-25 11:34:30Z fabien $
 
 /**
  * File::Gettext
@@ -52,7 +36,7 @@
  * #################################################################
  *
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 3152 $
+ * @version     $Revision: 9858 $
  * @access      public
  * @package System.I18N.core 
  */

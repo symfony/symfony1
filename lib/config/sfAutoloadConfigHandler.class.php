@@ -15,7 +15,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 9784 2008-06-23 07:40:20Z dwhittle $
  */
 class sfAutoloadConfigHandler extends sfYamlConfigHandler
 {
@@ -113,7 +113,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
               }
             }
 
-            $data[] = sprintf("'%s%s' => '%s',", $prefix, $class, $file);
+            $data[] = sprintf("'%s%s' => '%s',", $prefix, $class, str_replace('\\', '\\\\', $file));
           }
         }
       }

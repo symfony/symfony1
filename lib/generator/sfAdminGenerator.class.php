@@ -21,7 +21,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAdminGenerator.class.php 5099 2007-09-15 06:44:50Z fabien $
+ * @version    SVN: $Id: sfAdminGenerator.class.php 9861 2008-06-25 12:07:06Z fabien $
  */
 abstract class sfAdminGenerator extends sfCrudGenerator
 {
@@ -610,7 +610,7 @@ EOF;
 
     if ($column->isComponent())
     {
-      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'list'))";
+      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'filter'))";
     }
     else if ($column->isPartial())
     {
@@ -697,7 +697,7 @@ EOF;
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAdminGenerator.class.php 5099 2007-09-15 06:44:50Z fabien $
+ * @version    SVN: $Id: sfAdminGenerator.class.php 9861 2008-06-25 12:07:06Z fabien $
  */
 class sfAdminColumn
 {

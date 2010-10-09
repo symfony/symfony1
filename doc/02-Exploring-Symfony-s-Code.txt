@@ -200,7 +200,7 @@ Other additional design patterns can make the coding experience even easier. The
 
 The model layer can be split into a data access layer and a database abstraction layer. That way, data access functions will not use database-dependent query statements, but call some other functions that will do the queries themselves. If you change your database system later, only the database abstraction layer will need updating.
 
-An example of a MySQL-specific data access layer is presented in Listing 2-6, followed by a sample database abstraction layer in Listing 2-7.
+A sample database abstraction layer is presented in Listing 2-6, followed by an example of a MySQL-specific data access layer in Listing 2-7.
 
 Listing 2-6 - The Database Abstraction Part of the Model
 

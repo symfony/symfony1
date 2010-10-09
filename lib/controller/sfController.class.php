@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 7993 2008-03-20 00:21:14Z Carl.Vondrick $
+ * @version    SVN: $Id: sfController.class.php 9940 2008-06-27 16:25:49Z fabien $
  */
 abstract class sfController
 {
@@ -174,7 +174,7 @@ abstract class sfController
     $app     = sfConfig::get('sf_app');
     $env     = sfConfig::get('sf_environment');
 
-    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile($rootDir.'/'.$app.'_'.$env.'.clilock'))
+    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile($rootDir.'/'.$app.'_'.$env.'.lck'))
     {
       // application is unavailable
       $moduleName = sfConfig::get('sf_unavailable_module');
@@ -569,15 +569,11 @@ abstract class sfController
 
       if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
       {
-        $error = 'Your action is secured but the user is not authenticated.';
-
-        throw new sfException($error);
+        throw new sfException('Your action is secured, but the user is not authenticated.');
       }
       else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
       {
-        $error = 'Your action is secured but the user does not have access.';
-
-        throw new sfException($error);
+        throw new sfException('Your action is secured, but the user does not have access.');
       }
     }
 

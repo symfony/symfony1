@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebController.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfWebController.class.php 9957 2008-06-28 07:23:15Z fabien $
  */
 abstract class sfWebController extends sfController
 {
@@ -187,7 +187,7 @@ abstract class sfWebController extends sfController
       /x', $query_string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
       foreach ($matches as $match)
       {
-        $params[$match[1][0]] = $match[2][0];
+        $params[urldecode($match[1][0])] = urldecode($match[2][0]);
       }
 
       // check that all string is matched

@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 8817 2008-05-06 19:47:16Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 9959 2008-06-28 07:46:19Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -405,17 +405,26 @@ class sfWebRequest extends sfRequest
     if ($this->isSecure())
     {
       $standardPort = '443';
-      $proto = 'https';
+      $protocol = 'https';
     }
     else
     {
       $standardPort = '80';
-      $proto = 'http';
+      $protocol = 'http';
     }
 
-    $port = $pathArray['SERVER_PORT'] == $standardPort || !$pathArray['SERVER_PORT'] ? '' : ':'.$pathArray['SERVER_PORT'];
+    $host = explode(":", $pathArray['HTTP_HOST']);
+    if (count($host) == 1)
+    {
+      $host[] = $pathArray['SERVER_PORT'];
+    }
 
-    return $proto.'://'.$pathArray['SERVER_NAME'].$port;
+    if ($host[1] == $standardPort || empty($host[1]))
+    {
+      unset($host[1]);
+    }
+
+    return $protocol.'://'.implode(':', $host);;
   }
 
   /**
@@ -780,7 +789,7 @@ class sfWebRequest extends sfRequest
 
     $pathArray = $this->getPathInfoArray();
 
-    return isset($pathArray[$name]) ? stripslashes($pathArray[$name]) : null;
+    return isset($pathArray[$name]) ? sfToolkit::stripslashesDeep($pathArray[$name]) : null;
   }
 
   /**
@@ -794,7 +803,7 @@ class sfWebRequest extends sfRequest
 
     if (isset($_COOKIE[$name]))
     {
-      $retval = get_magic_quotes_gpc() ? stripslashes($_COOKIE[$name]) : $_COOKIE[$name];
+      $retval = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_COOKIE[$name]) : $_COOKIE[$name];
     }
 
     return $retval;

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Joe Simms
- * @version    SVN: $Id: sfLogManager.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfLogManager.class.php 9893 2008-06-26 12:12:48Z fabien $
  **/
 class sfLogManager
 {
@@ -76,8 +76,9 @@ class sfLogManager
     if (!$rotate_on || ($rotate_on == $today) || $override)
     {
       // create a lock file
-      $lock_name = $app.'_'.$env.'.lck';
-      touch(sfConfig::get('sf_root_dir').'/'.$lock_name);
+      $lockFile = sfConfig::get('sf_root_dir').'/'.$app.'_'.$env.'-cli.lck';
+      touch($lockFile);
+      chmod($lockFile, 0777);
 
       // if log file exists rotate it
       if (file_exists($src_log))
@@ -108,6 +109,8 @@ class sfLogManager
           unlink($new_logs[0]);
         }
       }
+
+      unlink($lockFile);
     }
   }
 }

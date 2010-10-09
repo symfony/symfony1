@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 7966 2008-03-19 11:34:42Z fabien $
+ * @version    SVN: $Id: sfToolkit.class.php 9589 2008-06-15 07:20:17Z FabianLange $
  */
 class sfToolkit
 {
@@ -444,6 +444,37 @@ class sfToolkit
     }
 
     return true;
+  }
+
+  public static function &getArrayValueForPathByRef(&$values, $name, $default = null)
+  {
+    if (false !== ($offset = strpos($name, '[')))
+    {
+      if (isset($values[substr($name, 0, $offset)]))
+      {
+        $array = &$values[substr($name, 0, $offset)];
+
+        while ($pos = strpos($name, '[', $offset))
+        {
+          $end = strpos($name, ']', $pos);
+          if ($end == $pos + 1)
+          {
+            // reached a []
+            break;
+          }
+          else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
+          {
+            return $default;
+          }
+          $array = &$array[substr($name, $pos + 1, $end - $pos - 1)];
+          $offset = $end;
+        }
+
+        return $array;
+      }
+    }
+
+    return $default;
   }
 
   public static function getArrayValueForPath($values, $name, $default = null)

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 6129 2007-11-21 10:06:02Z noel $
+ * @version    SVN: $Id: sfBrowser.class.php 9672 2008-06-19 13:31:21Z fabien $
  */
 class sfBrowser
 {
@@ -200,11 +200,18 @@ class sfBrowser
     }
 
     // for HTML/XML content, create a DOM and sfDomCssSelector objects for the response content
-    if (preg_match('/(x|ht)ml/i', $response->getContentType()))
+    if (preg_match('/(x|ht)ml/i', $response->getContentType(), $matches))
     {
       $this->dom = new DomDocument('1.0', sfConfig::get('sf_charset'));
       $this->dom->validateOnParse = true;
-      @$this->dom->loadHTML($response->getContent());
+      if ('x' == $matches[1])
+      {
+        @$this->dom->loadXML($response->getContent());
+      }
+      else
+      {
+        @$this->dom->loadHTML($response->getContent());
+      }
       $this->domCssSelector = new sfDomCssSelector($this->dom);
     }
     else

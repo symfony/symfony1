@@ -1,20 +1,4 @@
 <?php
-/**
- * TGettext_PO class file.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the BSD License.
- *
- * Copyright(c) 2004 by Qiang Xue. All rights reserved.
- *
- * To contact the author write to {@link mailto:qiang.xue@gmail.com Qiang Xue}
- * The latest version of PRADO can be obtained from:
- * {@link http://prado.sourceforge.net/}
- *
- * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1415 $  $Date: 2006-06-11 10:33:51 +0200 (Sun, 11 Jun 2006) $
- * @package System.I18N.core
- */
 
 // +----------------------------------------------------------------------+
 // | PEAR :: File :: Gettext :: PO                                        |
@@ -28,7 +12,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: PO.php 1415 2006-06-11 08:33:51Z fabien $
+// $Id: PO.php 9858 2008-06-25 11:34:30Z fabien $
 
 /**
  * File::Gettext::PO
@@ -45,7 +29,7 @@ require_once dirname(__FILE__).'/TGettext.class.php';
  * GNU PO file reader and writer.
  * 
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 1415 $
+ * @version     $Revision: 9858 $
  * @access      public
  * @package System.I18N.core 
  */

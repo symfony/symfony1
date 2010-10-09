@@ -8,7 +8,7 @@ Symfony Settings
 
 The `myapp/config/settings.yml` file contains the main symfony configuration for the `myapp` application. You have already seen the function of many settings from this file in the previous chapters, but let's revisit them.
 
-As explained in Chapter 5, this file is environment-dependent, which means that each setting can take a different value for each environment. Remember that each parameter defined in this file is accessible from inside the PHP code via the `sfConfig` class. The parameter name is the setting name prefixed with sf_. For instance, if you want to get the value of the cache parameter, you just need to call `sfConfig::get('sf_cache')`.
+As explained in Chapter 5, this file is environment-dependent, which means that each setting can take a different value for each environment. Remember that each parameter defined in this file is accessible from inside the PHP code via the `sfConfig` class. The parameter name is the setting name prefixed with `sf_`. For instance, if you want to get the value of the `cache` parameter, you just need to call `sfConfig::get('sf_cache')`.
 
 ### Default Modules and Actions
 
@@ -61,7 +61,7 @@ Parameter               | Description | Default Value
 `logging_enabled`       | Enables logging of symfony events. Set it to off when you want to ignore the logging.yml settings and turn symfony logging off completely. | `on`
 `escaping_strategy`     | Enables and defines the policy of the output escaping feature (see Chapter 7). Set it to `off` if you don't use the `$sf_data` container in your templates. | `bc`
 `cache`                 | Enables template caching (see Chapter 12). Set it to `on` if one of your modules includes `cache.yml` file. The cache filter (`sfCacheFilter`) is enabled only if it is on. | `off` in development, `on` in production
-`web_debug`             | Enables the web debug toolbar for easy debugging (see Chapter 16). Set it to `on` to display the toolbar on every page. The web debug filter (`sfWebDebugFilter`) is enabled ony if it is on. | `on` in development, `off` in production
+`web_debug`             | Enables the web debug toolbar for easy debugging (see Chapter 16). Set it to `on` to display the toolbar on every page. The web debug filter (`sfWebDebugFilter`) is enabled only if it is on. | `on` in development, `off` in production
 `check_symfony_version` | Enables the check of the symfony version for every request. Set it to on for automatic cache clearing after a framework upgrade. Leave it set to off if you always clear the cache after an upgrade. | `off`
 `check_lock`            | Enables the application lock system, triggered by the `clear-cache` and `disable` tasks (see the previous section). Set it to `on` to have all requests to disabled applications redirected to the `$sf_symfony_data_dir/web/errors/unavailable.php` page. | `off`
 `compressed`            | Enables PHP response compression. Set it to `on` to compress the outgoing HTML via the PHP compression handler. | `off`
@@ -394,7 +394,7 @@ The same principle also applies if you choose to include the symfony files as a 
     myproject/
       lib/
         vendor/
-          svn:externals symfony http://svn.symfony-project.com/trunk/
+          svn:externals symfony http://svn.symfony-project.com/branches/1.0
 
 In this case, the `config.php` file should look like this:
 
@@ -535,7 +535,7 @@ When calling the `checkConfig()` method, symfony looks for existing `map.yml` fi
 >       param:
 >         prefix: map_
 >
->Be careful not to choose a prefix already used by another handler. Existing prefixes are sf_, app_, and mod_.
+>Be careful not to choose a prefix already used by another handler. Existing prefixes are `sf_`, `app_`, and `mod_`.
 
 Controlling PHP Settings
 ------------------------

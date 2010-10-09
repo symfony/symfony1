@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPhpConfigHandler.class.php 8861 2008-05-08 11:54:11Z fabien $
+ * @version    SVN: $Id: sfPhpConfigHandler.class.php 9263 2008-05-26 10:57:53Z FabianLange $
  */
 class sfPhpConfigHandler extends sfYamlConfigHandler
 {
@@ -52,7 +52,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive', $configFiles[0], $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
@@ -60,7 +60,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // 63 is returned by PHP 5.2.6 instead of 7 when a php.ini key is changed several times per script
         if ($configs[$key]['access'] != 7 && $configs[$key]['access'] != 63)
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which cannot be overrided', $configFiles[0], $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which cannot be overrided.', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
@@ -81,13 +81,13 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]', $configFiles[0], $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
         if (ini_get($key) != $value)
         {
-          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]', $configFiles[0], $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
+          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s).', $configFiles[0], $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
           throw new sfInitializationException($error);
         }
       }
@@ -103,11 +103,11 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]', $configFiles[0], $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
-        $warning = sprintf('{sfPhpConfigHandler} php.ini "%s" key is better set to "%s" (current value is "%s" - %s)', $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
+        $warning = sprintf('{sfPhpConfigHandler} php.ini "%s" key is better set to "%s" (current value is "%s" - %s).', $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
         $data[] = sprintf("if (ini_get('%s') != %s)\n{\n  sfLogger::getInstance()->warning('%s');\n}\n", $key, var_export($value, true), str_replace("'", "\\'", $warning));
       }
     }
@@ -119,7 +119,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
       {
         if (!extension_loaded($extension_name))
         {
-          $error = sprintf('Configuration file "%s" specifies that the PHP extension "%s" should be loaded. (%s)', $configFiles[0], $extension_name, $this->get_ini_path());
+          $error = sprintf('Configuration file "%s" specifies that the PHP extension "%s" should be loaded. (%s).', $configFiles[0], $extension_name, $this->get_ini_path());
           throw new sfInitializationException($error);
         }
       }

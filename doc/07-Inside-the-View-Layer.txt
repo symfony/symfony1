@@ -44,7 +44,7 @@ Listing 7-2 - Sample Helper Definition
       return '<input type="text" name="'.$name.'" id="'.$name.'"value="'.$value.'" />';
     }
 
-As a matter of fact, the `input_tag()` function built into symfony is a little more complicated than that, as it accepts a third parameter to add other attributes to the `<input>` tag. You can check its complete syntax and options in the online API documentation ([http://www.symfony-project.org/api/symfony.html](http://www.symfony-project.org/api/symfony.html)).
+As a matter of fact, the `input_tag()` function built into symfony is a little more complicated than that, as it accepts a third parameter to add other attributes to the `<input>` tag. You can check its complete syntax and options in the online API documentation ([http://www.symfony-project.org/api/1_0/](http://www.symfony-project.org/api/1_0/)).
 
 Most of the time, helpers carry intelligence and save you long and complex coding:
 
@@ -118,7 +118,7 @@ Listing 7-4 - Common Default Helpers
     <?php echo stylesheet_tag('style') ?>
      => <link href="/stylesheets/style.css" media="screen" rel="stylesheet"type="text/css" />
 
-There are many other helpers in symfony, and it would take a full book to describe all of them. The best reference for helpers is the online API documentation ([http:// www.symfony-project.org/api/symfony.html](http://www.symfony-project.org/api/symfony.html)), where all the helpers are well documented, with their syntax, options, and examples.
+There are many other helpers in symfony, and it would take a full book to describe all of them. The best reference for helpers is the online API documentation ([http:// www.symfony-project.org/api/1_0/](http://www.symfony-project.org/api/1_0/)), where all the helpers are well documented, with their syntax, options, and examples.
 
 #### Adding Your Own Helpers
 

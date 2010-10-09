@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorManager.class.php 3302 2007-01-18 13:42:46Z fabien $
+ * @version    SVN: $Id: sfGeneratorManager.class.php 9260 2008-05-26 10:18:04Z fabien $
  */
 class sfGeneratorManager
 {
@@ -27,6 +27,7 @@ class sfGeneratorManager
   {
     // create cache instance
     $this->cache = new sfFileCache(sfConfig::get('sf_module_cache_dir'));
+    $this->cache->initialize(array('lifeTime' => 86400 * 365 * 10, 'automaticCleaningFactor' => 0));
     $this->cache->setSuffix('');
   }
 

@@ -461,7 +461,7 @@ Name                             | Function                               |  Sam
 `getCharsets()`                  | Array of accepted charsets             | `Array( ` ` [0] => ISO-8859-1 ` ` [1] => UTF-8 ` ` [2] => * )`
 getAcceptableContentTypes()      | Array of accepted content types        | `Array( [0] => text/xml [1] => text/html`
 
-* *Works only with prototype*
+* *Works with prototype, Prototype, Mootools, and jQuery*
 
 ** *Sometimes blocked by proxies*
 
@@ -492,19 +492,24 @@ Listing 6-16 - The `sfWebRequest` Object Knows How to Handle Attached Files
       {
         if ($this->getRequest()->hasFiles())
         {
-          foreach ($this->getRequest()->getFileNames() as $fileName)
+          foreach ($this->getRequest()->getFileNames() as $uploadedFile)
           {
-            $fileSize  = $this->getRequest()->getFileSize($fileName);
-            $fileType  = $this->getRequest()->getFileType($fileName);
-            $fileError = $this->getRequest()->hasFileError($fileName);
+            $fileName  = $this->getRequest()->getFileName($uploadedFile);
+            $fileSize  = $this->getRequest()->getFileSize($uploadedFile);
+            $fileType  = $this->getRequest()->getFileType($uploadedFile);
+            $fileError = $this->getRequest()->hasFileError($uploadedFile);
             $uploadDir = sfConfig::get('sf_upload_dir');
-            $this->getRequest()->moveFile('file', $uploadDir.'/'.$fileName);
+            $this->getRequest()->moveFile($uploadedFile, $uploadDir.'/'.$fileName);
           }
         }
       }
     }
 
 You don't have to worry about whether your server supports the `$_SERVER` or the `$_ENV` variables, or about default values or server-compatibility issues--the `sfWebRequest` methods do it all for you. Besides, their names are so evident that you will no longer need to browse the PHP documentation to find out how to get information from the request.
+
+>**NOTE**
+>The code above uses the `$fileName` as it was when the file was uploaded. As there is a small chance that this gets exploited by sending files with malicious file names, you always should normalize the target filename or generate it.
+
 
 User Session
 ------------

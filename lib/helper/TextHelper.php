@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: TextHelper.php 8392 2008-04-10 15:32:05Z FabianLange $
+ * @version    SVN: $Id: TextHelper.php 9189 2008-05-22 17:39:35Z FabianLange $
  */
 
 /**
@@ -94,7 +94,7 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $e
 
     if ($excerpt_space)
     {
-      //only cut off at ends where $exceprt_string is added
+      // only cut off at ends where $exceprt_string is added
       if($prefix)
       {
         $excerpt = preg_replace('/^(\S+)?\s+?/', ' ', $excerpt);

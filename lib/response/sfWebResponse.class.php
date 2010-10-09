@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage response
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebResponse.class.php 6987 2008-01-07 19:38:32Z fabien $
+ * @version    SVN: $Id: sfWebResponse.class.php 9969 2008-06-29 09:21:39Z FabianLange $
  */
 class sfWebResponse extends sfResponse
 {
@@ -471,7 +471,7 @@ class sfWebResponse extends sfResponse
 
     if ($escape)
     {
-      $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
+      $value = htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
     if ($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta'))

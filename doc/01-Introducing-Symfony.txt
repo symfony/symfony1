@@ -63,7 +63,7 @@ Fabien originally built symfony for Sensio's projects, because having an effecti
 After successfully using symfony for a few projects, Fabien decided to release it under an open source license. He did so to donate this work to the community, to benefit from user feedback, to showcase Sensio's experience, and because it's fun.
 
 >**Note**
->Why "symfony" and not "FooBarFramework"? Because Fabien wanted a short name containing an s, as in Sensio, and an f, as in framework--easy to remember and not associated with another development tool. Also, he doesn't like capital letters. symfony was close enough, even if not completely English, and it was also available as a project name. The other alternative was "baguette."
+>Why "symfony" and not "FooBarFramework"? Because Fabien wanted a short name containing an s, as in Sensio, and an f, as in framework--easy to remember and not associated with another development tool. Also, he doesn't like capital letters. symfony was close enough, even if not completely English, and it was also available as a project name. The other alternative was "baguette".
 
 For symfony to be a successful open source project, it needed to have extensive documentation, in English, to increase the adoption rate. Fabien asked fellow Sensio employee François Zaninotto, the other author of this book, to dig into the code and write an online book about it. It took quite a while, but when the project was made public, it was documented well enough to appeal to numerous developers. The rest is history.
 
@@ -129,7 +129,7 @@ Symfony uses magic methods, so you should have a thorough understanding of them.
 
 ### PHP Extension and Application Repository (PEAR)
 
-PEAR is "a framework and distribution system for reusable PHP components." PEAR allows you to download, install, upgrade, and uninstall PHP scripts. When using a PEAR package, you don't need to worry about where to put scripts, how to make them available, or how to extend the command-line interface (CLI).
+PEAR is "a framework and distribution system for reusable PHP components". PEAR allows you to download, install, upgrade, and uninstall PHP scripts. When using a PEAR package, you don't need to worry about where to put scripts, how to make them available, or how to extend the command-line interface (CLI).
 
 PEAR is a community-driven project written in PHP and shipped with standard PHP distributions.
 
@@ -208,7 +208,7 @@ The symfony project website proposes a step-by-step tutorial illustrating the de
 
 ### YAML
 
-According to the official YAML website ([http://www.yaml.org/](http://www.yaml.org/)), YAML is "a straightforward machine parsable data serialization format designed for human readability and interaction with scripting languages." Put another way, YAML is a very simple language used to describe data in an XML-like way but with a much simpler syntax. It is especially useful to describe data that can be translated into arrays and hashes, like this:
+According to the official YAML website ([http://www.yaml.org/](http://www.yaml.org/)), YAML is "a straightforward machine parsable data serialization format designed for human readability and interaction with scripting languages". Put another way, YAML is a very simple language used to describe data in an XML-like way but with a much simpler syntax. It is especially useful to describe data that can be translated into arrays and hashes, like this:
 
     [php]
     $house = array(
