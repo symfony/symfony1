@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormGenerator.class.php 24392 2009-11-25 18:35:39Z FabianLange $
+ * @version    SVN: $Id: sfPropelFormGenerator.class.php 29661 2010-05-28 16:56:42Z Kris.Wallsmith $
  */
 class sfPropelFormGenerator extends sfGenerator
 {
@@ -325,9 +325,13 @@ class sfPropelFormGenerator extends sfGenerator
         $name = 'Pass';
     }
 
-    if ($column->isPrimaryKey() || $column->isForeignKey())
+    if ($column->isForeignKey())
     {
       $name = 'PropelChoice';
+    }
+    else if ($column->isPrimaryKey())
+    {
+      $name = 'Choice';
     }
 
     return sprintf('sfValidator%s', $name);
@@ -350,7 +354,7 @@ class sfPropelFormGenerator extends sfGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), $this->translateColumnName($column));
+      $options[] = sprintf('\'choices\' => array($this->getObject()->get%s()), \'empty_value\' => $this->getObject()->get%1$s()', $this->translateColumnName($column, false, BasePeer::TYPE_PHPNAME));
     }
     else
     {

@@ -6,7 +6,7 @@
  * @package    symfony12
  * @subpackage filter
  * @author     Your name here
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 24171 2009-11-19 16:37:50Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
 abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
 {
@@ -45,8 +45,10 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.GroupPermission GroupPermission')
-          ->andWhereIn('GroupPermission.permission_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.GroupPermission GroupPermission')
+      ->andWhereIn('GroupPermission.permission_id', $values)
+    ;
   }
 
   public function addUsersListColumnQuery(Doctrine_Query $query, $field, $values)
@@ -61,8 +63,10 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.UserGroup UserGroup')
-          ->andWhereIn('UserGroup.user_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.UserGroup UserGroup')
+      ->andWhereIn('UserGroup.user_id', $values)
+    ;
   }
 
   public function getModelName()

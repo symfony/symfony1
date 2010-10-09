@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: OMBuilder.php 1450 2010-01-12 21:19:00Z francois $
+ *  $Id: OMBuilder.php 1524 2010-02-04 17:22:16Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -338,8 +338,8 @@ abstract class OMBuilder extends DataModelBuilder {
       if(method_exists($behavior->$modifierGetter(), $hookName)) { 
         return true;
       }
-      return false;
     }
+    return false;
   }
 
   /**

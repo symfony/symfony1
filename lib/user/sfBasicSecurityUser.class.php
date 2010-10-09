@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 24045 2009-11-16 18:24:48Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfBasicSecurityUser.class.php 29528 2010-05-19 13:12:27Z fabien $
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -37,7 +37,6 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function clearCredentials()
   {
-    $this->credentials = null;
     $this->credentials = array();
   }
 
@@ -133,6 +132,11 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function hasCredential($credentials, $useAnd = true)
   {
+    if (null === $this->credentials)
+    {
+      return false;
+    }
+
     if (!is_array($credentials))
     {
       return in_array($credentials, $this->credentials);

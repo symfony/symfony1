@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalTask.class.php 25036 2009-12-07 19:41:58Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestFunctionalTask.class.php 29415 2010-05-12 06:24:54Z fabien $
  */
 class sfTestFunctionalTask extends sfTestBaseTask
 {
@@ -47,7 +47,7 @@ The task launches all tests found in [test/functional/%application%|COMMENT].
 If some tests fail, you can use the [--trace|COMMENT] option to have more
 information about the failures:
 
-    [./symfony test:functional frontend -t|INFO]
+  [./symfony test:functional frontend -t|INFO]
 
 You can launch all functional tests for a specific controller by
 giving a controller name:

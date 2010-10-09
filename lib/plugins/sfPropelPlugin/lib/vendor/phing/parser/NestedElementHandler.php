@@ -31,7 +31,7 @@ include_once 'phing/TaskContainer.php';
  *
  * @author      Andreas Aderhold <andi@binarycloud.com>
  * @copyright © 2001,2002 THYRELL. All rights reserved
- * @version   $Revision: 1.10 $ $Date: 2006-09-14 22:19:08 +0200 (Thu, 14 Sep 2006) $
+ * @version   $Revision: 1.10 $ $Date: 2006-09-14 22:19:08 +0200 (jeu 14 sep 2006) $
  * @access    public
  * @package   phing.parser
  */

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BuildPropelGenPEARPackageTask.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: BuildPropelGenPEARPackageTask.php 1750 2010-05-09 12:33:47Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ include_once 'phing/tasks/ext/pearpackage/Fileset.php';
  *
  * @author     Hans Lellelid <hans@xmpl.org>
  * @package    phing.tasks.ext
- * @version    $Revision: 1262 $
+ * @version    $Revision: 1750 $
  */
 class BuildPropelGenPEARPackageTask extends MatchingTask {
 
@@ -121,7 +121,7 @@ class BuildPropelGenPEARPackageTask extends MatchingTask {
 		$package->setPackage('propel_generator');
 		$package->setSummary('Generator component of the Propel PHP object persistence layer');
 		$package->setDescription('Propel is an object persistence layer for PHP5 based on Apache Torque. This package provides the generator engine that builds PHP classes and SQL DDL based on an XML representation of your data model.');
-		$package->setChannel('pear.phpdb.org');
+		$package->setChannel('pear.propelorm.org');
 		$package->setPackageType('php');
 
 		$package->setReleaseVersion($this->version);

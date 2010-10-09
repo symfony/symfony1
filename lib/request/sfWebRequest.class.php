@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 28962 2010-04-01 14:29:26Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 29285 2010-04-28 06:33:02Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -600,15 +600,18 @@ class sfWebRequest extends sfRequest
       // Cut off any q-value that might come after a semi-colon
       if ($pos = strpos($value, ';'))
       {
-        $q     = (float) trim(substr($value, $pos + 3));
-        $value = trim(substr($value, 0, $pos));
+        $q     = (float) trim(substr($value, strpos($value, '=') + 1));
+        $value = substr($value, 0, $pos);
       }
       else
       {
         $q = 1;
       }
 
-      $values[$value] = $q;
+      if (0 < $q)
+      {
+        $values[trim($value)] = $q;
+      }
     }
 
     arsort($values);

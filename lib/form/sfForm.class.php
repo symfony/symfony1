@@ -23,7 +23,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 28996 2010-04-06 13:59:11Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfForm.class.php 29678 2010-05-30 14:38:42Z Kris.Wallsmith $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -334,13 +334,13 @@ class sfForm implements ArrayAccess, Iterator, Countable
   /**
    * Returns the array name under which user data can retrieved.
    *
-   * If the user data is not stored under an array, it returns null.
+   * If the user data is not stored under an array, it returns false.
    *
-   * @return string The name
+   * @return string|boolean The name or false if the name format is not an array format
    */
   public function getName()
   {
-    if ('%s' == $nameFormat = $this->widgetSchema->getNameFormat())
+    if ('[%s]' != substr($nameFormat = $this->widgetSchema->getNameFormat(), -4))
     {
       return false;
     }

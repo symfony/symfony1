@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestAllTask.class.php 25036 2009-12-07 19:41:58Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestAllTask.class.php 29415 2010-05-12 06:24:54Z fabien $
  */
 class sfTestAllTask extends sfTestBaseTask
 {
@@ -42,7 +42,7 @@ The task launches all tests found in [test/|COMMENT].
 If some tests fail, you can use the [--trace|COMMENT] option to have more
 information about the failures:
 
-    [./symfony test:all -t|INFO]
+  [./symfony test:all -t|INFO]
 
 Or you can also try to fix the problem by launching them by hand or with the
 [test:unit|COMMENT] and [test:functional|COMMENT] task.
@@ -50,7 +50,7 @@ Or you can also try to fix the problem by launching them by hand or with the
 Use the [--only-failed|COMMENT] option to force the task to only execute tests
 that failed during the previous run:
 
-    [./symfony test:all --only-failed|INFO]
+  [./symfony test:all --only-failed|INFO]
 
 Here is how it works: the first time, all tests are run as usual. But for
 subsequent test runs, only tests that failed last time are executed. As you

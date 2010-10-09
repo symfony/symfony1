@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 29000 2010-04-06 17:53:15Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfController.class.php 29523 2010-05-19 12:50:54Z fabien $
  */
 abstract class sfController
 {
@@ -401,7 +401,7 @@ abstract class sfController
 
     try
     {
-      // forward to the mail action
+      // forward to the action
       $this->forward($module, $action);
     }
     catch (Exception $e)
@@ -421,7 +421,7 @@ abstract class sfController
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);
 
-    // get raw email content
+    // get raw content
     $presentation =& $actionEntry->getPresentation();
 
     // put render mode back

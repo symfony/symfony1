@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 23945 2009-11-14 18:12:41Z fabien $
+ * @version    SVN: $Id: sfToolkit.class.php 29525 2010-05-19 13:01:43Z fabien $
  */
 class sfToolkit
 {
@@ -100,7 +100,10 @@ class sfToolkit
    */
   public static function clearGlob($pattern)
   {
-    $files = glob($pattern);
+    if (false === $files = glob($pattern))
+    {
+      return;
+    }
 
     // order is important when removing directories
     sort($files);

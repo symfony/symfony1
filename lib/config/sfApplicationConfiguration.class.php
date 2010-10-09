@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 24042 2009-11-16 18:07:52Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 29526 2010-05-19 13:06:40Z fabien $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -234,6 +234,9 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       {
         if (is_readable($file))
         {
+          header("HTTP/1.1 503 Service Temporarily Unavailable");
+          header("Status: 503 Service Temporarily Unavailable");
+
           include $file;
           break;
         }

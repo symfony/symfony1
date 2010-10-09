@@ -28,7 +28,7 @@ require_once 'phing/system/io/PhingFile.php';
  *
  * @author      Andreas Aderhold <andi@binarycloud.com>
  * @copyright (c) 2001,2002 THYRELL. All rights reserved
- * @version   $Revision: 1.14 $ $Date: 2007-01-25 20:38:05 +0100 (Thu, 25 Jan 2007) $
+ * @version   $Revision: 1.14 $ $Date: 2007-01-25 20:38:05 +0100 (jeu 25 jan 2007) $
  * @access    public
  * @package   phing.parser
  */

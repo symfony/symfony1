@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ObjectBuilder.php 1450 2010-01-12 21:19:00Z francois $
+ *  $Id: PHP5ObjectBuilder.php 1639 2010-03-25 22:11:59Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -227,7 +227,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addHydrate($script);
 		$this->addEnsureConsistency($script);
 
-		$this->addManipulationMethods($script);
+		if (!$table->isReadOnly()) {
+			$this->addManipulationMethods($script);
+		}
 
     if ($this->isAddValidateMethod())
     {

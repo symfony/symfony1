@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: AbstractPropelDataModelTask.php 1297 2009-11-08 07:26:13Z francois $
+ *  $Id: AbstractPropelDataModelTask.php 1684 2010-04-16 20:56:45Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -508,10 +508,11 @@ abstract class AbstractPropelDataModelTask extends Task {
 	protected function includeExternalSchemas(DomDocument $dom, $srcDir) {
 		$databaseNode = $dom->getElementsByTagName("database")->item(0);
 		$externalSchemaNodes = $dom->getElementsByTagName("external-schema");
+		$fs = FileSystem::getFileSystem();
 		while ($externalSchema = $externalSchemaNodes->item(0)) {
 			$include = $externalSchema->getAttribute("filename");
 			$externalSchema->parentNode->removeChild($externalSchema);
-			if (strpos($srcDir->getPath(), "/") === 0) {
+			if ($fs->prefixLength($include) != 0) {
 				$externalSchemaFile = new PhingFile($include);
 			} else {
 				$externalSchemaFile = new PhingFile($srcDir, $include);

@@ -18,7 +18,7 @@
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfFormDoctrine.class.php 28903 2010-03-30 21:00:43Z Jonathan.Wage $
+ * @version    SVN: $Id: sfFormDoctrine.class.php 29643 2010-05-27 15:52:21Z Jonathan.Wage $
  */
 abstract class sfFormDoctrine extends sfFormObject
 {
@@ -84,7 +84,7 @@ abstract class sfFormDoctrine extends sfFormObject
 
       if (false === $i18nObject->exists())
       {
-        unset($i18n['id'], $i18n['lang']);
+        unset($i18n[$this->getI18nModelPrimaryKeyName()], $i18n[$this->getI18nModelI18nField()]);
       }
 
       $this->embedForm($culture, $i18n, $decorator);
@@ -222,6 +222,33 @@ abstract class sfFormDoctrine extends sfFormObject
   public function getI18nFormClass()
   {
     return $this->getI18nModelName().'Form';
+  }
+
+  /**
+   * Returns the primary key name of the i18n model.
+   *
+   * @return string The primary key name of the i18n model
+   */
+  public function getI18nModelPrimaryKeyName()
+  {
+    $primaryKey = $this->getObject()->getTable()->getIdentifier();
+
+    if (is_array($primaryKey))
+    {
+      throw new sfException(sprintf('The model "%s" has composite primary keys and cannot be used with i18n..', $this->getModelName()));
+    }
+
+    return $primaryKey;
+  }
+
+  /**
+   * Returns the i18nField name of the i18n model.
+   *
+   * @return string The i18nField name of the i18n model
+   */
+  public function getI18nModelI18nField()
+  {
+    return $this->getObject()->getTable()->getTemplate('Doctrine_Template_I18n')->getI18n()->getOption('i18nField');
   }
 
   /**

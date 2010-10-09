@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Column.php 1447 2010-01-12 16:45:56Z francois $
+ *  $Id: Column.php 1594 2010-03-15 09:16:23Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,7 +36,7 @@ include_once 'propel/engine/database/model/ColumnDefaultValue.php';
  * @author     Daniel Rall <dlr@finemaltcoding.com> (Torque)
  * @author     Byron Foster <byron_foster@yahoo.com> (Torque)
  * @author     Bernd Goldschmidt <bgoldschmidt@rapidsoft.de>
- * @version    $Revision: 1447 $
+ * @version    $Revision: 1594 $
  * @package    propel.engine.database.model
  */
 class Column extends XMLElement {
@@ -255,7 +255,7 @@ class Column extends XMLElement {
    */
   public function getFullyQualifiedName()
   {
-    return ($this->parentTable->getName() . '.' . name);
+    return ($this->parentTable->getName() . '.' . $this->getName());
   }
 
   /**

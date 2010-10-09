@@ -8,7 +8,7 @@
  * @package    symfony12
  * @subpackage form
  * @author     Your name here
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 24171 2009-11-19 16:37:50Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
 abstract class BaseBlogArticleTranslationForm extends BaseFormDoctrine
 {
@@ -24,11 +24,11 @@ abstract class BaseBlogArticleTranslationForm extends BaseFormDoctrine
     ));
 
     $this->setValidators(array(
-      'id'          => new sfValidatorDoctrineChoice(array('model' => $this->getModelName(), 'column' => 'id', 'required' => false)),
+      'id'          => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'title'       => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'body'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'test_column' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
-      'lang'        => new sfValidatorDoctrineChoice(array('model' => $this->getModelName(), 'column' => 'lang', 'required' => false)),
+      'lang'        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('lang')), 'empty_value' => $this->getObject()->get('lang'), 'required' => false)),
       'slug'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 

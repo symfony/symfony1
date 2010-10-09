@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfWidgetFormDoctrineChoice.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormDoctrineChoice.class.php 29679 2010-05-30 14:46:03Z Kris.Wallsmith $
  */
 class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
 {
@@ -73,7 +73,7 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
     $choices = array();
     if (false !== $this->getOption('add_empty'))
     {
-      $choices[''] = true === $this->getOption('add_empty') ? '' : $this->getOption('add_empty');
+      $choices[''] = true === $this->getOption('add_empty') ? '' : $this->translate($this->getOption('add_empty'));
     }
 
     if (null === $this->getOption('table_method'))
