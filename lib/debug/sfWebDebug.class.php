@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 30951 2010-09-22 02:17:27Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebug.class.php 30961 2010-09-22 09:36:43Z Kris.Wallsmith $
  */
 class sfWebDebug
 {
@@ -167,7 +167,7 @@ class sfWebDebug
     }
     else
     {
-      $content = substr($content, 0, $pos).$debug.substr($content, $pos);
+      $content = substr($content, 0, $pos).'<script type="text/javascript">'.$this->getJavascript().'</script>'.$debug.substr($content, $pos);
     }
 
     return $content;
