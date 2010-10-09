@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 9853 2008-06-25 11:11:49Z FabianLange $
+ * @version    SVN: $Id: sfI18N.class.php 11700 2008-09-21 10:53:44Z fabien $
  */
 class sfI18N
 {
@@ -236,7 +236,7 @@ class sfI18N
    */
   public function getCountry($iso, $culture = null)
   {
-    $c = new sfCultureInfo(is_null($culture) ? $this->culture : $culture);
+    $c = sfCultureInfo::getInstance(is_null($culture) ? $this->culture : $culture);
     $countries = $c->getCountries();
 
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
@@ -251,9 +251,7 @@ class sfI18N
    */
   public function getNativeName($culture)
   {
-    $cult = new sfCultureInfo($culture);
-
-    return $cult->getNativeName();
+    return sfCultureInfo::getInstance($culture)->getNativeName();
   }
 
   /**

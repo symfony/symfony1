@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nSelectCountry.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormI18nSelectCountry.class.php 11700 2008-09-21 10:53:44Z fabien $
  */
 class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
 {
@@ -41,8 +41,7 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
     // populate choices with all countries
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
-    $cultureInfo = new sfCultureInfo($culture);
-    $countries = $cultureInfo->getCountries();
+    $countries = sfCultureInfo::getInstance($culture)->getCountries();
 
     // restrict countries to a sub-set
     if (isset($options['countries']))

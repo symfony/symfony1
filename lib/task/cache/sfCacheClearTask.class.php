@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheClearTask.class.php 11432 2008-09-10 13:44:38Z hartym $
+ * @version    SVN: $Id: sfCacheClearTask.class.php 11797 2008-09-26 13:06:48Z fabien $
  */
 class sfCacheClearTask extends sfBaseTask
 {
@@ -101,9 +101,10 @@ EOF;
 
         $this->logSection('cache', sprintf('Clearing cache type "%s" for "%s" app and "%s" env', $options['type'], $app, $env));
 
+        $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, $env, true);
+
         $this->lock($app, $env);
 
-        $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, $env, true);
         $event = $appConfiguration->getEventDispatcher()->notifyUntil(new sfEvent($this, 'task.cache.clear', array('app' => $appConfiguration, 'env' => $env, 'type' => $options['type'])));
         if (!$event->isProcessed())
         {

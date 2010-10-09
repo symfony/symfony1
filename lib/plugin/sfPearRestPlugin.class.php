@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPearRestPlugin.class.php 9131 2008-05-21 04:12:00Z Carl.Vondrick $
+ * @version    SVN: $Id: sfPearRestPlugin.class.php 11764 2008-09-24 14:27:54Z fabien $
  */
 class sfPearRestPlugin extends sfPearRest11
 {
@@ -82,6 +82,11 @@ class sfPearRestPlugin extends sfPearRest11
   public function getPluginLicense($plugin, $version)
   {
     $info = $this->packageInfo($this->restBase, $plugin);
+
+    if (PEAR::isError($info))
+    {
+      throw new sfPluginRestException(sprintf('Unable to get plugin licence information for plugin "%s": %s', $plugin, $info->getMessage())); 
+    }
 
     if (is_null($info))
     {

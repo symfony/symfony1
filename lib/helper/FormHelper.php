@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 10990 2008-08-20 08:36:27Z dwhittle $
+ * @version    SVN: $Id: FormHelper.php 11700 2008-09-21 10:53:44Z fabien $
  */
 
 /**
@@ -218,7 +218,7 @@ function select_tag($name, $option_tags = null, $options = array())
  */
 function select_country_tag($name, $selected = null, $options = array())
 {
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
 
   if ($country_option = _get_option($options, 'countries'))
@@ -270,7 +270,7 @@ function select_country_tag($name, $selected = null, $options = array())
  */
 function select_language_tag($name, $selected = null, $options = array())
 {
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
 
   if ($language_option = _get_option($options, 'languages'))
@@ -322,7 +322,7 @@ function select_language_tag($name, $selected = null, $options = array())
  */
 function select_currency_tag($name, $selected = null, $options = array())
 {
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $currencies = $c->getCurrencies();
 
   $currency_option = _get_option($options, 'currencies');

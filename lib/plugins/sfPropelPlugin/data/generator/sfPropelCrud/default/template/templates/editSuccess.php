@@ -23,7 +23,7 @@
 <?php foreach ($form->getWidgetSchema()->getPositions() as $i => $name): ?>
 <?php if ($form[$name]->isHidden()) continue ?>
       <tr>
-        <th><?php echo $form[$name]->renderLabel() ?></th>
+        <th>[?php echo $form['<?php echo $name ?>']->renderLabel() ?]</th>
         <td>
           [?php echo $form['<?php echo $name ?>']->renderError() ?]
           [?php echo $form['<?php echo $name ?>'] ?]

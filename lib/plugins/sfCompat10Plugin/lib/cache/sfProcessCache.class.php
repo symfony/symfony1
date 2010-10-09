@@ -46,7 +46,7 @@ class sfProcessCache
       {
         $cacher = 'xcache';
       }
-      elseif (function_exists('ecacher_put'))
+      elseif (function_exists('eaccelerator_put'))
       {
         $cacher = 'eaccelerator';
       }

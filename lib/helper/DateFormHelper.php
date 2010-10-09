@@ -16,7 +16,7 @@ use_helper('Form');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateFormHelper.php 9101 2008-05-20 08:38:20Z FabianLange $
+ * @version    SVN: $Id: DateFormHelper.php 11700 2008-09-21 10:53:44Z fabien $
  */
 
 /**
@@ -832,7 +832,7 @@ function select_timezone_tag($name, $selected = null, $options = array())
 {
   if (!isset($options['display'])) $options['display'] = 'identifier';
   
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = sfCultureInfo::getInstance(sfContext::getInstance()->getUser()->getCulture());
   $timezone_groups = $c->getTimeZones();
   
   $display_key = 0;

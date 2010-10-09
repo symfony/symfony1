@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormatInfo.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfNumberFormatInfo.class.php 11700 2008-09-21 10:53:44Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -197,7 +197,7 @@ class sfNumberFormatInfo
     }
     else if (is_string($culture))
     {
-      $sfCultureInfo = new sfCultureInfo($culture);
+      $sfCultureInfo = sfCultureInfo::getInstance($culture);
       $formatInfo = $sfCultureInfo->getNumberFormat();
       $formatInfo->setPattern($type);
 
@@ -205,7 +205,7 @@ class sfNumberFormatInfo
     }
     else
     {
-      $sfCultureInfo = new sfCultureInfo();
+      $sfCultureInfo = sfCultureInfo::getInstance();
       $formatInfo = $sfCultureInfo->getNumberFormat();
       $formatInfo->setPattern($type);
 

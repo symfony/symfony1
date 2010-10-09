@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfMessageSource.class.php 11836 2008-09-29 08:07:31Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -174,7 +174,7 @@ abstract class sfMessageSource implements sfIMessageSource
       if ($this->cache)
       {
         $lastModified = $this->getLastModified($source);
-        if ($this->getLastModified($source) >= 0 && $this->getLastModified($source) < $this->cache->getLastModified($variant.':'.$this->culture))
+        if ($lastModified >= 0 && $lastModified < $this->cache->getLastModified($variant.':'.$this->culture))
         {
           $data = unserialize($this->cache->get($variant.':'.$this->culture));
 

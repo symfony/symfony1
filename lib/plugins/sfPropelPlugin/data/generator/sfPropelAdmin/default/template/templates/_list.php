@@ -1,5 +1,5 @@
 <?php if ($this->getParameterValue('list.batch_actions')): ?>
-[?php echo form_tag('<?php echo $this->getModuleNAme() ?>/batchAction') ?]
+[?php echo form_tag('<?php echo $this->getModuleName() ?>/batchAction') ?]
 <?php endif; ?>
 <table cellspacing="0" class="sf_admin_list">
 <thead>

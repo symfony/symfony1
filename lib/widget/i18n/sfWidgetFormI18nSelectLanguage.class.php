@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nSelectLanguage.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormI18nSelectLanguage.class.php 11700 2008-09-21 10:53:44Z fabien $
  */
 class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
 {
@@ -41,8 +41,7 @@ class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
     // populate choices with all languages
     $culture = isset($options['culture']) ? $options['culture'] : 'en';
 
-    $cultureInfo = new sfCultureInfo($culture);
-    $languages = $cultureInfo->getLanguages();
+    $languages = sfCultureInfo::getInstance($culture)->getLanguages();
 
     // restrict languages to a sub-set
     if (isset($options['languages']))

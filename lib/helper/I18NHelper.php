@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: I18NHelper.php 8465 2008-04-15 00:20:33Z fabien $
+ * @version    SVN: $Id: I18NHelper.php 11700 2008-09-21 10:53:44Z fabien $
  */
 
 function __($text, $args = array(), $catalogue = 'messages')
@@ -61,7 +61,7 @@ function format_number_choice($text, $args = array(), $number, $catalogue = 'mes
 
 function format_country($country_iso, $culture = null)
 {
-  $c = new sfCultureInfo($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
+  $c = sfCultureInfo::getInstance($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
   $countries = $c->getCountries();
 
   return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
@@ -69,7 +69,7 @@ function format_country($country_iso, $culture = null)
 
 function format_language($language_iso, $culture = null)
 {
-  $c = new sfCultureInfo($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
+  $c = sfCultureInfo::getInstance($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
   $languages = $c->getLanguages();
 
   return isset($languages[$language_iso]) ? $languages[$language_iso] : '';

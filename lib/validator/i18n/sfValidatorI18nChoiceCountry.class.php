@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorI18nChoiceCountry.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorI18nChoiceCountry.class.php 11700 2008-09-21 10:53:44Z fabien $
  */
 class sfValidatorI18nChoiceCountry extends sfValidatorChoice
 {
@@ -23,7 +23,7 @@ class sfValidatorI18nChoiceCountry extends sfValidatorChoice
    *
    * Available options:
    *
-   *  * culture:   The culture to use for internationalized strings (required)
+   *  * culture:   The culture to use for internationalized strings
    *  * countries: An array of country codes to use (ISO 3166)
    *
    * @param array $options   An array of options
@@ -35,14 +35,11 @@ class sfValidatorI18nChoiceCountry extends sfValidatorChoice
   {
     parent::configure($options, $messages);
 
-    $this->addRequiredOption('culture');
+    $this->addOption('culture');
     $this->addOption('countries');
 
     // populate choices with all countries
-    $culture = isset($options['culture']) ? $options['culture'] : 'en';
-
-    $cultureInfo = new sfCultureInfo($culture);
-    $countries = array_keys($cultureInfo->getCountries());
+    $countries = array_keys(sfCultureInfo::getInstance()->getCountries());
 
     // restrict countries to a sub-set
     if (isset($options['countries']))

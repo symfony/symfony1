@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 10699 2008-08-06 09:22:54Z hartym $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 11776 2008-09-25 10:11:40Z fabien $
  */
 class sfProjectConfiguration
 {
@@ -297,6 +297,11 @@ class sfProjectConfiguration
    */
   static public function getActive()
   {
+    if (is_null(sfProjectConfiguration::$active))
+    {
+      throw new RuntimeException('There is no active configuration.');
+    }
+
     return sfProjectConfiguration::$active;
   }
 

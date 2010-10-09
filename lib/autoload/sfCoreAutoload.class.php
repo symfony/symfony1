@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.1.2');
+define('SYMFONY_VERSION', '1.1.3');
 
 /**
  * sfCoreAutoload class.
@@ -22,7 +22,7 @@ define('SYMFONY_VERSION', '1.1.2');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 11642 2008-09-18 13:33:43Z nicolas $
+ * @version    SVN: $Id: sfCoreAutoload.class.php 11848 2008-09-29 14:01:25Z nicolas $
  */
 class sfCoreAutoload
 {
