@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 3491 2007-02-18 09:07:59Z fabien $
+ * @version    SVN: $Id: FormHelper.php 4201 2007-06-10 09:12:21Z fabien $
  */
 
 /**
@@ -681,8 +681,8 @@ function input_date_tag($name, $value = null, $options = array())
 
   $calendar_date_format = preg_replace('/([mdyhklspe])+/i', '%\\1', $calendar_date_format);
 
-  $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
-  $id_calendarButton = 'trigger_'.get_id_from_name($name);
+  $id_inputField = isset($options['id']) ? $options['id'] : get_id_from_name($name);
+  $id_calendarButton = 'trigger_'.$id_inputField;
   $js = '
     document.getElementById("'.$id_calendarButton.'").disabled = false;
     Calendar.setup({

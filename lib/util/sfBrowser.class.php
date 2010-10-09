@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 3334 2007-01-23 15:46:08Z fabien $
+ * @version    SVN: $Id: sfBrowser.class.php 4286 2007-06-20 12:07:41Z fabien $
  */
 class sfBrowser
 {
@@ -207,6 +207,11 @@ class sfBrowser
       @$this->dom->loadHTML($response->getContent());
       $this->domCssSelector = new sfDomCssSelector($this->dom);
     }
+    else
+    {
+      $this->dom = null;
+      $this->domCssSelector = null;
+    }
 
     return $this;
   }
@@ -245,11 +250,21 @@ class sfBrowser
 
   public function getResponseDomCssSelector()
   {
+    if (is_null($this->dom))
+    {
+      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+    }
+
     return $this->domCssSelector;
   }
 
   public function getResponseDom()
   {
+    if (is_null($this->dom))
+    {
+      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+    }
+
     return $this->dom;
   }
 
@@ -294,13 +309,14 @@ class sfBrowser
   // link or button
   public function click($name, $arguments = array())
   {
-    if (!$this->dom)
+    $dom = $this->getResponseDom();
+
+    if (!$dom)
     {
       throw new sfException('Cannot click because there is no current page in the browser');
     }
 
-    $xpath = new DomXpath($this->dom);
-    $dom   = $this->dom;
+    $xpath = new DomXpath($dom);
 
     // text link
     if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item(0))

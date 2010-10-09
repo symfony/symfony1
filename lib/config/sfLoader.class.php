@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLoader.class.php 3313 2007-01-20 07:00:37Z fabien $
+ * @version    SVN: $Id: sfLoader.class.php 4277 2007-06-20 10:12:35Z fabien $
  */
 class sfLoader
 {
@@ -166,14 +166,13 @@ class sfLoader
    */
   static public function getGeneratorTemplateDirs($class, $theme)
   {
-    $dirs = array();
+    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template');                  // project
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/template'))
     {
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    $dirs[] = sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template';                       // project
     $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/template';                  // default theme
 
     return $dirs;
@@ -189,14 +188,13 @@ class sfLoader
    */
   static public function getGeneratorSkeletonDirs($class, $theme)
   {
-    $dirs = array();
+    $dirs = array(sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton');                  // project
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
     {
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    $dirs[] = sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton';                       // project
     $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/skeleton';                  // default theme
 
     return $dirs;

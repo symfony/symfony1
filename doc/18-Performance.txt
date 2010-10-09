@@ -147,8 +147,8 @@ Listing 18-5 - Example of Available `doSelect` Methods for an `ArticlePeer` Clas
     // Retrieve Article objects and hydrate related Category objects
     doSelectJoinCategory()
 
-    // Retrieve Article objects and hydrate related Author and Category objects
-    doSelectJoinAuthorAndCategory()
+    // Retrieve Article objects and hydrate related objects except Author
+    doSelectJoinAllExceptAuthor()
 
     // Synonym of
     doSelectJoinAll()

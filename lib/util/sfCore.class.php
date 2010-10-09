@@ -13,7 +13,7 @@
  *
  * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCore.class.php 3128 2007-01-03 08:01:46Z fabien $
+ * @version    SVN: $Id: sfCore.class.php 4203 2007-06-10 09:24:03Z fabien $
  */
 class sfCore
 {
@@ -27,6 +27,11 @@ class sfCore
     require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
     sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
+
+    sfCore::initIncludePath();
+
+    sfCore::callBootstrap();
+
     if (sfConfig::get('sf_check_lock'))
     {
       sfCore::checkLock();
@@ -35,9 +40,6 @@ class sfCore
     {
       sfCore::checkSymfonyVersion();
     }
-    sfCore::initIncludePath();
-
-    sfCore::callBootstrap();
   }
 
   static public function callBootstrap()

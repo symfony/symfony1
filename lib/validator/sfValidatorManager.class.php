@@ -17,7 +17,7 @@
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfValidatorManager.class.php 3233 2007-01-11 21:01:08Z fabien $
+ * @version    SVN: $Id: sfValidatorManager.class.php 4282 2007-06-20 11:32:49Z fabien $
  */
 class sfValidatorManager
 {
@@ -254,7 +254,7 @@ class sfValidatorManager
     if (
       ($data['is_file'] && !$value['name'])
       ||
-      (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value == null || strlen($value) == 0)))
+      (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen($value) == 0)))
     )
     {
       if ($data['required'] || $force)

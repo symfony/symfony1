@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDomCssSelector.class.php 3053 2006-12-16 16:01:30Z fabien $
+ * @version    SVN: $Id: sfDomCssSelector.class.php 4236 2007-06-18 08:40:13Z fabien $
  */
 class sfDomCssSelector
 {
@@ -193,12 +193,14 @@ class sfDomCssSelector
       switch ($combinator)
       {
         case ' ':
+          // Descendant selector
           foreach ($node->getElementsByTagName($tagName) as $element)
           {
             $founds[] = $element;
           }
           break;
         case '>':
+          // Child selector
           foreach ($node->childNodes as $element)
           {
             if ($tagName == $element->nodeName)
@@ -208,7 +210,13 @@ class sfDomCssSelector
           }
           break;
         case '+':
-          $element = $node->childNodes->item(0);
+          // Adjacent selector
+          $element = $node->nextSibling;
+          if ($element && '#text' == $element->nodeName)
+          {
+            $element = $element->nextSibling;
+          }
+
           if ($element && $tagName == $element->nodeName)
           {
             $founds[] = $element;

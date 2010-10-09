@@ -330,7 +330,7 @@ If you actually need to keep the GET syntax--to have request parameters passed u
 Listing 9-13 - Forcing GET Variables with the `query_string` Option
 
     [php]
-    <?php echo link_to('my article', 'article/read?title=Finance_in_France', array(
+    <?php echo link_to('my article', 'article/read', array(
       'query_string' => 'title=Finance_in_France'
     )) ?>
     => <a href="/article/read?title=Finance_in_France">my article</a>

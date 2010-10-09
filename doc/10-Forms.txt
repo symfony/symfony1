@@ -208,8 +208,9 @@ Listing 10-3 - Input Date Helpers
     <?php echo input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
      => a text input tag together with a calendar widget
 
-    // The following helpers require the Date helper group
-    <?php use_helper('Date') ?>
+    // The following helpers require the DateForm helper group
+    <?php use_helper('DateForm') ?>
+
     <?php echo select_day_tag('day', 1, 'include_custom=Choose a day') ?>
     => <select name="day" id="day">
           <option value="">Choose a day</option>
@@ -782,9 +783,9 @@ Each has a default set of parameters and error messages, but you can easily over
     sfNumberValidator:
       nan_error:    Please enter an integer
       min:          0
-      min_error:    The value must be more than zero
+      min_error:    The value must be at least zero
       max:          100
-      max_error:    The value must be less than 100
+      max_error:    The value must be less than or equal to 100
 
 #### E-Mail Validator
 

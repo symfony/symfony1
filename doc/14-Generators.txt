@@ -906,9 +906,9 @@ Listing 14-34 - Removing All Actions in the `list` View
 
 ### Form Validation
 
-If you take a look at the generated `_edit_form.php` template in your project `cache/` directory, you will see that the form fields use a special naming convention. In a generated `edit` view, the input names result from the concatenation of the module name and the field name between angle brackets.
+If you take a look at the generated `_edit_form.php` template in your project `cache/` directory, you will see that the form fields use a special naming convention. In a generated `edit` view, the input names result from the concatenation of the underscore-syntaxed model class name and the field name between angle brackets.
 
-For instance, if the `edit` view for the `article` module has a `title` field, the template will look like Listing 14-35 and the field will be identified as `article[title]`.
+For instance, if the `edit` view for the `Article` class has a `title` field, the template will look like Listing 14-35 and the field will be identified as `article[title]`.
 
 Listing 14-35 - Syntax of the Generated Input Names
 
@@ -1005,7 +1005,7 @@ Listing 14-39 - Example `edit` Header Partial, in `modules/articles/template/_ed
       <h2>This article has <?php echo $article->getNbComments() ?> comments.</h2>
     <?php endif; ?>
 
-Notice that an edit partial always has access to the current object through a variable having the same name as the module, and that a `list` partial always has access to the current pager through the `$pager` variable.
+Notice that an edit partial always has access to the current object through a variable named after the class, and that a `list` partial always has access to the current pager through the `$pager` variable.
 
 >**SIDEBAR**
 >Calling the Administration Actions with Custom Parameters

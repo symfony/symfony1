@@ -31,7 +31,7 @@ If you have an extensive approach to automated testing, you will probably need t
 
 In the test-driven development (TDD) methodology, the tests are written before the code. Writing tests first helps you to focus on the tasks a function should accomplish before actually developing it. It's a good practice that other methodologies, like Extreme Programming (XP), recommend as well. Plus it takes into account the undeniable fact that if you don't write unit tests first, you never write them.
 
-For instance, imagine that you must develop a text-stripping function. The function removes white spaces at the beginning and at the end of the string, replaces nonalphabetical characters by underscores, and transforms all uppercase characters to lowercase ones. In test-driven development, you would first think about all the possible cases and provide an example "nput and expected output for each, as shown in Table 15-1.
+For instance, imagine that you must develop a text-stripping function. The function removes white spaces at the beginning and at the end of the string, replaces nonalphabetical characters by underscores, and transforms all uppercase characters to lowercase ones. In test-driven development, you would first think about all the possible cases and provide an example input and expected output for each, as shown in Table 15-1.
 
 Table 15-1 - A List of Test Cases for a Text-Stripping Function
 
@@ -609,7 +609,7 @@ Listing 15-17 - Testing Directly with `sfTestBrowser`
     $b->initialize();
     $b->get('/foobar/edit/id/1')->
         isRequestParameter('id', 1)->
-        isStatutsCode()->
+        isStatusCode()->
         isResponseHeader('content-type', 'text/html; charset=utf-8')->
         responseContains('edit');
 

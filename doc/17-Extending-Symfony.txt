@@ -391,8 +391,8 @@ Listing 17-14 - Overriding Factories
       request:
         class: myRequest
 
-Bridges to Other Framework Components
--------------------------------------
+Bridges to Other Framework's Components
+---------------------------------------
 
 If you need capabilities provided by a third-party class, and if you don't want to copy this class in one of the symfony `lib/` dirs, you will probably install it outside of the usual places where symfony looks for files. In that case, using this class will imply a manual `require` in your code, unless you use the symfony bridge to take advantage of the autoloading.
 

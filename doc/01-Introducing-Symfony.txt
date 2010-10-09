@@ -241,13 +241,13 @@ This PHP array can be automatically created by parsing the YAML string:
         number: 34
         street: Main Street
         city: Nowheretown
-        zipcode: 12345
+        zipcode: "12345"
 
 In YAML, structure is shown through indentation, sequence items are denoted by a dash, and key/value pairs within a map are separated by a colon. YAML also has a shorthand syntax to describe the same structure with fewer lines, where arrays are explicitly shown with `[]` and hashes with `{}`. Therefore, the previous YAML data can be written in a shorter way, as follows:
 
     house:
       family: { name: Doe, parents: [John, Jane], children: [Paul, Mark, Simone] }
-      address: { number: 34, street: Main Street, city: Nowheretown, zipcode: 12345 }
+      address: { number: 34, street: Main Street, city: Nowheretown, zipcode: "12345" }
 
 YAML is an acronym for Yet Another Markup Language and pronounced "yamel." The format has been around since 2001, and YAML parsers exist for a large variety of languages.
 

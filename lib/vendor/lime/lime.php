@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 3298 2007-01-17 06:08:15Z fabien $
+ * @version    SVN: $Id: lime.php 4259 2007-06-19 07:24:40Z fabien $
  */
 
 class lime_test
@@ -41,16 +41,20 @@ class lime_test
 
     if ($total > $this->plan)
     {
-      $this->output->diag(sprintf("Looks like you planned %d tests but ran %d extra.", $this->plan, $total - $this->plan));
+      $this->output->red_bar(sprintf(" Looks like you planned %d tests but ran %d extra.", $this->plan, $total - $this->plan));
     }
     elseif ($total < $this->plan)
     {
-      $this->output->diag(sprintf("Looks like you planned %d tests but only ran %d.", $this->plan, $total));
+      $this->output->red_bar(sprintf(" Looks like you planned %d tests but only ran %d.", $this->plan, $total));
     }
 
     if ($this->failed)
     {
-      $this->output->diag(sprintf("Looks like you failed %d tests of %d.", $this->failed, $this->plan));
+      $this->output->red_bar(sprintf(" Looks like you failed %d tests of %d.", $this->failed, $this->plan));
+    }
+    else if ($total == $this->plan)
+    {
+      $this->output->green_bar(" Looks like everything went fine.");
     }
 
     flush();
@@ -73,7 +77,7 @@ class lime_test
       $traces = debug_backtrace();
       if ($_SERVER['PHP_SELF'])
       {
-        $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : 1;
+        $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : (isset($traces[1]['file']) ? 1 : 0);
       }
       else
       {
@@ -308,6 +312,16 @@ class lime_output
   {
     echo "$message\n";
   }
+
+  function green_bar($message)
+  {
+    echo "$message\n";
+  }
+
+  function red_bar($message)
+  {
+    echo "$message\n";
+  }
 }
 
 class lime_output_color extends lime_output
@@ -341,6 +355,16 @@ class lime_output_color extends lime_output
     $message = preg_replace('/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
 
     echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
+  }
+
+  function green_bar($message)
+  {
+    echo $this->colorizer->colorize($message.str_repeat(' ', 71 - min(71, strlen($message))), 'GREEN_BAR')."\n";
+  }
+
+  function red_bar($message)
+  {
+    echo $this->colorizer->colorize($message.str_repeat(' ', 71 - min(71, strlen($message))), 'RED_BAR')."\n";
   }
 }
 
@@ -384,6 +408,9 @@ lime_colorizer::style('INFO',  array('fg' => 'green', 'bold' => true));
 lime_colorizer::style('PARAMETER', array('fg' => 'cyan'));
 lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 
+lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
+lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
+
 class lime_harness extends lime_registration
 {
   public $php_cli = '';
@@ -392,7 +419,18 @@ class lime_harness extends lime_registration
 
   function __construct($output_instance, $php_cli = null)
   {
+    if (getenv('PHP_PATH'))
+    {
+      $this->php_cli = getenv('PHP_PATH');
+
+      if (!is_executable($this->php_cli))
+      {
+        throw new Exception('The defined PHP_PATH environment variable is not a valid PHP executable.');
+      }
+    }
+
     $this->php_cli = null === $php_cli ? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : $php_cli;
+
     if (!is_executable($this->php_cli))
     {
       $this->php_cli = $this->find_php_cli();
@@ -465,7 +503,7 @@ class lime_harness extends lime_registration
         $delta = $this->stats[$file]['plan'] - $this->stats[$file]['nb_tests'];
         if ($delta > 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           $this->stats['_nb_tests'] += $delta;
@@ -476,7 +514,7 @@ class lime_harness extends lime_registration
         }
         else if ($delta < 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           for ($i = 1; $i <= -$delta; $i++)
@@ -491,7 +529,7 @@ class lime_harness extends lime_registration
         }
       }
 
-      $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->stats[$file]['status']));
+      $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -min(67, strlen($relative_file))), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->stats[$file]['status']));
       if (($nb = count($this->stats[$file]['failed'])) || $return > 0)
       {
         if ($nb)
@@ -517,22 +555,23 @@ class lime_harness extends lime_registration
       {
         if (!in_array($file, $this->stats['_failed_files'])) continue;
 
-        $this->output->echoln(sprintf($format, substr($this->get_relative_file($file), -30), $file_stat['status_code'], count($file_stat['failed']) + count($file_stat['passed']), count($file_stat['failed']), implode(' ', $file_stat['failed'])));
+        $relative_file = $this->get_relative_file($file);
+        $this->output->echoln(sprintf($format, substr($relative_file, -min(30, strlen($relative_file))), $file_stat['status_code'], count($file_stat['failed']) + count($file_stat['passed']), count($file_stat['failed']), implode(' ', $file_stat['failed'])));
       }
 
-      $this->output->echoln(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
+      $this->output->red_bar(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
         $nb_failed_files = count($this->stats['_failed_files']),
         $nb_files = count($this->files),
         ($nb_files - $nb_failed_files) * 100 / $nb_files,
         $nb_failed_tests = $this->stats['_failed_tests'],
         $nb_tests = $this->stats['_nb_tests'],
         $nb_tests > 0 ? ($nb_tests - $nb_failed_tests) * 100 / $nb_tests : 0
-      ), 'ERROR');
+      ));
     }
     else
     {
-      $this->output->echoln('All tests successful.', 'INFO');
-      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']), 'INFO');
+      $this->output->green_bar(' All tests successful.');
+      $this->output->green_bar(sprintf(' Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']));
     }
 
     return $this->stats['_failed_tests'] ? false : true;
@@ -584,6 +623,11 @@ class lime_coverage extends lime_registration
     if (!function_exists('xdebug_start_code_coverage'))
     {
       throw new Exception('You must install and enable xdebug before using lime coverage.');
+    }
+
+    if (!ini_get('xdebug.extended_info'))
+    {
+      throw new Exception('You must set xdebug.extended_info to 1 in your php.ini to use lime coverage.');
     }
 
     if (!count($this->harness->files))
@@ -654,7 +698,8 @@ EOF;
       $total_php_lines += count($php_lines);
       $total_covered_lines += count($cov);
 
-      $output->echoln(sprintf("%-70s %3.0f%%", substr($this->get_relative_file($file), -70), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
+      $relative_file = $this->get_relative_file($file);
+      $output->echoln(sprintf("%-70s %3.0f%%", substr($relative_file, -min(70, strlen($relative_file))), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
       if ($this->verbose && $percent != 100)
       {
         $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));

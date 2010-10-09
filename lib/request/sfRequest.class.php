@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfRequest.class.php 3692 2007-04-02 11:16:54Z fabien $
+ * @version    SVN: $Id: sfRequest.class.php 4266 2007-06-19 12:44:54Z fabien $
  */
 abstract class sfRequest
 {
@@ -157,7 +157,7 @@ abstract class sfRequest
    */
   public function hasError($name)
   {
-    return isset($this->errors[$name]);
+    return array_key_exists($name, $this->errors);
   }
 
   /**

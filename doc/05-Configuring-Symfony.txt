@@ -156,7 +156,7 @@ Listing 5-10 - Category Headers Are Only There for Readability and Are Actually 
 >
 >YAML is just an interface to define settings to be used by PHP code, so the configuration defined in YAML files ends up being transformed into PHP. After browsing an application, check its cached configuration (in `cache/myapp/dev/config/`, for instance). You will see the PHP files corresponding to your YAML configuration. You will learn more about the configuration cache later in this chapter.
 >
->The good news is that if you don't want to use YAML files, you can still do what the configuration files do by hand, in PHP or via another format (XML, INT, and so on). Throughout this book, you will meet alternative ways to define configuration without YAML, and you will even learn to replace the symfony configuration handlers (in Chapter 19). If you use them wisely, these tricks will enable you to bypass configuration files or define your own configuration format.
+>The good news is that if you don't want to use YAML files, you can still do what the configuration files do by hand, in PHP or via another format (XML, INI, and so on). Throughout this book, you will meet alternative ways to define configuration without YAML, and you will even learn to replace the symfony configuration handlers (in Chapter 19). If you use them wisely, these tricks will enable you to bypass configuration files or define your own configuration format.
 
 ### Help, a YAML File Killed My App!
 

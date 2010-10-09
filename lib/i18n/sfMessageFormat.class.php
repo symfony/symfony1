@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageFormat.class.php 2834 2006-11-27 14:09:05Z fabien $
+ * @version    $Id: sfMessageFormat.class.php 4274 2007-06-20 09:55:49Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -59,7 +59,7 @@ class sfMessageFormat
    * A list of loaded message catalogues.
    * @var array
    */
-  protected $catagloues = array();
+  protected $catalogues = array();
 
   /**
    * The translation messages.
@@ -135,7 +135,7 @@ class sfMessageFormat
    */
   protected function loadCatalogue($catalogue)
   {
-    if (in_array($catalogue,$this->catagloues))
+    if (in_array($catalogue,$this->catalogues))
     {
       return;
     }
@@ -143,7 +143,7 @@ class sfMessageFormat
     if ($this->source->load($catalogue))
     {
       $this->messages[$catalogue] = $this->source->read();
-      $this->catagloues[] = $catalogue;
+      $this->catalogues[] = $catalogue;
     }
   }
 

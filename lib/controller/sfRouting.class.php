@@ -20,7 +20,7 @@
  * @package    symfony
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 3234 2007-01-11 21:09:21Z fabien $
+ * @version    SVN: $Id: sfRouting.class.php 4228 2007-06-15 13:43:24Z francois $
  */
 class sfRouting
 {
@@ -462,8 +462,7 @@ class sfRouting
     // we add all other params if *
     if (strpos($real_url, '*'))
     {
-      $tmp = '';
-
+      $tmp = array();
       foreach ($params as $key => $value)
       {
         if (isset($names_hash[$key]) || isset($defaults[$key])) continue;
@@ -472,19 +471,20 @@ class sfRouting
         {
           foreach ($value as $v)
           {
-            $tmp .= $key.$equals.urlencode($v).$divider;
+            $tmp[] = $key.$equals.urlencode($v);
           }
         }
         else
         {
-          $tmp .= urlencode($key).$equals.urlencode($value).$divider;
+          $tmp[] = urlencode($key).$equals.urlencode($value);
         }
       }
+      $tmp = implode($divider, $tmp);
       if (strlen($tmp) > 0)
       {
         $tmp = $querydiv.$tmp;
       }
-      $real_url = preg_replace('/\/\*(\/|$)/', $tmp, $real_url);
+      $real_url = preg_replace('/\/\*(\/|$)/', "$tmp$1", $real_url);
     }
 
     // strip off last divider character

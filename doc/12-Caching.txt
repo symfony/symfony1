@@ -473,7 +473,7 @@ That's it--you have a new environment. Use it by adding the front controller nam
     http://myapp.example.com/myapp_staging.php/user/list
 
 >**TIP**
->Instead of copying an existing one, you can create a new front controller with the `symfony` command line. For instance, to create a `staging` environment for the `myapp` application, called `myapp_staging.php` and where `SF_DEBUG` is `true`, just call `symfony init-controller myapp staging myapp_staging.php true`.
+>Instead of copying an existing one, you can create a new front controller with the `symfony` command line. For instance, to create a `staging` environment for the `myapp` application, called `myapp_staging.php` and where `SF_DEBUG` is `true`, just call `symfony init-controller myapp staging myapp_staging true`.
 
 ### Monitoring Performance
 

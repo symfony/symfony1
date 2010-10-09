@@ -1,4 +1,4 @@
-[?php echo form_tag('<?php echo $this->getModuleName() ?>/edit', array(
+[?php echo form_tag('<?php echo $this->getModuleName() ?>/save', array(
   'id'        => 'sf_admin_edit_form',
   'name'      => 'sf_admin_edit_form',
   'multipart' => true,

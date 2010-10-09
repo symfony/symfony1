@@ -754,7 +754,7 @@ By the magic of the `sortable_element()` helper, the `<ul>` element is made sort
     POST /sf_sandbox/web/frontend_dev.php/item/sort HTTP/1.1
       order[]=1&order[]=3&order[]=2&_=
 
-The full ordered list is passed as an array (with the format `order[$rank]=$id`, the `$order` starting at 0, and the `$id` based on what comes after the underscore (`_`) in the list element `id` property). The `id` property of the sortable element (`order` in the example) is used to name the array of parameters.
+The full ordered list is passed as an array (with the format `order[$rank]=$id`, the `$rank` starting at 0, and the `$id` based on what comes after the underscore (`_`) in the list element `id` property). The `id` property of the sortable element (`order` in the example) is used to name the array of parameters.
 
 The `sortable_element()` helper accepts the following parameters:
 
