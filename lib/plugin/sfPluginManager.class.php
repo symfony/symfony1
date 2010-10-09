@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginManager.class.php 9131 2008-05-21 04:12:00Z Carl.Vondrick $
+ * @version    SVN: $Id: sfPluginManager.class.php 13759 2008-12-05 08:53:37Z FabianLange $
  */
 class sfPluginManager
 {
@@ -42,7 +42,7 @@ class sfPluginManager
    * @param sfEventDispatcher $dispatcher   An event dispatcher instance
    * @param sfPearEnvironment $environment  A sfPearEnvironment instance
    */
-  public function initialize(sfEventDispatcher $dispatcher, $environment)
+  public function initialize(sfEventDispatcher $dispatcher, sfPearEnvironment $environment)
   {
     $this->dispatcher  = $dispatcher;
     $this->environment = $environment;
@@ -440,6 +440,13 @@ class sfPluginManager
       {
         // no release available
         return false;
+      }
+    }
+    else
+    {
+      if (!$this->isPluginCompatible($plugin, $version))
+      {
+        throw new sfPluginDependencyException(sprintf('Plugin "%s" in version "%s" is not compatible with the current application', $plugin, $version));
       }
     }
 

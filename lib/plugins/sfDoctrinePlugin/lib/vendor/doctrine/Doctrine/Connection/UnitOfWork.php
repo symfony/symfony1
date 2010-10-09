@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: UnitOfWork.php 5179 2008-11-17 12:48:24Z guilhermeblanco $
+ *  $Id: UnitOfWork.php 5250 2008-12-03 21:38:40Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +33,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5179 $
+ * @version     $Revision: 5250 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
  */
@@ -65,35 +65,37 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             $record->state($state);
 
-            if ($record->isValid()) {
-                $event = new Doctrine_Event($record, Doctrine_Event::RECORD_SAVE);
-                $record->preSave($event);
-                $record->getTable()->getRecordListener()->preSave($event);
-                $state = $record->state();
+            $event = new Doctrine_Event($record, Doctrine_Event::RECORD_SAVE);
+            $record->preSave($event);
+            $record->getTable()->getRecordListener()->preSave($event);
+            $state = $record->state();
 
-                if ( ! $event->skipOperation) {
-                    switch ($state) {
-                        case Doctrine_Record::STATE_TDIRTY:
-                        case Doctrine_Record::STATE_TCLEAN:
-                            $this->insert($record);
-                            break;
-                        case Doctrine_Record::STATE_DIRTY:
-                        case Doctrine_Record::STATE_PROXY:
-                            $this->update($record);
-                            break;
-                        case Doctrine_Record::STATE_CLEAN:
-                            // do nothing
-                            break;
-                    }
+            $isValid = true;
+
+            if ( ! $event->skipOperation) {
+                switch ($state) {
+                    case Doctrine_Record::STATE_TDIRTY:
+                    case Doctrine_Record::STATE_TCLEAN:
+                        $isValid = $this->insert($record);
+                        break;
+                    case Doctrine_Record::STATE_DIRTY:
+                    case Doctrine_Record::STATE_PROXY:
+                        $isValid = $this->update($record);
+                        break;
+                    case Doctrine_Record::STATE_CLEAN:
+                        // do nothing
+                        break;
                 }
+            }
 
+            if ($isValid) {
                 // NOTE: what about referential integrity issues?
                 foreach ($record->getPendingDeletes() as $pendingDelete) {
                     $pendingDelete->delete();
                 }
 
-                $record->getTable()->getRecordListener()->postSave($event);
                 $record->postSave($event);
+                $record->getTable()->getRecordListener()->postSave($event);
             } else {
                 $conn->transaction->addInvalid($record);
             }
@@ -109,7 +111,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     $obj = $record->$alias;
 
                     // check that the related object is not an instance of Doctrine_Null
-                    if ( ! ($obj instanceof Doctrine_Null)) {
+                    if ($obj && ! ($obj instanceof Doctrine_Null)) {
                         $obj->save($conn);
                     }
                 }
@@ -509,24 +511,28 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $table = $record->getTable();
         $table->getRecordListener()->preUpdate($event);
 
-        if ( ! $event->skipOperation) {
-            $identifier = $record->identifier();
-            if ($table->getOption('joinedParents')) {
-                // currrently just for bc!
-                $this->_updateCTIRecord($table, $record);
-                //--
-            } else {
-                $array = $record->getPrepared();
-                $this->conn->update($table, $array, $identifier);
+        if ($record->isValid()) {
+            if ( ! $event->skipOperation) {
+                $identifier = $record->identifier();
+                if ($table->getOption('joinedParents')) {
+                    // currrently just for bc!
+                    $this->_updateCTIRecord($table, $record);
+                    //--
+                } else {
+                    $array = $record->getPrepared();
+                    $this->conn->update($table, $array, $identifier);
+                }
+                $record->assignIdentifier(true);
             }
-            $record->assignIdentifier(true);
+
+            $table->getRecordListener()->postUpdate($event);
+
+            $record->postUpdate($event);
+
+            return true;
         }
 
-        $table->getRecordListener()->postUpdate($event);
-
-        $record->postUpdate($event);
-
-        return true;
+        return false;
     }
 
     /**
@@ -543,21 +549,25 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $table = $record->getTable();
         $table->getRecordListener()->preInsert($event);
 
-        if ( ! $event->skipOperation) {
-            if ($table->getOption('joinedParents')) {
-                // just for bc!
-                $this->_insertCTIRecord($table, $record);
-                //--
-            } else {
-                $this->processSingleInsert($record);
+        if ($record->isValid()) {
+            if ( ! $event->skipOperation) {
+                if ($table->getOption('joinedParents')) {
+                    // just for bc!
+                    $this->_insertCTIRecord($table, $record);
+                    //--
+                } else {
+                    $this->processSingleInsert($record);
+                }
             }
+
+            $table->addRecord($record);
+            $table->getRecordListener()->postInsert($event);
+            $record->postInsert($event);
+
+            return true;
         }
 
-        $table->addRecord($record);
-        $table->getRecordListener()->postInsert($event);
-        $record->postInsert($event);
-
-        return true;
+        return false;
     }
 
     /**

@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBaseTask.class.php 13415 2008-11-27 12:31:14Z fabien $
+ * @version    SVN: $Id: sfDoctrineBaseTask.class.php 13851 2008-12-08 22:54:16Z Jonathan.Wage $
  */
 abstract class sfDoctrineBaseTask extends sfBaseTask
 {
@@ -100,6 +100,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
 
     $cli = new sfDoctrineCli($config);
     $cli->setDispatcher($this->dispatcher);
+    $cli->setFormatter($this->formatter);
     $cli->run($arguments);
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Table.php 5207 2008-11-21 16:06:59Z guilhermeblanco $
+ *  $Id: Table.php 5280 2008-12-08 23:18:33Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Table
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 5207 $
+ * @version     $Revision: 5280 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -2133,7 +2133,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     || $name == 'scale'
                     || $name == 'type'
                     || $name == 'length'
-                    || $name == 'fixed') {
+                    || $name == 'fixed'
+                    || $name == 'comment') {
                 continue;
             }
             if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])
@@ -2277,7 +2278,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         // Forward the method on to the record instance and see if it has anything or one of its behaviors
         try {
             return call_user_func_array(array($this->getRecordInstance(), $method . 'TableProxy'), $arguments);
-        } catch (Exception $e) {}
+        } catch (Doctrine_Record_UnknownPropertyException $e) {}
 
         throw new Doctrine_Table_Exception(sprintf('Unknown method %s::%s', get_class($this), $method));
     }

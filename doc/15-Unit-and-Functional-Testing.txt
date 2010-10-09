@@ -430,7 +430,7 @@ You could run your functional tests with a text browser and a lot of regular exp
 
 A functional test traditionally starts with an initialization of a test browser object. This object makes a request to an action and verifies that some elements are present in the response.
 
-For example, every time you generate a module skeleton with the `generate:module` or the `propel:generate-crud` tasks, symfony creates a simple functional test for this module. The test makes a request to the default action of the module and checks the response status code, the module and action calculated by the routing system, and the presence of a certain sentence in the response content. For a `foobar` module, the generated `foobarActionsTest.php` file looks like Listing 15-9.
+For example, every time you generate a module skeleton with the `generate:module` or the `propel:generate-module` tasks, symfony creates a simple functional test for this module. The test makes a request to the default action of the module and checks the response status code, the module and action calculated by the routing system, and the presence of a certain sentence in the response content. For a `foobar` module, the generated `foobarActionsTest.php` file looks like Listing 15-9.
 
 Listing 15-9 - Default Functional Test for a New Module, in `tests/functional/frontend/foobarActionsTest.php`
 

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 13089 2008-11-17 23:18:18Z fabien $
+ * @version    SVN: $Id: sfModelGenerator.class.php 13947 2008-12-11 14:15:32Z fabien $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -63,7 +63,7 @@ abstract class sfModelGenerator extends sfGenerator
     // move helper file
     if (file_exists($file = $this->generatorManager->getBasePath().'/'.$this->getGeneratedModuleName().'/lib/helper.php'))
     {
-      rename($file, $this->generatorManager->getBasePath().'/'.$this->getGeneratedModuleName().'/lib/Base'.ucfirst($this->moduleName).'GeneratorHelper.class.php');
+      @rename($file, $this->generatorManager->getBasePath().'/'.$this->getGeneratedModuleName().'/lib/Base'.ucfirst($this->moduleName).'GeneratorHelper.class.php');
     }
 
     return "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php');";
@@ -392,15 +392,17 @@ EOF;
 
     require_once $this->getGeneratorManager()->getBasePath().'/'.$basePath;
 
-    $moduleDirs = array_keys($config->getControllerDirs($this->getModuleName()));
-    if (is_file($moduleDirs[0].'/../lib/configuration.php'))
+    $class = 'Base'.ucfirst($this->getModuleName()).'GeneratorConfiguration';
+    foreach ($config->getLibDirs($this->getModuleName()) as $dir)
     {
-      require_once $moduleDirs[0].'/../lib/configuration.php';
+      if (!is_file($configuration = $dir.'/'.$this->getModuleName().'GeneratorConfiguration.class.php'))
+      {
+        continue;
+      }
+
+      require_once $configuration;
       $class = $this->getModuleName().'GeneratorConfiguration';
-    }
-    else
-    {
-      $class = 'Base'.ucfirst($this->getModuleName()).'GeneratorConfiguration';
+      break;
     }
 
     // validate configuration

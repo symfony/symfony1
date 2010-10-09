@@ -212,10 +212,15 @@ class Doctrine_Search extends Doctrine_Record_Generator
                 $ids[] = $row[$id];
             }
 
-            $conn->exec('DELETE FROM ' 
-                        . $conn->quoteIdentifier($this->_table->getTableName())
-                        . ' WHERE ' . $conn->quoteIdentifier($id) . ' IN (' . implode(', ', $ids) . ')');
-                        
+            $placeholders = str_repeat('?, ', count($ids));
+            $placeholders = substr($placeholders, 0, strlen($placeholders) - 2);
+
+            $sql = 'DELETE FROM ' 
+                  . $conn->quoteIdentifier($this->_table->getTableName())
+                  . ' WHERE ' . $conn->quoteIdentifier($id) . ' IN (' . substr($placeholders, 0) . ')';
+
+            $conn->exec($sql, $ids);
+
             foreach ($rows as $row) {
                 foreach ($fields as $field) {
                     $data  = $row[$field];

@@ -638,7 +638,7 @@ Listing 9-24 - Defining a Rule in PHP
       array('id' => '\d+'),                             // Requirements
     );
 
-The `sfPatternRouting` class has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()` and so on. Refer to the API documentation ([http://www.symfony-project.org/api/1_1/](http://www.symfony-project.org/api/1_1/)) to learn more.
+The `sfPatternRouting` class has other useful methods for handling routes by hand: `clearRoutes()`, `hasRoutes()` and so on. Refer to the API documentation ([http://www.symfony-project.org/api/1_2/](http://www.symfony-project.org/api/1_2/)) to learn more.
 
 >**TIP**
 >Once you start to fully understand the concepts presented in this book, you can increase your understanding of the framework by browsing the online API documentation or, even better, the symfony source. Not all the tweaks and parameters of symfony can be described in this book. The online documentation, however, is limitless.

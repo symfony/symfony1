@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormGenerator.class.php 13234 2008-11-22 13:52:02Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelFormGenerator.class.php 13927 2008-12-10 21:47:32Z FabianLange $
  */
 class sfPropelFormGenerator extends sfGenerator
 {
@@ -219,6 +219,7 @@ class sfPropelFormGenerator extends sfGenerator
       case PropelColumnTypes::BOOLEAN:
         $name = 'InputCheckbox';
         break;
+      case PropelColumnTypes::CLOB:
       case PropelColumnTypes::LONGVARCHAR:
         $name = 'Textarea';
         break;
@@ -280,6 +281,7 @@ class sfPropelFormGenerator extends sfGenerator
       case PropelColumnTypes::BOOLEAN:
         $name = 'Boolean';
         break;
+      case PropelColumnTypes::CLOB:
       case PropelColumnTypes::CHAR:
       case PropelColumnTypes::VARCHAR:
       case PropelColumnTypes::LONGVARCHAR:
@@ -351,6 +353,7 @@ class sfPropelFormGenerator extends sfGenerator
     {
       switch ($column->getType())
       {
+        case PropelColumnTypes::CLOB:
         case PropelColumnTypes::CHAR:
         case PropelColumnTypes::VARCHAR:
         case PropelColumnTypes::LONGVARCHAR:

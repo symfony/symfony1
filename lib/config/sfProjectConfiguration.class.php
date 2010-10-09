@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 13547 2008-11-30 14:05:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 13929 2008-12-10 22:06:40Z FabianLange $
  */
 class sfProjectConfiguration
 {
@@ -448,7 +448,7 @@ class sfProjectConfiguration
    * 
    * @return array
    */
-  protected function getAllPluginPaths()
+  public function getAllPluginPaths()
   {
     $pluginPaths = array();
 

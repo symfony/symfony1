@@ -99,7 +99,7 @@ Before you get started with symfony, you should understand a few basic concepts.
 
 ### PHP 5
 
-Symfony is developed in PHP 5 ([http://www.php.net/](http://www.php.net/)) and dedicated to building web applications with the same language. Therefore, a solid understanding of PHP 5 is required to get the most out of the framework. The minimal version of PHP required to run symfony is PHP 5.1.
+Symfony is developed in PHP 5 ([http://www.php.net/](http://www.php.net/)) and dedicated to building web applications with the same language. Therefore, a solid understanding of PHP 5 is required to get the most out of the framework. The minimal version of PHP required to run symfony is PHP 5.2.
 
 Developers who already know PHP 4 but not PHP 5 should mainly focus on the language's new object-oriented model.
 

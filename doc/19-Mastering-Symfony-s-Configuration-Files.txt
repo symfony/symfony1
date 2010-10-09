@@ -32,10 +32,10 @@ You can override the default pages in two ways:
 
 Two other pages bear a symfony look and feel, and they also need to be customized before deployment to production. These pages are not in the `default` module, because they are called when symfony cannot run properly. Instead, you will find these default pages in the `$sf_symfony_lib_dir/exception/data/` directory:
 
-  * `error500.php`: Page called when an internal server error occurs in the production environment. In other environments (where debug is set to `true`), when an error occurs, symfony displays the full execution stack and an explicit error message (see Chapter 16 for details).
+  * `error.html.php`: Page called when an internal server error occurs in the production environment. In other environments (where debug is set to `true`), when an error occurs, symfony displays the full execution stack and an explicit error message (see Chapter 16 for details).
   * `unavailable.php`: Page called when a user requests a page while the application is disabled (with the `disable` task). It is also called while the cache is being cleared (that is, between a call to the `php symfony cache:clear` task and the end of this task execution). On systems with a very large cache, the cache-clearing process can take several seconds. Symfony cannot execute a request with a partially cleared cache, so requests received before the end of the process are redirected to this page.
 
-To customize these pages, simply create `error500.php` and `unavailable.php` pages in your project or application's `web/errors/` directory. Symfony will use these instead of its own.
+To customize these pages, simply create `error.html.php` and `unavailable.php` pages in your project or application's `config/error/` directory. Symfony will use these instead of its own.
 
 >**NOTE**
 >To have requests redirected to the `unavailable.php` page when needed, you need to set the `check_lock` setting to `on` in the application `settings.yml`. The check is deactivated by default, because it adds a very slight overhead for every request.
@@ -120,7 +120,7 @@ Two settings determine which characters precede and follow each error message: `
 
 #### Cache Settings
 
-Cache settings are defined in `cache.yml` for the most part, except for two in `settings.yml`: `cache` enables the template cache mechanism, and `etag` enables ETag handling on the server side (see Chapter 15). You can also specify which storage to use for two all cache systems (the view cache, the routing cache, and the i19n cache) in `factories.yml`. Listing 19-2 show the default view cache factory configuration.
+Cache settings are defined in `cache.yml` for the most part, except for two in `settings.yml`: `cache` enables the template cache mechanism, and `etag` enables ETag handling on the server side (see Chapter 15). You can also specify which storage to use for two all cache systems (the view cache, the routing cache, and the i18n cache) in `factories.yml`. Listing 19-2 show the default view cache factory configuration.
 
 Listing 19-2 - View Cache Configuration Settings, in `frontend/config/factories.yml`
 
@@ -135,7 +135,7 @@ Listing 19-2 - View Cache Configuration Settings, in `frontend/config/factories.
 The `class` can be any of `sfFileCache`, `sfAPCCache`, `sfEAcceleratorCache`, `sfXCacheCache`, `sfMemcacheCache`, and `sfSQLiteCache`. It can also be your own custom class, provided it extends `sfCache` and provides the same generic methods for setting, retrieving and deleting a key in the cache. The factory parameters depend on the class you choose, but there are constants:
 
   * `lifetime` defines the number of seconds after which a cache part is removed
-  * `prefix` is a prefix added to every cache key. Use the same prefix for two applications if you want their cache to be shared.
+  * `prefix` is a prefix added to every cache key (use the environment in the prefix to use different cache depending on the environment). Use the same prefix for two applications if you want their cache to be shared.
 
 Then, for each particular factory, you have to define the location of the cache storage.
 
@@ -187,10 +187,6 @@ Listing 19-3 - Miscellaneous Configuration Settings, in `frontend/config/setting
     strip_comments:         on
     # Maximum number of forwards followed by the action before raising an exception
     max_forwards:           5
-    # Global constants
-    path_info_array:        SERVER
-    path_info_key:          PATH_INFO
-    url_format:             PATH
 
 >**SIDEBAR**
 >Adding Your application settings

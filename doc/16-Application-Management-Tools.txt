@@ -56,8 +56,9 @@ Listing 16-3 - Changing the Log Format
       logger:
         param:
           sf_file_debug:
-            format:      %time% %type% [%priority%] %message%%EOL%
-            time_format: %b %d %H:%M:%S
+            param:
+              format:      %time% %type% [%priority%] %message%%EOL%
+              time_format: %b %d %H:%M:%S
 
 #### Symfony Log Level Configuration
 

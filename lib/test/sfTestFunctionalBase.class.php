@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 13023 2008-11-16 00:25:26Z FabianLange $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 13697 2008-12-03 23:41:44Z Kris.Wallsmith $
  */
 abstract class sfTestFunctionalBase
 {
@@ -556,19 +556,19 @@ abstract class sfTestFunctionalBase
     switch ($errno)
     {
       case E_WARNING:
-        $msg = printf($msg, 'warning');
+        $msg = sprintf($msg, 'warning');
         throw new RuntimeException($msg);
         break;
       case E_NOTICE:
-        $msg = printf($msg, 'notice');
-        throw new RuntimeException();
+        $msg = sprintf($msg, 'notice');
+        throw new RuntimeException($msg);
         break;
       case E_STRICT:
-        $msg = printf($msg, 'strict');
+        $msg = sprintf($msg, 'strict');
         throw new RuntimeException($msg);
         break;
       case E_RECOVERABLE_ERROR:
-        $msg = printf($msg, 'catchable');
+        $msg = sprintf($msg, 'catchable');
         throw new RuntimeException($msg);
         break;
     }

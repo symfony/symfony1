@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 13328 2008-11-25 08:18:56Z FabianLange $
+ * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 13592 2008-12-01 14:48:28Z fabien $
  */
 class sfPropelGenerateAdminTask extends sfPropelBaseTask
 {
@@ -60,13 +60,13 @@ The task creates a module in the [%frontend%|COMMENT] application for the
 [%article%|COMMENT] route definition found in [routing.yml|COMMENT].
 
 For the filters and batch actions to work properly, you need to add
-collection routes for them:
+the [wildcard|COMMENT] option to the route:
 
   article:
     class: sfPropelRouteCollection
     options:
-      model:              Article
-      collection_actions: { filter: post, batch: post }
+      model:                Article
+      with_wildcard_routes: true
 EOF;
   }
 

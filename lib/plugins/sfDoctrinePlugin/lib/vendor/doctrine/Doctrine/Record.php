@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Record.php 5212 2008-11-25 18:50:51Z jasoneisen $
+ *  $Id: Record.php 5264 2008-12-04 00:59:00Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5212 $
+ * @version     $Revision: 5264 $
  */
 abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate, Serializable
 {
@@ -635,10 +635,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         unset($vars['_filter']);
         unset($vars['_node']);
 
-        $name = $this->_table->getIdentifier();
-        $this->_data = array_merge($this->_data, $this->_id);
+        $data = $this->_data;
+        if ($this->exists()) {
+            $data = array_merge($data, $this->_id);
+        }
 
-        foreach ($this->_data as $k => $v) {
+        foreach ($data as $k => $v) {
             if ($v instanceof Doctrine_Record && $this->_table->getTypeOf($k) != 'object') {
                 unset($vars['_data'][$k]);
             } elseif ($v === self::$_null) {
@@ -1584,7 +1586,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @param string $type Format type: xml, yml, json
      * @param string $deep Whether or not to export deep in to all relationships
-     * @return void
+     * @return mixed $exported
      */
     public function exportTo($type, $deep = true)
     {

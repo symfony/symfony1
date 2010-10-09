@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 5125 2008-10-21 23:22:01Z jwage $
+ *  $Id: Mysql.php 5232 2008-12-01 22:41:30Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5125 $
+ * @version     $Revision: 5232 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -390,9 +390,6 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'bit';
             break;
             case 'geometry':
-                $type[] = 'geometry';
-                $length = null;
-            break;
             case 'geometrycollection':
             case 'point':
             case 'multipoint':

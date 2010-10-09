@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelect.class.php 11689 2008-09-20 19:45:10Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSelect.class.php 13578 2008-12-01 10:15:10Z FabianLange $
  */
 class sfWidgetFormSelect extends sfWidgetForm
 {
@@ -81,6 +81,14 @@ class sfWidgetFormSelect extends sfWidgetForm
     $mainAttributes = $this->attributes;
     $this->attributes = array();
 
+    if (!is_array($value))
+    {
+      $value = array($value);
+    }
+
+    $value = array_map('strval', array_values($value));
+    $value_set = array_flip($value);
+    
     $options = array();
     foreach ($choices as $key => $option)
     {
@@ -91,7 +99,7 @@ class sfWidgetFormSelect extends sfWidgetForm
       else
       {
         $attributes = array('value' => self::escapeOnce($key));
-        if ((is_array($value) && in_array(strval($key), $value)) || strval($key) == strval($value))
+        if (isset($value_set[strval($key)]))
         {
           $attributes['selected'] = 'selected';
         }

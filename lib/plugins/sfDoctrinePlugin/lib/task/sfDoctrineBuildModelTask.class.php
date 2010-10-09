@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildModelTask.class.php 13502 2008-11-30 00:04:57Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildModelTask.class.php 13854 2008-12-08 23:06:39Z Jonathan.Wage $
  */
 class sfDoctrineBuildModelTask extends sfDoctrineBaseTask
 {
@@ -129,7 +129,7 @@ EOF;
       {
         foreach ($array as $key => $value)
         {
-          if ($key == 'package' || isset($value['package']))
+          if ($key == 'package' || (is_array($value) && isset($value['package'])))
           {
             throw new sfDoctrineException(
               sprintf('Cannot use package parameter in symfony Doctrine schema files. Found in "%s"', $file)

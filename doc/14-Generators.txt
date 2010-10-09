@@ -65,7 +65,7 @@ With symfony, you build an administration on a per-model basis. A module is gene
 
 This call is enough to create an `article` module in the `backend` application based on the `Article` class definition, and is accessible by the following:
 
-    http://localhost/backend.php/articles
+    http://localhost/backend.php/article
 
 The look and feel of a generated module, illustrated in Figures 14-5 and 14-6, is sophisticated enough to make it usable out of the box for a commercial application.
 
@@ -77,10 +77,9 @@ The look and feel of a generated module, illustrated in Figures 14-5 and 14-6, i
 >     article:
 >       class: sfPropelRouteCollection
 >       options:
->         model:               Article
->         module:              article
->         prefix_path:         article
->         with_wilcard_routes: true
+>         model:                Article
+>         module:               article
+>         with_wildcard_routes: true
 >
 >You can also create your own route and pass the name as an argument to the task instead of the model class name:
 >
@@ -161,7 +160,7 @@ Listing 14-5 - Default Generator Configuration, in `backend/modules/article/conf
         with_show:             false
         singular:              ~
         plural:                ~
-        route_prefix:          categories
+        route_prefix:          article
         with_propel_route:     1
 
         config:
@@ -186,7 +185,7 @@ Listing 14-6 - Typical Complete Generator Configuration
         with_show:             false
         singular:              ~
         plural:                ~
-        route_prefix:          categories
+        route_prefix:          article
         with_propel_route:     1
 
         config:
@@ -238,12 +237,12 @@ The generator configuration file is very powerful, allowing you to alter the gen
 The examples of this section will tweak the `article` administration module, as well as the `comment` administration module, based on the `Comment` class definition. Create the latter by creating a route and launching the `propel:generate-admin` task:
 
     [yml]
-    articles:
+    comment:
       class: sfPropelRouteCollection
       options:
-        model:              Article
-        module:             article
-        collection_actions: { filter: post, batch: post }
+        model:               Comment
+        module:              comment
+        with_wildcard_routes: true
 
 -
 
@@ -364,7 +363,7 @@ Listing 14-12 - Adding a Custom Getter Returning HTML, in `lib/model/BlogComment
     [php]
     public function getArticleLink()
     {
-      return link_to($this->getBlogArticle()->getTitle(), 'articles_edit', $this->getBlogArticle());
+      return link_to($this->getBlogArticle()->getTitle(), 'article_edit', $this->getBlogArticle());
     }
 
 You can use this new getter as a custom field in the `comment/list` view with the same syntax as in Listing 14-11. See the example in Listing 14-13, and the result in Figure 14-11, where the HTML code output by the getter (a hyperlink to the article) appears in the second column instead of the article primary key.
@@ -396,7 +395,7 @@ For this to work, an `_article_link.php` partial must be created in the `modules
 Listing 14-15 - Example Partial for the `list` View, in `modules/comment/templates/_article_link.php`
 
     [php]
-    <?php echo link_to($comment->getBlogArticle()->getTitle(), '@articles_edit', $comment->getBlogArticle()) ?>
+    <?php echo link_to($comment->getBlogArticle()->getTitle(), '@article_edit', $comment->getBlogArticle()) ?>
 
 Notice that the partial template of a partial field has access to the current object through a variable named by the class (`$comment` in this example). For instance, for a module built for a class called `UserGroup`, the partial will have access to the current object through the `$user_group` variable.
 
@@ -836,7 +835,7 @@ Listing 14-38 - Using a Custom Style Sheet Instead of the Default One
       with_show:             false
       singular:              ~
       plural:                ~
-      route_prefix:          categories
+      route_prefix:          article
       with_propel_route:     1
       css:                   mystylesheet
 
@@ -853,7 +852,7 @@ The `list`, `new`, and `edit` views systematically include a header and footer p
 
 For instance, if you want to add a custom header to the `article/edit` view, create a file called `_form_header.php` as in Listing 14-39. It will work with no further configuration.
 
-Listing 14-39 - Example `edit` Header Partial, in `modules/articles/templates/_form_header.php`
+Listing 14-39 - Example `edit` Header Partial, in `modules/article/templates/_form_header.php`
 
     [php]
     <?php if ($article->getNbComments() > 0): ?>

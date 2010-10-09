@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Doctrine.php 5217 2008-11-25 23:09:17Z pookey $
+ *  $Id: Doctrine.php 5283 2008-12-11 00:23:54Z pookey $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,14 +29,14 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5217 $
+ * @version     $Revision: 5283 $
  */
 final class Doctrine
 {
     /**
      * VERSION
      */
-    const VERSION                   = '1.0.4';
+    const VERSION                   = '1.0.5';
 
     /**
      * ERROR CONSTANTS
@@ -535,6 +535,11 @@ final class Doctrine
                                         self::loadModel($className, $file->getPathName());
                                     }
                                 }
+                            }
+                            $previouslyLoaded = array_keys(self::$_loadedModelFiles, $file->getPathName());
+                            if ( ! empty($previouslyLoaded)) {
+                                $previouslyLoaded = array_combine(array_values($previouslyLoaded), array_values($previouslyLoaded));
+                                $loadedModels = array_merge($loadedModels, $previouslyLoaded);
                             }
                         }
                     }

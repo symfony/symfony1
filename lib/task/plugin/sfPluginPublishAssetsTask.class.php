@@ -51,15 +51,17 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    foreach ($this->configuration->getPluginPaths() as $path)
+    $plugins = $this->configuration->getPlugins();
+
+    foreach ($this->configuration->getAllPluginPaths() as $pluginName => $pluginPath)
     {
-      if ($options['core-only'] && dirname($path) != $this->configuration->getSymfonyLibDir().'/plugins')
+      if (!in_array($pluginName, $plugins) || ($options['core-only'] && dirname($pluginPath) != $this->configuration->getSymfonyLibDir().'/plugins'))
       {
         continue;
       }
 
-      $this->logSection('plugin', 'Configuring plugin - '.basename($path));
-      $this->installPluginAssets(basename($path), dirname($path));
+      $this->logSection('plugin', 'Configuring plugin - '.$pluginName);
+      $this->installPluginAssets($pluginName, $pluginPath);
     }
   }
 
@@ -71,7 +73,8 @@ EOF;
    */
   protected function installPluginAssets($plugin, $dir)
   {
-    $webDir = $dir.DIRECTORY_SEPARATOR.$plugin.DIRECTORY_SEPARATOR.'web';
+    $webDir = $dir.DIRECTORY_SEPARATOR.'web';
+
     if (is_dir($webDir))
     {
       $filesystem = new sfFilesystem();

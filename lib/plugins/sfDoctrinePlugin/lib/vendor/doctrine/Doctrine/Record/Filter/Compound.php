@@ -62,14 +62,11 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
                     return $record;
                 }
             } else {
-                // we do not want to execute N + 1 queries here, hence we cannot use get()
-                if (($ref = $record->reference($alias)) !== null) {
-                    if (isset($ref[$name])) {
-                        $ref[$name] = $value;
-                    }
-                    
-                    return $record;
+                if (isset($record[$alias][$name])) {
+                    $record[$alias][$name] = $value;
                 }
+
+                return $record;
             }
         }
     }
@@ -88,11 +85,8 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
                     return $record[$alias][$name];
                 }
             } else {
-                // we do not want to execute N + 1 queries here, hence we cannot use get()
-                if (($ref = $record->reference($alias)) !== null) {
-                    if (isset($ref[$name])) {
-                        return $ref[$name];
-                    }
+                if (isset($record[$alias][$name])) {
+                    return $record[$alias][$name];
                 }
             }
         }

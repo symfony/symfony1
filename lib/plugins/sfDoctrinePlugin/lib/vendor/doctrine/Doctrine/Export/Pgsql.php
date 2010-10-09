@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 4321 2008-04-30 21:00:32Z jwage $
+ *  $Id: Pgsql.php 5251 2008-12-03 21:51:31Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4321 $
+ * @version     $Revision: 5251 $
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
@@ -339,7 +339,17 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
             $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
         }
 
-        $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields . ')';
+        $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
+
+        if ($check = $this->getCheckDeclaration($fields)) {
+            $query .= ', ' . $check;
+        }
+
+        if (isset($options['checks']) && $check = $this->getCheckDeclaration($options['checks'])) {
+            $query .= ', ' . $check;
+        }
+
+        $query .= ')';
 
         $sql[] = $query;
 

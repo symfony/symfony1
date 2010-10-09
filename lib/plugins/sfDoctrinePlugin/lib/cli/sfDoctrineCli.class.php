@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineCli.class.php 12089 2008-10-08 20:23:25Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineCli.class.php 13851 2008-12-08 22:54:16Z Jonathan.Wage $
  */
 class sfDoctrineCli extends Doctrine_Cli
 {
@@ -54,7 +54,7 @@ class sfDoctrineCli extends Doctrine_Cli
    */
   public function notify($notification = null, $style = 'HEADER')
   {
-    return false;
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('doctrine', $notification))));
   }
 
   /**

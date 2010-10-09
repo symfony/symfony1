@@ -207,36 +207,37 @@ Many of symfony's classes have built-in events, allowing you to extend the frame
 
 Table 17-1 - Symfony's Events
 
-| **event namespace** | **event name**     | **type**    | **notifiers**          | **arguments**               |
-| ------------------- | ------------------ | ----------- | ---------------------- | --------------------------- |
-| **application**     | log                | notify      | lot of classes         | priority                    |
-|                     | throw_exception    | notifyUntil | sfException            | -                           |
-| **command**         | log                | notify      | sfCommand* classes     | priority                    |
-|                     | pre_command        | notifyUntil | sfTask                 | arguments, options          |
-|                     | post_command       | notify      | sfTask                 | -                           |
-|                     | filter_options     | filter      | sfTask                 | command_manager             |
-| **configuration**   | method_not_found   | notifyUntil | sfProjectConfiguration | method, arguments           |
-| **component**       | method_not_found   | notifyUntil | sfComponent            | method, arguments           |
-| **context**         | load_factories     | notify      | sfContext              | -                           |
-| **controller**      | change_action      | notify      | sfController           | module, action              |
-|                     | method_not_found   | notifyUntil | sfController           | method, arguments           |
-|                     | page_not_found     | notify      | sfController           | module, action              |
-| **plugin**          | pre_install        | notify      | sfPluginManager        | channel, plugin, is_package |
-|                     | post_install       | notify      | sfPluginManager        | channel, plugin             |
-|                     | pre_uninstall      | notify      | sfPluginManager        | channel, plugin             |
-|                     | post_uninstall     | notify      | sfPluginManager        | channel, plugin             |
-| **request**         | filter_parameters  | filter      | sfWebRequest           | path_info                   |
-|                     | method_not_found   | notifyUntil | sfRequest              | method, arguments           |
-| **response**        | method_not_found   | notifyUntil | sfResponse             | method, arguments           |
-|                     | filter_content     | filter      | sfResponse             | -                           |
-| **routing**         | load_configuration | notify      | sfRouting              | -                           |
-| **task**            | cache.clear        | notifyUntil | sfCacheClearTask       | app, type, env              |
-| **template**        | filter_parameters  | filter      | sfViewParameterHolder  | -                           |
-| **user**            | change_culture     | notify      | sfUser                 | culture                     |
-|                     | method_not_found   | notifyUntil | sfUser                 | method, arguments           |
-| **view**            | configure_format   | notify      | sfView                 | format, response, request   |
-|                     | method_not_found   | notifyUntil | sfView                 | method, arguments           |
-| **view.cache**      | filter_content     | filter      | sfViewCacheManager     | response, uri, new          |
+| **event namespace** | **event name**        | **type**    | **notifiers**          | **arguments**               |
+| ------------------- | --------------------- | ----------- | ---------------------- | --------------------------- |
+| **application**     | log                   | notify      | lot of classes         | priority                    |
+|                     | throw_exception       | notifyUntil | sfException            | -                           |
+| **command**         | log                   | notify      | sfCommand* classes     | priority                    |
+|                     | pre_command           | notifyUntil | sfTask                 | arguments, options          |
+|                     | post_command          | notify      | sfTask                 | -                           |
+|                     | filter_options        | filter      | sfTask                 | command_manager             |
+| **configuration**   | method_not_found      | notifyUntil | sfProjectConfiguration | method, arguments           |
+| **component**       | method_not_found      | notifyUntil | sfComponent            | method, arguments           |
+| **context**         | load_factories        | notify      | sfContext              | -                           |
+| **controller**      | change_action         | notify      | sfController           | module, action              |
+|                     | method_not_found      | notifyUntil | sfController           | method, arguments           |
+|                     | page_not_found        | notify      | sfController           | module, action              |
+| **plugin**          | pre_install           | notify      | sfPluginManager        | channel, plugin, is_package |
+|                     | post_install          | notify      | sfPluginManager        | channel, plugin             |
+|                     | pre_uninstall         | notify      | sfPluginManager        | channel, plugin             |
+|                     | post_uninstall        | notify      | sfPluginManager        | channel, plugin             |
+| **request**         | filter_parameters     | filter      | sfWebRequest           | path_info                   |
+|                     | method_not_found      | notifyUntil | sfRequest              | method, arguments           |
+| **response**        | method_not_found      | notifyUntil | sfResponse             | method, arguments           |
+|                     | filter_content        | filter      | sfResponse             | -                           |
+| **routing**         | load_configuration    | notify      | sfRouting              | -                           |
+| **task**            | cache.clear           | notifyUntil | sfCacheClearTask       | app, type, env              |
+| **template**        | filter_parameters     | filter      | sfViewParameterHolder  | -                           |
+| **user**            | change_culture        | notify      | sfUser                 | culture                     |
+|                     | method_not_found      | notifyUntil | sfUser                 | method, arguments           |
+|                     | change_authentication | notify      | sfBasicSecurityUser    | authenticated               |
+| **view**            | configure_format      | notify      | sfView                 | format, response, request   |
+|                     | method_not_found      | notifyUntil | sfView                 | method, arguments           |
+| **view.cache**      | filter_content        | filter      | sfViewCacheManager     | response, uri, new          |
 
 You are free to register event listeners on any of these events. Just make sure that listener callables return a boolean when registered on a `notifyUntil`-type event, and that they return the filtered value when registered on a `filter`-type event.
 
@@ -284,6 +285,7 @@ The factory definitions are stored in the `factories.yml` configuration file. Li
 
 Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
 
+    -
     prod:
       logger:
         class:   sfNoLogger
@@ -305,6 +307,18 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
         param:
           session_path: %SF_TEST_CACHE_DIR%/sessions
 
+      response:
+        class: sfWebResponse
+        param:
+          send_http_headers: false
+
+    all:
+      routing:
+        class: sfPatternRouting
+        param:
+          generate_shortest_url:            true
+          extra_parameters_as_query_string: true
+
     #all:
     #  controller:
     #    class: sfFrontWebController
@@ -312,6 +326,10 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
     #  request:
     #    class: sfWebRequest
     #    param:
+    #      logging:           %SF_LOGGING_ENABLED%
+    #      path_info_array:   SERVER
+    #      path_info_key:     PATH_INFO
+    #      relative_url_root: ~
     #      formats:
     #        txt:  text/plain
     #        js:   [application/javascript, application/x-javascript, text/javascript]
@@ -324,8 +342,9 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
     #  response:
     #    class: sfWebResponse
     #    param:
-    #      logging: %SF_LOGGING_ENABLED%
-    #      charset: %SF_CHARSET%
+    #      logging:           %SF_LOGGING_ENABLED%
+    #      charset:           %SF_CHARSET%
+    #      send_http_headers: true
     #
     #  user:
     #    class: myUser
@@ -346,7 +365,7 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
     #      automatic_cleaning_factor: 0
     #      cache_dir:                 %SF_TEMPLATE_CACHE_DIR%
     #      lifetime:                  86400
-    #      prefix:                    %SF_APP_DIR%
+    #      prefix:                    %SF_APP_DIR%/template
     #
     #  i18n:
     #    class: sfI18N
@@ -360,28 +379,27 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
     #        param:
     #          automatic_cleaning_factor: 0
     #          cache_dir:                 %SF_I18N_CACHE_DIR%
-    #          lifetime:                  86400
-    #          prefix:                    %SF_APP_DIR%
+    #          lifetime:                  31556926
+    #          prefix:                    %SF_APP_DIR%/i18n
     #
     #  routing:
     #    class: sfPatternRouting
     #    param:
-    #      load_configuration: true
-    #      suffix:             .
-    #      default_module:     default
-    #      default_action:     index
-    #      variable_prefixes:  [':']
-    #      segment_separators: ['/', '.']
-    #      variable_regex:     '[\w\d_]+'
-    #      debug:              %SF_DEBUG%
-    #      logging:            %SF_LOGGING_ENABLED%
+    #      load_configuration:               true
+    #      suffix:                           ''
+    #      default_module:                   default
+    #      default_action:                   index
+    #      debug:                            %SF_DEBUG%
+    #      logging:                          %SF_LOGGING_ENABLED%
+    #      generate_shortest_url:            false
+    #      extra_parameters_as_query_string: false
     #      cache:
     #        class: sfFileCache
     #        param:
     #          automatic_cleaning_factor: 0
     #          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
     #          lifetime:                  31556926
-    #          prefix:                    %SF_APP_DIR%
+    #          prefix:                    %SF_APP_DIR%/routing
     #
     #  logger:
     #    class: sfAggregateLogger
@@ -391,11 +409,14 @@ Listing 17-7 - Default Factories File, in `frontend/config/factories.yml`
     #        sf_web_debug:
     #          class: sfWebDebugLogger
     #          param:
-    #            condition:      %SF_WEB_DEBUG%
-    #            xdebug_logging: true
+    #            level: debug
+    #            condition:       %SF_WEB_DEBUG%
+    #            xdebug_logging:  true
+    #            web_debug_class: sfWebDebug
     #        sf_file_debug:
     #          class: sfFileLogger
     #          param:
+    #            level: debug
     #            file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
 
 
@@ -503,7 +524,7 @@ So, basically, a plug-in is a packaged extension for a symfony project. With plu
 
 The symfony project website contains a page dedicated to symfony plug-ins. It is in the symfony wiki and accessible with the following URL:
 
-    http://trac.symfony-project.org/wiki/SymfonyPlugins
+    http://www.symfony-project.org/plugins/
 
 Each plug-in listed there has its own page, with detailed installation instructions and documentation.
 
@@ -1076,7 +1097,7 @@ A symfony plug-in gets the broadest audience when distributed by the `symfony-pr
   2. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
   3. Create a new page on the symfony wiki named `sfSamplePlugin` (`Plugin` is a mandatory suffix). In this page, describe the plug-in usage, the license, the dependencies, and the installation procedure. You can reuse the contents of the plug-in `README` file. Check the existing plug-ins' wiki pages and use them as an example.
   4. Attach your PEAR package to the wiki page (`sfSamplePlugin-1.0.0.tgz`).
-  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://trac.symfony-project.org/wiki/SymfonyPlugins](http://trac.symfony-project.org/wiki/SymfonyPlugins)).
+  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://www.symfony-project.org/plugins/](http://www.symfony-project.org/plugins/)).
 
 If you follow this procedure, users will be able to install your plug-in by simply typing the following command in a project directory:
 

@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 13476 2008-11-29 03:00:16Z dwhittle $
+ * @version    SVN: $Id: FormHelper.php 13579 2008-12-01 10:48:55Z FabianLange $
  */
 
 /**
@@ -58,10 +58,13 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 {
   $html_options = _parse_attributes($html_options);
 
-  if (is_array($selected))
+  if (!is_array($selected))
   {
-    $selected = array_map('strval', array_values($selected));
+    $selected = array($selected);
   }
+
+  $selected = array_map('strval', array_values($selected));
+  $selected_set = array_flip($selected);
 
   $html = '';
 
@@ -84,12 +87,7 @@ function options_for_select($options = array(), $selected = '', $html_options = 
     {
       $option_options = array('value' => $key);
 
-      if (
-          (is_array($selected) && in_array(strval($key), $selected, true))
-          ||
-          (strval($key) == strval($selected))
-         )
-      {
+      if (isset($selected_set[strval($key)])) {
         $option_options['selected'] = 'selected';
       }
 
@@ -228,13 +226,7 @@ function select_country_tag($name, $selected = null, $options = array())
 
   if ($country_option = _get_option($options, 'countries'))
   {
-    foreach ($countries as $key => $value)
-    {
-      if (!in_array($key, $country_option))
-      {
-        unset($countries[$key]);
-      }
-    }
+    $countries = array_intersect_key($countries, array_flip($country_option)); 
   }
 
   asort($countries);
@@ -280,13 +272,7 @@ function select_language_tag($name, $selected = null, $options = array())
 
   if ($language_option = _get_option($options, 'languages'))
   {
-    foreach ($languages as $key => $value)
-    {
-      if (!in_array($key, $language_option))
-      {
-        unset($languages[$key]);
-      }
-    }
+    $languages = array_intersect_key($languages, array_flip($language_option)); 
   }
 
   asort($languages);
@@ -331,22 +317,20 @@ function select_currency_tag($name, $selected = null, $options = array())
   $currencies = $c->getCurrencies(null, true);
 
   $currency_option = _get_option($options, 'currencies');
+  if ($currency_option)
+  {
+      $currencies = array_intersect_key($currencies, array_flip($currency_option)); 
+  }
+
   $display_option = _get_option($options, 'display');
-  
+
   foreach ($currencies as $key => $value)
   {
-    if ($currency_option && !in_array($key, $currency_option))
+    switch ($display_option)
     {
-      unset($currencies[$key]);
-    }
-    else
-    {
-      switch ($display_option)
-      {
-        case 'symbol' : $currencies[$key] = $value[0];          break;
-        case 'code'   : $currencies[$key] = $key;               break;
-        default       : $currencies[$key] = ucfirst($value[1]); break;
-      }
+      case 'symbol' : $currencies[$key] = $value[0];          break;
+      case 'code'   : $currencies[$key] = $key;               break;
+      default       : $currencies[$key] = ucfirst($value[1]); break;
     }
   }
 

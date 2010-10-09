@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 4778 2008-08-19 01:27:22Z guilhermeblanco $
+ *  $Id: Sqlite.php 5259 2008-12-03 23:21:48Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 4778 $
+ * @version     $Revision: 5259 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -194,6 +194,10 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             case 'text':
             case 'varchar':
             case 'varchar2':
+            case 'nvarchar':
+            case 'ntext':
+            case 'image':
+            case 'nchar':
                 $fixed = false;
             case 'char':
                 $type[] = 'text';

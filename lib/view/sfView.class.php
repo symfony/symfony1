@@ -18,7 +18,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfView.class.php 13379 2008-11-26 21:30:25Z fabien $
+ * @version    SVN: $Id: sfView.class.php 13572 2008-12-01 02:10:36Z dwhittle $
  */
 abstract class sfView
 {
@@ -126,11 +126,15 @@ abstract class sfView
       {
         $this->setExtension('.'.$format.$this->getExtension());
       }
-
+      
       if ($mimeType = $request->getMimeType($format))
       {
         $this->context->getResponse()->setContentType($mimeType);
-        $this->setDecorator(false);
+        
+        if ('html' != $format)
+        {
+          $this->setDecorator(false);
+        }
       }
 
       $this->dispatcher->notify(new sfEvent($this, 'view.configure_format', array('format' => $format, 'response' => $context->getResponse(), 'request' => $context->getRequest())));

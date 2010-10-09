@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 11961 2008-10-05 18:08:57Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 13844 2008-12-08 22:19:21Z FabianLange $
  */
 abstract class sfWidgetFormSchemaFormatter
 {
@@ -170,8 +170,10 @@ abstract class sfWidgetFormSchemaFormatter
       return '';
     }
 
-    $widgetId = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
-    $attributes = array_merge($attributes, array('for' => $widgetId));
+    if (!isset($attributes['for']))
+    {
+      $attributes['for'] = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
+    }
 
     return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);
   }

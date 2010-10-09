@@ -104,7 +104,7 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 
 	        $rows = $q->delete($className)
 					  ->from($className.' obj')
-					  ->where(implode(' AND ',$conditions))
+					  ->where(implode(' AND ', $conditions))
 					  ->execute($values);
         }
     }

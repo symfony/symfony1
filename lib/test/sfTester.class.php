@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTester.class.php 13247 2008-11-22 15:56:35Z fabien $
+ * @version    SVN: $Id: sfTester.class.php 13691 2008-12-03 22:17:01Z Kris.Wallsmith $
  */
 abstract class sfTester
 {
@@ -83,6 +83,6 @@ abstract class sfTester
   {
     call_user_func_array(array($this->browser, $method), $arguments);
 
-    return $this;
+    return $this->getObjectToReturn();
   }
 }

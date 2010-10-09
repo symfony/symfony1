@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 4252 2008-04-19 07:37:53Z jwage $
+ *  $Id: Pgsql.php 5276 2008-12-06 19:45:16Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 4252 $
+ * @version     $Revision: 5276 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -88,7 +88,7 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
      */
     public function setCharset($charset)
     {
-        $query = 'SET NAMES '.$this->dbh->quote($charset);
+        $query = 'SET NAMES '.$this->quote($charset);
         $this->exec($query);
     }
 

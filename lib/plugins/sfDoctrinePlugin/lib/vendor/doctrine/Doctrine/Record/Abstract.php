@@ -295,6 +295,7 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
 
         $this->_table->addTemplate($className, $tpl);
 
+        $tpl->setInvoker($this);
         $tpl->setTable($this->_table);
         $tpl->setUp();
         $tpl->setTableDefinition();

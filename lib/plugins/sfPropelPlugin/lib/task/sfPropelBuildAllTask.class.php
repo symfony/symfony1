@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBuildAllTask.class.php 13497 2008-11-29 16:44:38Z FabianLange $
+ * @version    SVN: $Id: sfPropelBuildAllTask.class.php 13645 2008-12-02 23:08:25Z Kris.Wallsmith $
  */
 class sfPropelBuildAllTask extends sfPropelBaseTask
 {
@@ -88,7 +88,13 @@ EOF;
 
     if (!$options['skip-forms'])
     {
-      $this->logBlock('Phing was run before and used many custom classes that might conflict with your model classes. In case of errors try running "propel:build-forms" and "propel:build-filters" alone. This is due to a PHP limitation that cannot be fixed in symfony.','INFO');
+      $this->logBlock(array(
+        'Phing was run before and used many custom classes that might conflict with',
+        'your model classes. In case of errors try running "propel:build-forms" and',
+        '"propel:build-filters" alone. This is due to a PHP limitation that cannot be',
+        'fixed in symfony.',
+      ), 'INFO');
+
       $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
       $buildForms->setCommandApplication($this->commandApplication);
       $ret = $buildForms->run();

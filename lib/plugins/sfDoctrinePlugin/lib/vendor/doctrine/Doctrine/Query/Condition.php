@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Condition.php 5066 2008-10-08 06:44:26Z guilhermeblanco $
+ *  $Id: Condition.php 5218 2008-11-26 00:28:49Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5066 $
+ * @version     $Revision: 5218 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
@@ -43,7 +43,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
     {
         $tmp = trim($str);
         
-        $parts = $this->_tokenizer->bracketExplode($str, array(' \|\| ', ' OR '), '(', ')');
+        $parts = $this->_tokenizer->bracketExplode($str, array(' OR '), '(', ')');
 
         if (count($parts) > 1) {
             $ret = array();
@@ -53,7 +53,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             }
             $r = implode(' OR ', $ret);
         } else {
-            $parts = $this->_tokenizer->bracketExplode($str, array(' AND ', ' \&\& '), '(', ')');
+            $parts = $this->_tokenizer->bracketExplode($str, array(' AND '), '(', ')');
             
             // Ticket #1388: We need to make sure we're not splitting a BETWEEN ...  AND ... clause
             $tmp = array();

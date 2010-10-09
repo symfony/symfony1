@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Connection.php 5207 2008-11-21 16:06:59Z guilhermeblanco $
+ *  $Id: Connection.php 5261 2008-12-04 00:05:56Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -49,7 +49,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5207 $
+ * @version     $Revision: 5261 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (MDB2 library)
  */
@@ -1416,7 +1416,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function rollback($savepoint = null)
     {
-        $this->transaction->rollback($savepoint);
+        return $this->transaction->rollback($savepoint);
     }
 
     /**
@@ -1452,9 +1452,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } else {
             $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
         }
-
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
 
         if (isset($e)) {
             return $e;
@@ -1496,9 +1493,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         } else {
             $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
         }
-
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
 
         if (isset($e)) {
             return $e;

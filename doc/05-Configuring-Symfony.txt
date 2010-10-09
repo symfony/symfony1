@@ -492,19 +492,17 @@ Listing 5-17 - Extract of `settings.yml`
 
     all:
       .settings:
-        available:              on
-        path_info_array:        SERVER
-        path_info_key:          PATH_INFO
-        url_format:             PATH
+        csrf_secret:       false
+        escaping_strategy: off 
+        escaping_method:   ESC_SPECIALCHARS
 
 Listing 5-18 - What Symfony Does When Parsing `settings.yml`
 
     [php]
     sfConfig::add(array(
-      'sf_available' => true,
-      'sf_path_info_array' => 'SERVER',
-      'sf_path_info_key' => 'PATH_INFO',
-      'sf_url_format' => 'PATH',
+      'sf_csrf_secret' => 'false',
+      'sf_escaping_strategy' => 'false',
+      'sf_escaping_method' => 'ESC_SPECIALCHARS',
     ));
 
 Refer to Chapter 19 for the meanings of the settings found in the `settings.yml` file.

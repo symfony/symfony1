@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 13547 2008-11-30 14:05:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 13947 2008-12-11 14:15:32Z fabien $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -343,6 +343,29 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     $dirs[sfConfig::get('sf_symfony_lib_dir').'/controller/'.$moduleName.'/actions'] = true;  // core modules
+
+    return $dirs;
+  }
+
+  /**
+   * Gets directories where lib files are stored for a given module.
+   *
+   * @param string $moduleName The module name
+   *
+   * @return array An array of directories
+   */
+  public function getLibDirs($moduleName)
+  {
+    $dirs = array();
+    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
+    {
+      $dirs[] = $key.'/'.$moduleName.'/lib';
+    }
+
+    $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/lib';                  // application
+    $dirs = array_merge($dirs, $this->getPluginSubPaths('/modules/'.$moduleName.'/lib')); // plugins
+    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/controller/'.$moduleName.'/lib';      // core modules
+    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName.'/lib');   // generated templates in cache
 
     return $dirs;
   }
