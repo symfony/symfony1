@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPhpConfigHandler.class.php 3203 2007-01-09 18:32:54Z fabien $
+ * @version    SVN: $Id: sfPhpConfigHandler.class.php 8861 2008-05-08 11:54:11Z fabien $
  */
 class sfPhpConfigHandler extends sfYamlConfigHandler
 {
@@ -57,7 +57,8 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         }
 
         // key is overridable?
-        if ($configs[$key]['access'] != 7)
+        // 63 is returned by PHP 5.2.6 instead of 7 when a php.ini key is changed several times per script
+        if ($configs[$key]['access'] != 7 && $configs[$key]['access'] != 63)
         {
           $error = sprintf('Configuration file "%s" specifies key "%s" which cannot be overrided', $configFiles[0], $key);
           throw new sfParseException($error);

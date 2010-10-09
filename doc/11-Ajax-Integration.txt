@@ -680,10 +680,8 @@ The third argument of the `input_auto_complete_tag()` helper can take the follow
 
   * `use_style`: Styles the response list automatically.
   * `frequency`: Frequency of the periodical call (defaults to 0.4s).
+  * `indicator`: Id of an indicator that will be shown when loading of the autocompletion suggestions started and faded when it completes.
   * tokens: To allow tokenized incremental autocompletion. For instance, if you set this parameter to `,` and if the user entered `jane, george`, the action would receive only the value `'george'`.
-
->**NOTE**
->The `input_auto_complete_tag()` helper, like the following ones, also accepts the usual remote helper options described earlier in this chapter. In particular, it is a good habit to set `loading` and `complete` visual effects for a better user experience.
 
 ### Drag-and-Drop
 

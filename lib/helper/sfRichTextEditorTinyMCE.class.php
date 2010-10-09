@@ -26,7 +26,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRichTextEditorTinyMCE.class.php 3284 2007-01-15 19:05:48Z fabien $
+ * @version    SVN: $Id: sfRichTextEditorTinyMCE.class.php 8819 2008-05-06 22:05:47Z FabianLange $
  */
 class sfRichTextEditorTinyMCE extends sfRichTextEditor
 {
@@ -41,7 +41,7 @@ class sfRichTextEditorTinyMCE extends sfRichTextEditor
 
     // we need to know the id for things the rich text editor
     // in advance of building the tag
-    $id = _get_option($options, 'id', $this->name);
+    $id = _get_option($options, 'id', get_id_from_name($this->name, null));
 
     // use tinymce's gzipped js?
     $tinymce_file = _get_option($options, 'tinymce_gzip') ? '/tiny_mce_gzip.php' : '/tiny_mce.js';
@@ -109,6 +109,6 @@ tinyMCE.init({
 
     return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
-      content_tag('textarea', $this->content, array_merge(array('name' => $this->name, 'id' => get_id_from_name($id, null)), _convert_options($options)));
+      content_tag('textarea', $this->content, array_merge(array('name' => $this->name, 'id' => $id), _convert_options($options)));
   }
 }

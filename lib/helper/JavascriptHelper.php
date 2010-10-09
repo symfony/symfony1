@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: JavascriptHelper.php 8718 2008-05-02 09:59:29Z FabianLange $
+ * @version    SVN: $Id: JavascriptHelper.php 8827 2008-05-07 08:41:21Z FabianLange $
  */
 
 /*
@@ -265,7 +265,7 @@
 
     $options['form'] = true;
 
-    $options_html['onsubmit'] = remote_function($options).'; return false;';
+    $options_html['onsubmit'] = remote_function($options).' return false;';
     $options_html['action'] = isset($options_html['action']) ? $options_html['action'] : url_for($options['url']);
     $options_html['method'] = isset($options_html['method']) ? $options_html['method'] : 'post';
 
@@ -287,7 +287,7 @@
     }
 
     $options_html['type'] = 'button';
-    $options_html['onclick'] = remote_function($options).'; return false;';
+    $options_html['onclick'] = remote_function($options).' return false;';
     $options_html['name'] = $name;
     $options_html['value'] = $value;
 
@@ -446,7 +446,7 @@
       }
     }
 
-    return $function;
+    return $function.';';
   }
 
   /**

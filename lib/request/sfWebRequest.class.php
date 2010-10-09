@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 8480 2008-04-16 10:46:37Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 8817 2008-05-06 19:47:16Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -757,9 +757,12 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Returns true id the request is a XMLHttpRequest (via prototype 'HTTP_X_REQUESTED_WITH' header).
+   * Returns true if the request is a XMLHttpRequest.
    *
-   * @return boolean
+   * It works if your JavaScript library set an X-Requested-With HTTP header.
+   * Works with Prototype, Mootools, jQuery, and perhaps others.
+   *
+   * @return Boolean true if the request is an XMLHttpRequest, false otherwise
    */
   public function isXmlHttpRequest()
   {

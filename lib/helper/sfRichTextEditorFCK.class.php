@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRichTextEditorFCK.class.php 3284 2007-01-15 19:05:48Z fabien $
+ * @version    SVN: $Id: sfRichTextEditorFCK.class.php 8823 2008-05-06 22:53:38Z FabianLange $
  */
 class sfRichTextEditorFCK extends sfRichTextEditor
 {
@@ -85,6 +85,11 @@ class sfRichTextEditorFCK extends sfRichTextEditor
     }
 
     $content = $fckeditor->CreateHtml();
+
+    //fix for http://trac.symfony-project.com/ticket/732
+    //fields need to be of type text to be picked up by fillin. they are hidden by inline css anyway:
+    //<input type="hidden" id="name" name="name" style="display:none" value="&lt;p&gt;default&lt;/p&gt;">
+    $content = str_replace('type="hidden"','type="text"',$content);
 
     return $content;
   }

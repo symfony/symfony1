@@ -1,6 +1,6 @@
 <?php
 
-use_helper('Form', 'Javascript', 'Helper');
+use_helper('Form', 'Javascript', 'Helper', 'I18N');
 
 /*
  * This file is part of the symfony package.
@@ -16,7 +16,7 @@ use_helper('Form', 'Javascript', 'Helper');
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: ObjectAdminHelper.php 5856 2007-11-04 17:24:22Z fabien $
+ * @version    SVN: $Id: ObjectAdminHelper.php 8838 2008-05-07 16:53:50Z nicolas $
  */
 
 function object_admin_input_file_tag($object, $method, $options = array())

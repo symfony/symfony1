@@ -284,9 +284,9 @@ Once this is done, toggle the use of rich text editing in text areas by adding t
 Listing 10-7 - Rich Text Area
 
     [php]
-    <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
+    <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20') ?>
      => a rich text edit zone powered by TinyMCE
-    <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20 tinymce_options=language:"fr",theme_advanced_buttons2:"separator"')) ?>
+    <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20 tinymce_options=language:"fr",theme_advanced_buttons2:"separator"') ?>
     => a rich text edit zone powered by TinyMCE with custom parameters
 
 ### Country and Language Selection

@@ -17,7 +17,7 @@
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfEmailValidator.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfEmailValidator.class.php 8838 2008-05-07 16:53:50Z nicolas $
  */
 class sfEmailValidator extends sfValidator
 {
