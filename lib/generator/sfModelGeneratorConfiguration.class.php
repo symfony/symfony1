@@ -6,7 +6,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 13653 2008-12-03 08:51:34Z fabien $
+ * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 17680 2009-04-27 15:19:58Z fabien $
  */
 class sfModelGeneratorConfiguration
 {
@@ -381,6 +381,36 @@ class sfModelGeneratorConfiguration
     }
 
     return $default;
+  }
+
+  /**
+   * Removes visible fields not included for display.
+   *
+   * @param sfForm $form
+   */
+  protected function fixFormFields(sfForm $form)
+  {
+    $method = sprintf('get%sDisplay', $form->isNew() ? 'New' : 'Edit');
+    if (!$display = $this->$method())
+    {
+      $display = $this->getFormDisplay();
+    }
+
+    if ($display)
+    {
+      if (is_array(current($display)))
+      {
+        $display = call_user_func_array('array_merge', array_values($display));
+      }
+
+      foreach ($form as $name => $field)
+      {
+        if (!$field->isHidden() && !in_array($name, $display))
+        {
+          unset($form[$name]);
+        }
+      }
+    }
   }
 
   protected function fixActionParameters($action, $parameters)
