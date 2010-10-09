@@ -13,11 +13,6 @@ if (!isset($sf_symfony_lib_dir))
   die("You must launch symfony command line with the symfony script\n");
 }
 
-if (ini_get('zend.ze1_compatibility_mode'))
-{
-  die("symfony cannot run with zend.ze1_compatibility_mode enabled.\nPlease turn zend.ze1_compatibility_mode to Off in your php.ini.\n");
-}
-
 // set magic_quotes_runtime to off
 ini_set('magic_quotes_runtime', 'Off');
 

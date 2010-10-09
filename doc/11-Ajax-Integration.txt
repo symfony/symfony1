@@ -583,32 +583,40 @@ Listing 11-27 - Sample Template for Multiple Ajax Updates
     <p>Your e-mail was received and will be answered shortly.</p>
     <p>Sincerely,</p>
 
-To update both, imagine that the Ajax response can be a JSON header containing the following array:
+To update both, imagine that the Ajax response can be a JSON data block
+containing the following array:
 
-     [["title", "My basic letter"], ["name", "Mr Brown"]]
+     {"title":"My basic letter","name":"Mr Brown"}
 
-Then the remote call can easily interpret this response and update several fields in a row, with a little help from JavaScript. The code in Listing 11-28 shows what could be added to the template of Listing 11-27 to achieve this effect.
+Then the remote call can easily interpret this response and update several 
+fields in a row, with a little help from JavaScript. The code in Listing 
+11-28 shows what could be added to the template of Listing 11-27 to achieve 
+this effect.
 
 Listing 11-28 - Updating More Than One Element from a Remote Response
 
     [php]
     <?php echo link_to_remote('Refresh the letter', array(
       'url'      => 'publishing/refresh',
-      'complete' => 'updateJSON(request, json)'
+      'complete' => 'updateJSON(request)'
     )) ?>
 
     <?php echo javascript_tag("
-    function updateJSON(request, json)
-    {
-      var nbElementsInResponse = json.length;
-      for (var i = 0; i < nbElementsInResponse; i++)
+      function updateJSON(ajax)
       {
-         Element.update(json[i][0], json[i][1]);
+        json = ajax.responseJSON;
+        var elId;
+        for (elId in json)
+        {
+          Element.update(elId, json[elId]);
+        }
       }
-    }
     ") ?>
 
-The `complete` callback has access to the `json` header of the response and can pass it to a third-party function. This custom `updateJSON()` function iterates over the JSON header and for each member of the array, updates the element named by the first parameter with the content of the second parameter.
+The `complete` callback has access to the Ajax response and can pass it to a
+third-party function. This custom `updateJSON()` function iterates over the 
+JSON obtained from the response via `responseJSON` and for each member of the
+array, updates the element named by the key with the content of the value.
 
 Listing 11-29 shows how the `publishing/refresh` action can return a JSON response.
 

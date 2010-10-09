@@ -15,7 +15,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfPHPView.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfPHPView.class.php 20606 2009-07-30 14:22:31Z fabien $
  */
 class sfPHPView extends sfView
 {
@@ -92,7 +92,8 @@ class sfPHPView extends sfView
     $_escaping = $this->getEscaping();
     if ($_escaping === false || $_escaping === 'bc')
     {
-      extract($this->attributeHolder->getAll());
+      $vars = $this->attributeHolder->getAll();
+      extract($vars);
     }
 
     if ($_escaping !== false)

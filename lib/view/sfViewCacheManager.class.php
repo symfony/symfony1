@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 8010 2008-03-20 22:02:34Z dwhittle $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 17468 2009-04-21 07:21:38Z fabien $
  */
 class sfViewCacheManager
 {
@@ -265,6 +265,8 @@ class sfViewCacheManager
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
+    $this->registerConfiguration($params['module']);
+
     $value = $defaultValue;
     if (isset($this->cacheConfig[$params['module']][$params['action']][$key]))
     {
@@ -281,13 +283,26 @@ class sfViewCacheManager
   /**
    * Returns true if the current content is cacheable.
    *
-   * @param string Internal uniform resource identifier
+   * Possible break in backward compatibility: If the sf_lazy_cache_key
+   * setting is turned on in settings.yml, this method is not used when
+   * initially checking a partial's cacheability.
    *
-   * @return boolean true, if the content is cacheable otherwise false
+   * @see sfPartialView, isActionCacheable()
+   *
+   * @param  string $internalUri  Internal uniform resource identifier
+   *
+   * @return bool true, if the content is cacheable otherwise false
    */
   public function isCacheable($internalUri)
   {
+    if (count($_GET) || count($_POST))
+    {
+      return false;
+    }
+
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
+
+    $this->registerConfiguration($params['module']);
 
     if (isset($this->cacheConfig[$params['module']][$params['action']]))
     {
@@ -296,6 +311,37 @@ class sfViewCacheManager
     else if (isset($this->cacheConfig[$params['module']]['DEFAULT']))
     {
       return ($this->cacheConfig[$params['module']]['DEFAULT']['lifeTime'] > 0);
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns true if the action is cacheable.
+   * 
+   * @param  string $moduleName A module name
+   * @param  string $actionName An action or partial template name
+   * 
+   * @return boolean True if the action is cacheable
+   * 
+   * @see isCacheable()
+   */
+  public function isActionCacheable($moduleName, $actionName)
+  {
+    if (count($_GET) || count($_POST))
+    {
+      return false;
+    }
+
+    $this->registerConfiguration($moduleName);
+
+    if (isset($this->cacheConfig[$moduleName][$actionName]))
+    {
+      return $this->cacheConfig[$moduleName][$actionName]['lifeTime'] > 0;
+    }
+    else if (isset($this->cacheConfig[$moduleName]['DEFAULT']))
+    {
+      return $this->cacheConfig[$moduleName]['DEFAULT']['lifeTime'] > 0;
     }
 
     return false;

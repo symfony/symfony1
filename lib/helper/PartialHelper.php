@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PartialHelper.php 3265 2007-01-13 17:06:40Z fabien $
+ * @version    SVN: $Id: PartialHelper.php 17468 2009-04-21 07:21:38Z fabien $
  */
 
 /**
@@ -118,9 +118,7 @@ function get_component($moduleName, $componentName, $vars = array())
   // check cache
   if ($cacheManager = $context->getViewCacheManager())
   {
-    $cacheManager->registerConfiguration($moduleName);
-    $uri = '@sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='.(isset($vars['sf_cache_key']) ? $vars['sf_cache_key'] : md5(serialize($vars)));
-    if ($retval = _get_cache($cacheManager, $uri))
+    if ($retval = _get_cache($cacheManager, $moduleName, $actionName, $vars))
     {
       return $retval;
     }
@@ -196,8 +194,9 @@ function get_component($moduleName, $componentName, $vars = array())
 
     $retval = $view->render($componentInstance->getVarHolder()->getAll());
 
-    if ($cacheManager)
+    if ($cacheManager && (!sfConfig::get('sf_lazy_cache_key') || $cacheManager->isActionCacheable($moduleName, $actionName)))
     {
+      $uri = _get_cache_uri($moduleName, $actionName, $vars);
       $retval = _set_cache($cacheManager, $uri, $retval);
     }
 
@@ -261,9 +260,7 @@ function get_partial($templateName, $vars = array())
 
   if ($cacheManager = $context->getViewCacheManager())
   {
-    $cacheManager->registerConfiguration($moduleName);
-    $uri = '@sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='.(isset($vars['sf_cache_key']) ? $vars['sf_cache_key'] : md5(serialize($vars)));
-    if ($retval = _get_cache($cacheManager, $uri))
+    if ($retval = _get_cache($cacheManager, $moduleName, $actionName, $vars))
     {
       return $retval;
     }
@@ -273,16 +270,23 @@ function get_partial($templateName, $vars = array())
   $view->initialize($context, $moduleName, $actionName, '');
   $retval = $view->render($vars);
 
-  if ($cacheManager)
+  if ($cacheManager && (!sfConfig::get('sf_lazy_cache_key') || $cacheManager->isActionCacheable($moduleName, $actionName)))
   {
+    $uri = _get_cache_uri($moduleName, $actionName, $vars);
     $retval = _set_cache($cacheManager, $uri, $retval);
   }
 
   return $retval;
 }
 
-function _get_cache($cacheManager, $uri)
+function _get_cache($cacheManager, $moduleName, $actionName = null, $vars = array())
 {
+  if (!$cacheManager->isActionCacheable($moduleName, $actionName))
+  {
+    return null;
+  }
+
+  $uri = _get_cache_uri($moduleName, $actionName, $vars);
   $retval = $cacheManager->get($uri);
 
   if (sfConfig::get('sf_web_debug'))
@@ -291,6 +295,26 @@ function _get_cache($cacheManager, $uri)
   }
 
   return $retval;
+}
+
+function _get_cache_uri($moduleName, $actionName, & $vars = array())
+{
+  return '@sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='._get_cache_key($vars);
+}
+
+function _get_cache_key(& $vars = array())
+{
+  if (!isset($vars['sf_cache_key']))
+  {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      sfContext::getInstance()->getLogger()->info('{PartialHelper} Generate cache key');
+    }
+
+    $vars['sf_cache_key'] = md5(serialize($vars));
+  }
+
+  return $vars['sf_cache_key'];
 }
 
 function _set_cache($cacheManager, $uri, $retval)

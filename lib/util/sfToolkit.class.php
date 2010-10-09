@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 13893 2008-12-09 22:30:43Z FabianLange $
+ * @version    SVN: $Id: sfToolkit.class.php 19216 2009-06-13 06:42:00Z fabien $
  */
 class sfToolkit
 {
@@ -184,15 +184,20 @@ class sfToolkit
     $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
     $output = '';
 
-    foreach (token_get_all($source) as $token) {
+    foreach (token_get_all($source) as $token)
+    {
       // array
-      if (isset($token[1])) {
+      if (isset($token[1]))
+      {
         // no action on comments
-        if (!isset($ignore[$token[0]])) {
+        if (!isset($ignore[$token[0]]))
+        {
           // anything else -> output "as is"
           $output .= $token[1];
         }
-      } else {
+      }
+      else
+      {
         // simple 1-character token
         $output .= $token;
       }

@@ -19,7 +19,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @version    SVN: $Id: sfFileCache.class.php 15263 2009-02-04 17:51:34Z FabianLange $
+ * @version    SVN: $Id: sfFileCache.class.php 16899 2009-04-02 06:47:33Z fabien $
  */
 class sfFileCache extends sfCache
 {
@@ -527,30 +527,39 @@ class sfFileCache extends sfCache
     umask(0000);
     if (!is_dir($path))
     {
-     // create directory structure if needed
-     mkdir($path, 0777, true);
+      // create directory structure if needed
+      mkdir($path, 0777, true);
     }
-    
-    $tmpFile = $file . '.' . getmypid();
-    
-    if (!$fp = @fopen($path.$tmpFile, 'wb'))
+
+    $tmpFile = tempnam(dirname($path), basename($file));
+
+    if (!$fp = @fopen($tmpFile, 'wb'))
     {
-         throw new sfCacheException(sprintf('Unable to write cache file "%s".', $path.$file));
+      throw new sfCacheException(sprintf('Unable to write cache file "%s".', $path.$file));
     }
-    
+
     if ($this->readControl)
     {
       @fwrite($fp, $this->hash($data), 32);
     }
     @fwrite($fp, $data);
     @fclose($fp);
-    
-    chmod($path.$tmpFile, 0666);
-    @unlink($path.$file);
-    rename($path.$tmpFile, $path.$file);
+
+    // Hack from Agavi (http://trac.agavi.org/changeset/3979)
+    // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
+    // so we simply assume that when rename() fails that we are on win32 and try to use copy()
+    if (!@rename($tmpFile, $path.$file))
+    {
+      if (copy($tmpFile, $path.$file))
+      {
+        unlink($tmpFile);
+      }
+    }
+
+    chmod($path.$file, 0666);
     umask($current_umask);
 
-    return true; 
+    return true;
   }
 
  /**

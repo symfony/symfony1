@@ -108,7 +108,7 @@ Listing 6-3 - Sample Batch Script
 You can see that the only missing line is the call to the `dispatch()` method of the sfController object, which can be used only with a web server, not in a batch process. Defining an application and an environment gives you access to a specific configuration. Including the application `config.php` initiates the context and the autoloading.
 
 >**TIP**
->The symfony CLI offers an `init-batch` task, which automatically creates a skeleton similar to the one in Listing 6-3 in the `batch/` directory. Just pass it an application name, an environment name, and a batch name as arguments.
+>The symfony CLI offers an `init-batch` task, which automatically creates a skeleton similar to the one in Listing 6-3 in the `batch/` directory. Just pass it an application name, an environment name, and a batch name as arguments. For example: `symfony init-batch default prod mybatchname` will create a new batch in the batch/ directory called mybatchname.php, configured to be using your prod environment and the default batch skeleton.
 
 Actions
 -------
@@ -461,7 +461,7 @@ Name                             | Function                               |  Sam
 `getCharsets()`                  | Array of accepted charsets             | `Array( ` ` [0] => ISO-8859-1 ` ` [1] => UTF-8 ` ` [2] => * )`
 getAcceptableContentTypes()      | Array of accepted content types        | `Array( [0] => text/xml [1] => text/html`
 
-* *Works with prototype, Prototype, Mootools, and jQuery*
+\* *Works with prototype, Prototype, Mootools, and jQuery*
 
 ** *Sometimes blocked by proxies*
 
@@ -1055,7 +1055,20 @@ Listing 6-37 - Secure Communication Filter
       }
     }
 
-Filters are used extensively in plug-ins, as they allow you to extend the features of an application globally. Refer to Chapter 17 to learn more about plug-ins, and see the online wiki ([http://trac.symfony-project.org/](http://trac.symfony-project.org/)) for more filter examples.
+>**NOTE**
+>In symfony 1.0, when using redirect in a filter you must use a full url,
+>as it will not be parsed by the routing system. If you need to generate
+>a url from a route, you can use the `genUrl()` function of the controller
+>first:
+>
+>    $url = $context->getController()->genUrl("module/action", true);
+>    return $context->getController()->redirect($url);
+
+Filters are used extensively in plug-ins, as they allow you to extend the 
+features of an application globally. Refer to Chapter 17 to learn more about
+plug-ins, and see the online wiki 
+([http://trac.symfony-project.org/](http://trac.symfony-project.org/)) for 
+more filter examples.
 
 Module Configuration
 --------------------

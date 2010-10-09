@@ -36,7 +36,7 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLogger.class.php 7254 2008-02-01 00:37:38Z dwhittle $
+ * @version    SVN: $Id: sfLogger.class.php 16344 2009-03-16 16:51:28Z fabien $
  */
 class sfLogger
 {
@@ -131,7 +131,7 @@ class sfLogger
    */
   public function log($message, $priority = SF_LOG_INFO)
   {
-    if ($this->level < $priority)
+    if ($this->getLogLevel() < $priority)
     {
       return;
     }

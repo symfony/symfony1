@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: JavascriptHelper.php 8827 2008-05-07 08:41:21Z FabianLange $
+ * @version    SVN: $Id: JavascriptHelper.php 17386 2009-04-17 01:11:41Z dwhittle $
  */
 
 /*
@@ -439,7 +439,7 @@
     }
     if (isset($options['confirm']))
     {
-      $function = "if (confirm('".escape_javascript($options['confirm'])."')) { $function; }";
+      $function = "if (window.confirm('".escape_javascript($options['confirm'])."')) { $function; }";
       if (isset($options['cancel']))
       {
         $function = $function.' else { '.$options['cancel'].' }';

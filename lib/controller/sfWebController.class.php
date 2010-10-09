@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebController.class.php 9957 2008-06-28 07:23:15Z fabien $
+ * @version    SVN: $Id: sfWebController.class.php 16348 2009-03-16 17:03:35Z fabien $
  */
 abstract class sfWebController extends sfController
 {
@@ -76,7 +76,7 @@ abstract class sfWebController extends sfController
     else
     {
       // use GET format
-      $divider = ini_get('arg_separator.output');
+      $divider = '&';
       $equals  = '=';
       $querydiv = '?';
     }

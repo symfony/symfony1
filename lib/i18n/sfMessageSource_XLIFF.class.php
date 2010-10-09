@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_XLIFF.class.php 9806 2008-06-23 15:33:05Z fabien $
+ * @version    $Id: sfMessageSource_XLIFF.class.php 19777 2009-07-01 10:14:21Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -67,16 +67,16 @@ class sfMessageSource_XLIFF extends sfMessageSource
    */
   protected function &loadData($filename)
   {
-    //load it.
-
-    $XML = simplexml_load_file($filename);
-
-    if (!$XML)
+    libxml_use_internal_errors(true);
+    if (!$xml = simplexml_load_file($filename))
     {
-      return false;
-    }
+      $error = false;
 
-    $translationUnit = $XML->xpath('//trans-unit');
+      return $error;
+    }
+    libxml_use_internal_errors(false);
+
+    $translationUnit = $xml->xpath('//trans-unit');
 
     $translations = array();
 

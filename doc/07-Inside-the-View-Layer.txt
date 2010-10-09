@@ -711,9 +711,12 @@ To remove all style sheets or JavaScript files, use the following syntax:
 
 You can be more accurate and define an additional parameter to force the position where to include the file (first or last position):
 
+    [yml]
     // In the view.yml
     indexSuccess:
       stylesheets: [special: { position: first }]
+
+-
 
     [php]
     // In the action

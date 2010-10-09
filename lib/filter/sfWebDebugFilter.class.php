@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugFilter.class.php 3244 2007-01-12 14:46:11Z fabien $
+ * @version    SVN: $Id: sfWebDebugFilter.class.php 16942 2009-04-03 14:48:17Z fabien $
  */
 class sfWebDebugFilter extends sfFilter
 {
@@ -40,13 +40,13 @@ class sfWebDebugFilter extends sfFilter
 
     // don't add debug toolbar:
     // * for XHR requests
-    // * if 304
+    // * if response status code is in the 3xx range
     // * if not rendering to the client
     // * if HTTP headers only
     if (
       $this->getContext()->getRequest()->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
-      $response->getStatusCode() == 304 ||
+      '3' == substr($response->getStatusCode(), 0, 1) ||
       $controller->getRenderMode() != sfView::RENDER_CLIENT ||
       $response->isHeaderOnly()
     )

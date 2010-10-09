@@ -762,10 +762,14 @@ Symfony contains some standard validators that can be used for your forms:
   * `sfRegexValidator`
   * `sfCompareValidator`
   * `sfPropelUniqueValidator`
+  * `sfDoctrineUniqueValidator`
   * `sfFileValidator`
   * `sfCallbackValidator`
+  * `sfDateValidator`
 
-Each has a default set of parameters and error messages, but you can easily override them through the `initialize()` validator method or in the YAML file. The following sections describe the validators and show usage examples.
+Each has a default set of parameters and error messages, but you can easily 
+override them through the `initialize()` validator method or in the YAML file. 
+The following sections describe the validators and show usage examples.
 
 #### String Validator
 
@@ -834,11 +838,13 @@ The `match` parameter determines if the request parameter must match the pattern
           check:    password1
           compare_error: The two passwords do not match
 
-The `check` parameter contains the name of the field that the current field must match to be valid.
+The `check` parameter contains the name of the field that the current field 
+must match to be valid.
 
-#### Propel Unique Validator
+#### Propel/Doctrine Unique Validators
 
-`sfPropelUniqueValidator` validates that the value of a request parameter doesn't already exist in your database. It is very useful for unique indexes.
+`sfPropelUniqueValidator` validates that the value of a request parameter 
+doesn't already exist in your database. It is very useful for unique indexes.
 
     fields:
       nickname:
@@ -847,10 +853,17 @@ The `check` parameter contains the name of the field that the current field must
           column:       login
           unique_error: This login already exists. Please choose another one.
 
-In this example, the validator will look in the database for a record of class `User` where the `login` column has the same value as the field to validate.
+In this example, the validator will look in the database for a record of class 
+`User` where the `login` column has the same value as the field to validate.
 
 >**CAUTION**
->sfPropelUniqueValidator is susceptible to race conditions.  Although unlikely, in multiuser environments, the result may change the instant it returns.  You should still be ready to handle a duplicate INSERT error.  
+>sfPropelUniqueValidator is susceptible to race conditions.  Although unlikely,
+in multiuser environments, the result may change the instant it returns.  You 
+should still be ready to handle a duplicate INSERT error.  
+
+>**NOTE**
+>If you have enabled the Doctrine ORM for your project, you can also use the
+>`sfDoctrineUniqueValidator` in the same way as described above for Propel.
 
 #### File Validator
 
@@ -888,6 +901,17 @@ Be aware that the `file` attribute must be set to `True` for the field, and the 
           invalid_error: Please enter a valid credit card number.
 
 The callback method or function receives the value to be validated as a first parameter. This is very useful when you want to reuse existing methods of functions, rather than create a full validator class.
+
+#### Date Validator
+
+`sfDateValidator` checks that a submitted date is valid and/or within a certain
+simple range
+
+    sfDateValidator:
+      date_error:    You have entered an invalid date
+      compare:       "2007-05-01"
+      operator:      ">="  #defaults to "==" if not supplied
+      compare_error: "Enter a date later than 1st May 2007"
 
 >**TIP**
 >You can also write your own validators, as described in the "Creating a Custom Validator" section later in this chapter.

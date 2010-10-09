@@ -393,7 +393,7 @@ So you can use the `display` setting in two ways:
   * To group fields, use an associative array with the group name as a key, or `NONE` for a group with no name. The value is still an array of ordered column names.
 
 >**TIP**
->By default, the primary key columns never appear in either view.
+>By default, the primary key columns never appear in any view but the list view.
 
 #### Custom Fields
 

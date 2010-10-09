@@ -14,7 +14,7 @@ require_once 'propel/engine/builder/om/php5/PHP5ComplexPeerBuilder.php';
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: SfPeerBuilder.php 2534 2006-10-26 17:13:50Z fabien $
+ * @version    SVN: $Id: SfPeerBuilder.php 17357 2009-04-16 11:46:01Z FabianLange $
  */
 class SfPeerBuilder extends PHP5ComplexPeerBuilder
 {
@@ -96,6 +96,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
    */
   public static function doSelectWithI18n(Criteria \$c, \$culture = null, \$con = null)
   {
+    // we're going to modify criteria, so copy it first
+    \$c = clone \$c;
     if (\$culture === null)
     {
       \$culture = sfContext::getInstance()->getUser()->getCulture();
