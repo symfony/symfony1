@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSQLiteCache.class.php 3198 2007-01-08 20:36:20Z fabien $
+ * @version    SVN: $Id: sfSQLiteCache.class.php 3541 2007-02-26 06:13:12Z fabien $
  */
 class sfSQLiteCache extends sfCache
 {
@@ -73,9 +73,9 @@ class sfSQLiteCache extends sfCache
     $availableOptions = array('automaticCleaningFactor');
     foreach ($options as $key => $value)
     {
-      if (!in_array($key, $availableOptions))
+      if (!in_array($key, $availableOptions) && sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->error(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
+        sfLogger::getInstance()->err(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
       }
 
       $this->$key = $value;

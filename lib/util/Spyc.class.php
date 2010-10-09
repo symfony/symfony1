@@ -738,7 +738,7 @@ class Spyc
       $i = 0;
       foreach ($explode as $key => $value)
       {
-        if (strpos($value,'YAMLString'))
+        if (false !== strpos($value,'YAMLString'))
         {
           $explode[$key] = str_replace('YAMLString', $saved_strings[$i], $value);
           ++$i;

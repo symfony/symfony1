@@ -135,13 +135,13 @@ Listing 6-4 - Sample Action Class, in `apps/myapp/modules/mymodule/actions/actio
 >**CAUTION**
 >Even if method names are not case-sensitive in PHP, they are in symfony. So don't forget that the action methods must start with a lowercase `execute`, followed by the exact action name with the first letter capitalized.
 
-In order to request an action, you need to call the front controller script with the module name and action name as parameters. By default, this is done by appending the couple `module_name`/`acti`on_name to the script. This means that the action defined in Listing 6-4 can be called by this URL:
+In order to request an action, you need to call the front controller script with the module name and action name as parameters. By default, this is done by appending the couple `module_name`/`action_name` to the script. This means that the action defined in Listing 6-4 can be called by this URL:
 
     http://localhost/index.php/mymodule/index
 
 Adding more actions just means adding more `execute` methods to the `sfActions` object, as shown in Listing 6-5.
 
-Listing 6-5 - Action Class with Two Actions, in myapp/modules/mymodule/actions/actions.cla`ss.php`
+Listing 6-5 - Action Class with Two Actions, in `myapp/modules/mymodule/actions/actions.class.php`
 
     [php]
     class mymoduleActions extends sfActions
@@ -794,7 +794,7 @@ Figure 6-2 - The validation process
 So the key to validation is to respect the naming conventions for the action methods:
 
   * `validateActionName` is the validation method, returning `true` or `false`. It is the first method looked for when the action `ActionName` is requested. If it doesn't exist, the action method is executed directly.
-  * `hand`leErrorActionName is the method called when the validation method fails. If it doesn't exist, the `Error` template is displayed.
+  * `handleErrorActionName` is the method called when the validation method fails. If it doesn't exist, the `Error` template is displayed.
   * `executeActionName` is the action method. It must exist for all actions.
 
 Listing 6-29 shows an example of an action class with validation methods. Whether the validation passes or fails in this example, the `myActionSuccess.php` template will be executed, but not with the same parameters.
@@ -1051,7 +1051,7 @@ Listing 6-38 - Module Configuration, in `apps/myapp/modules/mymodule/config/modu
     all:                 # For all environments
       enabled:     true
       is_internal: false
-      view_name:   sfPhpView
+      view_name:   sfPHP
 
 The enabled parameter allows you to disable all actions of a module. All actions are redirected to the `module_disabled_module`/`module_disabled_action` action (as defined in `settings.yml`).
 

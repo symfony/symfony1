@@ -314,7 +314,7 @@ Whenever you start including many scripts for a unit test, you may need a simple
     sfCore::initSimpleAutoload($sf_symfony_lib_dir.'/util');
 
 >**TIP**
->The generated Propel objects rely on a long cascade of classes, so as soon as you want to test a Propel object, autoloading is necessary. Note that for Propel to work, you also need to include the files under the vendor/prop`el/` directory (so the call to `sfCore` becomes `sfCore::initSimpleAutoload(array(SF_ROOT_ DIR.'/lib/model', $sf_symfony_lib_dir.'/vendor/propel'));`) and to add the Propel core to the include path (by calling `set_include_path($sf_symfony_lib_dir.'/vendor'.PATH_SEPARATOR.SF_ROOT_DIR.PATH_SEPARATOR.get_include_path()`.
+>The generated Propel objects rely on a long cascade of classes, so as soon as you want to test a Propel object, autoloading is necessary. Note that for Propel to work, you also need to include the files under the `vendor/propel/` directory (so the call to `sfCore` becomes `sfCore::initSimpleAutoload(array(SF_ROOT_ DIR.'/lib/model', $sf_symfony_lib_dir.'/vendor/propel'));`) and to add the Propel core to the include path (by calling `set_include_path($sf_symfony_lib_dir.'/vendor'.PATH_SEPARATOR.SF_ROOT_DIR.PATH_SEPARATOR.get_include_path()`.
 
 Another good workaround for the autoloading issues is the use of stubs. A stub is an alternative implementation of a class where the real methods are replaced with simple canned data. It mimics the behavior of the real class, but without its cost. A good example of stubs is a database connection or a web service interface. In Listing 15-7, the unit tests for a mapping API rely on a `WebService` class. Instead of calling the real `fetch()` method of the actual web service class, the test uses a stub that returns test data.
 
@@ -683,7 +683,7 @@ Listing 15-21 - The Test Browser Gives Access to the Elements of the Response by
     $b = new sfTestBrowser();
     $b->initialize();
     $b->get('/foobar/edit/id/1')->
-        checkResponseElement('form input[type="hidden"][value="1"]', true->
+        checkResponseElement('form input[type="hidden"][value="1"]', true)->
         checkResponseElement('form textarea[name="text1"]', 'foo')->
         checkResponseElement('form input[type="submit"]', 1);
 

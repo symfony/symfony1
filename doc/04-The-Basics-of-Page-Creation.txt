@@ -10,7 +10,7 @@ Creating a Module Skeleton
 
 As Chapter 2 explained, symfony groups pages into modules. Before creating a page, you need to create a module, which is initially an empty shell with a file structure that symfony can recognize.
 
-The symfony command line automates the creation of modules. You just need to call the `in`it-module task with the application name and the module name as arguments. In the previous chapter, you created a `myapp` application. To add a `mymodule` module to this application, type the following commands:
+The symfony command line automates the creation of modules. You just need to call the `init-module` task with the application name and the module name as arguments. In the previous chapter, you created a `myapp` application. To add a `mymodule` module to this application, type the following commands:
 
     > cd ~/myproject
     > symfony init-module myapp mymodule

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 3211 2007-01-10 20:51:39Z fabien $
+ * @version    SVN: $Id: sfWebDebug.class.php 3606 2007-03-13 19:01:45Z fabien $
  */
 class sfWebDebug
 {
@@ -112,7 +112,7 @@ class sfWebDebug
    */
   protected function loadHelpers()
   {
-    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Javascript'));
+    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
   }
 
   /**

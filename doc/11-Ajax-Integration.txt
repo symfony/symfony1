@@ -29,7 +29,7 @@ As you'll soon learn, some of these helpers output HTML code, and some of them o
 
 ### JavaScript in Templates
 
-In XHTML, JavaScript code blocks must be enclosed within CDATA declarations. But pages requiring multiple JavaScript code blocks can soon become tedious to write. That's why symfony provides a java`script_tag()` helper, which transforms a string into an XHTML-compliant `<script>` tag. Listing 11-1 demonstrates using this helper.
+In XHTML, JavaScript code blocks must be enclosed within CDATA declarations. But pages requiring multiple JavaScript code blocks can soon become tedious to write. That's why symfony provides a `javascript_tag()` helper, which transforms a string into an XHTML-compliant `<script>` tag. Listing 11-1 demonstrates using this helper.
 
 Listing 11-1 - Inserting JavaScript with the `javascript_tag()` Helper
 
@@ -224,7 +224,7 @@ An Ajax interaction is made up of three parts: a caller (a link, a button, a for
 >However, when called through Ajax, actions return `true` to the following call:
 >
 >     [php]
->     $isAjax = $this->isXmlHttpRequest();
+>     $isAjax = $this->getRequest()->isXmlHttpRequest();
 >
 >Symfony knows that an action is in an Ajax context and can adapt the response processing accordingly. Therefore, by default, Ajax actions don't include the web debug toolbar in the development environment. Also, they skip the decoration process (their template is not included in a layout by default). If you want an Ajax view to be decorated, you need to specify explicitly `has_layout: true` for this view in the module `view.yml` file.
 >

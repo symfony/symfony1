@@ -330,7 +330,7 @@ Note that the application config.php file is not empty, so if you need to includ
 
 ### Modifying the Project Web Root
 
-All the paths built in `constants.php` rely on the project root directory, which is a constant defined in the front controller (`SF_ROOT_DIR`). Usually, the root directory is one level above the `we`b/ directory, but you can use a different structure. Suppose that your main directory structure is made of two directories, one public and one private, as shown in Listing 19-5. This typically happens when hosting a project on a shared host.
+All the paths built in `constants.php` rely on the project root directory, which is a constant defined in the front controller (`SF_ROOT_DIR`). Usually, the root directory is one level above the `web/` directory, but you can use a different structure. Suppose that your main directory structure is made of two directories, one public and one private, as shown in Listing 19-5. This typically happens when hosting a project on a shared host.
 
 Listing 19-5 - Example of Custom Directory Structure for a Shared Host
 

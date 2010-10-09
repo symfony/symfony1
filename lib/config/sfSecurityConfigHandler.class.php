@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSecurityConfigHandler.class.php 3203 2007-01-09 18:32:54Z fabien $
+ * @version    SVN: $Id: sfSecurityConfigHandler.class.php 3624 2007-03-17 10:57:03Z fabien $
  */
 class sfSecurityConfigHandler extends sfYamlConfigHandler
 {
@@ -40,6 +40,9 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
     );
 
     unset($myConfig['default']);
+
+    // change all of the keys to lowercase
+    $myConfig = array_change_key_case($myConfig);
 
     // compile data
     $retval = sprintf("<?php\n".
