@@ -14,7 +14,7 @@ pake_task('propel-build-model', 'project_exists');
 pake_desc('create sql for current model');
 pake_task('propel-build-sql', 'project_exists');
 
-pake_desc('create schema.xml from existing database');
+pake_desc('create a schema from existing database');
 pake_task('propel-build-schema', 'project_exists');
 
 pake_desc('create schema.xml from schema.yml');

@@ -71,7 +71,7 @@ Listing 7-3 - Declaring the Use of a Helper
     <p><?php echo auto_link_text($description) ?></p>
 
 >**TIP**
->If you need to declare more than one helper group, add more arguments to the `use_helper()` call. For instance, to load both the `Text` and the `Javascript` helper groups in a template, call `<?php echo ` use_helper('Text', 'Javascript') ?>`.
+>If you need to declare more than one helper group, add more arguments to the `use_helper()` call. For instance, to load both the `Text` and the `Javascript` helper groups in a template, call `<?php use_helper('Text', 'Javascript') ?>`.
 
 A few helpers are available by default in every template, without need for declaration. These are helpers of the following helper groups:
 

@@ -69,6 +69,7 @@ The related `schema.yml` file should look like Listing 8-3.
 
 Listing 8-3 - Sample `schema.yml`
 
+    [yml]
     propel:
       blog_article:
         _attributes: { phpName: Article }
@@ -487,6 +488,7 @@ The data model is independent from the database used, but you will definitely us
 
 Listing 8-17 - Sample Database Connection Settings, in `myproject/config/databases.yml`
 
+    [yml]
     prod:
       propel:
         param:
@@ -523,6 +525,7 @@ The permitted values of the `phptype` parameter are the ones of the database sys
 
 Listing 8-18 - Shorthand Database Connection Settings
 
+    [yml]
     all:
       propel:
         class:          sfPropelDatabase
@@ -533,12 +536,13 @@ If you use a SQLite database, the `hostspec` parameter must be set to the path o
 
 Listing 8-19 - Database Connection Settings for SQLite Use a File Path As Host
 
-        all:
-          propel:
-            class:          sfPropelDatabase
-            param:
-              phptype:  sqlite
-              database: %SF_DATA_DIR%/blog.db
+    [yml]
+    all:
+      propel:
+        class:          sfPropelDatabase
+          param:
+            phptype:  sqlite
+            database: %SF_DATA_DIR%/blog.db
 
 Extending the Model
 -------------------
@@ -647,6 +651,7 @@ Connections and tables can have specific attributes, as shown in Listing 8-24. T
 
 Listing 8-24 - Attributes for Connections and Tables
 
+    [yml]
     propel:
       _attributes:   { noXsd: false, defaultIdMethod: none, package: lib.model }
       blog_article:
@@ -662,6 +667,7 @@ Tables that contain localized content (that is, several versions of the content,
 
 Listing 8-25 - Attributes for i18n Tables
 
+    [yml]
     propel:
       blog_article:
         _attributes: { isI18N: true, i18nTable: db_group_i18n }
@@ -673,21 +679,21 @@ Listing 8-25 - Attributes for i18n Tables
 >
 >Consider these two schemas:
 >
+>     [yml]
+>     // In config/business-schema.yml
+>     propel:
+>       blog_article:
+>         _attributes: { phpName: Article }
+>         id:
+>         title: varchar(50)
 >
->      // In config/business-schema.yml
->      propel:
->        blog_article:
->          _attributes: { phpName: Article }
->        id:
->        title: varchar(50)
->
->      // In config/stats-schema.yml
->      propel:
->        stats_hit:
->          _attributes: { phpName: Hit }
->        id:
->        resource: varchar(100)
->        created_at:
+>     // In config/stats-schema.yml
+>     propel:
+>       stats_hit:
+>         _attributes: { phpName: Hit }
+>         id:
+>         resource: varchar(100)
+>         created_at:
 >
 >
 >Both schemas share the same connection (`propel`), and the `Article` and `Hit` classes will be generated under the same `lib/model/` directory. Everything happens as if you had written only one schema.
@@ -695,20 +701,21 @@ Listing 8-25 - Attributes for i18n Tables
 >You can also have different schemas use different connections (for instance, `propel` and `propel_bis`, to be defined in `databases.yml`) and organize the generated classes in subdirectories:
 >
 >
->      // In config/business-schema.yml
->      propel:
->        blog_article:
->          _attributes: { phpName: Article, package: lib.model.business }
->        id:
->        title: varchar(50)
+>     [yml]
+>     // In config/business-schema.yml
+>     propel:
+>       blog_article:
+>         _attributes: { phpName: Article, package: lib.model.business }
+>         id:
+>         title: varchar(50)
 >
->      // In config/stats-schema.yml
->      propel_bis:
->        stats_hit:
->          _attributes: { phpName: Hit, package: lib.model.stat }
->        id:
->        resource: varchar(100)
->        created_at:
+>     // In config/stats-schema.yml
+>     propel_bis:
+>       stats_hit:
+>         _attributes: { phpName: Hit, package: lib.model.stat }
+>         id:
+>         resource: varchar(100)
+>         created_at:
 >
 >
 >Many applications use more than one schema. In particular, some plug-ins have their own schema and package to avoid messing with your own classes (see Chapter 17 for details).
@@ -719,6 +726,7 @@ The basic syntax gives you two choices: let symfony deduce the column characteri
 
 Listing 8-26 - Basic Column Attributes
 
+    [yml]
     propel:
       blog_article:
         id:                 # Let symfony do the work
@@ -728,6 +736,7 @@ But you can define much more for a column. If you do, you will need to define co
 
 Listing 8-27 - Complex Column Attributes
 
+    [yml]
     propel:
       blog_article:
         id:       { type: integer, required: true, primaryKey: true, autoIncrement: true }
@@ -754,6 +763,7 @@ As an alternative to the `foreignTable` and `foreignReference` column attributes
 
 Listing 8-28 - Foreign Key Alternative Syntax
 
+    [yml]
     propel:
       blog_article:
         id:
@@ -784,6 +794,7 @@ As an alternative to the `index` column attribute, you can add indexes under the
 
 Listing 8-30 - Indexes and Unique Indexes Alternative Syntax
 
+    [yml]
     propel:
       blog_article:
         id:
@@ -823,6 +834,7 @@ In a `schema.yml` file, all that is implied when you name a table `foobar_i18n`.
 
 Listing 8-32 - Implied i18n Mechanism
 
+    [yml]
     propel:
       db_group:
         id:
@@ -833,6 +845,7 @@ Listing 8-32 - Implied i18n Mechanism
 
 Listing 8-33 - Explicit i18n Mechanism
 
+    [yml]
     propel:
       db_group:
         _attributes: { isI18N: true, i18nTable: db_group_i18n }

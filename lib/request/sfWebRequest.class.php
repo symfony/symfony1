@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 11784 2008-09-25 16:25:39Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 11954 2008-10-05 15:33:02Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -450,7 +450,7 @@ class sfWebRequest extends sfRequest
         $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathInfo);
         $prefix_name = preg_replace('#/[^/]+$#', '', $script_name);
         $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathInfo);
-        $pathInfo = preg_replace('/'.preg_quote($pathArray['QUERY_STRING'], '/').'$/', '', $pathInfo);
+        $pathInfo = preg_replace('/\??'.preg_quote($pathArray['QUERY_STRING'], '/').'$/', '', $pathInfo);
       }
     }
     else

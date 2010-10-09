@@ -936,6 +936,7 @@ class Criteria implements IteratorAggregate {
 				&& $this->selectModifiers === $criteria->getSelectModifiers()
 				&& $this->selectColumns === $criteria->getSelectColumns()
 				&& $this->orderByColumns === $criteria->getOrderByColumns()
+				&& $this->groupByColumns === $criteria->getGroupByColumns()
 			   )
 			{
 				$isEquiv = true;

@@ -15,7 +15,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 9784 2008-06-23 07:40:20Z dwhittle $
+ * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 13098 2008-11-18 08:09:35Z Kris.Wallsmith $
  */
 class sfAutoloadConfigHandler extends sfYamlConfigHandler
 {
@@ -78,7 +78,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $recursive = ((isset($entry['recursive'])) ? $entry['recursive'] : false);
         if (!$recursive)
         {
-          $finder->maxdepth(1);
+          $finder->maxdepth(0);
         }
 
         // exclude files or directories?
