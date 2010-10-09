@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 16555 2009-03-24 17:41:32Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfWebDebugLogger extends sfVarLogger
 {
@@ -56,7 +56,7 @@ class sfWebDebugLogger extends sfVarLogger
    * Listens to the response.filter_content event.
    *
    * @param  sfEvent $event   The sfEvent instance
-   * @param  string  $context The response content
+   * @param  string  $content The response content
    *
    * @return string  The filtered response content
    */
@@ -77,7 +77,7 @@ class sfWebDebugLogger extends sfVarLogger
 
     // don't add debug toolbar:
     // * for XHR requests
-    // * if 304
+    // * if response status code is in the 3xx range
     // * if not rendering to the client
     // * if HTTP headers only
     $response = $event->getSubject();
@@ -85,7 +85,7 @@ class sfWebDebugLogger extends sfVarLogger
     if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
       $request->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
-      $response->getStatusCode() == 304 ||
+      '3' == substr($response->getStatusCode(), 0, 1) ||
       $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
       $response->isHeaderOnly()
     )

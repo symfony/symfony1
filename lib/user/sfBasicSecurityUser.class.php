@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 11694 2008-09-21 08:26:37Z fabien $
+ * @version    SVN: $Id: sfBasicSecurityUser.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -52,7 +52,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   /**
    * Removes a credential.
    *
-   * @param  mixed credential
+   * @param  mixed $credential credential
    */
   public function removeCredential($credential)
   {

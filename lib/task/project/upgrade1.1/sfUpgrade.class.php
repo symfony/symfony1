@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfUpgrade.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfUpgrade.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 abstract class sfUpgrade extends sfBaseTask
 {
@@ -34,7 +34,7 @@ abstract class sfUpgrade extends sfBaseTask
   /**
    * Returns a finder that exclude upgrade scripts from being upgraded!
    *
-   * @param  string   String directory or file or any (for both file and directory)
+   * @param  string $type String directory or file or any (for both file and directory)
    *
    * @return sfFinder A sfFinder instance
    */

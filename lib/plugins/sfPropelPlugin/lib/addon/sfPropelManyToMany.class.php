@@ -15,7 +15,7 @@
  * @subpackage propel
  * @author     Nick Lane <nick.lane@internode.on.net>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelManyToMany.class.php 13234 2008-11-22 13:52:02Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelManyToMany.class.php 16948 2009-04-03 15:52:30Z fabien $
  */
 class sfPropelManyToMany
 {
@@ -146,7 +146,7 @@ class sfPropelManyToMany
       $localColumn = self::getColumn(get_class($object), $middleClass, $relatedColumn);
       $remoteColumn = self::getRelatedColumn(get_class($object), $middleClass, $relatedColumn);
       $c = new Criteria();
-      $c->add(constant(constant($middleClass.'::PEER').'::'.$localColumn->getColumnName()), $object->getId());
+      $c->add(constant(constant($middleClass.'::PEER').'::'.$localColumn->getName()), $object->getId());
       $relatedMethod = 'get'.$relatedClass.'RelatedBy'.$remoteColumn->getPhpName();
       $rels = call_user_func(array(constant($middleClass.'::PEER'), 'doSelectJoin'.$relatedClass.'RelatedBy'.$remoteColumn->getPhpName()), $c);
     }

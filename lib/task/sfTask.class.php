@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTask.class.php 12533 2008-11-01 13:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTask.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 abstract class sfTask
 {
@@ -262,7 +262,7 @@ abstract class sfTask
 
       if ($argument->isArray())
       {
-        $arguments[] = '... [nameN]';
+        $arguments[] = sprintf('... [%sN]', $argument->getName());
       }
     }
 
@@ -329,8 +329,8 @@ abstract class sfTask
   /**
    * Logs a message as a block of text.
    *
-   * @param string|array $message The message to display in the block
-   * @param string       $style   The style to use
+   * @param string|array $messages The message to display in the block
+   * @param string       $style    The style to use
    */
   public function logBlock($messages, $style)
   {

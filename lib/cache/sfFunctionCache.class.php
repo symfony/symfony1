@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFunctionCache.class.php 9084 2008-05-20 01:29:54Z Carl.Vondrick $
+ * @version    SVN: $Id: sfFunctionCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFunctionCache
 {
@@ -47,8 +47,8 @@ class sfFunctionCache
    * $cache->call('functionName', array($arg1, $arg2));
    * $cache->call(array($object, 'methodName'), array($arg1, $arg2));
    *
-   * @param mixed  $callable  A PHP callable
-   * @param array  $arguments An array of arguments to pass to the callable
+   * @param mixed $callable  A PHP callable
+   * @param array $arguments An array of arguments to pass to the callable
    *
    * @return mixed The result of the function/method
    */

@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageFormat.class.php 9675 2008-06-19 13:50:40Z fabien $
+ * @version    $Id: sfMessageFormat.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -93,7 +93,7 @@ class sfMessageFormat
    * from the supplied message source.
    *
    * @param sfMessageSource $source   the source of translation messages.
-   * @param string charset  $charset  for the message output.
+   * @param string          $charset  for the message output.
    */
   function __construct(sfIMessageSource $source, $charset = 'UTF-8')
   {

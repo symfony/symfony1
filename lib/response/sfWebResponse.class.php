@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage response
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebResponse.class.php 13564 2008-11-30 21:34:25Z fabien $
+ * @version    SVN: $Id: sfWebResponse.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfWebResponse extends sfResponse
 {
@@ -402,8 +402,8 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves a formated date.
    *
-   * @param  string $timetamp  Timestamp
-   * @param  string $type      Format type
+   * @param  string $timestamp  Timestamp
+   * @param  string $type       Format type
    *
    * @return string Formatted date
    */
@@ -650,7 +650,7 @@ class sfWebResponse extends sfResponse
   /**
    * Removes a stylesheet from the current web response.
    *
-   * @param string $css The stylesheet file to remove
+   * @param string $file The stylesheet file to remove
    */
   public function removeStylesheet($file)
   {
@@ -698,7 +698,7 @@ class sfWebResponse extends sfResponse
   /**
    * Adds javascript code to the current web response.
    *
-   * @param string $gile      The JavaScript file
+   * @param string $file      The JavaScript file
    * @param string $position  Position
    * @param string $options   Javascript options
    */
@@ -837,7 +837,7 @@ class sfWebResponse extends sfResponse
   /**
    * Fixes the content type by adding the charset for text content types.
    *
-   * @param  string $content  The content type
+   * @param  string $contentType  The content type
    *
    * @return string The content type with the charset if needed
    */

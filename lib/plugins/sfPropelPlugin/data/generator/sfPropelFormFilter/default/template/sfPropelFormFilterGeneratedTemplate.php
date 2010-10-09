@@ -8,7 +8,7 @@ require_once(sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.clas
  * @package    ##PROJECT_NAME##
  * @subpackage filter
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: sfPropelFormFilterGeneratedTemplate.php 15484 2009-02-13 13:13:51Z fabien $
+ * @version    SVN: $Id: sfPropelFormFilterGeneratedTemplate.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormFilterPropel
 {
@@ -17,7 +17,7 @@ class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormF
     $this->setWidgets(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
-      '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
+      '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($tables['middleTable']->getClassname()).'_list')) ?> => new sfWidgetFormPropelChoice(array('model' => '<?php echo $tables['relatedTable']->getClassname() ?>', 'add_empty' => true)),
@@ -27,7 +27,7 @@ class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormF
     $this->setValidators(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
-      '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => <?php echo $this->getValidatorForColumn($column) ?>,
+      '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => <?php echo $this->getValidatorForColumn($column) ?>,
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($tables['middleTable']->getClassname()).'_list')) ?> => new sfValidatorPropelChoice(array('model' => '<?php echo $tables['relatedTable']->getClassname() ?>', 'required' => false)),
@@ -77,7 +77,7 @@ class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormF
   {
     return array(
 <?php foreach ($this->table->getColumns() as $column): ?>
-      '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => '<?php echo $this->getType($column) ?>',
+      '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => '<?php echo $this->getType($column) ?>',
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($tables['middleTable']->getClassname()).'_list')) ?> => 'ManyKey',

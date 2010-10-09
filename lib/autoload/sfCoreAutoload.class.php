@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.2.6');
+define('SYMFONY_VERSION', '1.2.7');
 
 /**
  * sfCoreAutoload class.
@@ -22,7 +22,7 @@ define('SYMFONY_VERSION', '1.2.6');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 17682 2009-04-27 15:24:21Z fabien $
+ * @version    SVN: $Id: sfCoreAutoload.class.php 17870 2009-05-02 09:49:14Z FabianLange $
  */
 class sfCoreAutoload
 {
@@ -82,12 +82,13 @@ class sfCoreAutoload
   static public function unregister()
   {
     spl_autoload_unregister(array(self::getInstance(), 'autoload'));
+    self::$registered = false;
   }
 
   /**
    * Handles autoloading of classes.
    *
-   * @param  string  $class  A class name.
+   * @param string $class A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */
@@ -108,10 +109,10 @@ class sfCoreAutoload
    *
    * @return base directory
    */
-   public function getBaseDir()
-   {
-     return $this->baseDir;
-   }
+  public function getBaseDir()
+  {
+    return $this->baseDir;
+  }
 
   /**
    * Rebuilds the association array between class names and paths.
@@ -300,6 +301,7 @@ class sfCoreAutoload
   'sfStreamLogger' => 'log',
   'sfVarLogger' => 'log',
   'sfWebDebugLogger' => 'log',
+  'sfPearConfig' => 'plugin',
   'sfPearDownloader' => 'plugin',
   'sfPearEnvironment' => 'plugin',
   'sfPearFrontendPlugin' => 'plugin',

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanelConfig.class.php 13931 2008-12-10 22:43:27Z FabianLange $
+ * @version    SVN: $Id: sfWebDebugPanelConfig.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfWebDebugPanelConfig extends sfWebDebugPanel
 {
@@ -64,8 +64,8 @@ class sfWebDebugPanelConfig extends sfWebDebugPanel
   /**
    * Converts an array to HTML.
    *
-   * @param string $id      The identifier to use
-   * @param array  $values  The array of values
+   * @param string $id     The identifier to use
+   * @param array  $values The array of values
    *
    * @return string An HTML string
    */

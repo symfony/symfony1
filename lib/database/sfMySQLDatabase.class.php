@@ -33,7 +33,7 @@
  * @subpackage database
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfMySQLDatabase.class.php 12763 2008-11-08 11:27:24Z FabianLange $
+ * @version    SVN: $Id: sfMySQLDatabase.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfMySQLDatabase extends sfDatabase
 {
@@ -113,7 +113,7 @@ class sfMySQLDatabase extends sfDatabase
     }
 
     // set encoding if specified
-    if($encoding)
+    if ($encoding)
     {
       @mysql_query("SET NAMES '".$encoding."'", $this->connection);
     }
@@ -126,7 +126,7 @@ class sfMySQLDatabase extends sfDatabase
   /**
    * Returns the appropriate connect method.
    * 
-   * @param  bool $persistent wether persistent connections are use or not
+   * @param bool $persistent wether persistent connections are use or not
    * @return string name of connect method.
    */
   protected function getConnectMethod($persistent)
@@ -137,7 +137,7 @@ class sfMySQLDatabase extends sfDatabase
   /**
    * Selects the database to be used in this connection
    * 
-   * @param  string $database Name of database to be connected
+   * @param string $database Name of database to be connected
    *
    * @return bool true if this was successful
    */

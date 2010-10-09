@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBase.class.php 16345 2009-03-16 16:53:51Z fabien $
+ * @version    SVN: $Id: sfValidatorBase.class.php 17473 2009-04-21 07:59:34Z fabien $
  */
 abstract class sfValidatorBase
 {
@@ -59,8 +59,11 @@ abstract class sfValidatorBase
     $this->setDefaultOptions($this->getOptions());
     $this->setDefaultMessages($this->getMessages());
 
+    $currentOptionKeys = array_keys($this->options);
+    $optionKeys = array_keys($options);
+
     // check option names
-    if ($diff = array_diff(array_keys($options), array_merge(array_keys($this->options), $this->requiredOptions)))
+    if ($diff = array_diff($optionKeys, array_merge($currentOptionKeys, $this->requiredOptions)))
     {
       throw new InvalidArgumentException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
@@ -72,7 +75,7 @@ abstract class sfValidatorBase
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_merge(array_keys($this->options), array_keys($options))))
+    if ($diff = array_diff($this->requiredOptions, array_merge($currentOptionKeys, $optionKeys)))
     {
       throw new RuntimeException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }

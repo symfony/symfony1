@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandApplication.class.php 11505 2008-09-13 09:22:23Z fabien $
+ * @version    SVN: $Id: sfCommandApplication.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfCommandApplication
 {
@@ -35,9 +35,9 @@ abstract class sfCommandApplication
   /**
    * Constructor.
    *
-   * @param sfEventDispatcher $dispatcher   A sfEventDispatcher instance
-   * @param sfFormatter       $formatter    A sfFormatter instance
-   * @param array             $options      An array of options
+   * @param sfEventDispatcher $dispatcher A sfEventDispatcher instance
+   * @param sfFormatter       $formatter  A sfFormatter instance
+   * @param array             $options    An array of options
    */
   public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter, $options = array())
   {
@@ -60,9 +60,9 @@ abstract class sfCommandApplication
   /**
    * Returns the value of a given option.
    *
-   * @param  string  $name  The option name
+   * @param string $name The option name
    *
-   * @return mixed  The option value
+   * @return mixed The option value
    */
   public function getOption($name)
   {
@@ -84,7 +84,7 @@ abstract class sfCommandApplication
    *
    * If you pass null, this method will register all available tasks.
    *
-   * @param array  $tasks  An array of tasks
+   * @param array $tasks An array of tasks
    */
   public function registerTasks($tasks = null)
   {
@@ -404,7 +404,7 @@ abstract class sfCommandApplication
   /**
    * Gets a task from a task name or a shortcut.
    *
-   * @param  string  $name  The task name or a task shortcut
+   * @param string $name The task name or a task shortcut
    *
    * @return sfTask A sfTask object
    */

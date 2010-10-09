@@ -14,7 +14,7 @@ require_once 'propel/engine/builder/om/php5/PHP5PeerBuilder.php';
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: SfPeerBuilder.php 14378 2008-12-29 20:04:39Z Kris.Wallsmith $
+ * @version    SVN: $Id: SfPeerBuilder.php 17357 2009-04-16 11:46:01Z FabianLange $
  */
 class SfPeerBuilder extends PHP5PeerBuilder
 {
@@ -138,6 +138,8 @@ class SfPeerBuilder extends PHP5PeerBuilder
    */
   public static function doSelectWithI18n(Criteria \$c, \$culture = null, PropelPDO \$con = null)
   {
+    // we're going to modify criteria, so copy it first
+    \$c = clone \$c;
     if (\$culture === null)
     {
       \$culture = sfPropel::getDefaultCulture();

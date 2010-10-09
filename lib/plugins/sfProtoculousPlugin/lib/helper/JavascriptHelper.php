@@ -20,7 +20,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id: JavascriptHelper.php 11835 2008-09-29 06:52:55Z fabien $
+ * @version    SVN: $Id: JavascriptHelper.php 17384 2009-04-17 01:11:05Z dwhittle $
  */
 
 /*
@@ -437,7 +437,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
     }
     if (isset($options['confirm']))
     {
-      $function = "if (confirm('".escape_javascript($options['confirm'])."')) { $function; }";
+      $function = "if (window.confirm('".escape_javascript($options['confirm'])."')) { $function; }";
       if (isset($options['cancel']))
       {
         $function = $function.' else { '.$options['cancel'].' }';

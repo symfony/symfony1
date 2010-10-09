@@ -244,6 +244,7 @@ abstract class BaseMoviePeer {
   
   public static function doSelectWithI18n(Criteria $c, $culture = null, PropelPDO $con = null)
   {
+        $c = clone $c;
     if ($culture === null)
     {
       $culture = sfPropel::getDefaultCulture();

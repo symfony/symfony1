@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRoute.class.php 13928 2008-12-10 21:54:55Z FabianLange $
+ * @version    SVN: $Id: sfRoute.class.php 17382 2009-04-17 00:28:46Z dwhittle $
  */
 class sfRoute implements Serializable
 {
@@ -22,6 +22,7 @@ class sfRoute implements Serializable
     $isBound           = false,
     $context           = null,
     $parameters        = null,
+    $suffix            = null,
     $defaultParameters = array(),
     $defaultOptions    = array(),
     $compiled          = false,
@@ -207,6 +208,7 @@ class sfRoute implements Serializable
     }
 
     $url = $this->pattern;
+
     $defaults = $this->mergeArrays($this->getDefaultParameters(), $this->defaults);
     $tparams = $this->mergeArrays($defaults, $params);
 
@@ -228,6 +230,11 @@ class sfRoute implements Serializable
       foreach ($variables as $variable => $value)
       {
         $url = str_replace($value, urlencode($tparams[$variable]), $url);
+      }
+      
+      if(!in_array($this->suffix, $this->options['segment_separators']))
+      {
+        $url .= $this->suffix;
       }
     }
 
@@ -528,6 +535,14 @@ class sfRoute implements Serializable
         throw new InvalidArgumentException(sprintf('Unable to parse "%s" route near "%s".', $this->pattern, $buffer));
       }
     }
+    
+    // check for suffix
+    if ($this->suffix)
+    {
+      // treat as a separator
+      $this->tokens[] = array('separator', $currentSeparator, $this->suffix);
+    }
+
   }
 
   /**
@@ -738,23 +753,28 @@ class sfRoute implements Serializable
 
   protected function fixSuffix()
   {
-    if ('/' == $this->pattern[strlen($this->pattern) - 1])
+    $length = strlen($this->pattern);
+    
+    if ($length > 0 && '/' == $this->pattern[$length - 1])
     {
       // route ends by / (directory)
+      $this->suffix = '/';
     }
-    else if ('.' == $this->pattern[strlen($this->pattern) - 1])
+    else if ($length > 0 && '.' == $this->pattern[$length - 1])
     {
       // route ends by . (no suffix)
-      $this->pattern = substr($this->pattern, 0, strlen($this->pattern) -1);
+      $this->suffix = '';
+      $this->pattern = substr($this->pattern, 0, $length - 1);
     }
     else if (preg_match('#\.(?:'.$this->options['variable_prefix_regex'].$this->options['variable_regex'].'|'.$this->options['variable_content_regex'].')$#i', $this->pattern))
     {
       // specific suffix for this route
       // a . with a variable after or some cars without any separators
+      $this->suffix = '';
     }
     else
     {
-      $this->pattern .= $this->options['suffix'];
+      $this->suffix = $this->options['suffix'];
     }
   }
 

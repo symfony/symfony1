@@ -16,7 +16,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfFilterConfigHandler.class.php 13547 2008-11-30 14:05:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFilterConfigHandler.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFilterConfigHandler extends sfYamlConfigHandler
 {
@@ -129,9 +129,9 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a filter statement to the data.
    *
-   * @param string $category    The category name
-   * @param string $class       The filter class name
-   * @param array  $parameters  Filter default parameters
+   * @param string $category   The category name
+   * @param string $class      The filter class name
+   * @param array  $parameters Filter default parameters
    *
    * @return string The PHP statement
    */
@@ -146,9 +146,9 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a security filter statement to the data.
    *
-   * @param string The category name
-   * @param string The filter class name
-   * @param array  Filter default parameters
+   * @param string $category   The category name
+   * @param string $class      The filter class name
+   * @param array  $parameters Filter default parameters
    *
    * @return string The PHP statement
    */
@@ -198,7 +198,7 @@ EOF;
     {
       if (isset($keys['file']))
       {
-        $config['category']['file'] = self::replacePath($keys['file']);
+        $config[$category]['file'] = self::replacePath($keys['file']);
       }
     }
 

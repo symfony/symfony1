@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfObjectRouteCollection.class.php 13325 2008-11-25 08:18:09Z FabianLange $
+ * @version    SVN: $Id: sfObjectRouteCollection.class.php 17398 2009-04-17 16:01:14Z Kris.Wallsmith $
  */
 class sfObjectRouteCollection extends sfRouteCollection
 {
@@ -36,13 +36,14 @@ class sfObjectRouteCollection extends sfRouteCollection
     }
 
     $this->options = array_merge(array(
-      'actions'             => false,
-      'module'              => $this->options['name'],
-      'prefix_path'         => '/'.$this->options['name'],
-      'column'              => isset($this->options['column']) ? $this->options['column'] : 'id',
-      'with_show'           => true,
-      'segment_names'       => array('edit' => 'edit', 'new' => 'new'),
-      'model_methods'       => array(),
+      'actions'              => false,
+      'module'               => $this->options['name'],
+      'prefix_path'          => '/'.$this->options['name'],
+      'column'               => isset($this->options['column']) ? $this->options['column'] : 'id',
+      'with_show'            => true,
+      'segment_names'        => array('edit' => 'edit', 'new' => 'new'),
+      'model_methods'        => array(),
+      'requirements'         => array(),
       'with_wildcard_routes' => false,
     ), $this->options);
 

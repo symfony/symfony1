@@ -789,9 +789,9 @@ Listing 6-27 - Sample Validation Methods
     [php]
     class mymoduleActions extends sfActions
     {
-      public function validateMyAction($request)
+      public function validateMyAction()
       {
-        return $request->getParameter('id') > 0;
+        return $this->getRequestParameter('id') > 0;
       }
 
       public function handleErrorMyAction()

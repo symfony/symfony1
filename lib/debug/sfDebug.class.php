@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDebug.class.php 13931 2008-12-10 22:43:27Z FabianLange $
+ * @version    SVN: $Id: sfDebug.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfDebug
 {
@@ -47,7 +47,7 @@ class sfDebug
     // assign extension version
     if ($values['extensions'])
     {
-      foreach($values['extensions'] as $key => $extension)
+      foreach ($values['extensions'] as $key => $extension)
       {
         $values['extensions'][$key] = phpversion($extension) ? sprintf('%s (%s)', $extension, phpversion($extension)) : $extension;
       }

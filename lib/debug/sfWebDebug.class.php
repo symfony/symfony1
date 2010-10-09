@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 16169 2009-03-11 07:56:12Z fabien $
+ * @version    SVN: $Id: sfWebDebug.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfWebDebug
 {
@@ -117,7 +117,7 @@ class sfWebDebug
   /**
    * Removes a panel by name.
    *
-   * @param string          $name  The panel name
+   * @param string $name The panel name
    */
   public function removePanel($name)
   {
@@ -127,9 +127,9 @@ class sfWebDebug
   /**
    * Gets an option value by name.
    *
-   * @param  string $name  The option name
+   * @param string $name The option name
    *
-   * @return mixed  The option value
+   * @return mixed The option value
    */
   public function getOption($name, $default = null)
   {
@@ -139,7 +139,7 @@ class sfWebDebug
   /**
    * Injects the web debug toolbar into a given HTML string.
    *
-   * @param string  $content The HTML content
+   * @param string $content The HTML content
    *
    * @return string The content with the web debug toolbar injected
    */

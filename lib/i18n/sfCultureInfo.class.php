@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 11843 2008-09-29 11:25:50Z fabien $
+ * @version    $Id: sfCultureInfo.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -659,7 +659,7 @@ class sfCultureInfo
   /**
    * Get the country name in the current culture for the given code.
    *
-   * @param  string A valid country code
+   * @param  string $code A valid country code
    *
    * @return string The country name in the current culture
    */
@@ -678,7 +678,7 @@ class sfCultureInfo
   /**
    * Get the currency name in the current culture for the given code.
    *
-   * @param  string A valid currency code
+   * @param  string $code A valid currency code
    *
    * @return string The currency name in the current culture
    */
@@ -697,7 +697,7 @@ class sfCultureInfo
   /**
    * Get the language name in the current culture for the given code.
    *
-   * @param  string A valid language code
+   * @param  string $code A valid language code
    *
    * @return string The language name in the current culture
    */
@@ -716,7 +716,7 @@ class sfCultureInfo
   /**
    * Gets a list of countries in the language of the localized version.
    *
-   * @param  array An array of countries used to restrict the returned array (null by default, which means all countries)
+   * @param  array $countries An array of countries used to restrict the returned array (null by default, which means all countries)
    *
    * @return array a list of localized country names. 
    */
@@ -743,8 +743,8 @@ class sfCultureInfo
   /**
    * Gets a list of currencies in the language of the localized version.
    *
-   * @param  array   An array of currencies used to restrict the returned array (null by default, which means all currencies)
-   * @param  Boolean Whether to return the symbol and the name or not (false by default)
+   * @param  array   $currencies An array of currencies used to restrict the returned array (null by default, which means all currencies)
+   * @param  Boolean $full       Whether to return the symbol and the name or not (false by default)
    *
    * @return array a list of localized currencies.
    */
@@ -778,7 +778,7 @@ class sfCultureInfo
   /**
    * Gets a list of languages in the language of the localized version.
    *
-   * @param  array An array of languages used to restrict the returned array (null by default, which means all languages)
+   * @param  array $languages An array of languages used to restrict the returned array (null by default, which means all languages)
    *
    * @return array list of localized language names.
    */

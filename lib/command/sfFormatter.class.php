@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormatter.class.php 14274 2008-12-23 09:40:12Z FabianLange $
+ * @version    SVN: $Id: sfFormatter.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFormatter
 {
@@ -29,9 +29,9 @@ class sfFormatter
   /**
    * Formats a text according to the given parameters.
    *
-   * @param  string $text         The test to style
-   * @param  mixed  $parameters   An array of parameters
-   * @param  stream $stream       A stream (default to STDOUT)
+   * @param string $text       The test to style
+   * @param mixed  $parameters An array of parameters
+   * @param stream $stream     A stream (default to STDOUT)
    *
    * @return string The formatted text
    */
@@ -43,9 +43,9 @@ class sfFormatter
   /**
    * Formats a message within a section.
    *
-   * @param string  $section  The section name
-   * @param string  $text     The text message
-   * @param integer $size     The maximum size allowed for a line (65 by default)
+   * @param string  $section The section name
+   * @param string  $text    The text message
+   * @param integer $size    The maximum size allowed for a line (65 by default)
    */
   public function formatSection($section, $text, $size = null)
   {

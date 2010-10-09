@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfData.class.php 15803 2009-02-26 09:48:55Z fabien $
+ * @version    SVN: $Id: sfData.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 
 abstract class sfData
@@ -88,8 +88,8 @@ abstract class sfData
    *
    * The returned array of files is sorted by alphabetical order.
    *
-   * @param  string|array $element A directory or file name or an array of directories and/or file names
-   *                               If null, then defaults to 'sf_data_dir'/fixtures
+   * @param string|array $element A directory or file name or an array of directories and/or file names
+   *                              If null, then defaults to 'sf_data_dir'/fixtures
    *
    * @return array A list of *.yml files
    *

@@ -18,7 +18,7 @@
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfException.class.php 15223 2009-02-03 12:02:45Z fabien $
+ * @version    SVN: $Id: sfException.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfException extends Exception
 {
@@ -190,11 +190,11 @@ class sfException extends Exception
   /**
    * Returns the path for the template error message.
    *
-   * @param  string  $format The request format
-   * @param  Boolean $debug  Whether to return a template for the debug mode or not
+   * @param string  $format The request format
+   * @param Boolean $debug  Whether to return a template for the debug mode or not
    *
-   * @return string|Boolean  false if the template cannot be found for the given format,
-   *                         the absolute path to the template otherwise
+   * @return string|Boolean false if the template cannot be found for the given format,
+   *                        the absolute path to the template otherwise
    */
   static public function getTemplatePathForError($format, $debug)
   {
@@ -219,8 +219,8 @@ class sfException extends Exception
   /**
    * Returns an array of exception traces.
    *
-   * @param Exception $exception  An Exception implementation instance
-   * @param string    $format     The trace format (plain or html)
+   * @param Exception $exception An Exception implementation instance
+   * @param string    $format    The trace format (plain or html)
    *
    * @return array An array of traces
    */
@@ -281,8 +281,8 @@ class sfException extends Exception
   /**
    * Returns an excerpt of a code file around the given line number.
    *
-   * @param string $file  A file path
-   * @param int    $line  The selected line number
+   * @param string $file A file path
+   * @param int    $line The selected line number
    *
    * @return string An HTML string
    */
@@ -305,9 +305,9 @@ class sfException extends Exception
   /**
    * Formats an array as a string.
    *
-   * @param array   $args     The argument array
+   * @param array   $args   The argument array
    * @param boolean $single
-   * @param string  $format   The format string (html or plain)
+   * @param string  $format The format string (html or plain)
    *
    * @return string
    */

@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfStorage.class.php 9942 2008-06-27 18:00:49Z fabien $
+ * @version    SVN: $Id: sfStorage.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 abstract class sfStorage
 {
@@ -84,7 +84,7 @@ abstract class sfStorage
   /**
    * Regenerates id that represents this storage.
    *
-   * @param  boolean destroy Destroy session when regenerating?
+   * @param  boolean $destroy Destroy session when regenerating?
    *
    * @return boolean True if session regenerated, false if error
    *

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchemaDecorator.class.php 12409 2008-10-29 14:06:02Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchemaDecorator.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 {
@@ -50,7 +50,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 
   /**
    * @param  string $name        The element name
-   * @param  string $value       The value displayed in this widget
+   * @param  string $values      The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
    * @param  array  $errors      An array of errors for the field
    *

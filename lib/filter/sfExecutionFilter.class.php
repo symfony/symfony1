@@ -17,7 +17,7 @@
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfExecutionFilter.class.php 16250 2009-03-12 10:06:36Z fabien $
+ * @version    SVN: $Id: sfExecutionFilter.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfExecutionFilter extends sfFilter
 {
@@ -58,10 +58,10 @@ class sfExecutionFilter extends sfFilter
   /*
    * Handles the action.
    *
-   * @param  sfFilterChain $filterChain     The current filter chain
-   * @param  sfAction      $actionInstance  An sfAction instance
+   * @param sfFilterChain $filterChain    The current filter chain
+   * @param sfAction      $actionInstance An sfAction instance
    *
-   * @return string        The view type
+   * @return string The view type
    */
   protected function handleAction($filterChain, $actionInstance)
   {
@@ -79,9 +79,9 @@ class sfExecutionFilter extends sfFilter
   /**
    * Executes the execute method of an action.
    *
-   * @param  sfAction $actionInstance An sfAction instance
+   * @param sfAction $actionInstance An sfAction instance
    *
-   * @return string   The view type
+   * @return string The view type
    */
   protected function executeAction($actionInstance)
   {
@@ -96,9 +96,9 @@ class sfExecutionFilter extends sfFilter
   /**
    * Handles the view.
    *
-   * @param sfFilterChain  $filterChain     The current filter chain
-   * @param sfAction       $actionInstance  An sfAction instance
-   * @param string         $viewName        The view name
+   * @param sfFilterChain $filterChain    The current filter chain
+   * @param sfAction      $actionInstance An sfAction instance
+   * @param string        $viewName       The view name
    */
   protected function handleView($filterChain, $actionInstance, $viewName)
   {
@@ -123,10 +123,10 @@ class sfExecutionFilter extends sfFilter
    *   - sfView::RENDER_CLIENT: View data populates the response content.
    *   - sfView::RENDER_DATA: View data populates the data presentation variable.
    *
-   * @param  string $moduleName     The module name
-   * @param  string $actionName     The action name
-   * @param  string $viewName       The view name
-   * @param  array  $viewAttributes An array of view attributes
+   * @param string $moduleName     The module name
+   * @param string $actionName     The action name
+   * @param string $viewName       The view name
+   * @param array  $viewAttributes An array of view attributes
    *
    * @return string The view data
    */

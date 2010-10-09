@@ -41,7 +41,7 @@ class sfValidatorDoctrineChoiceMany extends sfValidatorDoctrineChoice
 
     $objects = $q->execute();
 
-    if (count(array_diff($values, $objects->getPrimaryKeys())))
+    if (count($objects) != count($values))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $values));
     }

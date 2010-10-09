@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandOption.class.php 9076 2008-05-19 23:19:44Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCommandOption.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCommandOption
 {
@@ -34,11 +34,11 @@ class sfCommandOption
   /**
    * Constructor.
    *
-   * @param string  $name       The option name
-   * @param string  $shortcut   The shortcut (can be null)
-   * @param integer $mode       The option mode: self::PARAMETER_REQUIRED, self::PARAMETER_NONE or self::PARAMETER_OPTIONAL
-   * @param string  $help       A help text
-   * @param mixed   $default    The default value (must be null for self::PARAMETER_REQUIRED or self::PARAMETER_NONE)
+   * @param string  $name     The option name
+   * @param string  $shortcut The shortcut (can be null)
+   * @param integer $mode     The option mode: self::PARAMETER_REQUIRED, self::PARAMETER_NONE or self::PARAMETER_OPTIONAL
+   * @param string  $help     A help text
+   * @param mixed   $default  The default value (must be null for self::PARAMETER_REQUIRED or self::PARAMETER_NONE)
    */
   public function __construct($name, $shortcut = null, $mode = null, $help = '', $default = null)
   {

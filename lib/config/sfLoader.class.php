@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLoader.class.php 11783 2008-09-25 16:21:27Z fabien $
+ * @version    SVN: $Id: sfLoader.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfLoader
 {
@@ -39,8 +39,8 @@ class sfLoader
   /**
    * Loads helpers.
    *
-   * @param array  $helpers     An array of helpers to load
-   * @param string $moduleName  A module name (optional)
+   * @param array  $helpers    An array of helpers to load
+   * @param string $moduleName A module name (optional)
    *
    * @throws sfViewException
    */

@@ -16,16 +16,16 @@ require_once(dirname(__FILE__).'/sfYamlInline.class.php');
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlDumper.class.php 10575 2008-08-01 13:08:42Z nicolas $
+ * @version    SVN: $Id: sfYamlDumper.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfYamlDumper
 {
   /**
    * Dumps a PHP value to YAML.
    *
-   * @param  mixed   The PHP value
-   * @param  integer The level where you switch to inline YAML
-   * @param  integer The level o indentation indentation (used internally)
+   * @param  mixed   $input  The PHP value
+   * @param  integer $inline The level where you switch to inline YAML
+   * @param  integer $indent The level o indentation indentation (used internally)
    *
    * @return string  The YAML representation of the PHP value
    */

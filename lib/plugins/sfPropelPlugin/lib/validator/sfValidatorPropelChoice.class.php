@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorPropelChoice.class.php 15627 2009-02-19 13:35:10Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfValidatorPropelChoice.class.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class sfValidatorPropelChoice extends sfValidatorBase
 {
@@ -91,6 +91,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
     if ($this->getOption('column'))
     {
       $columnName = $this->getOption('column');
+      $from = BasePeer::TYPE_FIELDNAME;
     }
     else
     {
@@ -99,12 +100,13 @@ class sfValidatorPropelChoice extends sfValidatorBase
       {
         if ($column->isPrimaryKey())
         {
-          $columnName = strtolower($column->getColumnName());
+          $columnName = $column->getPhpName();
           break;
         }
       }
+      $from = BasePeer::TYPE_PHPNAME;
     }
 
-    return call_user_func(array(constant($this->getOption('model').'::PEER'), 'translateFieldName'), $columnName, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
+    return call_user_func(array(constant($this->getOption('model').'::PEER'), 'translateFieldName'), $columnName, $from, BasePeer::TYPE_COLNAME);
   }
 }

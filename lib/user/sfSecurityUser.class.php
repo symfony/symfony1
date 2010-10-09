@@ -16,14 +16,14 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfSecurityUser.class.php 9060 2008-05-19 21:31:17Z FabianLange $
+ * @version    SVN: $Id: sfSecurityUser.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 interface sfSecurityUser
 {
   /**
    * Add a credential to this user.
    *
-   * @param mixed Credential data.
+   * @param mixed $credential Credential data.
    */
   public function addCredential($credential);
 

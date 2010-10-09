@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormFieldSchema.class.php 9045 2008-05-19 06:33:56Z Carl.Vondrick $
+ * @version    SVN: $Id: sfFormFieldSchema.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Countable
 {
@@ -26,11 +26,11 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Constructor.
    *
-   * @param sfWidgetFormSchema $widget  A sfWidget instance
-   * @param sfFormField        $parent  The sfFormField parent instance (null for the root widget)
-   * @param string             $name    The field name
-   * @param string             $value   The field value
-   * @param sfValidatorError   $error   A sfValidatorError instance
+   * @param sfWidgetFormSchema $widget A sfWidget instance
+   * @param sfFormField        $parent The sfFormField parent instance (null for the root widget)
+   * @param string             $name   The field name
+   * @param string             $value  The field value
+   * @param sfValidatorError   $error  A sfValidatorError instance
    */
   public function __construct(sfWidgetFormSchema $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
@@ -42,7 +42,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns true if the bound field exists (implements the ArrayAccess interface).
    *
-   * @param  string  $name  The name of the bound field
+   * @param string $name The name of the bound field
    *
    * @return Boolean true if the widget exists, false otherwise
    */
@@ -54,7 +54,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns the form field associated with the name (implements the ArrayAccess interface).
    *
-   * @param  string $name The offset of the value to get
+   * @param string $name The offset of the value to get
    *
    * @return sfFormField A form field instance
    */
@@ -67,9 +67,23 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
         throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
-      $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
+      $error = isset($this->error[$name]) ? $this->error[$name] : null;
 
-      $this->fields[$name] = new $class($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, isset($this->error[$name]) ? $this->error[$name] : null);
+      if ($widget instanceof sfWidgetFormSchema)
+      {
+        $class = 'sfFormFieldSchema';
+
+        if ($error && !$error instanceof sfValidatorErrorSchema)
+        {
+          $error = new sfValidatorErrorSchema($error->getValidator(), array($error));
+        }
+      }
+      else
+      {
+        $class = 'sfFormField';
+      }
+
+      $this->fields[$name] = new $class($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, $error);
     }
 
     return $this->fields[$name];

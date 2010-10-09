@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheConfigHandler.class.php 9085 2008-05-20 01:53:23Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCacheConfigHandler.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCacheConfigHandler extends sfYamlConfigHandler
 {
@@ -67,7 +67,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   /**
    * Returns a single addCache statement.
    *
-   * @param string $actionName  The action name
+   * @param string $actionName The action name
    *
    * @return string PHP code for the addCache statement
    */

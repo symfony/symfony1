@@ -56,7 +56,7 @@ abstract class BaseArticlePeer {
 		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'Online', 'Excerpt', 'CategoryId', 'CreatedAt', 'EndDate', 'BookId', ),
 		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'body', 'online', 'excerpt', 'categoryId', 'createdAt', 'endDate', 'bookId', ),
 		BasePeer::TYPE_COLNAME => array (self::ID, self::TITLE, self::BODY, self::ONLINE, self::EXCERPT, self::CATEGORY_ID, self::CREATED_AT, self::END_DATE, self::BOOK_ID, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'online', 'excerpt', 'category_id', 'created_at', 'end_date', 'book_id', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'Online', 'excerpt', 'category_id', 'created_at', 'end_date', 'book_id', ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 
@@ -65,7 +65,7 @@ abstract class BaseArticlePeer {
 		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'Online' => 3, 'Excerpt' => 4, 'CategoryId' => 5, 'CreatedAt' => 6, 'EndDate' => 7, 'BookId' => 8, ),
 		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'online' => 3, 'excerpt' => 4, 'categoryId' => 5, 'createdAt' => 6, 'endDate' => 7, 'bookId' => 8, ),
 		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TITLE => 1, self::BODY => 2, self::ONLINE => 3, self::EXCERPT => 4, self::CATEGORY_ID => 5, self::CREATED_AT => 6, self::END_DATE => 7, self::BOOK_ID => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'online' => 3, 'excerpt' => 4, 'category_id' => 5, 'created_at' => 6, 'end_date' => 7, 'book_id' => 8, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'Online' => 3, 'excerpt' => 4, 'category_id' => 5, 'created_at' => 6, 'end_date' => 7, 'book_id' => 8, ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 

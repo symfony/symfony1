@@ -18,7 +18,7 @@
  * @subpackage database
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfDatabaseManager.class.php 11293 2008-09-02 18:56:30Z fabien $
+ * @version    SVN: $Id: sfDatabaseManager.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfDatabaseManager
 {
@@ -44,7 +44,7 @@ class sfDatabaseManager
   /**
    * Initializes this sfDatabaseManager object
    *
-   * @param  sfProjectConfiguration $configuration A sfProjectConfiguration instance
+   * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -81,8 +81,8 @@ class sfDatabaseManager
   /**
    * Sets a database connection.
    *
-   * @param string     $name        The database name
-   * @param sfDatabase $sfDatabase  A sfDatabase instance
+   * @param string     $name     The database name
+   * @param sfDatabase $database A sfDatabase instance
    */
   public function setDatabase($name, sfDatabase $database)
   {
@@ -92,7 +92,7 @@ class sfDatabaseManager
   /**
    * Retrieves the database connection associated with this sfDatabase implementation.
    *
-   * @param string $name  A database name
+   * @param string $name A database name
    *
    * @return mixed A Database instance
    *

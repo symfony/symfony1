@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowserBase.class.php 14015 2008-12-13 21:54:33Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfBrowserBase.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 abstract class sfBrowserBase
 {
@@ -108,7 +108,6 @@ abstract class sfBrowserBase
    * Sets a cookie.
    *
    * @param  string  $name     The cookie name
-   * @param  string  $name     HTTP header name
    * @param  string  $value    Value for the cookie
    * @param  string  $expire   Cookie expiration period
    * @param  string  $path     Path

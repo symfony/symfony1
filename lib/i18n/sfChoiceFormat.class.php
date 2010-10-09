@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfChoiceFormat.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfChoiceFormat.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -83,8 +83,8 @@ class sfChoiceFormat
   /**
    * Determines if the given number belongs to a given set
    *
-   * @param  $number  float the number to test.
-   * @param  $set     string the set, in set notation.
+   * @param  float  $number the number to test.
+   * @param  string $set    the set, in set notation.
    * @return boolean true if number is in the set, false otherwise.
    */
   public function isValid($number, $set)
@@ -180,7 +180,7 @@ class sfChoiceFormat
   /**
    * Parses a choice string and get a list of sets and a list of strings corresponding to the sets.
    *
-   * @param  $string  string the string containing the choices
+   * @param  string $string the string containing the choices
    * @return array array($sets, $strings)
    */
   public function parse($string)

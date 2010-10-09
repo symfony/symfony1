@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_SQLite.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfMessageSource_SQLite.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -341,7 +341,7 @@ class sfMessageSource_SQLite extends sfMessageSource_Database
   /**
    * Deletes a particular message from the specified catalogue.
    *
-   * @param string  $source     the source message to delete.
+   * @param string  $message    the source message to delete.
    * @param string  $catalogue  the catalogue to delete from.
    * @return boolean true if deleted, false otherwise. 
    */

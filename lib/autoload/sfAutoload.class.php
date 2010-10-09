@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAutoload.class.php 12676 2008-11-06 08:57:12Z fabien $
+ * @version    SVN: $Id: sfAutoload.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfAutoload
 {
@@ -122,7 +122,7 @@ class sfAutoload
   /**
    * Handles autoloading of classes that have been specified in autoload.yml.
    *
-   * @param  string  $class  A class name.
+   * @param string $class A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */
@@ -147,7 +147,7 @@ class sfAutoload
   /**
    * Tries to load a class that has been specified in autoload.yml.
    *
-   * @param  string  $class  A class name.
+   * @param string $class A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */

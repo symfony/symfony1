@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 15544 2009-02-16 21:46:00Z dwhittle $
+ * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 17519 2009-04-22 07:37:46Z dwhittle $
  */
 abstract class sfDatabaseSessionStorage extends sfSessionStorage
 {
@@ -199,5 +199,6 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    */
   public function shutdown()
   {
+    parent::shutdown();
   }
 }

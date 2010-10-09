@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebController.class.php 13026 2008-11-16 16:50:51Z fabien $
+ * @version    SVN: $Id: sfWebController.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfWebController extends sfController
 {
@@ -37,7 +37,7 @@ abstract class sfWebController extends sfController
     }
 
     // relative URL?
-    if (is_string($parameters) && '/' == $parameters[0])
+    if (is_string($parameters) && 0 === strpos($parameters, '/'))
     {
       return $parameters;
     }
@@ -167,10 +167,10 @@ abstract class sfWebController extends sfController
   /**
    * Redirects the request to another URL.
    *
-   * @param string $url         An existing URL
-   * @param int    $delay       A delay in seconds before redirecting. This is only needed on
-   *                            browsers that do not support HTTP headers
-   * @param int    $statusCode  The status code
+   * @param string $url        An existing URL
+   * @param int    $delay      A delay in seconds before redirecting. This is only needed on
+   *                           browsers that do not support HTTP headers
+   * @param int    $statusCode The status code
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {

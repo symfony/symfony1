@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfYamlInline.class.php');
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlParser.class.php 10832 2008-08-13 07:46:08Z fabien $
+ * @version    SVN: $Id: sfYamlParser.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfYamlParser
 {
@@ -31,7 +31,7 @@ class sfYamlParser
   /**
    * Constructor
    *
-   * @param integer The offset of YAML document (used for line numbers in error messages)
+   * @param integer $offset The offset of YAML document (used for line numbers in error messages)
    */
   public function __construct($offset = 0)
   {
@@ -41,7 +41,7 @@ class sfYamlParser
   /**
    * Parses a YAML string to a PHP value.
    *
-   * @param  string A YAML string
+   * @param  string $value A YAML string
    *
    * @return mixed  A PHP value
    */
@@ -326,7 +326,7 @@ class sfYamlParser
   /**
    * Parses a YAML value.
    *
-   * @param  string A YAML value
+   * @param  string $value A YAML value
    *
    * @return mixed  A PHP value
    */
@@ -365,9 +365,9 @@ class sfYamlParser
   /**
    * Parses a folded scalar.
    *
-   * @param  string  The separator that was used to begin this folded scalar (| or >)
-   * @param  string  The indicator that was used to begin this folded scalar (+ or -)
-   * @param  integer The indentation that was used to begin this folded scalar
+   * @param  string  $separator   The separator that was used to begin this folded scalar (| or >)
+   * @param  string  $indicator   The indicator that was used to begin this folded scalar (+ or -)
+   * @param  integer $indentation The indentation that was used to begin this folded scalar
    *
    * @return string  The text value
    */
@@ -512,7 +512,7 @@ class sfYamlParser
   /**
    * Cleanups a YAML string to be parsed.
    *
-   * @param  string The input YAML string
+   * @param  string $value The input YAML string
    *
    * @return string A cleaned up YAML string
    */

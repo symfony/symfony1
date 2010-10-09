@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 15121 2009-01-30 21:58:33Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 17296 2009-04-14 15:27:30Z fabien $
  */
 class sfWebDebugPanelPropel extends sfWebDebugPanel
 {
@@ -104,6 +104,7 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
     {
       if (count($bindings[$i]))
       {
+        $bindings[$i] = array_reverse($bindings[$i]);
         foreach ($bindings[$i] as $search => $replace)
         {
           $logs[$i] = str_replace($search, $replace, $logs[$i]);

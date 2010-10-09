@@ -87,12 +87,23 @@ class BaseUserForm extends BaseFormDoctrine
       $con = $this->getConnection();
     }
 
-    $this->object->unlink('Groups', array());
-
+    $existing = $this->object->Groups->getPrimaryKeys();
     $values = $this->getValue('groups_list');
-    if (is_array($values))
+    if (!is_array($values))
     {
-      $this->object->link('Groups', $values);
+      $values = array();
+    }
+
+    $unlink = array_diff($existing, $values);
+    if (count($unlink))
+    {
+      $this->object->unlink('Groups', array_values($unlink));
+    }
+
+    $link = array_diff($values, $existing);
+    if (count($link))
+    {
+      $this->object->link('Groups', array_values($link));
     }
   }
 
@@ -114,12 +125,23 @@ class BaseUserForm extends BaseFormDoctrine
       $con = $this->getConnection();
     }
 
-    $this->object->unlink('Permissions', array());
-
+    $existing = $this->object->Permissions->getPrimaryKeys();
     $values = $this->getValue('permissions_list');
-    if (is_array($values))
+    if (!is_array($values))
     {
-      $this->object->link('Permissions', $values);
+      $values = array();
+    }
+
+    $unlink = array_diff($existing, $values);
+    if (count($unlink))
+    {
+      $this->object->unlink('Permissions', array_values($unlink));
+    }
+
+    $link = array_diff($values, $existing);
+    if (count($link))
+    {
+      $this->object->link('Permissions', array_values($link));
     }
   }
 

@@ -6,7 +6,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 15484 2009-02-13 13:13:51Z fabien $
+ * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
 {
@@ -14,7 +14,7 @@ class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
   {
     $this->setWidgets(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
-      '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
+      '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($tables['middleTable']->getClassname()).'_list')) ?> => new sfWidgetFormPropelChoiceMany(array('model' => '<?php echo $tables['relatedTable']->getClassname() ?>')),
@@ -23,7 +23,7 @@ class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
 
     $this->setValidators(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
-      '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>),
+      '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($this->underscore($tables['middleTable']->getClassname()).'_list')) ?> => new sfValidatorPropelChoiceMany(array('model' => '<?php echo $tables['relatedTable']->getClassname() ?>', 'required' => false)),
@@ -35,11 +35,11 @@ class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
 <?php if (count($uniqueColumns) > 1): ?>
       new sfValidatorAnd(array(
 <?php foreach ($uniqueColumns as $uniqueColumn): ?>
-        new sfValidatorPropelUnique(array('model' => '<?php echo $this->table->getClassname() ?>', 'column' => array('<?php echo strtolower(implode("', '", $uniqueColumn)) ?>'))),
+        new sfValidatorPropelUnique(array('model' => '<?php echo $this->table->getClassname() ?>', 'column' => array('<?php echo implode("', '", $uniqueColumn) ?>'))),
 <?php endforeach; ?>
       ))
 <?php else: ?>
-      new sfValidatorPropelUnique(array('model' => '<?php echo $this->table->getClassname() ?>', 'column' => array('<?php echo strtolower(implode("', '", $uniqueColumns[0])) ?>')))
+      new sfValidatorPropelUnique(array('model' => '<?php echo $this->table->getClassname() ?>', 'column' => array('<?php echo implode("', '", $uniqueColumns[0]) ?>')))
 <?php endif; ?>
     );
 
@@ -117,7 +117,7 @@ class Base<?php echo $this->table->getClassname() ?>Form extends BaseFormPropel
     }
 
     $c = new Criteria();
-    $c->add(<?php echo constant($tables['middleTable']->getClassname().'::PEER') ?>::<?php echo strtoupper($tables['column']->getColumnName()) ?>, $this->object->getPrimaryKey());
+    $c->add(<?php echo constant($tables['middleTable']->getClassname().'::PEER') ?>::<?php echo strtoupper($tables['column']->getName()) ?>, $this->object->getPrimaryKey());
     <?php echo constant($tables['middleTable']->getClassname().'::PEER') ?>::doDelete($c, $con);
 
     $values = $this->getValue('<?php echo $this->underscore($tables['middleTable']->getClassname()) ?>_list');

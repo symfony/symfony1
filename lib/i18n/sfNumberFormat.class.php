@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 11958 2008-10-05 16:51:39Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -241,7 +241,7 @@ class sfNumberFormat
   /**
    * Formats the decimal places.
    *
-   * @param string $decimal the decimal number in string form.
+   * @param string $string the decimal number in string form.
    * @return string formatted decimal places.
    */
   protected function formatDecimal($string)

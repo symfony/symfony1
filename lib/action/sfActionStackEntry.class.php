@@ -16,7 +16,7 @@
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfActionStackEntry.class.php 9044 2008-05-19 06:18:41Z Carl.Vondrick $
+ * @version    SVN: $Id: sfActionStackEntry.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfActionStackEntry
 {
@@ -29,9 +29,9 @@ class sfActionStackEntry
   /**
    * Class constructor.
    *
-   * @param string   $moduleName      A module name
-   * @param string   $actionName      An action name
-   * @param sfAction $actionInstance  An sfAction implementation instance
+   * @param string   $moduleName     A module name
+   * @param string   $actionName     An action name
+   * @param sfAction $actionInstance An sfAction implementation instance
    */
   public function __construct($moduleName, $actionName, $actionInstance)
   {

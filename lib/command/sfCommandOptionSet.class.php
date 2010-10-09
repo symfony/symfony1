@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandOptionSet.class.php 9076 2008-05-19 23:19:44Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCommandOptionSet.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCommandOptionSet
 {
@@ -83,7 +83,7 @@ class sfCommandOptionSet
   /**
    * Returns an option by name.
    *
-   * @param  string $name The option name
+   * @param string $name The option name
    *
    * @return sfCommandOption A sfCommandOption object
    */
@@ -100,7 +100,7 @@ class sfCommandOptionSet
   /**
    * Returns true if an option object exists by name.
    *
-   * @param  string  $name  The option name
+   * @param string $name The option name
    *
    * @return Boolean true if the option object exists, false otherwise
    */
@@ -122,7 +122,7 @@ class sfCommandOptionSet
   /**
    * Returns true if an option object exists by shortcut.
    *
-   * @param  string  $name  The option shortcut
+   * @param string $name The option shortcut
    *
    * @return Boolean true if the option object exists, false otherwise
    */
@@ -160,7 +160,7 @@ class sfCommandOptionSet
   /**
    * Returns the option name given a shortcut.
    *
-   * @param  string $shortcut The shortcut
+   * @param string $shortcut The shortcut
    *
    * @return string The option name
    */

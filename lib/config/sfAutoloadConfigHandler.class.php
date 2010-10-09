@@ -15,7 +15,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 13547 2008-11-30 14:05:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfAutoloadConfigHandler.class.php 17047 2009-04-06 14:43:02Z fabien $
  */
 class sfAutoloadConfigHandler extends sfYamlConfigHandler
 {
@@ -133,7 +133,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       if ($prefix)
       {
         // FIXME: does not work for plugins installed with a symlink
-        preg_match('~^'.str_replace('\*', '(.+?)', preg_quote(str_replace('/', DIRECTORY_SEPARATOR, $path), '~')).'~', $file, $match);
+        preg_match('~^'.str_replace('\*', '(.+?)', preg_quote(str_replace('/', DIRECTORY_SEPARATOR, $path), '~')).'~', str_replace('/', DIRECTORY_SEPARATOR, $file), $match);
         if (isset($match[$prefix]))
         {
           $localPrefix = $match[$prefix].'/';

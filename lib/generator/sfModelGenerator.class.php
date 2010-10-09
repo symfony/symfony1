@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 15622 2009-02-19 10:27:58Z fabien $
+ * @version    SVN: $Id: sfModelGenerator.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -181,9 +181,9 @@ abstract class sfModelGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string  $column     The column name
-   * @param boolean $developed  true if you want developped method names, false otherwise
-   * @param string  $prefix     The prefix value
+   * @param string  $column    The column name
+   * @param boolean $developed true if you want developped method names, false otherwise
+   * @param string  $prefix    The prefix value
    *
    * @return string PHP code
    */
@@ -194,9 +194,9 @@ abstract class sfModelGenerator extends sfGenerator
   /**
    * Returns HTML code for an action link.
    *
-   * @param string  $actionName   The action name
-   * @param array   $params       The parameters
-   * @param boolean $pk_link      Whether to add a primary key link or not
+   * @param string  $actionName The action name
+   * @param array   $params     The parameters
+   * @param boolean $pk_link    Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -206,14 +206,14 @@ abstract class sfModelGenerator extends sfGenerator
 
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
-    return '[?php echo link_to(__(\''.$params['label'].'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$this->asPhp($params['params']).', \''.$this->getI18nCatalogue().'\') ?]';
+    return '[?php echo link_to(__(\''.$params['label'].'\', array(), \''.$this->getI18nCatalogue().'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$this->asPhp($params['params']).') ?]';
   }
 
   /**
    * Wraps content with a credential condition.
    *
-   * @param string  $content  The content
-   * @param array   $params   The parameters
+   * @param string $content The content
+   * @param array  $params  The parameters
    *
    * @return string HTML code
    */

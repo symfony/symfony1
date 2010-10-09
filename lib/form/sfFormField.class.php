@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormField.class.php 15807 2009-02-26 10:45:51Z fabien $
+ * @version    SVN: $Id: sfFormField.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFormField
 {
@@ -31,11 +31,11 @@ class sfFormField
   /**
    * Constructor.
    *
-   * @param sfWidgetForm     $widget    A sfWidget instance
-   * @param sfFormField      $parent    The sfFormField parent instance (null for the root widget)
-   * @param string           $name      The field name
-   * @param string           $value     The field value
-   * @param sfValidatorError $error     A sfValidatorError instance
+   * @param sfWidgetForm     $widget A sfWidget instance
+   * @param sfFormField      $parent The sfFormField parent instance (null for the root widget)
+   * @param string           $name   The field name
+   * @param string           $value  The field value
+   * @param sfValidatorError $error  A sfValidatorError instance
    */
   public function __construct(sfWidgetForm $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
@@ -108,7 +108,7 @@ class sfFormField
   /**
    * Renders the form field.
    *
-   * @param  array  $attributes   An array of HTML attributes
+   * @param array $attributes An array of HTML attributes
    *
    * @return string The rendered widget
    */
@@ -124,9 +124,9 @@ class sfFormField
    * The formatted row contains the label, the field, the error and
    * the help message.
    *
-   * @param  array  $attributes   An array of HTML attributes to merge with the current attributes
-   * @param  string $label        The label name (not null to override the current value)
-   * @param  string $help         The help text (not null to override the current value)
+   * @param array  $attributes An array of HTML attributes to merge with the current attributes
+   * @param string $label      The label name (not null to override the current value)
+   * @param string $help       The help text (not null to override the current value)
    *
    * @return string The formatted row
    */
@@ -183,8 +183,8 @@ class sfFormField
   /**
    * Returns the label tag.
    *
-   * @param  string $label       The label name (not null to override the current value)
-   * @param  array  $attributes  Optional html attributes
+   * @param string $label      The label name (not null to override the current value)
+   * @param array  $attributes Optional html attributes
    *
    * @return string The label tag
    */

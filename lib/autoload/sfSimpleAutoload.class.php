@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSimpleAutoload.class.php 14689 2009-01-13 16:33:49Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfSimpleAutoload
 {
@@ -46,9 +46,9 @@ class sfSimpleAutoload
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @param  string $cacheFile  The file path to save the cache
+   * @param string $cacheFile The file path to save the cache
    *
-   * @return sfSimpleAutoload   A sfSimpleAutoload implementation instance.
+   * @return sfSimpleAutoload A sfSimpleAutoload implementation instance.
    */
   static public function getInstance($cacheFile = null)
   {
@@ -63,7 +63,7 @@ class sfSimpleAutoload
   /**
    * Register sfSimpleAutoload in spl autoloader.
    *
-   * @return void
+   * @return void 
    */
   static public function register()
   {
@@ -100,7 +100,7 @@ class sfSimpleAutoload
   /**
    * Handles autoloading of classes.
    *
-   * @param  string  A class name.
+   * @param string $class A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */
@@ -160,7 +160,7 @@ class sfSimpleAutoload
    */
   public function reload()
   {
-    $this->classes = array();
+    $this->classes     = array();
     $this->cacheLoaded = false;
 
     foreach ($this->dirs as $dir)
@@ -173,7 +173,7 @@ class sfSimpleAutoload
       $this->addFile($file);
     }
 
-    $this->cacheLoaded = true;
+    $this->cacheLoaded  = true;
     $this->cacheChanged = true;
   }
 
@@ -188,14 +188,14 @@ class sfSimpleAutoload
   /**
    * Adds a directory to the autoloading system if not yet present and give it the highest possible precedence.
    *
-   * @param string The directory to look for classes
-   * @param string The extension to look for
+   * @param string $dir The directory to look for classes
+   * @param string $ext The extension to look for
    */
   public function addDirectory($dir, $ext = '.php')
   {
     $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
 
-    if($dirs = glob($dir))
+    if ($dirs = glob($dir))
     {
       foreach ($dirs as $dir)
       {
@@ -223,8 +223,8 @@ class sfSimpleAutoload
   /**
    * Adds files to the autoloading system.
    *
-   * @param array   An array of files
-   * @param Boolean Whether to register those files as single entities (used when reloading)
+   * @param array   $files    An array of files
+   * @param Boolean $register Whether to register those files as single entities (used when reloading)
    */
   public function addFiles(array $files, $register = true)
   {
@@ -237,8 +237,8 @@ class sfSimpleAutoload
   /**
    * Adds a file to the autoloading system.
    *
-   * @param string  A file path
-   * @param Boolean Whether to register those files as single entities (used when reloading)
+   * @param string  $file     A file path
+   * @param Boolean $register Whether to register those files as single entities (used when reloading)
    */
   public function addFile($file, $register = true)
   {

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 13324 2008-11-24 22:53:58Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 17068 2009-04-07 08:24:53Z fabien $
  */
 class sfWidgetFormSelectCheckbox extends sfWidgetForm
 {
@@ -76,7 +76,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
     }
 
     // with groups?
-    if (count($choices) && is_array(next($choices)))
+    if (count($choices) && is_array(current($choices)))
     {
       $parts = array();
       foreach ($choices as $key => $option)
@@ -134,7 +134,8 @@ class sfWidgetFormSelectCheckbox extends sfWidgetForm
     if ($this->getOption('choices') instanceof sfCallable)
     {
       $callable = $this->getOption('choices')->getCallable();
-      if (is_array($callable))
+      $class = __CLASS__;
+      if (is_array($callable) && $callable[0] instanceof $class)
       {
         $callable[0] = $this;
         $this->setOption('choices', new sfCallable($callable));

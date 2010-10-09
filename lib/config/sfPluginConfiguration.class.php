@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
- * @version    SVN: $Id: sfPluginConfiguration.class.php 13196 2008-11-20 18:23:18Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPluginConfiguration.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfPluginConfiguration
 {
@@ -27,9 +27,9 @@ abstract class sfPluginConfiguration
   /**
    * Constructor.
    * 
-   * @param sfProjectConfiguration  $configuration
-   * @param string                  $rootDir        The plugin root directory
-   * @param string                  $name           The plugin name
+   * @param sfProjectConfiguration $configuration The project configuration
+   * @param string                 $rootDir       The plugin root directory
+   * @param string                 $name          The plugin name
    */
   public function __construct(sfProjectConfiguration $configuration, $rootDir = null, $name = null)
   {
@@ -133,9 +133,10 @@ abstract class sfPluginConfiguration
   /**
    * Filters sfAutoload configuration values.
    * 
-   * @param   array $config
+   * @param sfEvent $event  
+   * @param array   $config 
    * 
-   * @return  array
+   * @return array
    */
   public function filterAutoloadConfig(sfEvent $event, array $config)
   {

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMemcacheCache.class.php 9802 2008-06-23 15:16:57Z fabien $
+ * @version    SVN: $Id: sfMemcacheCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfMemcacheCache extends sfCache
 {
@@ -207,9 +207,9 @@ class sfMemcacheCache extends sfCache
   /**
    * Gets metadata about a key in the cache.
    *
-   * @param  string $key A cache key
+   * @param string $key A cache key
    *
-   * @return array  An array of metadata information
+   * @return array An array of metadata information
    */
   protected function getMetadata($key)
   {
@@ -219,8 +219,8 @@ class sfMemcacheCache extends sfCache
   /**
    * Stores metadata about a key in the cache.
    *
-   * @param  string $key A cache key
-   * @param  string $key The lifetime
+   * @param string $key      A cache key
+   * @param string $lifetime The lifetime
    */
   protected function setMetadata($key, $lifetime)
   {

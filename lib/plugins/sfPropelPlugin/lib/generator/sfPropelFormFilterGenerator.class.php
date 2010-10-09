@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormFilterGenerator.class.php 15134 2009-01-31 19:30:35Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelFormFilterGenerator.class.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class sfPropelFormFilterGenerator extends sfPropelFormGenerator
 {
@@ -229,11 +229,11 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
 
     if ($column->isForeignKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), strtolower($column->getRelatedColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $this->getForeignTable($column)->getClassname(), $this->translateColumnName($column, true));
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), strtolower($column->getColumnName()));
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getClassname(), $this->translateColumnName($column));
     }
     else
     {

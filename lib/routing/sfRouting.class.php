@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 15940 2009-03-02 23:54:06Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfRouting.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 abstract class sfRouting
 {
@@ -230,7 +230,7 @@ abstract class sfRouting
   /**
    * Listens to the user.change_culture event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    *
    */
   public function listenToChangeCultureEvent(sfEvent $event)

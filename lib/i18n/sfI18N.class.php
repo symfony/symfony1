@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 13482 2008-11-29 14:35:54Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfI18N
 {
@@ -323,7 +323,7 @@ class sfI18N
   /**
    * Returns the hour, minute from a date formatted with a given culture.
    *
-   * @param  string  $date    The formatted date as string
+   * @param  string  $time    The formatted date as string
    * @param  string  $culture The culture
    *
    * @return array   An array with the hour and minute

@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 13412 2008-11-27 12:27:01Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 17477 2009-04-21 08:30:59Z fabien $
  */
 class sfViewCacheManager
 {
@@ -185,9 +185,9 @@ class sfViewCacheManager
     {
       $request = $this->context->getRequest();
       $hostName = $request->getHost();
-      $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
-      $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
     }
+    $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
+    $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
 
     $cacheKey = sprintf('/%s/%s/%s', $hostName, $vary, $cacheKey);
 
@@ -343,6 +343,8 @@ class sfViewCacheManager
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
+    $this->registerConfiguration($params['module']);
+
     $value = $defaultValue;
     if (isset($this->cacheConfig[$params['module']][$params['action']][$key]))
     {
@@ -359,6 +361,12 @@ class sfViewCacheManager
   /**
    * Returns true if the current content is cacheable.
    *
+   * Possible break in backward compatibility: If the sf_lazy_cache_key
+   * setting is turned on in settings.yml, this method is not used when
+   * initially checking a partial's cacheability.
+   *
+   * @see sfPartialView, isActionCacheable()
+   *
    * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return bool true, if the content is cacheable otherwise false
@@ -372,6 +380,8 @@ class sfViewCacheManager
 
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
+    $this->registerConfiguration($params['module']);
+
     if (isset($this->cacheConfig[$params['module']][$params['action']]))
     {
       return ($this->cacheConfig[$params['module']][$params['action']]['lifeTime'] > 0);
@@ -379,6 +389,37 @@ class sfViewCacheManager
     else if (isset($this->cacheConfig[$params['module']]['DEFAULT']))
     {
       return ($this->cacheConfig[$params['module']]['DEFAULT']['lifeTime'] > 0);
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns true if the action is cacheable.
+   * 
+   * @param  string $moduleName A module name
+   * @param  string $actionName An action or partial template name
+   * 
+   * @return boolean True if the action is cacheable
+   * 
+   * @see isCacheable()
+   */
+  public function isActionCacheable($moduleName, $actionName)
+  {
+    if (count($_GET) || count($_POST))
+    {
+      return false;
+    }
+
+    $this->registerConfiguration($moduleName);
+
+    if (isset($this->cacheConfig[$moduleName][$actionName]))
+    {
+      return $this->cacheConfig[$moduleName][$actionName]['lifeTime'] > 0;
+    }
+    else if (isset($this->cacheConfig[$moduleName]['DEFAULT']))
+    {
+      return $this->cacheConfig[$moduleName]['DEFAULT']['lifeTime'] > 0;
     }
 
     return false;
@@ -611,7 +652,34 @@ class sfViewCacheManager
    */
   public function computeCacheKey(array $parameters)
   {
-    return isset($parameters['sf_cache_key']) ? $parameters['sf_cache_key'] : md5(serialize($parameters));
+    if (isset($parameters['sf_cache_key']))
+    {
+      return $parameters['sf_cache_key'];
+    }
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Generate cache key')));
+    }
+
+    return md5(serialize($parameters));
+  }
+
+  /**
+   * Checks that the supplied parameters include a cache key.
+   * 
+   * If no 'sf_cache_key' parameter is present one is added to the array as
+   * it is passed by reference.
+   * 
+   * @param  array  $parameters An array of parameters
+   * 
+   * @return string The cache key
+   */
+  public function checkCacheKey(array & $parameters)
+  {
+    $parameters['sf_cache_key'] = $this->computeCacheKey($parameters);
+
+    return $parameters['sf_cache_key'];
   }
 
   /**

@@ -98,12 +98,23 @@ class Base<?php echo $this->modelName ?>Form extends BaseFormDoctrine
       $con = $this->getConnection();
     }
 
-    $this->object->unlink('<?php echo $relation['alias'] ?>', array());
-
+    $existing = $this->object-><?php echo $relation['alias']; ?>->getPrimaryKeys();
     $values = $this->getValue('<?php echo $this->underscore($relation['alias']) ?>_list');
-    if (is_array($values))
+    if (!is_array($values))
     {
-      $this->object->link('<?php echo $relation['alias'] ?>', $values);
+      $values = array();
+    }
+
+    $unlink = array_diff($existing, $values);
+    if (count($unlink))
+    {
+      $this->object->unlink('<?php echo $relation['alias'] ?>', array_values($unlink));
+    }
+
+    $link = array_diff($values, $existing);
+    if (count($link))
+    {
+      $this->object->link('<?php echo $relation['alias'] ?>', array_values($link));
     }
   }
 

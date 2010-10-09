@@ -14,14 +14,14 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlInline.class.php 16177 2009-03-11 08:32:48Z fabien $
+ * @version    SVN: $Id: sfYamlInline.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfYamlInline
 {
   /**
    * Load YAML into a PHP array.
    *
-   * @param string YAML
+   * @param string $value YAML
    *
    * @return array PHP array
    */
@@ -48,7 +48,7 @@ class sfYamlInline
   /**
    * Dumps PHP array to YAML.
    *
-   * @param mixed   PHP
+   * @param mixed $value PHP
    *
    * @return string YAML
    */
@@ -92,7 +92,7 @@ class sfYamlInline
   /**
    * Dumps PHP array to YAML
    *
-   * @param array   The array to dump
+   * @param array $value The array to dump
    *
    * @return string YAML
    */
@@ -129,7 +129,7 @@ class sfYamlInline
    *
    * @param scalar $scalar
    * @param string $delimiters
-   * @param array  String delimiter
+   * @param array  $stringDelimiter
    * @param integer $i
    * @param boolean $evaluate
    *

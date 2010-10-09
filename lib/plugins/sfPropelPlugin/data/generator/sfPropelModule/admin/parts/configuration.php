@@ -6,7 +6,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: configuration.php 17680 2009-04-27 15:19:58Z fabien $
+ * @version    SVN: $Id: configuration.php 17586 2009-04-24 18:25:44Z Kris.Wallsmith $
  */
 class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorConfiguration extends sfModelGeneratorConfiguration
 {

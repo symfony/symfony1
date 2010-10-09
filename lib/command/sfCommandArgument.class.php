@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandArgument.class.php 9076 2008-05-19 23:19:44Z Carl.Vondrick $
+ * @version    SVN: $Id: sfCommandArgument.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfCommandArgument
 {
@@ -32,10 +32,10 @@ class sfCommandArgument
   /**
    * Constructor.
    *
-   * @param string  $name     The argument name
-   * @param integer $mode     The argument mode: self::REQUIRED or self::OPTIONAL
-   * @param string  $help     A help text
-   * @param mixed   $default  The default value (for self::OPTIONAL mode only)
+   * @param string  $name    The argument name
+   * @param integer $mode    The argument mode: self::REQUIRED or self::OPTIONAL
+   * @param string  $help    A help text
+   * @param mixed   $default The default value (for self::OPTIONAL mode only)
    */
   public function __construct($name, $mode = null, $help = '', $default = null)
   {

@@ -28,6 +28,9 @@ all:
     escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: on, off.
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
+    # Cache settings
+    lazy_cache_key:         on        # Delays creation of a cache key until after checking whether an action or partial is cacheable
+
 #all:
 #  .actions:
 #    error_404_module:       default   # To be called when a 404 error is raised
@@ -62,6 +65,7 @@ all:
 #    # Cache settings
 #    cache:                  off       # Enable the template cache
 #    etag:                   on        # Enable etag handling
+#    lazy_cache_key:         off       # Delays creation of a cache key until after checking whether an action or partial is cacheable (defaults to false for backward compatibility)
 #
 #    # Logging and debugging settings
 #    web_debug:              off       # Enable the web debug toolbar

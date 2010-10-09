@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 13947 2008-12-11 14:15:32Z fabien $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -32,10 +32,10 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Constructor.
    *
-   * @param string            $environment    The environment name
-   * @param Boolean           $debug          true to enable debug mode
-   * @param string            $rootDir        The project root directory
-   * @param sfEventDispatcher $dispatcher     An event dispatcher
+   * @param string            $environment The environment name
+   * @param Boolean           $debug       true to enable debug mode
+   * @param string            $rootDir     The project root directory
+   * @param sfEventDispatcher $dispatcher  An event dispatcher
    */
   public function __construct($environment, $debug, $rootDir = null, sfEventDispatcher $dispatcher = null)
   {
@@ -181,10 +181,10 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Adds enabled plugins to autoload config.
    * 
-   * @param   sfEvent $event
-   * @param   array   $config
+   * @param sfEvent $event
+   * @param array   $config
    * 
-   * @return  array
+   * @return array
    */
   public function filterAutoloadConfig(sfEvent $event, array $config)
   {
@@ -396,9 +396,9 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the helper directories for a given module name.
    *
-   * @param  string $moduleName The module name
+   * @param string $moduleName The module name
    *
-   * @return array  An array of directories
+   * @return array An array of directories
    */
   public function getHelperDirs($moduleName = '')
   {
@@ -425,8 +425,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the template directory to use for a given module and template file.
    *
-   * @param string $moduleName    The module name
-   * @param string $templateFile  The template file
+   * @param string $moduleName   The module name
+   * @param string $templateFile The template file
    *
    * @return string A template directory
    */
@@ -446,8 +446,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the template to use for a given module and template file.
    *
-   * @param string $moduleName    The module name
-   * @param string $templateFile  The template file
+   * @param string $moduleName   The module name
+   * @param string $templateFile The template file
    *
    * @return string A template path
    */
@@ -461,7 +461,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the decorator directories.
    *
-   * @return array  An array of the decorator directories
+   * @return array An array of the decorator directories
    */
   public function getDecoratorDirs()
   {
@@ -471,7 +471,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the decorator directory for a given template.
    *
-   * @param  string $template The template file
+   * @param string $template The template file
    *
    * @return string A template directory
    */
@@ -590,8 +590,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Loads helpers.
    *
-   * @param array  $helpers     An array of helpers to load
-   * @param string $moduleName  A module name (optional)
+   * @param array  $helpers    An array of helpers to load
+   * @param string $moduleName A module name (optional)
    */
   public function loadHelpers($helpers, $moduleName = '')
   {

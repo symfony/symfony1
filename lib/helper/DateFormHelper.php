@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/FormHelper.php';
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateFormHelper.php 14264 2008-12-22 20:30:02Z FabianLange $
+ * @version    SVN: $Id: DateFormHelper.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 
 /**
@@ -37,10 +37,10 @@ require_once dirname(__FILE__).'/FormHelper.php';
  *  echo select_day_tag('day', 14);
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value (1 - 31)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value (1 - 31)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with all the days of the month (1 - 31).
  * @see    select_date_tag, select datetime_tag
@@ -91,10 +91,10 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
  *  echo select_month_tag('month', null, array('use_month_numbers' => true, 'include_blank' => true));
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value (1 - 12)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value (1 - 12)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with all the months of the year (1 - 12).
  * @see select_date_tag, select datetime_tag
@@ -171,10 +171,10 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
  *  echo select_year_tag('year', null, array('year_start' => $year_start, 'year_end' => $year_end));
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value within the range of years.
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value within the range of years.
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  * 
  * @return string <select> tag populated with a range of years.
  * @see select_date_tag, select datetime_tag
@@ -258,10 +258,10 @@ function select_year_tag($name, $value = null, $options = array(), $html_options
  *  echo select_date_tag('date', $date, array('year_start' => $date['year'] - 10, 'year_end' => $date['year'] + 10));
  * </code>
  *
- * @param  string $name          field name (automatically becomes an array of parts: name[year], name[month], year[day])
- * @param  mixed  $value         accepts a valid date string or properly formatted date array
- * @param  array  $options       special options for the select tags
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name (automatically becomes an array of parts: name[year], name[month], year[day])
+ * @param mixed  $value        accepts a valid date string or properly formatted date array
+ * @param array  $options      special options for the select tags
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string three <select> tags populated with a months, days and years
  * @see select datetime_tag, select_month_tag, select_date_tag, select_year_tag
@@ -374,10 +374,10 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
  *  echo select_second_tag('second', 15, array('second_step' => 15));
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value (0 - 59)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value (0 - 59)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with 60 seconds (0 - 59).
  * @see select_time_tag, select datetime_tag
@@ -427,10 +427,10 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
  *  echo select_minute_tag('minute', 15, array('minute_step' => 15));
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value (0 - 59)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value (0 - 59)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with 60 minutes (0 - 59).
  * @see select_time_tag, select datetime_tag
@@ -478,10 +478,10 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
  *  echo select_hour_tag('hour', 6, array('12hour_time' => true));
  * </code>
  *
- * @param  string $name          field name
- * @param  int    $value         selected value (0 - 23 or 1 - 12 if '12hour_time' = true)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param int    $value        selected value (0 - 23 or 1 - 12 if '12hour_time' = true)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with 24 hours (0 - 23), or optionally 12 hours (1 - 12).
  * @see select_time_tag, select datetime_tag
@@ -533,10 +533,10 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
  *  echo select_ampm_tag('ampm', 'PM', array('include_blank' => true));
  * </code>
  *
- * @param  string $name          field name
- * @param  string $value         selected value (AM or PM)
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters 
+ * @param string $name         field name
+ * @param string $value        selected value (AM or PM)
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters 
  * @return string <select> tag populated with AM and PM options for use with 12-Hour time.
  * @see select_time_tag, select datetime_tag
  */
@@ -596,10 +596,10 @@ function select_ampm_tag($name, $value = null, $options = array(), $html_options
  *  echo select_time_tag('time', $time, array('include_second' => true, '12hour_time' => true));
  * </code>
  *
- * @param  string $name          field name (automatically becomes an array of parts: name[hour], name[minute], year[second])
- * @param  mixed  $value         accepts a valid time string or properly formatted time array
- * @param  array  $options       special options for the select tag
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name (automatically becomes an array of parts: name[hour], name[minute], year[second])
+ * @param mixed  $value        accepts a valid time string or properly formatted time array
+ * @param array  $options      special options for the select tag
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  * @return string three <select> tags populated with a hours, minutes and optionally seconds.
  * @see select datetime_tag, select_hour_tag, select_minute_tag, select_second_tag
  */
@@ -717,10 +717,10 @@ function select_time_tag($name, $value = null, $options = array(), $html_options
  *  echo select_datetime_tag('time', $datetime, array('use_short_month' => true, '12hour_time' => true));
  * </code>
  *
- * @param  string $name          field name (automatically becomes an array of date and time parts)
- * @param  mixed  $value         accepts a valid time string or properly formatted time array
- * @param  array  $options       special options for the select tagss
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name (automatically becomes an array of date and time parts)
+ * @param mixed  $value        accepts a valid time string or properly formatted time array
+ * @param array  $options      special options for the select tagss
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string a variable number of <select> tags populated with date and time related select boxes
  * @see select date_tag, select_time_tag
@@ -767,10 +767,10 @@ function select_datetime_tag($name, $value = null, $options = array(), $html_opt
  *  echo select_number_tag('limit', 5, array('start' => 5, 'end' => 120, 'increment' => 15));
  * </code>
  *
- * @param  string $name          field name
- * @param  string $value         the selected option
- * @param  array  $options       special options for the select tagss
- * @param  array  $html_options  additional HTML compliant <select> tag parameters
+ * @param string $name         field name
+ * @param string $value        the selected option
+ * @param array  $options      special options for the select tagss
+ * @param array  $html_options additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with a range of numbers.
  * @see options_for_select, content_tag
@@ -821,9 +821,9 @@ function select_number_tag($name, $value, $options = array(), $html_options = ar
  *  echo select_timezone_tag('timezone', 'America/Denver');
  * </code>
  *
- * @param  string $name      field name 
- * @param  string $selected  selected field value (timezone identifier)
- * @param  array  $options   additional HTML compliant <select> tag parameters
+ * @param string $name     field name 
+ * @param string $selected selected field value (timezone identifier)
+ * @param array  $options  additional HTML compliant <select> tag parameters
  *
  * @return string <select> tag populated with all the timezones in the world.
  * @see select_tag, options_for_select, sfCultureInfo
@@ -876,9 +876,9 @@ function select_timezone_tag($name, $selected = null, $options = array())
  *
  * <b>Note:</b> If <i>$value</i> is empty, it will be populated with the current date and time.
  *
- * @param  string $value        date or date part
- * @param  string $key          custom key for array values
- * @param  string $format_char  date format
+ * @param string $value       date or date part
+ * @param string $key         custom key for array values
+ * @param string $format_char date format
  *
  * @return string properly formatted date part value.
  * @see select_date_tag, select_time_tag, select_datetime_tag
@@ -911,7 +911,7 @@ function _parse_value_for_date($value, $key, $format_char)
  *
  * <b>Note:</b> If no <i>$culture</i> is defined, the user's culture setting will be used in its place.
  *
- * @param  string $culture  two or three character culture setting variable
+ * @param string $culture two or three character culture setting variable
  *
  * @return string formatted date/time format based on the specified date/time setting
  * @see sfUser

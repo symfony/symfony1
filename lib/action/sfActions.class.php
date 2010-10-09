@@ -16,7 +16,7 @@
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfActions.class.php 9044 2008-05-19 06:18:41Z Carl.Vondrick $
+ * @version    SVN: $Id: sfActions.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfActions extends sfAction
 {
@@ -26,7 +26,7 @@ abstract class sfActions extends sfAction
    * This method try to execute the executeXXX() method of the current object where XXX is the
    * defined action name.
    *
-   * @param  sfRequest $request The current sfRequest object
+   * @param sfRequest $request The current sfRequest object
    *
    * @return string    A string containing the view name associated with this action
    *

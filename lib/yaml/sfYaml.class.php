@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 8988 2008-05-15 20:24:26Z fabien $
+ * @version    SVN: $Id: sfYaml.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfYaml
 {
@@ -96,7 +96,7 @@ class sfYaml
 /**
  * Wraps echo to automatically provide a newline.
  *
- * @param string The string to echo with new line
+ * @param string $string The string to echo with new line
  */
 function echoln($string)
 {

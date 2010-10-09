@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCrudGenerator.class.php 11471 2008-09-12 10:03:49Z fabien $
+ * @version    SVN: $Id: sfCrudGenerator.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfCrudGenerator extends sfGenerator
 {
@@ -313,8 +313,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns HTML code for a column in list mode.
    *
-   * @param string  $column   The column name
-   * @param array   $params   The parameters
+   * @param string $column The column name
+   * @param array  $params The parameters
    *
    * @return string HTML code
    */
@@ -341,8 +341,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns HTML code for a column in edit mode.
    *
-   * @param string  $column   The column name
-   * @param array   $params   The parameters
+   * @param string $column The column name
+   * @param array  $params The parameters
    *
    * @return string HTML code
    */
@@ -419,10 +419,10 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string $helperName    The helper name
-   * @param string $column        The column name
-   * @param array  $params        An array of parameters
-   * @param array  $localParams   An array of local parameters
+   * @param string $helperName  The helper name
+   * @param string $column      The column name
+   * @param array  $params      An array of parameters
+   * @param array  $localParams An array of local parameters
    *
    * @return string PHP code
    */
@@ -433,9 +433,9 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string  $column     The column name
-   * @param boolean $developed  true if you want developped method names, false otherwise
-   * @param string  $prefix     The prefix value
+   * @param string  $column    The column name
+   * @param boolean $developed true if you want developped method names, false otherwise
+   * @param string  $prefix    The prefix value
    *
    * @return string PHP code
    */

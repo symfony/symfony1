@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 14153 2008-12-17 22:40:08Z FabianLange $
+ * @version    SVN: $Id: FormHelper.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 
 /**
@@ -47,9 +47,9 @@
  *  echo select_tag('employee', options_for_select($optgroup_array, null, array('include_blank' => true)), array('class' => 'mystyle'));
  * </code>
  *
- * @param  array  $options       dataset to create <option> tags and <optgroup> tags from
- * @param  string $selected      selected option value
- * @param  array  $html_options  additional HTML compliant <option> tag parameters
+ * @param array  $options      dataset to create <option> tags and <optgroup> tags from
+ * @param string $selected     selected option value
+ * @param array  $html_options additional HTML compliant <option> tag parameters
  *
  * @return string populated with <option> tags derived from the <i>$options</i> array variable
  * @see select_tag
@@ -409,8 +409,8 @@ function input_hidden_tag($name, $value = null, $options = array())
  *  echo input_file_tag('filename', array('size' => 30));
  * </code>
  *
- * @param  string $name     field name 
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $name    field name 
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with type="file"
  * @see input_tag, form_tag
@@ -439,9 +439,9 @@ function input_file_tag($name, $options = array())
  *  echo input_password_tag('password_confirm');
  * </code>
  *
- * @param  string $name     field name
- * @param  string $value    populated field value
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $name    field name
+ * @param string $value   populated field value
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with type="password"
  * @see input_tag
@@ -678,9 +678,9 @@ function input_date_range_tag($name, $value, $options = array())
  *  echo input_date_tag('date', null, array('rich' => true));
  * </code>
  *
- * @param  string $name     field name 
- * @param  string $value    date
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $name    field name 
+ * @param string $value   date
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with optional JS calendar integration
  * @see input_date_range_tag
@@ -731,12 +731,12 @@ function input_date_tag($name, $value = null, $options = array())
 
   // register our javascripts and stylesheets
   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.$culture;
-  if((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
+  if ((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
      (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
      (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/symfony/web/'.$langFile.'.js')))
   {
    $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.substr($culture,0,2);
-   if((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
+   if ((!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')) &&
       (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
       (!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/symfony/web/'.$langFile.'.js')))
    {
@@ -854,8 +854,8 @@ function input_date_tag($name, $value = null, $options = array())
  *  echo submit_tag('Update Record');
  * </code>
  *
- * @param  string $name     field value (title of submit button)
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $name    field value (title of submit button)
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with type="submit"
  */
@@ -880,8 +880,8 @@ function submit_tag($value = 'Save changes', $options = array())
  *  echo reset_tag('Start Over');
  * </code>
  *
- * @param  string $name     field value (title of reset button)
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $name    field value (title of reset button)
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with type="reset"
  */
@@ -909,8 +909,8 @@ function reset_tag($value = 'Reset', $options = array())
  *  echo submit_image_tag('http://mydomain.com/my_submit_button.gif');
  * </code>
  *
- * @param  string $source   path to image file
- * @param  array  $options  additional HTML compliant <input> tag parameters
+ * @param string $source  path to image file
+ * @param array  $options additional HTML compliant <input> tag parameters
  *
  * @return string XHTML compliant <input> tag with type="image"
  */
@@ -931,9 +931,9 @@ function submit_image_tag($source, $options = array())
 /**
  * Returns a <label> tag with <i>$label</i> for the specified <i>$id</i> parameter.
  *
- * @param  string $id       id
- * @param  string $label    label or title
- * @param  array  $options  additional HTML compliant <label> tag parameters
+ * @param string $id      id
+ * @param string $label   label or title
+ * @param array  $options additional HTML compliant <label> tag parameters
  *
  * @return string <label> tag with <i>$label</i> for the specified <i>$id</i> parameter.
  */

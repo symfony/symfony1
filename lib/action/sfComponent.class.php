@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfComponent.class.php 11599 2008-09-16 15:49:15Z fabien $
+ * @version    SVN: $Id: sfComponent.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfComponent
 {
@@ -70,7 +70,7 @@ abstract class sfComponent
    * user account, a shopping cart, or even a something as simple as a
    * single product.
    *
-   * @param  sfRequest $request The current sfRequest object
+   * @param sfRequest $request The current sfRequest object
    *
    * @return mixed     A string containing the view name associated with this action
    */
@@ -156,8 +156,8 @@ abstract class sfComponent
    *
    * <code>$this->getRequest()->getParameterHolder()->get($name)</code>
    *
-   * @param  string $name     The parameter name
-   * @param  mixed  $default  The default value if parameter does not exist
+   * @param string $name    The parameter name
+   * @param mixed  $default The default value if parameter does not exist
    *
    * @return string The request parameter value
    */
@@ -173,7 +173,7 @@ abstract class sfComponent
    *
    * <code>$this->getRequest()->getParameterHolder()->has($name)</code>
    *
-   * @param  string  $name  The parameter name
+   * @param string $name The parameter name
    * @return boolean true if the request parameter exists, false otherwise
    */
   public function hasRequestParameter($name)
@@ -230,9 +230,9 @@ abstract class sfComponent
    *
    * <code>$this->getContext()->getRouting()->generate(...)</code>
    *
-   * @param  string  The route name
-   * @param  array   An array of parameters for the route
-   * @param  Boolean Whether to generate an absolute URL or not
+   * @param string  The route name
+   * @param array   An array of parameters for the route
+   * @param Boolean Whether to generate an absolute URL or not
    *
    * @return string  The URL
    */
@@ -262,9 +262,9 @@ abstract class sfComponent
    * by symfony, so this is your responsability to ensure that the
    * value is escaped properly.
    *
-   * @param string  $name   The variable name
-   * @param mixed   $value  The variable value
-   * @param Boolean $safe   true if the value is safe for output (false by default)
+   * @param string  $name  The variable name
+   * @param mixed   $value The variable value
+   * @param Boolean $safe  true if the value is safe for output (false by default)
    */
   public function setVar($name, $value, $safe = false)
   {
@@ -274,7 +274,8 @@ abstract class sfComponent
   /**
    * Gets a variable set for the template.
    *
-   * @param  string $name  The variable name
+   * @param string $name The variable name
+   *
    * @return mixed  The variable value
    */
   public function getVar($name)
@@ -299,8 +300,8 @@ abstract class sfComponent
    *
    * <code>$this->setVar('name', 'value')</code>
    *
-   * @param  string  $key   The variable name
-   * @param  string  $value The variable value
+   * @param string $key   The variable name
+   * @param string $value The variable value
    *
    * @return boolean always true
    *
@@ -318,7 +319,7 @@ abstract class sfComponent
    *
    * <code>$this->getVar('name')</code>
    *
-   * @param  string $key The variable name
+   * @param string $key The variable name
    *
    * @return mixed The variable value
    *
@@ -336,7 +337,7 @@ abstract class sfComponent
    *
    * <code>$this->getVarHolder()->has('name')</code>
    *
-   * @param  string $name The variable name
+   * @param string $name The variable name
    *
    * @return boolean true if the variable is set
    */
@@ -352,7 +353,7 @@ abstract class sfComponent
    *
    * <code>$this->getVarHolder()->remove('name')</code>
    *
-   * @param  string $name The variable Name
+   * @param string $name The variable Name
    */
   public function __unset($name)
   {

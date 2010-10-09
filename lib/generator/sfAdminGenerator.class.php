@@ -21,7 +21,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAdminGenerator.class.php 13060 2008-11-17 11:52:11Z fabien $
+ * @version    SVN: $Id: sfAdminGenerator.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 abstract class sfAdminGenerator extends sfCrudGenerator
 {
@@ -32,8 +32,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a help icon.
    *
-   * @param string $column  The column name
-   * @param string $type    The field type (list, edit)
+   * @param string $column The column name
+   * @param string $type   The field type (list, edit)
    *
    * @return string HTML code
    */
@@ -51,8 +51,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a help text.
    *
-   * @param string $column  The column name
-   * @param string $type    The field type (list, edit)
+   * @param string $column The column name
+   * @param string $type   The field type (list, edit)
    *
    * @return string HTML code
    */
@@ -70,9 +70,9 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action button.
    *
-   * @param string  $actionName   The action name
-   * @param array   $params       The parameters
-   * @param boolean $pk_link      Whether to add a primary key link or not
+   * @param string  $actionName The action name
+   * @param array   $params     The parameters
+   * @param boolean $pk_link    Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -181,9 +181,9 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action link.
    *
-   * @param string  $actionName   The action name
-   * @param array   $params       The parameters
-   * @param boolean $pk_link      Whether to add a primary key link or not
+   * @param string  $actionName The action name
+   * @param array   $params     The parameters
+   * @param boolean $pk_link    Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -228,8 +228,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action option in a select tag.
    *
-   * @param string  $actionName The action name
-   * @param array   $params     The parameters
+   * @param string $actionName The action name
+   * @param array  $params     The parameters
    *
    * @return string HTML code
    */
@@ -258,8 +258,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a column in edit mode.
    *
-   * @param string  $column   The column name
-   * @param array   $params   The parameters
+   * @param string $column The column name
+   * @param array  $params The parameters
    *
    * @return string HTML code
    */
@@ -337,8 +337,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Wraps content with a credential condition.
    *
-   * @param string  $content  The content
-   * @param array   $params   The parameters
+   * @param string $content The content
+   * @param array  $params  The parameters
    *
    * @return string HTML code
    */
@@ -514,9 +514,9 @@ EOF;
   /**
    * Wraps a content for I18N.
    *
-   * @param string $key       The key name
-   * @param string $default   The defaul value
-   * @param bool   $withEcho  If true, string is wrapped in php echo
+   * @param string $key      The key name
+   * @param string $default  The defaul value
+   * @param bool   $withEcho If true, string is wrapped in php echo
    *
    * @return string HTML code
    */
@@ -589,8 +589,8 @@ EOF;
   /**
    * Returns HTML code for a column in list mode.
    *
-   * @param string  $column The column name
-   * @param array   $params The parameters
+   * @param string $column The column name
+   * @param array  $params The parameters
    *
    * @return string HTML code
    */
@@ -630,8 +630,8 @@ EOF;
   /**
    * Returns HTML code for a column in filter mode.
    *
-   * @param string  $column The column name
-   * @param array   $params The parameters
+   * @param string $column The column name
+   * @param array  $params The parameters
    *
    * @return string HTML code
    */
@@ -828,7 +828,7 @@ EOF;
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAdminGenerator.class.php 13060 2008-11-17 11:52:11Z fabien $
+ * @version    SVN: $Id: sfAdminGenerator.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfAdminColumn
 {

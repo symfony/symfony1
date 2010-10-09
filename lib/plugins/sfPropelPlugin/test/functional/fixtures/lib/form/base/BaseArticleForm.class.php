@@ -6,7 +6,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     Your name here
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 15484 2009-02-13 13:13:51Z fabien $
+ * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class BaseArticleForm extends BaseFormPropel
 {
@@ -16,7 +16,7 @@ class BaseArticleForm extends BaseFormPropel
       'id'                  => new sfWidgetFormInputHidden(),
       'title'               => new sfWidgetFormInput(),
       'body'                => new sfWidgetFormTextarea(),
-      'online'              => new sfWidgetFormInputCheckbox(),
+      'Online'              => new sfWidgetFormInputCheckbox(),
       'excerpt'             => new sfWidgetFormInput(),
       'category_id'         => new sfWidgetFormPropelChoice(array('model' => 'Category', 'add_empty' => false)),
       'created_at'          => new sfWidgetFormDateTime(),
@@ -29,7 +29,7 @@ class BaseArticleForm extends BaseFormPropel
       'id'                  => new sfValidatorPropelChoice(array('model' => 'Article', 'column' => 'id', 'required' => false)),
       'title'               => new sfValidatorString(array('max_length' => 255)),
       'body'                => new sfValidatorString(array('required' => false)),
-      'online'              => new sfValidatorBoolean(array('required' => false)),
+      'Online'              => new sfValidatorBoolean(array('required' => false)),
       'excerpt'             => new sfValidatorString(array('required' => false)),
       'category_id'         => new sfValidatorPropelChoice(array('model' => 'Category', 'column' => 'id')),
       'created_at'          => new sfValidatorDateTime(array('required' => false)),

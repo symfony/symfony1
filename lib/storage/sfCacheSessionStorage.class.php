@@ -23,13 +23,13 @@ class sfCacheSessionStorage extends sfStorage
   /**
    * Initialize this Storage.
    *
-   * @param array   An associative array of initialization parameters.
-   *                session_name [required] name of session to use
-   *                session_cookie_path [required] cookie path
-   *                session_cookie_domain [required] cookie domain
-   *                session_cookie_lifetime [required] liftime of cookie
-   *                session_cookie_secure [required] send only if secure connection
-   *                session_cookie_http_only [required] accessible only via http protocol
+   * @param array $options  An associative array of initialization parameters.
+   *                        session_name [required] name of session to use
+   *                        session_cookie_path [required] cookie path
+   *                        session_cookie_domain [required] cookie domain
+   *                        session_cookie_lifetime [required] liftime of cookie
+   *                        session_cookie_secure [required] send only if secure connection
+   *                        session_cookie_http_only [required] accessible only via http protocol
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    *
@@ -129,8 +129,8 @@ class sfCacheSessionStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
-   * @param mixed  Data associated with your key.
+   * @param string $key  A unique key identifying your data.
+   * @param mixed  $data Data associated with your key.
    *
    * @return void
    */
@@ -146,7 +146,7 @@ class sfCacheSessionStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string $key A unique key identifying your data.
    *
    * @return mixed Data associated with the key.
    */
@@ -167,7 +167,7 @@ class sfCacheSessionStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string $key A unique key identifying your data.
    *
    * @return mixed Data associated with the key.
    */
@@ -189,7 +189,7 @@ class sfCacheSessionStorage extends sfStorage
   /**
    * Regenerates id that represents this storage.
    *
-   * @param boolean Destroy session when regenerating?
+   * @param boolean $destroy Destroy session when regenerating?
    *
    * @return boolean True if session regenerated, false if error
    *

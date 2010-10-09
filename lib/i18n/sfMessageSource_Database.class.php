@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_Database.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfMessageSource_Database.class.php 17749 2009-04-29 11:54:22Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -35,7 +35,7 @@ abstract class sfMessageSource_Database extends sfMessageSource
    *
    * This function comes from PEAR's DB package.
    *
-   * @param string $dns DSN format, similar to PEAR's DB
+   * @param string $dsn DSN format, similar to PEAR's DB
    * @return array DSN information. 
    */
   protected function parseDSN($dsn)

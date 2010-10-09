@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileCache.class.php 15511 2009-02-16 08:31:53Z fabien $
+ * @version    SVN: $Id: sfFileCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
  */
 class sfFileCache extends sfCache
 {
@@ -60,7 +60,8 @@ class sfFileCache extends sfCache
 
     $data = $this->read($file_path, self::READ_DATA);
 
-    if ($data[self::READ_DATA] === null) {
+    if ($data[self::READ_DATA] === null)
+    {
       return $default;
     }
 
@@ -203,7 +204,7 @@ class sfFileCache extends sfCache
  /**
   * Converts a cache key to a full path.
   *
-  * @param string  $key  The cache key
+  * @param string $key The cache key
   *
   * @return string The full path to the cache file
   */
@@ -234,7 +235,8 @@ class sfFileCache extends sfCache
 
     @flock($fp, LOCK_SH);
     $data[self::READ_TIMEOUT] = intval(@stream_get_contents($fp, 12, 0));
-    if ($type != self::READ_TIMEOUT && time() < $data[self::READ_TIMEOUT]) {
+    if ($type != self::READ_TIMEOUT && time() < $data[self::READ_TIMEOUT])
+    {
       if ($type & self::READ_LAST_MODIFIED)
       {
         $data[self::READ_LAST_MODIFIED] = intval(@stream_get_contents($fp, 12, 12));
@@ -246,7 +248,9 @@ class sfFileCache extends sfCache
         fseek($fp, 24);
         $data[self::READ_DATA] = @fread($fp, $length);
       }
-    } else {
+    }
+    else
+    {
       $data[self::READ_LAST_MODIFIED] = null;
       $data[self::READ_DATA] = null;
     }
@@ -259,9 +263,9 @@ class sfFileCache extends sfCache
  /**
   * Writes the given data in the cache file.
   *
-  * @param  string  $path     The file path
-  * @param  string  $data     The data to put in cache
-  * @param  integer $timeout  The timeout timestamp
+  * @param string  $path    The file path
+  * @param string  $data    The data to put in cache
+  * @param integer $timeout The timeout timestamp
   *
   * @return boolean true if ok, otherwise false
   *
@@ -278,7 +282,7 @@ class sfFileCache extends sfCache
       mkdir(dirname($path), 0777, true);
     }
 
-    $tmpFile = $path . '.' . getmypid();
+    $tmpFile = tempnam(dirname($path), basename($path));
 
     if (!$fp = @fopen($tmpFile, 'wb'))
     {
@@ -290,9 +294,18 @@ class sfFileCache extends sfCache
     @fwrite($fp, $data);
     @fclose($fp);
 
-    chmod($tmpFile, 0666);
-    @unlink($path);
-    rename($tmpFile, $path);
+    // Hack from Agavi (http://trac.agavi.org/changeset/3979)
+    // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
+    // so we simply assume that when rename() fails that we are on win32 and try to use copy()
+    if (!@rename($tmpFile, $path))
+    {
+      if (copy($tmpFile, $path))
+      {
+        unlink($tmpFile);
+      }
+    }
+
+    chmod($path, 0666);
     umask($current_umask);
 
     return true;
