@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBuildFormsTask.class.php 8512 2008-04-17 18:06:12Z fabien $
+ * @version    SVN: $Id: sfPropelBuildFormsTask.class.php 10517 2008-07-30 15:56:37Z nicolas $
  */
 class sfPropelBuildFormsTask extends sfPropelBaseTask
 {
@@ -61,7 +61,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $this->logSection('propel', 'generating form classes');
-
+    
     $generatorManager = new sfGeneratorManager($this->configuration);
 
     $generatorManager->generate('sfPropelFormGenerator', array(

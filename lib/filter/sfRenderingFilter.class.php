@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRenderingFilter.class.php 9944 2008-06-27 19:22:37Z fabien $
+ * @version    SVN: $Id: sfRenderingFilter.class.php 10439 2008-07-23 12:36:55Z nicolas $
  */
 class sfRenderingFilter extends sfFilter
 {
@@ -40,10 +40,14 @@ class sfRenderingFilter extends sfFilter
     // get response object
     $response = $this->context->getResponse();
 
-    // hack to rethrow sfForm __toString() exception (see sfForm)
+    // hack to rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
     if (sfForm::hasToStringException())
     {
       throw sfForm::getToStringException();
+    }
+    else if (sfFormField::hasToStringException())
+    {
+      throw sfFormField::getToStringException();
     }
 
     // send headers + content

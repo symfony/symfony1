@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPatternRouting.class.php 9789 2008-06-23 08:17:33Z fabien $
+ * @version    SVN: $Id: sfPatternRouting.class.php 10591 2008-08-01 16:01:43Z fabien $
  */
 class sfPatternRouting extends sfRouting
 {
@@ -159,10 +159,10 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-	 * Gets the current route name.
-	 *
-	 * @return string The route name
-	 */
+   * Gets the current route name.
+   *
+   * @return string The route name
+   */
   public function getCurrentRouteName()
   {
     return $this->currentRouteName;
@@ -558,7 +558,10 @@ class sfPatternRouting extends sfRouting
 
     // replace variables
     $realUrl = $url;
-    foreach ($variables as $variable => $value)
+
+    $tmp = $variables;
+    uasort($tmp, create_function('$a, $b', 'return strlen($a) < strlen($b);'));
+    foreach ($tmp as $variable => $value)
     {
       $realUrl = str_replace($value, urlencode($tparams[$variable]), $realUrl);
     }

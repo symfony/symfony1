@@ -12,11 +12,14 @@
 /**
  * sfValidatorConfigHandler allows you to register validators with the system.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidatorConfigHandler.class.php 8758 2008-05-03 21:03:08Z FabianLange $
+ * @version    SVN: $Id: sfValidatorConfigHandler.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfValidatorConfigHandler extends sfYamlConfigHandler
 {

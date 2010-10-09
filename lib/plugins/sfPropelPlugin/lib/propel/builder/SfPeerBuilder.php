@@ -14,7 +14,7 @@ require_once 'propel/engine/builder/om/php5/PHP5ComplexPeerBuilder.php';
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: SfPeerBuilder.php 9665 2008-06-19 12:51:00Z fabien $
+ * @version    SVN: $Id: SfPeerBuilder.php 10328 2008-07-16 19:57:21Z fabien $
  */
 class SfPeerBuilder extends PHP5ComplexPeerBuilder
 {
@@ -27,9 +27,13 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
     {
-      //remove all inline includes: peer class include inline the mapbuilder classes
+      // remove all inline includes: peer class include inline the mapbuilder classes
       $peerCode = preg_replace("/(include|require)_once\s*.*MapBuilder\.php.*\s*/", "", $peerCode);
     }
+
+    // change Propel::import() calls to sfPropel::import()
+    $peerCode = str_replace('Propel::import(', 'sfPropel::import(', $peerCode);
+
     return $peerCode;
   }
 

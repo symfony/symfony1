@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 9264 2008-05-26 10:58:37Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 10290 2008-07-14 23:45:19Z Carl.Vondrick $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -173,6 +173,17 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
   /**
    * Sets the format string for the name HTML attribute.
+   *
+   * If you are using the form framework with symfony, do not use a reserved word in the
+   * name format.  If you do, symfony may act in an unexpected manner.
+   *
+   * For symfony 1.1 and 1.2, the following words are reserved and must NOT be used as
+   * the name format:
+   *
+   *  * module    (example: module[%s])
+   *  * action    (example: action[%s])
+   *
+   * However, you CAN use other variations, such as actions[%s] (note the s).
    *
    * @param string $format  The format string (must contain a %s for the name placeholder)
    */

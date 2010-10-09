@@ -166,7 +166,7 @@ abstract class BaseCategoryPeer {
 		$results = array();
 	
 				$cls = CategoryPeer::getOMClass();
-		$cls = Propel::import($cls);
+		$cls = sfPropel::import($cls);
 				while($rs->next()) {
 		
 			$obj = new $cls();

@@ -12,11 +12,14 @@
 /**
  * sfValidatorException is thrown when an error occurs in a validator.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidatorException.class.php 7792 2008-03-09 22:06:59Z fabien $
+ * @version    SVN: $Id: sfValidatorException.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfValidatorException extends sfException
 {

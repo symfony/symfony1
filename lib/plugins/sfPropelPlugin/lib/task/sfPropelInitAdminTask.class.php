@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelInitAdminTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfPropelInitAdminTask.class.php 10512 2008-07-30 15:27:39Z nicolas $
  */
 class sfPropelInitAdminTask extends sfPropelBaseTask
 {
@@ -62,6 +62,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $constants = array(

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPluginBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginAddChannelTask.class.php 7397 2008-02-08 06:48:35Z fabien $
+ * @version    SVN: $Id: sfPluginAddChannelTask.class.php 10197 2008-07-10 08:44:22Z fabien $
  */
 class sfPluginAddChannelTask extends sfPluginBaseTask
 {
@@ -48,6 +48,6 @@ EOF;
   {
     $this->logSection('plugin', sprintf('add channel "%s"', $arguments['name']));
 
-    $this->getPluginManager()->registerChannel($arguments['name']);
+    $this->getPluginManager()->getEnvironment()->registerChannel($arguments['name']);
   }
 }

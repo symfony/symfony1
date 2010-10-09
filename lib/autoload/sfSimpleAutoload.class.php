@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSimpleAutoload.class.php 9075 2008-05-19 23:07:50Z Carl.Vondrick $
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 10009 2008-06-30 05:31:40Z dwhittle $
  */
 class sfSimpleAutoload
 {
@@ -182,22 +182,25 @@ class sfSimpleAutoload
   public function addDirectory($dir, $ext = '.php')
   {
     $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
-    foreach (glob($dir) as $dir)
+    if($dirs = glob($dir))
     {
-      if (in_array($dir, $this->dirs))
+      foreach ($dirs as $dir)
       {
-        if ($this->cacheLoaded)
+        if (in_array($dir, $this->dirs))
         {
-          continue;
+          if ($this->cacheLoaded)
+          {
+            continue;
+          }
         }
-      }
-      else
-      {
-        $this->dirs[] = $dir;
-      }
+        else
+        {
+          $this->dirs[] = $dir;
+        }
 
-      $this->cacheChanged = true;
-      $this->addFiles($finder->in($dir), false);
+        $this->cacheChanged = true;
+        $this->addFiles($finder->in($dir), false);
+      }
     }
   }
 

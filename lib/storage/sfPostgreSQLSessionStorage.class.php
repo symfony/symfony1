@@ -18,7 +18,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfPostgreSQLSessionStorage.class.php 9089 2008-05-20 06:52:38Z FabianLange $
+ * @version    SVN: $Id: sfPostgreSQLSessionStorage.class.php 10589 2008-08-01 16:00:48Z nicolas $
  */
 class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
 {
@@ -83,7 +83,7 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
    *
    * @param  string $id  A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown
+   * @return string      The session data if the session was read or created, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be read
    */

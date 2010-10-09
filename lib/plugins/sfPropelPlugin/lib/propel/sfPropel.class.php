@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropel.class.php 9870 2008-06-25 16:24:42Z noel $
+ * @version    SVN: $Id: sfPropel.class.php 10328 2008-07-16 19:57:21Z fabien $
  */
 class sfPropel
 {
@@ -60,5 +60,45 @@ class sfPropel
   static public function listenToChangeCultureEvent(sfEvent $event)
   {
     self::setDefaultCulture($event['culture']);
+  }
+
+  /**
+   * Include once a file specified in DOT notation and return unqualified classname.
+   *
+   * This method is the same as in Propel::import().
+   * The only difference is that this one takes the autoloading into account.
+   *
+   * @see Propel::import()
+   */
+  public static function import($path)
+  {
+    // extract classname
+    if (($pos = strrpos($path, '.')) === false)
+    {
+      $class = $path;
+    }
+    else
+    {
+      $class = substr($path, $pos + 1);
+    }
+
+    // check if class exists
+    if (class_exists($class, true))
+    {
+      return $class;
+    }
+
+    // turn to filesystem path
+    $path = strtr($path, '.', DIRECTORY_SEPARATOR).'.php';
+
+    // include class
+    $ret = include_once($path);
+    if ($ret === false)
+    {
+      throw new PropelException("Unable to import class: ".$class." from ".$path);
+    }
+
+    // return qualified name
+    return $class;
   }
 }

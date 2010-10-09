@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 9588 2008-06-15 07:15:36Z FabianLange $
+ * @version    SVN: $Id: sfToolkit.class.php 10516 2008-07-30 15:55:34Z hartym $
  */
 class sfToolkit
 {
@@ -517,8 +517,15 @@ class sfToolkit
       {
         return $default;
       }
-      $array = &$array[substr($name, $pos + 1, $end - $pos - 1)];
-      $offset = $end;
+      else if (is_array($array))
+      {
+        $array = &$array[substr($name, $pos + 1, $end - $pos - 1)];
+        $offset = $end;
+      }
+      else
+      {
+        return $default;
+      }
     }
 
     return $array;
@@ -563,8 +570,15 @@ class sfToolkit
       {
         return $default;
       }
-      $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
-      $offset = $end;
+      else if (is_array($array))
+      {
+        $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+        $offset = $end;
+      }
+      else
+      {
+        return $default;
+      }
     }
 
     return $array;
@@ -603,8 +617,15 @@ class sfToolkit
       {
         return false;
       }
-      $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
-      $offset = $end;
+      else if (is_array($array))
+      {
+        $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+        $offset = $end;
+      }
+      else
+      {
+        return false;
+      }
     }
 
     return true;
@@ -657,11 +678,17 @@ class sfToolkit
       {
         return $default;
       }
-
-      $parent = &$value;
-      $key = substr($name, $pos + 1, $end - $pos - 1);
-      $value = &$value[$key];
-      $offset = $end;
+      else if (is_array($value))
+      {
+        $parent = &$value;
+        $key = substr($name, $pos + 1, $end - $pos - 1);
+        $value = &$value[$key];
+        $offset = $end;
+      }
+      else
+      {
+        return $default;
+      }
     }
 
     if ($key)

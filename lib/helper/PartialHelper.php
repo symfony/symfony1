@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PartialHelper.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    SVN: $Id: PartialHelper.php 10227 2008-07-11 19:36:32Z fabien $
  */
 
 /**
@@ -136,13 +136,19 @@ function get_component($moduleName, $componentName, $vars = array())
   $context = sfContext::getInstance();
   $actionName = '_'.$componentName;
 
+  $view = new sfPartialView($context, $moduleName, $actionName, '');
+  $view->setPartialVars($vars);
+
+  if ($retval = $view->getCache())
+  {
+    return $retval;
+  }
+
   $allVars = _call_component($moduleName, $componentName, $vars);
 
   if (!is_null($allVars))
   {
     // render
-    $view = new sfPartialView($context, $moduleName, $actionName, '');
-    $view->setPartialVars($vars);
     $view->getAttributeHolder()->add($allVars);
 
     return $view->render();

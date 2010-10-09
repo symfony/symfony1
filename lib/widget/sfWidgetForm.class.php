@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetForm.class.php 9499 2008-06-09 17:40:10Z nicolas $
+ * @version    SVN: $Id: sfWidgetForm.class.php 10235 2008-07-12 07:04:14Z Carl.Vondrick $
  */
 abstract class sfWidgetForm extends sfWidget
 {
@@ -104,7 +104,14 @@ abstract class sfWidgetForm extends sfWidget
    */
   public function renderTag($tag, $attributes = array())
   {
-    return parent::renderTag($tag, $this->fixFormId($attributes));
+    if (empty($tag))
+    {
+      return '';
+    }
+
+    $attributes = $this->fixFormId($attributes);
+
+    return sprintf('<%s%s%s', $tag, $this->attributesToHtml($attributes), self::$xhtml ? ' />' : (strtolower($tag) == 'input' ? '>' : sprintf('></%s>', $tag)));
   }
 
   /**

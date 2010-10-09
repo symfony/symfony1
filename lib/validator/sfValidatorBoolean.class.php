@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBoolean.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorBoolean.class.php 10307 2008-07-15 22:19:02Z Carl.Vondrick $
  */
 class sfValidatorBoolean extends sfValidatorBase
 {
@@ -37,6 +37,7 @@ class sfValidatorBoolean extends sfValidatorBase
     $this->addOption('false_values', array('false', 'f', 'no', 'n', 'off', '0'));
 
     $this->setOption('required', false);
+    $this->setOption('empty_value', false);
   }
 
   /**

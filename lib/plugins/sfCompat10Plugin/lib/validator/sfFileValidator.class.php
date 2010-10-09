@@ -22,10 +22,13 @@
  *                                                file mime type does not match a value
  *                                                listed in the mime types array.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileValidator.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfFileValidator.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfFileValidator extends sfValidator
 {

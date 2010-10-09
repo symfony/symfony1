@@ -28,10 +28,13 @@ else
 /**
  * This class makes easy to use ez components classes within symfony
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfEzComponentsBridge.class.php 5363 2007-10-04 06:40:33Z noel $
+ * @version    SVN: $Id: sfEzComponentsBridge.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfEzComponentsBridge
 {

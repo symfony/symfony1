@@ -19,7 +19,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
  * @author     Julien Garand <julien.garand@gmail.com>
- * @version    SVN: $Id: sfMySQLSessionStorage.class.php 9662 2008-06-19 09:50:09Z FabianLange $
+ * @version    SVN: $Id: sfMySQLSessionStorage.class.php 10589 2008-08-01 16:00:48Z nicolas $
  */
 class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 {
@@ -50,7 +50,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     }
 
     // failed to destroy session
-    throw new sfDatabaseException(sprintf('% cannot destroy session id "%s" (%s).', get_class($this), $id, mysql_error()));
+    throw new sfDatabaseException(sprintf('%s cannot destroy session id "%s" (%s).', get_class($this), $id, mysql_error()));
   }
 
   /**
@@ -70,11 +70,11 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 
     // delete the record older than the authorised session life time 
     $lifetime = $this->db_escape($lifetime); // We never know...
-    $sql = "DELETE FROM $db_table 'WHERE $db_time_col + $lifetime < UNIX_TIMESTAMP()";
+    $sql = "DELETE FROM $db_table WHERE $db_time_col + $lifetime < UNIX_TIMESTAMP()";
 
     if (!$this->db_query($sql))
     {
-      throw new sfDatabaseException(sprintf('% cannot delete old sessions (%s).', get_class($this), mysql_error()));
+      throw new sfDatabaseException(sprintf('%s cannot delete old sessions (%s).', get_class($this), mysql_error()));
     }
 
     return true;
@@ -85,7 +85,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
    *
    * @param  string $id  A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown
+   * @return string      The session data if the session was read or created, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be read
    */
@@ -122,7 +122,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
       }
 
       // can't create record
-      throw new sfDatabaseException(sprintf('% cannot create new record for id "%s" (%s).', get_class($this), $id, mysql_error()));
+      throw new sfDatabaseException(sprintf('%s cannot create new record for id "%s" (%s).', get_class($this), $id, mysql_error()));
     }
   }
 
@@ -157,11 +157,11 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     }
 
     // failed to write session data
-    throw new sfDatabaseException(sprintf('% cannot write session data for id "%s" (%s).', get_class($this), $id, mysql_error()));
+    throw new sfDatabaseException(sprintf('%s cannot write session data for id "%s" (%s).', get_class($this), $id, mysql_error()));
   }
 
-  /*!
-   * Execute an SQL Query
+  /**
+   * Executes an SQL Query
    *
    * @param  string $query  The query to execute
    * @return mixed The result of the query
@@ -171,8 +171,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return @mysql_query($query, $this->db);
   }
 
-  /*!
-   * Escape a string before using it in a query statement
+  /**
+   * Escapes a string before using it in a query statement
    *
    * @param  string $string  The string to escape
    * @return string The escaped string
@@ -182,8 +182,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return mysql_real_escape_string($string, $this->db);
   }
 
-  /*!
-   * Count the rows in a query result
+  /**
+   * Counts the rows in a query result
    *
    * @param  resource $result  Result of a query
    * @return int Number of rows
@@ -193,8 +193,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     return mysql_num_rows($result);
   }
 
-  /*!
-   * Extract a row from a query result set
+  /**
+   * Extracts a row from a query result set
    *
    * @param  resource $result  Result of a query
    * @return array Extracted row as an indexed array

@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 9663 2008-06-19 10:05:26Z FabianLange $
+ * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 10589 2008-08-01 16:00:48Z nicolas $
  */
 abstract class sfDatabaseSessionStorage extends sfSessionStorage
 {
@@ -102,6 +102,7 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     // get the database resource
     $this->db = $database->getResource();
     $this->con = $database->getConnection();
+    
     if (is_null($this->db) && is_null($this->con))
     {
       throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');
@@ -154,6 +155,31 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    * @throws <b>DatabaseException</b> If the session data cannot be written
    */
   abstract public function sessionWrite($id, $data);
+
+  /**
+   * Regenerates id that represents this storage.
+   *
+   * @param  boolean $destroy Destroy session when regenerating?
+   *
+   * @return boolean True if session regenerated, false if error
+   *
+   */
+  public function regenerate($destroy = false)
+  {
+    if (self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    $currentId = session_id();
+
+    parent::regenerate($destroy);
+
+    $newId = session_id();
+    $this->sessionRead($newId);
+
+    return $this->sessionWrite($newId, $this->sessionRead($currentId));
+  }
 
   /**
    * Executes the shutdown procedure.

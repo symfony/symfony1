@@ -13,11 +13,14 @@
  * sfExecutionFilter is the last filter registered for each filter chain. This
  * filter does all action and view execution.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidationExecutionFilter.class.php 9947 2008-06-27 20:49:13Z fabien $
+ * @version    SVN: $Id: sfValidationExecutionFilter.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfValidationExecutionFilter extends sfFilter
 {

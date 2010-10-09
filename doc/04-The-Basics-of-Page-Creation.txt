@@ -85,7 +85,7 @@ Now, if you request the following URL:
 symfony will complain that the `showSuccess.php` template is missing. That's normal; in symfony, a page is always made of an action and a template.
 
 >**CAUTION**
->URLs (not domain names) are case-sensitive, and so is symfony (even though the method names are case-insensitive in PHP). This means that if you add an `executeshow()` method, or an `executeShow()`, and then you call `show` with the browser, symfony will return a 404 error.
+>URLs (not domain names) are case-sensitive, and so is symfony (even though the method names are case-insensitive in PHP). This means that symfony will return a 404 error if you call `sHow` with the browser.
 
 -
 
@@ -188,7 +188,7 @@ Listing 4-10 - Hyperlinks, the Classic Way
       I never say my name
     </a>
 
-To avoid this hassle, you should always use the `link_to()` helper to create hyperlinks to your application's actions. And if you only want the generate the URL part, the `url_for()` is the helper you're looking for.
+To avoid this hassle, you should always use the `link_to()` helper to create hyperlinks to your application's actions. And if you only want to generate the URL part, the `url_for()` is the helper you're looking for.
 
 A helper is a PHP function defined by symfony that is meant to be used within templates. It outputs some HTML code and is faster to use than writing the actual HTML code by yourself. Listing 4-11 demonstrates the use of the hyperlink helpers.
 

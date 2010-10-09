@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectRadio.class.php 9925 2008-06-27 11:27:03Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSelectRadio.class.php 10307 2008-07-15 22:19:02Z Carl.Vondrick $
  */
 class sfWidgetFormSelectRadio extends sfWidgetForm
 {
@@ -71,7 +71,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
         'id'    => $id = $this->generateId($name.'[]', self::escapeOnce($key)),
       );
 
-      if (strval($key) == strval($value))
+      if (strval($key) == strval($value === false ? 0 : $value))
       {
         $baseAttributes['checked'] = 'checked';
       }

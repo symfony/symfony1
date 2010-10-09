@@ -534,14 +534,14 @@ Listing 8-18 - Sample Database Connection Settings, in `myproject/config/databas
 The permitted values of the `phptype` parameter are the ones of the database systems supported by Creole:
 
   * `mysql`
-  * `sqlserver`
+  * `mssql`
   * `pgsql`
   * `sqlite`
   * `oracle`
 
 `hostspec`, `database`, `username`, and `password` are the usual database connection settings.
 
-To overridden the configuration per application, you need to edit an application-specific file, such as `apps/frontend/config/databases.yml`.
+To override the configuration per application, you need to edit an application-specific file, such as `apps/frontend/config/databases.yml`.
 
 If you use a SQLite database, the `hostspec` parameter must be set to the path of the database file. For instance, if you keep your blog database in `data/blog.db`, the `databases.yml` file will look like Listing 8-19.
 
@@ -650,7 +650,7 @@ After rebuilding the model, deleted `Article` objects will remain in the databas
 
 **New in symfony 1.1**: Alternatively, you can also declare behaviors directly in the `schema.yml`, by listing them under the `_behaviors` key (see Listing 8-34 below).
 
-Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors](http://trac.symfony-project.com/wiki/SymfonyPlugins#Behaviors)). Each has its own documentation and installation guide.
+Check the list of symfony plug-ins in the wiki to find behaviors ([http://trac.symfony-project.org/wiki/SymfonyPlugins#Behaviors](http://trac.symfony-project.org/wiki/SymfonyPlugins#Behaviors)). Each has its own documentation and installation guide.
 
 Extended Schema Syntax
 ----------------------

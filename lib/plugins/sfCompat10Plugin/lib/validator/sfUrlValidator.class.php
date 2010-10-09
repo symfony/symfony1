@@ -11,10 +11,13 @@
 /**
  * sfUrlValidator verifies a parameter contains a value that qualifies as a valid URL.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfUrlValidator.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfUrlValidator.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfUrlValidator extends sfValidator
 {

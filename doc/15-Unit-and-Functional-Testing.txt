@@ -12,7 +12,7 @@ That's why automated tests are a suggested, if not required, part of a successfu
 
 Automated tests can sometimes replace developer documentation since they can clearly illustrate what an application is supposed to do. A good test suite shows what output should be expected for a set of test inputs, and that is a good way to explain the purpose of a method.
 
-The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the PEAR package, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.com/browser/branches/1.1/test](http://trac.symfony-project.com/browser/branches/1.1/test).
+The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the PEAR package, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.org/browser/branches/1.1/test](http://trac.symfony-project.org/browser/branches/1.1/test).
 
 ### Unit and Functional Tests
 
@@ -306,11 +306,11 @@ Listing 15-6 - Including Classes in Unit Tests
 
 In unit tests, you need to instantiate not only the object you're testing, but also the object it depends upon. Since unit tests must remain unitary, depending on other classes may make more than one test fail if one class is broken. In addition, setting up real objects can be expensive, both in terms of lines of code and execution time. Keep in mind that speed is crucial in unit testing because developers quickly tire of a slow process.
 
-Whenever you start including many scripts for a unit test, you may need a simple autoloading system. For this purpose, the `sfSimpleAutoload` class (which must be manually included) provides an `initSimpleAutoload()` method, which expects an absolute path as parameter. All the classes located under this path will be autoloaded. For instance, if you want to have all the classes located under `$sf_symfony_lib_dir/util/` autoloaded, start your unit test script as follows:
+Whenever you start including many scripts for a unit test, you may need a simple autoloading system. For this purpose, the sfSimpleAutoload class (which must be manually included) provides an addDirectory() method which expects an absolute path as parameter and that can be called several times in case you need to include several directories on the search path. All the classes located under this path will be autoloaded. For instance, if you want to have all the classes located under `$sf_symfony_lib_dir/util/` autoloaded, start your unit test script as follows:
 
     [php]
     require_once($sf_symfony_lib_dir.'/autoload/sfSimpleAutoload.class.php');
-    $autoload = new sfSimpleAutoload();
+    $autoload = sfSimpleAutoload::getInstance();
     $autoload->addDirectory($sf_symfony_lib_dir.'/util');
     $autoload->register();
 

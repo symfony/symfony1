@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectDeployTask.class.php 7766 2008-03-07 14:25:43Z fabien $
+ * @version    SVN: $Id: sfProjectDeployTask.class.php 10501 2008-07-29 15:15:25Z nicolas $
  */
 class sfProjectDeployTask extends sfBaseTask
 {
@@ -44,7 +44,7 @@ The [project:deploy|INFO] task deploys a project on a server:
 
 The server must be configured in [config/properties.ini|COMMENT]:
 
-  [production]
+  [[production]
     host=www.example.com
     port=22
     user=fabien

@@ -166,7 +166,7 @@ abstract class BaseBookPeer {
 		$results = array();
 	
 				$cls = BookPeer::getOMClass();
-		$cls = Propel::import($cls);
+		$cls = sfPropel::import($cls);
 				while($rs->next()) {
 		
 			$obj = new $cls();

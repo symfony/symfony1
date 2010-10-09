@@ -11,10 +11,13 @@
 /**
  * sfFillInFormFilter fills in forms.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFillInFormFilter.class.php 5320 2007-09-30 12:04:58Z fabien $
+ * @version    SVN: $Id: sfFillInFormFilter.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfFillInFormFilter extends sfFilter
 {

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfYamlInline.class.php');
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlDumper.class.php 8488 2008-04-16 22:20:29Z fabien $
+ * @version    SVN: $Id: sfYamlDumper.class.php 10574 2008-08-01 13:08:08Z nicolas $
  */
 class sfYamlDumper
 {
@@ -40,7 +40,7 @@ class sfYamlDumper
     }
     else
     {
-      $isAHash = count(array_diff_key($input, array_fill(0, count($input), true)));
+      $isAHash = array_keys($input) !== range(0, count($input) - 1);
 
       foreach ($input as $key => $value)
       {

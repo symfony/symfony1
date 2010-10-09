@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 10307 2008-07-15 22:19:02Z Carl.Vondrick $
  */
 class sfWidgetFormInputCheckbox extends sfWidgetFormInput
 {
@@ -43,7 +43,7 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if (!is_null($value))
+    if (!is_null($value) && $value !== false)
     {
       $attributes['checked'] = 'checked';
     }

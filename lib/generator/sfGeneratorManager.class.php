@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorManager.class.php 9261 2008-05-26 10:20:00Z fabien $
+ * @version    SVN: $Id: sfGeneratorManager.class.php 10135 2008-07-05 17:28:27Z FabianLange $
  */
 class sfGeneratorManager
 {
@@ -62,7 +62,7 @@ class sfGeneratorManager
       $current_umask = umask(0000);
       if (false === @mkdir(dirname($path), 0777, true))
       {
-        throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($cache)));
+        throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($path)));
       }
       umask($current_umask);
     }

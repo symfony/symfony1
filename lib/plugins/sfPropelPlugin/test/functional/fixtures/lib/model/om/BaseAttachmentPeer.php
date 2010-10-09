@@ -171,7 +171,7 @@ abstract class BaseAttachmentPeer {
 		$results = array();
 	
 				$cls = AttachmentPeer::getOMClass();
-		$cls = Propel::import($cls);
+		$cls = sfPropel::import($cls);
 				while($rs->next()) {
 		
 			$obj = new $cls();

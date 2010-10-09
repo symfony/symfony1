@@ -12,11 +12,14 @@
 /**
  * sfValidatorBase allows you to apply constraints to user entered parameters.
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidator.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfValidator.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 abstract class sfValidator
 {

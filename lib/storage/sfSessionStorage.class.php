@@ -21,12 +21,13 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfSessionStorage.class.php 9942 2008-06-27 18:00:49Z fabien $
+ * @version    SVN: $Id: sfSessionStorage.class.php 10425 2008-07-22 15:03:11Z nicolas $
  */
 class sfSessionStorage extends sfStorage
 {
   static protected
-    $sessionStarted = false;
+    $sessionIdRegenerated = false,
+    $sessionStarted       = false;
 
   /**
    * Available options:
@@ -162,8 +163,15 @@ class sfSessionStorage extends sfStorage
    */
   public function regenerate($destroy = false)
   {
-    // regenerate a new session id
+    if (self::$sessionIdRegenerated)
+    {
+      return;
+    }
+
+    // regenerate a new session id once per object
     session_regenerate_id($destroy);
+
+    self::$sessionIdRegenerated = true;
   }
 
   /**

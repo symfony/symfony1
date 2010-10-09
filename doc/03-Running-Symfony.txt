@@ -315,7 +315,7 @@ You should now be ready to browse your application. Check the congratulation pag
 >
 >Symfony is compatible with other server configurations. You can, for instance, access a symfony application using an alias instead of a virtual host. You can also run a symfony application with an IIS server. There are as many techniques as there are configurations, and it is not the purpose of this book to explain them all.
 >
->To find directions for a specific server configuration, refer to the symfony wiki ([http://trac.symfony-project.com/](http://trac.symfony-project.com/)), which contains many step-by-step tutorials.
+>To find directions for a specific server configuration, refer to the symfony wiki ([http://trac.symfony-project.org/](http://trac.symfony-project.org/)), which contains many step-by-step tutorials.
 
 Troubleshooting
 ---------------
@@ -355,7 +355,7 @@ You can check if your problem has already happened to someone else and find solu
 
   * The symfony installation forum ([http://www.symfony-project.org/forum/](http://www.symfony-project.org/forum/)) is full of installation questions about a given platform, environment, configuration, host, and so on.
   * The archives of the users mailing-list ([http://groups.google.fr/group/symfony-users](http://groups.google.fr/group/symfony-users)) are also searchable. You may find similar experiences to your own there.
-  * The symfony wiki ([http://trac.symfony-project.com/#Installingsymfony](http://trac.symfony-project.com/#Installingsymfony)) contains step-by-step tutorials, contributed by symfony users, about installation.
+  * The symfony wiki ([http://trac.symfony-project.org/#Installingsymfony](http://trac.symfony-project.org/#Installingsymfony)) contains step-by-step tutorials, contributed by symfony users, about installation.
 
 If you don't find any answer, try posing your question to the symfony community. You can post your query in the forum, the mailing list, or even drop to the `#symfony` IRC channel to get feedback from the most active members of the community.
 

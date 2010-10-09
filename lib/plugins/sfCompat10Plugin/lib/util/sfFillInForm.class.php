@@ -10,10 +10,13 @@
 
 /**
  *
+ * WARNING: This class is deprecated and will be removed in symfony 1.2.
+ *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFillInForm.class.php 9588 2008-06-15 07:15:36Z FabianLange $
+ * @version    SVN: $Id: sfFillInForm.class.php 10270 2008-07-13 21:51:03Z Carl.Vondrick $
+ * @deprecated Deprecated since symfony 1.1
  */
 class sfFillInForm
 {

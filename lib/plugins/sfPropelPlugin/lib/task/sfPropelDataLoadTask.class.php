@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelDataLoadTask.class.php 8491 2008-04-16 23:26:28Z fabien $
+ * @version    SVN: $Id: sfPropelDataLoadTask.class.php 10512 2008-07-30 15:27:39Z nicolas $
  */
 class sfPropelLoadDataTask extends sfPropelBaseTask
 {
@@ -70,6 +70,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    
     if (count($options['dir']))
     {
       $fixturesDirs = $options['dir'];
@@ -82,8 +84,6 @@ EOF;
       }
       $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
     }
-
-    $databaseManager = new sfDatabaseManager($this->configuration);
 
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);

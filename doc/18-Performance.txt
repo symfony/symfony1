@@ -3,7 +3,7 @@ Chapter 18 - Performance
 
 If you expect your website will attract a crowd, performance and optimization issues should be a major factor during the development phase. Rest assured, performance has always been a chief concern among the core symfony developers.
 
-While the advantages gained by accelerating the development process result in some overhead, the core symfony developers have always been cognizant of performance requirements. Accordingly, every class and every method have been closely inspected and optimized to be as fast as possible. The basic overhead, which you can measure by comparing the time to display a "hello, world" message with and without symfony, is minimal. As a result, the framework is scalable and reacts well to stress tests. And as the ultimate proof, some websites with extremely high traffic (that is, websites with millions of active subscribers and a lot of server-pressuring Ajax interactions) use symfony and are very satisfied with its performance. Check the list of websites developed with symfony in the wiki ([http://trac.symfony-project.com/wiki/ApplicationsDevelopedWithSymfony](http://trac.symfony-project.com/wiki/ApplicationsDevelopedWithSymfony)) for names.
+While the advantages gained by accelerating the development process result in some overhead, the core symfony developers have always been cognizant of performance requirements. Accordingly, every class and every method have been closely inspected and optimized to be as fast as possible. The basic overhead, which you can measure by comparing the time to display a "hello, world" message with and without symfony, is minimal. As a result, the framework is scalable and reacts well to stress tests. And as the ultimate proof, some websites with extremely high traffic (that is, websites with millions of active subscribers and a lot of server-pressuring Ajax interactions) use symfony and are very satisfied with its performance. Check the list of websites developed with symfony in the wiki ([http://trac.symfony-project.org/wiki/ApplicationsDevelopedWithSymfony](http://trac.symfony-project.org/wiki/ApplicationsDevelopedWithSymfony)) for names.
 
 But, of course, high-traffic websites often have the means to expand the server farm and upgrade hardware as they see fit. If you don't have the resources to do this, or if you want to be sure the full power of the framework is always at your disposal, there are a few tweaks that you can use to further speed up your symfony application. This chapter lists some of the recommended performance optimizations at all levels of the framework and they are mostly for advanced users. Some of them were already mentioned throughout the previous chapters, but you will find it useful to have them all in one place.
 
@@ -473,7 +473,7 @@ If a function doesn't rely on context-sensitive values nor on randomness, callin
 Listing 18-16 - Caching the Result of a Function
 
     [php]
-    $cache = new sfFileCache(sfConfig::get('sf_cache_dir').'/function');
+    $cache = new sfFileCache(array('cache_dir' => sfConfig::get('sf_cache_dir').'/function'));
     $fc = new sfFunctionCache($cache);
     $result1 = $fc->call('cos', array(M_PI));
     $result2 = $fc->call('preg_replace', array('/\s\s+/', ' ', $input));
@@ -537,7 +537,6 @@ As for the security features (see Chapter 6), you can deactivate them in the `fi
 Listing 18-21 - Turning Features Off, in `frontend/config/filters.yml`
 
     rendering: ~
-    web_debug: ~
     security:
       enabled: off
 
@@ -549,7 +548,7 @@ Listing 18-21 - Turning Features Off, in `frontend/config/filters.yml`
 
 Some features are useful only in development, so you should not activate them in production. This is already the case by default, since the production environment in symfony is really optimized for performance. Among the performance-impacting development features, the debug mode is the most severe. As for the symfony logs, the feature is also turned off in production by default.
 
-You may wonder how to get information about failed requests in production if logging is disabled, and argue that problems arise not only in development. Fortunately, symfony can use the `sfErrorLoggerPlugin` plug-in, which runs in the background in production and logs the details of 404 and 500 errors in a database. It is much faster than the file logging feature, because the plug-in methods are called only when a request fails, while the logging mechanism, once turned on, adds a nonnegligible overhead whatever the level. Check the installation instructions and manual at [http://www.symfony-project.com/wiki/sfErrorLoggerPlugin](http://trac.symfony-project.com/wiki/sfErrorLoggerPlugin).
+You may wonder how to get information about failed requests in production if logging is disabled, and argue that problems arise not only in development. Fortunately, symfony can use the `sfErrorLoggerPlugin` plug-in, which runs in the background in production and logs the details of 404 and 500 errors in a database. It is much faster than the file logging feature, because the plug-in methods are called only when a request fails, while the logging mechanism, once turned on, adds a nonnegligible overhead whatever the level. Check the installation instructions and manual at [http://www.symfony-project.com/wiki/sfErrorLoggerPlugin](http://trac.symfony-project.org/wiki/sfErrorLoggerPlugin).
 
 >**TIP**
 >Make sure you regularly check the server error logs--they also contain very valuable information about 404 and 500 errors.
@@ -596,7 +595,7 @@ Even if the `sfConfig` registry is very well optimized, the number of calls to i
 
 And that's not all, because an evident test like the preceding one also gets optimized to an empty string.
 
-To apply the optimizations, you must first install the plug-in from [http://trac.symfony-project.com/wiki/sfOptimizerPlugin](http://trac.symfony-project.com/wiki/sfOptimizerPlugin) and then call the `optimize` task, specifying an application and an environment:
+To apply the optimizations, you must first install the plug-in from [http://trac.symfony-project.org/wiki/sfOptimizerPlugin](http://trac.symfony-project.org/wiki/sfOptimizerPlugin) and then call the `optimize` task, specifying an application and an environment:
 
     > php symfony optimize frontend prod
 

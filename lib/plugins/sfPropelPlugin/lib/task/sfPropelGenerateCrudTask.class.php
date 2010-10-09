@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateCrudTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfPropelGenerateCrudTask.class.php 10512 2008-07-30 15:27:39Z nicolas $
  */
 class sfPropelGenerateCrudTask extends sfPropelBaseTask
 {
@@ -72,6 +72,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $this->constants = array(
@@ -81,7 +83,7 @@ EOF;
       'MODEL_CLASS'  => $arguments['model'],
       'AUTHOR_NAME'  => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
     );
-
+    
     $method = $options['generate-in-cache'] ? 'executeInit' : 'executeGenerate';
 
     $this->$method($arguments, $options);

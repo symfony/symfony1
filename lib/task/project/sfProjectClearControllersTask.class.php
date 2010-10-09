@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectClearControllersTask.class.php 8148 2008-03-29 07:58:59Z fabien $
+ * @version    SVN: $Id: sfProjectClearControllersTask.class.php 10581 2008-08-01 14:44:42Z nicolas $
  */
 class sfProjectClearControllersTask extends sfBaseTask
 {
@@ -66,7 +66,7 @@ EOF;
     {
       $content = file_get_contents($controller);
 
-      if (preg_match('/new (.*?)Configuration\(\'(.*?)\'/', $content, $match))
+      if (preg_match('/ProjectConfiguration::getApplicationConfiguration\(\'(.*?)\', \'(.*?)\'/', $content, $match))
       {
         // Remove file if it has found an application and the environment is not production
         if ($match[2] != 'prod')

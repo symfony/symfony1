@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPartialView.class.php 9496 2008-06-09 14:00:32Z hartym $
+ * @version    SVN: $Id: sfPartialView.class.php 10227 2008-07-11 19:36:32Z fabien $
  */
 class sfPartialView extends sfPHPView
 {
@@ -66,22 +66,15 @@ class sfPartialView extends sfPHPView
       $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
     }
 
-    if (sfConfig::get('sf_cache'))
+    if ($retval = $this->getCache())
     {
-      $viewCache = $this->context->getViewCacheManager();
-      $viewCache->registerConfiguration($this->moduleName);
-
-      $cacheKey = $viewCache->computeCacheKey($this->partialVars);
-      if ($retval = $viewCache->getPartialCache($this->moduleName, $this->actionName, $cacheKey))
-      {
-        return $retval;
-      }
-      else
-      {
-        $mainResponse = $this->context->getResponse();
-        $responseClass = get_class($mainResponse);
-        $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions()));
-      }
+      return $retval;
+    }
+    else if (sfConfig::get('sf_cache'))
+    {
+      $mainResponse = $this->context->getResponse();
+      $responseClass = get_class($mainResponse);
+      $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions()));
     }
 
     // execute pre-render check
@@ -94,7 +87,7 @@ class sfPartialView extends sfPHPView
 
     if (sfConfig::get('sf_cache'))
     {
-      $retval = $viewCache->setPartialCache($this->moduleName, $this->actionName, $cacheKey, $retval);
+      $retval = $this->viewCache->setPartialCache($this->moduleName, $this->actionName, $this->cacheKey, $retval);
       $this->context->setResponse($mainResponse);
       $mainResponse->merge($response);
     }
@@ -105,5 +98,22 @@ class sfPartialView extends sfPHPView
     }
 
     return $retval;
+  }
+
+  public function getCache()
+  {
+    if (!sfConfig::get('sf_cache'))
+    {
+      return null;
+    }
+
+    $this->viewCache = $this->context->getViewCacheManager();
+    $this->viewCache->registerConfiguration($this->moduleName);
+
+    $this->cacheKey = $this->viewCache->computeCacheKey($this->partialVars);
+    if ($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey))
+    {
+      return $retval;
+    }
   }
 }

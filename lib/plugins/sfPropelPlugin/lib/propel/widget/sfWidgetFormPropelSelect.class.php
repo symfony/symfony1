@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormPropelSelect.class.php 9783 2008-06-23 07:14:46Z fabien $
+ * @version    SVN: $Id: sfWidgetFormPropelSelect.class.php 10437 2008-07-23 12:26:28Z nicolas $
  */
 class sfWidgetFormPropelSelect extends sfWidgetFormSelect
 {
@@ -83,6 +83,12 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
     $objects = call_user_func(array($class, 'doSelect'), $criteria, $this->getOption('connection'));
 
     $method = $this->getOption('method');
+    
+    if (!method_exists($this->getOption('model'), $method))
+    {
+      throw new RuntimeException(sprintf('Class "%s" must implement a "%s" method to be rendered in a "%s" widget', $this->getOption('model'), $method, __CLASS__));
+    }
+    
     foreach ($objects as $object)
     {
       $choices[$object->getPrimaryKey()] = $object->$method();

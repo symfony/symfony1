@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPluginBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginInstallTask.class.php 8893 2008-05-10 12:01:06Z fabien $
+ * @version    SVN: $Id: sfPluginInstallTask.class.php 10198 2008-07-10 11:55:29Z fabien $
  */
 class sfPluginInstallTask extends sfPluginBaseTask
 {
@@ -107,7 +107,7 @@ EOF;
     {
       try
       {
-        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], isset($options['channel']) ? $options['channel'] : null);
+        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], $options);
       }
       catch (Exception $e)
       {

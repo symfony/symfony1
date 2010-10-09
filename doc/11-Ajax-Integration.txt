@@ -618,7 +618,7 @@ Listing 11-28 - Updating More Than One Element from a Remote Response
     }
     ") ?>
 
-The `complete` callback has access the ajax respomse and can pass it to a third-party function. This custom `updateJSON()` function iterates over the JSON obtained from the response via `responseJSON` and for each member of the array, updates the element named by the first parameter with the content of the second parameter.
+The `complete` callback has access the ajax response and can pass it to a third-party function. This custom `updateJSON()` function iterates over the JSON obtained from the response via `responseJSON` and for each member of the array, updates the element named by the first parameter with the content of the second parameter.
 
 Listing 11-29 shows how the `publishing/refresh` action can return a JSON response.
 

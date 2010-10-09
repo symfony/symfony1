@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 8746 2008-05-03 07:47:24Z fabien $
+ * @version    SVN: $Id: lime.php 10005 2008-06-30 02:46:31Z dwhittle $
  */
 class lime_test
 {
@@ -74,7 +74,7 @@ class lime_test
     if (!$result)
     {
       $traces = debug_backtrace();
-      if ($_SERVER['PHP_SELF'])
+      if (!empty($_SERVER['PHP_SELF'])) 
       {
         $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : (isset($traces[1]['file']) ? 1 : 0);
       }

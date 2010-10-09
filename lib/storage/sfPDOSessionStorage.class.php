@@ -19,7 +19,7 @@
  * @author     Mathew Toth <developer@poetryleague.com>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfPDOSessionStorage.class.php 9089 2008-05-20 06:52:38Z FabianLange $
+ * @version    SVN: $Id: sfPDOSessionStorage.class.php 10589 2008-08-01 16:00:48Z nicolas $
  */
 class sfPDOSessionStorage extends sfDatabaseSessionStorage
 {
@@ -51,6 +51,8 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
     {
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
+    
+    return true;
   }
 
   /**
@@ -88,7 +90,7 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
    *
    * @param  string $id  A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown
+   * @return string      The session data if the session was read or created, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session cannot be read
    */
@@ -164,6 +166,6 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
       throw new sfDatabaseException(sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage()));
     }
 
-    return false;
+    return true;
   }
 }
