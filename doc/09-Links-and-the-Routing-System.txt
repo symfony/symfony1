@@ -514,7 +514,7 @@ Now an `article/delete` URL can't match the `article_by_id` rule anymore, becaus
 >The `permalink` action needs to determine the requested article from its title, so your model must provide an appropriate method.
 >
 >     [php]
->     public function executePermalink($request)
+>     public function executePermalink(sfWebRequest $request)
 >     {
 >       $article = ArticlePeer::retrieveBySlug($request->getParameter('slug');
 >       $this->forward404Unless($article);  // Display 404 if no article matches slug

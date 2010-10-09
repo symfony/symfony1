@@ -47,7 +47,7 @@ EOF;
     {
       $v = new $class($this->dispatcher, $this->formatter);
 
-      $this->logBlock(($i + 1).'. '.$v->getHeader(), 'QUESTION_LARGE');
+      $this->logBlock(($i + 1).'. '.$v->getHeader(), '1.2' == substr(SYMFONY_VERSION, 0, 3) ? 'QUESTION' : 'QUESTION_LARGE');
 
       $v->setCommandApplication($this->commandApplication);
       $files = $v->validate();

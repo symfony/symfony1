@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFillInForm.class.php 9588 2008-06-15 07:15:36Z FabianLange $
+ * @version    SVN: $Id: sfFillInForm.class.php 27415 2010-02-02 13:09:54Z FabianLange $
  */
 class sfFillInForm
 {
@@ -77,7 +77,7 @@ class sfFillInForm
   public function fillInXhtml($xml, $formName, $formId, $values)
   {
     $xhtml = $this->fillInXml($xml, $formName, $formId, $values);
-    $prolog_regexp = '/^' . preg_quote('<?xml version="1.0"?>') . '\s*/';
+    $prolog_regexp = '/^' . preg_quote('<?xml version="1.0" encoding="'.sfConfig::get('sf_charset', 'UTF-8').'"?>') . '\s*/';
     return preg_replace($prolog_regexp, '', $xhtml);
   }
 
@@ -89,14 +89,21 @@ class sfFillInForm
   public function fillInXml($xml, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
+
+    // pages not having a doctype need it for loading
     if (strpos($xml,'<!DOCTYPE') === false)
     {
       $xml = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '.
              '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'.
              $xml;
     }
-    @$dom->loadXML($xml);
 
+    @$dom->loadXML($xml);
+    // loadXML will unset encoding if it was not defined in the source, no matter what the DomDocument constructor said
+    if($dom->encoding === null)
+    {
+      $dom->encoding = sfConfig::get('sf_charset', 'UTF-8');
+    }
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
     return $dom->saveXML();

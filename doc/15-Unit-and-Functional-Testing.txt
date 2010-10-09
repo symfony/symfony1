@@ -555,7 +555,7 @@ Listing 15-14 - The Test Browser Doesn't Automatically Follow Redirects
 
     [php]
     // Example action in modules/foobar/actions/actions.class.php
-    public function executeUpdate($request)
+    public function executeUpdate(sfWebRequest $request)
     {
       // ...
 

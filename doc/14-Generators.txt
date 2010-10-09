@@ -763,7 +763,7 @@ The `addComment` action can be implemented as in Listing 14-33.
 Listing 14-33 - Implementing the Custom Interaction Action, in `actions/actions.class.php`
 
     [php]
-    public function executeAddComment($request)
+    public function executeAddComment(sfWebRequest $request)
     {
       $comment = new BlogComment();
       $comment->setArticleId($request->getParameter('id'));

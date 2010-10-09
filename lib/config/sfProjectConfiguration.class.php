@@ -14,13 +14,14 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 21895 2009-09-11 09:31:45Z fabien $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 27191 2010-01-26 13:38:49Z FabianLange $
  */
 class sfProjectConfiguration
 {
   protected
     $rootDir               = null,
     $symfonyLibDir         = null,
+    $dispatcher            = null,
     $plugins               = array('sfPropelPlugin'),
     $pluginPaths           = array(),
     $overriddenPluginPaths = array(),

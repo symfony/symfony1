@@ -434,9 +434,10 @@ Listing 8-15 - Custom SQL Query with PDO
 
     [php]
     $connection = Propel::getConnection();
-    $query = 'SELECT MAX(%s) AS max FROM %s';
-    $query = sprintf($query, ArticlePeer::CREATED_AT, ArticlePeer::TABLE_NAME);
+    $query = 'SELECT MAX(?) AS max FROM ?';
     $statement = $connection->prepare($query);
+    $statement->bindValue(1, ArticlePeer::CREATED_AT);
+    $statement->bindValue(2, ArticlePeer::TABLE_NAME);
     $statement->execute();
     $resultset = $statement->fetch(PDO::FETCH_OBJ);
     $max = $resultset->max;
@@ -477,7 +478,7 @@ Additionally, the getters for date columns accept a date format as an argument:
 >For example, imagine the code needed in a blog to retrieve the ten most popular articles for a given tag (passed as request parameter). This code should not be in an action, but in the model. In fact, if you need to display this list in a template, the action should simply look like this:
 >
 >     [php]
->     public function executeShowPopularArticlesForTag($request)
+>     public function executeShowPopularArticlesForTag(sfWebRequest $request)
 >     {
 >       $tag = TagPeer::retrieveByName($request->getParameter('tag'));
 >       $this->forward404Unless($tag);

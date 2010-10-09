@@ -66,12 +66,12 @@ class sfDeprecatedHelpersValidation extends sfValidation
     ));
     foreach ($files as $file)
     {
-      $content = file_get_contents($file);
+      $content = sfToolkit::stripComments(file_get_contents($file));
 
       $matches = array();
       foreach ($helpers as $helper)
       {
-        if (false !== stripos($content, $helper))
+        if (preg_match('#\b'.preg_quote($helper, '#').'\b#', $content))
         {
           $matches[] = $helper;
         }

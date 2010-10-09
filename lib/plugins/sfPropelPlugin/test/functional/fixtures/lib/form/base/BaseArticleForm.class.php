@@ -6,7 +6,6 @@
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     Your name here
- * @version    SVN: $Id: sfPropelFormGeneratedTemplate.php 16976 2009-04-04 12:47:44Z fabien $
  */
 class BaseArticleForm extends BaseFormPropel
 {

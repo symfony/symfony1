@@ -33,6 +33,18 @@
         <source>Cancel</source>
         <target>キャンセル</target>
       </trans-unit>
+      <trans-unit>
+        <source>Choose an action</source>
+        <target>アクションを選択</target>
+      </trans-unit>
+      <trans-unit>
+        <source>go</source>
+        <target>実行</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Back to list</source>
+        <target>リストに戻る</target>
+      </trans-unit>
 
       <!-- Filters -->
       <trans-unit>
@@ -55,7 +67,7 @@
       </trans-unit>
       <trans-unit>
         <source>(page %%page%%/%%nb_pages%%)</source>
-        <target>(ページ %%page%%%%nb_pages%%)</target>
+        <target>(ページ %%page%%/%%nb_pages%%)</target>
       </trans-unit>
       <trans-unit>
         <source>asc</source>
@@ -64,6 +76,10 @@
       <trans-unit>
         <source>desc</source>
         <target>昇順</target>
+      </trans-unit>
+      <trans-unit>
+        <source>[0] no result|[1] 1 result|(1,+Inf] %1% results</source>
+        <target>[0] 0件|[1] 1件|(1,+Inf] %1% 件</target>
       </trans-unit>
 
       <!-- Pagination -->
@@ -108,6 +124,26 @@
       <trans-unit>
         <source>The item was deleted successfully.</source>
         <target>アイテムを削除しました</target>
+      </trans-unit>
+      <trans-unit>
+        <source>You must at least select one item.</source>
+        <target>最低でも1つを選択してください。</target>
+      </trans-unit>
+      <trans-unit>
+        <source>You must select an action to execute on the selected items.</source>
+        <target>選択されたアイテムを処理するためにアクションを選択してください。</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items as some items do not exist anymore.</source>
+        <target>すでに存在しないアイテムを削除しようとしてエラーが発生しました。</target>
+      </trans-unit>
+      <trans-unit>
+        <source>The selected items have been deleted successfully.</source>
+        <target>選択されたアイテムを削除しました。</target>
+      </trans-unit>
+      <trans-unit>
+        <source>A problem occurs when deleting the selected items.</source>
+        <target>選択されたアイテムを削除するときにエラーが発生しました。</target>
       </trans-unit>
     </body>
   </file>

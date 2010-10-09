@@ -149,7 +149,7 @@ class sfWebDebugPanelDoctrine extends sfWebDebugPanel
   static protected function formatSql($sql)
   {
     $color = "#990099";
-    $newSql = $sql;
+    $newSql = htmlspecialchars($sql, ENT_QUOTES, sfConfig::get('sf_charset'));
     $newSql = str_replace("SELECT ", "<span style=\"color: $color;\"><b>SELECT </b></span>  ",$newSql);
     $newSql = str_replace("FROM ", "<span style=\"color: $color;\"><b>FROM </b></span>",$newSql);
     $newSql = str_replace(" LEFT JOIN ", "<span style=\"color: $color;\"><b> LEFT JOIN </b></span>",$newSql);

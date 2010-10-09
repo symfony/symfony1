@@ -33,7 +33,7 @@ Listing 4-1 - The Default Generated Action, in `actions/actions.class.php`
 
     class contentActions extends sfActions
     {
-      public function executeIndex()
+      public function executeIndex(sfWebRequest $request)
       {
         $this->forward('default', 'module');
       }
@@ -71,7 +71,7 @@ Listing 4-2 - Adding an Action Is Like Adding an Execute Method to the Action Cl
 
     class contentActions extends sfActions
     {
-      public function executeShow()
+      public function executeShow(sfWebRequest $request)
       {
       }
     }
@@ -156,7 +156,7 @@ Listing 4-6 - Setting an Action Attribute in the Action to Make It Available to 
 
     class contentActions extends sfActions
     {
-      public function executeShow()
+      public function executeShow(sfWebRequest $request)
       {
         $today = getdate();
         $this->hour = $today['hours'];
@@ -253,7 +253,7 @@ Listing 4-13 - Getting Data from the Request Parameter in the Action
     {
       // ...
 
-      public function executeUpdate($request)
+      public function executeUpdate(sfWebRequest $request)
       {
         $this->name = $request->getParameter('name');
       }

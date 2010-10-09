@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 18104 2009-05-10 05:38:14Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebug.class.php 26968 2010-01-21 10:21:00Z FabianLange $
  */
 class sfWebDebug
 {
@@ -255,7 +255,7 @@ function sfWebDebugGetElementsByClassName(strClass, strTag, objContElm)
   var j = objColl.length;
   for (var i = 0; i < j; i++) {
     if(objColl[i].className == undefined) continue;
-    var arrObjClass = objColl[i].className.split(' ');
+    var arrObjClass = objColl[i].className.split ? objColl[i].className.split(' ') : [];
     if (delim == ' ' && arrClass.length > arrObjClass.length) continue;
     var c = 0;
     comparisonLoop:

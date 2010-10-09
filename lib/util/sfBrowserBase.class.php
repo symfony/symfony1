@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowserBase.class.php 23913 2009-11-14 14:24:03Z bschussek $
+ * @version    SVN: $Id: sfBrowserBase.class.php 27616 2010-02-06 11:14:40Z FabianLange $
  */
 abstract class sfBrowserBase
 {
@@ -185,7 +185,7 @@ abstract class sfBrowserBase
    */
   public function get($uri, $parameters = array(), $changeStack = true)
   {
-    return $this->call($uri, 'get', $parameters);
+    return $this->call($uri, 'get', $parameters, $changeStack);
   }
 
   /**
@@ -199,7 +199,7 @@ abstract class sfBrowserBase
    */
   public function post($uri, $parameters = array(), $changeStack = true)
   {
-    return $this->call($uri, 'post', $parameters);
+    return $this->call($uri, 'post', $parameters, $changeStack);
   }
 
   /**

@@ -161,7 +161,7 @@ Listing 12-5 - Using the `cache()` Helper, in `frontend/modules/user/templates/l
 
 Here's how it works:
 
-  * If a cached version of the fragment named 'users' is found, it is used to replace the code between the <?php if (!cache($unique_fragment_name)): ?> and the <?php endif; ?> lines.
+  * If a cached version of the fragment named 'users' is found, it is used to replace the code between the `<?php if (!cache($unique_fragment_name)): ?>` and the `<?php endif; ?>` lines.
   * If not, the code between these lines is processed and saved in the cache, identified with the unique fragment name.
 
 The code not included between such lines is always processed and not cached.
@@ -313,7 +313,7 @@ For instance, imagine that the `update` action of the `user` module modifies the
 Listing 12-9 - Clearing the Cache for a Given Action, in `modules/user/actions/actions.class.php`
 
     [php]
-    public function executeUpdate($request)
+    public function executeUpdate(sfWebRequest $request)
     {
       // Update a user
       $user_id = $request->getParameter('id');

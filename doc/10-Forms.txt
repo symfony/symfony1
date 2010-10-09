@@ -173,7 +173,7 @@ The `submit_image_tag()` helper uses the same syntax and has the same advantages
 >
 >     [php]
 >     // In mymodule/actions/actions.class.php
->     public function executeEditAuthor($request)
+>     public function executeEditAuthor(sfWebRequest $request)
 >     {
 >       if (!$this->getRequest()->isMethod('post'))
 >       {
@@ -497,7 +497,7 @@ The `update` action of the `author` module, called when the form is submitted, c
 Listing 10-17 - Handling a Form Submission Based on Object Form Helpers
 
     [php]
-    public function executeUpdate($request)
+    public function executeUpdate(sfWebRequest $request)
     {
       $author = AuthorPeer::retrieveByPk($request->getParameter('id'));
       $this->forward404Unless($author);

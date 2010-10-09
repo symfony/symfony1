@@ -119,12 +119,12 @@ Listing 6-4 - Action Class with Two Actions, in `frontend/modules/mymodule/actio
     [php]
     class mymoduleActions extends sfActions
     {
-      public function executeIndex()
+      public function executeIndex(sfWebRequest $request)
       {
         // ...
       }
 
-      public function executeList()
+      public function executeList(sfWebRequest $request)
       {
         // ...
       }
@@ -154,7 +154,7 @@ Listing 6-5 - Single Action File, in `frontend/modules/mymodule/actions/indexAct
     [php]
     class indexAction extends sfAction
     {
-      public function execute($request)
+      public function execute(sfWebRequest $request)
       {
         // ...
       }
@@ -165,7 +165,7 @@ Listing 6-6 - Single Action File, in `frontend/modules/mymodule/actions/listActi
     [php]
     class listAction extends sfAction
     {
-      public function execute($request)
+      public function execute(sfWebRequest $request)
       {
         // ...
       }
@@ -180,7 +180,7 @@ Listing 6-7 - `sfActions` Common Methods
     [php]
     class mymoduleActions extends sfActions
     {
-      public function executeIndex($request)
+      public function executeIndex(sfWebRequest $request)
       {
         // Retrieving request parameters
         $password    = $request->getParameter('password');
@@ -329,7 +329,7 @@ There is a special kind of forward that is used very commonly. The `forward404()
 Listing 6-11 - Use of the `forward404()` Method
 
     [php]
-    public function executeShow($request)
+    public function executeShow(sfWebRequest $request)
     {
       $article = ArticlePeer::retrieveByPK($request->getParameter('id'));
       if (!$article)
@@ -347,7 +347,7 @@ Listing 6-12 - Use of the `forward404If()` Method
 
     [php]
     // This action is equivalent to the one shown in Listing 6-11
-    public function executeShow($request)
+    public function executeShow(sfWebRequest $request)
     {
       $article = ArticlePeer::retrieveByPK($request->getParameter('id'));
       $this->forward404If(!$article);
@@ -382,12 +382,12 @@ Listing 6-13 - Using `preExecute()`, `postExecute()`, and Custom Methods in an A
         ...
       }
 
-      public function executeIndex($request)
+      public function executeIndex(sfWebRequest $request)
       {
         ...
       }
 
-      public function executeList($request)
+      public function executeList(sfWebRequest $request)
       {
         ...
         $this->myCustomMethod();  // Methods of the action class are accessible
@@ -449,7 +449,7 @@ Listing 6-14 - The `sfWebRequest` Object Knows How to Handle Attached Files
     [php]
     class mymoduleActions extends sfActions
     {
-      public function executeUpload($request)
+      public function executeUpload(sfWebRequest $request)
       {
         if ($request->hasFiles())
         {
@@ -486,7 +486,7 @@ Listing 6-15 - The `sfUser` Object Can Hold Custom User Attributes Existing Acro
     [php]
     class mymoduleActions extends sfActions
     {
-      public function executeFirstPage($request)
+      public function executeFirstPage(sfWebRequest $request)
       {
         $nickname = $request->getParameter('nickname');
 
@@ -676,7 +676,7 @@ Listing 6-23 - Setting the Authenticated Status of a User
     [php]
     class myAccountActions extends sfActions
     {
-      public function executeLogin($request)
+      public function executeLogin(sfWebRequest $request)
       {
         if ($request->getParameter('login') == 'foobar')
         {

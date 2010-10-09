@@ -59,7 +59,7 @@ class sfDeprecatedClassesValidation extends sfValidation
       'sfActionException', 'sfValidatorException', 'sfFillInFormFilter', 'sfValidationExecutionFilter',
       'sfRequestCompat10', 'sfFillInForm', 'sfCallbackValidator', 'sfCompareValidator', 'sfDateValidator',
       'sfEmailValidator', 'sfFileValidator', 'sfNumberValidator', 'sfRegexValidator', 'sfStringValidator',
-      'sfUrlValidator', 'sfValidator\(', 'sfValidatorManager', 'sfMailView', 'sfMail\(',
+      'sfUrlValidator', 'sfValidator', 'sfValidatorManager', 'sfMailView', 'sfMail',
     );
 
     $found = array();
@@ -71,12 +71,12 @@ class sfDeprecatedClassesValidation extends sfValidation
     ));
     foreach ($files as $file)
     {
-      $content = file_get_contents($file);
+      $content = sfToolkit::stripComments(file_get_contents($file));
 
       $matches = array();
       foreach ($classes as $class)
       {
-        if (false !== stripos($content, $class))
+        if (preg_match('#\b'.preg_quote($class, '#').'\b#', $content))
         {
           $matches[] = $class;
         }

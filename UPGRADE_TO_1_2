@@ -661,6 +661,16 @@ The old `post` option of `link_to` is still valid but deprecated:
     // and equivalent to
     <?php echo link_to('@some_route', array('method' => 'post')) ?>
 
+Using `link_to()` for non-symfony links is no longer possible in favour of the
+new functionality. In fact, `link_to()` was never intended for cases like this:
+
+    [php]
+    // does no longer work
+    <?php echo link_to('Link', '#', array('onclick' => "alert('js')"); ?>
+
+    // use this instead
+    <a href="#" onclick="alert('js')">Link</a>
+
 The `url_for()` and `link_to()` helpers support new signatures.
 Instead of an internal URI, they can now also take the route name and
 an array of parameters:

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 14507 2009-01-06 19:12:41Z Kris.Wallsmith $
+ * @version    SVN: $Id: UrlHelper.php 27597 2010-02-05 16:37:22Z FabianLange $
  */
 
 function link_to2($name, $routeName, $params, $options = array())
@@ -163,7 +163,7 @@ function link_to()
 {
   // for BC with 1.1
   $arguments = func_get_args();
-  if (empty($arguments[1]) || '@' == substr($arguments[1], 0, 1) || false !== strpos($arguments[1], '/'))
+  if (empty($arguments[1]) || is_array($arguments[1]) || '@' == substr($arguments[1], 0, 1) || false !== strpos($arguments[1], '/'))
   {
     return call_user_func_array('link_to1', $arguments);
   }
