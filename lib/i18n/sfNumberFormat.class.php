@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 2834 2006-11-27 14:09:05Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 4340 2007-06-23 06:47:05Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -69,18 +69,18 @@ class sfNumberFormat
 {
   /**
    * The DateTimeFormatInfo, containing culture specific patterns and names.
-   * @var DateTimeFormatInfo   
+   * @var DateTimeFormatInfo
    */
   protected $formatInfo;
 
   /**
-   * Create a new number format instance. The constructor can be instantiated
+   * Creates a new number format instance. The constructor can be instantiated
    * with a string that represent a culture/locale. Similarly, passing
    * a sfCultureInfo or sfNumberFormatInfo instance will instantiated a instance
-   * for that particular culture. 
+   * for that particular culture.
    *
    * @param mixed either null, a sfCultureInfo, a sfNumberFormatInfo, or string
-   * @return sfNumberFormat 
+   * @return sfNumberFormat
    */
   function __construct($formatInfo = null)
   {
@@ -103,7 +103,7 @@ class sfNumberFormat
   }
 
   /**
-   * For the number for a certain pattern. The valid patterns are
+   * Formats the number for a certain pattern. The valid patterns are
    * 'c', 'd', 'e', 'p' or a custom pattern, such as "#.000" for
    * 3 decimal places.
    *
@@ -161,7 +161,7 @@ class sfNumberFormat
   }
 
   /**
-   * For the integer, perform groupings and string padding.
+   * Formats the integer, perform groupings and string padding.
    *
    * @param string the decimal number in string form.
    * @return string  formatted integer string with grouping
@@ -231,7 +231,7 @@ class sfNumberFormat
   }
 
   /**
-   * Format the decimal places.
+   * Formats the decimal places.
    *
    * @param string the decimal number in string form.
    * @return string formatted decimal places.
@@ -252,8 +252,8 @@ class sfNumberFormat
       }
       else if (is_int($decimalDigits))
       {
-        $string = $float = round((float)$string, $decimalDigits);
-        if (strpos((string)$float, '.') === false)
+        $string = $float = round((float) $string, $decimalDigits);
+        if (strpos((string) $float, '.') === false)
         {
           $decimal = str_pad($decimal, $decimalDigits, '0');
         }
@@ -282,7 +282,7 @@ class sfNumberFormat
   }
 
   /**
-   * Set the pattern to format against. The default patterns
+   * Sets the pattern to format against. The default patterns
    * are retrieved from the sfNumberFormatInfo instance.
    *
    * @param string the requested patterns.

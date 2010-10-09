@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_XLIFF.class.php 2834 2006-11-27 14:09:05Z fabien $
+ * @version    $Id: sfMessageSource_XLIFF.class.php 4340 2007-06-23 06:47:05Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -55,11 +55,11 @@ class sfMessageSource_XLIFF extends sfMessageSource
    */
   function __construct($source)
   {
-    $this->source = (string)$source;
+    $this->source = (string) $source;
   }
 
   /**
-   * Load the messages from a XLIFF file.
+   * Loads the messages from a XLIFF file.
    *
    * @param string XLIFF file.
    * @return array of messages.
@@ -81,17 +81,17 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
     foreach ($translationUnit as $unit)
     {
-      $source = (string)$unit->source;
-      $translations[$source][] = (string)$unit->target;
-      $translations[$source][]= (string)$unit['id'];
-      $translations[$source][]= (string)$unit->note;
+      $source = (string) $unit->source;
+      $translations[$source][] = (string) $unit->target;
+      $translations[$source][]= (string) $unit['id'];
+      $translations[$source][]= (string) $unit->note;
     }
 
     return $translations;
   }
 
   /**
-   * Get the last modified unix-time for this particular catalogue+variant.
+   * Gets the last modified unix-time for this particular catalogue+variant.
    * Just use the file modified time.
    *
    * @param string catalogue+variant
@@ -99,18 +99,11 @@ class sfMessageSource_XLIFF extends sfMessageSource
    */
   protected function getLastModified($source)
   {
-    if (is_file($source))
-    {
-      return filemtime($source);
-    }
-    else
-    {
-      return 0;
-    }
+    return is_file($source) ? filemtime($source) : 0;
   }
 
   /**
-   * Get the XLIFF file for a specific message catalogue and cultural variant.
+   * Gets the XLIFF file for a specific message catalogue and cultural variant.
    *
    * @param string message catalogue
    * @return string full path to the XLIFF file.
@@ -121,7 +114,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Determin if the XLIFF file source is valid.
+   * Determines if the XLIFF file source is valid.
    *
    * @param string XLIFF file
    * @return boolean true if valid, false otherwise.
@@ -132,7 +125,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Get all the variants of a particular catalogue.
+   * Gets all the variants of a particular catalogue.
    *
    * @param string catalogue name
    * @return array list of all variants for this catalogue. 
@@ -150,7 +143,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
     {
       if (strlen($variants[$i]) > 0)
       {
-        $variant .= ($variant) ? '_'.$variants[$i] : $variants[$i];
+        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
         $catalogues[] = $catalogue.$this->dataSeparator.$variant.$this->dataExt;
       }
     }
@@ -162,7 +155,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Traverse through the directory structure to find the catalogues.
+   * Traverses through the directory structure to find the catalogues.
    * This should only be called by getCatalogueList()
    *
    * @param string a particular catalogue.
@@ -180,7 +173,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
     {
       if (strlen($variants[$i]) > 0)
       {
-        $variant .= ($variant) ? '_'.$variants[$i] : $variants[$i];
+        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
         $catalogues[] = $variant.'/'.$catalogue.$this->dataExt;
       }
     }
@@ -190,7 +183,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
   /**
    * Returns a list of catalogue and its culture ID.
-   * E.g. array('messages','en_AU')
+   * E.g. array('messages', 'en_AU')
    *
    * @return array list of catalogues 
    * @see getCatalogues()
@@ -203,7 +196,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   /**
    * Returns a list of catalogue and its culture ID. This takes care
    * of directory structures.
-   * E.g. array('messages','en_AU')
+   * E.g. array('messages', 'en_AU')
    *
    * @return array list of catalogues 
    */
@@ -245,7 +238,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Get the variant for a catalogue depending on the current culture.
+   * Gets the variant for a catalogue depending on the current culture.
    *
    * @param string catalogue
    * @return string the variant. 
@@ -273,7 +266,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Save the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source. 
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -300,17 +293,27 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
     if (is_writable($filename) == false)
     {
-      throw new sfException("Unable to save to file {$filename}, file must be writable.");
+      throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $filename));
     }
 
     // create a new dom, import the existing xml
-    $dom = DOMDocument::load($filename);
+    $dom = new DOMDocument();
+    $dom->load($filename);
 
     // find the body element
     $xpath = new DomXPath($dom);
     $body = $xpath->query('//body')->item(0);
 
-    $count = $xpath->query('//trans-unit')->length;
+    // find the biggest "id" used
+    $lastNodes = $xpath->query('//trans-unit[not(@id <= preceding-sibling::trans-unit/@id) and not(@id <= following-sibling::trans-unit/@id)]');
+    if (null !== $last = $lastNodes->item(0))
+    {
+      $count = intval($last->getAttribute('id'));
+    }
+    else
+    {
+      $count = 0;
+    }
 
     // for each message add it to the XML file using DOM
     foreach ($messages as $message)
@@ -346,7 +349,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Update the translation.
+   * Updates the translation.
    *
    * @param string the source string.
    * @param string the new translation string.
@@ -368,11 +371,12 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
     if (is_writable($filename) == false)
     {
-      throw new sfException("Unable to update file {$filename}, file must be writable.");
+      throw new sfException(sprintf("Unable to update file %s, file must be writable.", $filename));
     }
 
     // create a new dom, import the existing xml
-    $dom = DOMDocument::load($filename);
+    $dom = new DOMDocument();
+    $dom->load($filename);
 
     // find the body element
     $xpath = new DomXPath($dom);
@@ -417,7 +421,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
       // append a target
       if ($found && !$targetted)
       {
-        $unit->appendChild($dom->createElement('target',$target));
+        $unit->appendChild($dom->createElement('target', $target));
       }
 
       // append a note
@@ -450,7 +454,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   }
 
   /**
-   * Delete a particular message from the specified catalogue.
+   * Deletes a particular message from the specified catalogue.
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
@@ -470,11 +474,12 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
     if (is_writable($filename) == false)
     {
-      throw new sfException("Unable to modify file {$filename}, file must be writable.");
+      throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $filename));
     }
 
     // create a new dom, import the existing xml
-    $dom = DOMDocument::load($filename);
+    $dom = new DOMDocument();
+    $dom->load($filename);
 
     // find the body element
     $xpath = new DomXPath($dom);

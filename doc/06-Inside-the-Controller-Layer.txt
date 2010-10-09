@@ -235,7 +235,13 @@ Listing 6-8 - `sfActions` Common Methods
 >
 >You already saw, in the front controller, a call to sfContext::getInstance(). In an action, the getContext() method returns the same singleton. It is a very useful object that stores a reference to all the symfony core objects related to a given request, and offers an accessor for each of them:
 >
->`sfController`: The controller object (`->getController()`) `sfRequest`: The request object (`->getRequest()`) `sfResponse`: The response object (`->getResponse()`) `sfUser`: The user session object (`->getUser()`) `sfDatabaseConnection`: The database connection (`->getDatabaseConnection()`) `sfLogger`: The logger object (`->getLogger()`) `sfI18N`: The internationalization object (`->getI18N()`)
+>`sfController`: The controller object (`->getController()`)
+>`sfRequest`: The request object (`->getRequest()`)
+>`sfResponse`: The response object (`->getResponse()`)
+>`sfUser`: The user session object (`->getUser()`)
+>`sfDatabaseConnection`: The database connection (`->getDatabaseConnection()`)
+>`sfLogger`: The logger object (`->getLogger()`)
+>`sfI18N`: The internationalization object (`->getI18N()`)
 >
 >You can call the `sfContext::getInstance()` singleton from any part of the code.
 

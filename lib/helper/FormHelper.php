@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 4201 2007-06-10 09:12:21Z fabien $
+ * @version    SVN: $Id: FormHelper.php 4387 2007-06-25 16:49:03Z fabien $
  */
 
 /**
@@ -579,11 +579,15 @@ function input_date_range_tag($name, $value, $options = array())
 {
   $options = _parse_attributes($options);
 
-  return _get_option($options, 'before', '').
+  $before = _get_option($options, 'before', '');
+  $middle = _get_option($options, 'middle', '');
+  $after  = _get_option($options, 'after', '');
+
+  return $before.
          input_date_tag($name.'[from]', $value['from'], $options).
-         _get_option($options, 'middle', '').
+         $middle.
          input_date_tag($name.'[to]', $value['to'], $options).
-         _get_option($options, 'after', '');
+         $after;
 }
 
 /**

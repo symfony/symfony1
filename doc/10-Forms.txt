@@ -853,7 +853,7 @@ In this example, the validator will look in the database for a record of class `
       image:
         required:
           msg:      Please upload an image file
-        file:       True
+          file:     True
         sfFileValidator:
           mime_types:
             - 'image/jpeg'

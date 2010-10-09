@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 4098 2007-05-24 14:53:10Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 4340 2007-06-23 06:47:05Z fabien $
  */
 class sfI18N
 {
@@ -42,7 +42,6 @@ class sfI18N
     $this->context = $context;
 
     $this->globalMessageSource = $this->createMessageSource(sfConfig::get('sf_app_i18n_dir'));
-
     $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);
   }
 
