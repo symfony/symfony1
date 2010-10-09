@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: JavascriptHelper.php 3500 2007-02-18 10:25:13Z fabien $
+ * @version    SVN: $Id: JavascriptHelper.php 4754 2007-07-31 09:08:30Z fabien $
  */
 
 /*
@@ -992,7 +992,7 @@
 
   function _build_observer($klass, $name, $options = array())
   {
-    if (!isset($options['with']) && $options['update'])
+    if (!isset($options['with']) && isset($options['update']))
     {
       $options['with'] = 'value';
     }

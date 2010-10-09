@@ -602,9 +602,15 @@ Listing 5-21 - YAML Files Can Contain PHP
 
     all:
       translation:
-        format:  <?php echo sfConfig::get('sf_i18n') == true ? 'xliff' : 'none' ?>
+        format:  <?php echo (sfConfig::get('sf_i18n') == true ? 'xliff' : 'none')."\n" ?>
 
 But be aware that the configuration is parsed very early in the life of a request, so you will not have any symfony built-in methods or functions to help you.
+
+Also, as the `echo` language construct does not add a carriage return by default, you need to add a "\n" or use the `echoln` helper to keep the YAML format valid.
+
+    all:
+      translation:
+        format:  <?php echoln sfConfig::get('sf_i18n') == true ? 'xliff' : 'none' ?>
 
 >**CAUTION**
 >In the production environment, the configuration is cached, so the configuration files are parsed (and executed) only once after the cache is cleared.

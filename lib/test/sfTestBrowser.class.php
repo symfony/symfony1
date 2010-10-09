@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestBrowser.class.php 3329 2007-01-23 08:29:34Z fabien $
+ * @version    SVN: $Id: sfTestBrowser.class.php 4574 2007-07-11 12:13:26Z fabien $
  */
 class sfTestBrowser extends sfBrowser
 {
@@ -62,7 +62,7 @@ class sfTestBrowser extends sfBrowser
   public function getAndCheck($module, $action, $url = null, $code = 200)
   {
     return $this->
-      get(null !== null ? $url : sprintf('/%s/%s', $module, $action))->
+      get(null !== $url ? $url : sprintf('/%s/%s', $module, $action))->
       isStatusCode($code)->
       isRequestParameter('module', $module)->
       isRequestParameter('action', $action)
@@ -232,9 +232,10 @@ class sfTestBrowser extends sfBrowser
    */
   public function isResponseHeader($key, $value)
   {
-    $headers = $this->getResponse()->getHttpHeader($key);
+    $headers = explode(', ', $this->getResponse()->getHttpHeader($key));
 
     $ok = false;
+
     foreach ($headers as $header)
     {
       if ($header == $value)
@@ -244,7 +245,7 @@ class sfTestBrowser extends sfBrowser
       }
     }
 
-    $this->test->ok($ok, sprintf('response header "%s" is "%s"', $key, $value));
+    $this->test->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->getResponse()->getHttpHeader($key)));
 
     return $this;
   }

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 4286 2007-06-20 12:07:41Z fabien $
+ * @version    SVN: $Id: sfBrowser.class.php 4750 2007-07-31 08:46:44Z fabien $
  */
 class sfBrowser
 {
@@ -252,7 +252,7 @@ class sfBrowser
   {
     if (is_null($this->dom))
     {
-      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+      throw new sfException('The DOM is not accessible because the browser response content type is not HTML.');
     }
 
     return $this->domCssSelector;
@@ -262,7 +262,7 @@ class sfBrowser
   {
     if (is_null($this->dom))
     {
-      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+      throw new sfException('The DOM is not accessible because the browser response content type is not HTML.');
     }
 
     return $this->dom;

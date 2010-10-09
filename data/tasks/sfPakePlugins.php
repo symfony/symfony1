@@ -144,6 +144,9 @@ function _pear_echo_message($message)
 
 function _pear_init()
 {
+  // Remove E_STRICT from error_reporting
+  error_reporting(error_reporting() &~ E_STRICT);
+
   require_once 'PEAR.php';
   require_once 'PEAR/Frontend.php';
   require_once 'PEAR/Config.php';

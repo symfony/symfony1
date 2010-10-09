@@ -383,9 +383,9 @@ This command reads all the YAML fixture files from the `data/fixtures/` director
 
     > symfony propel-load-data frontend append
 
-You can specify another fixture file or directory in the call. In this case, add a path relative to the project `data/` directory.
+You can specify another fixture file or directory in the call. In this case, add a path relative to the project directory.
 
-    > symfony propel-load-data frontend myfixtures/myfile.yml
+    > symfony propel-load-data frontend data/myfixtures/myfile.yml
 
 ### Using Linked Tables
 

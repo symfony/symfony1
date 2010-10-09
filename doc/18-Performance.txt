@@ -68,7 +68,7 @@ Listing 18-1 - Limiting the Number of Results Returned by a Criteria
     $c->setLimit(10);   // Number of records returned
     $articles = ArticlePeer::doSelect($c);
 
-This can be automated by the use of a pager. The `sfPropelPager` object automatically handles the offset and the limit of a Propel query to hydrate only the objects required for a given page. Refer to the API documentation for more information on this class.
+This can be automated by the use of a pager. The `sfPropelPager` object automatically handles the offset and the limit of a Propel query to hydrate only the objects required for a given page. Refer to the [pager documentation](http://www.symfony-project.com/cookbook/trunk/pager) for more information on this class.
 
 ### Minimizing the Number of Queries with Joins
 

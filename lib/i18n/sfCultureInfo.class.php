@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    $Id: sfCultureInfo.class.php 4439 2007-06-27 14:24:44Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -222,7 +222,7 @@ class sfCultureInfo
    * @param string a culture
    * @return boolean true if valid, false otherwise.
    */
-  public function validCulture($culture)
+  static public function validCulture($culture)
   {
     if (preg_match('/^[a-z]{2}(_[A-Z]{2,5}){0,2}$/', $culture))
     {

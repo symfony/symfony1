@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfWebRequest.class.php 3250 2007-01-12 20:09:11Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 4642 2007-07-17 11:32:43Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -795,7 +795,7 @@ class sfWebRequest extends sfRequest
     $pathArray = $this->getPathInfoArray();
 
     return (
-      (isset($pathArray['HTTPS']) && strtolower($pathArray['HTTPS']) == 'on')
+      (isset($pathArray['HTTPS']) && (strtolower($pathArray['HTTPS']) == 'on' || strtolower($pathArray['HTTPS']) == 1))
       ||
       (isset($pathArray['HTTP_X_FORWARDED_PROTO']) && strtolower($pathArray['HTTP_X_FORWARDED_PROTO']) == 'https')
     );

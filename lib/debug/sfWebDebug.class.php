@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 3606 2007-03-13 19:01:45Z fabien $
+ * @version    SVN: $Id: sfWebDebug.class.php 4641 2007-07-17 11:19:54Z fabien $
  */
 class sfWebDebug
 {
@@ -337,10 +337,10 @@ class sfWebDebug
         <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>
       </div>
 
-      <div id="sfWebDebugLog" class="top" style="display: none"><h1>Log and debug messages</h1>'.$logInfo.'</div>
-      <div id="sfWebDebugConfig" class="top" style="display: none"><h1>Configuration and request variables</h1>'.$this->getCurrentConfigAsHtml().'</div>
-      <div id="sfWebDebugDatabaseDetails" class="top" style="display: none"><h1>SQL queries</h1>'.$dbInfoDetails.'</div>
-      <div id="sfWebDebugTimeDetails" class="top" style="display: none"><h1>Timers</h1>'.$timeInfoDetails.'</div>
+      <div id="sfWebDebugLog" class="sfWebDebugTop" style="display: none"><h1>Log and debug messages</h1>'.$logInfo.'</div>
+      <div id="sfWebDebugConfig" class="sfWebDebugTop" style="display: none"><h1>Configuration and request variables</h1>'.$this->getCurrentConfigAsHtml().'</div>
+      <div id="sfWebDebugDatabaseDetails" class="sfWebDebugTop" style="display: none"><h1>SQL queries</h1>'.$dbInfoDetails.'</div>
+      <div id="sfWebDebugTimeDetails" class="sfWebDebugTop" style="display: none"><h1>Timers</h1>'.$timeInfoDetails.'</div>
 
       </div>
     ';
