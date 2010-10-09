@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 13697 2008-12-03 23:41:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 16170 2009-03-11 08:02:42Z fabien $
  */
 abstract class sfTestFunctionalBase
 {
@@ -552,7 +552,7 @@ abstract class sfTestFunctionalBase
       return false;
     }
 
-    $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
+    $msg = sprintf('PHP sent a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
     switch ($errno)
     {
       case E_WARNING:

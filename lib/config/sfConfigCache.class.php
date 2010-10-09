@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfConfigCache.class.php 10059 2008-07-02 05:38:45Z fabien $
+ * @version    SVN: $Id: sfConfigCache.class.php 16530 2009-03-23 14:55:43Z FabianLange $
  */
 class sfConfigCache
 {
@@ -329,20 +329,29 @@ class sfConfigCache
    */
   protected function writeCacheFile($config, $cache, $data)
   {
+    $current_umask = umask(0000);
     if (!is_dir(dirname($cache)))
     {
-      $current_umask = umask(0000);
       if (false === @mkdir(dirname($cache), 0777, true))
       {
         throw new sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', dirname($cache), $config));
       }
-      umask($current_umask);
     }
 
-    if (false === @file_put_contents($cache, $data))
+    $tmpFile = $cache.'.'.getmypid();
+
+    if (!$fp = @fopen($tmpFile, 'wb'))
     {
-      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $cache, $config));
+      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $tmpFile, $config));
     }
+
+    @fwrite($fp, $data);
+    @fclose($fp);
+
+    chmod($tmpFile, 0666);
+    @unlink($cache);
+    rename($tmpFile, $cache);
+    umask($current_umask);
   }
 
   /**

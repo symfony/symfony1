@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 13485 2008-11-29 14:48:24Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 16230 2009-03-12 08:30:19Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -497,8 +497,8 @@ class sfWebRequest extends sfRequest
   /**
    * Gets a cookie value.
    *
-   * @param  string $name     Cookie name
-   * @param  string $default  Default value returned when no cookie with given name is found
+   * @param  string $name          Cookie name
+   * @param  string $defaultValue  Default value returned when no cookie with given name is found
    *
    * @return mixed
    */

@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllReloadTask.class.php 14213 2008-12-19 21:03:13Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildAllReloadTask.class.php 15823 2009-02-26 19:16:05Z Jonathan.Wage $
  */
 class sfDoctrineBuildAllReloadTask extends sfDoctrineBaseTask
 {
@@ -74,8 +74,13 @@ EOF;
     {
       $dropDbOptions[] = '--application=' . $options['application'];
     }
-    $dropDb->run(array(), $dropDbOptions);
-    
+    $ret = $dropDb->run(array(), $dropDbOptions);
+
+    if ($ret)
+    {
+      return $ret;
+    }
+
     $buildAllLoad = new sfDoctrineBuildAllLoadTask($this->dispatcher, $this->formatter);
     $buildAllLoad->setCommandApplication($this->commandApplication);
 

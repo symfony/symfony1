@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 13373 2008-11-26 21:06:27Z fabien $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 16555 2009-03-24 17:41:32Z Kris.Wallsmith $
  */
 class sfWebDebugLogger extends sfVarLogger
 {
@@ -94,8 +94,8 @@ class sfWebDebugLogger extends sfVarLogger
     }
 
     $webDebug = new $this->webDebugClass($this->dispatcher, $this, array(
-      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot().'/' : '').sfConfig::get('sf_web_debug_web_dir').'/images')
-    );
+      'image_root_path' => ($request->getRelativeUrlRoot() ? $request->getRelativeUrlRoot() : '').sfConfig::get('sf_web_debug_web_dir').'/images',
+    ));
 
     return $webDebug->injectToolbar($content);
   }

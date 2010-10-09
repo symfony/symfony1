@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PHP5NestedSetBuilder.php 1091 2009-01-07 11:13:06Z heltem $
+ *  $Id: PHP5NestedSetBuilder.php 1097 2009-02-09 13:41:11Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -520,9 +520,6 @@ abstract class ".$this->getClassname()." extends ".$this->getObjectBuilder()->ge
 	public function getDescendants(PropelPDO \$con = null)
 	{
 		\$this->getLevel();
-		if (is_array(\$this->_children)) {
-			return \$this->_children;
-		}
 
 		return $peerClassname::retrieveDescendants(\$this, \$con);
 	}

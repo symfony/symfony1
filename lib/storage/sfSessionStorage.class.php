@@ -21,7 +21,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfSessionStorage.class.php 13499 2008-11-29 17:23:39Z fabien $
+ * @version    SVN: $Id: sfSessionStorage.class.php 15553 2009-02-17 11:04:14Z dwhittle $
  */
 class sfSessionStorage extends sfStorage
 {
@@ -180,5 +180,6 @@ class sfSessionStorage extends sfStorage
   public function shutdown()
   {
     // don't need a shutdown procedure because read/write do it in real-time
+    session_write_close();
   }
 }

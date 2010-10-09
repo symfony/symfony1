@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormTime.class.php 14261 2008-12-22 20:19:21Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormTime.class.php 15283 2009-02-05 15:19:29Z fabien $
  */
 class sfWidgetFormTime extends sfWidgetForm
 {
@@ -30,7 +30,7 @@ class sfWidgetFormTime extends sfWidgetForm
    *  * minutes:                An array of minutes for the minute select tag (optional)
    *  * seconds:                An array of seconds for the second select tag (optional)
    *  * can_be_empty:           Whether the widget accept an empty value (true by default)
-   *  * empty_values:           An array of values to use for the empty value (empty string for year, month, and date by default)
+   *  * empty_values:           An array of values to use for the empty value (empty string for hours, minutes, and seconds by default)
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes

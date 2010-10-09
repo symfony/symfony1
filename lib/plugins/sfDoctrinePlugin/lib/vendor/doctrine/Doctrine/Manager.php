@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Manager.php 5308 2008-12-18 00:20:38Z jwage $
+ *  $Id: Manager.php 5457 2009-02-03 03:55:57Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5308 $
+ * @version     $Revision: 5457 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Manager extends Doctrine_Configurable implements Countable, IteratorAggregate
@@ -103,6 +103,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES   => false,
                         Doctrine::ATTR_USE_DQL_CALLBACKS        => false,
                         Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE   => false,
+                        Doctrine::ATTR_HYDRATE_OVERWRITE        => true
                         ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);

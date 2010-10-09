@@ -13,7 +13,7 @@ class BaseArticleForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'             => new sfWidgetFormInputHidden(),
-      'author_id'      => new sfWidgetFormDoctrineSelect(array('model' => 'Author', 'add_empty' => true)),
+      'author_id'      => new sfWidgetFormDoctrineChoice(array('model' => 'Author', 'add_empty' => true)),
       'is_on_homepage' => new sfWidgetFormInputCheckbox(),
       'created_at'     => new sfWidgetFormDateTime(),
       'updated_at'     => new sfWidgetFormDateTime(),

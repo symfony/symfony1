@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 14484 2009-01-06 10:26:22Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 16178 2009-03-11 08:54:03Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -23,11 +23,12 @@ class sfValidatorFile extends sfValidatorBase
    *
    * Available options:
    *
-   *  * max_size:           The maximum file size
-   *  * mime_types:         Allowed mime types array or category (available categories: web_images)
-   *  * mime_type_guessers: An array of mime type guesser PHP callables (must return the mime type or null)
-   *  * mime_categories:    An array of mime type categories (web_images is defined by default)
-   *  * path:               The path where to save the file - as used by the sfValidatedFile class (optional)
+   *  * max_size:             The maximum file size
+   *  * mime_types:           Allowed mime types array or category (available categories: web_images)
+   *  * mime_type_guessers:   An array of mime type guesser PHP callables (must return the mime type or null)
+   *  * mime_categories:      An array of mime type categories (web_images is defined by default)
+   *  * path:                 The path where to save the file - as used by the sfValidatedFile class (optional)
+   *  * validated_file_class: Name of the class that manages the cleaned uploaded file (optional)
    *
    * There are 3 built-in mime type guessers:
    *
@@ -128,7 +129,7 @@ class sfValidatorFile extends sfValidatorBase
       case UPLOAD_ERR_NO_TMP_DIR:
         throw new sfValidatorError($this, 'no_tmp_dir');
       case UPLOAD_ERR_CANT_WRITE:
-        throw new sfValidatorError($this, 'no_cant_write');
+        throw new sfValidatorError($this, 'cant_write');
       case UPLOAD_ERR_EXTENSION:
         throw new sfValidatorError($this, 'extension');
     }
@@ -283,7 +284,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 14484 2009-01-06 10:26:22Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 16178 2009-03-11 08:54:03Z fabien $
  */
 class sfValidatedFile
 {
@@ -393,9 +394,9 @@ class sfValidatedFile
   }
 
   /**
-   * Generates a unique filename for the current file.
+   * Generates a random filename for the current file.
    *
-   * @return string A unique name to represent the current file
+   * @return string A random name to represent the current file
    */
   public function generateFilename()
   {

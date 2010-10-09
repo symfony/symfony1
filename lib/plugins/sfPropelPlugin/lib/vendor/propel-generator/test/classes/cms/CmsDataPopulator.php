@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: CmsDataPopulator.php 876 2007-12-19 13:16:31Z heltem $
+ *  $Id: CmsDataPopulator.php 1098 2009-02-09 13:42:51Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -126,12 +126,17 @@ class CmsDataPopulator {
 		$dbh->exec("INSERT INTO Page (ScopeId, LeftChild, RightChild, Title) VALUES (1, 184,185,'vaktrutiner')");
 		$dbh->exec("INSERT INTO Page (ScopeId, LeftChild, RightChild, Title) VALUES (1, 189,190,'laroplan')");
 		$dbh->exec("INSERT INTO Page (ScopeId, LeftChild, RightChild, Title) VALUES (1, 186,187,'SSOkurs')");
+
+		$dbh->exec("INSERT INTO Category (LeftChild, RightChild, Title) VALUES (1, 8, 'Cat_1')");
+		$dbh->exec("INSERT INTO Category (LeftChild, RightChild, Title) VALUES (2, 7, 'Cat_1_1')");
+		$dbh->exec("INSERT INTO Category (LeftChild, RightChild, Title) VALUES (3, 6, 'Cat_1_1_1')");
+		$dbh->exec("INSERT INTO Category (LeftChild, RightChild, Title) VALUES (4, 5, 'Cat_1_1_1_1')");
 	}
 
 	public static function depopulate()
 	{
 		$dbh = Propel::getConnection(PagePeer::DATABASE_NAME);
 		$dbh->exec("DELETE FROM Page");
+		$dbh->exec("DELETE FROM Category");
 	}
-
 }

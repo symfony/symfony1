@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 11794 2008-09-26 09:05:48Z fabien $
+ * @version    SVN: $Id: sfRouting.class.php 15940 2009-03-02 23:54:06Z Kris.Wallsmith $
  */
 abstract class sfRouting
 {
@@ -274,7 +274,7 @@ abstract class sfRouting
       }
     }
 
-    if ($absolute && isset($this->options['context']['host']))
+    if ($absolute && isset($this->options['context']['host']) && 0 !== strpos($url, 'http'))
     {
       $url = 'http'.(isset($this->options['context']['is_secure']) && $this->options['context']['is_secure'] ? 's' : '').'://'.$this->options['context']['host'].$url;
     }

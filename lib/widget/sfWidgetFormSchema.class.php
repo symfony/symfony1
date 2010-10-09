@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 12813 2008-11-09 10:23:47Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 16227 2009-03-12 08:26:39Z fabien $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -279,7 +279,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   }
 
   /**
-   * Sets the labels.
+   * Gets the labels.
    *
    * @return array An array of label names
    */

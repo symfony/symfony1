@@ -69,6 +69,18 @@ class Doctrine_Template_Searchable extends Doctrine_Template
     }
 
     /**
+     * Proxy method so the batch updating can be called from table classes
+     *
+     * @param integer $limit 
+     * @param integer $offset 
+     * @return void
+     */
+    public function batchUpdateIndexTableProxy($limit = null, $offset = null)
+    {
+        $this->batchUpdateIndex($limit, $offset);
+    }
+
+    /**
      * Searchable keyword search proxy for Doctrine_Table
      * 
      * @param string $string Keyword string to search for

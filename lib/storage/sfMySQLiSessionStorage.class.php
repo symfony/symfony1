@@ -20,7 +20,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
  * @author     Julien Garand <julien.garand@gmail.com>
- * @version    SVN: $Id: sfMySQLiSessionStorage.class.php 9662 2008-06-19 09:50:09Z FabianLange $
+ * @version    SVN: $Id: sfMySQLiSessionStorage.class.php 15545 2009-02-16 21:47:19Z dwhittle $
  */
 class sfMySQLiSessionStorage extends sfMySQLSessionStorage
 {
@@ -32,7 +32,7 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_query($query)
   {
-    return mysqli_query($this->db,$query);
+    return mysqli_query($this->db, $query);
   }
 
   /**
@@ -43,7 +43,7 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_escape($string)
   {
-    return mysqli_real_escape_string($this->db,$string);
+    return mysqli_real_escape_string($this->db, $string);
   }
 
   /**

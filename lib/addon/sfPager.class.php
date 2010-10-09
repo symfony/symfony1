@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 9183 2008-05-22 09:40:42Z FabianLange $
+ * @version    SVN: $Id: sfPager.class.php 16260 2009-03-12 11:48:02Z fabien $
  */
 
 /**
@@ -22,7 +22,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 9183 2008-05-22 09:40:42Z FabianLange $
+ * @version    SVN: $Id: sfPager.class.php 16260 2009-03-12 11:48:02Z fabien $
  */
 abstract class sfPager
 {
@@ -85,7 +85,7 @@ abstract class sfPager
       $links[] = $i++;
     }
 
-    $this->currentMaxLink = $links[count($links) - 1];
+    $this->currentMaxLink = count($links) ? $links[count($links) - 1] : 1;
 
     return $links;
   }

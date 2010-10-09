@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 4778 2008-08-19 01:27:22Z guilhermeblanco $
+ *  $Id: Mysql.php 5456 2009-02-03 03:15:55Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,10 +29,31 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4778 $
+ * @version     $Revision: 5456 $
  */
 class Doctrine_Export_Mysql extends Doctrine_Export
 {
+    /**
+     * drop existing constraint
+     *
+     * @param string    $table        name of table that should be used in method
+     * @param string    $name         name of the constraint to be dropped
+     * @param string    $primary      hint if the constraint is primary
+     * @return void
+     */
+    public function dropConstraint($table, $name, $primary = false)
+    {
+        $table = $this->conn->quoteIdentifier($table);
+
+        if ( ! $primary) {
+            $name = 'CONSTRAINT ' . $this->conn->quoteIdentifier($name);
+        } else {
+            $name = 'PRIMARY KEY';
+        }
+
+        return $this->conn->exec('ALTER TABLE ' . $table . ' DROP ' . $name);
+    }
+
     /**
      * createDatabaseSql
      *

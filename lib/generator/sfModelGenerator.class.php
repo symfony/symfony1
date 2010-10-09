@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 13947 2008-12-11 14:15:32Z fabien $
+ * @version    SVN: $Id: sfModelGenerator.class.php 15622 2009-02-19 10:27:58Z fabien $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -439,5 +439,10 @@ EOF;
   public function asPhp($variable)
   {
     return str_replace(array("\n", 'array ('), array('', 'array('), var_export($variable, true));
+  }
+
+  public function escapeString($string)
+  {
+    return str_replace("'", "\\'", $string);
   }
 }

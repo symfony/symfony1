@@ -19,7 +19,7 @@ The basic actions and templates that implement the CRUD operations for a given t
 
 ### Example Data Model
 
-Throughout this chapter, the listings will demonstrate the capabilities of the symfony admin generator based on a simple example, which will remind you of Chapter 8. This is the well-known example of the weblog application, containing two `Article` and `Comment` classes. Listing 14-1 shows its schema, illustrated in Figure 14-1.
+Throughout this chapter, the listings will demonstrate the capabilities of the symfony admin generator based on a simple example, which will remind you of Chapter 8. This is the well-known example of the weblog application, containing two `BlogArticle` and `BlogComment` classes. Listing 14-1 shows its schema, illustrated in Figure 14-1.
 
 Listing 14-1 - `schema.yml` of the Example Weblog Application
 
@@ -62,9 +62,9 @@ Administration modules interpret the model by way of a special configuration fil
 
 With symfony, you build an administration on a per-model basis. A module is generated based on a Propel object using the `propel:generate-admin` task:
 
-    > php symfony propel:generate-admin backend Article
+    > php symfony propel:generate-admin backend BlogArticle --module=article
 
-This call is enough to create an `article` module in the `backend` application based on the `Article` class definition, and is accessible by the following:
+This call is enough to create an `article` module in the `backend` application based on the `BlogArticle` class definition, and is accessible by the following:
 
     http://localhost/backend.php/article
 
@@ -78,13 +78,13 @@ The look and feel of a generated module, illustrated in Figures 14-5 and 14-6, i
 >     article:
 >       class: sfPropelRouteCollection
 >       options:
->         model:                Article
+>         model:                BlogArticle
 >         module:               article
 >         with_wildcard_routes: true
 >
 >You can also create your own route and pass the name as an argument to the task instead of the model class name:
 >
->     > php symfony propel:generate-admin backend article
+>     > php symfony propel:generate-admin backend BlogArticle --module=article
 
 Figure 14-5 - `list` view of the `article` module in the `backend` application
 
@@ -101,7 +101,7 @@ Figure 14-6 - `edit` view of the `article` module in the `backend` application
 
 ### A Look at the Generated Code
 
-The code of the Article administration module, in the `apps/backend/modules/article/` directory, looks empty because it is only initiated. The best way to review the generated code of this module is to interact with it using the browser, and then check the contents of the `cache/` folder. Listing 14-4 lists the generated actions and the templates found in the cache.
+The code of the article administration module, in the `apps/backend/modules/article/` directory, looks empty because it is only initiated. The best way to review the generated code of this module is to interact with it using the browser, and then check the contents of the `cache/` folder. Listing 14-4 lists the generated actions and the templates found in the cache.
 
 Listing 14-4 - Generated Administration Elements, in `cache/backend/ENV/modules/article/`
 
@@ -191,7 +191,7 @@ Listing 14-6 - Typical Complete Generator Configuration
 
         config:
           actions:
-            _new: { label: "Create a new Article", credentials: editor }
+            _new: { label: "Create a new article", credentials: editor }
 
           fields:
             author_id:    { label: Article author }
@@ -233,21 +233,11 @@ The following sections explain in detail all the parameters that can be used in 
 Generator Configuration
 -----------------------
 
-The generator configuration file is very powerful, allowing you to alter the generated administration in many ways. But such capabilities come with a price: The overall syntax description is long to read and learn, making this chapter one of the longest in this book. The symfony website proposes an additional resource that will help you learn this syntax: the administration generator cheat sheet, reproduced in Figure 14-7. Download it from [http://www.symfony-project.org/uploads/assets/sfAdminGeneratorRefCard.pdf](http://www.symfony-project.org/uploads/assets/sfAdminGeneratorRefCard.pdf), and keep it close to you when you read the following examples of this chapter.
+The generator configuration file is very powerful, allowing you to alter the generated administration in many ways. But such capabilities come with a price: The overall syntax description is long to read and learn, making this chapter one of the longest in this book.
 
-The examples of this section will tweak the `article` administration module, as well as the `comment` administration module, based on the `Comment` class definition. Create the latter by creating a route and launching the `propel:generate-admin` task:
+The examples of this section will tweak the `article` administration module, as well as the `comment` administration module, based on the `BlogComment` class definition. Create the latter by launching the `propel:generate-admin` task:
 
-    [yml]
-    comment:
-      class: sfPropelRouteCollection
-      options:
-        model:               Comment
-        module:              comment
-        with_wildcard_routes: true
-
--
-
-    > php symfony propel:generate-admin backend comment
+    > php symfony propel:generate-admin backend BlogComment --module=comment
 
 Figure 14-7 - The administration generator cheat sheet
 
@@ -255,7 +245,7 @@ Figure 14-7 - The administration generator cheat sheet
 
 ### Fields
 
-By default, the columns of the `list` view are the columns defined in `schema.yml`. The fields of the `new` and `edit` views are the one defined in the form associated with the model (`ArticleForm`). With `generator.yml`, you can choose which fields are displayed, which ones are hidden, and add fields of your own--even if they don't have a direct correspondence in the object model.
+By default, the columns of the `list` view are the columns defined in `schema.yml`. The fields of the `new` and `edit` views are the one defined in the form associated with the model (`BlogArticleForm`). With `generator.yml`, you can choose which fields are displayed, which ones are hidden, and add fields of your own--even if they don't have a direct correspondence in the object model.
 
 #### Field Settings
 
@@ -333,14 +323,14 @@ So you can use the `display` setting in two ways:
 
 #### Custom Fields
 
-As a matter of fact, the fields configured in `generator.yml` don't even need to correspond to actual columns defined in the schema. If the related class offers a custom getter, it can be used as a field for the `list` view; if there is a getter and/or a setter, it can also be used in the `edit` view. For instance, you can extend the `Article` model with a `getNbComments()` method similar to the one in Listing 14-10.
+As a matter of fact, the fields configured in `generator.yml` don't even need to correspond to actual columns defined in the schema. If the related class offers a custom getter, it can be used as a field for the `list` view; if there is a getter and/or a setter, it can also be used in the `edit` view. For instance, you can extend the `BlogArticle` model with a `getNbComments()` method similar to the one in Listing 14-10.
 
-Listing 14-10 - Adding a Custom Getter in the Model, in `lib/model/Article.php`
+Listing 14-10 - Adding a Custom Getter in the Model, in `lib/model/BlogArticle.php`
 
     [php]
     public function getNbComments()
     {
-      return $this->countComments();
+      return $this->countBlogComments();
     }
 
 Then `nb_comments` is available as a field in the generated module (notice that the getter uses a camelCase version of the field name), as in Listing 14-11.
@@ -397,7 +387,7 @@ For this to work, an `_article_link.php` partial must be created in the `modules
 Listing 14-15 - Example Partial for the `list` View, in `modules/comment/templates/_article_link.php`
 
     [php]
-    <?php echo link_to($comment->getBlogArticle()->getTitle(), '@article_edit', $comment->getBlogArticle()) ?>
+    <?php echo link_to($form->getObject()->getBlogArticle()->getTitle(), '@article_edit', $form->getObject()->getBlogArticle()) ?>
 
 Notice that the partial template of a partial field has access to the current object through a variable named by the class (`$comment` in this example). For instance, for a module built for a class called `UserGroup`, the partial will have access to the current object through the `$user_group` variable.
 
@@ -547,7 +537,7 @@ Notice that a `tabular` layout expects an array of fields under the `display` ke
 
 #### Filtering the Results
 
-In a `list` view, you can add a set of filter interactions. With these filters, users can both display fewer results and get to the ones they want faster. Configure the filters under the `filter` key, with an array of field names. For instance, add a filter on the `article_id`, `author`, and `created_at` fields to the comment `list` view, as in Listing 14-23, to display a filter box similar to the one in Figure 14-16. You will need to add a `__toString()` method to the `Article` class (returning, for instance, the article `title`) for this to work.
+In a `list` view, you can add a set of filter interactions. With these filters, users can both display fewer results and get to the ones they want faster. Configure the filters under the `filter` key, with an array of field names. For instance, add a filter on the `article_id`, `author`, and `created_at` fields to the comment `list` view, as in Listing 14-23, to display a filter box similar to the one in Figure 14-16. You will need to add a `__toString()` method to the `BlogArticle` class (returning, for instance, the article `title`) for this to work.
 
 Listing 14-23 - Setting the Filters in the `list` View, in `modules/comment/config/generator.yml`
 
@@ -574,7 +564,7 @@ The filters displayed by symfony depend on the column type defined in the schema
   * For date columns (like the `created_at` field in the `comment` module), the filter is a pair of rich date tags, allowing the selection of a time interval.
   * For Boolean columns, the filter is a drop-down list having `true`, `false`, and `true or false` options--the last value reinitializes the filter.
 
-Just like the `new` and `edit` views are tied to a form class, the filters use the default filter form class associated with the model (`ArticleFormFilter` for the `Article` model for example). By defining a custom class for the filter form, you can customize the filter fields by leveraging the power of the form framework and by using all the available filter widgets. It is as easy as defining a `class` under the `filter` entry as shown in Listing 14-24.
+Just like the `new` and `edit` views are tied to a form class, the filters use the default filter form class associated with the model (`BlogArticleFormFilter` for the `BlogArticle` model for example). By defining a custom class for the filter form, you can customize the filter fields by leveraging the power of the form framework and by using all the available filter widgets. It is as easy as defining a `class` under the `filter` entry as shown in Listing 14-24.
 
 Listing 14-24 - Customizing the Form Class used for Filtering
 
@@ -642,12 +632,12 @@ You can customize the number of records to be displayed in each page with the `m
 
 #### Using a Join to Speed Up Page Delivery
 
-By default, the administration generator uses a simple `doSelect()` to retrieve a list of records. But, if you use related objects in the list, the number of database queries required to display the list may rapidly increase. For instance, if you want to display the name of the article in a list of comments, an additional query is required for each post in the list to retrieve the related `Article` object. So you may want to force the pager to use a `doSelectJoinXXX()` method to optimize the number of queries. This can be specified with the `peer_method` parameter.
+By default, the administration generator uses a simple `doSelect()` to retrieve a list of records. But, if you use related objects in the list, the number of database queries required to display the list may rapidly increase. For instance, if you want to display the name of the article in a list of comments, an additional query is required for each post in the list to retrieve the related `BlogArticle` object. So you may want to force the pager to use a `doSelectJoinXXX()` method to optimize the number of queries. This can be specified with the `peer_method` parameter.
 
     [yml]
     config:
       list:
-        peer_method: doSelectJoinArticle
+        peer_method: doSelectJoinBlogArticle
 
 Chapter 18 explains the concept of Join more extensively.
 
@@ -689,7 +679,7 @@ If your schema defines table relationships, the generated administration modules
 
 The 1-n table relationships are taken care of by the administration generator. As is depicted by Figure 14-1 earlier, the `blog_comment` table is related to the `blog_article` table through the `article_id` field. If you initiate the module of the `BlogComment` class with the administration generator, the `edit` view will automatically display the `article_id` as a drop-down list showing the IDs of the available records of the `blog_article` table (check again Figure 14-9 for an illustration).
 
-In addition, if you define a `__toString()` method in the `Article` class, the text of the drop-down options use it instead of the primary keys.
+In addition, if you define a `__toString()` method in the `BlogArticle` class, the text of the drop-down options use it instead of the primary keys.
 
 If you need to display the list of comments related to an article in the `article` module (n-1 relationship), you will need to customize the module a little by way of a partial field.
 
@@ -772,7 +762,7 @@ Listing 14-33 - Implementing the Custom Interaction Action, in `actions/actions.
     [php]
     public function executeAddComment($request)
     {
-      $comment = new Comment();
+      $comment = new BlogComment();
       $comment->setArticleId($request->getParameter('id'));
       $comment->save();
 

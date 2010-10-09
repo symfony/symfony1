@@ -1049,7 +1049,7 @@ If you deal with objects in your templates, you will use the additional paramete
 >The usual symfony variables are also escaped when you turn on output escaping. So be aware that `$sf_user`, `$sf_request`, `$sf_param`, and `$sf_context` still work, but their methods return escaped data, unless you add `ESC_RAW` as a final argument to their method calls.
 
 >**TIP**
->**New in symfony 1.1**: Even if XSS is one of the most common exploit of websites, this is not the only one. CSRF is also very popular and symfony provides a simple way to protect your applications. Read the sidebar named "The CSRF Filter" in Chapter 6 for more information.
+>**New in symfony 1.1**: Even if XSS is one of the most common exploit of websites, this is not the only one. CSRF is also very popular and symfony provides automatic forms protection.
 
 Summary
 -------

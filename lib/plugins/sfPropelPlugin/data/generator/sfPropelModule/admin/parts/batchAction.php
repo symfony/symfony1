@@ -50,6 +50,8 @@
     $count = 0;
     foreach (<?php echo constant($this->getModelClass().'::PEER') ?>::retrieveByPks($ids) as $object)
     {
+      $this->dispatcher->notify(new sfEvent($this, 'admin.delete_object', array('object' => $object)));
+
       $object->delete();
       if ($object->isDeleted())
       {

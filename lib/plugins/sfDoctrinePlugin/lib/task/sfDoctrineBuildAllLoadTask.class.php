@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllLoadTask.class.php 14213 2008-12-19 21:03:13Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildAllLoadTask.class.php 16462 2009-03-20 07:44:12Z Jonathan.Wage $
  */
 class sfDoctrineBuildAllLoadTask extends sfDoctrineBaseTask
 {
@@ -79,6 +79,10 @@ EOF;
     if ($options['no-confirmation'])
     {
       $buildAllOptions[] = '--no-confirmation';
+    }
+    if (isset($options['application']) && $options['application'])
+    {
+      $buildAllOptions[] = '--application=' . $options['application'];
     }
     $ret = $buildAll->run(array(), $buildAllOptions);
 

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 12215 2008-10-16 12:11:16Z fabien $
+ * @version    SVN: $Id: sfBrowser.class.php 15726 2009-02-23 15:56:12Z fabien $
  */
 class sfBrowser extends sfBrowserBase
 {
@@ -65,21 +65,21 @@ class sfBrowser extends sfBrowserBase
   {
     if (is_null($this->context) || $forceReload)
     {
-      if (!is_null($this->context))
-      {
-        $currentConfiguration = $this->context->getConfiguration();
-        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
-        $this->context = sfContext::createInstance($configuration);
-        unset($currentConfiguration);
+      $isContextEmpty = is_null($this->context);
+      $context = $isContextEmpty ? sfContext::getInstance() : $this->context;
 
+      $currentConfiguration = $context->getConfiguration();
+      $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+      $this->context = sfContext::createInstance($configuration);
+      unset($currentConfiguration);
+
+      if (!$isContextEmpty)
+      {
         sfConfig::clear();
         sfConfig::add($this->rawConfiguration);
       }
       else
       {
-        $this->context = sfContext::getInstance();
-        $this->context->initialize($this->context->getConfiguration());
-
         $this->rawConfiguration = sfConfig::getAll();
       }
 

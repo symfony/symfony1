@@ -2,7 +2,7 @@
 Article:
   actAs:
     I18n:
-      fields: [title, body]
+      fields: [title, body, test_column]
       actAs:
         Sluggable:
           fields: [title]
@@ -13,6 +13,7 @@ Article:
     is_on_homepage: boolean
     title: string(255)
     body: string(255)
+    test_column: string(255)
   relations:
     Author:
       foreignAlias: Articles

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 15247 2009-02-04 16:18:12Z FabianLange $
+ * @version    SVN: $Id: sfWebDebug.class.php 16169 2009-03-11 07:56:12Z fabien $
  */
 class sfWebDebug
 {
@@ -145,7 +145,7 @@ class sfWebDebug
    */
   public function injectToolbar($content)
   {
-    $content = str_ireplace('</head>', '<style type="text/css">'.str_replace("\n", ' ', $this->getStylesheet()).'</style></head>', $content);
+    $content = str_ireplace('</head>', '<style type="text/css">'.str_replace(array("\r", "\n"), ' ', $this->getStylesheet()).'</style></head>', $content);
 
     $debug = $this->asHtml();
     $count = 0;
@@ -198,7 +198,7 @@ class sfWebDebug
         <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($this->getPriority($this->logger->getHighestPriority())).'">
           <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->options['image_root_path'].'/sf.png" alt="Debug toolbar" /></a>
 
-          <ul id="sfWebDebugDetails" class="menu">
+          <ul id="sfWebDebugDetails" class="sfWebDebugMenu">
             '.implode("\n", $titles).'
             <li class="last">
               <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->options['image_root_path'].'/close.png" alt="Close" /></a>
@@ -418,6 +418,7 @@ EOF;
 #sfWebDebug img
 {
   border: 0;
+  display: inline;
 }
 
 #sfWebDebugBar
@@ -443,7 +444,7 @@ EOF;
   vertical-align: middle;
 }
 
-#sfWebDebugBar .menu
+#sfWebDebugBar .sfWebDebugMenu
 {
   padding: 5px;
   padding-left: 0;
@@ -451,7 +452,7 @@ EOF;
   margin: 0;
 }
 
-#sfWebDebugBar .menu li
+#sfWebDebugBar .sfWebDebugMenu li
 {
   display: inline;
   list-style: none;
@@ -459,7 +460,7 @@ EOF;
   padding: 0 6px;
 }
 
-#sfWebDebugBar .menu li.last
+#sfWebDebugBar .sfWebDebugMenu li.last
 {
   margin: 0;
   padding: 0;

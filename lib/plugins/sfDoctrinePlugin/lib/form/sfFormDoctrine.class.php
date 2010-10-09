@@ -264,7 +264,7 @@ abstract class sfFormDoctrine extends sfForm
     foreach ($valuesToProcess as $field => $value)
     {
       $method = sprintf('update%sColumn', self::camelize($field));
-      
+
       if (method_exists($this, $method))
       {
         if (false === $ret = $this->$method($value))
@@ -282,7 +282,7 @@ abstract class sfFormDoctrine extends sfForm
         if ($this->validatorSchema[$field] instanceof sfValidatorFile)
         {
           $values[$field] = $this->processUploadedFile($field, null, $valuesToProcess);
-        }          
+        }
       }
     }
 
@@ -527,10 +527,5 @@ abstract class sfFormDoctrine extends sfForm
   protected function camelize($text)
   {
     return sfToolkit::pregtr($text, array('#/(.?)#e' => "'::'.strtoupper('\\1')", '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
-  }
-
-  public function __sleep()
-  {
-    
   }
 }

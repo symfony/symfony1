@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCommandManager.class.php 12536 2008-11-01 14:43:18Z fabien $
+ * @version    SVN: $Id: sfCommandManager.class.php 16343 2009-03-16 16:48:40Z fabien $
  */
 class sfCommandManager
 {
@@ -328,7 +328,7 @@ class sfCommandManager
   {
     if (false !== strpos($argument, '='))
     {
-      list($name, $value) = explode('=', $argument);
+      list($name, $value) = explode('=', $argument, 2);
 
       if (!$this->optionSet->hasOption($name))
       {

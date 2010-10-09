@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: NestedSet.php 5190 2008-11-19 16:12:49Z guilhermeblanco $
+ *  $Id: NestedSet.php 5361 2009-01-12 20:07:28Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5190 $
+ * @version     $Revision: 5361 $
  * @author      Joe Simms <joe.simms@websites4.com>
  * @author      Roman Borschel <roman@code-factory.org>
  */
@@ -60,7 +60,7 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      */
     public function setTableDefinition()
     {
-        if ($root = $this->getAttribute('rootColumnName')) {
+        if (($root = $this->getAttribute('rootColumnName')) && (!$this->table->hasColumn($root))) {
             $this->table->setColumn($root, 'integer', 4);
         }
 

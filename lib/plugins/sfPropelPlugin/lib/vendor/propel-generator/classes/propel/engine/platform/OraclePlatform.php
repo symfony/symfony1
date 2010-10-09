@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: OraclePlatform.php 656 2007-06-20 15:25:53Z hans $
+ *  $Id: OraclePlatform.php 1102 2009-02-19 01:14:55Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'propel/engine/platform/DefaultPlatform.php';
  *
  * @author     Hans Lellelid <hans@xmpl.org> (Propel)
  * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version    $Revision: 656 $
+ * @version    $Revision: 1102 $
  * @package    propel.engine.platform
  */
 class OraclePlatform extends DefaultPlatform {
@@ -46,10 +46,11 @@ class OraclePlatform extends DefaultPlatform {
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::DOUBLE, "FLOAT"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::DECIMAL, "NUMBER"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::NUMERIC, "NUMBER"));
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::VARCHAR, "VARCHAR2"));
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "VARCHAR2", "2000"));
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::TIME, "DATE"));
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::TIMESTAMP, "DATE"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::VARCHAR, "NVARCHAR2"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "NVARCHAR2", "2000")); 
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::TIME, "TIME")); 
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::DATE, "DATE")); 
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::TIMESTAMP, "TIMESTAMP")); 
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::BINARY, "LONG RAW"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::VARBINARY, "BLOB"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARBINARY, "LONG RAW"));

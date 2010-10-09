@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfObjectRoute.class.php 13382 2008-11-27 07:28:52Z fabien $
+ * @version    SVN: $Id: sfObjectRoute.class.php 15850 2009-02-27 16:48:19Z fabien $
  */
 class sfObjectRoute extends sfRequestRoute
 {
@@ -78,7 +78,7 @@ class sfObjectRoute extends sfRequestRoute
    */
   public function generate($params, $context = array(), $absolute = false)
   {
-    return parent::generate('object' == $this->options['type'] ? $this->convertObjectToArray($params) : $params, $absolute);
+    return parent::generate('object' == $this->options['type'] ? $this->convertObjectToArray($params) : $params, $context, $absolute);
   }
 
   /**

@@ -167,7 +167,9 @@ class Doctrine_Data_Import extends Doctrine_Data
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
         if ( ! isset($this->_importedObjects[$rowKey])) {
-            throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
+            throw new Doctrine_Data_Exception(
+                sprintf('Invalid row key specified: %s, referred to in %s', $rowkey, $referringRowKey)
+            );
         }
 
         $relatedRowKeyObject = $this->_importedObjects[$rowKey];
@@ -219,12 +221,18 @@ class Doctrine_Data_Import extends Doctrine_Data
                 } else {
                     $obj->set($key, $this->_getImportedObject($value, $obj, $key, $rowKey));
                 }
-            // used for Doctrine plugin methods (Doctrine_Template)
-            } else if (is_callable(array($obj, 'set' . Doctrine_Inflector::classify($key)))) {
-              $func = 'set' . Doctrine_Inflector::classify($key);
-              $obj->$func($value);
             } else {
-                throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');
+                try {
+                    $obj->$key = $value;
+                } catch (Exception $e) {
+                    // used for Doctrine plugin methods (Doctrine_Template)
+                    if (is_callable(array($obj, 'set' . Doctrine_Inflector::classify($key)))) {
+                        $func = 'set' . Doctrine_Inflector::classify($key);
+                        $obj->$func($value);
+                    } else {
+                        throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');
+                    }
+                }
             }
         }
     }

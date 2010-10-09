@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfData.class.php 12695 2008-11-06 18:09:15Z fabien $
+ * @version    SVN: $Id: sfData.class.php 15803 2009-02-26 09:48:55Z fabien $
  */
 
 abstract class sfData
@@ -99,7 +99,7 @@ abstract class sfData
   {
     if (is_null($element))
     {
-      $directory_or_file = sfConfig::get('sf_data_dir').'/fixtures';
+      $element = sfConfig::get('sf_data_dir').'/fixtures';
     }
 
     $files = array();
@@ -116,7 +116,7 @@ abstract class sfData
     }
     else if (is_dir($element))
     {
-      $files = sfFinder::type('file')->name('*.yml')->in($element);
+      $files = sfFinder::type('file')->name('*.yml')->sort_by_name()->in($element);
     }
     else
     {

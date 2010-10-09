@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormPropel.class.php 15033 2009-01-28 22:40:25Z FabianLange $
+ * @version    SVN: $Id: sfFormPropel.class.php 16007 2009-03-04 23:23:33Z Kris.Wallsmith $
  */
 abstract class sfFormPropel extends sfForm
 {
@@ -219,7 +219,7 @@ abstract class sfFormPropel extends sfForm
 
     foreach ($forms as $name => $form)
     {
-      if (!is_array($values[$name]))
+      if (!isset($values[$name]) || !is_array($values[$name]))
       {
         continue;
       }

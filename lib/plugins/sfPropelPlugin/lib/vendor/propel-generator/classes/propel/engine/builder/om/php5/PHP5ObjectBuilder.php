@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ObjectBuilder.php 1083 2008-10-30 20:04:32Z hans $
+ *  $Id: PHP5ObjectBuilder.php 1099 2009-02-10 08:24:47Z ron $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3140,7 +3140,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 				\$count = count(\$this->$collName);
 			}
 		}
-		\$this->$lastCriteriaName = \$criteria;
 		return \$count;
 	}
 ";

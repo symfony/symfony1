@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 13950 2008-12-11 16:10:13Z FabianLange $
+ * @version    SVN: $Id: lime.php 16012 2009-03-04 23:45:36Z Kris.Wallsmith $
  */
 class lime_test
 {
@@ -179,7 +179,7 @@ class lime_test
     $type = is_object($var) ? get_class($var) : gettype($var);
     if (!$result = $this->ok($type == $class, $message))
     {
-      $this->output->diag(sprintf("      isa_ok isn't a '%s' it's a '%s'", $class, $type));
+      $this->output->diag(sprintf("      variable isn't a '%s' it's a '%s'", $class, $type));
     }
 
     return $result;
@@ -538,7 +538,8 @@ class lime_harness extends lime_registration
       $relative_file = $this->get_relative_file($file);
 
       ob_start(array($this, 'process_test_output'));
-      passthru(sprintf('%s "%s" 2>&1', $this->php_cli, $file), $return);
+      // see http://trac.symfony-project.org/ticket/5437 for the explanation on the weird "cd" thing
+      passthru(sprintf('cd & "%s" "%s" 2>&1', $this->php_cli, $file), $return);
       ob_end_clean();
 
       if ($return > 0)
@@ -714,7 +715,8 @@ echo '<PHP_SER>'.serialize(xdebug_get_code_coverage()).'</PHP_SER>';
 EOF;
       file_put_contents($tmp_file, $tmp);
       ob_start();
-      passthru(sprintf('%s "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
+      // see http://trac.symfony-project.org/ticket/5437 for the explanation on the weird "cd" thing
+      passthru(sprintf('cd & "%s" "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
       $retval = ob_get_clean();
 
       if (0 != $return) // test exited without success

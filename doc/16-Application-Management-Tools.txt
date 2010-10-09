@@ -36,7 +36,7 @@ In addition to the standard PHP logs, symfony can log a lot of custom events. Yo
 
 If you have a symfony application running, take a look at its log files. The syntax is very simple. For every event, one line is added to the log file of the application. Each line includes the exact time of the event, the nature of the event, the object being processed, and any additional relevant details. Listing 16-2 shows an example of symfony log file content.
 
-Listing 16-2 - Sample Symfony Log File Content, in `log/frontend_dev.php`
+Listing 16-2 - Sample Symfony Log File Content, in `log/frontend_dev.log`
 
     Nov 15 16:30:25 symfony [info ] {sfAction} call "barActions->executemessages()"
     Nov 15 16:30:25 symfony [info ] {sfPropelLogger} executeQuery: SELECT bd_message.ID...

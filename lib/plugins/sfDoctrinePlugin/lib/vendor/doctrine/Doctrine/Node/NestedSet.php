@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 5168 2008-11-13 20:31:08Z guilhermeblanco $
+ *    $Id: NestedSet.php 5424 2009-01-26 22:10:33Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       www.phpdoctrine.org
  * @since      1.0
- * @version    $Revision: 5168 $
+ * @version    $Revision: 5424 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -803,17 +803,6 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         try {
             $conn->beginInternalTransaction();
             
-            // Detach from old tree (close gap in old tree)
-            $first = $oldRgt + 1;
-            $delta = $oldLft - $oldRgt - 1;
-            $this->shiftRLValues($first, $delta, $this->getRootValue());
-            
-            // Set new lft/rgt/root/level values for root node
-            $this->setLeftValue(1);
-            $this->setRightValue($oldRgt - $oldLft + 1);
-            $this->setRootValue($newRootId);
-            $this->record['level'] = 0;
-            
             // Update descendants lft/rgt/root/level values
             $diff = 1 - $oldLft;
             $newRoot = $newRootId;
@@ -829,6 +818,17 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
                     array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
+            
+            // Detach from old tree (close gap in old tree)
+            $first = $oldRgt + 1;
+            $delta = $oldLft - $oldRgt - 1;
+            $this->shiftRLValues($first, $delta, $this->getRootValue());
+            
+            // Set new lft/rgt/root/level values for root node
+            $this->setLeftValue(1);
+            $this->setRightValue($oldRgt - $oldLft + 1);
+            $this->setRootValue($newRootId);
+            $this->record['level'] = 0;
             
             $conn->commit();
             

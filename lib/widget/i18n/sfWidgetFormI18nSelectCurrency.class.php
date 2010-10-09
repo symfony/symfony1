@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormI18nSelectCurrency.class.php 11843 2008-09-29 11:25:50Z fabien $
+ * @version    SVN: $Id: sfWidgetFormI18nSelectCurrency.class.php 16232 2009-03-12 08:37:50Z fabien $
  */
 class sfWidgetFormI18nSelectCurrency extends sfWidgetFormSelect
 {
@@ -24,7 +24,7 @@ class sfWidgetFormI18nSelectCurrency extends sfWidgetFormSelect
    * Available options:
    *
    *  * culture:    The culture to use for internationalized strings (required)
-   *  * currencies: An array of currency codes to use (ISO 639-1)
+   *  * currencies: An array of currency codes to use (ISO 4217)
    *  * add_empty:  Whether to add a first empty value or not (false by default)
    *                If the option is not a Boolean, the value will be used as the text value
    *

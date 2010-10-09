@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 5307 2008-12-18 00:15:10Z jwage $
+ *  $Id: Query.php 5430 2009-01-29 00:54:57Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5307 $
+ * @version     $Revision: 5430 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -221,7 +221,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // this prevents the 'id' being selected, re ticket #307
         $obj->isSubquery(true);
-        
+
         return $obj;
     }
 
@@ -1279,7 +1279,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if (($driverName == 'oracle' || $driverName == 'oci') && $this->_isOrderedByJoinedColumn()) {
             // When using "ORDER BY x.foo" where x.foo is a column of a joined table,
             // we may get duplicate primary keys because all columns in ORDER BY must appear
-            // in the SELECT list when using DISTINCT. Hence we need to filter out the 
+            // in the SELECT list when using DISTINCT. Hence we need to filter out the
             // primary keys with an additional DISTINCT subquery.
             // #1038
             $subquery = 'SELECT doctrine_subquery_alias.' . $table->getColumnName($table->getIdentifier())
@@ -1359,7 +1359,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $subquery = implode(' ', $parts);
         return $subquery;
     }
-    
+
     /**
      * Checks whether the query has an ORDER BY on a column of a joined table.
      * This information is needed in special scenarios like the limit-offset when its
@@ -1479,7 +1479,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if (count($e) > 1) {
             $joinCondition = substr($path, strlen($e[0]) + 4, strlen($e[1]));
             $path = substr($path, 0, strlen($e[0]));
-            
+
             $overrideJoin = true;
         } else {
             $e = explode(' WITH ', str_ireplace(' with ', ' WITH ', $path));
@@ -1796,69 +1796,70 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      *
      * @return string $q
      */
-    public function getCountQuery()
-    {
-        // triggers dql parsing/processing
-        $this->getQuery(); // this is ugly
+     public function getCountQuery()
+     {
+         // triggers dql parsing/processing
+         $this->getQuery(); // this is ugly
 
-        // initialize temporary variables
-        $where  = $this->_sqlParts['where'];
-        $having = $this->_sqlParts['having'];
-        $groupby = $this->_sqlParts['groupby'];
-        $map = reset($this->_queryComponents);
-        $componentAlias = key($this->_queryComponents);
-        $tableAlias = $this->getTableAlias($componentAlias);
-        $table = $map['table'];
-        $idColumnNames = $table->getIdentifierColumnNames();
+         // initialize temporary variables
+         $where  = $this->_sqlParts['where'];
+         $having = $this->_sqlParts['having'];
+         $groupby = $this->_sqlParts['groupby'];
+         $map = reset($this->_queryComponents);
+         $componentAlias = key($this->_queryComponents);
+         $tableAlias = $this->getTableAlias($componentAlias);
+         $table = $map['table'];
+         $idColumnNames = $table->getIdentifierColumnNames();
 
-        // build the query base
-        $q  = 'SELECT COUNT(DISTINCT ' . $this->_conn->quoteIdentifier($tableAlias)
-              . '.' . implode(
-                  ' || ' . $this->_conn->quoteIdentifier($tableAlias) . '.', 
-                  $this->_conn->quoteMultipleIdentifier($idColumnNames)
-              ) . ') AS num_results';
+         // build the query base
+         $q  = 'SELECT COUNT(*) AS ' . $this->_conn->quoteIdentifier('num_results') . 
+            ' FROM (SELECT DISTINCT ' . $this->_conn->quoteIdentifier($tableAlias) . '.' . 
+            implode(
+                ' , ' . $this->_conn->quoteIdentifier($tableAlias) . '.',
+                $this->_conn->quoteMultipleIdentifier($idColumnNames)
+            );
 
-        foreach ($this->_sqlParts['select'] as $field) {
-            if (strpos($field, '(') !== false) {
-                $q .= ', ' . $field;
-            }
-        }
+         foreach ($this->_sqlParts['select'] as $field) {
+             if (strpos($field, '(') !== false) {
+                 $q .= ', ' . $field;
+             }
+         }
 
-        $q .= ' FROM ' . $this->_buildSqlFromPart();
+         $q .= ' FROM ' . $this->_buildSqlFromPart();
 
-        // append column aggregation inheritance (if needed)
-        $string = $this->getInheritanceCondition($this->getRootAlias());
+         // append column aggregation inheritance (if needed)
+         $string = $this->getInheritanceCondition($this->getRootAlias());
 
-        if ( ! empty($string)) {
-            if (count($where) > 0) {
-                $where[] = 'AND';
-            }
-            
-            $where[] = $string;
-        }
+         if ( ! empty($string)) {
+             if (count($where) > 0) {
+                 $where[] = 'AND';
+             }
 
-        // append conditions
-        $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' ', $where) : '';
+             $where[] = $string;
+         }
 
-        if ( ! empty($groupby)) {
-            // Maintain existing groupby
-            $q .= ' GROUP BY '  . implode(', ', $groupby);
-        } else {
-            // Default groupby to primary identifier. Database defaults to this internally
-            // This is required for situations where the user has aggregate functions in the select part
-            // Without the groupby it fails
-            $q .= ' GROUP BY ' . $this->_conn->quoteIdentifier($tableAlias) 
-			      . '.' . implode(
-                      ', ' . $this->_conn->quoteIdentifier($tableAlias) . '.', 
-                      $this->_conn->quoteMultipleIdentifier($idColumnNames)
-                  );
-        }
+         // append conditions
+         $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' ', $where) : '';
 
-        $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
+         if ( ! empty($groupby)) {
+             // Maintain existing groupby
+             $q .= ' GROUP BY '  . implode(', ', $groupby);
+         } else {
+             // Default groupby to primary identifier. Database defaults to this internally
+             // This is required for situations where the user has aggregate functions in the select part
+             // Without the groupby it fails
+             $q .= ' GROUP BY ' . $this->_conn->quoteIdentifier($tableAlias)
+                 . '.' . implode(
+                         ', ' . $this->_conn->quoteIdentifier($tableAlias) . '.',
+                         $this->_conn->quoteMultipleIdentifier($idColumnNames)
+                         );
+         }
 
-        return $q;
-    }
+         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
+         $q .= ') AS ' . $this->_conn->quoteIdentifier('dctrn_count_query');
 
+         return $q;
+     }
     /**
      * count
      * fetches the count of the query
@@ -1948,7 +1949,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $this->_parsers = array();
 
         // Subqueries share some information from the parent so it can intermingle
-        // with the dql of the main query. So when a subquery is cloned we need to 
+        // with the dql of the main query. So when a subquery is cloned we need to
         // kill those references or it causes problems
         if ($this->isSubquery()) {
             $this->_killReference('_params');

@@ -6,7 +6,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGeneratorConfigurationField.class.php 13089 2008-11-17 23:18:18Z fabien $
+ * @version    SVN: $Id: sfModelGeneratorConfigurationField.class.php 16440 2009-03-19 15:18:36Z hartym $
  */
 class sfModelGeneratorConfigurationField
 {
@@ -17,13 +17,19 @@ class sfModelGeneratorConfigurationField
   /**
    * Constructor.
    *
-   * @param string $config The configuration for this field
-   * @param array  $flags  The column flags
+   * @param string $name   The field name
+   * @param array  $config The configuration for this field
    */
   public function __construct($name, $config)
   {
     $this->name = $name;
     $this->config = $config;
+
+    if (isset($this->config['flag']))
+    {
+      $this->setFlag($this->config['flag']);
+      unset($this->config['flag']);
+    }
   }
 
   /**

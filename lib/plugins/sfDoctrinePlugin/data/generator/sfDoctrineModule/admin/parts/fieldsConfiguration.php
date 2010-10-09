@@ -12,19 +12,19 @@
 
   public function getListTitle()
   {
-    return '<?php echo isset($this->config['list']['title']) ? $this->config['list']['title'] : sfInflector::humanize($this->getModuleName()).' List' ?>';
+    return '<?php echo $this->escapeString(isset($this->config['list']['title']) ? $this->config['list']['title'] : sfInflector::humanize($this->getModuleName()).' List') ?>';
 <?php unset($this->config['list']['title']) ?>
   }
 
   public function getEditTitle()
   {
-    return '<?php echo isset($this->config['edit']['title']) ? $this->config['edit']['title'] : 'Edit '.sfInflector::humanize($this->getModuleName()) ?>';
+    return '<?php echo $this->escapeString(isset($this->config['edit']['title']) ? $this->config['edit']['title'] : 'Edit '.sfInflector::humanize($this->getModuleName())) ?>';
 <?php unset($this->config['edit']['title']) ?>
   }
 
   public function getNewTitle()
   {
-    return '<?php echo isset($this->config['new']['title']) ? $this->config['new']['title'] : 'New '.sfInflector::humanize($this->getModuleName()) ?>';
+    return '<?php echo $this->escapeString(isset($this->config['new']['title']) ? $this->config['new']['title'] : 'New '.sfInflector::humanize($this->getModuleName())) ?>';
 <?php unset($this->config['new']['title']) ?>
   }
 

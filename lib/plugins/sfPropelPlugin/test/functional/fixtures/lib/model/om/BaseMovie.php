@@ -533,7 +533,6 @@ abstract class BaseMovie extends BaseObject  implements Persistent {
 				$count = count($this->collMovieI18ns);
 			}
 		}
-		$this->lastMovieI18nCriteria = $criteria;
 		return $count;
 	}
 

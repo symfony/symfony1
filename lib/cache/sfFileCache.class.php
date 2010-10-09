@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileCache.class.php 15261 2009-02-04 17:51:00Z FabianLange $
+ * @version    SVN: $Id: sfFileCache.class.php 15511 2009-02-16 08:31:53Z fabien $
  */
 class sfFileCache extends sfCache
 {
@@ -149,7 +149,7 @@ class sfFileCache extends sfCache
     {
       if (sfCache::ALL == $mode || !$this->isValid($file))
       {
-        $result = $result && @unlink($file);
+        $result = @unlink($file) && $result;
       }
     }
 

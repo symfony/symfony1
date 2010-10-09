@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBaseTask.class.php 14299 2008-12-24 04:57:47Z dwhittle $
+ * @version    SVN: $Id: sfPropelBaseTask.class.php 15727 2009-02-23 16:19:10Z fabien $
  */
 abstract class sfPropelBaseTask extends sfBaseTask
 {
@@ -312,7 +312,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       if (count(sfPhingListener::getErrors()))
       {
-        $messages[] = '  Read the logs to fix them';
+        $messages[] = '  If the exception message is not clear enough, read the output of the task for more information';
       }
 
       $this->logBlock($messages, 'ERROR');

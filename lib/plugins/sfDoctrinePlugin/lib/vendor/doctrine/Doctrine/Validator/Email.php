@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Email.php 3884 2008-02-22 18:26:35Z jwage $
+ *  $Id: Email.php 5450 2009-02-02 02:10:04Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3884 $
+ * @version     $Revision: 5450 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Email
@@ -41,11 +41,13 @@ class Doctrine_Validator_Email
      */
     public function validate($value)
     {
-        if ($value === null) {
+        if (empty($value)) {
             return true;
         }
+        
         if (isset($this->args)) {
             $parts = explode('@', $value);
+        
             if (isset($parts[1]) && function_exists('checkdnsrr')) {
                 if ( ! checkdnsrr($parts[1], 'MX')) {
                     return false;

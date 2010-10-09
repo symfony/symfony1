@@ -533,7 +533,6 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 				$count = count($this->collProductI18ns);
 			}
 		}
-		$this->lastProductI18nCriteria = $criteria;
 		return $count;
 	}
 

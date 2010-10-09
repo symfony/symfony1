@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBase.class.php 12876 2008-11-10 12:53:18Z nicolas $
+ * @version    SVN: $Id: sfValidatorBase.class.php 16345 2009-03-16 16:53:51Z fabien $
  */
 abstract class sfValidatorBase
 {
@@ -213,7 +213,7 @@ abstract class sfValidatorBase
   /**
    * Returns all options.
    *
-   * @return array An array if options
+   * @return array An array of options
    */
   public function getOptions()
   {
@@ -223,7 +223,7 @@ abstract class sfValidatorBase
   /**
    * Changes all options.
    *
-   * @param array $values  An array if options
+   * @param array $values  An array of options
    */
   public function setOptions($values)
   {

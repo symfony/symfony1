@@ -530,7 +530,6 @@ abstract class BaseBook extends BaseObject  implements Persistent {
 				$count = count($this->collArticles);
 			}
 		}
-		$this->lastArticleCriteria = $criteria;
 		return $count;
 	}
 

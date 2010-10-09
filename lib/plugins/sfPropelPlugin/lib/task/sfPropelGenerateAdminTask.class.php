@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 13592 2008-12-01 14:48:28Z fabien $
+ * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 15470 2009-02-12 21:27:18Z Kris.Wallsmith $
  */
 class sfPropelGenerateAdminTask extends sfPropelBaseTask
 {
@@ -128,10 +128,10 @@ EOF;
 %s:
   class: sfPropelRouteCollection
   options:
-    model:               %s
-    module:              %s
-    prefix_path:         %s
-    column:              %s
+    model:                %s
+    module:               %s
+    prefix_path:          %s
+    column:               %s
     with_wildcard_routes: true
 
 

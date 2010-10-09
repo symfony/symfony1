@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPluginManager.class.php 13759 2008-12-05 08:53:37Z FabianLange $
+ * @version    SVN: $Id: sfPluginManager.class.php 16445 2009-03-19 18:03:10Z FabianLange $
  */
 class sfPluginManager
 {
@@ -338,7 +338,7 @@ class sfPluginManager
         {
           try
           {
-            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel']));
+            $this->doInstallPlugin($dependency['name'], array('channel' => $dependency['channel'], 'install_deps' => true));
           }
           catch (sfException $e)
           {

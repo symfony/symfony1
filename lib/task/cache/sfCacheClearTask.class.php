@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheClearTask.class.php 12548 2008-11-01 16:55:27Z fabien $
+ * @version    SVN: $Id: sfCacheClearTask.class.php 16656 2009-03-27 08:44:15Z Kris.Wallsmith $
  */
 class sfCacheClearTask extends sfBaseTask
 {
@@ -206,8 +206,11 @@ EOF;
 
   public function cleanCacheFromFactoryConfig($class, $parameters = array())
   {
-    $cache = new $class($parameters);
-    $cache->clean();
+    if ($class)
+    {
+      $cache = new $class($parameters);
+      $cache->clean();
+    }
   }
 
   protected function lock($app, $env)

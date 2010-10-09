@@ -83,7 +83,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
             $newQuery = $query->copy();
             $query->getSql();
-            $newQuery->addWhere($query->getRootAlias() . '.id IN(' . $q->getSql() . ')', $q->getParams());
+            $newQuery->addWhere($query->getRootAlias() . '.id IN (SQL:' . $q->getSql() . ')', $q->getParams());
 
             return $newQuery;
         } else {

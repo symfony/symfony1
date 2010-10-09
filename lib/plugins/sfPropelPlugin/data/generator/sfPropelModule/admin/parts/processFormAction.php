@@ -3,7 +3,7 @@
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
     {
-      $this->getUser()->setFlash('notice', $form->getObject()->isNew() ? 'The item was created successfully.' : 'The item was updated successfully.');
+      $notice = $form->getObject()->isNew() ? 'The item was created successfully.' : 'The item was updated successfully.';
 
       $<?php echo $this->getSingularName() ?> = $form->save();
 
@@ -11,17 +11,19 @@
 
       if ($request->hasParameter('_save_and_add'))
       {
-        $this->getUser()->setFlash('notice', $this->getUser()->getFlash('notice').' You can add another one below.');
+        $this->getUser()->setFlash('notice', $notice.' You can add another one below.');
 
         $this->redirect('@<?php echo $this->getUrlForAction('new') ?>');
       }
       else
       {
+        $this->getUser()->setFlash('notice', $notice);
+
         $this->redirect('@<?php echo $this->getUrlForAction('edit') ?>?<?php echo $this->getPrimaryKeyUrlParams() ?>);
       }
     }
     else
     {
-      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.');
+      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.', false);
     }
   }

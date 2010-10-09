@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: GeneratedNestedSetObjectTest.php 894 2007-12-27 14:39:01Z heltem $
+ *  $Id: GeneratedNestedSetObjectTest.php 1098 2009-02-09 13:42:51Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -154,4 +154,44 @@ class GeneratedNestedSetObjectTest extends CmsTestBase {
 		$home->makeRoot();
 	}
 
+	/**
+	 * Test xxxNestedSet::getDescendants()
+	 */
+	public function testPeerGetDescendants()
+	{
+		$nodesWithoutPool = array();
+		CategoryPeer::clearInstancePool();
+		$cat = CategoryPeer::retrieveRoot(1);
+		$children = $cat->getDescendants();
+		foreach($children as $child)
+		{
+			$nodesWithoutPool[] = $child->getTitle();
+		}
+		$this->assertEquals($nodesWithoutPool, array('Cat_1_1', 'Cat_1_1_1', 'Cat_1_1_1_1'));
+	}
+
+	/**
+	 * Test xxxNestedSet::getDescendantsTwice()
+	 */
+	public function testPeerGetDescendantsTwice()
+	{
+		$nodesWithoutPool = array();
+		$nodesWithPool = array();
+
+		CategoryPeer::clearInstancePool();
+		$cat = CategoryPeer::retrieveRoot(1);
+		$children = $cat->getDescendants();
+		foreach($children as $child)
+		{
+			$nodesWithoutPool[] = $child->getTitle();
+		}
+
+		$cat = CategoryPeer::retrieveRoot(1);
+		$children = $cat->getDescendants();
+		foreach($children as $child)
+		{
+			$nodesWithPool[] = $child->getTitle();
+		}
+		$this->assertEquals($nodesWithoutPool, $nodesWithPool, 'Retrieved nodes must be the same with and without InstancePooling');
+	}
 }

@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 12764 2008-11-08 11:28:57Z FabianLange $
+ * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 15544 2009-02-16 21:46:00Z dwhittle $
  */
 abstract class sfDatabaseSessionStorage extends sfSessionStorage
 {
@@ -100,19 +100,24 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     $database = $this->options['database'];
 
     // get the database and connection
-    if(get_class($database) == 'sfPropelDatabase')
+    $databaseClass = get_class($database);
+    if($databaseClass == 'sfPropelDatabase')
     {
-      $this->db = Propel::getConnection(); 
+      $this->db = Propel::getConnection();
+    }
+    elseif($databaseClass == 'sfDoctrineDatabase')
+    {
+      $this->db = $database->getConnection();
     }
     else
     {
-      $this->db = $database->getResource(); 
+      $this->db = $database->getResource();
     }
     $this->con = $database->getConnection();
-    
+
     if (is_null($this->db) && is_null($this->con))
     {
-      throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');
+      throw new sfDatabaseException('Database connection does not exist. Unable to open session.');
     }
 
     return true;

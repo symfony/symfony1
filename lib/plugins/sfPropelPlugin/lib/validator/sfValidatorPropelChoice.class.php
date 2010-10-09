@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorPropelChoice.class.php 11669 2008-09-19 14:03:40Z fabien $
+ * @version    SVN: $Id: sfValidatorPropelChoice.class.php 15627 2009-02-19 13:35:10Z Kris.Wallsmith $
  */
 class sfValidatorPropelChoice extends sfValidatorBase
 {
@@ -55,7 +55,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
         $value = array($value);
       }
 
-      $criteria->add($this->getColumn(), $value, Criteria::IN);
+      $criteria->addAnd($this->getColumn(), $value, Criteria::IN);
 
       $objects = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelect'), $criteria, $this->getOption('connection'));
 
@@ -66,7 +66,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
     }
     else
     {
-      $criteria->add($this->getColumn(), $value);
+      $criteria->addAnd($this->getColumn(), $value);
 
       $object = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doSelectOne'), $criteria, $this->getOption('connection'));
 

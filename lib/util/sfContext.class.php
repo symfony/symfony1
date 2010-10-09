@@ -18,7 +18,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfContext.class.php 11286 2008-09-02 10:27:36Z fabien $
+ * @version    SVN: $Id: sfContext.class.php 16165 2009-03-11 07:16:24Z fabien $
  */
 class sfContext
 {
@@ -234,6 +234,11 @@ class sfContext
      return isset($this->factories['controller']) ? $this->factories['controller'] : null;
    }
 
+   /**
+    * Retrieve the logger.
+    *
+    * @return sfLogger The current sfLogger implementation instance.
+    */
    public function getLogger()
    {
      if (!isset($this->factories['logger']))

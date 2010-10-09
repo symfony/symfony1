@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: UnitOfWork.php 5250 2008-12-03 21:38:40Z jwage $
+ *  $Id: UnitOfWork.php 5438 2009-01-30 22:23:36Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +33,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5250 $
+ * @version     $Revision: 5438 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
  */
@@ -61,7 +61,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         try {
             $conn->beginInternalTransaction();
-            $saveLater = $this->saveRelated($record);
+            $this->saveRelatedLocalKeys($record);
 
             $record->state($state);
 
@@ -104,6 +104,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             $record->state($record->exists() ? Doctrine_Record::STATE_LOCKED : Doctrine_Record::STATE_TLOCKED);
 
+            $saveLater = $this->saveRelatedForeignKeys($record);
             foreach ($saveLater as $fk) {
                 $alias = $fk->getAlias();
 
@@ -368,24 +369,41 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      }
 
     /**
-     * saveRelated
-     * saves all related records to $record
+     * saveRelatedForeignKeys
+     * saves all related (through ForeignKey) records to $record
      *
      * @throws PDOException         if something went wrong at database level
      * @param Doctrine_Record $record
      */
-    public function saveRelated(Doctrine_Record $record)
+    public function saveRelatedForeignKeys(Doctrine_Record $record)
     {
         $saveLater = array();
+        foreach ($record->getReferences() as $k => $v) {
+            $rel = $record->getTable()->getRelation($k);
+            if ($rel instanceof Doctrine_Relation_ForeignKey) {
+                $saveLater[$k] = $rel;
+            }
+        }
+
+        return $saveLater;
+    }
+    
+    /**
+     * saveRelatedLocalKeys
+     * saves all related (through LocalKey) records to $record
+     *
+     * @throws PDOException         if something went wrong at database level
+     * @param Doctrine_Record $record
+     */
+    public function saveRelatedLocalKeys(Doctrine_Record $record)
+    {
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
 
             $local = $rel->getLocal();
             $foreign = $rel->getForeign();
 
-            if ($rel instanceof Doctrine_Relation_ForeignKey) {
-                $saveLater[$k] = $rel;
-            } else if ($rel instanceof Doctrine_Relation_LocalKey) {
+            if ($rel instanceof Doctrine_Relation_LocalKey) {
                 // ONE-TO-ONE relationship
                 $obj = $record->get($rel->getAlias());
 
@@ -405,8 +423,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
         }
-
-        return $saveLater;
     }
 
     /**

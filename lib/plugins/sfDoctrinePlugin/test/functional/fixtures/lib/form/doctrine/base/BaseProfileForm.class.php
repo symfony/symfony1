@@ -13,7 +13,7 @@ class BaseProfileForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'         => new sfWidgetFormInputHidden(),
-      'user_id'    => new sfWidgetFormDoctrineSelect(array('model' => 'User', 'add_empty' => true)),
+      'user_id'    => new sfWidgetFormDoctrineChoice(array('model' => 'User', 'add_empty' => true)),
       'first_name' => new sfWidgetFormInput(),
       'last_name'  => new sfWidgetFormInput(),
     ));

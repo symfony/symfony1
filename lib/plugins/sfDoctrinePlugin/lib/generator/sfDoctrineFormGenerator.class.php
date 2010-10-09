@@ -326,7 +326,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     }
     else if ($column->isForeignKey())
     {
-      $widgetSubclass = 'DoctrineSelect';
+      $widgetSubclass = 'DoctrineChoice';
     }
 
     return sprintf('sfWidgetForm%s', $widgetSubclass);
@@ -456,7 +456,6 @@ class sfDoctrineFormGenerator extends sfGenerator
           }
           if (isset($column['regexp']))
           {
-            $options = array();
             $options[] = sprintf('\'pattern\' => \'%s\'', $column['regexp']);
           }
           break;
@@ -485,7 +484,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     $max = 0;
     foreach ($this->getColumns() as $column)
     {
-      if (($m = strlen($column->getName())) > $max)
+      if (($m = strlen($column->getFieldName())) > $max)
       {
         $max = $m;
       }

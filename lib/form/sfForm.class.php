@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 14852 2009-01-17 23:27:45Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfForm.class.php 15892 2009-03-01 15:41:49Z hartym $
  */
 class sfForm implements ArrayAccess, Iterator, Countable
 {
@@ -144,7 +144,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
   /**
    * Renders hidden form fields.
-   * 
+   *
    * @return string
    */
   public function renderHiddenFields()
@@ -466,9 +466,9 @@ class sfForm implements ArrayAccess, Iterator, Countable
 
     $this->defaults = array_merge($this->defaults, $form->getDefaults());
 
-    foreach ($form->getWidgetSchema()->getFields() as $field => $widget)
+    foreach ($form->getWidgetSchema()->getPositions() as $field)
     {
-      $this->widgetSchema[$field] = $widget;
+      $this->widgetSchema[$field] = $form->getWidget($field);
     }
 
     foreach ($form->getValidatorSchema()->getFields() as $field => $validator)
@@ -476,8 +476,8 @@ class sfForm implements ArrayAccess, Iterator, Countable
       $this->validatorSchema[$field] = $validator;
     }
 
-    $this->getWidgetSchema()->setLabels(array_merge($this->getWidgetSchema()->getLabels(),
-                                                    $form->getWidgetSchema()->getLabels()));
+    $this->getWidgetSchema()->setLabels(array_merge($this->getWidgetSchema()->getLabels(), $form->getWidgetSchema()->getLabels()));
+    $this->getWidgetSchema()->setHelps(array_merge($this->getWidgetSchema()->getHelps(), $form->getWidgetSchema()->getHelps()));
 
     $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
     $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
@@ -1033,7 +1033,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    */
   public function rewind()
   {
-    $this->fieldNames = array_keys($this->widgetSchema->getFields());
+    $this->fieldNames = $this->widgetSchema->getPositions();
 
     reset($this->fieldNames);
     $this->count = count($this->fieldNames);
@@ -1157,20 +1157,16 @@ class sfForm implements ArrayAccess, Iterator, Countable
   static public function arrayToPaths($array = array(), $prefix = '')
   {
     $str = '';
-    $freshPrefix = $prefix;
 
     foreach ($array as $key => $value)
     {
-      $freshPrefix .= "/{$key}";
-
       if (is_array($value))
       {
-        $str .= self::arrayToPaths($value, $freshPrefix);
-        $freshPrefix = $prefix;
+        $str .= self::arrayToPaths($value, $prefix.'/'.$key);
       }
       else
       {
-        $str .= "{$prefix}/{$key} = {$value}\n";
+        $str .= "$prefix/$key = $value\n";
       }
     }
 

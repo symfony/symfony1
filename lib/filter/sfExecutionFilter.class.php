@@ -10,14 +10,14 @@
  */
 
 /**
- * sfValidationExecutionFilter is the last filter registered for each filter chain. This
+ * sfExecutionFilter is the last filter registered for each filter chain. This
  * filter does all action and view execution.
  *
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfExecutionFilter.class.php 9945 2008-06-27 20:40:58Z fabien $
+ * @version    SVN: $Id: sfExecutionFilter.class.php 16250 2009-03-12 10:06:36Z fabien $
  */
 class sfExecutionFilter extends sfFilter
 {

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Record.php 5323 2008-12-23 14:28:37Z guilhermeblanco $
+ *  $Id: Record.php 5464 2009-02-03 17:48:11Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5323 $
+ * @version     $Revision: 5464 $
  */
 abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate, Serializable
 {
@@ -545,7 +545,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $k = $this->_table->getFieldName($k);
             $old = $this->get($k, false);
 
-            if ((string) $old !== (string) $v || $old === null) {
+            if (((string) $old !== (string) $v || $old === null) && !in_array($k, $this->_modified)) {
                 $this->set($k, $v);
             }
         }
@@ -615,8 +615,14 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function hydrate(array $data)
     {
-        $this->_values = array_merge($this->_values, $this->cleanData($data));
-        $this->_data = array_merge($this->_data, $data);
+        if ($this->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE)) {
+            $this->_values = array_merge($this->_values, $this->cleanData($data));
+            $this->_data = array_merge($this->_data, $data);
+        } else {
+            $this->_values = array_merge($this->cleanData($data), $this->_values);
+            $this->_data = array_merge($data, $this->_data);
+        }
+
         if (count($this->_values) < $this->_table->getColumnCount()) {
             $this->_state = self::STATE_PROXY;
         }
@@ -835,6 +841,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
         $id = array_values($id);
 
+        $overwrite = $this->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE);
+        $this->getTable()->setAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE, true);
+
         if ($deep) {
             $query = $this->getTable()->createQuery();
             foreach (array_keys($this->_references) as $name) {
@@ -850,6 +859,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $this->hydrate($record);
             }
         }
+
+        $this->getTable()->setAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE, $overwrite);
 
         if ($record === false) {
             throw new Doctrine_Record_Exception('Failed to refresh. Record does not exist.');
@@ -1673,9 +1684,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function exists()
     {
-        return ($this->_state !== Doctrine_Record::STATE_TCLEAN &&
-                $this->_state !== Doctrine_Record::STATE_TDIRTY &&
-                $this->_state !== Doctrine_Record::STATE_TLOCKED);
+        return ($this->_state !== Doctrine_Record::STATE_TCLEAN  &&
+                $this->_state !== Doctrine_Record::STATE_TDIRTY  &&
+                $this->_state !== Doctrine_Record::STATE_TLOCKED &&
+                $this->_state !== null);
     }
 
     /**
@@ -2106,7 +2118,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         foreach ($this->_table->getTemplates() as $template) {
-            if (method_exists($template, $method)) {
+            if (is_callable(array($template, $method))) {
                 $template->setInvoker($this);
                 $this->_table->setMethodOwner($method, $template);
 

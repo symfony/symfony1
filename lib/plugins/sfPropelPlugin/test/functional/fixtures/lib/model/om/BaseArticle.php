@@ -995,7 +995,6 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$count = count($this->collAuthorArticles);
 			}
 		}
-		$this->lastAuthorArticleCriteria = $criteria;
 		return $count;
 	}
 
@@ -1131,7 +1130,6 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$count = count($this->collAttachments);
 			}
 		}
-		$this->lastAttachmentCriteria = $criteria;
 		return $count;
 	}
 

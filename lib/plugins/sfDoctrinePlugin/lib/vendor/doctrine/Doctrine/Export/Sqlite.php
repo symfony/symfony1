@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 4252 2008-04-19 07:37:53Z jwage $
+ *  $Id: Sqlite.php 5418 2009-01-26 20:18:24Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4252 $
+ * @version     $Revision: 5418 $
  */
 class Doctrine_Export_Sqlite extends Doctrine_Export
 {
@@ -271,7 +271,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      */
     public function createSequence($seqName, $start = 1, array $options = array())
     {
-        $sequenceName   = $this->conn->quoteIdentifier($this->conn->getSequenceName($seqName), true);
+        $sequenceName   = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
         $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
         $query          = 'CREATE TABLE ' . $sequenceName . ' (' . $seqcolName . ' INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)';
 
@@ -304,7 +304,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      */
     public function dropSequenceSql($sequenceName)
     {
-        $sequenceName = $this->conn->quoteIdentifier($this->conn->getSequenceName($sequenceName), true);
+        $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
 
         return 'DROP TABLE ' . $sequenceName;
     }

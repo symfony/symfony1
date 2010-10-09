@@ -20,7 +20,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfUser.class.php 9060 2008-05-19 21:31:17Z FabianLange $
+ * @version    SVN: $Id: sfUser.class.php 15553 2009-02-17 11:04:14Z dwhittle $
  */
 class sfUser
 {
@@ -265,8 +265,6 @@ class sfUser
 
     // write culture to the storage
     $this->storage->write(self::CULTURE_NAMESPACE, $this->culture);
-
-    session_write_close();
   }
 
   /**

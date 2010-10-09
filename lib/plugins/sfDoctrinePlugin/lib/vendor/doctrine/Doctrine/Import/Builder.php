@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Builder.php 5318 2008-12-19 20:44:54Z jwage $
+ *  $Id: Builder.php 5441 2009-01-30 22:58:43Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 5318 $
+ * @version     $Revision: 5441 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
@@ -372,12 +372,12 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $i = 0;
 
         if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'concrete') {
-            $ret[$i] = "    parent::setTableDefinition();";
+            $ret[$i] = "        parent::setTableDefinition();";
             $i++;
         }
 
         if (isset($definition['tableName']) && !empty($definition['tableName'])) {
-            $ret[$i] = "    ".'$this->setTableName(\''. $definition['tableName'].'\');';
+            $ret[$i] = "        ".'$this->setTableName(\''. $definition['tableName'].'\');';
             $i++;
         }
 
@@ -407,14 +407,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         }
 
         if (isset($definition['inheritance']['subclasses']) && ! empty($definition['inheritance']['subclasses'])) {
-            $ret[$i] = "    ".'$this->setSubClasses('. $this->varExport($definition['inheritance']['subclasses']).');';
+            $ret[$i] = "        ".'$this->setSubClasses('. $this->varExport($definition['inheritance']['subclasses']).');';
             $i++;
         }
 
         $code = implode(PHP_EOL, $ret);
         $code = trim($code);
 
-        return PHP_EOL . "  public function setTableDefinition()" . PHP_EOL . '  {' . PHP_EOL . '    ' . $code . PHP_EOL . '  }';
+        return PHP_EOL . "    public function setTableDefinition()" . PHP_EOL . '    {' . PHP_EOL . '        ' . $code . PHP_EOL . '    }';
     }
 
     /**
@@ -440,9 +440,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
 
                 if ($relation['type'] === Doctrine_Relation::ONE) {
-                    $ret[$i] = "    ".'$this->hasOne(\'' . $class . $alias . '\'';
+                    $ret[$i] = "        ".'$this->hasOne(\'' . $class . $alias . '\'';
                 } else {
-                    $ret[$i] = "    ".'$this->hasMany(\'' . $class . $alias . '\'';
+                    $ret[$i] = "        ".'$this->hasMany(\'' . $class . $alias . '\'';
                 }
 
                 $a = array();
@@ -523,7 +523,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         // If we have some code for the function then lets define it and return it
         if ($code) {
-            return '  public function setUp()' . PHP_EOL . '  {' . PHP_EOL . '    ' . $code . PHP_EOL . '  }';
+            return '    public function setUp()' . PHP_EOL . '    {' . PHP_EOL . '        ' . $code . PHP_EOL . '    }';
         }
     }
 
@@ -537,7 +537,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $build = '';
         foreach ($checks as $check) {
-            $build .= "    \$this->check('" . $check . "');" . PHP_EOL;
+            $build .= "        \$this->check('" . $check . "');" . PHP_EOL;
         }
         return $build;
     }
@@ -553,7 +553,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $build = null;
         foreach ($columns as $name => $column) {
             $columnName = isset($column['name']) ? $column['name']:$name;
-            $build .= "    ".'$this->hasColumn(\'' . $columnName . '\', \'' . $column['type'] . '\'';
+            $build .= "        ".'$this->hasColumn(\'' . $columnName . '\', \'' . $column['type'] . '\'';
 
             if ($column['length']) {
                 $build .= ', ' . $column['length'];
@@ -605,41 +605,6 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         return $build;
     }
 
-    /*
-     * Build the accessors
-     *
-     * @param  string $table
-     * @param  array  $columns
-     */
-    public function buildAccessors(array $definition)
-    {
-        $accessors = array();
-        foreach (array_keys($definition['columns']) as $name) {
-            $accessors[] = $name;
-        }
-
-        foreach ($definition['relations'] as $relation) {
-            $accessors[] = $relation['alias'];
-        }
-
-        $ret = '';
-        foreach ($accessors as $name) {
-            // getters
-            $ret .= PHP_EOL . '  public function get' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\$load = true)" . PHP_EOL;
-            $ret .= "  {" . PHP_EOL;
-            $ret .= "    return \$this->get('{$name}', \$load);" . PHP_EOL;
-            $ret .= "  }" . PHP_EOL;
-
-            // setters
-            $ret .= PHP_EOL . '  public function set' . Doctrine_Inflector::classify(Doctrine_Inflector::tableize($name)) . "(\${$name}, \$load = true)" . PHP_EOL;
-            $ret .= "  {" . PHP_EOL;
-            $ret .= "    return \$this->set('{$name}', \${$name}, \$load);" . PHP_EOL;
-            $ret .= "  }" . PHP_EOL;
-        }
-
-        return $ret;
-    }
-
     /**
      * emit a behavior assign
      *
@@ -655,7 +620,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if (class_exists("Doctrine_Template_$name", true)) {
             $classname = "Doctrine_Template_$name";
         }
-        return "    \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
+        return "        \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
     }
 
     /**
@@ -668,7 +633,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitAddChild($level, $parent, $name)
     {
-        return "    \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . PHP_EOL;
+        return "        \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -681,7 +646,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitActAs($level, $name)
     {
-        return "    \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
+        return "        \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
     }
 
 
@@ -776,7 +741,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $build = '';
         foreach($listeners as $listener) {
-            $build .= "    \$this->addListener(new " . $listener . "());" . PHP_EOL;
+            $build .= "        \$this->addListener(new " . $listener . "());" . PHP_EOL;
         }
 
         return $build;
@@ -813,7 +778,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             }
 
             $string = implode(' ^ ', $values);
-            $build .= "    \$this->setAttribute(Doctrine::ATTR_" . strtoupper($key) . ", " . $string . ");" . PHP_EOL;
+            $build .= "        \$this->setAttribute(Doctrine::ATTR_" . strtoupper($key) . ", " . $string . ");" . PHP_EOL;
         }
 
         return $build;
@@ -829,7 +794,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     {
         $build = '';
         foreach ($options as $name => $value) {
-            $build .= "    \$this->option('$name', " . $this->varExport($value) . ");" . PHP_EOL;
+            $build .= "        \$this->option('$name', " . $this->varExport($value) . ");" . PHP_EOL;
         }
 
         return $build;
@@ -846,7 +811,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
       $build = '';
 
       foreach ($indexes as $indexName => $definitions) {
-          $build .= PHP_EOL . "    \$this->index('" . $indexName . "'";
+          $build .= PHP_EOL . "        \$this->index('" . $indexName . "'";
           $build .= ', ' . $this->varExport($definitions);
           $build .= ');';
       }

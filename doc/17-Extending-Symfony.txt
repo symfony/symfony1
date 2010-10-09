@@ -189,7 +189,7 @@ Listing 17-5 - Notifying and Handling a Filter Event
         return $this->dispatcher->filter(new sfEvent($this, 'rest_request.filter_result', array(
           'uri'        => $uri,
           'parameters' => $parameters,
-        ), $result));
+        )), $result)->getReturnValue();
       }
     }
 

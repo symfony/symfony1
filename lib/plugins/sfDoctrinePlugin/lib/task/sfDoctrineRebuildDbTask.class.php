@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRebuildDbTask.class.php 14213 2008-12-19 21:03:13Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineRebuildDbTask.class.php 16087 2009-03-07 22:08:50Z Kris.Wallsmith $
  */
 class sfDoctrineRebuildDbTask extends sfDoctrineBaseTask
 {
@@ -52,31 +52,23 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
-    $dropDb->setCommandApplication($this->commandApplication);
+    $baseOptions = $this->configuration instanceof sfApplicationConfiguration ? array(
+      '--application='.$this->configuration->getApplication(),
+      '--env='.$options['env'],
+    ) : array();
 
-    $dropDbOptions = array();
-    if (!empty($options['application']))
-    {
-      $dropDbOptions[] = '--application=' . $options['application'];
-    }
-    $dropDbOptions[] = '--env='.$options['env'];
+    $dropDbOptions = $baseOptions;
     if (isset($options['no-confirmation']) && $options['no-confirmation'])
     {
       $dropDbOptions[] = '--no-confirmation';
     }
 
+    $dropDb = new sfDoctrineDropDbTask($this->dispatcher, $this->formatter);
+    $dropDb->setCommandApplication($this->commandApplication);
     $dropDb->run(array(), $dropDbOptions);
-
-    $buildAllOptions = array();
-    if (!empty($options['application']))
-    {
-      $buildAllOptions[] = '--application=' . $options['application'];
-    }
-    $buildAllOptions[] = '--env='.$options['env'];
 
     $buildAll = new sfDoctrineBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->run(array(), array('--env='.$options['env']));
+    $buildAll->run(array(), $baseOptions);
   }
 }

@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit>
         <source>The item was deleted successfully.</source>
-        <target>L'object a été supprimé avec succès.</target>
+        <target>L'objet a été supprimé avec succès.</target>
       </trans-unit>
       <trans-unit>
         <source>You must at least select one item.</source>
