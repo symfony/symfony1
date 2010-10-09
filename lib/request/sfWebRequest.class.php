@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 17372 2009-04-16 16:10:59Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 20047 2009-07-09 09:37:17Z FabianLange $
  */
 class sfWebRequest extends sfRequest
 {
@@ -33,7 +33,7 @@ class sfWebRequest extends sfRequest
     $requestParameters      = null,
     $formats                = array(),
     $format                 = null,
-    $fileArrayFixed         = false;
+    $fixedFileArray         = false;
 
   /**
    * Initializes this sfRequest.
@@ -41,8 +41,8 @@ class sfWebRequest extends sfRequest
    * Available options:
    *
    *  * formats:           The list of supported format and their associated mime-types
-   *  * path_info_key:     The path info key (default to SERVER)
-   *  * path_info_array:   The path info key (default to PATH_INFO)
+   *  * path_info_key:     The path info key (default to PATH_INFO)
+   *  * path_info_array:   The path info array (default to SERVER)
    *  * relative_url_root: The relative URL root
    *
    * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
@@ -703,13 +703,12 @@ class sfWebRequest extends sfRequest
    */
   public function getFiles($key = null)
   {
-    if (false === $this->fileArrayFixed)
+    if (false === $this->fixedFileArray)
     {
-      $files = self::convertFileInformation($_FILES);
-      $this->fileArrayFixed = true;
+      $this->fixedFileArray = self::convertFileInformation($_FILES);
     }
 
-    return is_null($key) ? $files : (isset($files[$key]) ? $files[$key] : array());
+    return is_null($key) ? $this->fixedFileArray : (isset($this->fixedFileArray[$key]) ? $this->fixedFileArray[$key] : array());
   }
 
   /**

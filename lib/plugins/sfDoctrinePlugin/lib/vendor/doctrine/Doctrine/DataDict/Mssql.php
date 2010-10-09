@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mssql.php 5176 2008-11-17 12:19:44Z guilhermeblanco $
+ *  $Id: Mssql.php 5848 2009-06-09 08:15:56Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @author      Frank M. Kromann <frank@kromann.info> (PEAR MDB2 Mssql driver)
  * @author      David Coallier <davidc@php.net> (PEAR MDB2 Mssql driver)
- * @version     $Revision: 5176 $
+ * @version     $Revision: 5848 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -140,11 +140,15 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             break;
             case 'tinyint':
             case 'smallint':
+            case 'bigint':
             case 'int':
                 $type[0] = 'integer';
                 if ($length == 1) {
                     $type[] = 'boolean';
                 }
+            break;
+            case 'date': 
+                $type[0] = 'date'; 
             break;
             case 'datetime':
             case 'timestamp':
@@ -194,5 +198,57 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                      'length'   => $length,
                      'unsigned' => $unsigned,
                      'fixed'    => $fixed);
+    }
+
+    /**
+     * Obtain DBMS specific SQL code portion needed to declare an integer type
+     * field to be used in statements like CREATE TABLE.
+     *
+     * @param string  $name   name the field to be declared.
+     * @param string  $field  associative array with the name of the properties
+     *                        of the field being declared as array indexes.
+     *                        Currently, the types of supported field
+     *                        properties are as follows:
+     *
+     *                       unsigned
+     *                        Boolean flag that indicates whether the field
+     *                        should be declared as unsigned integer if
+     *                        possible.
+     *
+     *                       default
+     *                        Integer value to be used as default for this
+     *                        field.
+     *
+     *                       notnull
+     *                        Boolean flag that indicates whether this field is
+     *                        constrained to not be set to null.
+     * @return string  DBMS specific SQL code portion that should be used to
+     *                 declare the specified field.
+     */
+    public function getIntegerDeclaration($name, $field)
+    {
+        $default = $autoinc = '';
+        if ( ! empty($field['autoincrement'])) {
+            $autoinc = ' identity';
+        } elseif (array_key_exists('default', $field)) {
+            if ($field['default'] === '') {
+                $field['default'] = empty($field['notnull']) ? null : 0;
+            }
+
+            $default = ' DEFAULT ' . (is_null($field['default'])
+                ? 'NULL'
+                : $this->conn->quote($field['default']));
+        }
+
+
+        $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
+        $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        $comment  = (isset($field['comment']) && $field['comment']) 
+            ? " COMMENT '" . $field['comment'] . "'" : '';
+
+        $name = $this->conn->quoteIdentifier($name, true);
+
+        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned 
+            . $default . $notnull . $autoinc . $comment;
     }
 }

@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowserBase.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfBrowserBase.class.php 19411 2009-06-20 11:54:04Z fabien $
  */
 abstract class sfBrowserBase
 {
@@ -82,7 +82,7 @@ abstract class sfBrowserBase
    * @param string $name   The variable name
    * @param mixed  $value  The value
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setVar($name, $value)
   {
@@ -115,7 +115,7 @@ abstract class sfBrowserBase
    * @param  bool    $secure   If secure
    * @param  bool    $httpOnly If uses only HTTP
    * 
-   * @return sfBrowser         This sfBrowser instance
+   * @return sfBrowserBase     This sfBrowserBase instance
    */
   public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
@@ -135,9 +135,9 @@ abstract class sfBrowserBase
   /**
    * Removes a cookie by name.
    *
-   * @param string $name The cookie name
+   * @param string $name   The cookie name
    *
-   * @return sfBrowser    This sfBrowser instance
+   * @return sfBrowserBase This sfBrowserBase instance
    */
   public function removeCookie($name)
   {
@@ -149,7 +149,7 @@ abstract class sfBrowserBase
   /**
    * Clears all cookies.
    *
-   * @return sfBrowser    This sfBrowser instance
+   * @return sfBrowserBase This sfBrowserBase instance
    */
   public function clearCookies()
   {
@@ -164,7 +164,7 @@ abstract class sfBrowserBase
    * @param string $username  The username
    * @param string $password  The password
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setAuth($username, $password)
   {
@@ -181,7 +181,7 @@ abstract class sfBrowserBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function get($uri, $parameters = array(), $changeStack = true)
   {
@@ -195,7 +195,7 @@ abstract class sfBrowserBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function post($uri, $parameters = array(), $changeStack = true)
   {
@@ -210,7 +210,7 @@ abstract class sfBrowserBase
    * @param array  $parameters   The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
@@ -379,7 +379,7 @@ abstract class sfBrowserBase
   /**
    * Go back in the browser history stack.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function back()
   {
@@ -395,7 +395,7 @@ abstract class sfBrowserBase
   /**
    * Go forward in the browser history stack.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function forward()
   {
@@ -411,7 +411,7 @@ abstract class sfBrowserBase
   /**
    * Reload the current browser.
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function reload()
   {
@@ -517,7 +517,7 @@ abstract class sfBrowserBase
    *
    * @throws sfException If request was not a redirect
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function followRedirect()
   {
@@ -535,7 +535,7 @@ abstract class sfBrowserBase
    * @param string $name   The field name
    * @param string $value  The field value
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function setField($name, $value)
   {
@@ -550,7 +550,7 @@ abstract class sfBrowserBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doSelect()
    */
@@ -566,7 +566,7 @@ abstract class sfBrowserBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doSelect()
    */
@@ -634,7 +634,7 @@ abstract class sfBrowserBase
    * @param array   $arguments  The arguments to pass to the link
    * @param array   $options    An array of options
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    *
    * @see    doClick()
    */
@@ -678,8 +678,18 @@ abstract class sfBrowserBase
 
     $method = strtolower(isset($options['method']) ? $options['method'] : 'get');
 
-    // text link
-    if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item($position))
+    $query  = sprintf('//a[.="%s"]', $name);
+    $query .= sprintf('|//a/img[@alt="%s"]/ancestor::a', $name);
+    $query .= sprintf('|//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name);
+    $query .= sprintf('|//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name);
+    $list = $xpath->query($query);
+
+    if (!$item = $list->item($position))
+    {
+      throw new InvalidArgumentException(sprintf('Cannot find the "%s" link or button.', $name));
+    }
+
+    if ('a' == $item->nodeName)
     {
       if (in_array($method, array('post', 'put', 'delete')))
       {
@@ -688,49 +698,27 @@ abstract class sfBrowserBase
           $arguments['_with_csrf'] = true;
         }
 
-        return array($link->getAttribute('href'), $method, $arguments);
+        return array($item->getAttribute('href'), $method, $arguments);
       }
       else
       {
-        return array($link->getAttribute('href'), 'get', array());
-      }
-    }
-
-    // image link
-    if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item($position))
-    {
-      if (in_array($method, array('post', 'put', 'delete')))
-      {
-        return array($link->getAttribute('href'), $method, $arguments);
-      }
-      else
-      {
-        return array($link->getAttribute('href'), 'get', $arguments);
-      }
-    }
-
-    // form
-    if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item($position))
-    {
-      if (!$form = $xpath->query(sprintf('//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name))->item($position))
-      {
-        throw new InvalidArgumentException(sprintf('Cannot find the "%s" link or button.', $name));
+        return array($item->getAttribute('href'), 'get', $arguments);
       }
     }
 
     // form attributes
-    $url = $form->getAttribute('action');
+    $url = $item->getAttribute('action');
     if (!$url || '#' == $url)
     {
       $url = $this->stack[$this->stackPosition]['uri'];
     }
-    $method = strtolower(isset($options['method']) ? $options['method'] : ($form->getAttribute('method') ? $form->getAttribute('method') : 'get'));
+    $method = strtolower(isset($options['method']) ? $options['method'] : ($item->getAttribute('method') ? $item->getAttribute('method') : 'get'));
 
     // merge form default values and arguments
     $defaults = array();
     $arguments = sfToolkit::arrayDeepMerge($this->fields, $arguments);
 
-    foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
+    foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $item) as $element)
     {
       $elementName = $element->getAttribute('name');
       $nodeName    = $element->nodeName;
@@ -877,7 +865,7 @@ abstract class sfBrowserBase
   /**
    * Reset browser to original state
    *
-   * @return sfBrowser
+   * @return sfBrowserBase
    */
   public function restart()
   {

@@ -12,7 +12,7 @@ $app = 'frontend';
 $fixtures = 'fixtures/fixtures.yml';
 require_once(dirname(__FILE__).'/../bootstrap/functional.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
 
 $authors = Doctrine::getTable('Author')->findAll();
 $t->is(count($authors), 2);
@@ -47,7 +47,21 @@ $t->is($article->getauthorId(), $article->author_id);
 $t->is($article->getAuthorID(), $article->author_id);
 $t->is($article->getauthor_id(), $article->author_id);
 
+// Camel case columns
+$camelCase = new CamelCase();
+$camelCase->testCamelCase = 'camel';
+$camelCase->setTestCamelCase('camel');
+
+$t->is($camelCase->getTestCamelCase(), 'camel');
+$t->is($camelCase->gettestCamelCase(), 'camel');
+$t->is($camelCase->gettestcamelcase(), 'camel');
+$t->is($camelCase->gettest_camel_case(), 'camel');
+$t->is($camelCase->getTest_camel_case(), 'camel');
+
 // Propel style accessors work with relationships
 $article->setAuthor($author);
 $t->is($article->Author, $author);
 $t->is($article->getAuthor(), $author);
+
+// Camel case with relationships
+$t->is($article->getCamelCase()->getTable()->getOption('name'), 'CamelCase');

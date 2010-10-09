@@ -534,7 +534,6 @@ Some of these plug-ins are contributions from the community, and some come from 
   * `sfThumbnailPlugin`: Creates thumbnails--for instance, for uploaded images
   * `sfMediaLibraryPlugin`: Allows media upload and management, including an extension for rich text editors to allow authoring of images inside rich text
   * `sfShoppingCartPlugin`: Allows shopping cart management
-  * `sfPagerNavigationPlugin`: Provides classical and Ajax pager controls, based on an `sfPager` object
   * `sfGuardPlugin`: Provides authentication, authorization, and other user management features above the standard security feature of symfony
   * `sfPrototypePlugin`: Provides prototype and script.aculo.us JavaScript files as a standalone library
   * `sfSuperCachePlugin`: Writes pages in cache directory under the web root to allow the web server to serve them as fast as possible
@@ -596,14 +595,14 @@ Listing 17-13 - Installing a Plug-In with some Options
 
 #### Archive Plug-Ins
 
-Some plug-ins come as a simple archive of files. To install those, just unpack the archive into your project's `plugins/` directory. If the plug-in contains a `web/` subdirectory, make a copy or a symlink of this directory into the project's `web/` directory, as demonstrated in Listing 17-14. Finally, don't forget to clear the cache.
+Some plug-ins come as a simple archive of files. To install those, just unpack the archive into your project's `plugins/` directory. If the plug-in contains a `web/` subdirectory, don't forget to run the `plugin:publish-assets` command to create the corresponding symlink under the main `web/` folder as shown in listing 17-14. Finally, don't forget to clear the cache.
 
 Listing 17-14 - Installing a Plug-In from an Archive
 
     > cd plugins
     > tar -zxpf myPlugin.tgz
     > cd ..
-    > ln -sf plugins/myPlugin/web web/myPlugin
+    > php symfony plugin:publish-assets
     > php symfony cc
 
 #### Installing Plug-Ins from a Version Control Repository
@@ -618,10 +617,11 @@ Listing 17-15 - Installing a Plug-In from a Source Version Repository
     > svn propedit svn:externals plugins
       pluginName   http://svn.example.com/pluginName/trunk
     > svn up
+    > php symfony plugin:publish-assets
     > php symfony cc
 
 >**NOTE**
->If the plug-in contains a `web/` directory, you must create a symlink to it the same way as for an archive plug-in.
+>If the plug-in contains a `web/` directory, the symfony `plugin:publish-assets` command has to be run to generate the corresponding symlink under the main `web/` folder of the project.
 
 #### Activating a Plug-In Module
 
@@ -1000,8 +1000,8 @@ Listing 17-24 - Example `package.xml` for a Symfony Plug-In
         <name>symfony</name>
         <channel>pear.symfony-project.com</channel>
         <min>1.1.0</min>
-        <max>1.2.0</max>
-        <exclude>1.2.0</exclude>
+        <max>1.3.0</max>
+        <exclude>1.3.0</exclude>
        </package>
       </required>
      </dependencies>

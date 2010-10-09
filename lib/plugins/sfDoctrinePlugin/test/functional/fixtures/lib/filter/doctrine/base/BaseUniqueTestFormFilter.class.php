@@ -17,12 +17,14 @@ class BaseUniqueTestFormFilter extends BaseFormFilterDoctrine
       'unique_test1' => new sfWidgetFormFilterInput(),
       'unique_test2' => new sfWidgetFormFilterInput(),
       'unique_test3' => new sfWidgetFormFilterInput(),
+      'unique_test4' => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
       'unique_test1' => new sfValidatorPass(array('required' => false)),
       'unique_test2' => new sfValidatorPass(array('required' => false)),
       'unique_test3' => new sfValidatorPass(array('required' => false)),
+      'unique_test4' => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('unique_test_filters[%s]');
@@ -44,6 +46,7 @@ class BaseUniqueTestFormFilter extends BaseFormFilterDoctrine
       'unique_test1' => 'Text',
       'unique_test2' => 'Text',
       'unique_test3' => 'Text',
+      'unique_test4' => 'Text',
     );
   }
 }

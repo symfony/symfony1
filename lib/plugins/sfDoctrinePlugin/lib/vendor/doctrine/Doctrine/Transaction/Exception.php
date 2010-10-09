@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Exception.php 4252 2008-04-19 07:37:53Z jwage $
+ *  $Id: Exception.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @since       1.0
- * @version     $Revision: 4252 $
+ * @version     $Revision: 5801 $
  * @link        www.phpdoctrine.org
  */
 class Doctrine_Transaction_Exception extends Doctrine_Exception

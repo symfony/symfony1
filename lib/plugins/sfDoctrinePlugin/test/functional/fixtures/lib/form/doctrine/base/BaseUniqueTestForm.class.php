@@ -16,6 +16,7 @@ class BaseUniqueTestForm extends BaseFormDoctrine
       'unique_test1' => new sfWidgetFormInput(),
       'unique_test2' => new sfWidgetFormInput(),
       'unique_test3' => new sfWidgetFormInput(),
+      'unique_test4' => new sfWidgetFormInput(),
     ));
 
     $this->setValidators(array(
@@ -23,12 +24,14 @@ class BaseUniqueTestForm extends BaseFormDoctrine
       'unique_test1' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'unique_test2' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'unique_test3' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
+      'unique_test4' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorAnd(array(
         new sfValidatorDoctrineUnique(array('model' => 'UniqueTest', 'column' => array('unique_test1'))),
         new sfValidatorDoctrineUnique(array('model' => 'UniqueTest', 'column' => array('unique_test1', 'unique_test2'))),
+        new sfValidatorDoctrineUnique(array('model' => 'UniqueTest', 'column' => array('unique_test4'))),
       ))
     );
 

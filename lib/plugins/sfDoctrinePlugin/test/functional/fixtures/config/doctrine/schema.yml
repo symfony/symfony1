@@ -18,6 +18,14 @@ Article:
     Author:
       foreignAlias: Articles
 
+CamelCase:
+  columns:
+    article_id: integer
+    testCamelCase: string(255)
+  relations:
+    Article:
+      foreignAlias: camelCase
+
 Author:
   columns:
     name: string(255)
@@ -54,10 +62,18 @@ UniqueTest:
       unique: true
     unique_test2: string(255)
     unique_test3: string(255)
+    unique_test4: string(255)
   indexes:
     unique_test:
       fields: [unique_test1, unique_test2]
       type: unique
+    unique_test2:
+      fields:
+        unique_test4:
+          sorting: ASC
+          length: 10
+      type: unique
+
 
 Profile:
   columns:

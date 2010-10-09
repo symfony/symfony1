@@ -43,23 +43,14 @@ class Doctrine_Validator_Unsigned
      */
     public function validate($value)
     {
-        if(is_null($value) || $value == '')
-        {
+        if (is_null($value) || $value == '') {
             return true;
         }
-
         if (preg_match('/[^0-9\-\.]/', $value)) {
             return false;
         }
 
-        if(strpos($value, '.') === false)
-        {
-            $number = (int) $value;
-        } else {
-            $number = (float) $value;
-        }
-
-        if ((string) $number == $value && $number >= 0)
+        if ((double) $value >= 0)
         {
             return true;
         }

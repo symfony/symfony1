@@ -438,7 +438,7 @@ Name                             | Function                               |  Sam
 `getCharsets()`                  | Array of accepted charsets             | `Array( ` ` [0] => ISO-8859-1 ` ` [1] => UTF-8 ` ` [2] => * )`
 getAcceptableContentTypes()      | Array of accepted content types        | `Array( [0] => text/xml [1] => text/html`
 
-* *Works with prototype, Prototype, Mootools, and jQuery*
+\* *Works with prototype, Prototype, Mootools, and jQuery*
 
 ** *Sometimes blocked by proxies*
 

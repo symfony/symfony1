@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfModelGenerator.class.php 18498 2009-05-20 16:41:48Z Kris.Wallsmith $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -261,7 +261,7 @@ EOF;
     }
     else if ('Date' == $field->getType())
     {
-      $html = sprintf("$html ? format_date(%s, \"%s\") : '&nbsp;'", $html, $field->getConfig('date_format', 'f'));
+      $html = sprintf("false !== strtotime($html) ? format_date(%s, \"%s\") : '&nbsp;'", $html, $field->getConfig('date_format', 'f'));
     }
     else if ('Boolean' == $field->getType())
     {

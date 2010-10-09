@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5418 2009-01-26 20:18:24Z guilhermeblanco $
+ *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5418 $
+ * @version     $Revision: 5801 $
  */
 class Doctrine_Export_Sqlite extends Doctrine_Export
 {
@@ -104,7 +104,21 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
     {
         $name  = $this->conn->formatter->getIndexName($name);
         $name  = $this->conn->quoteIdentifier($name);
-        $query = 'CREATE INDEX ' . $name . ' ON ' . $table;
+        $type  = '';
+
+        if (isset($definition['type'])) {
+            switch (strtolower($definition['type'])) {
+                case 'unique':
+                    $type = strtoupper($definition['type']) . ' ';
+                break;
+                default:
+                    throw new Doctrine_Export_Exception(
+                        'Unknown type ' . $definition['type'] . ' for index ' . $name . ' in table ' . $table
+                    );
+            }
+        }
+
+        $query = 'CREATE ' . $type . 'INDEX ' . $name . ' ON ' . $table;
         $query .= ' (' . $this->getIndexFieldDeclarationList($definition['fields']) . ')';
 
         return $query;

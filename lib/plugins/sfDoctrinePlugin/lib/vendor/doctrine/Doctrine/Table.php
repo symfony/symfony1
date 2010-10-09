@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Table.php 5460 2009-02-03 04:37:06Z jwage $
+ *  $Id: Table.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Table
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 5460 $
+ * @version     $Revision: 5801 $
  * @link        www.phpdoctrine.org
  * @since       1.0
  */
@@ -566,17 +566,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * getTemplates
-     * returns all templates attached to this table
-     *
-     * @return array     an array containing all templates
-     */
-    public function getTemplates()
-    {
-        return $this->_templates;
-    }
-
-    /**
      * export
      * exports this table to database based on column and option definitions
      *
@@ -653,7 +642,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
                     if (($key = array_search($def, $options['foreignKeys'])) === false) {
                         $options['foreignKeys'][] = $def;
-                        $constraints[] = $integrity;
+                        if ($integrity !== $emptyIntegrity) {
+                            $constraints[] = $integrity;
+                        }
                     } else {
                         if ($integrity !== $emptyIntegrity) {
                             $constraints[$key] = $integrity;
@@ -772,6 +763,20 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function addIndex($index, array $definition)
     {
+        if (isset($definition['fields'])) {
+	        foreach ((array) $definition['fields'] as $key => $field) {
+		        if (is_numeric($key)) {
+                    $definition['fields'][$key] = $this->getColumnName($field);
+                } else {
+                    $columnName = $this->getColumnName($key);
+
+                    unset($definition['fields'][$key]);
+
+                    $definition['fields'][$columnName] = $field;
+                }
+            }
+        }
+
         $this->_options['indexes'][$index] = $definition;
     }
 
@@ -1485,13 +1490,16 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $id = implode(' ', $id);
 
             if (isset($this->_identityMap[$id])) {
-                //NOTE: This is still flawed as modifications are overridden in hydrate()
                 $record = $this->_identityMap[$id];
-                $record->hydrate($this->_data);
-                if ($record->state() == Doctrine_Record::STATE_PROXY) {
-                    if (count($this->_data) >= $this->getColumnCount()) {
-                        $record->state(Doctrine_Record::STATE_CLEAN);
+                if ($record->getTable()->getAttribute(Doctrine::ATTR_HYDRATE_OVERWRITE)) {
+                    $record->hydrate($this->_data);
+                    if ($record->state() == Doctrine_Record::STATE_PROXY) {
+                        if (count($this->_data) >= $this->getColumnCount()) {
+                            $record->state(Doctrine_Record::STATE_CLEAN);
+                        }
                     }
+                } else {
+                    $record->hydrate($this->_data, false);
                 }
             } else {
                 $recordName = $this->getComponentName();
@@ -1992,6 +2000,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function isTree()
     {
         return ( ! is_null($this->_options['treeImpl'])) ? true : false;
+    }
+    
+    /**
+     * getTemplates
+     * returns all templates attached to this table
+     *
+     * @return array     an array containing all templates
+     */
+    public function getTemplates()
+    {
+        return $this->_templates;
     }
 
     /**

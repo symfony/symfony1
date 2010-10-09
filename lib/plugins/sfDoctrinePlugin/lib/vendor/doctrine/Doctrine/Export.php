@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Export.php 5102 2008-10-16 11:03:01Z adrive $
+ *  $Id: Export.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5102 $
+ * @version     $Revision: 5801 $
  */
 class Doctrine_Export extends Doctrine_Connection_Module
 {
@@ -1138,7 +1138,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If create index statement
-                 if (preg_grep("/CREATE ?.* INDEX/", array($query))) {
+                 if (preg_grep("/CREATE ([^ ]* )?INDEX/", array($query))) {
                      $connections[$connectionName]['create_indexes'][] =  $query;
 
                      unset($sql[$key]);

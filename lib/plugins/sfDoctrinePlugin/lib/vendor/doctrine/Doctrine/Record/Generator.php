@@ -176,6 +176,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $definition = array();
         $definition['columns'] = $this->_table->getColumns();
         $definition['tableName'] = $this->_table->getTableName();
+        $definition['actAs'] = $this->_table->getTemplates();
 
         $this->generateClass($definition);
 
@@ -242,6 +243,9 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                     $this->_table->addGenerator($child->getPlugin(), get_class($child->getPlugin()));
                 }
 
+                $this->_table->addTemplate(get_class($child), $child);
+
+                $child->setInvoker($this);
                 $child->setTable($this->_table);
                 $child->setTableDefinition();
                 $child->setUp();

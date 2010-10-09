@@ -12,7 +12,7 @@ That's why automated tests are a suggested, if not required, part of a successfu
 
 Automated tests can sometimes replace developer documentation since they can clearly illustrate what an application is supposed to do. A good test suite shows what output should be expected for a set of test inputs, and that is a good way to explain the purpose of a method.
 
-The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the PEAR package, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.org/browser/branches/1.1/test](http://trac.symfony-project.org/browser/branches/1.1/test).
+The symfony framework applies this principle to itself. The internals of the framework are validated by automated tests. These unit and functional tests are not bundled with the PEAR package, but you can check them out from the SVN repository or browse them online at [http://trac.symfony-project.org/browser/branches/1.2/test](http://trac.symfony-project.org/browser/branches/1.2/test).
 
 ### Unit and Functional Tests
 
@@ -132,24 +132,27 @@ The `lime_test` object comes with a large number of testing methods, as listed i
 
 Table 15-2 - Methods of the `lime_test` Object for Unit Testing
 
-Method                                      | Description
-------------------------------------------- | -------------------------------------------------------------
-`diag($msg)`                                | Outputs a comment but runs no test
-`ok($test, $msg)`                           | Tests a condition and passes if it is true
-`is($value1, $value2, $msg)`                | Compares two values and passes if they are equal (`==`)
-`isnt($value1, $value2, $msg)`              | Compares two values and passes if they are not equal
-`like($string, $regexp, $msg)`              | Tests a string against a regular expression
-`unlike($string, $regexp, $msg)`            | Checks that a string doesn't match a regular expression
-`cmp_ok($value1, $operator, $value2, $msg)` | Compares two arguments with an operator
-`isa_ok($variable, $type, $msg)`            | Checks the type of an argument
-`isa_ok($object, $class, $msg)`             | Checks the class of an object
-`can_ok($object, $method, $msg)`            | Checks the availability of a method for an object or a class
-`is_deeply($array1, $array2, $msg)`         | Checks that two arrays have the same values
-`include_ok($file, $msg)`                   | Validates that a file exists and that it is properly included
-`fail()`                                    | Always fails--useful for testing exceptions
-`pass()`                                    | Always passes--useful for testing exceptions
-`skip($msg, $nb_tests)`                     | Counts as `$nb_tests` tests--useful for conditional tests
-`todo()`                                    | Counts as a test--useful for tests yet to be written
+Method                                        | Description
+--------------------------------------------- | -------------------------------------------------------------
+`diag($msg)`                                  | Outputs a diag message but runs no test
+`ok($test[, $msg])`                           | Tests a condition and passes if it is true
+`is($value1, $value2[, $msg])`                | Compares two values and passes if they are equal (`==`)
+`isnt($value1, $value2[, $msg])`              | Compares two values and passes if they are not equal
+`like($string, $regexp[, $msg])`              | Tests a string against a regular expression
+`unlike($string, $regexp[, $msg])`            | Checks that a string doesn't match a regular expression
+`cmp_ok($value1, $operator, $value2[, $msg])` | Compares two arguments with an operator
+`isa_ok($variable, $type[, $msg])`            | Checks the type of an argument
+`isa_ok($object, $class[, $msg])`             | Checks the class of an object
+`can_ok($object, $method[, $msg])`            | Checks the availability of a method for an object or a class
+`is_deeply($array1, $array2[, $msg])`         | Checks that two arrays have the same values
+`include_ok($file[, $msg])`                   | Validates that a file exists and that it is properly included
+`fail([$msg])`                                | Always fails--useful for testing exceptions
+`pass([$msg])`                                | Always passes--useful for testing exceptions
+`skip([$msg, $nb_tests])`                     | Counts as `$nb_tests` tests--useful for conditional tests
+`todo([$msg])`                                | Counts as a test--useful for tests yet to be written
+`comment($msg)`                               | Outputs a comment message but runs no test
+`error($msg)`                                 | Outputs a error message but runs no test
+`info($msg)`                                  | Outputs a info message but runs no test
 
 The syntax is quite straightforward; notice that most methods take a message as their last parameter. This message is displayed in the output when the test passes. Actually, the best way to learn these methods is to test them, so have a look at Listing 15-3, which uses them all.
 
@@ -199,7 +202,7 @@ Listing 15-3 - Testing Methods of the `lime_test` Object, in `test/unit/exampleT
     }
     catch (Exception $e)
     {
-      $t->pass('exception catched successfully');
+      $t->pass('exception caught successfully');
     }
 
     if (!isset($foobar))

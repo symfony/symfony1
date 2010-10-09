@@ -158,18 +158,23 @@ class Doctrine_Data_Export extends Doctrine_Data
                 $recordKey = $className . '_' . implode('_', $record->identifier());
                 $preparedData[$className][$recordKey] = array();
 
+                // skip single primary keys, we need to maintain composite primary keys
+                $keys = $record->getTable()->getIdentifier();
+
                 $recordData = $record->toArray(false);
 
                 foreach ($recordData as $key => $value) {
-                    // skip single primary keys, we need to maintain composite primary keys
-                    $keys = $record->getTable()->getIdentifier();
-
                     if ( ! is_array($keys)) {
                       $keys = array($keys);
                     }
 
                     if (count($keys) <= 1 && in_array($key, $keys)) {
                         continue;
+                    }
+
+                    if (is_object($record[$key])) {
+                        // If the field is an object serialize it
+                        $value = serialize($record[$key]);
                     }
 
                     if ($relation = $this->isRelation($record, $key)) {

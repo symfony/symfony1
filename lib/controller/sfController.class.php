@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfController.class.php 19442 2009-06-21 12:27:42Z fabien $
  */
 abstract class sfController
 {
@@ -48,7 +48,7 @@ abstract class sfController
     $this->dispatcher = $context->getEventDispatcher();
 
     // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards');
+    $this->maxForwards = sfConfig::get('sf_max_forwards', $this->maxForwards);
   }
 
   /**

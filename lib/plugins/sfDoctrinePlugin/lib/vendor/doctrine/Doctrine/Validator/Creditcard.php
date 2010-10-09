@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Creditcard.php 4259 2008-04-19 08:39:22Z jwage $
+ *  $Id: Creditcard.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4259 $
+ * @version     $Revision: 5801 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Creditcard
@@ -41,6 +41,9 @@ class Doctrine_Validator_Creditcard
      */
     public function validate($value)
     {
+        if (is_null($value)) {
+            return true;
+        }
         $cardType = "";
         $card_regexes = array(
             "/^4\d{12}(\d\d\d){0,1}$/"      => 'visa',

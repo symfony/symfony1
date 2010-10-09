@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 17044 2009-04-06 14:23:53Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 19297 2009-06-16 07:08:53Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -121,7 +121,12 @@ class sfValidatorFile extends sfValidatorBase
     switch ($value['error'])
     {
       case UPLOAD_ERR_INI_SIZE:
-        throw new sfValidatorError($this, 'max_size', array('max_size' => ini_get('upload_max_filesize'), 'size' => (int) $value['size']));
+        $max = ini_get('upload_max_filesize');
+        if ($this->getOption('max_size'))
+        {
+          $max = min($max, $this->getOption('max_size'));
+        }
+        throw new sfValidatorError($this, 'max_size', array('max_size' => $max, 'size' => (int) $value['size']));
       case UPLOAD_ERR_FORM_SIZE:
         throw new sfValidatorError($this, 'max_size', array('max_size' => 0, 'size' => (int) $value['size']));
       case UPLOAD_ERR_PARTIAL:
@@ -284,7 +289,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 17044 2009-04-06 14:23:53Z fabien $
+ * @version    SVN: $Id: sfValidatorFile.class.php 19297 2009-06-16 07:08:53Z fabien $
  */
 class sfValidatedFile
 {
@@ -602,6 +607,7 @@ class sfValidatedFile
       'application/vnd.ms-artgalry' => 'cil',
       'application/vnd.ms-asf' => 'asf',
       'application/vnd.ms-excel' => 'xls',
+      'application/vnd.ms-excel.sheet.macroEnabled.12' => 'xlsm',
       'application/vnd.ms-lrm' => 'lrm',
       'application/vnd.ms-powerpoint' => 'ppt',
       'application/vnd.ms-project' => 'mpp',
@@ -626,6 +632,10 @@ class sfValidatedFile
       'application/vnd.oasis.opendocument.formula' => 'odf',
       'application/vnd.oasis.opendocument.database' => 'odb',
       'application/vnd.oasis.opendocument.image' => 'odi',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.template' => 'dotx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
       'application/vnd.palm' => 'prc',
       'application/vnd.picsel' => 'efif',
       'application/vnd.pvi.ptid1' => 'pti',

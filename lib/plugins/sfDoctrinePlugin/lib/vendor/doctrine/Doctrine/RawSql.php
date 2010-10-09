@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: RawSql.php 5189 2008-11-19 14:27:32Z guilhermeblanco $
+ *  $Id: RawSql.php 5860 2009-06-09 16:35:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +33,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5189 $
+ * @version     $Revision: 5860 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_RawSql extends Doctrine_Query_Abstract
@@ -222,7 +222,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
 
         // force-add all primary key fields
-        if ($this->_sqlParts['distinct'] != true) {
+        if ( ! isset($this->_sqlParts['distinct']) || $this->_sqlParts['distinct'] != true) {
             foreach ($this->getTableAliasMap() as $tableAlias => $componentAlias) {
                 $map = $this->_queryComponents[$componentAlias];
 
@@ -238,13 +238,15 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
 
         $q = 'SELECT ';
 
-        if ($this->_sqlParts['distinct'] == true) {
+        if (isset($this->_sqlParts['distinct']) && $this->_sqlParts['distinct'] == true) {
             $q .= 'DISTINCT ';
         }
 
         // first add the fields of the root component
         reset($this->_queryComponents);
         $componentAlias = key($this->_queryComponents);
+
+        $this->_rootAlias = $componentAlias;
         
         $q .= implode(', ', $select[$componentAlias]);
         unset($select[$componentAlias]);
@@ -287,6 +289,9 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         //This is not correct, if the result is not hydrated by doctrine, but it mimics the behaviour of Doctrine_Query::getCountQuery
         reset($this->_queryComponents);
         $componentAlias = key($this->_queryComponents);
+
+        $this->_rootAlias = $componentAlias;
+
         $tableAlias = $this->getSqlTableAlias($componentAlias);
         $fields = array();
 
@@ -424,5 +429,21 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * calculateResultCacheHash
+     * calculate hash key for result cache
+     *
+     * @param array $params
+     * @return string    the hash
+     */
+    public function calculateResultCacheHash($params = array())
+    {
+        $sql = $this->getSql();
+        $conn = $this->getConnection();
+        $params = $this->getFlattenedParams($params);
+        $hash = md5($this->_hydrator->getHydrationMode() . $conn->getName() . $conn->getOption('dsn') . $sql . var_export($params, true));
+        return $hash;
     }
 }

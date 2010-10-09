@@ -17,7 +17,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRecord.class.php 15828 2009-02-26 20:14:18Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineRecord.class.php 19987 2009-07-07 20:31:36Z Jonathan.Wage $
  */
 abstract class sfDoctrineRecord extends Doctrine_Record
 {
@@ -94,6 +94,10 @@ abstract class sfDoctrineRecord extends Doctrine_Record
   {
     self::initializeI18n();
 
+    if (!self::$_defaultCulture)
+    {
+      throw new sfException('The default culture has not been set');
+    }
     return self::$_defaultCulture;
   }
 
@@ -166,18 +170,31 @@ abstract class sfDoctrineRecord extends Doctrine_Record
         }
         else if ($table->hasField($fieldName = $table->getFieldName($name)))
         {
-          $entityName = strtolower($fieldName);
+          $entityNameLower = strtolower($fieldName);
+          if ($table->hasField($entityNameLower) || $table->hasRelation($entityNameLower))
+          {
+            $entityName = $entityNameLower;
+          } else {
+            $entityName = $fieldName;
+          }
         }
         else
         {
           $underScored = $table->getFieldName(sfInflector::underscore($name));
-          if ($table->hasField($underScored))
+          if ($table->hasField($underScored) || $table->hasRelation($underScored))
           {
             $entityName = $underScored;
-          } else if ($table->hasField(strtolower($name))) {
+          } else if ($table->hasField(strtolower($name)) || $table->hasRelation(strtolower($name))) {
             $entityName = strtolower($name);
           } else {
-            $entityName = $underScored;
+            $camelCase = $table->getFieldName(sfInflector::camelize($name));
+            $camelCase = strtolower($camelCase[0]).substr($camelCase, 1, strlen($camelCase));
+            if ($table->hasField($camelCase) || $table->hasRelation($camelCase))
+            {
+              $entityName = $camelCase;
+            } else {
+              $entityName = $underScored;
+            }
           }
         }
 

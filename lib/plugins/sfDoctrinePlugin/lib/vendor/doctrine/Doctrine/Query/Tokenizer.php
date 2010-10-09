@@ -248,7 +248,7 @@ class Doctrine_Query_Tokenizer
     public function sqlExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {
         if ($d == ' ') {
-            $d = array(' ', '\s');
+            $d = array(' ', '\s'); 
         }
         if (is_array($d)) {
             $d = array_map('preg_quote', $d);
@@ -258,7 +258,6 @@ class Doctrine_Query_Tokenizer
             }
 
             $split = '#(' . implode('|', $d) . ')#';
-
             $str = preg_split($split, $str);
             $d = stripslashes($d[0]);
         } else {
@@ -296,6 +295,7 @@ class Doctrine_Query_Tokenizer
                     }
                 } else {
                     if ( ! (substr_count($term[$i], "'") & 1) &&
+                           (substr_count($term[$i], "\\\'") & 1) &&
                          ! (substr_count($term[$i], "\"") & 1)) {
                         $i++;
                     }

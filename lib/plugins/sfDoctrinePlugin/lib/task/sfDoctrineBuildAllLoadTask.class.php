@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllLoadTask.class.php 16462 2009-03-20 07:44:12Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineBuildAllLoadTask.class.php 18971 2009-06-05 15:44:44Z Jonathan.Wage $
  */
 class sfDoctrineBuildAllLoadTask extends sfDoctrineBaseTask
 {
@@ -92,7 +92,7 @@ EOF;
       $loadData->setCommandApplication($this->commandApplication);
 
       $loadDataOptions = array('--env='.$options['env'], '--connection='.$options['connection']);
-      if (isset($this->options['application']))
+      if (isset($options['application']))
       {
         $loadDataOptions[] = '--application='.$options['application'];
       }

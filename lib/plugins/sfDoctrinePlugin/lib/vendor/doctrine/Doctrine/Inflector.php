@@ -56,6 +56,7 @@ class Doctrine_Inflector
      */
     public static function classify($word)
     {
+        $word = preg_replace('/[$]/', '', $word);
         return preg_replace_callback('~(_?)(_)([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
     }
 
@@ -244,6 +245,13 @@ class Doctrine_Inflector
     {
         // Remove all non url friendly characters with the unaccent function
         $text = self::unaccent($text);
+        
+        if (function_exists('mb_strtolower'))
+        {
+            $text = mb_strtolower($text);
+        } else {
+            $text = strtolower($text);
+        }
         
         // Remove all none word characters
         $text = preg_replace('/\W/', ' ', $text);

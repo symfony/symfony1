@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Tree.php 3975 2008-03-13 02:16:21Z jwage $
+ *  $Id: Tree.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 3975 $
+ * @version     $Revision: 5801 $
  * @author      Joe Simms <joe.simms@websites4.com>
  */
 class Doctrine_Tree

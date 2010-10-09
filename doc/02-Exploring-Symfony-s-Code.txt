@@ -648,7 +648,11 @@ Listing 2-18 - Adding a Parameter Holder to a Class
 
 ### Constants
 
-Surprisingly, you will not find any constant in symfony. This is because constants have a major drawback in PHP: you can't change their value once they are defined. So symfony uses its own configuration object, called `sfConfig`, which replaces constants. It provides static methods to access parameters from everywhere. Listing 2-19 demonstrates the use of `sfConfig` class methods.
+You will not find any constants in symfony because by their very nature you 
+can't change their value once they are defined. Symfony uses its own 
+configuration object, called `sfConfig`, which replaces constants. It 
+provides static methods to access parameters from everywhere. Listing 2-19
+demonstrates the use of `sfConfig` class methods.
 
 Listing 2-19 - Using the `sfConfig` Class Methods Instead of Constants
 
@@ -665,13 +669,17 @@ The sfConfig methods support default values, and you can call the sfConfig::set(
 
 ### Class Autoloading
 
-Classically, when you use a class method or create an object in PHP, you need to include the class definition first.
+Usually, when you use a class method or create an object in PHP, you need to 
+include the class definition first:
 
     [php]
     include 'classes/MyClass.php';
     $myObject = new MyClass();
 
-But on large projects with many classes and a deep directory structure, keeping track of all the class files to include and their paths takes a lot of time. By providing an `spl_autoload_register()` function, symfony makes `include` statements unnecessary, and you can write directly:
+On large projects with many classes and a deep directory structure,
+keeping track of all the class files to include and their paths can be time 
+consuming. By providing an `spl_autoload_register()` function, symfony makes 
+`include` statements unnecessary, and you can write directly:
 
     [php]
     $myObject = new MyClass();

@@ -168,7 +168,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     {
         if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception(
-                sprintf('Invalid row key specified: %s, referred to in %s', $rowkey, $referringRowKey)
+                sprintf('Invalid row key specified: %s, referred to in %s', $rowKey, $referringRowKey)
             );
         }
 
@@ -202,6 +202,9 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $func = 'set' . Doctrine_Inflector::classify($key);
                 $obj->$func($value);
             } else if ($obj->getTable()->hasField($key)) {
+                if ($obj->getTable()->getTypeOf($key) == 'object') {
+                    $value = unserialize($value);
+                }
                 $obj->set($key, $value);
             } else if ($obj->getTable()->hasRelation($key)) {
                 if (is_array($value)) {
@@ -247,10 +250,21 @@ class Doctrine_Data_Import extends Doctrine_Data
     * @param $data
     * @return boolean
     */
-    protected function _hasNaturalNestedSetFormat($className, array $data) {
-		$first = current($data);
-		return isset($first['children']) && Doctrine::getTable($className)->isTree();
+    protected function _hasNaturalNestedSetFormat($className, array &$data)
+    {
+        if (Doctrine::getTable($className)->isTree()) {
+            if (isset($data['NestedSet']) && $data['NestedSet'] == true) {
+                unset($data['NestedSet']);
+                return true;
+            } else {
+                $first = current($data);
+                return array_key_exists('children', $first);
+            }
+        } else {
+            return false;
+        }
     }
+
     /**
      * Perform the loading of the data from the passed array
      *
@@ -336,7 +350,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             $data  = array();
 
             if (array_key_exists('children', $nestedSet)) {
-                $children = $nestedSet['children'];
+                $children = (array) $nestedSet['children'];
                 $children = array_reverse($children, true);
                 unset($nestedSet['children']);
             }

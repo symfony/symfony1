@@ -180,7 +180,14 @@ class Doctrine_Migration
             
             $e = explode('_', $fileName);
             $classMigrationNum = (int) $e[0];
-            
+
+            if (isset($this->_migrationClasses[$classMigrationNum]) && $fileName != $this->_migrationClasses[$classMigrationNum]['fileName']) {
+                throw new Doctrine_Migration_Exception(
+                    'You have two migration classes with the same migration number, "' . $classMigrationNum . '". '.
+                    'The two files are "'. $fileName . '" and "' . $this->_migrationClasses[$classMigrationNum]['fileName'] . '"'
+                );
+            }
+
             $this->_migrationClasses[$classMigrationNum] = array('className' => $name, 'fileName' => $fileName);
         }
         
@@ -314,6 +321,8 @@ class Doctrine_Migration
         $migrate = $this->getMigrationClass($num);
         
         $migrate->doMigrate($direction);
+
+        $this->setCurrentVersion($num);
     }
 
     /**

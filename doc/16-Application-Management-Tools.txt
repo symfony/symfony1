@@ -396,7 +396,7 @@ Listing 16-14 - Sample Task, in `lib/task/testHelloTask.class.php`
         $this->briefDescription = 'Says hello';
       }
 
-      protected function execute()
+      protected function execute($arguments = array(), $options = array())
       {
         // your code here
         $this->log('Hello, world!');

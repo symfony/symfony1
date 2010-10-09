@@ -764,6 +764,8 @@ The column parameters are as follows:
 
   * `type`: Column type. The choices are `boolean`, `tinyint`, `smallint`, `integer`, `bigint`, `double`, `float`, `real`, `decimal`, `char`, `varchar(size)`, `longvarchar`, `date`, `time`, `timestamp`, `bu_date`, `bu_timestamp`, `blob`, and `clob`.
   * `required`: Boolean. Set it to `true` if you want the column to be required.
+  * `size`: The size or length of the field for types that support it
+  * `scale`: Number of decimal places for use with decimal data type (size must also be specified)
   * `default`: Default value.
   * `primaryKey`: Boolean. Set it to `true` for primary keys.
   * `autoIncrement`: Boolean. Set it to `true` for columns of type `integer` that need to take an auto-incremented value.

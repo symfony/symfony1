@@ -112,11 +112,17 @@ The `_dir` variables are part of your PEAR configuration. To see their values, t
 
 ### Checking Out symfony from the SVN Repository
 
-For production servers, or when PEAR is not an option, you can download the latest version of the symfony libraries directly from the symfony Subversion repository by requesting a checkout:
+For production servers, or when PEAR is not an option, you can download the 
+latest version of the symfony libraries directly from the symfony Subversion
+repository by requesting a checkout:
 
     > mkdir /path/to/symfony
     > cd /path/to/symfony
     > svn checkout http://svn.symfony-project.com/tags/RELEASE_1_2_0/ .
+
+>**TIP**
+>For the latest stable bug-fix release on the 1.2 branch (1.2.x) refer to 
+>([http://www.symfony-project.org/installation/1_2](http://www.symfony-project.org/installation/1_2))
 
 The `symfony` command, available only for PEAR installations, is a call to the `/path/to/symfony/data/bin/symfony` script. So the following would be the equivalent to the `symfony -V` command for an SVN installation:
 
@@ -140,7 +146,9 @@ If you chose an SVN installation, you probably already have an existing symfony 
 Chapter 19 proposes other ways to link a project with a symfony installation (including symbolic links and relative paths).
 
 >**TIP**
->Alternatively, you can also download the PEAR package ([http://pear.symfony-project.com/get/symfony-1.2.0.tgz](http://pear.symfony-project.com/get/symfony-1.2.0.tgz)) and unpack it somewhere. You will have the same result as with a checkout.
+>Alternatively, you can also download the PEAR package. Refer to  
+>([http://www.symfony-project.org/installation/1_2](http://www.symfony-project.org/installation/1_2))
+>for latest 1.2 release. You will have the same result as with a checkout.
 
 Setting Up an Application
 -------------------------
@@ -231,14 +239,27 @@ Listing 3-1 - Sample Apache Configuration, in `apache/conf/httpd.conf`
       </Directory>
     </VirtualHost>
 
-In the configuration in Listing 3-1, the `$sf_symfony_data_dir` placeholder must be replaced by the actual path. For example, for a PEAR installation in *nix, you should type something like this:
+In the configuration in Listing 3-1, the `$sf_symfony_data_dir` placeholder 
+must be replaced by the actual path. For example, for a PEAR installation in
+*nix, you should type something like this:
 
-    Alias /sf /usr/local/lib/php/data/symfony/web/sf
+        Alias /sf /usr/local/lib/php/data/symfony/web/sf
 
 >**NOTE**
->The alias to the `web/sf/` directory is not mandatory. It allows Apache to find images, style sheets, and JavaScript files for the web debug toolbar, the admin generator, the default symfony pages, and the Ajax support. An alternative to this alias would be to create a symbolic link (symlink) or copy the `/path/to/symfony/data/web/sf/` directory to `myproject/web/sf/`.
+>The alias to the `web/sf/` directory is not mandatory. It allows Apache to 
+find images, style sheets, and JavaScript files for the web debug toolbar, 
+the admin generator, the default symfony pages, and the Ajax support. 
+An alternative to this alias would be to create a symbolic link (symlink) or 
+copy the `/path/to/symfony/data/web/sf/` directory to `myproject/web/sf/`.
 
-Restart Apache, and that's it. Your newly created application can now be called and viewed through a standard web browser at the following URL:
+>**TIP**
+>If you have installed symfony via PEAR and can't find the symfony shared data
+>directory, look in the PEAR `data_dir` which is listed in the PEAR config:
+>
+>    pear config-show
+
+Restart Apache, and that's it. Your newly created application can now be called
+and viewed through a standard web browser at the following URL:
 
     http://localhost/frontend_dev.php/
 

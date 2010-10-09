@@ -83,7 +83,8 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
             $newQuery = $query->copy();
             $query->getSql();
-            $newQuery->addWhere($query->getRootAlias() . '.id IN (SQL:' . $q->getSql() . ')', $q->getParams());
+            $key = (array) $this->getOption('table')->getIdentifier();
+            $newQuery->addWhere($query->getRootAlias() . '.'.current($key).' IN (SQL:' . $q->getSql() . ')', $q->getParams());
 
             return $newQuery;
         } else {
@@ -264,7 +265,8 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
         $className = $this->getOption('className');
 
-        if (class_exists($className)) {
+        $autoLoad = (bool) ($this->_options['generateFiles']);
+        if (class_exists($className, $autoLoad)) {
             return false;
         }
 

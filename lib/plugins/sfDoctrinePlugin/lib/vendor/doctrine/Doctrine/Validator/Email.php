@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Email.php 5450 2009-02-02 02:10:04Z guilhermeblanco $
+ *  $Id: Email.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5450 $
+ * @version     $Revision: 5801 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Email
@@ -41,18 +41,23 @@ class Doctrine_Validator_Email
      */
     public function validate($value)
     {
-        if (empty($value)) {
+        if (is_null($value)) {
             return true;
         }
-        
         if (isset($this->args)) {
             $parts = explode('@', $value);
         
-            if (isset($parts[1]) && function_exists('checkdnsrr')) {
+            if (isset($parts[1]) && $parts[1] && function_exists('checkdnsrr')) {
                 if ( ! checkdnsrr($parts[1], 'MX')) {
                     return false;
                 }
             }
+        }
+
+        $e = explode('.', $value);
+        $tld = end($e);
+        if (preg_match("/[^a-zA-Z]/", $tld)) {
+            return false;
         }
 
         $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
@@ -61,8 +66,8 @@ class Doctrine_Validator_Email
         $quotedPair = '\\x5c[\\x00-\\x7f]';
         $domainLiteral = "\\x5b($dtext|$quotedPair)*\\x5d";
         $quotedString = "\\x22($qtext|$quotedPair)*\\x22";
-        $domain_ref = $atom;
-        $subDomain = "($domain_ref|$domainLiteral)";
+        $domainRef = $atom;
+        $subDomain = "($domainRef|$domainLiteral)";
         $word = "($atom|$quotedString)";
         $domain = "$subDomain(\\x2e$subDomain)+";
         /*

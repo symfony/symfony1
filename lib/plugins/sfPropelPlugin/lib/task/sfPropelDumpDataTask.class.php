@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelDumpDataTask.class.php 13389 2008-11-27 08:39:00Z fabien $
+ * @version    SVN: $Id: sfPropelDumpDataTask.class.php 18726 2009-05-28 08:15:54Z fabien $
  */
 class sfPropelDumpDataTask extends sfPropelBaseTask
 {
@@ -55,7 +55,7 @@ The task will dump data in [data/fixtures/%target%|COMMENT]
 (data/fixtures/dump.yml in the example).
 
 The dump file is in the YML format and can be re-imported by using
-the [propel:data-dump|INFO] task.
+the [propel:data-load|INFO] task.
 
 By default, the task use the [propel|COMMENT] connection as defined in [config/databases.yml|COMMENT].
 You can use another connection by using the [connection|COMMENT] option:

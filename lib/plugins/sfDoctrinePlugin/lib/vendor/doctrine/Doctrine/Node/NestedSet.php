@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 5424 2009-01-26 22:10:33Z guilhermeblanco $
+ *    $Id: NestedSet.php 5844 2009-06-09 07:07:36Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       www.phpdoctrine.org
  * @since      1.0
- * @version    $Revision: 5424 $
+ * @version    $Revision: 5844 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -210,9 +210,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets descendants for node (direct descendants only)
      *
-     * @return mixed  The descendants of the node or FALSE if the node has no descendants.
-     * @todo Currently all descendants are fetched, no matter the depth. Maybe there is a better
-     *       solution with less overhead.      
+     * @return mixed  The descendants of the node or FALSE if the node has no descendants.  
      */
     public function getDescendants($depth = null, $includeNode = false)
     {
@@ -321,7 +319,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */     
     public function getNumberChildren()
     {
-        return count($this->getChildren());
+        $children = $this->getChildren();
+        return $children === false ? 0 : count($children);
     }
 
     /**
@@ -830,6 +829,8 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $this->setRootValue($newRootId);
             $this->record['level'] = 0;
             
+            $this->record->save();
+            
             $conn->commit();
             
             return true;
@@ -1015,9 +1016,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             // update level for descendants
             $q = new Doctrine_Query();
             $q = $q->update($componentName)
-                    ->set($componentName . '.level', $componentName.'.level + ?')
+                    ->set($componentName . '.level', $componentName.'.level + ?', array($levelDiff))
                     ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                            array($levelDiff, $left, $right));
+                            array($left, $right));
             $q = $this->_tree->returnQueryWithRootId($q, $rootId);
             $q->execute();
 
@@ -1064,7 +1065,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         $resultLeft = $qLeft->execute();
         
         // shift right columns
-        $resultRight = $qRight->update($componentName)
+        $qRight = $qRight->update($componentName)
                 ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
                 ->where($componentName . '.rgt >= ?', $first);
 

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Oracle.php 5290 2008-12-12 14:26:00Z guilhermeblanco $
+ *  $Id: Oracle.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5290 $
+ * @version     $Revision: 5801 $
  */
 class Doctrine_Export_Oracle extends Doctrine_Export
 {
@@ -96,6 +96,10 @@ class Doctrine_Export_Oracle extends Doctrine_Export
     public function _makeAutoincrement($name, $table, $start = 1)
     {
         $sql   = array();
+
+        if ( ! $this->conn->getAttribute(Doctrine::ATTR_QUOTE_IDENTIFIER)) {
+        	$table = strtoupper($table);
+        }
         $indexName  = $table . '_AI_PK';
         $definition = array(
             'primary' => true,
@@ -138,7 +142,7 @@ BEGIN
    ELSE
       SELECT NVL(Last_Number, 0) INTO last_Sequence
         FROM User_Sequences
-       WHERE UPPER(Sequence_Name) = UPPER(\'' . $sequenceName . '\');
+       WHERE Sequence_Name = \'' . $sequenceName . '\';
       SELECT :NEW.' . $name . ' INTO last_InsertID FROM DUAL;
       WHILE (last_InsertID > last_Sequence) LOOP
          SELECT ' . $this->conn->quoteIdentifier($sequenceName) . '.NEXTVAL INTO last_Sequence FROM DUAL;
@@ -203,7 +207,7 @@ END;';
     public function getAdvancedForeignKeyOptions(array $definition)
     {
         $query = '';
-        if (isset($definition['onDelete'])) {
+        if (isset($definition['onDelete']) && strtoupper(trim($definition['onDelete'])) != 'NO ACTION') {
             $query .= ' ON DELETE ' . $definition['onDelete'];
         }
         if (isset($definition['deferrable'])) {

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfWebDebug.class.php 18104 2009-05-10 05:38:14Z Kris.Wallsmith $
  */
 class sfWebDebug
 {
@@ -417,6 +417,8 @@ EOF;
 
 #sfWebDebug img
 {
+  float: none;
+  margin: 0;
   border: 0;
   display: inline;
 }

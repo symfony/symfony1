@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormFilterDate.class.php 11672 2008-09-19 14:08:37Z fabien $
+ * @version    SVN: $Id: sfWidgetFormFilterDate.class.php 19243 2009-06-14 14:29:19Z fabien $
  */
 class sfWidgetFormFilterDate extends sfWidgetFormDateRange
 {
@@ -25,6 +25,8 @@ class sfWidgetFormFilterDate extends sfWidgetFormDateRange
    *
    *  * with_empty:      Whether to add the empty checkbox (true by default)
    *  * empty_label:     The label to use when using an empty checkbox
+   *  * template:        The template used for from date and to date
+   *                     Available placeholders: %from_date%, %to_date%
    *  * filter_template: The template to use to render the widget
    *                     Available placeholders: %date_range%, %empty_checkbox%, %empty_label%
    *

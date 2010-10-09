@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMemcacheCache.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfMemcacheCache.class.php 19701 2009-06-30 09:02:32Z fabien $
  */
 class sfMemcacheCache extends sfCache
 {
@@ -119,7 +119,12 @@ class sfMemcacheCache extends sfCache
       $this->setCacheInfo($key);
     }
 
-    return $this->memcache->set($this->getOption('prefix').$key, $data, false, $lifetime);
+    if (false !== $this->memcache->replace($this->getOption('prefix').$key, $data, false, time() + $lifetime))
+    {
+      return true;
+    }
+
+    return $this->memcache->set($this->getOption('prefix').$key, $data, false, time() + $lifetime);
   }
 
   /**

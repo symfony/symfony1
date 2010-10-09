@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRoute.class.php 17382 2009-04-17 00:28:46Z dwhittle $
+ * @version    SVN: $Id: sfRoute.class.php 19468 2009-06-23 07:14:37Z fabien $
  */
 class sfRoute implements Serializable
 {
@@ -649,7 +649,13 @@ class sfRoute implements Serializable
     // compute some regexes
     $this->options['variable_prefix_regex']    = '(?:'.implode('|', array_map(create_function('$a', 'return preg_quote($a, \'#\');'), $this->options['variable_prefixes'])).')';
     $this->options['segment_separators_regex'] = '(?:'.implode('|', array_map(create_function('$a', 'return preg_quote($a, \'#\');'), $this->options['segment_separators'])).')';
-    $this->options['variable_content_regex']   = '[^'.implode('', array_map(create_function('$a', 'return str_replace(\'-\', \'\-\', preg_quote($a, \'#\'));'), $this->options['segment_separators'])).']+';
+
+    // as of PHP 5.3.0, preg_quote automatically quotes dashes "-" (see http://bugs.php.net/bug.php?id=47229)
+    $this->options['variable_content_regex'] = '[^'.implode('', array_map(
+      version_compare(PHP_VERSION, '5.3.0RC4', '>=') ?
+        create_function('$a', 'return preg_quote($a, \'#\');') :
+        create_function('$a', 'return str_replace(\'-\', \'\-\', preg_quote($a, \'#\'));')
+      , $this->options['segment_separators'])).']+';
   }
 
   protected function parseStarParameter($star)
@@ -754,7 +760,7 @@ class sfRoute implements Serializable
   protected function fixSuffix()
   {
     $length = strlen($this->pattern);
-    
+
     if ($length > 0 && '/' == $this->pattern[$length - 1])
     {
       // route ends by / (directory)

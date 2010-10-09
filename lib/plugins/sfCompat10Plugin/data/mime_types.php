@@ -107,6 +107,7 @@ application/vnd.mozilla.xul+xml xul
 application/vnd.ms-artgalry cil
 application/vnd.ms-asf asf
 application/vnd.ms-excel xls
+application/vnd.ms-excel.sheet.macroEnabled.12 xlsm
 application/vnd.ms-lrm lrm
 application/vnd.ms-powerpoint ppt
 application/vnd.ms-project mpp
@@ -131,6 +132,10 @@ application/vnd.oasis.opendocument.chart odc
 application/vnd.oasis.opendocument.formula odf
 application/vnd.oasis.opendocument.database odb
 application/vnd.oasis.opendocument.image odi
+application/vnd.openxmlformats-officedocument.wordprocessingml.document docx
+application/vnd.openxmlformats-officedocument.wordprocessingml.template dotx
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet xlsx
+application/vnd.openxmlformats-officedocument.presentationml.presentation pptx
 application/vnd.palm prc
 application/vnd.picsel efif
 application/vnd.pvi.ptid1 pti

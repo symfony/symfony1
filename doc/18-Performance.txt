@@ -341,7 +341,7 @@ Listing 18-12 - Example Action Returning a JSON Header
     [php]
     public function executeRefresh()
     {
-      $output = '<"title", "My basic letter"], ["name", "Mr Brown">';
+      $output = '{"title":"My basic letter","name":"Mr Brown"}';
       $this->getResponse()->setHttpHeader("X-JSON", '('.$output.')');
 
       return sfView::HEADER_ONLY;

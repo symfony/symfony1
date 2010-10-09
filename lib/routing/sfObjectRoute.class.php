@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfObjectRoute.class.php 15850 2009-02-27 16:48:19Z fabien $
+ * @version    SVN: $Id: sfObjectRoute.class.php 18835 2009-06-02 10:42:07Z fabien $
  */
 class sfObjectRoute extends sfRequestRoute
 {
@@ -190,6 +190,11 @@ class sfObjectRoute extends sfRequestRoute
 
   protected function convertObjectToArray($object)
   {
+    if (!$this->compiled)
+    {
+      $this->compile();
+    }
+
     if (is_array($object))
     {
       if (!isset($object['sf_subject']))

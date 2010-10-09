@@ -6,7 +6,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: configuration.php 17586 2009-04-24 18:25:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: configuration.php 19819 2009-07-02 11:45:11Z fabien $
  */
 class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorConfiguration extends sfModelGeneratorConfiguration
 {
@@ -25,11 +25,7 @@ class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorConfiguration ex
   {
     $class = $this->getFormClass();
 
-    $form = new $class($object, $this->getFormOptions());
-
-    $this->fixFormFields($form);
-
-    return $form;
+    return new $class($object, $this->getFormOptions());
   }
 
   /**

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mssql.php 4252 2008-04-19 07:37:53Z jwage $
+ *  $Id: Mssql.php 5836 2009-06-06 21:31:13Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4252 $
+ * @version     $Revision: 5836 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
@@ -88,5 +88,17 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
     public function guid()
     {
         return 'NEWID()';
+    }
+
+    /**
+     * Returns the length of a text field
+     *
+     * @param string $column
+     *
+     * @return string
+     */
+    public function length($column)
+    {
+        return 'LEN (' . $column . ')';
     }
 }

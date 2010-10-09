@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: TextHelper.php 9778 2008-06-23 05:49:23Z dwhittle $
+ * @version    SVN: $Id: TextHelper.php 20142 2009-07-13 10:20:44Z FabianLange $
  */
 
 /**
@@ -165,10 +165,10 @@ function simple_format_text($text, $options = array())
   $css = (isset($options['class'])) ? ' class="'.$options['class'].'"' : '';
 
   $text = sfToolkit::pregtr($text, array("/(\r\n|\r)/"        => "\n",               // lets make them newlines crossplatform
-                                         "/\n{3,}/"           => "\n\n",             // zap dupes
-                                         "/\n\n/"             => "</p>\\0<p$css>",   // turn two newlines into paragraph
-                                         "/([^\n])\n([^\n])/" => "\\1\n<br />\\2")); // turn single newline into <br/>
+                                         "/\n{2,}/"           => "</p><p$css>"));    // turn two and more newlines into paragraph
 
+  // turn single newline into <br/>
+  $text = str_replace("\n", "\n<br />", $text);
   return '<p'.$css.'>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
 }
 

@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 16260 2009-03-12 11:48:02Z fabien $
+ * @version    SVN: $Id: sfPager.class.php 18089 2009-05-09 06:36:09Z fabien $
  */
 
 /**
@@ -22,7 +22,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 16260 2009-03-12 11:48:02Z fabien $
+ * @version    SVN: $Id: sfPager.class.php 18089 2009-05-09 06:36:09Z fabien $
  */
 abstract class sfPager
 {
@@ -79,7 +79,7 @@ abstract class sfPager
     $limit = ($check > 0) ? $check : 1;
     $begin = ($tmp > 0) ? (($tmp > $limit) ? $limit : $tmp) : 1;
 
-    $i = $begin;
+    $i = (int) $begin;
     while (($i < $begin + $nb_links) && ($i <= $this->lastPage))
     {
       $links[] = $i++;

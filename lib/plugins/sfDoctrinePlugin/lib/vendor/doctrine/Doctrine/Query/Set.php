@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Set.php 5187 2008-11-18 19:13:36Z guilhermeblanco $
+ *  $Id: Set.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 5187 $
+ * @version     $Revision: 5801 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Set extends Doctrine_Query_Part
@@ -47,11 +47,14 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
             $lftExpr = (($hasAggExpression) ? $matches[1] . '(' : '');
             $rgtExpr = (($hasAggExpression) ? $matches[3] . ')' : '');
 	
-	        preg_match_all("/[a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*/i", $term, $m);
+	        preg_match_all("/^([a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*)(\sAS\s[a-zA-Z0-9_]+)?/i", $term, $m, PREG_SET_ORDER);
             
             if (isset($m[0])) {
-                foreach ($m[0] as $part) {
-	                $e = explode('.', trim($part));
+                $processed = array();
+                
+                foreach ($m as $piece) {
+                    $part = $piece[1];
+                    $e = explode('.', trim($part));
 
                     $fieldName  = array_pop($e);
                     $reference  = (count($e) > 0) ? implode('.', $e) : $this->query->getRootAlias();
@@ -61,9 +64,13 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 	                    $columnName = $aliasMap['table']->getColumnName($fieldName);
                         $columnName = $aliasMap['table']->getConnection()->quoteIdentifier($columnName);
 
-                        $termsTranslation[$termOriginal] = $lftExpr . $columnName . $rgtExpr;
+                        $part = $columnName;
                     }
+                    
+                    $processed[] = $part . (isset($piece[2]) ? $piece[2] : '');
                 }
+                
+                $termsTranslation[$termOriginal] = $lftExpr . implode(' ', $processed) . $rgtExpr;
             }
         } 
 

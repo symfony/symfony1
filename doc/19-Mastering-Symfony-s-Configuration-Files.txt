@@ -326,7 +326,7 @@ Every path to a key directory is determined by a parameter ending with `_dir`. A
 
 You will probably need to modify the default project file structure if you develop an application for a client who already has a defined directory structure and who is not willing to change it to comply with the symfony logic. By overriding the `sf_XXX_dir` variables with `sfConfig`, you can make symfony work for a totally different directory structure than the default structure. The best place to do this is in the application `ProjectConfiguration` class for project directories, or `XXXConfiguration` class for applications directories.
 
-For instance, if you want all applications to share a common directory for the template layouts, add this line to the `configure()` method of the `ProjectConfiguration` class to override the `sf_app_template_dir` settings:
+For instance, if you want all applications to share a common directory for the template layouts, add this line to the `setup()` method of the `ProjectConfiguration` class to override the `sf_app_template_dir` settings:
 
     [php]
     sfConfig::set('sf_app_template_dir', sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'templates');
@@ -360,7 +360,7 @@ In addition, use the `setWebDir()` method to change the public area from the usu
     [php]
     class ProjectConfiguration extends sfProjectConfiguration
     {
-      public function configure()
+      public function setup()
       {
         // ...
 

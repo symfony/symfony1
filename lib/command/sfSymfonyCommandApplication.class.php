@@ -14,10 +14,12 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 12499 2008-10-31 16:10:07Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 20053 2009-07-09 12:49:20Z nicolas $
  */
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
+  protected $taskFiles = array();
+  
   /**
    * Configures the current symfony command application.
    */
@@ -50,6 +52,8 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    * Runs the current application.
    *
    * @param mixed $options The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($options = null)
   {
@@ -100,12 +104,43 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     // project tasks
     $dirs[] = sfConfig::get('sf_lib_dir').'/task';
 
-    // require tasks
     $finder = sfFinder::type('file')->name('*Task.class.php');
-    foreach ($finder->in($dirs) as $task)
+    foreach ($finder->in($dirs) as $file)
     {
-      require_once $task;
+      $this->taskFiles[basename($file, '.class.php')] = $file;
     }
+
+    // register local autoloader for tasks
+    spl_autoload_register(array($this, 'autoloadTask'));
+
+    // require tasks
+    foreach ($this->taskFiles as $task => $file)
+    {
+      // forces autoloading of each task class
+      class_exists($task, true);
+    }
+
+    // unregister local autoloader
+    spl_autoload_unregister(array($this, 'autoloadTask'));
+  }
+
+  /**
+   * Autoloads a task class
+   *
+   * @param  string  $class  The task class name
+   *
+   * @return Boolean
+   */
+  public function autoloadTask($class)
+  {
+    if (isset($this->taskFiles[$class]))
+    {
+      require_once $this->taskFiles[$class];
+
+      return true;
+    }
+
+    return false;
   }
 
   /**

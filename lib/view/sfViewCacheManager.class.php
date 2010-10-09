@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 17477 2009-04-21 08:30:59Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 19850 2009-07-03 14:58:22Z FabianLange $
  */
 class sfViewCacheManager
 {
@@ -186,7 +186,7 @@ class sfViewCacheManager
       $request = $this->context->getRequest();
       $hostName = $request->getHost();
     }
-    $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
+    $hostName = preg_replace('/[^a-z0-9\*]/i', '_', $hostName);
     $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
 
     $cacheKey = sprintf('/%s/%s/%s', $hostName, $vary, $cacheKey);
@@ -526,7 +526,7 @@ class sfViewCacheManager
    * @param  string $internalUri       Internal uniform resource identifier
    * @param  string $hostName          The host name
    * @param  string $vary              The vary headers, separated by |, or "all" for all vary headers
-   * @param  string $contextualPrefix  The removal prefix for contextual partials. Deauls to '**' (all actions, all params)
+   * @param  string $contextualPrefix  The removal prefix for contextual partials. Defaults to '**' (all actions, all params)
    *
    * @return bool true, if the remove happened, false otherwise
    */

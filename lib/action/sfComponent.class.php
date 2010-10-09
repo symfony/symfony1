@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage action
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfComponent.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfComponent.class.php 20048 2009-07-09 09:53:03Z FabianLange $
  */
 abstract class sfComponent
 {
@@ -367,6 +367,8 @@ abstract class sfComponent
    * @param array  $arguments The method arguments
    *
    * @return mixed The returned value of the called method
+   *
+   * @throws sfException If called method is undefined
    */
   public function __call($method, $arguments)
   {

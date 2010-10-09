@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mssql.php 4252 2008-04-19 07:37:53Z jwage $
+ *  $Id: Mssql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * @subpackage  Transaction
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4252 $
+ * @version     $Revision: 5801 $
  */
 class Doctrine_Transaction_Mssql extends Doctrine_Transaction
 {

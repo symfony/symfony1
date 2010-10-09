@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 4256 2008-04-19 08:18:56Z jwage $
+ *  $Id: Mysql.php 5837 2009-06-06 21:38:32Z guilhermeblanco $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4256 $
+ * @version     $Revision: 5837 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
@@ -138,12 +138,23 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
     /**
      * Returns day from dbms
      *
-     * @param string $column 
+     * @param string $column
      * @return string to get day from dbms
      */
     public function day($column)
     {
         $column = $this->getIdentifier($column);
         return 'DAY(' .  $column . ')';
+    }
+
+    /**
+     * Returns soundex from dbms
+     *
+     * @param string $column
+     * @return string to get soundex from dbms
+     */
+    public function soundex($column)
+    {
+        return 'SOUNDEX(' . $column . ')';
     }
 }

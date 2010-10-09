@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 14169 2008-12-18 10:13:51Z FabianLange $
+ * @version    SVN: $Id: sfToolkit.class.php 19980 2009-07-07 16:29:54Z nicolas $
  */
 class sfToolkit
 {
@@ -188,15 +188,20 @@ class sfToolkit
     $ignore = array(T_COMMENT => true, T_DOC_COMMENT => true);
     $output = '';
 
-    foreach (token_get_all($source) as $token) {
+    foreach (token_get_all($source) as $token)
+    {
       // array
-      if (isset($token[1])) {
+      if (isset($token[1]))
+      {
         // no action on comments
-        if (!isset($ignore[$token[0]])) {
+        if (!isset($ignore[$token[0]]))
+        {
           // anything else -> output "as is"
           $output .= $token[1];
         }
-      } else {
+      }
+      else
+      {
         // simple 1-character token
         $output .= $token;
       }
@@ -703,8 +708,7 @@ class sfToolkit
       {
         foreach (explode(PATH_SEPARATOR, $path) as $dir)
         {
-          $file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix;
-          if (is_executable($file))
+          if (is_file($file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix) && is_executable($file))
           {
             return $file;
           }

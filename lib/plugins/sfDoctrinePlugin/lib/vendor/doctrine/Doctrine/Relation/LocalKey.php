@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: LocalKey.php 4296 2008-04-26 14:46:57Z romanb $
+ *  $Id: LocalKey.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 4296 $
+ * @version     $Revision: 5801 $
  */
 class Doctrine_Relation_LocalKey extends Doctrine_Relation
 {

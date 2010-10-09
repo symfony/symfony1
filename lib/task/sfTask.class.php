@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTask.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfTask.class.php 18135 2009-05-11 11:55:46Z fabien $
  */
 abstract class sfTask
 {
@@ -66,6 +66,8 @@ abstract class sfTask
    *
    * @param sfCommandManager $commandManager  An sfCommandManager instance
    * @param mixed            $options         The command line options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function runFromCLI(sfCommandManager $commandManager, $options = null)
   {
@@ -80,6 +82,8 @@ abstract class sfTask
    *
    * @param array $arguments  An array of arguments
    * @param array $options    An array of options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
   public function run($arguments = array(), $options = array())
   {
@@ -414,8 +418,10 @@ abstract class sfTask
   /**
    * Executes the current task.
    *
-   * @param array $arguments  An array of arguments
-   * @param array $options    An array of options
+   * @param array    $arguments  An array of arguments
+   * @param array    $options    An array of options
+   *
+   * @return integer 0 if everything went fine, or an error code
    */
    abstract protected function execute($arguments = array(), $options = array());
 

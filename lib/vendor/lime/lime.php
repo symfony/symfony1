@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 16012 2009-03-04 23:45:36Z Kris.Wallsmith $
+ * @version    SVN: $Id: lime.php 18665 2009-05-26 19:41:00Z fabien $
  */
 class lime_test
 {
@@ -623,7 +623,7 @@ class lime_harness extends lime_registration
       $this->output->green_bar(sprintf(' Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']));
     }
 
-    return $this->stats['_failed_tests'] ? false : true;
+    return $this->stats['_failed_files'] ? false : true;
   }
 
   private function process_test_output($lines)

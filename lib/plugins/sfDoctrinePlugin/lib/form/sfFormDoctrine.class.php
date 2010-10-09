@@ -467,7 +467,7 @@ abstract class sfFormDoctrine extends sfForm
 
     $this->removeFile($field);
 
-    return $this->saveFile($field, $filename);
+    return $this->saveFile($field, $filename, $values[$field]);
   }
 
   /**

@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 16170 2009-03-11 08:02:42Z fabien $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 19411 2009-06-20 11:54:04Z fabien $
  */
 abstract class sfTestFunctionalBase
 {
@@ -176,7 +176,7 @@ abstract class sfTestFunctionalBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfTestFunctionalBase
    */
   public function get($uri, $parameters = array(), $changeStack = true)
   {
@@ -191,7 +191,7 @@ abstract class sfTestFunctionalBase
    * @param  string $url     Url
    * @param  string $code    The expected return status code
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function getAndCheck($module, $action, $url = null, $code = 200)
   {
@@ -212,7 +212,7 @@ abstract class sfTestFunctionalBase
    * @param array  $parameters  The Request parameters
    * @param bool   $changeStack  Change the browser history stack?
    *
-   * @return sfBrowser
+   * @return sfTestFunctionalBase
    */
   public function post($uri, $parameters = array(), $changeStack = true)
   {
@@ -227,7 +227,7 @@ abstract class sfTestFunctionalBase
    * @param  array  $parameters   Additional paramaters
    * @param  bool   $changeStack  If set to false ActionStack is not changed
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
@@ -252,7 +252,7 @@ abstract class sfTestFunctionalBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfTestFunctionalBase
    */
   public function deselect($name)
   {
@@ -266,7 +266,7 @@ abstract class sfTestFunctionalBase
    *
    * @param string  $name       The checkbox or radiobutton id, name or text
    *
-   * @return sfBrowser
+   * @return sfTestFunctionalBase
    */
   public function select($name)
   {
@@ -282,7 +282,7 @@ abstract class sfTestFunctionalBase
    * @param array   $arguments  The arguments to pass to the link
    * @param array   $options    An array of options
    *
-   * @return sfBrowser
+   * @return sfTestFunctionalBase
    */
   public function click($name, $arguments = array(), $options = array())
   {
@@ -294,7 +294,7 @@ abstract class sfTestFunctionalBase
   /**
    * Simulates the browser back button.
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function back()
   {
@@ -308,7 +308,7 @@ abstract class sfTestFunctionalBase
   /**
    * Simulates the browser forward button.
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function forward()
   {
@@ -324,7 +324,7 @@ abstract class sfTestFunctionalBase
    *
    * @param string $message A message
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function info($message)
   {
@@ -340,7 +340,7 @@ abstract class sfTestFunctionalBase
    *
    * @param  bool $boolean  Flag for redirection mode
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isRedirected($boolean = true)
   {
@@ -353,7 +353,7 @@ abstract class sfTestFunctionalBase
    * @param  string $uri   Uniform resource identifier
    * @param  string $text  Text in the response
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function check($uri, $text = null)
   {
@@ -374,7 +374,7 @@ abstract class sfTestFunctionalBase
    *
    * @param string Status code to check, default 200
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isStatusCode($statusCode = 200)
   {
@@ -388,7 +388,7 @@ abstract class sfTestFunctionalBase
    *
    * @param string Text to check
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function responseContains($text)
   {
@@ -403,7 +403,7 @@ abstract class sfTestFunctionalBase
    * @param string $key
    * @param string $value
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isRequestParameter($key, $value)
   {
@@ -418,7 +418,7 @@ abstract class sfTestFunctionalBase
    * @param  string $key
    * @param  string $value
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isResponseHeader($key, $value)
   {
@@ -432,7 +432,7 @@ abstract class sfTestFunctionalBase
    *
    * @param  string $culture  The user culture
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isUserCulture($culture)
   {
@@ -446,7 +446,7 @@ abstract class sfTestFunctionalBase
    *
    * @param  string $format  The request format
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function isRequestFormat($format)
   {
@@ -462,7 +462,7 @@ abstract class sfTestFunctionalBase
    * @param  mixed  $value     Flag for the selector
    * @param  array  $options   Options for the current test
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function checkResponseElement($selector, $value = true, $options = array())
   {
@@ -475,7 +475,7 @@ abstract class sfTestFunctionalBase
    * @param  string $class    Class name
    * @param  string $message  Message name
    *
-   * @return sfTestBrowser The current sfTestBrowser instance
+   * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
    */
   public function throwsException($class = null, $message = null)
   {

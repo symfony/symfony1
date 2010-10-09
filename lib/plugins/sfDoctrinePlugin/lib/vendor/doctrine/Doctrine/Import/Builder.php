@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Builder.php 5441 2009-01-30 22:58:43Z jwage $
+ *  $Id: Builder.php 5818 2009-06-03 19:45:58Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.phpdoctrine.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 5441 $
+ * @version     $Revision: 5818 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
@@ -488,9 +488,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
 
                 if ( ! empty($a)) {
-                    $ret[$i] .= ', ' . 'array(';
+                    $ret[$i] .= ', ' . 'array(' . PHP_EOL . str_repeat(' ', 13);
                     $length = strlen($ret[$i]);
-                    $ret[$i] .= implode(',' . PHP_EOL . str_repeat(' ', $length), $a) . ')';
+                    $ret[$i] .= implode(',' . PHP_EOL . str_repeat(' ', 13), $a) . ')';
                 }
 
                 $ret[$i] .= ');'.PHP_EOL;

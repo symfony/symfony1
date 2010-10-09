@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 17426 2009-04-19 20:52:15Z FabianLange $
+ * @version    SVN: $Id: sfPropelData.class.php 18694 2009-05-27 13:37:57Z fabien $
  */
 class sfPropelData extends sfData
 {
@@ -390,6 +390,8 @@ class sfPropelData extends sfData
       {
         $stmt = $this->con->query('SELECT * FROM '.constant(constant($tableName.'::PEER').'::TABLE_NAME'));
         $resultsSets[] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        unset($stmt);
       }
 
       foreach ($resultsSets as $rows)

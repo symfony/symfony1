@@ -6,7 +6,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 19819 2009-07-02 11:45:11Z fabien $
  */
 class sfModelGeneratorConfiguration
 {
@@ -304,7 +304,7 @@ class sfModelGeneratorConfiguration
       $fields = array();
 
       // with fieldsets?
-      if (!is_array(current($fieldsets)))
+      if (!is_array(reset($fieldsets)))
       {
         $fieldsets = array('NONE' => $fieldsets);
       }
@@ -382,28 +382,6 @@ class sfModelGeneratorConfiguration
     }
 
     return $default;
-  }
-
-  /**
-   * Removes visible fields not included for display.
-   *
-   * @param sfForm $form
-   */
-  protected function fixFormFields(sfForm $form)
-  {
-    $fieldsets = $this->getFormFields($form, $form->isNew() ? 'new' : 'edit');
-
-    // flatten fields and collect names
-    $fields = call_user_func_array('array_merge', array_values($fieldsets));
-    $names = array_map(array($this, 'mapFieldName'), $fields);
-
-    foreach ($form as $name => $field)
-    {
-      if (!$field->isHidden() && !in_array($name, $names))
-      {
-        unset($form[$name]);
-      }
-    }
   }
 
   protected function mapFieldName(sfModelGeneratorConfigurationField $field)
