@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfDateFormat.class.php 4340 2007-06-23 06:47:05Z fabien $
+ * @version    $Id: sfDateFormat.class.php 6806 2007-12-29 07:53:10Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -39,7 +39,8 @@ require_once(dirname(__FILE__).'/util.php');
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Sat Dec 04 14:10:49 EST 2004
- * @package System.I18N.core
+ * @package    symfony
+ * @subpackage i18n
  */
 class sfDateFormat
 {

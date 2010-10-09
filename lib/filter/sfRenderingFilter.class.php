@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRenderingFilter.class.php 3244 2007-01-12 14:46:11Z fabien $
+ * @version    SVN: $Id: sfRenderingFilter.class.php 6648 2007-12-20 20:24:19Z fabien $
  */
 class sfRenderingFilter extends sfFilter
 {
@@ -41,7 +41,10 @@ class sfRenderingFilter extends sfFilter
     $response = $this->getContext()->getResponse();
 
     // send headers
-    $response->sendHttpHeaders();
+    if (method_exists($response, 'sendHttpHeaders'))
+    {
+      $response->sendHttpHeaders();
+    }
 
     // send content
     $response->sendContent();

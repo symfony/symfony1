@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfCultureInfo.class.php 6375 2007-12-07 20:11:13Z fabien $
+ * @version    $Id: sfCultureInfo.class.php 6806 2007-12-29 07:53:10Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -46,7 +46,8 @@
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Sat Dec 04 13:41:46 EST 2004
- * @package System.I18N.core
+ * @package    symfony
+ * @subpackage i18n
  */
 class sfCultureInfo
 {

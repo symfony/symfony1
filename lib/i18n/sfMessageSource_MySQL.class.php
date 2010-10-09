@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource_MySQL.class.php 5771 2007-10-31 07:16:16Z fabien $
+ * @version    $Id: sfMessageSource_MySQL.class.php 6806 2007-12-29 07:53:10Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -91,7 +91,8 @@ require_once(dirname(__FILE__).'/util.php');
  *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:58:58 EST 2004
- * @package System.I18N.core
+ * @package    symfony
+ * @subpackage i18n
  */
 class sfMessageSource_MySQL extends sfMessageSource
 {

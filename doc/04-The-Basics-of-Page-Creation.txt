@@ -189,8 +189,8 @@ Listing 4-8 - Templates Can Include Usual HTML Code
     <p>Hello, world!</p>
     <?php if ($hour >= 18): ?>
     <p>Or should I say good evening? It's already <?php echo $hour ?>.</p>
-    <?php endif; ?>	
-    <form method="post" target="/myapp_dev.php/mymodule/anotherAction">
+    <?php endif; ?>
+    <form method="post" action="/myapp_dev.php/mymodule/anotherAction">
       <label for="name">What is your name?</label>
       <input type="text" name="name" id="name" value="" />
       <input type="submit" value="Ok" />

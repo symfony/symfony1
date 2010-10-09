@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfWebRequest.class.php 4642 2007-07-17 11:32:43Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 6768 2007-12-27 16:24:58Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -263,6 +263,8 @@ class sfWebRequest extends sfRequest
    */
   public function getFileExtension($name)
   {
+    static $mimeTypes = null;
+
     $fileType = $this->getFileType($name);
 
     if (!$fileType)
@@ -270,7 +272,10 @@ class sfWebRequest extends sfRequest
       return '.bin';
     }
 
-    $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat'));
+    if (is_null($mimeTypes))
+    {
+      $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat'));
+    }
 
     return isset($mimeTypes[$fileType]) ? '.'.$mimeTypes[$fileType] : '.bin';
   }

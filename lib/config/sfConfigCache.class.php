@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfConfigCache.class.php 3503 2007-02-18 19:08:26Z fabien $
+ * @version    SVN: $Id: sfConfigCache.class.php 6725 2007-12-26 21:49:37Z fabien $
  */
 class sfConfigCache
 {
@@ -190,7 +190,7 @@ class sfConfigCache
       $this->callHandler($configPath, $files, $cache);
 
       // clear process cache
-      if ('config/config_handlers.yml' != $configPath && sfConfig::has('sf_use_process_cache') && !$process_cache_cleared)
+      if ('config/config_handlers.yml' != $configPath && sfConfig::get('sf_use_process_cache') && !$process_cache_cleared)
       {
         sfProcessCache::clear();
         $process_cache_cleared = true;

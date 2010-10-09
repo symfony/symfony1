@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfController.class.php 3221 2007-01-11 07:33:23Z fabien $
+ * @version    SVN: $Id: sfController.class.php 6766 2007-12-27 16:12:50Z fabien $
  */
 abstract class sfController
 {
@@ -198,7 +198,7 @@ abstract class sfController
       // the requested action doesn't exist
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfController} action does not exist');
+        $this->getContext()->getLogger()->info(sprintf('{sfController} action "%s/%s" does not exist', $moduleName, $actionName));
       }
 
       // track the requested module so we have access to the data in the error 404 page
@@ -553,13 +553,13 @@ abstract class sfController
 
       if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
       {
-        $error = 'Your mail action is secured but the user is not authenticated.';
+        $error = 'Your action is secured but the user is not authenticated.';
 
         throw new sfException($error);
       }
       else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
       {
-        $error = 'Your mail action is secured but the user does not have access.';
+        $error = 'Your action is secured but the user does not have access.';
 
         throw new sfException($error);
       }

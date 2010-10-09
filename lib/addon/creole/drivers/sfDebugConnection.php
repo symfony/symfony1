@@ -21,8 +21,9 @@
  * The next call to Creole::getConnection() will return an instance of
  * DebugConnection.
  *
- * @author Michael Sims
- * @package creole.drivers.debug
+ * @package    symfony
+ * @subpackage creole
+ * @author     Michael Sims
  */
 class sfDebugConnection implements Connection
 {

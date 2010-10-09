@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 3099 2006-12-20 08:16:15Z fabien $
+ * @version    SVN: $Id: sfPager.class.php 6763 2007-12-27 16:09:11Z fabien $
  */
 
 /**
@@ -22,7 +22,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPager.class.php 3099 2006-12-20 08:16:15Z fabien $
+ * @version    SVN: $Id: sfPager.class.php 6763 2007-12-27 16:09:11Z fabien $
  */
 abstract class sfPager
 {
@@ -93,7 +93,7 @@ abstract class sfPager
 
   public function haveToPaginate()
   {
-    return (($this->getPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
+    return (($this->getMaxPerPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
   }
 
   public function getCursor()

@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 5772 2007-10-31 07:32:44Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 6806 2007-12-29 07:53:10Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -63,7 +63,8 @@ require_once(dirname(__FILE__).'/util.php');
  * 
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 10 18:10:20 EST 2004
- * @package System.I18N.core
+ * @package    symfony
+ * @subpackage i18n
  */
 class sfNumberFormat
 {
