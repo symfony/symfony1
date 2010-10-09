@@ -449,7 +449,7 @@ So, basically, a plug-in is a packaged extension for a symfony project. With plu
 
 The symfony project website contains a page dedicated to symfony plug-ins. It is in the symfony wiki and accessible with the following URL:
 
-    http://trac.symfony-project.org/wiki/SymfonyPlugins
+    http://www.symfony-project.org/plugins/
 
 Each plug-in listed there has its own page, with detailed installation instructions and documentation.
 
@@ -946,17 +946,17 @@ Test the way the plug-in behaves in your application. If it works well, you are 
 
 #### Hosting Your Plug-In in the Symfony Project Website
 
-A symfony plug-in gets the broadest audience when distributed by the `symfony-project.com` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
+A symfony plug-in gets the broadest audience when distributed by the `symfony-project.org` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
 
-  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Wiki Formatting syntax ([http://trac.symfony-project.org/wiki/WikiFormatting](http://trac.symfony-project.org/wiki/WikiFormatting)).
-  2. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
-  3. Create a new page on the symfony wiki named `sfSamplePlugin` (`Plugin` is a mandatory suffix). In this page, describe the plug-in usage, the license, the dependencies, and the installation procedure. You can reuse the contents of the plug-in `README` file. Check the existing plug-ins' wiki pages and use them as an example.
-  4. Attach your PEAR package to the wiki page (`sfSamplePlugin-1.0.0.tgz`).
-  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://trac.symfony-project.org/wiki/SymfonyPlugins](http://trac.symfony-project.org/wiki/SymfonyPlugins)).
+  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Markdown Formatting syntax ([http://daringfireball.net/projects/markdown/syntax](http://daringfireball.net/projects/markdown/syntax)).
+  2. Create a symfony account (http://www.symfony-project.org/user/new) and create the plugin (http://www.symfony-project.org/plugins/new).
+  3. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
+  4. Upload your PEAR package (`sfSamplePlugin-1.0.0.tgz`).
+  5. Your plugin must now appear in the list of plugins ([http://www.symfony-project.org/plugins/](http://www.symfony-project.org/plugins/)).
 
 If you follow this procedure, users will be able to install your plug-in by simply typing the following command in a project directory:
 
-    > php symfony plugin-install http://plugins.symfony-project.com/sfSamplePlugin
+    > php symfony plugin:install sfSamplePlugin
 
 #### Naming Conventions
 

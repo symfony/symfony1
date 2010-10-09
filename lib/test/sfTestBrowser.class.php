@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestBrowser.class.php 5153 2007-09-16 15:47:55Z fabien $
+ * @version    SVN: $Id: sfTestBrowser.class.php 16170 2009-03-11 08:02:42Z fabien $
  */
 class sfTestBrowser extends sfBrowser
 {
@@ -453,7 +453,7 @@ function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
     return;
   }
 
-  $msg = sprintf('PHP send a "%s" error at %s line %s (%s)', '%s', $errfile, $errline, $errstr);
+  $msg = sprintf('PHP sent a "%s" error at %s line %s (%s)', '%s', $errfile, $errline, $errstr);
   switch ($errno)
   {
     case E_WARNING:

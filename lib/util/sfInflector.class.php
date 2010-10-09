@@ -13,13 +13,13 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfInflector.class.php 1415 2006-06-11 08:33:51Z fabien $
+ * @version    SVN: $Id: sfInflector.class.php 13894 2008-12-09 22:31:49Z FabianLange $
  */
 class sfInflector
 {
   /**
    * Returns a camelized string from a lower case and underscored string by replaceing slash with
-   * double-colol and upper-casing each letter preceded by an underscore.
+   * double-colon and upper-casing each letter preceded by an underscore.
    *
    * @param string String to camelize.
    *

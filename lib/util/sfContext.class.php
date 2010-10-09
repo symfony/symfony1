@@ -19,7 +19,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfContext.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfContext.class.php 16165 2009-03-11 07:16:24Z fabien $
  */
 class sfContext
 {
@@ -131,6 +131,11 @@ class sfContext
      return $this->controller;
    }
 
+   /**
+    * Retrieve the logger.
+    *
+    * @return sfLogger The current sfLogger implementation instance.
+    */
    public function getLogger()
    {
      return $this->logger;

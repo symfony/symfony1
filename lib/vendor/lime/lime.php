@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 4259 2007-06-19 07:24:40Z fabien $
+ * @version    SVN: $Id: lime.php 16011 2009-03-04 23:40:44Z Kris.Wallsmith $
  */
 
 class lime_test

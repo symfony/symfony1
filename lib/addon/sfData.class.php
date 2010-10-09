@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfData.class.php 8288 2008-04-04 13:55:10Z noel $
+ * @version    SVN: $Id: sfData.class.php 15838 2009-02-27 05:32:24Z fabien $
  */
 
 abstract class sfData

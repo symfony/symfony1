@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 9940 2008-06-27 16:25:49Z fabien $
+ * @version    SVN: $Id: sfController.class.php 14385 2008-12-30 08:36:18Z noel $
  */
 abstract class sfController
 {
@@ -269,7 +269,14 @@ abstract class sfController
         // change i18n message source directory to our module
         if (sfConfig::get('sf_i18n'))
         {
-          $this->context->getI18N()->setMessageSourceDir(sfLoader::getI18NDir($moduleName), $this->context->getUser()->getCulture());
+          if (sfLoader::getI18NDir($moduleName))
+          {
+            $this->context->getI18N()->setMessageSourceDir(sfLoader::getI18NDir($moduleName), $this->context->getUser()->getCulture());
+          }
+          else
+          {
+            $this->context->getI18N()->setMessageSourceDir(sfConfig::get('sf_app_i18n_dir'), $this->context->getUser()->getCulture());
+          }
         }
 
         // process the filter chain

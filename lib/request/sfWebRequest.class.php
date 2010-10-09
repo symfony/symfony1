@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 11954 2008-10-05 15:33:02Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 13416 2008-11-27 12:45:18Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -374,12 +374,17 @@ class sfWebRequest extends sfRequest
   {
     $pathArray = $this->getPathInfoArray();
 
-    if ($this->isAbsUri())
+    // for IIS with rewrite module (IIFR, ISAPI Rewrite, ...)
+    if ('HTTP_X_REWRITE_URL' == sfConfig::get('sf_path_info_key'))
     {
-      return $pathArray['REQUEST_URI'];
+      $uri = isset($pathArray['HTTP_X_REWRITE_URL']) ? $pathArray['HTTP_X_REWRITE_URL'] : '';
+    }
+    else
+    {
+      $uri = isset($pathArray['REQUEST_URI']) ? $pathArray['REQUEST_URI'] : '';
     }
 
-    return $this->getUriPrefix().$pathArray['REQUEST_URI'];
+    return $this->isAbsUri() ? $uri : $this->getUriPrefix().$uri;
   }
 
   /**
