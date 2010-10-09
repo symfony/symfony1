@@ -240,14 +240,27 @@ Listing 3-1 - Sample Apache Configuration, in `apache/conf/httpd.conf`
       </Directory>
     </VirtualHost>
 
-In the configuration in Listing 3-1, the `$sf_symfony_data_dir` placeholder must be replaced by the actual path. For example, for a PEAR installation in *nix, you should type something like this:
+In the configuration in Listing 3-1, the `$sf_symfony_data_dir` placeholder 
+must be replaced by the actual path. For example, for a PEAR installation in
+*nix, you should type something like this:
 
-    Alias /sf /usr/local/lib/php/data/symfony/web/sf
+        Alias /sf /usr/local/lib/php/data/symfony/web/sf
 
 >**NOTE**
->The alias to the `web/sf/` directory is not mandatory. It allows Apache to find images, style sheets, and JavaScript files for the web debug toolbar, the admin generator, the default symfony pages, and the Ajax support. An alternative to this alias would be to create a symbolic link (symlink) or copy the `/path/to/symfony/data/web/sf/` directory to `myproject/web/sf/`.
+>The alias to the `web/sf/` directory is not mandatory. It allows Apache to 
+find images, style sheets, and JavaScript files for the web debug toolbar, 
+the admin generator, the default symfony pages, and the Ajax support. 
+An alternative to this alias would be to create a symbolic link (symlink) or 
+copy the `/path/to/symfony/data/web/sf/` directory to `myproject/web/sf/`.
 
-Restart Apache, and that's it. Your newly created application can now be called and viewed through a standard web browser at the following URL:
+>**TIP**
+>If you have installed symfony via PEAR and can't find the symfony shared data
+>directory, look in the PEAR `data_dir` which is listed in the PEAR config:
+>
+>    pear config-show
+
+Restart Apache, and that's it. Your newly created application can now be called
+and viewed through a standard web browser at the following URL:
 
     http://localhost/frontend_dev.php/
 

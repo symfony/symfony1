@@ -64,8 +64,6 @@ print sprintf("Releasing symfony version \"%s\".\n", $version);
 // tests
 $result = $filesystem->sh('php test/bin/prove.php');
 
-$result = 0;
-
 if (0 != $result)
 {
   throw new Exception('Some tests failed. Release process aborted!');

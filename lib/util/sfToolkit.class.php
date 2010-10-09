@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 19216 2009-06-13 06:42:00Z fabien $
+ * @version    SVN: $Id: sfToolkit.class.php 19980 2009-07-07 16:29:54Z nicolas $
  */
 class sfToolkit
 {
@@ -708,8 +708,7 @@ class sfToolkit
       {
         foreach (explode(PATH_SEPARATOR, $path) as $dir)
         {
-          $file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix;
-          if (is_executable($file))
+          if (is_file($file = $dir.DIRECTORY_SEPARATOR.$phpCli.$suffix) && is_executable($file))
           {
             return $file;
           }
