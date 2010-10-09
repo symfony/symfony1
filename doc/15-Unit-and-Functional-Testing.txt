@@ -803,7 +803,7 @@ For unit tests, a good practice is to group the tests by function or method, and
 Listing 15-29 - Example Unit Test Naming Practice
 
     [php]
-    // srttolower()
+    // strtolower()
     $t->diag('strtolower()');
     $t->isa_ok(strtolower('Foo'), 'string', 'strtolower() returns a string');
     $t->is(strtolower('FOO'), 'foo', 'strtolower() transforms the input to lowercase');

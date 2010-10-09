@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 12201 2008-10-15 14:26:29Z fabien $
+ * @version    SVN: $Id: FormHelper.php 23543 2009-11-03 08:19:42Z fabien $
  */
 
 /**
@@ -421,7 +421,7 @@ function textarea_tag($name, $content = null, $options = array())
 
   if ($size = _get_option($options, 'size'))
   {
-    list($options['cols'], $options['rows']) = split('x', $size, 2);
+    list($options['cols'], $options['rows']) = explode('x', $size, 2);
   }
 
   // rich control?

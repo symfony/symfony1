@@ -19,7 +19,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @version    SVN: $Id: sfFunctionCache.class.php 3452 2007-02-14 15:03:08Z francois $
+ * @version    SVN: $Id: sfFunctionCache.class.php 23725 2009-11-09 19:59:37Z FabianLange $
  */
 class sfFunctionCache extends sfFileCache
 {
@@ -57,6 +57,7 @@ class sfFunctionCache extends sfFileCache
         list($class, $method) = explode('::', $target);
         try
         {
+          class_exists($class);
           $result = call_user_func_array(array($class, $method), $arguments);
         }
         catch (Exception $e)

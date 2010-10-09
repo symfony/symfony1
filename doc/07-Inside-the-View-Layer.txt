@@ -962,7 +962,7 @@ As a matter of fact, the variables in the template are not of the type you might
     <?php echo get_class($test_object) ?>
      => sfOutputEscaperObjectDecorator
 
-This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can be still be accessed using `[]`, be traversed using `foreach`, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
+This explains why some usual PHP functions (like `array_shift()`, `print_r()`, and so on) don't work on escaped arrays anymore. But they can still be accessed using `[]`, be traversed using `foreach`, and they give back the right result with `count()` (`count()` works only with PHP 5.2 or later). And in templates, the data should be read-only anyway, so most access will be through the methods that do work.
 
 You still have a way to retrieve the raw data through the `$sf_data` object. In addition, methods of escaped objects are altered to accept an additional parameter: an escaping method. So you can choose an alternative escaping method each time you display a variable in a template, or opt for the `ESC_RAW` helper to deactivate escaping. See Listing 7-46 for an example.
 

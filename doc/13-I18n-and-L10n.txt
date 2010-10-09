@@ -61,12 +61,12 @@ Listing 13-2 - Setting and Retrieving the Culture in an Action
 >     page:
 >       url: /:sf_culture/:page
 >       requirements: { sf_culture: (?:fr|en|de) }
->       params: ...
+>       param: ...
 >
 >     article:
 >       url: /:sf_culture/:year/:month/:day/:slug
 >       requirements: { sf_culture: (?:fr|en|de) }
->       params: ...
+>       param: ...
 >
 >
 >To avoid manually setting the sf_culture request parameter in every `link_to()`, symfony automatically adds the user culture to the default routing parameters. It also works inbound because symfony will automatically change the user culture if the `sf_culture` parameter is found in the URL.

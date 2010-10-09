@@ -428,9 +428,10 @@ Listing 8-15 - Custom SQL Query with Creole
 
     [php]
     $connection = Propel::getConnection();
-    $query = 'SELECT MAX(%s) AS max FROM %s';
-    $query = sprintf($query, ArticlePeer::CREATED_AT, ArticlePeer::TABLE_NAME);
+    $query = 'SELECT MAX(?) AS max FROM ?';
     $statement = $connection->prepareStatement($query);
+    $statement->setString(1, ArticlePeer::CREATED_AT);
+    $statement->setString(2, ArticlePeer::TABLE_NAME);
     $resultset = $statement->executeQuery();
     $resultset->next();
     $max = $resultset->getInt('max');
@@ -473,7 +474,7 @@ Additionally, the getters for date columns accept a date format as an argument:
 >     public function executeShowPopularArticlesForTag()
 >     {
 >       $tag = TagPeer::retrieveByName($this->getRequestParameter('tag'));
->       $this->foward404Unless($tag);
+>       $this->forward404Unless($tag);
 >       $this->articles = $tag->getPopularArticles(10);
 >     }
 >

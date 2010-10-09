@@ -486,7 +486,7 @@ You can access settings from within the application code through the `sfConfig` 
 
     [php]
     // Retrieve a setting
-    parameter = sfConfig::get('param_name', $default_value);
+    $parameter = sfConfig::get('param_name', $default_value);
 
 Note that you can also define, or override, a setting from within PHP code:
 
