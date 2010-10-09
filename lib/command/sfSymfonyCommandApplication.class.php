@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 9721 2008-06-21 08:17:38Z Carl.Vondrick $
+ * @version    SVN: $Id: sfSymfonyCommandApplication.class.php 12499 2008-10-31 16:10:07Z Kris.Wallsmith $
  */
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
@@ -32,11 +32,11 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     if (is_readable($configurationFile))
     {
       require_once $configurationFile;
-      $configuration = new ProjectConfiguration(getcwd());
+      $configuration = new ProjectConfiguration(getcwd(), $this->dispatcher);
     }
     else
     {
-      $configuration = new sfProjectConfiguration(getcwd());
+      $configuration = new sfProjectConfiguration(getcwd(), $this->dispatcher);
     }
 
     // application

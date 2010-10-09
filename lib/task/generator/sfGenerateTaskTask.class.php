@@ -77,7 +77,7 @@ Call it with:
   [php symfony $taskName|INFO]
 HED;
     
-    if($options['use-database'] != 'true')
+    if($options['use-database'] == 'true')
     {
       $content = <<<HED
 <?php

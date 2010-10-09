@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBaseTask.class.php 11338 2008-09-06 06:30:45Z fabien $
+ * @version    SVN: $Id: sfBaseTask.class.php 12867 2008-11-10 08:36:15Z fabien $
  */
 abstract class sfBaseTask extends sfCommandApplicationTask
 {
@@ -34,7 +34,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     $this->dispatcher->notifyUntil($event);
     if ($event->isProcessed())
     {
-      return $this->getReturnValue();
+      return $event->getReturnValue();
     }
 
     $this->checkProjectExists();
@@ -63,7 +63,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       }
     }
 
-    $autoloader = sfSimpleAutoload::getInstance();
+    $autoloader = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
     foreach ($this->configuration->getModelDirs() as $dir)
     {
       $autoloader->addDirectory($dir);

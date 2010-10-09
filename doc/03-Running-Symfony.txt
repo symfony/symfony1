@@ -125,7 +125,7 @@ The `symfony` command, available only for PEAR installations, is a call to the `
 
     symfony version 1.1.0 (/path/to/the/svn/symfony/lib/dir)
 
-If you chose an SVN installation, you probably already have an existing symfony project. For this project to make use of the symfony files, you need to change the path defined in the project's `lib/ProjectConfiguration.class.php` file, as follows:
+If you chose an SVN installation, you probably already have an existing symfony project. For this project to make use of the symfony files, you need to change the path defined in the project's `config/ProjectConfiguration.class.php` file, as follows:
 
     [php]
     <?php
@@ -266,7 +266,7 @@ Setting up an application in a shared host is a little trickier, since the host 
 
 Let's imagine that your shared host requires that the web folder is named `www/` instead of `web/`, and that it doesn't give you access to the `httpd.conf` file, but only to an `.htaccess` file in the web folder.
 
-In a symfony project, every path to a directory is configurable. Chapter 19 will tell you more about it, but in the meantime, you can still rename the `web` directory to `www` and have the application take it into account by changing the configuration, as shown in Listing 3-2. These lines are to be added to the end of the `lib/ProjectConfiguration.class.php` file.
+In a symfony project, every path to a directory is configurable. Chapter 19 will tell you more about it, but in the meantime, you can still rename the `web` directory to `www` and have the application take it into account by changing the configuration, as shown in Listing 3-2. These lines are to be added to the end of the `config/ProjectConfiguration.class.php` file.
 
 Listing 3-2 - Changing the Default Directory Structure Settings, in `lib/ProjectConfiguration.class.php`
 

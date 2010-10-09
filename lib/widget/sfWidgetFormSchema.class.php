@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 11509 2008-09-13 10:51:34Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 12813 2008-11-09 10:23:47Z fabien $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -25,7 +25,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     LAST   = 'last',
     BEFORE = 'before',
     AFTER  = 'after';
-  
+
   protected static
     $defaultFormatterName = 'table';
 
@@ -65,7 +65,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $this->helps  = $helps;
 
     $this->addOption('name_format', '%s');
-    $this->addOption('form_formatter', self::$defaultFormatterName);
+    $this->addOption('form_formatter', null);
 
     parent::__construct($options, $attributes);
 
@@ -102,12 +102,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     return $this->formFormatters;
   }
-  
+
   /**
-   * Sets the generic default formatter name used by the class. If you want all 
-   * of your forms to be generated with the <code>list</code> format, you can 
+   * Sets the generic default formatter name used by the class. If you want all
+   * of your forms to be generated with the <code>list</code> format, you can
    * do it in a project or application configuration class:
-   * 
+   *
    * <pre>
    * class ProjectConfiguration extends sfProjectConfiguration
    * {
@@ -116,7 +116,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *     sfWidgetFormSchema::setDefaultFormFormatterName('list');
    *   }
    * }
-   * </pre>  
+   * </pre>
    *
    * @param string $name  New default formatter name
    */
@@ -142,7 +142,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function getFormFormatterName()
   {
-    return $this->options['form_formatter'];
+    return is_null($this->options['form_formatter']) ? self::$defaultFormatterName : $this->options['form_formatter'];
   }
 
   /**
@@ -159,15 +159,15 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     if (!isset($this->formFormatters[$name]))
     {
       $class = 'sfWidgetFormSchemaFormatter'.ucfirst($name);
-      
+
       if (!class_exists($class))
       {
         throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
       }
-      
+
       $this->formFormatters[$name] = new $class($this);
     }
-    
+
     return $this->formFormatters[$name];
   }
 
@@ -453,16 +453,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     $format = $this->getNameFormat();
 
-    if ('[%s]' == substr($format, -4))
+    if ('[%s]' == substr($format, -4) && preg_match('/^(.+?)\[(.+)\]$/', $name, $match))
     {
-      if (preg_match('/^(.+?)\[(.+)\]$/', $name, $match))
-      {
-        $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], $match[2]);
-      }
-      else
-      {
-        $name = sprintf('%s[%s]', substr($format, 0, -4), $name);
-      }
+      $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], $match[2]);
     }
     else if (false !== $format)
     {
@@ -559,6 +552,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     if (false !== $position = array_search($name, $this->positions))
     {
       unset($this->positions[$position]);
+
+      $this->positions = array_values($this->positions);
     }
   }
 
@@ -674,6 +669,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       // offsetSet will clone the field and change the parent
       $this[$name] = $field;
+    }
+
+    foreach ($this->formFormatters as &$formFormatter)
+    {
+      $formFormatter = clone $formFormatter;
+      $formFormatter->setWidgetSchema($this);
     }
   }
 }

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 11035 2008-08-22 06:23:06Z fabien $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 13118 2008-11-18 10:49:21Z nicolas $
  */
 class sfWebDebugLogger extends sfLogger
 {
@@ -155,7 +155,7 @@ class sfWebDebugLogger extends sfLogger
 
     // get log type in {}
     $type = 'sfOther';
-    if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/', $message, $matches))
+    if (preg_match('/^\s*{([^}]+)}\s*((.|\n)+?)$/', $message, $matches))
     {
       $type    = $matches[1];
       $message = $matches[2];

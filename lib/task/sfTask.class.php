@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTask.class.php 9652 2008-06-18 21:38:48Z nicolas $
+ * @version    SVN: $Id: sfTask.class.php 12533 2008-11-01 13:33:00Z Kris.Wallsmith $
  */
 abstract class sfTask
 {
@@ -288,7 +288,7 @@ abstract class sfTask
     $this->dispatcher->notifyUntil($event);
     if ($event->isProcessed())
     {
-      return $this->getReturnValue();
+      return $event->getReturnValue();
     }
 
     $ret = $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());

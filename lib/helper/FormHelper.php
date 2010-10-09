@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 11700 2008-09-21 10:53:44Z fabien $
+ * @version    SVN: $Id: FormHelper.php 12201 2008-10-15 14:26:29Z fabien $
  */
 
 /**
@@ -76,7 +76,7 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   foreach ($options as $key => $value)
   {
-    if (is_array($value))
+    if (is_array($value) || $value instanceof sfOutputEscaperArrayDecorator)
     {
       $html .= content_tag('optgroup', options_for_select($value, $selected, $html_options), array('label' => $key))."\n";
     }

@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.1.4');
+define('SYMFONY_VERSION', '1.1.5');
 
 /**
  * sfCoreAutoload class.
@@ -22,12 +22,13 @@ define('SYMFONY_VERSION', '1.1.4');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 11937 2008-10-03 19:57:29Z fabien $
+ * @version    SVN: $Id: sfCoreAutoload.class.php 13131 2008-11-18 16:25:52Z nicolas $
  */
 class sfCoreAutoload
 {
   static protected
-    $instance = null;
+    $registered = false,
+    $instance   = null;
 
   protected
     $baseDir = '';
@@ -59,11 +60,18 @@ class sfCoreAutoload
    */
   static public function register()
   {
+    if (self::$registered)
+    {
+      return;
+    }
+
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    if (!spl_autoload_register(array(self::getInstance(), 'autoload')))
+    if (false === spl_autoload_register(array(self::getInstance(), 'autoload')))
     {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
+
+    self::$registered = true;
   }
 
   /**

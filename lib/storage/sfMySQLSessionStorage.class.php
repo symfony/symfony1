@@ -19,7 +19,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
  * @author     Julien Garand <julien.garand@gmail.com>
- * @version    SVN: $Id: sfMySQLSessionStorage.class.php 10589 2008-08-01 16:00:48Z nicolas $
+ * @version    SVN: $Id: sfMySQLSessionStorage.class.php 12061 2008-10-07 20:18:39Z fabien $
  */
 class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 {
@@ -100,7 +100,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
     // cleanup the session id, just in case
     $id = $this->db_escape($id);
 
-    // delete the record associated with this id
+    // get the record associated with this id
     $sql = "SELECT $db_data_col FROM $db_table WHERE $db_id_col = '$id'";
 
     $result = $this->db_query($sql);

@@ -13,7 +13,7 @@
  *
  * @package    lime
  * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @version    SVN: $Id: lime.php 11916 2008-10-02 16:35:33Z fabien $
+ * @version    SVN: $Id: lime.php 12216 2008-10-16 12:25:26Z fabien $
  */
 class lime_test
 {
@@ -458,17 +458,26 @@ class lime_harness extends lime_registration
 
   public function __construct($output_instance, $php_cli = null)
   {
-    if (getenv('PHP_PATH'))
+    if (is_null($php_cli))
     {
-      $this->php_cli = getenv('PHP_PATH');
-
-      if (!is_executable($this->php_cli))
+      if (getenv('PHP_PATH'))
       {
-        throw new Exception('The defined PHP_PATH environment variable is not a valid PHP executable.');
+        $this->php_cli = getenv('PHP_PATH');
+
+        if (!is_executable($this->php_cli))
+        {
+          throw new Exception('The defined PHP_PATH environment variable is not a valid PHP executable.');
+        }
+      }
+      else
+      {
+        $this->php_cli = PHP_BINDIR.DIRECTORY_SEPARATOR.'php';
       }
     }
-
-    $this->php_cli = null === $php_cli ? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : $php_cli;
+    else
+    {
+      $this->php_cli = $php_cli;
+    }
 
     if (!is_executable($this->php_cli))
     {
@@ -651,14 +660,12 @@ class lime_coverage extends lime_registration
   public $base_dir = '';
   public $harness = null;
   public $verbose = false;
+  protected $coverage = array();
 
   public function __construct($harness)
   {
     $this->harness = $harness;
-  }
 
-  public function run()
-  {
     if (!function_exists('xdebug_start_code_coverage'))
     {
       throw new Exception('You must install and enable xdebug before using lime coverage.');
@@ -668,7 +675,10 @@ class lime_coverage extends lime_registration
     {
       throw new Exception('You must set xdebug.extended_info to 1 in your php.ini to use lime coverage.');
     }
+  }
 
+  public function run()
+  {
     if (!count($this->harness->files))
     {
       throw new Exception('You must register some test files before running coverage!');
@@ -679,9 +689,22 @@ class lime_coverage extends lime_registration
       throw new Exception('You must register some files to cover!');
     }
 
-    $coverage = array();
+    $this->coverage = array();
+
+    $this->process($this->harness->files);
+
+    $this->output($this->files);
+  }
+
+  public function process($files)
+  {
+    if (!is_array($files))
+    {
+      $files = array($files);
+    }
+
     $tmp_file = lime_test::get_temp_directory().DIRECTORY_SEPARATOR.'test.php';
-    foreach ($this->harness->files as $file)
+    foreach ($files as $file)
     {
       $tmp = <<<EOF
 <?php
@@ -720,14 +743,9 @@ EOF;
 
       foreach ($cov as $file => $lines)
       {
-        if (!in_array($file, $this->files))
+        if (!isset($this->coverage[$file]))
         {
-          continue;
-        }
-
-        if (!isset($coverage[$file]))
-        {
-          $coverage[$file] = $lines;
+          $this->coverage[$file] = $lines;
           continue;
         }
 
@@ -735,20 +753,27 @@ EOF;
         {
           if ($flag == 1)
           {
-            $coverage[$file][$line] = 1;
+            $this->coverage[$file][$line] = 1;
           }
         }
       }
     }
-    unlink($tmp_file);
 
-    ksort($coverage);
+    if (file_exists($tmp_file))
+    {
+      unlink($tmp_file);
+    }
+  }
+
+  public function output($files)
+  {
+    ksort($this->coverage);
     $total_php_lines = 0;
     $total_covered_lines = 0;
-    foreach ($this->files as $file)
+    foreach ($files as $file)
     {
-      $is_covered = isset($coverage[$file]);
-      $cov = isset($coverage[$file]) ? $coverage[$file] : array();
+      $is_covered = isset($this->coverage[$file]);
+      $cov = isset($this->coverage[$file]) ? $this->coverage[$file] : array();
       $covered_lines = array();
       $missing_lines = array();
 

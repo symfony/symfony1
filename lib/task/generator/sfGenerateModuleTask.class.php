@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateModuleTask.class.php 11923 2008-10-03 13:46:30Z fabien $
+ * @version    SVN: $Id: sfGenerateModuleTask.class.php 13022 2008-11-15 23:08:23Z Kris.Wallsmith $
  */
 class sfGenerateModuleTask extends sfGeneratorBaseTask
 {
@@ -45,9 +45,9 @@ for a new module in an existing application:
 The task can also change the author name found in the [actions.class.php|COMMENT]
 if you have configure it in [config/properties.ini|COMMENT]:
 
-  [symfony]
+  [[symfony]
     name=blog
-    author=Fabien Potencier <fabien.potencier@sensio.com>
+    author=Fabien Potencier <fabien.potencier@sensio.com>|INFO]
 
 You can customize the default skeleton used by the task by creating a
 [%sf_data_dir%/skeleton/module|COMMENT] directory.

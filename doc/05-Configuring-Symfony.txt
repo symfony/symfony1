@@ -590,7 +590,7 @@ Also, as the `echo` language construct does not add a carriage return by default
 
     all:
       translation:
-        format:  <?php echoln sfConfig::get('sf_i18n') == true ? 'xliff' : 'none' ?>
+        format:  <?php echoln(sfConfig::get('sf_i18n') == true ? 'xliff' : 'none') ?>
 
 >**CAUTION**
 >In the production environment, the configuration is cached, so the configuration files are parsed (and executed) only once after the cache is cleared.

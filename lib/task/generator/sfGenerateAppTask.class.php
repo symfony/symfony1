@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateAppTask.class.php 10051 2008-07-01 20:05:05Z Carl.Vondrick $
+ * @version    SVN: $Id: sfGenerateAppTask.class.php 12426 2008-10-30 08:42:02Z FabianLange $
  */
 class sfGenerateAppTask extends sfGeneratorBaseTask
 {
@@ -136,7 +136,7 @@ EOF;
       'APP_NAME'    => $app,
       'ENVIRONMENT' => 'dev',
       'IS_DEBUG'    => 'true',
-      'IP_CHECK'    => '// this check prevents access to debug front conrollers that are deployed by accident to production servers.'.PHP_EOL.
+      'IP_CHECK'    => '// this check prevents access to debug front controllers that are deployed by accident to production servers.'.PHP_EOL.
                        '// feel free to remove this, extend it or make something more sophisticated.'.PHP_EOL.
                        'if (!in_array(@$_SERVER[\'REMOTE_ADDR\'], array(\'127.0.0.1\', \'::1\')))'.PHP_EOL.
                        '{'.PHP_EOL.

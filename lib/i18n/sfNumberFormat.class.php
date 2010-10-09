@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 9128 2008-05-21 00:58:19Z Carl.Vondrick $
+ * @version    $Id: sfNumberFormat.class.php 11958 2008-10-05 16:51:39Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -171,7 +171,7 @@ class sfNumberFormat
     // if not decimal digits, assume 0 decimal points.
     if (is_int($decimalDigits) && $decimalDigits > 0)
     {
-      $string = (string) round(floatval($string), $decimalDigits);
+      $string = (string) intval(round(floatval($string), $decimalDigits));
     }
 
     $dp = strpos($string, '.');

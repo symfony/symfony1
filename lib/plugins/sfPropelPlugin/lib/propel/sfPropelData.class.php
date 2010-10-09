@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 11618 2008-09-17 17:36:54Z nicolas $
+ * @version    SVN: $Id: sfPropelData.class.php 12957 2008-11-12 17:58:57Z hartym $
  */
 class sfPropelData extends sfData
 {
@@ -241,8 +241,7 @@ class sfPropelData extends sfData
       }
 
       $classes = array_keys($data);
-      krsort($classes);
-      foreach ($classes as $class)
+      foreach (array_reverse($classes) as $class)
       {
         $class = trim($class);
         if (in_array($class, $this->deletedClasses))

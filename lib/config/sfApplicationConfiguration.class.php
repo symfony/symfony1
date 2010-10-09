@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 11929 2008-10-03 18:48:51Z fabien $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 13124 2008-11-18 14:13:39Z nicolas $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -403,12 +403,12 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    *
    * @return array An array of i18n directories
    */
-  public function getI18NGlobalDirs()
+  public function getDecoratorDirsGlobalDirs()
   {
     $dirs = array();
 
     // application
-    if (is_dir($dir = sfConfig::get('sf_app_dir').'/i18n'))
+    if (is_dir($dir = sfConfig::get('sf_app_i18n_dir')))
     {
       $dirs[] = $dir;
     }
@@ -441,26 +441,17 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     // application
-    if (is_dir($dir = sfConfig::get('sf_app_dir').'/i18n'))
+    if (is_dir($dir = sfConfig::get('sf_app_i18n_dir')))
     {
       $dirs[] = $dir;
     }
 
-    // module in plugins
-    $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/i18n');
-    if (isset($pluginDirs[0]))
-    {
-      $dirs[] = $pluginDirs[0];
-    }
-
-    // plugins
-    $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/i18n');
-    if (isset($pluginDirs[0]))
-    {
-      $dirs[] = $pluginDirs[0];
-    }
-
-    return $dirs;
+    // plugins, module in plugins
+    return array_merge(
+      $dirs,
+      (array) glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/i18n'),
+      (array) glob(sfConfig::get('sf_plugins_dir').'/*/i18n')
+    );
   }
 
   /**

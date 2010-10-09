@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfAutoload.class.php 9207 2008-05-23 07:42:06Z fabien $
+ * @version    SVN: $Id: sfAutoload.class.php 12676 2008-11-06 08:57:12Z fabien $
  */
 class sfAutoload
 {
@@ -57,7 +57,7 @@ class sfAutoload
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
 
-    if (!spl_autoload_register(array(self::getInstance(), 'autoload')))
+    if (false === spl_autoload_register(array(self::getInstance(), 'autoload')))
     {
       throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }

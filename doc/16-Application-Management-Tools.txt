@@ -56,8 +56,9 @@ Listing 16-3 - Changing the Log Format
     all:
       logger:
         param:
-          format:      %time% %type% [%priority%] %message%%EOL%
-          time_format: %b %d %H:%M:%S
+          sf_file_debug:
+            format:      %time% %type% [%priority%] %message%%EOL%
+            time_format: %b %d %H:%M:%S
 
 #### Symfony Log Level Configuration
 
@@ -606,7 +607,16 @@ This command launches the `rsync` command in dry mode; that is, it shows which f
 Don't forget to clear the cache in the production server after synchronization.
 
 >**TIP**
->Sometimes bugs appear in production that didn't exist in development. In 90% of the cases, this is due to differences in versions (of PHP, web server, or database) or in configurations. To avoid unpleasant surprises, you should define the target PHP configuration in the `php.yml` file of your application, so that it checks that the development environment applies the same settings. Refer to Chapter 19 for more information about this configuration file.
+>As of symfony 1.1, the `php.yml` configuration file has been removed.
+>
+>The only setting you will have to check by hand is `log_errors`, which was set to on by `php.yml`.
+>
+>php.yml is replaced by the `check_configuration.php` utility you can find in he `data/bin` folder. It checks your environment against symfony requirements. You can launch it from anywhere:
+>
+>     [php]
+>     $ php /path/to/symfony/data/bin/check_configuration.php
+>
+>Even if you can use this utility from the command line, it's strongly recommended to launch it from the web by copying it under your web root directory as PHP can use different `php.ini` configuration files for the ommand line interface and the web.
 
 -
 

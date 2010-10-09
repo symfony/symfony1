@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 11020 2008-08-21 15:32:42Z fabien $
+ * @version    SVN: $Id: sfBrowser.class.php 12215 2008-10-16 12:11:16Z fabien $
  */
 class sfBrowser
 {
@@ -31,7 +31,8 @@ class sfBrowser
     $vars               = array(),
     $defaultServerArray = array(),
     $headers            = array(),
-    $currentException   = null;
+    $currentException   = null,
+    $rawConfiguration   = null;
 
   /**
    * Class constructor.
@@ -414,11 +415,16 @@ class sfBrowser
         $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
         $this->context = sfContext::createInstance($configuration);
         unset($currentConfiguration);
+
+        sfConfig::clear();
+        sfConfig::add($this->rawConfiguration);
       }
       else
       {
         $this->context = sfContext::getInstance();
         $this->context->initialize($this->context->getConfiguration());
+
+        $this->rawConfiguration = sfConfig::getAll();
       }
 
       $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));

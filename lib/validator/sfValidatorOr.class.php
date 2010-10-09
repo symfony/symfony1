@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorOr.class.php 9411 2008-06-02 17:02:26Z nicolas $
+ * @version    SVN: $Id: sfValidatorOr.class.php 13126 2008-11-18 15:35:02Z nicolas $
  */
 class sfValidatorOr extends sfValidatorBase
 {
@@ -54,11 +54,6 @@ class sfValidatorOr extends sfValidatorBase
       throw new InvalidArgumentException('sfValidatorOr constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }
     
-    if (!isset($options['required']))
-    {
-      $options['required'] = false;
-    }
-
     parent::__construct($options, $messages);
   }
 

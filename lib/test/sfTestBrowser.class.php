@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestBrowser.class.php 9253 2008-05-25 18:48:32Z Carl.Vondrick $
+ * @version    SVN: $Id: sfTestBrowser.class.php 12997 2008-11-14 06:48:24Z fabien $
  */
 class sfTestBrowser extends sfBrowser
 {
@@ -510,25 +510,31 @@ function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
 {
   if (($errno & error_reporting()) == 0)
   {
-    return;
+    return false;
   }
 
   $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
   switch ($errno)
   {
     case E_WARNING:
-      throw new Exception(sprintf($msg, 'warning'));
+      $msg = printf($msg, 'warning');
+      throw new Exception($msg);
       break;
     case E_NOTICE:
-      throw new Exception(sprintf($msg, 'notice'));
+      $msg = printf($msg, 'notice');
+      throw new Exception();
       break;
     case E_STRICT:
-      throw new Exception(sprintf($msg, 'strict'));
+      $msg = printf($msg, 'strict');
+      throw new Exception($msg);
       break;
     case E_RECOVERABLE_ERROR:
-      throw new Exception(sprintf($msg, 'catchable'));
+      $msg = printf($msg, 'catchable');
+      throw new Exception($msg);
       break;
   }
+
+  return false;
 }
 
 set_error_handler('sfTestBrowserErrorHandler');

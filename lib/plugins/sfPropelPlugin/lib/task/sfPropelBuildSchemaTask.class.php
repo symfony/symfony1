@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBuildSchemaTask.class.php 7760 2008-03-07 11:29:51Z fabien $
+ * @version    SVN: $Id: sfPropelBuildSchemaTask.class.php 12163 2008-10-13 11:07:52Z fabien $
  */
 class sfPropelBuildSchemaTask extends sfPropelBaseTask
 {
@@ -32,7 +32,7 @@ class sfPropelBuildSchemaTask extends sfPropelBaseTask
     $this->aliases = array('propel-build-schema');
     $this->namespace = 'propel';
     $this->name = 'build-schema';
-    $this->briefDescription = 'Creates a schema.xml from an existing database';
+    $this->briefDescription = 'Creates a schema from an existing database';
 
     $this->detailedDescription = <<<EOF
 The [propel:build-schema|INFO] task introspects a database to create a schema:

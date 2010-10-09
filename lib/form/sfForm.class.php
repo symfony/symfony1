@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfForm.class.php 11621 2008-09-17 18:46:34Z nicolas $
+ * @version    SVN: $Id: sfForm.class.php 13082 2008-11-17 21:19:56Z Jonathan.Wage $
  */
 class sfForm implements ArrayAccess
 {
@@ -264,6 +264,7 @@ class sfForm implements ArrayAccess
    */
   public function embedForm($name, sfForm $form, $decorator = null)
   {
+    $name = (string) $name;
     if (true === $this->isBound() || true === $form->isBound())
     {
       throw new LogicException('A bound form cannot be embedded');

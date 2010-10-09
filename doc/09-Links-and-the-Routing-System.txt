@@ -112,7 +112,7 @@ Listing 9-3 - The Routing System Interprets Incoming Request URLs
       'title'   => 'activity-breakdown'
 
 >**TIP**
->The `.html` extension of the external URL is a simple decoration and is ignored by the routing system. Its sole interest is to makes dynamic pages look like static ones. You will see how to activate this extension in the "Routing Configuration" section later in this chapter.
+>The `.html` extension of the external URL is a simple decoration and is ignored by the routing system. Its sole interest is to make dynamic pages look like static ones. You will see how to activate this extension in the "Routing Configuration" section later in this chapter.
 
 The request is then passed to the `permalink` action of the `article` module, which has all the required information in the request parameters to determine which article is to be shown.
 
@@ -556,7 +556,7 @@ Listing 9-20 - Setting a Default Value for a Request Parameter
 If you look carefully, you can see that `article` and `read` are also default values for `module` and `action` variables not found in the pattern.
 
 >**TIP**
->You can define a default parameter for all the routing rules by calling the `sfRouting::addDefaultParameter()` method. For instance, if you want all the rules to have a `theme` parameter set to `default` by default, add  `$this->context->getRouting()->setDefaultParameter('theme', 'default');` to one of your global filters.
+>You can define a default parameter for all the routing rules by calling the `sfRouting::setDefaultParameter()` method. For instance, if you want all the rules to have a `theme` parameter set to `default` by default, add  `$this->context->getRouting()->setDefaultParameter('theme', 'default');` to one of your global filters.
 
 ### Speeding Up Routing by Using the Rule Name
 

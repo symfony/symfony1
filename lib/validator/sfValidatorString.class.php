@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorString.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorString.class.php 12641 2008-11-04 18:22:00Z fabien $
  */
 class sfValidatorString extends sfValidatorBase
 {
@@ -54,7 +54,7 @@ class sfValidatorString extends sfValidatorBase
   {
     $clean = (string) $value;
 
-    $length = function_exists('mb_strlen') ? mb_strlen($clean, $this->getCharset()) : strlen($value);
+    $length = function_exists('mb_strlen') ? mb_strlen($clean, $this->getCharset()) : strlen($clean);
 
     if ($this->hasOption('max_length') && $length > $this->getOption('max_length'))
     {
