@@ -354,8 +354,8 @@ In addition, since the public area is `www/` instead of the usual `web/`, you mu
 
     [php]
     sfConfig::add(array(
-      'sf_web_dir'      => SF_ROOT_DIR.DIRECTORY_SEPARATOR.'www',
-      'sf_upload_dir'   => SF_ROOT_DIR.DIRECTORY_SEPARATOR.'www'.DIRECTORY_SEPARATOR.sfConfig::get('sf_upload_dir_name'),
+      'sf_web_dir'      => SF_ROOT_DIR.'/../www',
+      'sf_upload_dir'   => SF_ROOT_DIR.'/../www/'.sfConfig::get('sf_upload_dir_name'),
     ));
 
 ### Linking to Symfony Libraries

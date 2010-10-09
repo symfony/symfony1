@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfMessageSource.class.php 6806 2007-12-29 07:53:10Z fabien $
+ * @version    $Id: sfMessageSource.class.php 8785 2008-05-05 08:45:37Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -150,7 +150,7 @@ abstract class sfMessageSource implements sfIMessageSource
    *  # [7] Continue with the foreach loop, e.g. goto [2].
    *
    * @param  string  a catalogue to load
-   * @return boolean true if loaded, false otherwise.
+   * @return boolean always true
    * @see    read()
    */
   function load($catalogue = 'messages')

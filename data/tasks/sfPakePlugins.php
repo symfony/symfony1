@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -217,7 +217,7 @@ function _pear_init()
       ),
     ),
     '_lastmodified' => array(
-      'ETag' => "113845-297-dc93f000", 
+      'ETag' => "113845-297-dc93f000",
       'Last-Modified' => date('r'),
     ),
   );
@@ -276,7 +276,7 @@ function _uninstall_web_content($plugin_name)
     }
     else
     {
-      pake_remove(pakeFinder::type('any'), $target_dir);
+      pake_remove(pakeFinder::type('any')->ignore_version_control(), $target_dir);
       pake_remove($target_dir, '');
     }
   }
@@ -294,7 +294,7 @@ function _absolute_path_difference($source, $target)
   $target = explode(DIRECTORY_SEPARATOR, rtrim($target, DIRECTORY_SEPARATOR));
 
   if ($source == $target)
-  { 
+  {
     return '.';
   }
 

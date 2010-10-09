@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMailView.class.php 3232 2007-01-11 20:51:54Z fabien $
+ * @version    SVN: $Id: sfMailView.class.php 8288 2008-04-04 13:55:10Z noel $
  */
 class sfMailView extends sfPHPView
 {
@@ -81,7 +81,7 @@ class sfMailView extends sfPHPView
     // render main and alternate templates
     $all_template_dir  = dirname($template);
     $all_template_regex = preg_replace('/\\.php$/', '\..+\.php', basename($template));
-    $all_templates = sfFinder::type('file')->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
+    $all_templates = sfFinder::type('file')->ignore_version_control()->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
     $all_retvals = array();
     foreach ($all_templates as $templateFile)
     {

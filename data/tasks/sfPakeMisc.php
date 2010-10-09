@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -296,12 +296,12 @@ function run_enable($task, $args)
   $env = $args[1];
 
   $lockFile = $app.'_'.$env.'.clilock';
-  $locks = pakeFinder::type('file')->prune('.svn')->discard('.svn')->maxdepth(0)->name($lockFile)->relative()->in('./');
+  $locks = pakeFinder::type('file')->ignore_version_control()->prune('.svn')->discard('.svn')->maxdepth(0)->name($lockFile)->relative()->in('./');
 
   if (file_exists(sfConfig::get('sf_root_dir').'/'.$lockFile))
   {
     pake_remove($lockFile, '');
-    run_clear_cache($task, array()); 
+    run_clear_cache($task, array());
     pake_echo_action('enable', "$app [$env] has been ENABLED");
 
     return;

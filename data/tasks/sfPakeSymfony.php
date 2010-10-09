@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -71,7 +71,7 @@ function run_unfreeze($task, $args)
   $dirs = explode('#', file_get_contents('config/config.php.bak'));
   _change_symfony_dirs('\''.$dirs[0].'\'', '\''.$dirs[1].'\'');
 
-  $finder = pakeFinder::type('any');
+  $finder = pakeFinder::type('any')->ignore_version_control();
   pake_remove($finder, sfConfig::get('sf_lib_dir').'/symfony');
   pake_remove(sfConfig::get('sf_lib_dir').'/symfony', '');
   pake_remove($finder, sfConfig::get('sf_data_dir').'/symfony');

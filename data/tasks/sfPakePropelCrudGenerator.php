@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -61,7 +61,7 @@ function run_propel_init_crud($task, $args)
   pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
 
   // customize php and yml files
-  $finder = pakeFinder::type('file')->name('*.php', '*.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 }
 
@@ -95,7 +95,7 @@ function run_propel_generate_crud($task, $args)
   $moduleDir = $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
 
   // copy our generated module
-  $finder = pakeFinder::type('any');
+  $finder = pakeFinder::type('any')->ignore_version_control();
   pake_mirror($finder, $tmp_dir.'/auto'.ucfirst($module), $moduleDir);
 
   // change module name
@@ -119,16 +119,16 @@ function run_propel_generate_crud($task, $args)
   );
 
   // customize php and yml files
-  $finder = pakeFinder::type('file')->name('*.php', '*.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 
   // create basic test
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
 
-  // customize test file
+  // customize test files
   pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
 
   // delete temp files
-  $finder = pakeFinder::type('any');
+  $finder = pakeFinder::type('any')->ignore_version_control();
   pake_remove($finder, $tmp_dir);
 }

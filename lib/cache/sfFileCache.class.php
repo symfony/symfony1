@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -19,7 +19,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @version    SVN: $Id: sfFileCache.class.php 5308 2007-09-29 06:51:43Z fabien $
+ * @version    SVN: $Id: sfFileCache.class.php 8280 2008-04-04 12:06:44Z noel $
  */
 class sfFileCache extends sfCache
 {
@@ -71,7 +71,7 @@ class sfFileCache extends sfCache
   * x (integer) > 1 => automatic cleaning randomly 1 times on x cache write
   */
   protected $automaticCleaningFactor = 500;
-  
+
  /**
   * Nested directory level
   */
@@ -90,7 +90,10 @@ class sfFileCache extends sfCache
   */
   public function __construct($cacheDir = null)
   {
-    $this->setCacheDir($cacheDir);
+    if (!is_null($cacheDir))
+    {
+      $this->setCacheDir($cacheDir);
+    }
   }
 
   /**
@@ -274,7 +277,7 @@ class sfFileCache extends sfCache
 
     return false;
   }
-  
+
  /**
   * Saves some data in a cache file.
   *
@@ -483,7 +486,7 @@ class sfFileCache extends sfCache
       {
         $hashControl = @fread($fp, 32);
         $length = $length - 32;
-      } 
+      }
       $data = ($length) ? @fread($fp, $length) : '';
       set_magic_quotes_runtime($mqr);
       if ($this->fileLocking)
@@ -569,7 +572,7 @@ class sfFileCache extends sfCache
 
     throw new sfCacheException('Unable to write cache file "'.$path.$file.'"');
   }
-  
+
  /**
   * Writes the given data in the cache file and controls it just after to avoid corrupted cache entries.
   *
@@ -586,7 +589,7 @@ class sfFileCache extends sfCache
 
     return ($dataRead == $data);
   }
-  
+
  /**
   * Makes a control key with the string containing datas.
   *

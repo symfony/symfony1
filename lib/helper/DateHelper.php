@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: DateHelper.php 3815 2007-04-18 16:44:39Z fabien $
+ * @version    SVN: $Id: DateHelper.php 8763 2008-05-04 07:24:40Z fabien $
  */
 
 function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null, $charset = null)
@@ -148,7 +148,7 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
   else
   {
     $string = 'over %years% years';
-    $parameters['%years%'] = round($distance_in_minutes / 525960);
+    $parameters['%years%'] = floor($distance_in_minutes / 525960);
   }
 
   if (sfConfig::get('sf_i18n'))

@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFillInForm.class.php 4883 2007-08-20 14:15:13Z fabien $
+ * @version    SVN: $Id: sfFillInForm.class.php 8716 2008-05-02 08:31:07Z FabianLange $
  */
 class sfFillInForm
 {
@@ -43,16 +43,36 @@ class sfFillInForm
   public function fillInHtml($html, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
-    @$dom->loadHTML($html);
 
+    $noHead = strpos($html,'<head>') === false;
+    if ($noHead){
+      //loadHTML needs the conent-type meta for the charset
+      $html = '<meta http-equiv="Content-Type" content="text/html; charset='.sfConfig::get('sf_charset').'"/>'.$html;
+    }
+
+    @$dom->loadHTML($html);
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
+    if($noHead){
+      //remove the head element that was created by adding the meta tag.
+      $headElement = $dom->getElementsByTagName('head')->item(0);
+      if ($headElement)
+      {
+        $dom->getElementsByTagName('html')->item(0)->removeChild($headElement);
+      }
+    }
     return $dom->saveHTML();
   }
 
   public function fillInXml($xml, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
+    if (strpos($xml,'<!DOCTYPE') === false)
+    {
+      $xml = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '.
+             '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'.
+             $xml;
+    }
     @$dom->loadXML($xml);
 
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
@@ -72,13 +92,6 @@ class sfFillInForm
     {
       $ns = '';
     }
-
-    $query = 'descendant::'.$ns.'input[@name and (not(@type)';
-    foreach ($this->types as $type)
-    {
-      $query .= ' or @type="'.$type.'"';
-    }
-    $query .= ')] | descendant::'.$ns.'textarea[@name] | descendant::'.$ns.'select[@name]';
 
     // find our form
     if ($formName)
@@ -107,6 +120,13 @@ class sfFillInForm
       }
     }
 
+    $query = 'descendant::'.$ns.'input[@name and (not(@type)';
+    foreach ($this->types as $type)
+    {
+      $query .= ' or @type="'.$type.'"';
+    }
+    $query .= ')] | descendant::'.$ns.'textarea[@name] | descendant::'.$ns.'select[@name]';
+
     foreach ($xpath->query($query, $form) as $element)
     {
       $name  = (string) $element->getAttribute('name');
@@ -125,7 +145,14 @@ class sfFillInForm
         {
           // checkbox and radio
           $element->removeAttribute('checked');
-          if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
+          if (is_array($this->getValue($values, $name)) && ($this->hasValue($values, $name) || !$element->hasAttribute('value')))
+          {
+            if (in_array($value, $this->getValue($values, $name)))
+            {
+              $element->setAttribute('checked', 'checked');
+            }
+          }
+          else if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
           {
             $element->setAttribute('checked', 'checked');
           }
@@ -134,22 +161,19 @@ class sfFillInForm
         {
           // text input
           $element->removeAttribute('value');
-          if ($this->hasValue($values, $name))
-          {
-            $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name), $name));
-          }
+          $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name, true), $name));
         }
       }
       else if ($element->nodeName == 'textarea')
       {
         $el = $element->cloneNode(false);
-        $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name), $name)));
+        $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name, true), $name)));
         $element->parentNode->replaceChild($el, $element);
       }
       else if ($element->nodeName == 'select')
       {
-        // select
-        $value    = $this->getValue($values, $name);
+        //if the name contains [] it is part of an array that needs to be shifted
+        $value    = $this->getValue($values, $name, strpos($name,'[]') !== false);
         $multiple = $element->hasAttribute('multiple');
         foreach ($xpath->query('descendant::'.$ns.'option', $element) as $option)
         {
@@ -182,11 +206,19 @@ class sfFillInForm
     return null !== sfToolkit::getArrayValueForPath($values, $name);
   }
 
-  protected function getValue($values, $name)
+  //use reference to values so that arrays can be shifted.
+  protected function getValue(&$values, $name, $shiftArray = false)
   {
     if (array_key_exists($name, $values))
     {
-      return $values[$name];
+      $return = $values[$name];
+      if ($shiftArray && is_array($return))
+      {
+        //we need to remove the first element from the array. Therefore we need a reference
+        $arrayRef = &$values[$name];
+        $return = array_shift($arrayRef);
+      }
+      return $return;
     }
 
     return sfToolkit::getArrayValueForPath($values, $name);

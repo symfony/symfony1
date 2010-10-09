@@ -711,7 +711,7 @@ Listing 8-25 - Attributes for i18n Tables
 >      // In config/stats-schema.yml
 >      propel_bis:
 >        stats_hit:
->          _attributes: { phpName: Hit, package.lib.model.stat }
+>          _attributes: { phpName: Hit, package: lib.model.stat }
 >        id:
 >        resource: varchar(100)
 >        created_at:

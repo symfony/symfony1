@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: JavascriptHelper.php 5847 2007-11-04 15:40:57Z fabien $
+ * @version    SVN: $Id: JavascriptHelper.php 8718 2008-05-02 09:59:29Z FabianLange $
  */
 
 /*
@@ -929,6 +929,10 @@
     if (isset($options['after_update_element']))
     {
       $js_options['afterUpdateElement'] = $options['after_update_element'];
+    }
+    if (isset($options['param_name'])) 
+    {
+      $js_options['paramName'] = "'".$options['param_name']."'";
     }
 
     $javascript .= ', '._options_for_javascript($js_options).');';

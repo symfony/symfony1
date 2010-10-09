@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 6019 2007-11-14 11:28:24Z fabien $
+ * @version    SVN: $Id: sfPropelData.class.php 8288 2008-04-04 13:55:10Z noel $
  */
 class sfPropelData extends sfData
 {
@@ -266,7 +266,7 @@ class sfPropelData extends sfData
     if ('all' === $tables || is_null($tables))
     {
       // load all map builder classes
-      $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+      $files = sfFinder::type('file')->ignore_version_control()->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
       foreach ($files as $file)
       {
         $mapBuilderClass = basename($file, '.php');
@@ -455,7 +455,7 @@ class sfPropelData extends sfData
 
     return $classes;
   }
-  
+
   protected function fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in = null)
   {
     $rs = $this->con->executeQuery(sprintf('SELECT * FROM %s WHERE %s %s',

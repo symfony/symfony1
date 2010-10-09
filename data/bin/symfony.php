@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -162,7 +162,7 @@ foreach ($dirs as $globDir => $name)
 {
   if ($dirs = glob($globDir))
   {
-    $tasks = pakeFinder::type('file')->name($name)->in($dirs);
+    $tasks = pakeFinder::type('file')->ignore_version_control()->name($name)->in($dirs);
     foreach ($tasks as $task)
     {
       include_once($task);

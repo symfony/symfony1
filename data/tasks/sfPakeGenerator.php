@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -48,10 +48,10 @@ function run_init_project($task, $args)
   $finder = pakeFinder::type('any')->ignore_version_control()->discard('.sf');
   pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/project', $sf_root_dir);
 
-  $finder = pakeFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('properties.ini', 'apache.conf', 'propel.ini');
   pake_replace_tokens($finder, $sf_root_dir, '##', '##', array('PROJECT_NAME' => $project_name));
 
-  $finder = pakeFinder::type('file')->name('propel.ini');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('propel.ini');
   pake_replace_tokens($finder, $sf_root_dir, '##', '##', array('PROJECT_DIR' => $sf_root_dir));
 
   // update config/config.php
@@ -93,13 +93,13 @@ function run_init_app($task, $args)
   }
 
   // set no_script_name value in settings.yml for production environment
-  $finder = pakeFinder::type('file')->name('settings.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('settings.yml');
   pake_replace_tokens($finder, $app_dir.'/'.sfConfig::get('sf_app_config_dir_name'), '##', '##', array('NO_SCRIPT_NAME' => ($first_app ? 'on' : 'off')));
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$index_name.'.php');
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index_dev.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
 
-  $finder = pakeFinder::type('file')->name($index_name.'.php', $app.'_dev.php');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name($index_name.'.php', $app.'_dev.php');
   pake_replace_tokens($finder, sfConfig::get('sf_web_dir'), '##', '##', array('APP_NAME' => $app));
 
   run_fix_perms($task, $args);
@@ -161,7 +161,7 @@ function run_init_module($task, $args)
   pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
 
   // customize php and yml files
-  $finder = pakeFinder::type('file')->name('*.php', '*.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*.php', '*.yml');
   pake_replace_tokens($finder, $module_dir, '##', '##', $constants);
 }
 

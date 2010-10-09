@@ -16,7 +16,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidatorConfigHandler.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfValidatorConfigHandler.class.php 8754 2008-05-03 18:32:36Z FabianLange $
  */
 class sfValidatorConfigHandler extends sfYamlConfigHandler
 {
@@ -45,7 +45,11 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     {
       if (!isset($config[$category]))
       {
-        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category', $configFiles[0], $category));
+        if (!isset($config['fillin']))
+        {
+          throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category', $configFiles[0], $category));
+        }
+        $config[$category] = array();
       }
     }
 
@@ -97,9 +101,9 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     $data[] = "if (\$_SERVER['REQUEST_METHOD'] == 'GET')";
     $data[] = "{";
 
-    $ret = $this->generateRegistration('GET', $data, $methods, $names, $validators);
+    $this->generateRegistration('GET', $data, $methods, $names, $validators);
 
-    if ($ret)
+    if (count($fillin))
     {
       $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
     }
@@ -110,9 +114,9 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     $data[] = "else if (\$_SERVER['REQUEST_METHOD'] == 'POST')";
     $data[] = "{";
 
-    $ret = $this->generateRegistration('POST', $data, $methods, $names, $validators);
+    $this->generateRegistration('POST', $data, $methods, $names, $validators);
 
-    if ($ret)
+    if (count($fillin))
     {
       $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
     }

@@ -42,7 +42,7 @@ Listing 10-2 - Standard Form Helpers Syntax
     // All form helpers accept an additional options parameter
     // It allows you to add custom attributes to the generated tag
     <?php echo input_tag('name', 'default value', 'maxlength=20') ?>
-     => <input type="text" name="name" id="name" value="default value"maxlength="20" />
+     => <input type="text" name="name" id="name" value="default value" maxlength="20" />
 
     // Long text field (text area)
     <?php echo textarea_tag('name', 'default content', 'size=10x20') ?>
@@ -53,13 +53,13 @@ Listing 10-2 - Standard Form Helpers Syntax
     // Check box
     <?php echo checkbox_tag('single', 1, true) ?>
     <?php echo checkbox_tag('driverslicense', 'B', false) ?>
-     => <input type="checkbox" name="single" id="single" value="1"checked="checked" />
-        <input type="checkbox" name="driverslicense" id="driverslicense"value="B" />
+     => <input type="checkbox" name="single" id="single" value="1" checked="checked" />
+        <input type="checkbox" name="driverslicense" id="driverslicense" value="B" />
 
     // Radio button
     <?php echo radiobutton_tag('status[]', 'value1', true) ?>
     <?php echo radiobutton_tag('status[]', 'value2', false) ?>
-     => <input type="radio" name="status[]" id="status_value1" value="value1"checked="checked" />
+     => <input type="radio" name="status[]" id="status_value1" value="value1" checked="checked" />
         <input type="radio" name="status[]" id="status_value2" value="value2" />
 
     // Dropdown list (select)
@@ -729,11 +729,14 @@ Listing 10-26 - Activating `fillin` to Repopulate the Form When Validation Fails
         skip_fields:   [email]  # Do not repopulate these fields
         exclude_types: [hidden, password] # Do not repopulate these field types
         check_types:   [text, checkbox, radio, password, hidden] # Do repopulate these
+        content_type:  html  # html is the tolerant default. Other option is xml
 
 By default, the automatic repopulation works for text inputs, check boxes, radio buttons, text areas, and select components (simple and multiple), but it does not repopulate password or hidden tags. The `fillin` feature doesn't work for file tags.
 
 >**NOTE**
->The `fillin` feature works by parsing the response content in XML just before sending it to the user. If the response is not a valid XHTML document, `fillin` might not work.
+>The `fillin` feature works by parsing the response content in XML just before sending it to the user. By default `fillin` will output HTML.
+>
+>If you want to have `fillin` to output XHTML you have to set `param: content_type: xml`. If the response is not a strictly valid XHTML document `fillin` will not work.
 
 You might want to transform the values entered by the user before writing them back in a form input. Escaping, URL rewriting, transformation of special characters into entities, and all the other transformations that can be called through a function can be applied to the fields of your form if you define the transformation under the `converters:` key, as shown in Listing 10-27.
 

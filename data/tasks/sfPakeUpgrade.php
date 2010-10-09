@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -59,7 +59,7 @@ function run_upgrade_1_0($task, $args)
   _upgrade_1_0_activate();
 
   // find all applications for this project
-  $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
+  $apps = pakeFinder::type('directory')->ignore_version_control()->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
   // install symfony CLI
   if (file_exists(sfConfig::get('sf_root_dir').'/SYMFONY'))
@@ -97,7 +97,7 @@ function run_upgrade_1_0($task, $args)
     if ($dir)
     {
       // template dirs
-      $template_dirs   = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($dir);
+      $template_dirs   = pakeFinder::type('directory')->ignore_version_control()->name('templates')->mindepth(1)->maxdepth(1)->in($dir);
       $template_dirs[] = $app_dir.'/'.sfConfig::get('sf_app_template_dir_name');
 
       _upgrade_1_0_deprecated_for_templates($template_dirs);
@@ -109,7 +109,7 @@ function run_upgrade_1_0($task, $args)
       _upgrade_1_0_cache_yml($app_dir);
 
       // actions dirs
-      $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
+      $action_dirs = pakeFinder::type('directory')->ignore_version_control()->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
 
       _upgrade_1_0_deprecated_for_actions($action_dirs);
 
@@ -136,7 +136,7 @@ function run_upgrade_1_0($task, $args)
 function _upgrade_1_0_i18n()
 {
   $dirs = array(sfConfig::get('sf_lib_dir_name'), sfConfig::get('sf_apps_dir_name'));
-  $finder = pakeFinder::type('file')->name('*.php');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*.php');
 
   $seen = false;
   foreach ($finder->in($dirs) as $php_file)
@@ -164,7 +164,7 @@ function _upgrade_1_0_php_files($app_dir)
 {
   pake_echo_action('upgrade 1.0', 'upgrading sf/ path configuration');
 
-  $php_files = pakeFinder::type('file')->name('*.php')->in($app_dir);
+  $php_files = pakeFinder::type('file')->ignore_version_control()->name('*.php')->in($app_dir);
   foreach ($php_files as $php_file)
   {
     $content = file_get_contents($php_file);
@@ -226,7 +226,7 @@ function _upgrade_1_0_activate()
   foreach ($config_files as $config_file => $changed)
   {
     list($dir, $config_file) = array(dirname($config_file), basename($config_file));
-    $files = pakeFinder::type('file')->name($config_file)->in(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.$dir);
+    $files = pakeFinder::type('file')->ignore_version_control()->name($config_file)->in(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.$dir);
     foreach ($files as $file)
     {
       $content = file_get_contents($file);
@@ -260,7 +260,7 @@ function _upgrade_1_0_view_yml($app_dir)
 {
   pake_echo_action('upgrade 1.0', 'upgrading view configuration');
 
-  $yml_files = pakeFinder::type('file')->name('*.yml')->in($app_dir);
+  $yml_files = pakeFinder::type('file')->ignore_version_control()->name('*.yml')->in($app_dir);
   foreach ($yml_files as $yml_file)
   {
     $content = file_get_contents($yml_file);
@@ -301,7 +301,7 @@ function _upgrade_1_0_cache_yml($app_dir)
 {
   pake_echo_action('upgrade 1.0', 'upgrading cache configuration');
 
-  $yml_files = pakeFinder::type('files')->name('cache.yml')->in($app_dir);
+  $yml_files = pakeFinder::type('files')->ignore_version_control()->name('cache.yml')->in($app_dir);
 
   $seen = false;
   foreach ($yml_files as $yml_file)
@@ -338,7 +338,7 @@ function _upgrade_1_0_deprecated_for_generator($app_dir)
 {
   pake_echo_action('upgrade 1.0', 'upgrading deprecated helpers in generator.yml');
 
-  $yml_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
+  $yml_files = pakeFinder::type('files')->ignore_version_control()->name('generator.yml')->in($app_dir);
 
   $seen = array();
   $deprecated_str = array(
@@ -376,7 +376,7 @@ function _upgrade_1_0_deprecated_for_actions($action_dirs)
 {
   pake_echo_action('upgrade 1.0', 'upgrading deprecated methods in actions');
 
-  $php_files = pakeFinder::type('file')->name('*.php')->in($action_dirs);
+  $php_files = pakeFinder::type('file')->ignore_version_control()->name('*.php')->in($action_dirs);
   foreach ($php_files as $php_file)
   {
     $content = file_get_contents($php_file);
@@ -423,7 +423,7 @@ function _upgrade_1_0_date_form_helpers($template_dirs)
   );
   $regex = '/('.implode('|', $helpers).')/';
 
-  $php_files = pakeFinder::type('file')->name('*.php')->in($template_dirs);
+  $php_files = pakeFinder::type('file')->ignore_version_control()->name('*.php')->in($template_dirs);
   $seen = false;
   foreach ($php_files as $php_file)
   {
@@ -456,7 +456,7 @@ function _upgrade_1_0_deprecated_for_templates($template_dirs)
 {
   pake_echo_action('upgrade 1.0', 'upgrading deprecated helpers');
 
-  $php_files = pakeFinder::type('file')->name('*.php')->in($template_dirs);
+  $php_files = pakeFinder::type('file')->ignore_version_control()->name('*.php')->in($template_dirs);
   $seen = array();
   $deprecated_str = array(
     'use_helpers'                   => 'use_helper',
@@ -517,7 +517,7 @@ function _upgrade_1_0_filters_yml($app_dir)
 
   // upgrade module filters.yml
   $seen = false;
-  $yml_files = pakeFinder::type('file')->name('filters.yml')->in($app_dir.DIRECTORY_SEPARATOR.'modules');
+  $yml_files = pakeFinder::type('file')->ignore_version_control()->name('filters.yml')->in($app_dir.DIRECTORY_SEPARATOR.'modules');
   foreach ($yml_files as $yml_file)
   {
     $module_content = file_get_contents($yml_file);
@@ -617,7 +617,7 @@ function _upgrade_1_0_propel_model()
   pake_echo_action('upgrade 1.0', 'upgrading require in models');
 
   $seen = false;
-  $php_files = pakeFinder::type('file')->name('*.php')->in(sfConfig::get('sf_lib_dir').'/model');
+  $php_files = pakeFinder::type('file')->ignore_version_control()->name('*.php')->in(sfConfig::get('sf_lib_dir').'/model');
   foreach ($php_files as $php_file)
   {
     $content = file_get_contents($php_file);
@@ -650,7 +650,7 @@ function _upgrade_1_0_schemas()
   pake_echo_action('upgrade 1.0', 'upgrading schemas');
 
   $seen = false;
-  $xml_files = pakeFinder::type('file')->name('*schema.xml')->in(sfConfig::get('sf_config_dir'));
+  $xml_files = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->in(sfConfig::get('sf_config_dir'));
   foreach ($xml_files as $xml_file)
   {
     $content = file_get_contents($xml_file);

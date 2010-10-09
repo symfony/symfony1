@@ -19,7 +19,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 8019 2008-03-21 08:47:55Z noel $
+ * @version    SVN: $Id: sfWebRequest.class.php 8480 2008-04-16 10:46:37Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -254,7 +254,7 @@ class sfWebRequest extends sfRequest
    *
    * @return array An array of re-ordered uploaded file information
    */
-  protected function convertFileInformation(array $taintedFiles)
+  protected function convertFileInformation($taintedFiles)
   {
     return $this->pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', $this->arrayToPaths($taintedFiles)));
   }

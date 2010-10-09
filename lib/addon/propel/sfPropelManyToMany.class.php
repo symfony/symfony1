@@ -14,7 +14,7 @@
  * @subpackage util
  * @author     Nick Lane <nick.lane@internode.on.net>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelManyToMany.class.php 1931 2006-09-02 17:56:18Z fabien $
+ * @version    SVN: $Id: sfPropelManyToMany.class.php 8288 2008-04-04 13:55:10Z noel $
  */
 class sfPropelManyToMany
 {
@@ -51,7 +51,7 @@ class sfPropelManyToMany
     $column = self::getRelatedColumn($class, $middleClass);
 
     // we must load all map builder classes
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+    $classes = sfFinder::type('file')->ignore_version_control()->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');

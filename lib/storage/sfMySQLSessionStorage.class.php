@@ -31,7 +31,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfMySQLSessionStorage.class.php 7791 2008-03-09 21:57:09Z fabien $
+ * @version    SVN: $Id: sfMySQLSessionStorage.class.php 8664 2008-04-28 20:42:14Z FabianLange $
  */
 class sfMySQLSessionStorage extends sfSessionStorage
 {
@@ -123,7 +123,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
   /**
    * Cleans up old sessions.
    *
-   * @param int The lifetime of a session
+   * @param int The lifetime of a session in seconds
    *
    * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
    *
@@ -131,16 +131,13 @@ class sfMySQLSessionStorage extends sfSessionStorage
    */
   public function sessionGC($lifetime)
   {
-    // determine deletable session time
-    $time = time() - $lifetime;
-
     // get table/column
     $db_table    = $this->getParameterHolder()->get('db_table');
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' '.
-           'WHERE '.$db_time_col.' < '.$time;
+           'WHERE '.$db_time_col.' + INTERVAL '.$lifetime.' SECOND < NOW()';
 
     if (@mysql_query($sql, $this->resource))
     {
@@ -216,7 +213,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
       // session does not exist, create it
       $sql = 'INSERT INTO '.$db_table.' ('.$db_id_col.', ' .
              $db_data_col.', '.$db_time_col.') VALUES (' .
-             '\''.$id.'\', \'\', '.time().')';
+             '\''.$id.'\', \'\', NOW())';
 
       if (@mysql_query($sql, $this->resource))
       {
@@ -256,7 +253,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     // delete the record associated with this id
     $sql = 'UPDATE '.$db_table.' ' .
            'SET '.$db_data_col.' = \''.$data.'\', ' .
-           $db_time_col.' = '.time().' ' .
+           $db_time_col.' = NOW() ' .
            'WHERE '.$db_id_col.' = \''.$id.'\'';
 
     if (@mysql_query($sql, $this->resource))

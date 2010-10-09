@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCrudGenerator.class.php 5099 2007-09-15 06:44:50Z fabien $
+ * @version    SVN: $Id: sfCrudGenerator.class.php 8288 2008-04-04 13:55:10Z noel $
  */
 abstract class sfCrudGenerator extends sfGenerator
 {
@@ -86,8 +86,8 @@ abstract class sfCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
-    $configFiles = sfFinder::type('file')->name('*.yml')->relative()->in($themeDir.'/config');
+    $templateFiles = sfFinder::type('file')->ignore_version_control()->name('*.php')->relative()->in($themeDir.'/templates');
+    $configFiles = sfFinder::type('file')->ignore_version_control()->name('*.yml')->relative()->in($themeDir.'/config');
 
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles, $configFiles);
 
@@ -313,7 +313,7 @@ abstract class sfCrudGenerator extends sfGenerator
   public function getColumnListTag($column, $params = array())
   {
     $type = $column->getCreoleType();
-    
+
     $columnGetter = $this->getColumnGetter($column, true);
 
     if ($type == CreoleTypes::TIMESTAMP)

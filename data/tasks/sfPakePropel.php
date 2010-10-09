@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -53,7 +53,7 @@ function run_propel_convert_xml_schema($task, $args)
 
 function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 {
-  $finder = pakeFinder::type('file')->name('*schema.yml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.yml');
   $dirs = array('config');
   if ($pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/config'))
   {
@@ -84,14 +84,14 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
     $xml_file_name = str_replace('.yml', '.xml', basename($schema));
 
     $file = str_replace(basename($schema), $localprefix.$xml_file_name,  $schema);
-    pake_echo_action('schema', 'putting '.$file);    
+    pake_echo_action('schema', 'putting '.$file);
     file_put_contents($file, $db_schema->asXML());
   }
 }
 
 function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 {
-  $finder = pakeFinder::type('file')->name('*schema.xml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml');
 
   $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
   if ($check_schema && !count($schemas))
@@ -114,16 +114,16 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 
     // save converted xml files in original directories
     $yml_file_name = str_replace('.xml', '.yml', basename($schema));
-    
+
     $file = str_replace(basename($schema), $prefix.$yml_file_name,  $schema);
-    pake_echo_action('schema', 'putting '.$file);    
+    pake_echo_action('schema', 'putting '.$file);
     file_put_contents($file, $db_schema->asYAML());
   }
 }
 
 function _propel_copy_xml_schema_from_plugins($prefix = '')
 {
-  $schemas = pakeFinder::type('file')->name('*schema.xml')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
+  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
 
   foreach ($schemas as $schema)
   {
@@ -167,7 +167,7 @@ function run_propel_build_model($task, $args)
   _propel_convert_yml_schema(false, 'generated-');
   _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'om');
-  $finder = pakeFinder::type('file')->name('generated-*schema.xml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('generated-*schema.xml');
   pake_remove($finder, array('config', 'plugins'));
 }
 
@@ -176,7 +176,7 @@ function run_propel_build_sql($task, $args)
   _propel_convert_yml_schema(false, 'generated-');
   _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'sql');
-  $finder = pakeFinder::type('file')->name('generated-*schema.xml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('generated-*schema.xml');
   pake_remove($finder, 'config');
 }
 
@@ -190,7 +190,7 @@ function run_propel_insert_sql($task, $args)
   _propel_convert_yml_schema(false, 'generated-');
   _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'insert-sql');
-  $finder = pakeFinder::type('file')->name('generated-*schema.xml');
+  $finder = pakeFinder::type('file')->ignore_version_control()->name('generated-*schema.xml');
   pake_remove($finder, 'config');
 }
 
@@ -209,7 +209,7 @@ function run_propel_build_schema($task, $args)
   if (!isset($args[0]) || $args[0] != 'xml')
   {
     _propel_convert_xml_schema(false, '');
-    $finder = pakeFinder::type('file')->name('schema.xml');
+    $finder = pakeFinder::type('file')->ignore_version_control()->name('schema.xml');
     pake_remove($finder, 'config');
   }
 }
@@ -323,7 +323,7 @@ function run_propel_load_data($task, $args)
     {
       $pluginDirs = array();
     }
-    $fixtures_dirs = pakeFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
+    $fixtures_dirs = pakeFinder::type('dir')->ignore_version_control()->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
   }
   else
   {
@@ -350,7 +350,7 @@ function run_propel_load_data($task, $args)
 
 function _call_phing($task, $task_name, $check_schema = true)
 {
-  $schemas = pakeFinder::type('file')->name('*schema.xml')->relative()->follow_link()->in('config');
+  $schemas = pakeFinder::type('file')->ignore_version_control()->name('*schema.xml')->relative()->follow_link()->in('config');
   if ($check_schema && !$schemas)
   {
     throw new Exception('You must create a schema.yml or schema.xml file.');
