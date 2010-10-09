@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfSimpleAutoload.class.php 10009 2008-06-30 05:31:40Z dwhittle $
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 10702 2008-08-06 11:11:16Z hartym $
  */
 class sfSimpleAutoload
 {
@@ -174,7 +174,7 @@ class sfSimpleAutoload
   }
 
   /**
-   * Adds a directory to the autoloading system.
+   * Adds a directory to the autoloading system if not yet present and give it the highest possible precedence.
    *
    * @param string The directory to look for classes
    * @param string The extension to look for
@@ -182,12 +182,16 @@ class sfSimpleAutoload
   public function addDirectory($dir, $ext = '.php')
   {
     $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
+
     if($dirs = glob($dir))
     {
       foreach ($dirs as $dir)
       {
-        if (in_array($dir, $this->dirs))
+        if (false !== ($key = array_search($dir, $this->dirs)))
         {
+          unset($this->dirs[$key]);
+          $this->dirs[] = $dir;
+
           if ($this->cacheLoaded)
           {
             continue;

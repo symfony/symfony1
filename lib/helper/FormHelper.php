@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 9967 2008-06-29 07:58:50Z fabien $
+ * @version    SVN: $Id: FormHelper.php 10990 2008-08-20 08:36:27Z dwhittle $
  */
 
 /**
@@ -742,11 +742,11 @@ function input_date_tag($name, $value = null, $options = array())
 
   // register our javascripts and stylesheets
   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.$culture;
-  if((!is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js')) &&
+  if((!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
      (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
   {
    $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.substr($culture,0,2);
-   if((!is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js')) &&
+   if((!is_readable(sfConfig::get('sf_symfony_lib_dir').'/../data/web/'.$langFile.'.js')) &&
       (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
    {
      $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en';

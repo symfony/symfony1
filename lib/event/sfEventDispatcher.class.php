@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfEventDispatcher.class.php 9192 2008-05-22 18:22:49Z fabien $
+ * @version    SVN: $Id: sfEventDispatcher.class.php 10632 2008-08-03 16:51:41Z fabien $
  */
 class sfEventDispatcher
 {
@@ -149,7 +149,7 @@ class sfEventDispatcher
   {
     if (!isset($this->listeners[$name]))
     {
-      $this->listeners[$name] = array();
+      return array();
     }
 
     return $this->listeners[$name];

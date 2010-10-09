@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCacheClearTask.class.php 9890 2008-06-26 11:35:01Z fabien $
+ * @version    SVN: $Id: sfCacheClearTask.class.php 11432 2008-09-10 13:44:38Z hartym $
  */
 class sfCacheClearTask extends sfBaseTask
 {
@@ -85,8 +85,6 @@ EOF;
     {
       $this->checkAppExists($app);
 
-      $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, 'cli', true);
-
       if (!is_dir(sfConfig::get('sf_cache_dir').'/'.$app))
       {
         continue;
@@ -105,6 +103,7 @@ EOF;
 
         $this->lock($app, $env);
 
+        $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, $env, true);
         $event = $appConfiguration->getEventDispatcher()->notifyUntil(new sfEvent($this, 'task.cache.clear', array('app' => $appConfiguration, 'env' => $env, 'type' => $options['type'])));
         if (!$event->isProcessed())
         {
@@ -114,7 +113,7 @@ EOF;
           {
             throw new InvalidArgumentException(sprintf('Do not know how to remove cache for type "%s".', $options['type']));
           }
-          $this->$method($appConfiguration, $env);
+          $this->$method($appConfiguration);
         }
 
         $this->unlock($app, $env);
@@ -122,7 +121,7 @@ EOF;
     }
 
     // clear global cache
-    if (is_null($options['app']))
+    if (is_null($options['app']) && is_null($options['type']))
     {
       $this->getFilesystem()->remove(sfFinder::type('file')->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
     }
@@ -133,17 +132,18 @@ EOF;
     return sprintf('clear%sCache', ucfirst($type));
   }
 
-  protected function clearAllCache(sfApplicationConfiguration $appConfiguration, $env)
+  protected function clearAllCache(sfApplicationConfiguration $appConfiguration)
   {
-    $this->clearI18NCache($appConfiguration, $env);
-    $this->clearRoutingCache($appConfiguration, $env);
-    $this->clearTemplateCache($appConfiguration, $env);
-    $this->clearConfigCache($appConfiguration, $env);
+    $this->clearI18NCache($appConfiguration);
+    $this->clearRoutingCache($appConfiguration);
+    $this->clearTemplateCache($appConfiguration);
+    $this->clearConfigCache($appConfiguration);
   }
 
-  protected function clearConfigCache(sfApplicationConfiguration $appConfiguration, $env)
+  protected function clearConfigCache(sfApplicationConfiguration $appConfiguration)
   {
-    $subDir = sfConfig::get('sf_cache_dir').'/'.$appConfiguration->getApplication().'/'.$env.'/config';
+    $subDir = sfConfig::get('sf_cache_dir').'/'.$appConfiguration->getApplication().'/'.$appConfiguration->getEnvironment().'/config';
+
     if (is_dir($subDir))
     {
       // remove cache files
@@ -151,21 +151,21 @@ EOF;
     }
   }
 
-  protected function clearI18NCache(sfApplicationConfiguration $appConfiguration, $env)
+  protected function clearI18NCache(sfApplicationConfiguration $appConfiguration)
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
     $this->cleanCacheFromFactoryConfig($config['i18n']['param']['cache']['class'], $config['i18n']['param']['cache']['param']);
   }
 
-  protected function clearRoutingCache(sfApplicationConfiguration $appConfiguration, $env)
+  protected function clearRoutingCache(sfApplicationConfiguration $appConfiguration)
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
     $this->cleanCacheFromFactoryConfig($config['routing']['param']['cache']['class'], $config['routing']['param']['cache']['param']);
   }
 
-  protected function clearTemplateCache(sfApplicationConfiguration $appConfiguration, $env)
+  protected function clearTemplateCache(sfApplicationConfiguration $appConfiguration)
   {
     $config = $this->getFactoriesConfiguration($appConfiguration);
 
@@ -174,12 +174,20 @@ EOF;
 
   public function getFactoriesConfiguration(sfApplicationConfiguration $appConfiguration)
   {
-    if (is_null($this->config))
+    $app = $appConfiguration->getApplication();
+    $env = $appConfiguration->getEnvironment();
+
+    if (!isset($this->config[$app]))
     {
-      $this->config = sfFactoryConfigHandler::getConfiguration($appConfiguration->getConfigPaths('config/factories.yml'));
+      $this->config[$app] = array();
     }
 
-    return $this->config;
+    if (!isset($this->config[$app][$env]))
+    {
+      $this->config[$app][$env] = sfFactoryConfigHandler::getConfiguration($appConfiguration->getConfigPaths('config/factories.yml'));
+    }
+
+    return $this->config[$app][$env] ;
   }
 
   public function cleanCacheFromFactoryConfig($class, $parameters = array())

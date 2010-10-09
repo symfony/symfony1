@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,10 +14,29 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 10307 2008-07-15 22:19:02Z Carl.Vondrick $
+ * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 11278 2008-09-01 13:32:35Z nicolas $
  */
 class sfWidgetFormInputCheckbox extends sfWidgetFormInput
 {
+  /**
+   * Constructor.
+   *
+   * Available options:
+   *
+   *  - value_attribute_value: The "value" attribute value to set for the checkbox
+   *
+   * @param array  $options     An array of options
+   * @param array  $attributes  An array of default HTML attributes
+   *
+   * @see sfWidgetFormInput
+   */
+  public function __construct($options = array(), $attributes = array())
+  {
+    $this->addOption('value_attribute_value');
+
+    parent::__construct($options, $attributes);
+  }
+
   /**
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -29,6 +48,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
     parent::configure($options, $attributes);
 
     $this->setOption('type', 'checkbox');
+
+    if (isset($attributes['value']))
+    {
+      $this->setOption('value_attribute_value', $attributes['value']);
+    }
   }
 
   /**
@@ -46,6 +70,11 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
     if (!is_null($value) && $value !== false)
     {
       $attributes['checked'] = 'checked';
+    }
+
+    if (!isset($attributes['value']) && !is_null($this->getOption('value_attribute_value')))
+    {
+      $attributes['value'] = $this->getOption('value_attribute_value');
     }
 
     return parent::render($name, null, $attributes, $errors);

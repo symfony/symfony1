@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorChoiceMany.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfValidatorChoiceMany.class.php 11612 2008-09-17 15:28:38Z nicolas $
  */
 class sfValidatorChoiceMany extends sfValidatorChoice
 {
@@ -36,7 +36,7 @@ class sfValidatorChoiceMany extends sfValidatorChoice
 
     foreach ($values as $value)
     {
-      if (!in_array($value, $choices))
+      if (!parent::inChoices($value, $choices))
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }

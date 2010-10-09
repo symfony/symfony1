@@ -18,7 +18,7 @@
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfException.class.php 9080 2008-05-20 00:40:15Z Carl.Vondrick $
+ * @version    SVN: $Id: sfException.class.php 11478 2008-09-12 13:16:14Z fabien $
  */
 class sfException extends Exception
 {
@@ -63,7 +63,10 @@ class sfException extends Exception
       error_log($exception->getMessage());
 
       // clean current output buffer
-      while (@ob_end_clean());
+      while (ob_get_level())
+      {
+        ob_end_clean();
+      }
 
       ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 

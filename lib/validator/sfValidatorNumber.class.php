@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorNumber.class.php 9437 2008-06-06 06:51:12Z fabien $
+ * @version    SVN: $Id: sfValidatorNumber.class.php 11476 2008-09-12 12:48:38Z fabien $
  */
 class sfValidatorNumber extends sfValidatorBase
 {
@@ -52,12 +52,12 @@ class sfValidatorNumber extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $clean = floatval($value);
-
-    if (strval($clean) != $value)
+    if (!is_numeric($value))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
+
+    $clean = floatval($value);
 
     if ($this->hasOption('max') && $clean > $this->getOption('max'))
     {

@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelData.class.php 9906 2008-06-26 20:30:29Z FabianLange $
+ * @version    SVN: $Id: sfPropelData.class.php 11618 2008-09-17 17:36:54Z nicolas $
  */
 class sfPropelData extends sfData
 {
@@ -142,7 +142,7 @@ class sfPropelData extends sfData
               {
                 throw new InvalidArgumentException(sprintf('The object "%s" from class "%s" is not defined in your data file.', $value, $relatedTable->getPhpName()));
               }
-              $value = $this->object_references[$relatedTable->getPhpName().'_'.$value]->getPrimaryKey();
+              $value = $this->object_references[$relatedTable->getPhpName().'_'.$value]->getByName($column->getRelatedName(), BasePeer::TYPE_COLNAME);
             }
           }
 
@@ -487,7 +487,7 @@ class sfPropelData extends sfData
 
     return $classes;
   }
-  
+
   protected function fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in = null)
   {
     $rs = $this->con->executeQuery(sprintf('SELECT * FROM %s WHERE %s %s',

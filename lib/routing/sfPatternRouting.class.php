@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPatternRouting.class.php 10591 2008-08-01 16:01:43Z fabien $
+ * @version    SVN: $Id: sfPatternRouting.class.php 11297 2008-09-02 20:08:24Z FabianLange $
  */
 class sfPatternRouting extends sfRouting
 {
@@ -716,7 +716,11 @@ class sfPatternRouting extends sfRouting
     $tmp = explode('/', $star);
     for ($i = 0, $max = count($tmp); $i < $max; $i += 2)
     {
-      $parameters[$tmp[$i]] = isset($tmp[$i + 1]) ? urldecode($tmp[$i + 1]) : true;
+      //dont allow a param name to be empty - #4173
+      if (!empty($tmp[$i]))
+      {
+        $parameters[$tmp[$i]] = isset($tmp[$i + 1]) ? urldecode($tmp[$i + 1]) : true;
+      }
     }
 
     return $parameters;

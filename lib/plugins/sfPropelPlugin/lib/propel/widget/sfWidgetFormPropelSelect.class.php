@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormPropelSelect.class.php 10437 2008-07-23 12:26:28Z nicolas $
+ * @version    SVN: $Id: sfWidgetFormPropelSelect.class.php 11616 2008-09-17 17:24:18Z nicolas $
  */
 class sfWidgetFormPropelSelect extends sfWidgetFormSelect
 {
@@ -74,7 +74,7 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
 
     $class = $this->getOption('model').'Peer';
 
-    $criteria = is_null($this->getOption('criteria')) ? new Criteria() : $this->getOption('criteria');
+    $criteria = is_null($this->getOption('criteria')) ? new Criteria() : clone $this->getOption('criteria');
     if ($order = $this->getOption('order_by'))
     {
       $method = sprintf('add%sOrderByColumn', 0 === strpos(strtoupper($order[1]), 'ASC') ? 'Ascending' : 'Descending');
@@ -83,22 +83,17 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
     $objects = call_user_func(array($class, 'doSelect'), $criteria, $this->getOption('connection'));
 
     $method = $this->getOption('method');
-    
+
     if (!method_exists($this->getOption('model'), $method))
     {
       throw new RuntimeException(sprintf('Class "%s" must implement a "%s" method to be rendered in a "%s" widget', $this->getOption('model'), $method, __CLASS__));
     }
-    
+
     foreach ($objects as $object)
     {
       $choices[$object->getPrimaryKey()] = $object->$method();
     }
 
     return $choices;
-  }
-
-  public function __clone()
-  {
-    $this->setOption('choices', new sfCallable(array($this, 'getChoices')));
   }
 }

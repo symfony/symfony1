@@ -410,7 +410,7 @@ abstract class AbstractPropelDataModelTask extends Task {
 				if ($this->xslFile) {
 					$this->log("Transforming " . $xmlFile->getPath() . " using stylesheet " . $this->xslFile->getPath(), PROJECT_MSG_VERBOSE);
 					if (!class_exists('XSLTProcessor')) {
-						$this->log("Could not perform XLST transformation.  Make sure PHP has been compiled/configured to support XSLT.", PROJECT_MSG_ERR);
+						$this->log("Could not perform XSLT transformation.  Make sure PHP has been compiled/configured to support XSLT.", PROJECT_MSG_ERR);
 					} else {
 						// normalize the document using normalizer stylesheet
 

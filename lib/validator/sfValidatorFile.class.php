@@ -20,7 +20,7 @@ if (!defined('UPLOAD_ERR_EXTENSION'))
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 9407 2008-06-02 09:13:10Z nicolas $
+ * @version    SVN: $Id: sfValidatorFile.class.php 11326 2008-09-04 20:23:09Z fabien $
  */
 class sfValidatorFile extends sfValidatorBase
 {
@@ -206,7 +206,6 @@ class sfValidatorFile extends sfValidatorBase
     }
 
     $type = $finfo->file($file);
-    $finfo->close();
 
     return $type;
   }
@@ -286,7 +285,7 @@ class sfValidatorFile extends sfValidatorBase
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFile.class.php 9407 2008-06-02 09:13:10Z nicolas $
+ * @version    SVN: $Id: sfValidatorFile.class.php 11326 2008-09-04 20:23:09Z fabien $
  */
 class sfValidatedFile
 {

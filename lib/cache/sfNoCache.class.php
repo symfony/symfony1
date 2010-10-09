@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfNoCache.class.php 7605 2008-02-25 12:58:56Z fabien $
+ * @version    SVN: $Id: sfNoCache.class.php 10970 2008-08-19 19:02:38Z fabien $
  */
 class sfNoCache extends sfCache
 {
@@ -23,7 +23,7 @@ class sfNoCache extends sfCache
    */
   public function get($key, $default = null)
   {
-    return null;
+    return $default;
   }
 
   /**

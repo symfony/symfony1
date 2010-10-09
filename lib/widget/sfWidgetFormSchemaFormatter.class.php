@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 9238 2008-05-25 09:18:37Z nicolas $
+ * @version    SVN: $Id: sfWidgetFormSchemaFormatter.class.php 11509 2008-09-13 10:51:34Z FabianLange $
  */
 abstract class sfWidgetFormSchemaFormatter
 {

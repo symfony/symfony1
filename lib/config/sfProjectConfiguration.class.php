@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectConfiguration.class.php 9454 2008-06-08 14:17:56Z fabien $
+ * @version    SVN: $Id: sfProjectConfiguration.class.php 10699 2008-08-06 09:22:54Z hartym $
  */
 class sfProjectConfiguration
 {
@@ -138,17 +138,21 @@ class sfProjectConfiguration
   }
 
   /**
-   * Gets directories where model classes are stored.
+   * Gets directories where model classes are stored. The order of returned paths is lowest precedence
+   * to highest precedence.
    *
    * @return array An array of directories
    */
   public function getModelDirs()
   {
-    $dirs = array(sfConfig::get('sf_lib_dir').'/model');                     // project
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/model'))
+    $dirs = array();
+
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/model'))                                   // plugins
     {
-      $dirs = array_merge($dirs, $pluginDirs);                               // plugins
+      $dirs = array_merge($dirs, $pluginDirs);
     }
+
+    $dirs[] = sfConfig::get('sf_lib_dir').'/model';                                                           // project
 
     return $dirs;
   }

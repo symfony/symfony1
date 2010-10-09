@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorSchemaFilter.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorSchemaFilter.class.php 11003 2008-08-20 16:39:20Z fabien $
  */
 class sfValidatorSchemaFilter extends sfValidatorSchema
 {
@@ -53,7 +53,14 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
 
     $value = isset($values[$this->getOption('field')]) ? $values[$this->getOption('field')] : null;
 
-    $values[$this->getOption('field')] = $this->getOption('validator')->clean($value);
+    try
+    {
+      $values[$this->getOption('field')] = $this->getOption('validator')->clean($value);
+    }
+    catch (sfValidatorError $error)
+    {
+      throw new sfValidatorErrorSchema($this, array($this->getOption('field') => $error));
+    }
 
     return $values;
   }

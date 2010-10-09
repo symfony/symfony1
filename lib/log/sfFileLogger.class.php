@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFileLogger.class.php 9081 2008-05-20 00:47:12Z Carl.Vondrick $
+ * @version    SVN: $Id: sfFileLogger.class.php 10964 2008-08-19 18:33:50Z fabien $
  */
 class sfFileLogger extends sfLogger
 {
@@ -120,7 +120,7 @@ class sfFileLogger extends sfLogger
    */
   public function shutdown()
   {
-    if ($this->fp)
+    if (is_resource($this->fp))
     {
       fclose($this->fp);
     }

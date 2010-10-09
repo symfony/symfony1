@@ -618,7 +618,7 @@ Listing 11-28 - Updating More Than One Element from a Remote Response
     }
     ") ?>
 
-The `complete` callback has access the ajax response and can pass it to a third-party function. This custom `updateJSON()` function iterates over the JSON obtained from the response via `responseJSON` and for each member of the array, updates the element named by the first parameter with the content of the second parameter.
+The `complete` callback has access to the Ajax response and can pass it to a third-party function. This custom `updateJSON()` function iterates over the JSON obtained from the response via `responseJSON` and for each member of the array, updates the element named by the first parameter with the content of the second parameter.
 
 Listing 11-29 shows how the `publishing/refresh` action can return a JSON response.
 
@@ -634,14 +634,13 @@ Listing 11-29 - Sample Action Returning JSON data
         return $this->renderText('('.$output.')');
       }
 
-Using the `application/json` content type allows Prototype to automatically evaluate the JSON passed as body of the response, which is preferred as of returning it via the header, because the HTTP header is limited in size and some browsers struggle with responses that do not have a body.
+Using the `application/json` content type allows Prototype to automatically evaluate the JSON passed as the body of the response, which is preferred to returning it via the header, because the HTTP header is limited in size and some browsers struggle with responses that do not have a body.
 By using `->renderText()` the template file is not used, resulting in better performance.
 
 JSON has become a standard among web applications. Web services often propose responses in JSON rather than XML to allow service integration in the client (mashup), rather than on the server. So if you wonder which format to use for communication between your server and a JavaScript function, JSON is probably your best bet.
 
 >**TIP**
->Since version 5.2, PHP offers two functions, `json_encode()` and `json_decode()`, that allow you to convert an array between the PHP syntax and the JSON syntax, and vice versa ([http://www.php.net/manual/en/ref.json.php](http://www.php.net/manual/en/ref.json.php)). These facilitate the integration of JSON arrays and Ajax in general.
->This would enable to use of a more PHP like code:
+>Since version 5.2, PHP offers two functions, `json_encode()` and `json_decode()`, that allow you to convert an array between the PHP syntax and the JSON syntax, and vice versa ([http://www.php.net/manual/en/ref.json.php](http://www.php.net/manual/en/ref.json.php)). These facilitate the integration of JSON arrays (and Ajax in general) and enable the use of more readable native PHP code:
 >
 >     [php]
 >     $output = array("title" => "My basic letter", "name" => "Mr Brown");

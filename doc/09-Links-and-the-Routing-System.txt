@@ -147,7 +147,7 @@ Before getting deeper into the routing system, one matter needs to be clarified.
 
 There is no script name in the examples of generated URLs either. This is because generated URLs don't contain any script name in the production environment by default. The `no_script_name` parameter of the `settings.yml` file precisely controls the appearance of the front controller name in generated URLs. Set it to `off`, as shown in Listing 9-5, and the URLs output by the link helpers will mention the front controller script name in every link.
 
-Listing 9-5 - Showing the Front Controller Name in URLs, in `apps/frontend/settings.yml`
+Listing 9-5 - Showing the Front Controller Name in URLs, in `apps/frontend/config/settings.yml`
 
     prod:
       .settings
@@ -439,11 +439,11 @@ Patterns can contain wildcards (represented by an asterisk, `*`) and named wildc
 >**NOTE**
 >**New in symfony 1.1** named wildcards can be separated by a slash or a dot, so you can write a pattern like:
 >
->    my_rule:
->      url:   /foo/:bar.:format
->      param: { module: mymodule, action: myaction }
+>     my_rule:
+>       url:   /foo/:bar.:format
+>       param: { module: mymodule, action: myaction }
 >
->That way, an external URL like 'foo/12.xml' will math `my_rule` and execute `mymodule/muaction` with two parameters: `$bar=12` and `$format=xml`.
+>That way, an external URL like 'foo/12.xml' will match `my_rule` and execute `mymodule/myaction` with two parameters: `$bar=12` and `$format=xml`.
 >You can add more separators by changing the `segment_separators` parameters value in the `sfPatternRouting` factory configuration (see chapter 19).
 
 The routing system parses the `routing.yml` file from the top to the bottom and stops at the first match. This is why you must add your own rules on top of the default ones. For instance, the URL `/foo/123` matches both of the rules defined in Listing 9-16, but symfony first tests `my_rule:`, and as that rule matches, it doesn't even test the `default:` one. The request is handled by the `mymodule/myaction` action with `bar` set to `123` (and not by the `foo/123` action).
@@ -645,7 +645,7 @@ The `sfPatternRouting` class has other useful methods for handling routes by han
 Dealing with Routes in Actions
 ------------------------------
 
-If you need to retrieve information about the current route--for instance, to prepare a future "back to page xxx" link--you should use the methods of the `sfPattenrRouting` object. The URIs returned by the `getCurrentInternalUri()` method can be used in a call to a `link_to()` helper, as shown in Listing 9-25.
+If you need to retrieve information about the current route--for instance, to prepare a future "back to page xxx" link--you should use the methods of the `sfPatternRouting` object. The URIs returned by the `getCurrentInternalUri()` method can be used in a call to a `link_to()` helper, as shown in Listing 9-25.
 
 Listing 9-25 - Using `sfRouting` to Get Information About the Current Route
 

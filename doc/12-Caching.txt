@@ -419,9 +419,9 @@ This also works for partials:
 The `remove()` method accepts two additional parameters, allowing you to define which hosts and vary headers you want to clear the cache for. This is because symfony keeps one cache version for each host and vary headers, so that two applications sharing the same code base but not the same hostname use different caches. This can be of great use, for instance, when an application interprets the subdomain as a request parameter (like `http://php.askeet.com` and `http://life.askeet.com`). If you don't set the last two parameters, symfony will remove the cache for the current host and for the `all` vary header. Alternatively, if you want to remove the cache for another host, call `remove()` as follows:
 
     [php]
-    $cacheManager->remove('user/show?id=*');                     // Remove for all user records for the current host
-    $cacheManager->remove('user/show?id=*', 'life.askeet.com');  // Remove for all user records for the host life.askeet.com
-    $cacheManager->remove('user/show?id=*', '*');                // Remove for all user records for every hosts
+    $cacheManager->remove('user/show?id=*');                     // Remove records for the current host and all users
+    $cacheManager->remove('user/show?id=*', 'life.askeet.com');  // Remove records for the host life.askeet.com and all users
+    $cacheManager->remove('user/show?id=*', '*');                // Remove records for every host and all users
 
 The `remove()` method works in all the caching strategies that you can define in the `factories.yml` (not only `sfFileCache`, but also `sfAPCCache`, `sfEAcceleratorCache`, `sfMemcacheCache`, `sfSQLiteCache`, and `sfXCacheCache`).
 

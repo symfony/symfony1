@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormPropel.class.php 9394 2008-06-01 20:56:54Z nicolas $
+ * @version    SVN: $Id: sfFormPropel.class.php 11363 2008-09-07 18:20:10Z FabianLange $
  */
 
 /**
@@ -21,7 +21,7 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFormPropel.class.php 9394 2008-06-01 20:56:54Z nicolas $
+ * @version    SVN: $Id: sfFormPropel.class.php 11363 2008-09-07 18:20:10Z FabianLange $
  */
 abstract class sfFormPropel extends sfForm
 {
@@ -91,10 +91,9 @@ abstract class sfFormPropel extends sfForm
    * Embeds i18n objects into the current form.
    *
    * @param array   $cultures   An array of cultures
-   * @param string  $nameFormat The format to use for widget name
    * @param string  $decorator  A HTML decorator for the embedded form
    */
-  public function embedI18n($cultures, $nameFormat = null, $decorator = null)
+  public function embedI18n($cultures, $decorator = null)
   {
     if (!$this->isI18n())
     {
@@ -107,7 +106,7 @@ abstract class sfFormPropel extends sfForm
     $i18n = new $class();
     foreach ($cultures as $culture)
     {
-      $this->embedForm($culture, $i18n, $nameFormat, $decorator);
+      $this->embedForm($culture, $i18n, $decorator);
     }
   }
 
@@ -198,12 +197,7 @@ abstract class sfFormPropel extends sfForm
       throw $this->getErrorSchema();
     }
 
-    $values = $this->getValues();
-
-    // remove special columns that are updated automatically
-    unset($values['updated_at'], $values['updated_on'], $values['created_at'], $values['created_on']);
-
-    $this->object->fromArray($values, BasePeer::TYPE_FIELDNAME);
+    $this->object->fromArray($this->getValues(), BasePeer::TYPE_FIELDNAME);
 
     return $this->object;
   }

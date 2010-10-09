@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelect.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormSelect.class.php 11538 2008-09-14 14:45:59Z fabien $
  */
 class sfWidgetFormSelect extends sfWidgetForm
 {
@@ -113,5 +113,18 @@ class sfWidgetFormSelect extends sfWidgetForm
   protected function attributesToHtmlCallback($k, $v)
   {
     return is_null($v) || ('' === $v && 'value' != $k) ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
+  }
+
+  public function __clone()
+  {
+    if ($this->getOption('choices') instanceof sfCallable)
+    {
+      $callable = $this->getOption('choices')->getCallable();
+      if (is_array($callable))
+      {
+        $callable[0] = $this;
+        $this->setOption('choices', new sfCallable($callable));
+      }
+    }
   }
 }

@@ -412,7 +412,7 @@ Listing 13-17 - Translating Sentences Depending on the Value of Parameters
 
     [php]
     <?php echo format_number_choice(
-      '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf]There are%1% persons logged', array('%1%' => count_logged()), count_logged()) ?>
+      '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf]There are %1% persons logged', array('%1%' => count_logged()), count_logged()) ?>
 
 The first argument is the multiple possibilities of text. The second argument is the replacement pattern (as with the `__()` helper) and is optional. The third argument is the number on which the test is made to determine which text is taken.
 
@@ -432,8 +432,8 @@ Listing 13-18 - XLIFF Dictionary for a `format_number_choice()` Argument
 
     ...
     <trans-unit id="3">
-      <source>[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf]There are%1% persons logged</source>
-      <target>[0]Personne n'est connecté|[1]Une personne est connectée|(1,+Inf]Ily a %1% personnes en ligne</target>
+      <source>[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf]There are %1% persons logged</source>
+      <target>[0]Personne n'est connecté|[1]Une personne est connectée|(1,+Inf]Il y a %1% personnes en ligne</target>
     </trans-unit>
     ...
 

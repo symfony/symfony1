@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorSchema.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorSchema.class.php 10836 2008-08-13 12:06:35Z fabien $
  */
 class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
 {
@@ -78,7 +78,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
     $this->addOption('allow_extra_fields', false);
     $this->addOption('filter_extra_fields', true);
 
-    $this->addMessage('extra_fields', 'Extra field %field%.');
+    $this->addMessage('extra_fields', 'Unexpected extra form field named "%field%".');
   }
 
   /**

@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBase.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorBase.class.php 10893 2008-08-14 12:30:27Z hartym $
  */
 abstract class sfValidatorBase
 {
@@ -326,7 +326,7 @@ abstract class sfValidatorBase
    */
   protected function isEmpty($value)
   {
-    return in_array($value, array(null, ''));
+    return in_array($value, array(null, '', array()), true);
   }
 
   /**

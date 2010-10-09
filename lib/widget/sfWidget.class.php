@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidget.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidget.class.php 10985 2008-08-20 07:26:11Z dwhittle $
  */
 abstract class sfWidget
 {
@@ -275,7 +275,7 @@ abstract class sfWidget
       return '';
     }
 
-    return sprintf('<%s%s%s', $tag, $this->attributesToHtml($attributes), self::$xhtml ? ' />' : sprintf('></%s>', $tag));
+    return sprintf('<%s%s%s', $tag, $this->attributesToHtml($attributes), self::$xhtml ? ' />' : ('input' != $tag ? sprintf('></%s>', $tag) : '>'));
   }
 
   /**

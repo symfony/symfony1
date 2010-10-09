@@ -346,7 +346,7 @@ Experience shows that, most of the time, an action makes a redirect or a forward
 Listing 6-12 - Use of the `forward404If()` Method
 
     [php]
-    // This action is equivalent to the one shown in Listing 6-12
+    // This action is equivalent to the one shown in Listing 6-11
     public function executeShow($request)
     {
       $article = ArticlePeer::retrieveByPK($request->getParameter('id'));

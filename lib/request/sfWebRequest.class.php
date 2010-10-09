@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 9960 2008-06-28 07:46:34Z fabien $
+ * @version    SVN: $Id: sfWebRequest.class.php 11166 2008-08-26 20:18:00Z dwhittle $
  */
 class sfWebRequest extends sfRequest
 {
@@ -995,7 +995,7 @@ class sfWebRequest extends sfRequest
         $acceptableContentTypes = $this->getAcceptableContentTypes();
 
         // skip if no acceptable content types or browsers
-        if (isset($acceptableContentTypes[0]) && 'text/xml' != $acceptableContentTypes[0])
+        if (isset($acceptableContentTypes[0]) && ('text/xml' != $acceptableContentTypes[0] && 'application/xml' != $acceptableContentTypes[0]))
         {
           $this->setRequestFormat($this->getFormat($acceptableContentTypes[0]));
         }

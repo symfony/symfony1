@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugLogger.class.php 9081 2008-05-20 00:47:12Z Carl.Vondrick $
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 11035 2008-08-22 06:23:06Z fabien $
  */
 class sfWebDebugLogger extends sfLogger
 {
@@ -26,6 +26,11 @@ class sfWebDebugLogger extends sfLogger
 
   /**
    * Initializes this logger.
+   *
+   * Available options:
+   *
+   * - web_debug_class: The web debug class (sfWebDebug by default).
+   * - xdebugLogging:   Whether to add xdebug trace to the logs (false by default).
    *
    * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param  array             $options     An array of options.

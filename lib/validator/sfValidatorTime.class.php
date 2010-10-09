@@ -137,9 +137,13 @@ class sfValidatorTime extends sfValidatorBase
   {
     if (is_array($value))
     {
-      $filtered = array_filter($value);
-
-      return empty($filtered);
+      // array is not empty when a value is found
+      foreach($value as $key => $val)
+      {
+        // int and string '0' are 'empty' values that are explicitly accepted
+        if ($val === 0 || $val === '0' || !empty($val)) return false;
+      }
+      return true;
     }
 
     return parent::isEmpty($value);

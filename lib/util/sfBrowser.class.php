@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfBrowser.class.php 9673 2008-06-19 13:33:41Z fabien $
+ * @version    SVN: $Id: sfBrowser.class.php 11020 2008-08-21 15:32:42Z fabien $
  */
 class sfBrowser
 {
@@ -467,7 +467,7 @@ class sfBrowser
 
   /**
    * Test for an uncaught exception.
-   * 
+   *
    * @return  boolean
    */
   public function checkCurrentExceptionIsEmpty()
@@ -566,7 +566,7 @@ class sfBrowser
       {
         if ($element->getAttribute('checked'))
         {
-          $value = $element->getAttribute('value');
+          $value = $element->hasAttribute('value') ? $element->getAttribute('value') : '1';
         }
       }
       else if ($nodeName == 'input' && $element->getAttribute('type') == 'file')
@@ -640,9 +640,10 @@ class sfBrowser
         }
 
         // if no option is selected and if it is a simple select box, take the first option as the value
-        if (!$found && !$multiple)
+        $option = $xpath->query('descendant::option', $element)->item(0);
+        if (!$found && !$multiple && $option instanceof DOMElement)
         {
-          $value = $xpath->query('descendant::option', $element)->item(0)->getAttribute('value');
+          $value = $option->getAttribute('value');
         }
       }
 
@@ -679,7 +680,7 @@ class sfBrowser
     if (false !== $pos = strpos($name, '['))
     {
       $var = &$vars;
-      $tmps = array_filter(preg_split('/(\[ | \[\] | \])/x', $name));
+      $tmps = array_filter(preg_split('/(\[ | \[\] | \])/x', $name), create_function('$s', 'return $s !== "";'));
       foreach ($tmps as $tmp)
       {
         $var = &$var[$tmp];
@@ -775,7 +776,7 @@ class sfBrowser
    */
   protected function newSession()
   {
-    $_SERVER['session_id'] = md5(uniqid(rand(), true));
+    $this->defaultServerArray['session_id'] = $_SERVER['session_id'] = md5(uniqid(rand(), true));
   }
 
   /**

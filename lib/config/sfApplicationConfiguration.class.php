@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfApplicationConfiguration.class.php 9890 2008-06-26 11:35:01Z fabien $
+ * @version    SVN: $Id: sfApplicationConfiguration.class.php 11593 2008-09-16 05:16:29Z fabien $
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
@@ -122,6 +122,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     {
       sfForm::enableCSRFProtection(sfConfig::get('sf_csrf_secret'));
     }
+
+    sfWidget::setCharset(sfConfig::get('sf_charset'));
 
     // force setting default timezone if not set
     if ($default_timezone = sfConfig::get('sf_default_timezone'))

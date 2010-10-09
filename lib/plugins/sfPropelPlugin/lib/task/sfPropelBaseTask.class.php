@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
+set_include_path(dirname(__FILE__).'/../vendor'.PATH_SEPARATOR.get_include_path());
 
 /**
  * Base class for all symfony Propel tasks.
@@ -16,7 +16,7 @@ set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelBaseTask.class.php 9924 2008-06-27 11:14:39Z fabien $
+ * @version    SVN: $Id: sfPropelBaseTask.class.php 10678 2008-08-05 19:16:07Z fabien $
  */
 abstract class sfPropelBaseTask extends sfBaseTask
 {

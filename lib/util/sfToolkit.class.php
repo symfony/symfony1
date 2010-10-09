@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfToolkit.class.php 10516 2008-07-30 15:55:34Z hartym $
+ * @version    SVN: $Id: sfToolkit.class.php 10833 2008-08-13 11:33:13Z fabien $
  */
 class sfToolkit
 {
@@ -90,7 +90,7 @@ class sfToolkit
     }
 
     // close file pointer
-    fclose($fp);
+    closedir($fp);
   }
 
   /**
@@ -381,7 +381,7 @@ class sfToolkit
    */
   public static function replaceConstants($value)
   {
-    return is_string($value) ? preg_replace('/%(.+?)%/e', 'sfConfig::has(strtolower("\\1")) ? sfConfig::get(strtolower("\\1")) : "%\\1%"', $value) : $value;
+    return is_string($value) ? preg_replace_callback('/%(.+?)%/', create_function('$v', 'return sfConfig::has(strtolower($v[1])) ? sfConfig::get(strtolower($v[1])) : "%{$v[1]}%";'), $value) : $value;
   }
 
   /**

@@ -448,7 +448,7 @@ Listing 17-9 - Extending the Autoloading System To Enable Third Party Components
         {
           set_include_path($sf_zend_lib_dir.PATH_SEPARATOR.get_include_path());
           require_once($sf_zend_lib_dir.'/Zend/Loader.php');
-          spl_autoload_register(array('Zend_Loader', 'Zend_Loader'));
+          spl_autoload_register(array('Zend_Loader', 'autoload'));
         }
 
         // Integrate eZ Components
@@ -472,7 +472,7 @@ Listing 17-9 - Extending the Autoloading System To Enable Third Party Components
 What happens when you create a new object of an unloaded class is simple:
 
   1. The symfony autoloading function first looks for a class in the paths declared in the `autoload.yml` file.
-  2. If no class path is found, the callback methods registered by `spl_autoload_register()` calls will be called one after the other, until one of them returns `true`. So each of `Zend_Loader::Zend_Loader()`, `ezcBase::autoload()`, and `Swift_ClassLoader::load()` are called until one finds the class.
+  2. If no class path is found, the callback methods registered by `spl_autoload_register()` calls will be called one after the other, until one of them returns `true`. So each of `Zend_Loader::autoload()`, `ezcBase::autoload()`, and `Swift_ClassLoader::load()` are called until one finds the class.
   3. If these also return `false`, PHP will generate an error.
 
 This means that the other framework components benefit from the autoload mechanism, and you can use them even more easily than within their own environment. For instance, if you want to use the `Zend_Search` component in the Zend Framework to implement an equivalent of the Lucene search engine in PHP, you usually need a `require` statement: 

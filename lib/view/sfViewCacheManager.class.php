@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 9408 2008-06-02 11:40:28Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 11195 2008-08-27 11:35:19Z fabien $
  */
 class sfViewCacheManager
 {
@@ -138,7 +138,7 @@ class sfViewCacheManager
         $cacheKey = $contextualPrefix;
       }
       list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
-      $cacheKey .= sprintf('/%s/%s/%s', $params['module'], $params['action'], $params['sf_cache_key']);
+      $cacheKey .= sprintf('/%s/%s/%s', $params['module'], $params['action'], isset($params['sf_cache_key']) ? $params['sf_cache_key'] : '');
     }
     else
     {

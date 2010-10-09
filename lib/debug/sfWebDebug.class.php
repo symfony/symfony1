@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 9459 2008-06-08 17:28:17Z fabien $
+ * @version    SVN: $Id: sfWebDebug.class.php 11095 2008-08-25 08:58:17Z fabien $
  */
 class sfWebDebug
 {
@@ -180,7 +180,7 @@ class sfWebDebug
         // sql queries log
         if (preg_match('/execute(?:Query|Update).+?\:\s+(.+)$/', $log, $match))
         {
-          $sqlLogs[] .= $match[1];
+          $sqlLogs[] = $match[1];
         }
 
         ++$line_nb;

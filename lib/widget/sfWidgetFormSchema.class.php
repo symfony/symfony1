@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSchema.class.php 10290 2008-07-14 23:45:19Z Carl.Vondrick $
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 11509 2008-09-13 10:51:34Z FabianLange $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -373,7 +373,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
       if ($widget instanceof sfWidgetForm && $widget->isHidden())
       {
-        $hiddenRows[] = $widget->render($this->generateName($name), $value, $widgetAttributes);
+        $hiddenRows[] = $this->renderField($name, $value, $widgetAttributes);
       }
       else
       {

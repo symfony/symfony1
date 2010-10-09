@@ -19,7 +19,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDomCssSelector.class.php 5938 2007-11-09 07:38:23Z fabien $
+ * @version    SVN: $Id: sfDomCssSelector.class.php 10947 2008-08-19 14:11:06Z fabien $
  */
 class sfDomCssSelector
 {
@@ -175,7 +175,7 @@ class sfDomCssSelector
           $tagName = $matches[1] ? $matches[1] : '*';
           preg_match_all('/
             \[
-              (\w+)                 # attribute
+              ([\w\-]+)             # attribute
               ([=~\|\^\$\*]?)       # modifier (optional)
               =?                    # equal (optional)
               (

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorChoice.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorChoice.class.php 11612 2008-09-17 15:28:38Z nicolas $
  */
 class sfValidatorChoice extends sfValidatorBase
 {
@@ -46,11 +46,32 @@ class sfValidatorChoice extends sfValidatorBase
       $choices = $choices->call();
     }
 
-    if (!in_array($value, $choices))
+    if (!self::inChoices($value, $choices))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
 
     return $value;
+  }
+
+  /**
+   * Checks if a value is part of given choices (see bug #4212)
+   *
+   * @param  mixed $value   The value to check
+   * @param  array $choices The array of available choices
+   *
+   * @return Boolean
+   */
+  static protected function inChoices($value, array $choices = array())
+  {
+    foreach ($choices as $choice)
+    {
+      if ((string) $choice == (string) $value)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
