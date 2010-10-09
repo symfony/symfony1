@@ -1,0 +1,974 @@
+Chapter 17 - Extending Symfony
+==============================
+
+Eventually, you will need to alter symfony's behavior. Whether you need to modify the way a certain class behaves or add your own custom features, the moment will inevitably happen--all clients have specific requirements that no framework can forecast. As a matter of fact, this situation is so common that symfony provides a mechanism to extend existing classes, called a mixin. You can even replace the core symfony classes on your own, using the factories settings. Once you have built an extension, you can easily package it as a plug-in, so that it can be reused in other applications--or by other symfony users.
+
+Mixins
+------
+
+Among the current limitations of PHP, one of the most annoying is you can't have a class extend more than one class. Another limitation is you can't add new methods to an existing class or override existing methods. To palliate these two limitations and to make the framework truly extendable, symfony introduces a class called `sfMixer`. It is in no way related to cooking devices, but to the concept of mixins found in object-oriented programming. A mixin is a group of methods or functions that can be mixed into a class to extend it.
+
+### Understanding Multiple Inheritance
+
+Multiple inheritance is the ability for a class to extend more than one class and inherit these class properties and methods. Let's consider an example. Imagine a `Story` and a `Book` class, each with its own properties and methods--just like in Listing 17-1.
+
+Listing 17-1 - Two Example Classes
+
+    [php]
+    class Story
+    {
+      protected $title = '';
+      protected $topic = '';
+      protected $characters = array();
+
+      public function __construct($title = '', $topic = '', $characters = array())
+      {
+        $this->title = $title;
+        $this->topic = $topic;
+        $this->characters = $characters;
+      }
+
+      public function getSummary()
+      {
+        return $this->title.', a story about '.$this->topic;
+      }
+    }
+
+    class Book
+    {
+      protected $isbn = 0;
+
+      function setISBN($isbn = 0)
+      {
+        $this->isbn = $isbn;
+      }
+
+      public function getISBN()
+      {
+        return $this->isbn;
+      }
+    }
+
+A `ShortStory` class extends `Story`, a `ComputerBook` class extends `Book`, and logically, a `Novel` should extend both `Story` and `Book` and take advantage of all their methods. Unfortunately, this is not possible in PHP. You cannot write the `Novel` declaration as in Listing 17-2.
+
+Listing 17-2 - Multiple Inheritance Is Not Possible in PHP
+
+    [php]
+    class Novel extends Story, Book
+    {
+    }
+
+    $myNovel = new Novel();
+    $myNovel->getISBN();
+
+One possibility would be to have Novel implements two interfaces instead of having it extend two classes, but this would prevent you from having the methods actually written in the parent classes.
+
+### Mixing Classes
+
+The `sfMixer` class takes another approach to the problem, taking an existing class and extending it a posteriori, provided that the class contains the proper hooks. The process involves two steps:
+
+  * Declaring a class as extendable
+  * Registering extensions (or mixins), after the class declaration
+
+Listing 17-3 shows how you would implement the `Novel` class with `sfMixer`.
+
+Listing 17-3 - Multiple Inheritance Is Possible via `sfMixer`
+
+    [php]
+    class Novel extends Story
+    {
+      public function __call($method, $arguments)
+      {
+        return sfMixer::callMixins();
+      }
+    }
+
+    sfMixer::register('Novel', array('Book', 'getISBN'));
+    $myNovel = new Novel();
+    $myNovel->getISBN();
+
+One of the classes (`Story`) is chosen as the main parent, in line with PHP's ability to only inherit from one class. The `Novel` class is declared as extendable by the code located in the `__call()` method. The method of the other class (`Book`) is added afterwards to the `Novel` class by a call to `sfMixer::register()`. The next sections will explicitly explain this process.
+
+When the `getISBN()` method of the `Novel` class is called, everything happens as if the class had been defined as in Listing 17-2--except it's the magic of the `__call()` method and of the `sfMixer` static methods that simulate it. The `getISBN()` method is mixed in the `Novel` class.
+
+>**SIDEBAR**
+>When to use mixins
+>
+>The symfony mixin mechanism is useful in many cases. Simulating multiple inheritance, as described previously, is just one of them.
+>
+>You can use mixins to alter a method after its declaration. For example, when building a graphic library, you will probably implement a `Line` object--representing a line. It will have four attributes (the coordinates for both ends) and a `draw()` method to render itself. A `ColoredLine` should have the same properties and methods, but with an additional attribute, `color`, to specify its color. Furthermore, the `draw()` method of a `ColoredLine` is a little different from the one of a simple `Line`, to use the object's color. You could package the abilities of a graphical element to deal with color into a `ColoredElement` class. This would allow you to reuse the color methods for other graphical elements (`Dot`, `Polygon`, and so on). In this case, the ideal implementation of the `ColoredLine` class would be an extension of the `Line` class, with methods from the `ColoredElement` class mixed in. The final `draw()` method would be a mix between the original one from `Line` and the one from `ColoredElement`.
+>
+>Mixins can also be seen as a way to add new methods to an existing class. For instance, the symfony action class, called `sfActions`, is defined in the framework. One of the constraints of PHP is that you cannot change the sfActions definition after its initial declaration. You may want to add a custom method to sfActions in one of your applications only--for instance, to forward a request to a special web service. For that purpose, PHP alone falls short, but the mixin mechanism provides a perfect solution.
+
+### Declaring a Class As Extendable
+
+To declare a class as extendable, you must insert one or several "hooks" into the code, which the `sfMixer` class can later identify. These hooks are calls to the `sfMixer::callMixins()` method. Many of the symfony classes already contain such hooks, including `sfRequest`, `sfResponse`, `sfController`, `sfUser`, `sfAction`, and others.
+
+The hook can be placed in different parts of the class, according to the desired degree of extensibility:
+
+  * To be able to add new methods to a class, you must insert the hook in the `__call()` method and return its result, as demonstrated in Listing 17-4.
+
+Listing 17-4 - Giving a Class the Ability to Get New Methods
+
+    [php]
+    class SomeClass
+    {
+      public function __call($method, $arguments)
+      {
+        return sfMixer::callMixins();
+      }
+    }
+
+  * To be able to alter the way an existing method works, you must insert the hook inside the method, as demonstrated in Listing 17-5. The code added by the mixin class will be executed where the hook is placed.
+
+Listing 17-5 - Giving a Method the Ability to Be Altered
+
+    [php]
+    class SomeOtherClass
+    {
+      public function doThings()
+      {
+        echo "I'm working...";
+        sfMixer::callMixins();
+      }
+    }
+
+You may want to place more than one hook in a method. In this case, you must name the hooks, so that you can define which hook is to be extended afterwards, as demonstrated in Listing 17-6. A named hook is a call to `callMixins()` with a hook name as a parameter. This name will be used afterwards, when registering a mixin, to tell where in the method the mixin code must be executed.
+
+Listing 17-6 - A Method Can Contain More Than One Hook, In Which Case They Must Be Named
+
+    [php]
+    class AgainAnotherClass
+    {
+      public function doMoreThings()
+      {
+        echo "I'm ready.";
+        sfMixer::callMixins('beginning');
+        echo "I'm working...";
+        sfMixer::callMixins('end');
+        echo "I'm done.";
+      }
+    }
+
+Of course, you can combine these techniques to create classes with the ability to be assigned new and extendable methods, as Listing 17-7 demonstrates.
+
+Listing 17-7 - A Class Can Be Extendable in Various Ways
+
+    [php]
+    class BicycleRider
+    {
+      protected $name = 'John';
+
+      public function getName()
+      {
+        return $this->name;
+      }
+
+      public function sprint($distance)
+      {
+        echo $this->name." sprints ".$distance." meters\n";
+        sfMixer::callMixins(); // The sprint() method is extendable
+      }
+
+      public function climb()
+      {
+        echo $this->name.' climbs';
+        sfMixer::callMixins('slope'); // The climb() method is extendable here
+        echo $this->name.' gets to the top';
+        sfMixer::callMixins('top'); // And also here
+      }
+
+      public function __call($method, $arguments)
+      {
+        return sfMixer::callMixins(); // The BicyleRider class is extendable
+      }
+    }
+
+>**CAUTION**
+>Only the classes that are declared as extendable can be extended by `sfMixer`. This means that you cannot use this mechanism to extend a class that didn't "subscribe" to this service.
+
+### Registering Extensions
+
+To register an extension to an existing hook, use the `sfMixer::register()` method. Its first argument is the element to extend, and the second argument is a PHP callable and represents the mixin.
+
+The format of the first argument depends on what you try to extend:
+
+  * If you extend a class, use the class name.
+  * If you extend a method with an anonymous hook, use the `class:method` pattern.
+  * If you extend a method with a named hook, use the `class:method:hook` pattern.
+
+Listing 17-8 illustrates this principle by extending the class defined in Listing 17-7. The extended object is automatically passed as first parameter to the mixin methods (except, of course, if the extended method is static). The mixin method also gets access to the parameters of the original method call.
+
+Listing 17-8 - Registering Extensions
+
+    [php]
+    class Steroids
+    {
+      protected $brand = 'foobar';
+
+      public function partyAllNight($bicycleRider)
+      {
+        echo $bicycleRider->getName()." spends the night dancing.\n";
+        echo "Thanks ".$brand."!\n";
+      }
+
+      public function breakRecord($bicycleRider, $distance)
+      {
+        echo "Nobody ever made ".$distance." meters that fast before!\n";
+      }
+
+      static function pass()
+      {
+        echo " and passes half the peloton.\n";
+      }
+    }
+
+    sfMixer::register('BicycleRider', array('Steroids', 'partyAllNight'));
+    sfMixer::register('BicycleRider:sprint', array('Steroids', 'breakRecord'));
+    sfMixer::register('BicycleRider:climb:slope', array('Steroids', 'pass'));
+    sfMixer::register('BicycleRider:climb:top', array('Steroids', 'pass'));
+
+    $superRider = new BicycleRider();
+    $superRider->climb();
+    => John climbs and passes half the peloton
+    => John gets to the top and passes half the peloton
+    $superRider->sprint(2000);
+    => John sprints 2000 meters
+    => Nobody ever made 2000 meters that fast before!
+    $superRider->partyAllNight();
+    => John spends the night dancing.
+    => Thanks foobar!
+
+The extension mechanism is not only about adding methods. The partyAllNight() method uses an attribute of the `Steroids` class. This means that when you extend the `BicycleRider` class with a method of the `Steroids` class, you actually create a new `Steroids` instance inside the `BicycleRider` object.
+
+>**CAUTION**
+>You cannot add two methods with the same name to an existing class. This is because the `callMixins()` call in the `__call()` methods uses the mixin method name as a key. Also, you cannot add a method to a class that already has a method with the same name, because the mixin mechanism relies on the magic `__call()` method and, in that particular case, it would never be called.
+
+The second argument of the `register()` call is a PHP callable, so it can be a `class::method` array, or an `object->method` array, or even a function name. See examples in Listing 17-9.
+
+Listing 17-9 - Any Callable Can Be Registered As a Mixer Extension
+
+    [php]
+    // Use a class method as a callable
+    sfMixer::register('BicycleRider', array('Steroids', 'partyAllNight'));
+
+    // Use an object method as a callable
+    $mySteroids = new Steroids();
+    sfMixer::register('BicycleRider', array($mySteroids, 'partyAllNight'));
+
+    // Use a function as a callable
+    sfMixer::register('BicycleRider', 'die');
+
+The extension mechanism is dynamic, which means that even if you already instantiated an object, it can take advantage of further extensions in its class. See an example in Listing 17-10.
+
+Listing 17-10 - The Extension Mechanism Is Dynamic and Can Occur Even After Instantiation
+
+    [php]
+    $simpleRider = new BicycleRider();
+    $simpleRider->sprint(500);
+    => John sprints 500 meters
+    sfMixer::register('BicycleRider:sprint', array('Steroids', 'breakRecord'));
+    $simpleRider->sprint(500);
+    => John sprints 500 meters
+    => Nobody ever made 500 meters that fast before!
+
+### Extending with More Precision
+
+The `sfMixer::callMixins()` instruction is actually a shortcut to something a little bit more elaborate. It automatically loops over the list of registered mixins and calls them one by one, passing to it the current object and the current method parameters. In short, an `sfMixer::callMixins()` call behaves more or less like Listing 17-11.
+
+Listing 17-11 - `callMixin()` Loops Over the Registered Mixins and Executes Them
+
+    [php]
+    foreach (sfMixer::getCallables($class.':'.$method.':'.$hookName) as $callable)
+    {
+      call_user_func_array($callable, $parameters);
+    }
+
+If you want to pass other parameters or to do something special with the return value, you can write the foreach loop explicitly instead of using the shortcut method. Look at Listing 17-12 for an example of a mixin more integrated into a class.
+
+Listing 17-12 - Replacing `callMixin()` by a Custom Loop
+
+    [php]
+    class Income
+    {
+      protected $amout = 0;
+
+      public function calculateTaxes($rate = 0)
+      {
+        $taxes = $this->amount * $rate;
+        foreach (sfMixer::getCallables('Income:calculateTaxes') as $callable)
+        {
+          $taxes += call_user_func($callable, $this->amount, $rate);
+        }
+
+        return $taxes;
+      }
+    }
+
+    class FixedTax
+    {
+      protected $minIncome = 10000;
+      protected $taxAmount = 500;
+
+      public function calculateTaxes($amount)
+      {
+        return ($amount > $this->minIncome) ? $this->taxAmount : 0;
+      }
+    }
+
+    sfMixer::register('Income:calculateTaxes', array('FixedTax', 'calculateTaxes'));
+
+>**SIDEBAR**
+>Propel Behaviors
+>
+>Propel behaviors, discussed previously in Chapter 8, are a special kind of mixin: They extend Propel-generated objects. Let's look at an example.
+>
+>The Propel objects corresponding to the tables of the database all have a delete() method, which deletes the related record from the database. But for an `Invoice` class, for which you can't delete a record, you may want to alter the `delete()` method to be able to keep the record in the database and change the value of an is_deleted attribute to true instead. Usual object retrieval methods (`doSelect()`, `retrieveByPk()`) would only consider the records for which `is_deleted` is false. You would also need to add another method called `forceDelete()`, which would allow you to really delete the record. In fact, all these modifications can be packaged into a new class, called `ParanoidBehavior`. The final `Invoice` class extends the Propel `BaseInvoice` class and has methods of the `ParanoidBehavior` mixed in.
+>
+>So a behavior is a mixin on a Propel object. Actually, the term "behavior" in symfony covers one more thing: the fact that the mixin is packaged as a plug-in. The `ParanoidBehavior` class just mentioned corresponds to a real symfony plug-in called `sfPropelParanoidBehaviorPlugin`. Refer to the symfony wiki ([http://www.symfony-project.com/trac/wiki/sfPropelParanoidBehaviorPlugin](http://www.symfony-project.com/trac/wiki/sfPropelParanoidBehaviorPlugin)) for details on installation and use of this plug-in.
+>
+>One last word about behaviors: To be able to support them, the generated Propel objects must contain quite a number of hooks. These may slow down execution a little and penalize performance if you don't use behaviors. That's why the hooks are not enabled by default. In order to add them and enable behavior support, you must first set the `propel.builder.addBehaviors` property to `true` in the `propel.ini` file and rebuild the model.
+
+Factories
+---------
+
+A factory is the definition of a class for a certain task. Symfony relies on factories for its core features such as the controller and session capabilities. For instance, when the framework needs to create a new request object, it searches in the factory definition for the name of the class to use for that purpose. The default factory definition for requests is `sfWebRequest`, so symfony creates an object of this class in order to deal with requests. The great advantage of using a factory definition is that it is very easy to alter the core features of the framework: Just change the factory definition, and symfony will use your custom request class instead of its own.
+
+The factory definitions are stored in the `factories.yml` configuration file. Listing 17-13 shows the default factory definition file. Each definition is made of the name of an autoloaded class and (optionally) a set of parameters. For instance, the session storage factory (set under the `storage:` key) uses a `session_name` parameter to name the cookie created on the client computer to allow persistent sessions.
+
+Listing 17-13 - Default Factories File, in `myapp/config/factories.yml`
+
+    cli:
+      controller:
+        class: sfConsoleController
+      request:
+        class: sfConsoleRequest
+
+    test:
+      storage:
+        class: sfSessionTestStorage
+
+    #all:
+    #  controller:
+    #    class: sfFrontWebController
+    #
+    #  request:
+    #    class: sfWebRequest
+    #
+    #  response:
+    #    class: sfWebResponse
+    #
+    #  user:
+    #    class: myUser
+    #
+    #  storage:
+    #    class: sfSessionStorage
+    #    param:
+    #      session_name: symfony
+    #
+    #  view_cache:
+    #    class: sfFileCache
+    #    param:
+    #      automaticCleaningFactor: 0
+    #      cacheDir:                %SF_TEMPLATE_CACHE_DIR%
+
+The best way to change a factory is to create a new class inheriting from the default factory and to add new methods to it. For instance, the user session factory is set to the `myUser` class (located in `myapp/lib/`) and inherits from `sfUser`. Use the same mechanism to take advantage of the existing factories. Listing 17-14 shows an example of a new factory for the request object.
+
+Listing 17-14 - Overriding Factories
+
+    [php]
+    // Create a myRequest.class.php in an autoloaded directory,
+    // For instance in myapp/lib/
+    <?php
+
+    class myRequest extends sfRequest
+    {
+      // Your code here
+    }
+
+    // Declare this class as the request factory in factories.yml
+    all:
+      request:
+        class: myRequest
+
+Bridges to Other Framework Components
+-------------------------------------
+
+If you need capabilities provided by a third-party class, and if you don't want to copy this class in one of the symfony `lib/` dirs, you will probably install it outside of the usual places where symfony looks for files. In that case, using this class will imply a manual `require` in your code, unless you use the symfony bridge to take advantage of the autoloading.
+
+Symfony doesn't (yet) provide tools for everything. If you need a PDF generator, an API to Google Maps, or a PHP implementation of the Lucene search engine, you will probably need a few libraries from the Zend Framework. If you want to manipulate images directly in PHP, connect to a POP3 account to read e-mails, or design a console interface, you might choose the libraries from eZcomponents. Fortunately, if you define the right settings, the components from both these libraries will work out of the box in symfony.
+
+The first thing that you need to declare (unless you installed the third-party libraries via PEAR) is the path to the root directory of the libraries. This is to be done in the application `settings.yml`:
+
+    .settings:
+      zend_lib_dir:   /usr/local/zend/library/
+      ez_lib_dir:     /usr/local/ezcomponents/
+
+Then, extend the autoload routine by specifying which library to consider when the autoloading fails with symfony:
+
+    .settings:
+      autoloading_functions:
+        - [sfZendFrameworkBridge, autoload]
+        - [sfEzComponentsBridge,  autoload]
+
+Note that this setting is distinct from the rules defined in `autoload.yml` (see Chapter 19 for more information about this file). The `autoloading_functions` setting specifies bridge classes, and `autoload.yml` specifies paths and rules for searching. The following describes what will happen when you create a new object of an unloaded class:
+
+  1. The symfony autoloading function (`sfCore::splAutoload()`) first looks for a class in the paths declared in the `autoload.yml` file.
+  2. If none is found, the callback methods declared in the `sf_autoloading_functions` setting will be called one after the other, until one of them returns `true`:
+  3. `sfZendFrameworkBridge::autoload()`
+  4. `sfEzComponentsBridge::autoload()`
+  5. If these also return false, if you use PHP 5.0.X, symfony will throw an exception saying that the class doesn't exist. Starting with PHP 5.1, the error will be generated by PHP itself.
+
+This means that the other framework components benefit from the autoload mechanism, and you can use them even more easily than within their own environment. For instance, if you want to use the `Zend_Search` component in the Zend Framework to implement an equivalent of the Lucene search engine in PHP, you have to write this:
+
+    [php]
+    require_once 'Zend/Search/Lucene.php';
+    $doc = new Zend_Search_Lucene_Document();
+    $doc->addField(Zend_Search_Lucene_Field::Text('url', $docUrl));
+    ...
+
+With symfony and the Zend Framework bridge, it is simpler. Just write this:
+
+    [php]
+    $doc = new Zend_Search_Lucene_Document(); // The class is autoloaded
+    $doc->addField(Zend_Search_Lucene_Field::Text('url', $docUrl));
+    ...
+
+The available bridges are stored in the `$sf_symfony_lib_dir/addon/bridge/` directory.
+
+Plug-Ins
+--------
+
+You will probably need to reuse a piece of code that you developed for one of your symfony applications. If you can package this piece of code into a single class, no problem: Drop the class in one of the `lib/` folders of another application and the autoloader will take care of the rest. But if the code is spread across more than one file, such as a complete new theme for the administration generator or a combination of JavaScript files and helpers to automate your favorite visual effect, just copying the files is not the best solution.
+
+Plug-ins offer a way to package code disseminated in several files and to reuse this code across several projects. Into a plug-in, you can package classes, filters, mixins, helpers, configuration, tasks, modules, schemas and model extensions, fixtures, web assets, etc. Plug-ins are easy to install, upgrade, and uninstall. They can be distributed as a .tgz archive, a PEAR package, or a simple checkout of a code repository. The PEAR packaged plug-ins have the advantage of managing dependencies, being easier to upgrade and automatically discovered. The symfony loading mechanisms take plug-ins into account, and the features offered by a plug-in are available in the project as if the plug-in code was part of the framework.
+
+So, basically, a plug-in is a packaged extension for a symfony project. With plug-ins, not only can you reuse your own code across applications, but you can also reuse developments made by other contributors and add third-party extensions to the symfony core.
+
+### Finding Symfony Plug-Ins
+
+The symfony project website contains a page dedicated to symfony plug-ins. It is in the symfony wiki and accessible with the following URL:
+
+    http://www.symfony-project.com/trac/wiki/SymfonyPlugins
+
+Each plug-in listed there has its own page, with detailed installation instructions and documentation.
+
+Some of these plug-ins are contributions from the community, and some come from the core symfony developers. Among the latter, you will find the following:
+
+  * `sfFeedPlugin`: Automates the manipulation of RSS and Atom feeds
+  * `sfThumbnailPlugin`: Creates thumbnails--for instance, for uploaded images
+  * `sfMediaLibraryPlugin`: Allows media upload and management, including an extension for rich text editors to allow authoring of images inside rich text
+  * `sfShoppingCartPlugin`: Allows shopping cart management
+  * `sfPagerNavigationPlugin`: Provides classical and Ajax pager controls, based on an `sfPager` object
+  * `sfGuardPlugin`: Provides authentication, authorization, and other user management features above the standard security feature of symfony
+  * `sfPrototypePlugin`: Provides prototype and script.aculo.us JavaScript files as a standalone library
+  * `sfSuperCachePlugin`: Writes pages in cache directory under the web root to allow the web server to serve them as fast as possible
+  * `sfOptimizerPlugin`: Optimizes your application's code to make it execute faster in the production environment (see the next chapter for details)
+  * `sfErrorLoggerPlugin`: Logs every 404 and 500 error in a database and provides an administration module to browse these errors
+  * `sfSslRequirementPlugin`: Provides SSL encryption support for actions
+
+The wiki also proposes plug-ins designed to extend your Propel objects, also called behaviors. Among them, you will find the following:
+
+  * `sfPropelParanoidBehaviorPlugin`: Disables object deletion and replaces it with the updating of a `deleted_at` column
+  * `sfPropelOptimisticLockBehaviorPlugin`: Implements optimistic locking for Propel objects
+
+You should regularly check out the symfony wiki, because new plug-ins are added all the time, and they bring very useful shortcuts to many aspects of web application programming.
+
+Apart from the symfony wiki, the other ways to distribute plug-ins are to propose a plug-ins archive for download, to host them in a PEAR channel, or to store them in a public version control repository.
+
+### Installing a Plug-In
+
+The plug-in installation process differs according to the way it's packaged. Always refer to the included README file and/or installation instructions on the plug-in download page. Also, always clear the symfony cache after installing a plug-in.
+
+Plug-ins are installed applications on a per-project basis. All the methods described in the following sections result in putting all the files of a plug-in into a `myproject/plugins/pluginName/` directory.
+
+#### PEAR Plug-Ins
+
+Plug-ins listed on the symfony wiki are bundled as PEAR packages attached to a wiki page. To install such a plug-in, use the `plugin-install` task with a full URL, as shown in Listing 17-15.
+
+Listing 17-15 - Installing a Plug-In from the Symfony Wiki
+
+    > cd myproject
+    > php symfony plugin-install http://plugins.symfony-project.com/pluginName
+    > php symfony cc
+
+Alternatively, you can download the plug-in and install it from the disk. In this case, replace the channel name with the absolute path to the package archive, as shown in Listing 17-16.
+
+Listing 17-16 - Installing a Plug-In from a Downloaded PEAR Package
+
+    > cd myproject
+    > php symfony plugin-install /home/path/to/downloads/pluginName.tgz
+    > php symfony cc
+
+Some plug-ins are hosted on PEAR channels. Install them with the `plugin-install` task, and don't forget to mention the channel name, as shown in Listing 17-17.
+
+Listing 17-17 - Installing a Plug-In from a PEAR Channel
+
+    > cd myproject
+    > php symfony plugin-install channelName/pluginName
+    > php symfony cc
+
+These three types of installation all use a PEAR package, so the term "PEAR plug-in" will be used indiscriminately to talk about plug-ins installed from the symfony wiki, a PEAR channel, or a downloaded PEAR package.
+
+#### Archive Plug-Ins
+
+Some plug-ins come as a simple archive of files. To install those, just unpack the archive into your project's `plugins/` directory. If the plug-in contains a `web/` subdirectory, make a copy or a symlink of this directory into the project's `web/` directory, as demonstrated in Listing 17-18. Finally, don't forget to clear the cache.
+
+Listing 17-18 - Installing a Plug-In from an Archive
+
+    > cd plugins
+    > tar -zxpf myPlugin.tgz
+    > cd ..
+    > ln -sf plugins/myPlugin/web web/myPlugin
+    > php symfony cc
+
+#### Installing Plug-Ins from a Version Control Repository
+
+Plug-ins sometimes have their own source code repository for version control. You can install them by doing a simple checkout in the `plugins/` directory, but this can be problematic if your project itself is under version control.
+
+Alternatively, you can declare the plug-in as an external dependency so that every update of your project source code also updates the plug-in source code. For instance, Subversion stores external dependencies in the `svn:externals` property. So you can add a plug-in by editing this property and updating your source code afterwards, as Listing 17-19 demonstrates.
+
+Listing 17-19 - Installing a Plug-In from a Source Version Repository
+
+    > cd myproject
+    > svn propedit svn:externals plugins
+      pluginName   http://svn.example.com/pluginName/trunk
+    > svn up
+    > php symfony cc
+
+>**NOTE**
+>If the plug-in contains a `web/` directory, you must create a symlink to it the same way as for an archive plug-in.
+
+#### Activating a Plug-In Module
+
+Some plug-ins contain whole modules. The only difference between module plug-ins and classical modules is that module plug-ins don't appear in the `myproject/apps/myapp/modules/` directory (to keep them easily upgradeable). They also need to be activated in the `settings.yml` file, as shown in Listing 17-20.
+
+Listing 17-20 - Activating a Plug-In Module, in `myapp/config/settings.yml`
+
+    all:
+      .settings:
+        enabled_modules:  [default, sfMyPluginModule]
+
+This is to avoid a situation where the plug-in module is mistakenly made available for an application that doesn't require it, which could open a security breach. Think about a plug-in that provides `frontend` and `backend` modules. You will need to enable the `frontend` modules only in your `frontend` application, and the `backend` ones only in the `backend` application. This is why plug-in modules are not activated by default.
+
+>**TIP**
+>The default module is the only enabled module by default. That's not really a plug-in module, because it resides in the framework, in `$sf_symfony_data_dir/modules/default/`. This is the module that provides the congratulations pages, and the default error pages for 404 and credentials required errors. If you don't want to use the symfony default pages, just remove this module from the `enabled_modules` setting.
+
+#### Listing the Installed Plug-Ins
+
+If a glance at your project's `plugins/` directory can tell you which plug-ins are installed, the `plugin-list` task tells you even more: the version number and the channel name of each installed plug-in (see Listing 17-21).
+
+Listing 17-21 - Listing Installed Plug-Ins
+
+    > cd myproject
+    > php symfony plugin-list
+
+    Installed plugins:
+    sfPrototypePlugin               1.0.0-stable # pear.symfony-project.com (symfony)
+    sfSuperCachePlugin              1.0.0-stable # pear.symfony-project.com (symfony)
+    sfThumbnail                     1.1.0-stable # pear.symfony-project.com (symfony)
+
+#### Upgrading and Uninstalling Plug-Ins
+
+To uninstall a PEAR plug-in, call the `plugin-uninstall` task from the root project directory, as shown in Listing 17-22. You must prefix the plug-in name with its installation channel (use the `plugin-list` task to determine this channel).
+
+Listing 17-22 - Uninstalling a Plug-In
+
+    > cd myproject
+    > php symfony plugin-uninstall pear.symfony-project.com/sfPrototypePlugin
+    > php symfony cc
+
+>**TIP**
+>Some channels have an alias. For instance, the `pear.symfony-project.com` channel can also be seen as `symfony`, which means that you can uninstall the `sfPrototypePlugin` as in Listing 17-22 by calling simply `php symfony plugin-uninstall symfony/sfPrototypePlugin`.
+
+To uninstall an archive plug-in or an SVN plug-in, remove manually the plug-in files from the project `plugins/` and `web/` directories, and clear the cache.
+
+To upgrade a plug-in, either use the `plugin-upgrade` task (for a PEAR plug-in) or do an `svn update` (if you grabbed the plug-in from a version control repository). Archive plug-ins can't be upgraded easily.
+
+### Anatomy of a Plug-In
+
+Plug-ins are written using the PHP language. If you can understand how an application is organized, you can understand the structure of the plug-ins.
+
+#### Plug-In File Structure
+
+A plug-in directory is organized more or less like a project directory. The plug-in files have to be in the right directories in order to be loaded automatically by symfony when needed. Have a look at the plug-in file structure description in Listing 17-23.
+
+Listing 17-23 - File Structure of a Plug-In
+
+    pluginName/
+      config/
+        *schema.yml        // Data schema
+        *schema.xml
+        config.php         // Specific plug-in configuration
+      data/
+        generator/
+          sfPropelAdmin
+            */             // Administration generator themes
+              templates/
+              skeleton/
+        fixtures/
+          *.yml            // Fixtures files
+        tasks/
+          *.php            // Pake tasks
+      lib/
+        *.php              // Classes
+        helper/
+          *.php            // Helpers
+        model/
+          *.php            // Model classes
+      modules/
+        */                 // Modules
+          actions/
+            actions.class.php
+          config/
+            module.yml
+            view.yml
+            security.yml
+          templates/
+            *.php
+          validate/
+            *.yml
+      web/
+        *                  // Assets
+
+#### Plug-In Abilities
+
+Plug-ins can contain a lot of things. Their content is automatically taken into account by your application at runtime and when calling tasks with the command line. But for plug-ins to work properly, you must respect a few conventions:
+
+  * Database schemas are detected by the `propel-` tasks. When you call `propel-build-model` in your project, you rebuild the project model and all the plug-in models with it. Note that a plug-in schema must always have a package attribute under the shape `plugins.pluginName`. `lib.model`, as shown in Listing 17-24.
+
+Listing 17-24 - Example Schema Declaration in a Plug-In, in `myPlugin/config/schema.yml`
+
+    propel:
+      _attributes:    { package: plugins.myPlugin.lib.model }
+      my_plugin_foobar:
+        _attributes:    { phpName: myPluginFoobar }
+          id:
+          name:           { type: varchar, size: 255, index: unique }
+          ...
+
+  * The plug-in configuration is to be included in the plug-in bootstrap script (`config.php`). This file is executed after the application and project configuration, so symfony is already bootstrapped at that time. You can use this file, for instance, to add directories to the PHP include path or to extend existing classes with mixins.
+  * Fixtures files located in the plug-in `data/fixtures/` directory are processed by the `propel-load-data` task.
+  * Tasks are immediately available to the symfony command line as soon as the plug-in is installed. It is a best practice to prefix the task by something meaningful--for instance, the plug-in name. Type `symfony` to see the list of available tasks, including the ones added by plug-ins.
+  * Custom classes are autoloaded just like the ones you put in your project `lib/` folders.
+  * Helpers are automatically found when you call `use_helper()` in templates. They must be in a` helper/` subdirectory of one of the plug-in's `lib/` directory.
+  * Model classes in `myplugin/lib/model/` specialize the model classes generated by the Propel builder (in `myplugin/lib/model/om/` and `myplugin/lib/model/map/`). They are, of course, autoloaded. Be aware that you cannot override the generated model classes of a plug-in in your own project directories.
+  * Modules provide new actions accessible from the outside, provided that you declare them in the `enabled_modules` setting in your application.
+  * Web assets (images, scripts, style sheets, etc.) are made available to the server. When you install a plug-in via the command line, symfony creates a symlink to the project `web/` directory if the system allows it, or copies the content of the module `web/` directory into the project one. If the plug-in is installed from an archive or a version control repository, you have to copy the plug-in `web/` directory by hand (as the `README` bundled with the plug-in should mention).
+
+#### Manual Plug-In Setup
+
+There are some elements that the `plugin-install` task cannot handle on its own, and which require manual setup during installation:
+
+  * Custom application configuration can be used in the plug-in code (for instance, by using `sfConfig::get('app_myplugin_foo')`), but you can't put the default values in an `app.yml` file located in the plug-in `config/` directory. To handle default values, use the second argument of the `sfConfig::get()` method. The settings can still be overridden at the application level (see Listing 17-25 for an example).
+  * Custom routing rules have to be added manually to the application `routing.yml`.
+  * Custom filters have to be added manually to the application `filters.yml`.
+  * Custom factories have to be added manually to the application `factories.yml`.
+
+Generally speaking, all the configuration that should end up in one of the application configuration files has to be added manually. Plug-ins with such manual setup should embed a `README` file describing installation in detail.
+
+#### Customizing a Plug-In for an Application
+
+Whenever you want to customize a plug-in, never alter the code found in the `plugins/` directory. If you do so, you will lose all your modifications when you upgrade the plug-in. For customization needs, plug-ins provide custom settings, and they support overriding.
+
+Well-designed plug-ins use settings that can be changed in the application `app.yml`, as Listing 17-25 demonstrates.
+
+Listing 17-25 - Customizing a Plug-In That Uses the Application Configuration
+
+    [php]
+    // example plug-in code
+    $foo = sfConfig::get('app_my_plugin_foo', 'bar');
+
+    // Change the 'foo' default value ('bar') in the application app.yml
+    all:
+      my_plugin:
+        foo:       barbar
+
+The module settings and their default values are often described in the plug-in's `README` file.
+
+You can replace the default contents of a plug-in module by creating a module of the same name in your own application. It is not really overriding, since the elements in your application are used instead of the ones of the plug-in. It works fine if you create templates and configuration files of the same name as the ones of the plug-ins.
+
+On the other hand, if a plug-in wants to offer a module with the ability to override its actions, the `actions.class.php` in the plug-in module must be empty and inherit from an autoloading class, so that the method of this class can be inherited as well by the `actions.class.php` of the application module. See Listing 17-26 for an example.
+
+Listing 17-26 - Customizing a Plug-In Action
+
+    [php]
+    // In myPlugin/modules/mymodule/lib/myPluginmymoduleActions.class.php
+    class myPluginmymoduleActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        // Some code there
+      }
+    }
+
+    // In myPlugin/modules/mymodule/actions/actions.class.php
+    class mymoduleActions extends myPluginmymoduleActions
+    {
+      // Nothing
+    }
+
+    // In myapp/modules/mymodule/actions/actions.class.php
+    class mymoduleActions extends myPluginmymoduleActions
+    {
+      public function executeIndex()
+      {
+        // Override the plug-in code there
+      }
+    }
+
+### How to Write a Plug-In
+
+Only plug-ins packaged as PEAR packages can be installed with the `plugin-install` task. Remember that such plug-ins can be distributed via the symfony wiki, a PEAR channel, or a simple file download. So if you want to author a plug-in, it is better to publish it as a PEAR package than as a simple archive. In addition, PEAR packaged plug-ins are easier to upgrade, can declare dependencies, and automatically deploy assets in the `web/` directory.
+
+#### File Organization
+
+Suppose you have developed a new feature and want to package it as a plug-in. The first step is to organize the files logically so that the symfony loading mechanisms can find them when needed. For that purpose, you have to follow the structure given in Listing 17-23. Listing 17-27 shows an example of file structure for an `sfSamplePlugin` plug-in.
+
+Listing 17-27 - Example List of Files to Package As a Plug-In
+
+    sfSamplePlugin/
+      README
+      LICENSE
+      config/
+        schema.yml
+      data/
+        fixtures/
+          fixtures.yml
+        tasks/
+          sfSampleTask.php
+      lib/
+        model/
+          sfSampleFooBar.php
+          sfSampleFooBarPeer.php
+        validator/
+          sfSampleValidator.class.php
+      modules/
+        sfSampleModule/
+          actions/
+            actions.class.php
+          config/
+            security.yml
+          lib/
+            BasesfSampleModuleActions.class.php
+          templates/
+            indexSuccess.php
+      web/
+        css/
+          sfSampleStyle.css
+        images/
+          sfSampleImage.png
+
+For authoring, the location of the plug-in directory (`sfSamplePlugin/` in Listing 17-27) is not important. It can be anywhere on the disk.
+
+>**TIP**
+>Take examples of the existing plug-ins and, for your first attempts at creating a plug-in, try to reproduce their naming conventions and file structure.
+
+#### Creating the package.xml File
+
+The next step of plug-in authoring is to add a package.xml file at the root of the plug-in directory. The `package.xml` follows the PEAR syntax. Have a look at a typical symfony plug-in `package.xml` in Listing 17-28.
+
+Listing 17-28 - Example `package.xml` for a Symfony Plug-In
+
+    [xml]
+    <?xml version="1.0" encoding="UTF-8"?>
+    <package packagerversion="1.4.6" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+     <name>sfSamplePlugin</name>
+     <channel>pear.symfony-project.com</channel>
+     <summary>symfony sample plugin</summary>
+     <description>Just a sample plugin to illustrate PEAR packaging</description>
+     <lead>
+      <name>Fabien POTENCIER</name>
+      <user>fabpot</user>
+      <email>fabien.potencier@symfony-project.com</email>
+      <active>yes</active>
+     </lead>
+     <date>2006-01-18</date>
+     <time>15:54:35</time>
+     <version>
+      <release>1.0.0</release>
+      <api>1.0.0</api>
+     </version>
+     <stability>
+      <release>stable</release>
+      <api>stable</api>
+     </stability>
+     <license uri="http://www.symfony-project.com/license">MIT license</license>
+     <notes>-</notes>
+     <contents>
+      <dir name="/">
+       <file role="data" name="README" />
+       <file role="data" name="LICENSE" />
+       <dir name="config">
+        <!-- model -->
+        <file role="data" name="schema.yml" />
+       </dir>
+       <dir name="data">
+        <dir name="fixtures">
+         <!-- fixtures -->
+         <file role="data" name="fixtures.yml" />
+        </dir>
+        <dir name="tasks">
+         <!-- tasks -->
+         <file role="data" name="sfSampleTask.php" />
+        </dir>
+       </dir>
+       <dir name="lib">
+        <dir name="model">
+         <!-- model classes -->
+         <file role="data" name="sfSampleFooBar.php" />
+         <file role="data" name="sfSampleFooBarPeer.php" />
+        </dir>
+        <dir name="validator">
+         <!-- validators ->>
+         <file role="data" name="sfSampleValidator.class.php" />
+        </dir>
+       </dir>
+       <dir name="modules">
+        <dir name="sfSampleModule">
+         <file role="data" name="actions/actions.class.php" />
+         <file role="data" name="config/security.yml" />
+         <file role="data" name="lib/BasesfSampleModuleActions.class.php" />
+         <file role="data" name="templates/indexSuccess.php" />
+        </dir>
+       </dir>
+       <dir name="web">
+        <dir name="css">
+         <!-- stylesheets -->
+         <file role="data" name="sfSampleStyle.css" />
+        </dir>
+        <dir name="images">
+         <!-- images -->
+         <file role="data" name="sfSampleImage.png" />
+        </dir>
+       </dir>
+      </dir>
+     </contents>
+     <dependencies>
+      <required>
+       <php>
+        <min>5.0.0</min>
+       </php>
+       <pearinstaller>
+        <min>1.4.1</min>
+       </pearinstaller>
+       <package>
+        <name>symfony</name>
+        <channel>pear.symfony-project.com</channel>
+        <min>1.0.0</min>
+        <max>1.1.0</max>
+        <exclude>1.1.0</exclude>
+       </package>
+      </required>
+     </dependencies>
+     <phprelease />
+     <changelog />
+    </package>
+
+The interesting parts here are the `<contents>` and the `<dependencies>` tags, described next. For the rest of the tags, there is nothing specific to symfony, so you can refer to the PEAR online manual ([http://pear.php.net/manual/en/](http://pear.php.net/manual/en/)) for more details about the `package.xml` format.
+
+#### Contents
+
+The `<contents>` tag is the place where you must describe the plug-in file structure. This will tell PEAR which files to copy and where. Describe the file structure with `<dir>` and `<file>` tags. All `<file>` tags must have a `role="data"` attribute. The `<contents>` part of Listing 17-28 describes the exact directory structure of Listing 17-27.
+
+>**NOTE**
+>The use of `<dir>` tags is not compulsory, since you can use relative paths as `name` values in the `<file>` tags. However, it is recommended so that the `package.xml` file remains readable.
+
+#### Plug-In Dependencies
+
+Plug-ins are designed to work with a given set of versions of PHP, PEAR, symfony, PEAR packages, or other plug-ins. Declaring these dependencies in the `<dependencies>` tag tells PEAR to check that the required packages are already installed, and to raise an exception if not.
+
+You should always declare dependencies on PHP, PEAR, and symfony, at least the ones corresponding to your own installation, as a minimum requirement. If you don't know what to put, add a requirement for PHP 5.0, PEAR 1.4, and symfony 1.0.
+
+It is also recommended to add a maximum version number of symfony for each plug-in. This will cause an error message when trying to use a plug-in with a more advanced version of the framework, and this will oblige the plug-in author to make sure that the plug-in works correctly with this version before releasing it again. It is better to have an alert and to download an upgrade rather than have a plug-in fail silently.
+
+#### Building the Plug-In
+
+The PEAR component has a command (`pear package`) that creates the `.tgz` archive of the package, provided you call the command shown in Listing 17-29 from a directory containing a `package.xml`.
+
+Listing 17-29 - Packaging a Plug-In As a PEAR Package
+
+    > cd sfSamplePlugin
+    > pear package
+
+    Package sfSamplePlugin-1.0.0.tgz done
+
+Once your plug-in is built, check that it works by installing it yourself, as shown in Listing 17-30.
+
+Listing 17-30 - Installing the Plug-In
+
+    > cp sfSamplePlugin-1.0.0.tgz /home/production/myproject/
+    > cd /home/production/myproject/
+    > php symfony plugin-install sfSamplePlugin-1.0.0.tgz
+
+According to their description in the `<contents>` tag, the packaged files will end up in different directories of your project. Listing 17-31 shows where the files of the `sfSamplePlugin` should end up after installation.
+
+Listing 17-31 - The Plug-In Files Are Installed on the `plugins/` and `web/` Directories
+
+    plugins/
+      sfSamplePlugin/
+        README
+        LICENSE
+        config/
+          schema.yml
+        data/
+          fixtures/
+            fixtures.yml
+          tasks/
+            sfSampleTask.php
+        lib/
+          model/
+            sfSampleFooBar.php
+            sfSampleFooBarPeer.php
+          validator/
+            sfSampleValidator.class.php
+        modules/
+          sfSampleModule/
+            actions/
+              actions.class.php
+            config/
+              security.yml
+            lib/
+              BasesfSampleModuleActions.class.php
+            templates/
+              indexSuccess.php
+    web/
+      sfSamplePlugin/               ## Copy or symlink, depending on system
+        css/
+          sfSampleStyle.css
+        images/
+          sfSampleImage.png
+
+Test the way the plug-in behaves in your application. If it works well, you are ready to distribute it across projects--or to contribute it to the symfony community.
+
+#### Hosting Your Plug-In in the Symfony Project Website
+
+A symfony plug-in gets the broadest audience when distributed by the `symfony-project.com` website. Even your own plug-ins can be distributed this way, provided that you follow these steps:
+
+  1. Make sure the `README` file describes the way to install and use your plug-in, and that the `LICENSE` file gives the license details. Format your `README` with the Wiki Formatting syntax ([http://www.symfony-project.com/trac/wiki/WikiFormatting](http://www.symfony-project.com/trac/wiki/WikiFormatting)).
+  2. Create a PEAR package for your plug-in by calling the `pear package` command, and test it. The PEAR package must be named `sfSamplePlugin-1.0.0.tgz` (1.0.0 is the plug-in version).
+  3. Create a new page on the symfony wiki named `sfSamplePlugin` (`Plugin` is a mandatory suffix). In this page, describe the plug-in usage, the license, the dependencies, and the installation procedure. You can reuse the contents of the plug-in `README` file. Check the existing plug-ins' wiki pages and use them as an example.
+  4. Attach your PEAR package to the wiki page (`sfSamplePlugin-1.0.0.tgz`).
+  5. Add the new plug-in wiki page (`[wiki:sfSamplePlugin]`) to the list of available plug-ins, which is also a wiki page ([http://www.symfony-project.com/trac/wiki/SymfonyPlugins](http://www.symfony-project.com/trac/wiki/SymfonyPlugins)).
+
+If you follow this procedure, users will be able to install your plug-in by simply typing the following command in a project directory:
+
+    > php symfony plugin-install http://plugins.symfony-project.com/sfSamplePlugin
+
+#### Naming Conventions
+
+To keep the `plugins/` directory clean, ensure all the plug-in names are in camelCase and end with `Plugin` (for example, `shoppingCartPlugin`, `feedPlugin`, and so on). Before naming your plug-in, check that there is no existing plug-in with the same name.
+
+>**NOTE**
+>Plug-ins relying on Propel should contain `Propel` in the name. For instance, an authentication plug-in using the Propel data access objects should be called `sfPropelAuth`.
+
+Plug-ins should always include a `LICENSE` file describing the conditions of use and the chosen license. You are also advised to add a `README` file to explain the version changes, purpose of the plug-in, its effect, installation and configuration instructions, etc.
+
+Summary
+-------
+
+The symfony classes contain `sfMixer` hooks that give them the ability to be modified at the application level. The mixins mechanism allows multiple inheritance and class overriding at runtime even if the PHP limitations forbid it. So you can easily extend the symfony features, even if you have to modify the core classes for that--the factories configuration is here for that.
+
+Many such extensions already exist; they are packaged as plug-ins, to be easily installed, upgraded, and uninstalled through the symfony command line. Creating a plug-in is as easy as creating a PEAR package, and provides reusability across applications.
+
+The symfony wiki contains many plug-ins, and you can even add your own. So now that you know how to do it, we hope that you will enhance the symfony core with a lot of useful extensions!
