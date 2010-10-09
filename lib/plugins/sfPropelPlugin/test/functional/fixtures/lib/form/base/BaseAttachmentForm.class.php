@@ -21,7 +21,7 @@ abstract class BaseAttachmentForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'id'         => new sfValidatorPropelChoice(array('model' => 'Attachment', 'column' => 'id', 'required' => false)),
+      'id'         => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
       'article_id' => new sfValidatorPropelChoice(array('model' => 'Article', 'column' => 'id', 'required' => false)),
       'name'       => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'file'       => new sfValidatorString(array('max_length' => 255, 'required' => false)),

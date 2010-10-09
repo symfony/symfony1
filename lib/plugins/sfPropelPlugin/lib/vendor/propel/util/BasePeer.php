@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasePeer.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: BasePeer.php 1608 2010-03-15 23:09:22Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,7 +35,7 @@
  * @author     John D. McNally <jmcnally@collab.net> (Torque)
  * @author     Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author     Stephen Haberman <stephenh@chase3000.com> (Torque)
- * @version    $Revision: 1262 $
+ * @version    $Revision: 1608 $
  * @package    propel.util
  */
 class BasePeer
@@ -501,6 +501,9 @@ class BasePeer
 			$params = array();
 
 			if ($needsComplexCount) {
+				if (self::needsSelectAliases($criteria)) {
+					self::turnSelectColumnsToAliases($criteria);
+				}
 				$selectSql = self::createSelectSql($criteria, $params);
 				$sql = 'SELECT COUNT(*) FROM (' . $selectSql . ') AS propelmatch4cnt';
 			} else {
@@ -666,6 +669,66 @@ class BasePeer
 		return $pk;
 	}
 
+	/**
+	 * Checks whether the Criteria needs to use column aliasing
+	 * This is implemented in a service class rather than in Criteria itself
+	 * in order to avoid doing the tests when it's not necessary (e.g. for SELECTs)
+	 */
+	public static function needsSelectAliases(Criteria $criteria)
+	{
+		$columnNames = array();
+		foreach ($criteria->getSelectColumns() as $fullyQualifiedColumnName) {
+			if ($pos = strrpos($fullyQualifiedColumnName, '.')) {
+				$columnName = substr($fullyQualifiedColumnName, $pos);
+				if (isset($columnNames[$columnName])) {
+					// more than one column with the same name, so aliasing is required
+					return true;
+				}
+				$columnNames[$columnName] = true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Ensures uniqueness of select column names by turning them all into aliases
+	 * This is necessary for queries on more than one table when the tables share a column name
+	 * @see http://propel.phpdb.org/trac/ticket/795
+	 *
+	 * @param Criteria $criteria
+	 * 
+	 * @return Criteria The input, with Select columns replaced by aliases
+	 */
+	public static function turnSelectColumnsToAliases(Criteria $criteria)
+	{
+		$selectColumns = $criteria->getSelectColumns();
+		// clearSelectColumns also clears the aliases, so get them too
+		$asColumns = $criteria->getAsColumns();
+		$criteria->clearSelectColumns();
+		$columnAliases = $asColumns;
+		// add the select columns back
+		foreach ($selectColumns as $clause) {
+			// Generate a unique alias
+			$baseAlias = preg_replace('/\W/', '_', $clause);
+			$alias = $baseAlias;
+			// If it already exists, add a unique suffix
+			$i = 0;
+			while (isset($columnAliases[$alias])) {
+				$i++;
+				$alias = $baseAlias . '_' . $i;
+			}
+			// Add it as an alias
+			$criteria->addAsColumn($alias, $clause);
+			$columnAliases[$alias] = $clause;
+		}
+		// Add the aliases back, don't modify them
+		foreach ($asColumns as $name => $clause) {
+			$criteria->addAsColumn($name, $clause);
+		}
+		
+		return $criteria;
+	}
+	
 	/**
 	 * Method to create an SQL query based on values in a Criteria.
 	 *

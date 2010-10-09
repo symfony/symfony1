@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPatternRouting.class.php 28641 2010-03-21 10:20:44Z fabien $
+ * @version    SVN: $Id: sfPatternRouting.class.php 29418 2010-05-12 07:36:59Z fabien $
  */
 class sfPatternRouting extends sfRouting
 {
@@ -312,7 +312,8 @@ class sfPatternRouting extends sfRouting
       {
         throw new sfConfigurationException(sprintf('The route "%s" does not exist.', $name));
       }
-      $route = $this->routes[$name];      $this->ensureDefaultParametersAreSet();
+      $route = $this->routes[$name];
+      $this->ensureDefaultParametersAreSet();
     }
     else
     {

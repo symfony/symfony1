@@ -19,7 +19,7 @@ abstract class BaseMovieForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'id'       => new sfValidatorPropelChoice(array('model' => 'Movie', 'column' => 'id', 'required' => false)),
+      'id'       => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
       'director' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 

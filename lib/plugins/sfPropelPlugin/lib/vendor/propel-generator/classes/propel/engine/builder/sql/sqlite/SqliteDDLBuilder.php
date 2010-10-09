@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: SqliteDDLBuilder.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: SqliteDDLBuilder.php 1595 2010-03-15 09:45:51Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -72,6 +72,10 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 
 		foreach ($table->getColumns() as $col) {
 			$lines[] = $this->getColumnDDL($col);
+		}
+
+		if ($table->hasPrimaryKey() && count($table->getPrimaryKey()) > 1) {
+			$lines[] = "PRIMARY KEY (".$this->getColumnList($table->getPrimaryKey()).")";
 		}
 
 		foreach ($table->getUnices() as $unique ) {

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMemcacheCache.class.php 24607 2009-11-30 21:39:08Z FabianLange $
+ * @version    SVN: $Id: sfMemcacheCache.class.php 29490 2010-05-17 13:09:00Z fabien $
  */
 class sfMemcacheCache extends sfCache
 {
@@ -133,12 +133,12 @@ class sfMemcacheCache extends sfCache
   public function remove($key)
   {
     // delete metadata
-    $this->memcache->delete($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key);
+    $this->memcache->delete($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key, 0);
     if ($this->getOption('storeCacheInfo', false))
     {
       $this->setCacheInfo($key, true);
     }
-    return $this->memcache->delete($this->getOption('prefix').$key);
+    return $this->memcache->delete($this->getOption('prefix').$key, 0);
   }
 
   /**

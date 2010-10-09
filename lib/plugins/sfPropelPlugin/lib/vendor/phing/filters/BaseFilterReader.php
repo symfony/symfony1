@@ -28,7 +28,7 @@ include_once 'phing/system/io/StringReader.php';
  * Base class for core filter readers.
  *
  * @author    <a href="mailto:yl@seasonfive.com">Yannick Lecaillez</a>
- * @version   $Revision: 1.8 $ $Date: 2007-12-20 16:44:58 +0100 (Thu, 20 Dec 2007) $
+ * @version   $Revision: 1.8 $ $Date: 2007-12-20 16:44:58 +0100 (jeu 20 déc 2007) $
  * @access    public
  * @see       FilterReader
  * @package   phing.filters

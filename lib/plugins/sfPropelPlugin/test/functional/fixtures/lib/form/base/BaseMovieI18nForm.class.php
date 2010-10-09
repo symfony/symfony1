@@ -21,7 +21,7 @@ abstract class BaseMovieI18nForm extends BaseFormPropel
 
     $this->setValidators(array(
       'id'      => new sfValidatorPropelChoice(array('model' => 'Movie', 'column' => 'id', 'required' => false)),
-      'culture' => new sfValidatorPropelChoice(array('model' => 'MovieI18n', 'column' => 'culture', 'required' => false)),
+      'culture' => new sfValidatorChoice(array('choices' => array($this->getObject()->getCulture()), 'empty_value' => $this->getObject()->getCulture(), 'required' => false)),
       'title'   => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 

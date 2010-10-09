@@ -77,7 +77,8 @@ DROP TABLE [author_article];
 CREATE TABLE [author_article]
 (
 	[author_id] INTEGER  NOT NULL,
-	[article_id] INTEGER  NOT NULL
+	[article_id] INTEGER  NOT NULL,
+	PRIMARY KEY ([author_id],[article_id])
 );
 
 -- SQLite does not support foreign keys; this is just for reference
@@ -111,7 +112,8 @@ CREATE TABLE [product_i18n]
 (
 	[id] INTEGER  NOT NULL,
 	[culture] VARCHAR(7)  NOT NULL,
-	[name] VARCHAR(50)
+	[name] VARCHAR(50),
+	PRIMARY KEY ([id],[culture])
 );
 
 -- SQLite does not support foreign keys; this is just for reference
@@ -142,6 +144,7 @@ CREATE TABLE [movie_i18n]
 	[id] INTEGER  NOT NULL,
 	[culture] VARCHAR(7)  NOT NULL,
 	[title] VARCHAR(255),
+	PRIMARY KEY ([id],[culture]),
 	UNIQUE ([title])
 );
 
