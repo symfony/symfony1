@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 7674 2010-06-08 22:59:01Z jwage $
+ *  $Id: Query.php 7691 2011-02-04 15:43:29Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 7674 $
+ * @version     $Revision: 7691 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -484,7 +484,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
 
         $sql = array();
-        foreach ($fields as $fieldName) {
+        foreach ($fields as $fieldAlias => $fieldName) {
             $columnName = $table->getColumnName($fieldName);
             if (($owner = $table->getColumnOwner($columnName)) !== null &&
                     $owner !== $table->getComponentName()) {
@@ -496,10 +496,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                        . ' AS '
                        . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
             } else {
-                $columnName = $table->getColumnName($fieldName);
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-585
+                // Take the field alias if available
+                if (isset($this->_aggregateAliasMap[$fieldAlias])) {
+                    $aliasSql = $this->_aggregateAliasMap[$fieldAlias];
+                } else {
+                    $columnName = $table->getColumnName($fieldName);
+                    $aliasSql = $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
+                }
                 $sql[] = $this->_conn->quoteIdentifier($tableAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
                        . ' AS '
-                       . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
+                       . $aliasSql;
             }
         }
 
@@ -570,6 +577,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     public function getExpressionOwner($expr)
     {
         if (strtoupper(substr(trim($expr, '( '), 0, 6)) !== 'SELECT') {
+            // Fix for http://www.doctrine-project.org/jira/browse/DC-754
+            $expr = preg_replace('/([\'\"])[^\1]*\1/', '', $expr);
             preg_match_all("/[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*[\.[a-z0-9]+]*/i", $expr, $matches);
 
             $match = current($matches);
@@ -651,6 +660,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
 
                 $this->_neededTables[] = $tableAlias;
+
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-585
+                // Add selected columns to pending fields
+                if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
+                    $this->_pendingFields[$componentAlias][$alias] = $field[3];
+                }
+
             } else {
                 $e = explode('.', $terms[0]);
 
@@ -811,7 +827,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
     }
 
-    public function parseFunctionExpression($expr)
+    public function parseFunctionExpression($expr, $parseCallback = null)
     {
         $pos = strpos($expr, '(');
         $name = substr($expr, 0, $pos);
@@ -825,7 +841,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         // parse args
 
         foreach ($this->_tokenizer->sqlExplode($argStr, ',') as $arg) {
-           $args[] = $this->parseClause($arg);
+           $args[] = $parseCallback ? call_user_func_array($parseCallback, array($arg)) : $this->parseClause($arg);
         }
 
         // convert DQL function to its RDBMS specific equivalent
@@ -1353,7 +1369,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $q .= ( ! empty($this->_sqlParts['orderby'])) ? ' ORDER BY ' . implode(', ', $this->_sqlParts['orderby'])  : '';
 
         if ($modifyLimit) {
-            $q = $this->_conn->modifyLimitQuery($q, $this->_sqlParts['limit'], $this->_sqlParts['offset']);
+            $q = $this->_conn->modifyLimitQuery($q, $this->_sqlParts['limit'], $this->_sqlParts['offset'], false, false, $this);
         }
 
         $q .= $this->_sqlParts['forUpdate'] === true ? ' FOR UPDATE ' : '';
@@ -1503,8 +1519,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
             $part = str_replace(array('"', "'", '`'), "", $part);
 
-            if ($this->hasSqlTableAlias($part)) {
-                $parts[$k] = $this->_conn->quoteIdentifier($this->generateNewSqlTableAlias($part));
+            // Fix DC-645, Table aliases ending with ')' where not replaced properly
+            preg_match('/^(\(?)(.*?)(\)?)$/', $part, $matches);
+            if ($this->hasSqlTableAlias($matches[2])) {
+                $parts[$k] = $matches[1].$this->_conn->quoteIdentifier($this->generateNewSqlTableAlias($matches[2])).$matches[3];
                 continue;
             }
 
@@ -1749,8 +1767,9 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                                                                  'parent'   => $parent,
                                                                  'relation' => $relation,
                                                                  'map'      => null);
-                if ( ! $relation->isOneToOne()) {
-                   $this->_needsSubquery = true;
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-701
+                if ( ! $relation->isOneToOne() && ! $this->disableLimitSubquery) {
+                    $this->_needsSubquery = true;
                 }
 
                 $localAlias   = $this->getSqlTableAlias($parent, $localTable->getTableName());

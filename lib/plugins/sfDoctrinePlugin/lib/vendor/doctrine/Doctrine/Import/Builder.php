@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
+ *  $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@
  * @link        www.doctrine-project.org
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @since       1.0
- * @version     $Revision: 7490 $
+ * @version     $Revision: 7691 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  * @author      Nicolas Bérard-Nault <nicobn@php.net>
@@ -530,6 +530,18 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         $build = null;
         foreach ($columns as $name => $column) {
+            // An alias cannot passed via column name and column alias definition
+            if (isset($column['name']) && stripos($column['name'], ' as ') && isset($column['alias'])) {
+                throw new Doctrine_Import_Exception(
+                    sprintf('When using a column alias you cannot pass it via column name and column alias definition (column: %s).', $column['name'])
+                );
+            }
+            
+            // Update column name if an alias is provided
+            if (isset($column['alias']) && !isset($column['name'])) {
+                $column['name'] = $name . ' as ' . $column['alias'];
+            }
+          
             $columnName = isset($column['name']) ? $column['name']:$name;
             if ($manager->getAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE)) {
                 $e = explode(' as ', $columnName);
@@ -679,7 +691,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $ret[] = '@package    ' . $this->_phpDocPackage;
         $ret[] = '@subpackage ' . $this->_phpDocSubpackage;
         $ret[] = '@author     ' . $this->_phpDocName . ' <' . $this->_phpDocEmail . '>';
-        $ret[] = '@version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $';
+        $ret[] = '@version    SVN: $Id: Builder.php 7691 2011-02-04 15:43:29Z jwage $';
 
         $ret = ' * ' . implode(PHP_EOL . ' * ', $ret);
         $ret = ' ' . trim($ret);
