@@ -9,7 +9,7 @@ require_once(dirname(__FILE__).'/../lib/Base<?php echo ucfirst($this->moduleName
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: actions.class.php 24051 2009-11-16 21:08:08Z Kris.Wallsmith $
+ * @version    SVN: $Id: actions.class.php 31002 2010-09-27 12:04:07Z Kris.Wallsmith $
  */
 abstract class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass()."\n" ?>
 {
@@ -25,6 +25,8 @@ abstract class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?ph
     $this->dispatcher->notify(new sfEvent($this, 'admin.pre_execute', array('configuration' => $this->configuration)));
 
     $this->helper = new <?php echo $this->getModuleName() ?>GeneratorHelper();
+
+    parent::preExecute();
   }
 
 <?php include dirname(__FILE__).'/../../parts/indexAction.php' ?>

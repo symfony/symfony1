@@ -19,7 +19,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDomCssSelector.class.php 29521 2010-05-19 11:47:56Z fabien $
+ * @version    SVN: $Id: sfDomCssSelector.class.php 31890 2011-01-24 18:03:26Z fabien $
  */
 class sfDomCssSelector implements Countable, Iterator
 {
@@ -160,7 +160,7 @@ class sfDomCssSelector implements Countable, Iterator
           $nodes = array();
           foreach ($founds as $found)
           {
-            if (preg_match('/\b'.$className.'\b/', $found->getAttribute('class')))
+            if (preg_match('/(^|\s+)'.$className.'($|\s+)/', $found->getAttribute('class')))
             {
               $nodes[] = $found;
             }
