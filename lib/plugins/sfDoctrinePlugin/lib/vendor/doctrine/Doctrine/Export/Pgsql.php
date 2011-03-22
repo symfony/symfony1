@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 7691 2011-02-04 15:43:29Z jwage $
+ *  $Id: Pgsql.php 7680 2010-08-19 14:08:28Z lsmith $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 7691 $
+ * @version     $Revision: 7680 $
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
@@ -159,7 +159,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                     $query = 'ALTER ' . $fieldName . ' SET DEFAULT ' . $this->conn->quote($field['definition']['default'], $field['definition']['type']);
                     $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
                 }
-                if ( isset($field['definition']['notnull'])) {
+                if ( ! empty($field['definition']['notnull'])) {
                     $query = 'ALTER ' . $fieldName . ' ' . ($field['definition']['notnull'] ? 'SET' : 'DROP') . ' NOT NULL';
                     $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
                 }

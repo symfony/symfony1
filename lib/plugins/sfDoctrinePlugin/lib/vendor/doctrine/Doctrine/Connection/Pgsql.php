@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 7490 2010-03-29 19:53:27Z jwage $
+ *  $Id: Pgsql.php 7696 2011-03-21 12:10:28Z beberlei $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
+ * @version     $Revision: 7696 $
  * @link        www.doctrine-project.org
  * @since       1.0
  */
@@ -142,14 +142,14 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
                 $from  = $match[2];
                 $where = $match[3];
                 $query = $manip . ' ' . $from . ' WHERE ctid=(SELECT ctid FROM '
-                       . $from . ' ' . $where . ' LIMIT ' . $limit . ')';
+                       . $from . ' ' . $where . ' LIMIT ' . (int)$limit . ')';
 
             } else {
                 if ( ! empty($limit)) {
-                  $query .= ' LIMIT ' . $limit;
+                  $query .= ' LIMIT ' . (int)$limit;
                 }
                 if ( ! empty($offset)) {
-                  $query .= ' OFFSET ' . $offset;
+                  $query .= ' OFFSET ' . (int)$offset;
                 }
             }
         }
