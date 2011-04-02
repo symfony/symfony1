@@ -374,6 +374,11 @@ class Doctrine_Core
     const HYDRATE_RECORD_HIERARCHY  = 9;
 
     /**
+     * HYDRATE_ARRAY_SHALLOW
+     */
+    const HYDRATE_ARRAY_SHALLOW     = 10;
+
+    /**
      * VALIDATION CONSTANTS
      */
     const VALIDATE_NONE             = 0;
