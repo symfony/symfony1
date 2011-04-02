@@ -14,11 +14,13 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputText.class.php 20941 2009-08-08 14:11:51Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormInputText.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInputText extends sfWidgetFormInput
 {
   /**
+   * Configures the current widget.
+   *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
    *

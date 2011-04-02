@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 28709 2010-03-23 13:57:27Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 {
@@ -61,6 +61,8 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

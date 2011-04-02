@@ -14,11 +14,13 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormTextarea.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormTextarea.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormTextarea extends sfWidgetForm
 {
   /**
+   * Configures the current widget.
+   *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
    *
@@ -31,6 +33,8 @@ class sfWidgetFormTextarea extends sfWidgetForm
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

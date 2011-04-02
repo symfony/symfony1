@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTask.class.php 23437 2009-10-29 16:12:53Z fabien $
+ * @version    SVN: $Id: sfTask.class.php 30773 2010-08-27 19:27:41Z Kris.Wallsmith $
  */
 abstract class sfTask
 {
@@ -356,7 +356,8 @@ abstract class sfTask
 
   protected function doRun(sfCommandManager $commandManager, $options)
   {
-    $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
+    $event = $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
+    $options = $event->getReturnValue();
 
     $this->process($commandManager, $options);
 

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFilesystem.class.php 27816 2010-02-10 15:46:46Z FabianLange $
+ * @version    SVN: $Id: sfFilesystem.class.php 30527 2010-08-04 16:21:44Z fabien $
  */
 class sfFilesystem
 {
@@ -355,7 +355,7 @@ class sfFilesystem
         }
       }
 
-      sleep(0.1);
+      usleep(100000);
     }
 
     fclose($pipes[1]);

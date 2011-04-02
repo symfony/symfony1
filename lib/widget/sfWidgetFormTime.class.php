@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormTime.class.php 29674 2010-05-30 12:35:21Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWidgetFormTime.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormTime extends sfWidgetForm
 {
@@ -51,6 +51,8 @@ class sfWidgetFormTime extends sfWidgetForm
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The time displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
