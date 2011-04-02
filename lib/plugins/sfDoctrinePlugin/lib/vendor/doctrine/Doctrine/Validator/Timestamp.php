@@ -33,8 +33,7 @@
 class Doctrine_Validator_Timestamp extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is a valid timestamp
-     * ISO-8601 timestamp (YYYY-MM-DDTHH:MM:SS+00:00) or (YYYY-MM-DD HH:MM:SS)
+     * checks if given value is a valid ISO-8601 timestamp (YYYY-MM-DDTHH:MM:SS+00:00)
      *
      * @param mixed $value
      * @return boolean
@@ -45,11 +44,9 @@ class Doctrine_Validator_Timestamp extends Doctrine_Validator_Driver
             return true;
         }
 
-        $splitChar = false !== strpos($value, 'T') ? 'T' : ' ';
-
-        $e = explode($splitChar, trim($value));
-        $date = isset($e[0]) ? $e[0] : null;
-        $time = isset($e[1]) ? $e[1] : null;
+        $e = explode('T', trim($value));
+        $date = isset($e[0]) ? $e[0]:null;
+        $time = isset($e[1]) ? $e[1]:null;
 
         $dateValidator = Doctrine_Validator::getValidator('date');
         $timeValidator = Doctrine_Validator::getValidator('time');

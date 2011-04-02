@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Manager.php 7691 2011-02-04 15:43:29Z jwage $
+ *  $Id: Manager.php 7657 2010-06-08 17:57:01Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 7691 $
+ * @version     $Revision: 7657 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Manager extends Doctrine_Configurable implements Countable, IteratorAggregate
@@ -76,7 +76,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         Doctrine_Core::HYDRATE_ON_DEMAND        => 'Doctrine_Hydrator_RecordDriver',
         Doctrine_Core::HYDRATE_ARRAY_HIERARCHY  => 'Doctrine_Hydrator_ArrayHierarchyDriver',
         Doctrine_Core::HYDRATE_RECORD_HIERARCHY => 'Doctrine_Hydrator_RecordHierarchyDriver',
-        Doctrine_Core::HYDRATE_ARRAY_SHALLOW    => 'Doctrine_Hydrator_ArrayShallowDriver',
     );
 
     protected $_connectionDrivers = array(
