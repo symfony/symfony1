@@ -9,7 +9,6 @@ require_once(dirname(__FILE__).'/../lib/Base<?php echo ucfirst($this->moduleName
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: actions.class.php 24051 2009-11-16 21:08:08Z Kris.Wallsmith $
  */
 abstract class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass()."\n" ?>
 {

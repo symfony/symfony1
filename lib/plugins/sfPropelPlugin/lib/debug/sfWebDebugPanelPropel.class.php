@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 24993 2009-12-06 20:56:49Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanelPropel.class.php 27284 2010-01-28 18:34:57Z Kris.Wallsmith $
  */
 class sfWebDebugPanelPropel extends sfWebDebugPanel
 {
@@ -120,11 +120,11 @@ class sfWebDebugPanelPropel extends sfWebDebugPanel
       $backtrace = isset($log['debug_backtrace']) && count($log['debug_backtrace']) ? '&nbsp;'.$this->getToggleableDebugStack($log['debug_backtrace']) : '';
 
       $html[] = sprintf('
-        <li class="%s">
+        <li%s>
           <p class="sfWebDebugDatabaseQuery">%s</p>
           <div class="sfWebDebugDatabaseLogInfo">%s%s</div>
         </li>',
-        $slowQuery ? 'sfWebDebugWarning' : '',
+        $slowQuery ? ' class="sfWebDebugWarning"' : '',
         $query,
         implode(', ', $details),
         $backtrace

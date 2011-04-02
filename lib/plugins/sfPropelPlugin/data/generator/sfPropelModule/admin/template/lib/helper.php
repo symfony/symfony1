@@ -6,7 +6,6 @@
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: helper.php 24051 2009-11-16 21:08:08Z Kris.Wallsmith $
  */
 abstract class Base<?php echo ucfirst($this->getModuleName()) ?>GeneratorHelper extends sfModelGeneratorHelper
 {

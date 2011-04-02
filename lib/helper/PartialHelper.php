@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PartialHelper.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: PartialHelper.php 27755 2010-02-08 20:51:02Z Kris.Wallsmith $
  */
 
 /**
@@ -138,7 +138,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
   $class = sfConfig::get('mod_'.strtolower($moduleName).'_partial_view_class', 'sf').'PartialView';
   $view = new $class($context, $moduleName, $actionName, '');
-  $view->setPartialVars($vars);
+  $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   if ($retval = $view->getCache())
   {
@@ -213,7 +213,7 @@ function get_partial($templateName, $vars = array())
 
   $class = sfConfig::get('mod_'.strtolower($moduleName).'_partial_view_class', 'sf').'PartialView';
   $view = new $class($context, $moduleName, $actionName, '');
-  $view->setPartialVars($vars);
+  $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   return $view->render();
 }

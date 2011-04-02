@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 23194 2009-10-19 16:37:13Z fabien $
+ * @version    SVN: $Id: sfModelGenerator.class.php 25459 2009-12-16 13:08:43Z fabien $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -267,7 +267,7 @@ EOF;
     }
     else if ($field->isPartial())
     {
-      return sprintf("get_partial('%s', array('type' => 'list', '%s' => \$%s))", $field->getName(), $this->getSingularName(), $this->getSingularName());
+      return sprintf("get_partial('%s/%s', array('type' => 'list', '%s' => \$%s))", $this->getModuleName(), $field->getName(), $this->getSingularName(), $this->getSingularName());
     }
     else if ('Date' == $field->getType())
     {

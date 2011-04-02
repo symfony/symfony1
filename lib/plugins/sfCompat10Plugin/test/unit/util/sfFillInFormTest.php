@@ -276,7 +276,7 @@ EOF;
 $xml = $f->fillInXml($xml, 'form', null, array('foo' => 'bar'));
 $t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
 $t->like($xml, '#<option value="selected" selected="selected">#', '->fillInXml() outputs valid XML');
-$t->like($xml, '#<\?xml version="1.0"\?>#',  '->fillInXml() outputs XML prolog');
+$t->like($xml, '#<\?xml version="1.0" encoding="UTF-8"\?>#',  '->fillInXml() outputs XML prolog');
 
 // ->fillInXhtml()
 $xml = $f->fillInXhtml($xml, 'form', null, array('foo' => 'bar'));

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebugPanel.class.php 22955 2009-10-12 16:44:07Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebDebugPanel.class.php 27284 2010-01-28 18:34:57Z Kris.Wallsmith $
  */
 abstract class sfWebDebugPanel
 {
@@ -123,7 +123,7 @@ abstract class sfWebDebugPanel
 
       $isProjectFile = $file && 0 === strpos($file, sfConfig::get('sf_root_dir')) && !preg_match('/(cache|plugins|vendor)/', $file);
 
-      $html .= sprintf('<span class="%s">#%s &raquo; ', $isProjectFile ? 'sfWebDebugHighlight' : '', $keys[$j] + 1);
+      $html .= sprintf('<span%s>#%s &raquo; ', $isProjectFile ? ' class="sfWebDebugHighlight"' : '', $keys[$j] + 1);
 
       if (isset($trace['function']))
       {

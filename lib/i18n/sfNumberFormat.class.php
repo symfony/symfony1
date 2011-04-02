@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 23894 2009-11-14 11:40:15Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 26681 2010-01-15 15:28:37Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -170,13 +170,6 @@ class sfNumberFormat
   protected function formatInteger($string)
   {
     $string = (string) $string;
-
-    $decimalDigits = $this->formatInfo->DecimalDigits;
-    // if not decimal digits, assume 0 decimal points.
-    if (is_int($decimalDigits) && $decimalDigits > 0)
-    {
-      $string = (string) intval(round(floatval($string), $decimalDigits));
-    }
 
     $dp = strpos($string, '.');
 

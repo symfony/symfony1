@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTesterRequest.class.php 14497 2009-01-06 17:30:36Z fabien $
+ * @version    SVN: $Id: sfTesterRequest.class.php 27845 2010-02-10 19:46:03Z Kris.Wallsmith $
  */
 class sfTesterRequest extends sfTester
 {
@@ -92,7 +92,7 @@ class sfTesterRequest extends sfTester
     {
       if ($exists)
       {
-        $this->tester->fail(sprintf('cookie "%s" exist.', $name));
+        $this->tester->fail(sprintf('cookie "%s" exists.', $name));
       }
       else
       {

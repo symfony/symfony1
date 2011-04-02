@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5PeerBuilder.php 1265 2009-10-29 20:26:39Z francois $
+ *  $Id: PHP5PeerBuilder.php 1450 2010-01-12 21:19:00Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -160,7 +160,12 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 
   public function getTableMapClass()
   {
-    return ($this->getTable()->isAbstract() ? '' : $this->getTable()->getPhpName()) . 'TableMap';
+    return $this->getTablePhpName() . 'TableMap';
+  }
+  
+  public function getTablePhpName()
+  {
+  	return ($this->getTable()->isAbstract() ? '' : $this->getStubObjectBuilder()->getClassname());
   }
 
 	/**
@@ -172,7 +177,7 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 	{
 		$dbName = $this->getDatabase()->getName();
 	  $tableName = $this->prefixTableName($this->getTable()->getName());
-	  $tablePhpName = $this->getTable()->isAbstract() ? '' : $this->getTable()->getPhpName();
+	  $tablePhpName = $this->getTablePhpName();
 		$script .= "
 	/** the default database name for this class */
 	const DATABASE_NAME = '$dbName';
@@ -1264,6 +1269,7 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 	protected function addDoDelete(&$script)
 	{
 		$table = $this->getTable();
+		$emulateCascade = $this->isDeleteCascadeEmulationNeeded() || $this->isDeleteSetNullEmulationNeeded();
 		$script .= "
 	/**
 	 * Method perform a DELETE on the database, given a ".$this->getObjectClassname()." or Criteria object OR a primary key value.
@@ -1282,18 +1288,23 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 			\$con = Propel::getConnection(".$this->getPeerClassname()."::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
-		if (\$values instanceof Criteria) {
+		if (\$values instanceof Criteria) {";
+		if (!$emulateCascade) {
+			$script .= "
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			".$this->getPeerClassname()."::clearInstancePool();
-
+			".$this->getPeerClassname()."::clearInstancePool();";
+		}
+		$script .= "
 			// rename for clarity
 			\$criteria = clone \$values;
-		} elseif (\$values instanceof ".$this->getObjectClassname().") {
+		} elseif (\$values instanceof ".$this->getObjectClassname().") { // it's a model object";
+		if (!$emulateCascade) {
+			$script .= "
 			// invalidate the cache for this single object
 			".$this->getPeerClassname()."::removeInstanceFromPool(\$values);";
-
+		}
 		if (count($table->getPrimaryKey()) > 0) {
 			$script .= "
 			// create criteria based on pk values
@@ -1305,36 +1316,31 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 		}
 
 		$script .= "
-		} else {
-			// it must be the primary key
-
-
-
+		} else { // it's a primary key, or an array of pks";
+		$script .= "
 			\$criteria = new Criteria(self::DATABASE_NAME);";
 
 		if (count($table->getPrimaryKey()) === 1) {
 			$pkey = $table->getPrimaryKey();
 			$col = array_shift($pkey);
 			$script .= "
-			\$criteria->add(".$this->getColumnConstant($col).", (array) \$values, Criteria::IN);
-
+			\$criteria->add(".$this->getColumnConstant($col).", (array) \$values, Criteria::IN);";
+			if (!$emulateCascade) {
+				$script .= "
+			// invalidate the cache for this object(s)
 			foreach ((array) \$values as \$singleval) {
-				// we can invalidate the cache for this single object
 				".$this->getPeerClassname()."::removeInstanceFromPool(\$singleval);
 			}";
-
+			}
 		} else {
 			$script .= "
 			// primary key is composite; we therefore, expect
-			// the primary key passed to be an array of pkey
-			// values
+			// the primary key passed to be an array of pkey values
 			if (count(\$values) == count(\$values, COUNT_RECURSIVE)) {
 				// array is not multi-dimensional
 				\$values = array(\$values);
 			}
-
-			foreach (\$values as \$value) {
-";
+			foreach (\$values as \$value) {";
 			$i=0;
 			foreach ($table->getPrimaryKey() as $col) {
 				if ($i == 0) {
@@ -1347,10 +1353,13 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 				$i++;
 			}
 			$script .= "
-				\$criteria->addOr(\$criterion);
-
+				\$criteria->addOr(\$criterion);";
+			if (!$emulateCascade) {
+				$script .= "
 				// we can invalidate the cache for this single PK
-				".$this->getPeerClassname()."::removeInstanceFromPool(\$value);
+				".$this->getPeerClassname()."::removeInstanceFromPool(\$value);";
+			}
+			$script .= "
 			}";
 		} /* if count(table->getPrimaryKeys()) */
 
@@ -1377,16 +1386,20 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 			";
 		}
 
-		if ($this->isDeleteCascadeEmulationNeeded() || $this->isDeleteSetNullEmulationNeeded()) {
+		if ($emulateCascade) {
 			$script .= "
-				// Because this db requires some delete cascade/set null emulation, we have to
-				// clear the cached instance *after* the emulation has happened (since
-				// instances get re-added by the select statement contained therein).
-				if (\$values instanceof Criteria) {
-					".$this->getPeerClassname()."::clearInstancePool();
-				} else { // it's a PK or object
-					".$this->getPeerClassname()."::removeInstanceFromPool(\$values);
+			// Because this db requires some delete cascade/set null emulation, we have to
+			// clear the cached instance *after* the emulation has happened (since
+			// instances get re-added by the select statement contained therein).
+			if (\$values instanceof Criteria) {
+				".$this->getPeerClassname()."::clearInstancePool();
+			} elseif (\$values instanceof ".$this->getObjectClassname().") { // it's a model object
+				".$this->getPeerClassname()."::removeInstanceFromPool(\$values);
+			} else { // it's a primary key, or an array of pks
+				foreach ((array) \$values as \$singleval) {
+					".$this->getPeerClassname()."::removeInstanceFromPool(\$singleval);
 				}
+			}
 			";
 		}
 
@@ -1969,9 +1982,17 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					\$obj2->hydrate(\$row, \$startcol);
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj2, \$key2);
 				} // if obj2 already loaded
-
-				// Add the \$obj1 (".$this->getObjectClassname().") to \$obj2 (".$joinedTablePeerBuilder->getObjectClassname().")
-				\$obj2->".($fk->isLocalPrimaryKey() ? 'set' : 'add') . $joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);
+				
+				// Add the \$obj1 (".$this->getObjectClassname().") to \$obj2 (".$joinedTablePeerBuilder->getObjectClassname().")";
+					if ($fk->isLocalPrimaryKey()) {
+						$script .= "
+				// one to one relationship
+				\$obj1->set" . $joinedTablePeerBuilder->getObjectClassname() . "(\$obj2);";
+					} else {
+					$script .= "
+				\$obj2->add" . $joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);";
+					}
+					$script .= "
 
 			} // if joined row was not null
 
@@ -2220,10 +2241,15 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj$index, \$key$index);
 				} // if obj$index loaded
 
-				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")
-				".($fk->isLocalPrimaryKey() ?
-				"\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");" :
-				"\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);")."
+				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")";
+				if ($fk->isLocalPrimaryKey()) {
+					$script .= "
+				\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");";
+				} else {
+					$script .= "
+				\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($fk, $plural = false)."(\$obj1);";
+				}
+				$script .= "
 			} // if joined row not null
 ";
 
@@ -2485,8 +2511,15 @@ abstract class ".$this->getClassname(). $extendingPeerClass . " {
 					".$joinedTablePeerBuilder->getPeerClassname()."::addInstanceToPool(\$obj$index, \$key$index);
 				} // if \$obj$index already loaded
 
-				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")
-				\$obj".$index."->".($subfk->isLocalPrimaryKey() ? 'set' : 'add') . $joinedTableObjectBuilder->getRefFKPhpNameAffix($subfk, $plural = false)."(\$obj1);
+				// Add the \$obj1 (".$this->getObjectClassname().") to the collection in \$obj".$index." (".$joinedTablePeerBuilder->getObjectClassname().")";
+				if ($subfk->isLocalPrimaryKey()) {
+					$script .= "
+				\$obj1->set".$joinedTablePeerBuilder->getObjectClassname()."(\$obj".$index.");";
+				} else {
+					$script .= "
+				\$obj".$index."->add".$joinedTableObjectBuilder->getRefFKPhpNameAffix($subfk, $plural = false)."(\$obj1);";
+				}
+				$script .= "
 
 			} // if joined row is not null
 ";
