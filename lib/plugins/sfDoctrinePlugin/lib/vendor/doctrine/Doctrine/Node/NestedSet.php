@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 6799 2009-11-24 19:24:33Z jwage $
+ *    $Id: NestedSet.php 6840 2009-12-01 20:28:58Z jkaziukenas $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link       www.phpdoctrine.org
  * @since      1.0
- * @version    $Revision: 6799 $
+ * @version    $Revision: 6840 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -633,7 +633,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
                     $this->insertAsLastChildOf($dest);
                 break;
                 default:
-                    throw new Exception("Unknown move operation: $moveType.");
+                    throw new Doctrine_Node_Exception("Unknown move operation: $moveType.");
             }
 
             $diff = $oldRgt - $oldLft;

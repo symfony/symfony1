@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestAllTask.class.php 23200 2009-10-19 21:29:50Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfTestAllTask.class.php 25036 2009-12-07 19:41:58Z Kris.Wallsmith $
  */
 class sfTestAllTask extends sfTestBaseTask
 {
@@ -73,7 +73,10 @@ EOF;
   {
     require_once dirname(__FILE__).'/sfLimeHarness.class.php';
 
-    $h = new sfLimeHarness(array('force_colors' => $options['color'], 'verbose' => $options['trace']));
+    $h = new sfLimeHarness(array(
+      'force_colors' => isset($options['color']) && $options['color'],
+      'verbose'      => isset($options['trace']) && $options['trace'],
+    ));
     $h->addPlugins(array_map(array($this->configuration, 'getPluginConfiguration'), $this->configuration->getPlugins()));
     $h->base_dir = sfConfig::get('sf_test_dir');
 

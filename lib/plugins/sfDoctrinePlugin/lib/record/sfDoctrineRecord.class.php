@@ -17,7 +17,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRecord.class.php 24632 2009-12-01 01:32:29Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineRecord.class.php 24703 2009-12-01 18:36:11Z Jonathan.Wage $
  */
 abstract class sfDoctrineRecord extends Doctrine_Record
 {
@@ -188,9 +188,7 @@ abstract class sfDoctrineRecord extends Doctrine_Record
         }
         else
         {
-          $underScored = sfInflector::underscore($name);
-          $underScored = preg_replace('/[0-9]/', "_$0", $underScored);
-          $underScored = $table->getFieldName($underScored);
+          $underScored = $table->getFieldName(sfInflector::underscore($name));
           if ($table->hasField($underScored) || $table->hasRelation($underScored))
           {
             $entityName = $underScored;
@@ -225,10 +223,10 @@ abstract class sfDoctrineRecord extends Doctrine_Record
         return parent::__call($method, $arguments);
       } catch (Doctrine_Record_UnknownPropertyException $e2) {}
 
-      if ($e)
+      if (isset($e) && $e)
       {
         throw $e;
-      } else if ($e2) {
+      } else if (isset($e2) && $e2) {
         throw $e2;
       }
     }

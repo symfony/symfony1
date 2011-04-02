@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Array.php 6821 2009-11-30 17:32:21Z jwage $
+ *  $Id: Array.php 6839 2009-12-01 19:19:05Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 6821 $
+ * @version     $Revision: 6839 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
@@ -89,8 +89,10 @@ class Doctrine_Cache_Array extends Doctrine_Cache_Driver implements Countable
      */
     protected function _doDelete($id)
     {
+        $exists = isset($this->data[$id]);
+
         unset($this->data[$id]);
 
-        return true;
+        return $exists;
     }
 }

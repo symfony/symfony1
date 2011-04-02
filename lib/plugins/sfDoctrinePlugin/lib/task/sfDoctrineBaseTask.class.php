@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBaseTask.class.php 24060 2009-11-16 22:17:53Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineBaseTask.class.php 24970 2009-12-05 14:28:15Z Kris.Wallsmith $
  */
 abstract class sfDoctrineBaseTask extends sfBaseTask
 {
@@ -131,7 +131,7 @@ abstract class sfDoctrineBaseTask extends sfBaseTask
   protected function prepareSchemaFile($yamlSchemaPath)
   {
     $models = array();
-    $finder = sfFinder::type('file')->name('*.yml')->sort_by_name();
+    $finder = sfFinder::type('file')->name('*.yml')->sort_by_name()->follow_link();
 
     // plugin models
     foreach ($this->configuration->getPlugins() as $name)

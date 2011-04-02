@@ -62,14 +62,13 @@ else
 print sprintf("Releasing symfony version \"%s\".\n", $version);
 
 // tests
-/*
 list($result) = $filesystem->execute('php data/bin/symfony symfony:test');
 
 if (0 != $result)
 {
   throw new Exception('Some tests failed. Release process aborted!');
 }
-*/
+
 if (is_file('package.xml'))
 {
   $filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');

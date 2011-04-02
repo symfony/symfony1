@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineBuildAllTask.class.php 24849 2009-12-03 08:34:47Z fabien $
  *
  * @deprecated Use doctrine:build instead
  */
@@ -43,7 +43,7 @@ class sfDoctrineBuildAllTask extends sfDoctrineBaseTask
     $this->briefDescription = 'Generates Doctrine model, SQL and initializes the database';
 
     $this->detailedDescription = <<<EOF
-The [doctrine:build-all|INFO] task is a shortcut for three other tasks:
+The [doctrine:build-all|INFO] task is a shortcut for four other tasks:
 
   [./symfony doctrine:build-all|INFO]
 
@@ -54,7 +54,7 @@ The task is equivalent to:
   [./symfony doctrine:build-forms|INFO]
   [./symfony doctrine:insert-sql|INFO]
 
-See those three tasks help page for more information.
+See those four tasks help page for more information.
 
 To bypass the confirmation, you can pass the [no-confirmation|COMMENT]
 option:

@@ -65,10 +65,11 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
             }
             $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
               ->from($tableName . ' INNER JOIN ' . $assocTable . ' ON ' . implode(' OR ', $joinCondition))
-              ->where(implode(' OR ', $condition))
-              ->orderBy($tableName . '.' . $identifier . ' ASC');
+              ->where(implode(' OR ', $condition));
             if ($orderBy = $this->getOrderByStatement($tableName, true)) {
                 $q->addOrderBy($orderBy);
+            } else {
+                $q->addOrderBy($tableName . '.' . $identifier . ' ASC');
             }
             $q->addComponent($tableName,  $this->getClass());
 

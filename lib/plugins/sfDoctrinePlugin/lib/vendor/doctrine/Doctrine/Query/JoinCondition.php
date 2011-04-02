@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: JoinCondition.php 6528 2009-10-15 20:37:17Z jwage $
+ *  $Id: JoinCondition.php 6859 2009-12-05 00:12:51Z kriswallsmith $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @link        www.phpdoctrine.org
  * @since       1.0
- * @version     $Revision: 6528 $
+ * @version     $Revision: 6859 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
@@ -122,7 +122,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                 default:
                     $rightExpr = (($hasRightAggExpression) ? $rightMatches[1] . '(' : '')
                               . $value
-                              . (($hasRightAggExpression) ? $rightMatches[3] . ')' : '') ;
+                              . (($hasRightAggExpression) ? ')' . $rightMatches[3] : '') ;
 
                     $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
             }
