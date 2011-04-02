@@ -26,7 +26,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFinder.class.php 23744 2009-11-10 00:52:39Z FabianLange $
+ * @version    SVN: $Id: sfFinder.class.php 29608 2010-05-24 16:39:39Z Kris.Wallsmith $
  */
 class sfFinder
 {
@@ -413,7 +413,7 @@ class sfFinder
     $files = array();
     $temp_files = array();
     $temp_folders = array();
-    if (is_dir($dir))
+    if (is_dir($dir) && is_readable($dir))
     {
       $current_dir = opendir($dir);
       while (false !== $entryname = readdir($current_dir))
@@ -617,7 +617,7 @@ class sfFinder
  * @author     Richard Clamp <richardc@unixbeard.net> perl version
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
  * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
- * @version    SVN: $Id: sfFinder.class.php 23744 2009-11-10 00:52:39Z FabianLange $
+ * @version    SVN: $Id: sfFinder.class.php 29608 2010-05-24 16:39:39Z Kris.Wallsmith $
  */
 class sfGlobToRegex
 {
@@ -739,7 +739,7 @@ class sfGlobToRegex
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
  * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
  * @see        http://physics.nist.gov/cuu/Units/binary.html
- * @version    SVN: $Id: sfFinder.class.php 23744 2009-11-10 00:52:39Z FabianLange $
+ * @version    SVN: $Id: sfFinder.class.php 29608 2010-05-24 16:39:39Z Kris.Wallsmith $
  */
 class sfNumberCompare
 {

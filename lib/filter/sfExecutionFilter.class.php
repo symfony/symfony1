@@ -17,7 +17,7 @@
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfExecutionFilter.class.php 24615 2009-11-30 22:30:46Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfExecutionFilter.class.php 29523 2010-05-19 12:50:54Z fabien $
  */
 class sfExecutionFilter extends sfFilter
 {
@@ -123,7 +123,7 @@ class sfExecutionFilter extends sfFilter
    *
    *   - sfView::NONE: Nothing happens.
    *   - sfView::RENDER_CLIENT: View data populates the response content.
-   *   - sfView::RENDER_DATA: View data populates the data presentation variable.
+   *   - sfView::RENDER_VAR: View data populates the data presentation variable.
    *
    * @param string $moduleName     The module name
    * @param string $actionName     The action name

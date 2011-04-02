@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormPropelChoice.class.php 22261 2009-09-23 05:31:39Z fabien $
+ * @version    SVN: $Id: sfWidgetFormPropelChoice.class.php 29675 2010-05-30 13:17:12Z Kris.Wallsmith $
  */
 class sfWidgetFormPropelChoice extends sfWidgetFormChoice
 {
@@ -73,7 +73,7 @@ class sfWidgetFormPropelChoice extends sfWidgetFormChoice
     $choices = array();
     if (false !== $this->getOption('add_empty'))
     {
-      $choices[''] = true === $this->getOption('add_empty') ? '' : $this->getOption('add_empty');
+      $choices[''] = true === $this->getOption('add_empty') ? '' : $this->translate($this->getOption('add_empty'));
     }
 
     $class = constant($this->getOption('model').'::PEER');

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Bernhard Schussek <bernhard.schussek@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormChoiceBase.class.php 24012 2009-11-16 13:06:31Z bschussek $
+ * @version    SVN: $Id: sfWidgetFormChoiceBase.class.php 29309 2010-04-29 07:41:57Z bschussek $
  */
 abstract class sfWidgetFormChoiceBase extends sfWidgetForm
 {
@@ -33,6 +33,7 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
   protected function configure($options = array(), $attributes = array())
   {
     $this->addRequiredOption('choices');
+    $this->addOption('translate_choices', true);
   }
 
   /**
@@ -47,6 +48,11 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
     if ($choices instanceof sfCallable)
     {
       $choices = $choices->call();
+    }
+
+    if (!$this->getOption('translate_choices'))
+    {
+      return $choices;
     }
 
     $results = array();

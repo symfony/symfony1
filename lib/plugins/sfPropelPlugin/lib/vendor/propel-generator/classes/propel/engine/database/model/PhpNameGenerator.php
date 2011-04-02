@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PhpNameGenerator.php 1262 2009-10-26 20:54:39Z francois $
+ *  $Id: PhpNameGenerator.php 1514 2010-02-02 20:30:58Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ include_once 'propel/engine/database/model/NameGenerator.php';
  * @author     Daniel Rall <dlr@finemaltcoding.com> (Torque)
  * @author     Byron Foster <byron_foster@yahoo.com> (Torque)
  * @author     Bernd Goldschmidt <bgoldschmidt@rapidsoft.de>
- * @version    $Revision: 1262 $
+ * @version    $Revision: 1514 $
  * @package    propel.engine.database.model
  */
 class PhpNameGenerator implements NameGenerator {
@@ -154,7 +154,7 @@ class PhpNameGenerator implements NameGenerator {
 	{
 		$name = "";
 		$tok = strtok($schemaName, self::STD_SEPARATOR_CHAR);
-		while ($tok) {
+		while ($tok !== false) {
 			$name .= ucfirst($tok);
 			$tok = strtok(self::STD_SEPARATOR_CHAR);
 		}

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage doctrine
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrinePluginConfiguration.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrinePluginConfiguration.class.php 29156 2010-04-14 22:22:41Z bschussek $
  */
 class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 {
@@ -69,11 +69,14 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
     }
 
     $this->dispatcher->notify(new sfEvent($manager, 'doctrine.configure'));
+
+    // make sure the culture is intercepted
+    $this->dispatcher->connect('user.change_culture', array('sfDoctrineRecord', 'listenToChangeCultureEvent'));
   }
 
   /**
    * Returns options for the Doctrine schema builder.
-   * 
+   *
    * @return array
    */
   public function getModelBuilderOptions()
@@ -98,7 +101,7 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 
   /**
    * Returns a configuration array for the Doctrine CLI.
-   * 
+   *
    * @return array
    */
   public function getCliConfig()

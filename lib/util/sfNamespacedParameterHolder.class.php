@@ -20,7 +20,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfNamespacedParameterHolder.class.php 9051 2008-05-19 11:43:00Z FabianLange $
+ * @version    SVN: $Id: sfNamespacedParameterHolder.class.php 29521 2010-05-19 11:47:56Z fabien $
  */
 class sfNamespacedParameterHolder extends sfParameterHolder
 {
@@ -52,8 +52,10 @@ class sfNamespacedParameterHolder extends sfParameterHolder
   {
     if ($move)
     {
-      $values = $this->removeNamespace();
-      $this->addByRef($values, $namespace);
+      if (null !== $values = $this->removeNamespace())
+      {
+          $this->addByRef($values, $namespace);
+      }
     }
 
     $this->default_namespace = $namespace;

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectOptimizeTask.class.php 28715 2010-03-23 15:28:37Z fabien $
+ * @version    SVN: $Id: sfProjectOptimizeTask.class.php 29415 2010-05-12 06:24:54Z fabien $
  */
 class sfProjectOptimizeTask extends sfBaseTask
 {
@@ -174,7 +174,7 @@ EOF;
     foreach ($this->configuration->getPluginSubPaths(DIRECTORY_SEPARATOR.'modules') as $path)
     {
       // parse out the plugin name
-      if (preg_match("#plugins".DIRECTORY_SEPARATOR."([^".DIRECTORY_SEPARATOR."]+)".DIRECTORY_SEPARATOR."modules#", $path, $matches))
+      if (preg_match("#plugins".preg_quote(DIRECTORY_SEPARATOR)."([^".preg_quote(DIRECTORY_SEPARATOR)."]+)".preg_quote(DIRECTORY_SEPARATOR)."modules#", $path, $matches))
       {
         // plugin module enabled?
         if (in_array($matches[1], sfConfig::get('sf_enabled_modules')))

@@ -21,7 +21,7 @@ abstract class BaseProductI18nForm extends BaseFormPropel
 
     $this->setValidators(array(
       'id'      => new sfValidatorPropelChoice(array('model' => 'Product', 'column' => 'id', 'required' => false)),
-      'culture' => new sfValidatorPropelChoice(array('model' => 'ProductI18n', 'column' => 'culture', 'required' => false)),
+      'culture' => new sfValidatorChoice(array('choices' => array($this->getObject()->getCulture()), 'empty_value' => $this->getObject()->getCulture(), 'required' => false)),
       'name'    => new sfValidatorString(array('max_length' => 50, 'required' => false)),
     ));
 

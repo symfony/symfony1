@@ -18,7 +18,7 @@
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineFormGenerator.class.php 28900 2010-03-30 20:55:38Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineFormGenerator.class.php 29661 2010-05-28 16:56:42Z Kris.Wallsmith $
  */
 class sfDoctrineFormGenerator extends sfGenerator
 {
@@ -405,9 +405,13 @@ class sfDoctrineFormGenerator extends sfGenerator
         $validatorSubclass = 'Pass';
     }
 
-    if ($column->isPrimaryKey() || $column->isForeignKey())
+    if ($column->isForeignKey())
     {
       $validatorSubclass = 'DoctrineChoice';
+    }
+    else if ($column->isPrimaryKey())
+    {
+      $validatorSubclass = 'Choice';
     }
 
     return sprintf('sfValidator%s', $validatorSubclass);
@@ -429,7 +433,7 @@ class sfDoctrineFormGenerator extends sfGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => $this->getModelName(), \'column\' => \'%s\'', $column->getFieldName());
+      $options[] = sprintf('\'choices\' => array($this->getObject()->get(\'%s\')), \'empty_value\' => $this->getObject()->get(\'%1$s\')', $column->getFieldName());
     }
     else
     {

@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfViewCacheManager.class.php 28785 2010-03-25 13:11:07Z fabien $
+ * @version    SVN: $Id: sfViewCacheManager.class.php 29527 2010-05-19 13:08:37Z fabien $
  */
 class sfViewCacheManager
 {
@@ -385,6 +385,11 @@ class sfViewCacheManager
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
+    if (!isset($params['module']))
+    {
+        return $defaultValue;
+    }
+
     $this->registerConfiguration($params['module']);
 
     $value = $defaultValue;
@@ -421,6 +426,11 @@ class sfViewCacheManager
     }
 
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
+
+    if (!isset($params['module']))
+    {
+        return false;
+    }
 
     $this->registerConfiguration($params['module']);
 

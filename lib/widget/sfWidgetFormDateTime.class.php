@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDateTime.class.php 20301 2009-07-19 10:57:32Z fabien $
+ * @version    SVN: $Id: sfWidgetFormDateTime.class.php 29674 2010-05-30 12:35:21Z Kris.Wallsmith $
  */
 class sfWidgetFormDateTime extends sfWidgetForm
 {
@@ -111,6 +111,9 @@ class sfWidgetFormDateTime extends sfWidgetForm
     {
       throw new InvalidArgumentException(sprintf('You must pass an array for the %s option.', $type));
     }
+
+    // add id_format if it's not there already
+    $options += array('id_format' => $this->getOption('id_format'));
 
     return $options;
   }
