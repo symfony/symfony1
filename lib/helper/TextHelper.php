@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: TextHelper.php 29417 2010-05-12 06:53:36Z fabien $
+ * @version    SVN: $Id: TextHelper.php 31895 2011-01-24 18:37:43Z fabien $
  */
 
 /**
@@ -234,7 +234,7 @@ if (!defined('SF_AUTO_LINK_RE'))
       (?::\d+)?                # port
       (?:/(?:(?:[\~\w\+%-]|(?:[,.;:][^\s$]))+)?)* # path
       (?:\?[\w\+%&=.;-]+)?     # query string
-      (?:\#[\w\-]*)?           # trailing anchor
+      (?:\#[\w\-/\?!=]*)?        # trailing anchor
     )
     ([[:punct:]]|\s|<|$)    # trailing text
    ~x');
