@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage mailer
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMailer.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfMailer.class.php 28841 2010-03-29 08:13:57Z fabien $
  */
 class sfMailer extends Swift_Mailer
 {
@@ -32,7 +32,8 @@ class sfMailer extends Swift_Mailer
     $strategy          = 'realtime',
     $address           = '',
     $realtimeTransport = null,
-    $force             = false;
+    $force             = false,
+    $redirectingPlugin = null;
 
   /**
    * Constructor.
@@ -127,7 +128,7 @@ class sfMailer extends Swift_Mailer
 
       $this->address = $options['delivery_address'];
 
-      $transport->registerPlugin(new Swift_Plugins_RedirectingPlugin($this->address));
+      $transport->registerPlugin($this->redirectingPlugin = new Swift_Plugins_RedirectingPlugin($this->address));
     }
 
     parent::__construct($transport);
@@ -220,6 +221,11 @@ class sfMailer extends Swift_Mailer
   public function setDeliveryAddress($address)
   {
     $this->address = $address;
+
+    if (sfMailer::SINGLE_ADDRESS == $this->strategy)
+    {
+      $this->redirectingPlugin->setRecipient($address);
+    }
   }
 
   /**

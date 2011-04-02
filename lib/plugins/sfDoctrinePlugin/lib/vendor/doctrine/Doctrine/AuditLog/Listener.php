@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  AuditLog
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -61,7 +61,8 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
         $version = $this->_auditLog->getOption('version');
         $name = $version['alias'] === null ? $version['name'] : $version['alias'];
 
-        $event->getInvoker()->set($name, 1);
+        $record = $event->getInvoker();
+        $record->set($name, $this->_getInitialVersion($record));
     }
 
     /**
@@ -135,6 +136,17 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
             $version->merge($record->toArray(), false);
             $version->save();
         }
+    }
+
+    /**
+     * Get the initial version number for the audit log
+     *
+     * @param Doctrine_Record $record
+     * @return integer $initialVersion
+     */
+    protected function _getInitialVersion(Doctrine_Record $record)
+    {
+        return 1;
     }
 
     /**

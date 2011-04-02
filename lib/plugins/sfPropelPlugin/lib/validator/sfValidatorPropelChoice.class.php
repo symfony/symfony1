@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorPropelChoice.class.php 22299 2009-09-23 18:32:54Z fabien $
+ * @version    SVN: $Id: sfValidatorPropelChoice.class.php 28632 2010-03-20 14:13:37Z Kris.Wallsmith $
  */
 class sfValidatorPropelChoice extends sfValidatorBase
 {
@@ -76,7 +76,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
 
       $criteria->addAnd($this->getColumn(), $value, Criteria::IN);
 
-      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, $this->getOption('connection'));
+      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, false, $this->getOption('connection'));
 
       if ($dbcount != $count)
       {
@@ -87,7 +87,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
     {
       $criteria->addAnd($this->getColumn(), $value);
 
-      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, $this->getOption('connection'));
+      $dbcount = call_user_func(array(constant($this->getOption('model').'::PEER'), 'doCount'), $criteria, false, $this->getOption('connection'));
 
       if (0 === $dbcount)
       {

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Query.php 6792 2009-11-23 22:27:26Z jwage $
+ *  $Id: Query.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -28,9 +28,9 @@
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6792 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @todo        Proposal: This class does far too much. It should have only 1 task: Collecting
  *              the DQL query parts and the query parameters (the query state and caching options/methods
@@ -279,6 +279,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
     public function fetchOne($params = array(), $hydrationMode = null)
     {
         $collection = $this->execute($params, $hydrationMode);
+
+        if (is_scalar($collection)) {
+            return $collection;
+        }
 
         if (count($collection) === 0) {
             return false;
@@ -1393,7 +1397,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
                 foreach ($e as $f) {
                     if ($f == 0 || $f % 2 == 0) {
-                        $partOriginal = trim($f);
+                        $partOriginal = str_replace(',', '', trim($f));
                         $callback = create_function('$e', 'return trim($e, \'[]`"\');');
                         $part = trim(implode('.', array_map($callback, explode('.', $partOriginal))));
                 
@@ -1437,6 +1441,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     }
                 }
             }
+        }
+
+        // Add having fields that got stripped out of select
+        preg_match_all('/`[a-z0-9_]+`\.`[a-z0-9_]+`/i', implode(' ', $having), $matches, PREG_PATTERN_ORDER);
+        if (count($matches[0]) > 0) {
+            $subquery .= ', ' . implode(', ', array_unique($matches[0]));
         }
 
         $subquery .= ' FROM';
@@ -2050,6 +2060,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                     if (strpos($field, '(') !== false) {
                         $selectFields .= ', ' . $field;
                     }
+                }
+                // Add having fields that got stripped out of select
+                preg_match_all('/`[a-z0-9_]+`\.`[a-z0-9_]+`/i', $having, $matches, PREG_PATTERN_ORDER);
+                if (count($matches[0]) > 0) {
+                    $selectFields .= ', ' . implode(', ', array_unique($matches[0]));
                 }
             }
 

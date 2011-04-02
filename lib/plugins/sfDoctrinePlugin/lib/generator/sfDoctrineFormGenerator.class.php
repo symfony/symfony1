@@ -18,7 +18,7 @@
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineFormGenerator.class.php 27842 2010-02-10 19:42:03Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineFormGenerator.class.php 28900 2010-03-30 20:55:38Z Jonathan.Wage $
  */
 class sfDoctrineFormGenerator extends sfGenerator
 {
@@ -573,6 +573,8 @@ class sfDoctrineFormGenerator extends sfGenerator
     $indexes = $this->table->getOption('indexes');
     foreach ($indexes as $name => $index)
     {
+      $index['fields'] = (array) $index['fields'];
+
       if (isset($index['type']) && $index['type'] == 'unique')
       {
         $tmp = $index['fields'];

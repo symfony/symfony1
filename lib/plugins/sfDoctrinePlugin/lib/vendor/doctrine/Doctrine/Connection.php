@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Connection.php 6799 2009-11-24 19:24:33Z jwage $
+ *  $Id: Connection.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -47,9 +47,9 @@
  * @package     Doctrine
  * @subpackage  Connection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6799 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (MDB2 library)
  */
@@ -893,7 +893,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function query($query, array $params = array(), $hydrationMode = null)
     {
-        $parser = Doctrine_Query::create();
+        $parser = Doctrine_Query::create($this);
         $res = $parser->query($query, $params, $hydrationMode);
         $parser->free();
 
@@ -1030,7 +1030,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @param string $query     sql query
      * @param array $params     query parameters
      *
-     * @return PDOStatement|Doctrine_Adapter_Statement
+     * @return integer
      */
     public function exec($query, array $params = array())
     {
@@ -1116,7 +1116,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             return $this->tables[$name];
         }
 
-        $class = $name . 'Table';
+        $class = sprintf($this->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS_FORMAT), $name);
 
         if (class_exists($class, $this->getAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES)) &&
                 in_array('Doctrine_Table', class_parents($class))) {
@@ -1599,7 +1599,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', array_merge($parts, array($relation['onDelete']), array($relation['onUpdate'])));
         $format = $this->getAttribute(Doctrine_Core::ATTR_FKNAME_FORMAT);
 
-        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, $this->properties['max_identifier_length']);
+        return $this->_generateUniqueName('foreign_keys', $parts, $key, $format, $this->getAttribute(Doctrine_Core::ATTR_MAX_IDENTIFIER_LENGTH));
     }
 
     /**
@@ -1617,13 +1617,16 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $key = implode('_', $parts);
         $format = $this->getAttribute(Doctrine_Core::ATTR_IDXNAME_FORMAT);
 
-        return $this->_generateUniqueName('indexes', $parts, $key, $format, $this->properties['max_identifier_length']);
+        return $this->_generateUniqueName('indexes', $parts, $key, $format, $this->getAttribute(Doctrine_Core::ATTR_MAX_IDENTIFIER_LENGTH));
     }
 
-    protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = 64)
+    protected function _generateUniqueName($type, $parts, $key, $format = '%s', $maxLength = null)
     {
         if (isset($this->_usedNames[$type][$key])) {
             return $this->_usedNames[$type][$key];
+        }
+        if ($maxLength === null) {
+          $maxLength = $this->properties['max_identifier_length'];
         }
 
         $generated = implode('_', $parts);

@@ -17,7 +17,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineRecord.class.php 24703 2009-12-01 18:36:11Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineRecord.class.php 28898 2010-03-30 20:35:08Z Jonathan.Wage $
  */
 abstract class sfDoctrineRecord extends Doctrine_Record
 {
@@ -241,7 +241,7 @@ abstract class sfDoctrineRecord extends Doctrine_Record
   public function getDateTimeObject($dateFieldName)
   {
     $type = $this->getTable()->getTypeOf($dateFieldName);
-    if ($type == 'date' || $type == 'timestamp')
+    if ($type == 'date' || $type == 'timestamp' || $type == 'datetime')
     {
       return new DateTime($this->get($dateFieldName));
     }
@@ -261,7 +261,7 @@ abstract class sfDoctrineRecord extends Doctrine_Record
   public function setDateTimeObject($dateFieldName, DateTime $dateTimeObject)
   {
     $type = $this->getTable()->getTypeOf($dateFieldName);
-    if ($type == 'date' || $type == 'timestamp')
+    if ($type == 'date' || $type == 'timestamp' || $type == 'datetime')
     {
       return $this->set($dateFieldName, $dateTimeObject->format('Y-m-d H:i:s'));
     }

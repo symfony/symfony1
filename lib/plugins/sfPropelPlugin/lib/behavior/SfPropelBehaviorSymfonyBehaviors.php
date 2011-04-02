@@ -14,7 +14,7 @@
  * @package     sfPropelPlugin
  * @subpackage  behavior
  * @author      Kris Wallsmith <kris.wallsmith@symfony-project.com>
- * @version     SVN: $Id: SfPropelBehaviorSymfonyBehaviors.php 23394 2009-10-27 18:09:12Z Kris.Wallsmith $
+ * @version     SVN: $Id: SfPropelBehaviorSymfonyBehaviors.php 28958 2010-04-01 13:56:17Z fabien $
  */
 class SfPropelBehaviorSymfonyBehaviors extends SfPropelBehaviorBase
 {
@@ -28,8 +28,10 @@ class SfPropelBehaviorSymfonyBehaviors extends SfPropelBehaviorBase
     return <<<EOF
 foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:delete:pre') as \$callable)
 {
-  if (\$ret = call_user_func(\$callable, \$this, \$con))
+  if (call_user_func(\$callable, \$this, \$con))
   {
+    \$con->commit();
+
     return;
   }
 }
@@ -65,6 +67,8 @@ foreach (sfMixer::getCallables('Base{$this->getTable()->getPhpName()}:save:pre')
 {
   if (is_integer(\$affectedRows = call_user_func(\$callable, \$this, \$con)))
   {
+    \$con->commit();
+
     return \$affectedRows;
   }
 }

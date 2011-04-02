@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @package     Doctrine
  * @subpackage  Migration
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jonwage@gmail.com>
@@ -45,7 +45,8 @@ class Doctrine_Migration_Diff
                                 'created_indexes'     =>  array(),
                                 'dropped_indexes'     =>  array()),
               $_migration,
-              $_startingModelFiles = array();
+              $_startingModelFiles = array(),
+              $_tmpPath;
 
     protected static $_toPrefix   = 'ToPrfx',
                      $_fromPrefix = 'FromPrfx';
@@ -68,12 +69,27 @@ class Doctrine_Migration_Diff
         $this->_from = $from;
         $this->_to = $to;
         $this->_startingModelFiles = Doctrine_Core::getLoadedModelFiles();
+        $this->setTmpPath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . getmypid());
 
         if ($migration instanceof Doctrine_Migration) {
             $this->_migration = $migration;
         } else if (is_dir($migration)) {
             $this->_migration = new Doctrine_Migration($migration);
         }
+    }
+
+    /**
+     * Set the temporary path to store the generated models for generating diffs
+     *
+     * @param string $tmpPath
+     * @return void
+     */
+    public function setTmpPath($tmpPath)
+    {
+        if ( ! is_dir($tmpPath)) {
+            mkdir($tmpPath, 0777, true);
+        }
+        $this->_tmpPath = $tmpPath;
     }
 
     /**
@@ -114,6 +130,27 @@ class Doctrine_Migration_Diff
     }
 
     /**
+     * Initialize some Doctrine models at a given path.
+     *
+     * @param string $path 
+     * @return array $models
+     */
+    protected function _initializeModels($path)
+    {
+        $manager = Doctrine_Manager::getInstance();
+        $modelLoading = $manager->getAttribute(Doctrine_Core::ATTR_MODEL_LOADING);
+        if ($modelLoading === Doctrine_Core::MODEL_LOADING_PEAR) {
+            $orig = Doctrine_Core::getModelsDirectory();
+            Doctrine_Core::setModelsDirectory($path);
+            $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
+            Doctrine_Core::setModelsDirectory($orig);
+        } else {
+            $models = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($path));
+        }
+        return $models;
+    }
+
+    /**
      * Generate a diff between the from and to schema information
      *
      * @param  string $from     Path to set of models to migrate from
@@ -123,8 +160,8 @@ class Doctrine_Migration_Diff
     protected function _diff($from, $to)
     {
         // Load the from and to models
-        $fromModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($from));
-        $toModels = Doctrine_Core::initializeModels(Doctrine_Core::loadModels($to));
+        $fromModels = $this->_initializeModels($from);
+        $toModels = $this->_initializeModels($to);
 
         // Build schema information for the models
         $fromInfo = $this->_buildModelInformation($fromModels);
@@ -292,6 +329,33 @@ class Doctrine_Migration_Diff
     }
 
     /**
+     * Get the extension of the type of file contained in a directory.
+     * Used to determine if a directory contains YAML or PHP files.
+     *
+     * @param string $item
+     * @return string $extension
+     */
+    protected function _getItemExtension($item)
+    {
+        if (is_dir($item)) {
+            $files = glob($item . DIRECTORY_SEPARATOR . '*');
+        } else {
+            $files = array($item);
+        }
+
+        $extension = null;
+        if (isset($files[0])) {
+            if (is_dir($files[0])) {
+                $extension = $this->_getItemExtension($files[0]);
+            } else {
+                $pathInfo = pathinfo($files[0]);
+                $extension = $pathInfo['extension'];
+            }
+        }
+        return $extension;
+    }
+
+    /**
      * Generate a set of models for the schema information source
      *
      * @param  string $prefix  Prefix to generate the models with
@@ -301,23 +365,14 @@ class Doctrine_Migration_Diff
      */
     protected function _generateModels($prefix, $item)
     {
-        $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
+        $path = $this->_tmpPath . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
         $options = array(
             'classPrefix' => $prefix,
             'generateBaseClasses' => false
         );
 
         if (is_string($item) && file_exists($item)) {
-            if (is_dir($item)) {
-                $files = glob($item . DIRECTORY_SEPARATOR . '*.*');
-            } else {
-                $files = array($item);
-            }
-
-            if (isset($files[0])) {
-                $pathInfo = pathinfo($files[0]);
-                $extension = $pathInfo['extension'];
-            }
+            $extension = $this->_getItemExtension($item);
 
             if ($extension === 'yml') {
                 Doctrine_Core::generateModelsFromYaml($item, $path, $options);
@@ -357,7 +412,7 @@ class Doctrine_Migration_Diff
         }
 
         // clean up tmp directories
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories(sys_get_temp_dir() . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
     }
 }

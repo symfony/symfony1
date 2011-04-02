@@ -19,7 +19,7 @@
  * @package    symfony12
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 6820 2009-11-30 17:27:49Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseModelWithNumberInColumn extends myDoctrineRecord
 {
@@ -28,15 +28,15 @@ abstract class BaseModelWithNumberInColumn extends myDoctrineRecord
         $this->setTableName('model_with_number_in_column');
         $this->hasColumn('column_1', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
              ));
         $this->hasColumn('column2', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
              ));
         $this->hasColumn('column__3', 'string', 255, array(
              'type' => 'string',
-             'length' => '255',
+             'length' => 255,
              ));
 
         $this->option('symfony', array(

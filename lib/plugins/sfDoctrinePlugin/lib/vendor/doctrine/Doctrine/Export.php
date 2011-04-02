@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Export.php 6491 2009-10-12 21:00:11Z jwage $
+ *  $Id: Export.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,9 +27,9 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6491 $
+ * @version     $Revision: 7490 $
  */
 class Doctrine_Export extends Doctrine_Connection_Module
 {
@@ -1242,8 +1242,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         
         foreach ($models as $name) {
             $record = new $name();
-            $table  = $record->getTable();
-
+            $table = $record->getTable();
             $parents = $table->getOption('joinedParents');
 
             foreach ($parents as $parent) {
@@ -1272,6 +1271,10 @@ class Doctrine_Export extends Doctrine_Connection_Module
             if ($table->getAttribute(Doctrine_Core::ATTR_EXPORT) & Doctrine_Core::EXPORT_PLUGINS) {
                 $sql = array_merge($sql, $this->exportGeneratorsSql($table));
             }
+            
+            // DC-474: Remove dummy $record from repository to not pollute it during export
+            $table->getRepository()->evict($record->getOid());
+            unset($record);
         }
         
         $sql = array_unique($sql);

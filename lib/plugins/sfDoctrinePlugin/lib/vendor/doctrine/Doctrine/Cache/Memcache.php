@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Memcache.php 6821 2009-11-30 17:32:21Z jwage $
+ *  $Id: Memcache.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Cache
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6821 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
@@ -40,11 +40,11 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
 
     /**
      * constructor
-     * 
+     *
      * @param array $options        associative array of cache driver options
      */
     public function __construct($options = array())
-    {      
+    {
         if ( ! extension_loaded('memcache')) {
             throw new Doctrine_Cache_Exception('In order to use Memcache driver, the memcache extension must be loaded.');
         }
@@ -58,7 +58,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             }
             $this->setOption('servers', $value);
         }
-        
+
         $this->_memcache = new Memcache;
 
         foreach ($this->_options['servers'] as $server) {
@@ -78,7 +78,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed  Returns either the cached data or false
      */
-    protected function _doFetch($id, $testCacheValidity = true) 
+    protected function _doFetch($id, $testCacheValidity = true)
     {
         return $this->_memcache->get($id);
     }
@@ -89,7 +89,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      * @param string $id cache id
      * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    protected function _doContains($id) 
+    protected function _doContains($id)
     {
         return (bool) $this->_memcache->get($id);
     }
@@ -117,12 +117,35 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
     /**
      * Remove a cache record directly. This method is implemented by the cache
      * drivers and used in Doctrine_Cache_Driver::delete()
-     * 
+     *
      * @param string $id cache id
      * @return boolean true if no problem
      */
-    protected function _doDelete($id) 
+    protected function _doDelete($id)
     {
         return $this->_memcache->delete($id);
+    }
+
+    /**
+     * Fetch an array of all keys stored in cache
+     *
+     * @return array Returns the array of cache keys
+     */
+    protected function _getCacheKeys()
+    {
+        $keys = array();
+        $allSlabs = $this->_memcache->getExtendedStats('slabs');
+
+        foreach ($allSlabs as $server => $slabs) {
+            foreach (array_keys($slabs) as $slabId) {
+                $dump = $this->_memcache->getExtendedStats('cachedump', (int) $slabId);
+                foreach ($dump as $entries) {
+                    if ($entries) {
+                        $keys = array_merge($keys, array_keys($entries));
+                    }
+                }
+            }
+        }
+        return $keys;
     }
 }

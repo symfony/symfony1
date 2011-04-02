@@ -13,7 +13,7 @@
  * @package    symfony12
  * @subpackage model
  * @author     Your name here
- * @version    SVN: $Id: Builder.php 6820 2009-11-30 17:27:49Z jwage $
+ * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseDefaultValueTest extends myDoctrineRecord
 {
@@ -24,7 +24,7 @@ abstract class BaseDefaultValueTest extends myDoctrineRecord
              'type' => 'string',
              'notnull' => true,
              'default' => '',
-             'length' => '255',
+             'length' => 255,
              ));
     }
 
