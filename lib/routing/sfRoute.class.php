@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRoute.class.php 32652 2011-06-15 17:44:19Z fabien $
+ * @version    SVN: $Id: sfRoute.class.php 32939 2011-08-22 13:40:06Z fabien $
  */
 class sfRoute implements Serializable
 {
@@ -232,7 +232,7 @@ class sfRoute implements Serializable
     {
       // replace variables
       $variables = $this->variables;
-      uasort($variables, create_function('$a, $b', 'return strlen($a) < strlen($b);'));
+      uasort($variables, array('sfRoute', 'generateCompareVarsByStrlen'));
       foreach ($variables as $variable => $value)
       {
         $url = str_replace($value, urlencode($tparams[$variable]), $url);
@@ -257,6 +257,11 @@ class sfRoute implements Serializable
     }
 
     return $url;
+  }
+
+  static private function generateCompareVarsByStrlen($a, $b)
+  {
+    return strlen($a) < strlen($b);
   }
 
   /**

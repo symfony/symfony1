@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 31254 2010-10-26 15:26:03Z fabien $
+ * @version    SVN: $Id: sfWebDebug.class.php 32890 2011-08-05 07:44:44Z fabien $
  */
 class sfWebDebug
 {
@@ -780,7 +780,7 @@ EOF;
   margin: 0;
   padding: 0;
   margin-left: 20px;
-  list-style: number;
+  list-style: decimal;
 }
 
 #sfWebDebugDatabaseLogs li
