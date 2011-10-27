@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelFormFilterGenerator.class.php 24392 2009-11-25 18:35:39Z FabianLange $
+ * @version    SVN: $Id: sfPropelFormFilterGenerator.class.php 33137 2011-10-18 13:05:25Z fabien $
  */
 class sfPropelFormFilterGenerator extends sfPropelFormGenerator
 {
@@ -59,8 +59,6 @@ class sfPropelFormFilterGenerator extends sfPropelFormGenerator
     }
 
     $this->loadBuilders();
-
-    $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
 
     // create the project base class for all forms
     $file = sfConfig::get('sf_lib_dir').'/filter/BaseFormFilterPropel.class.php';
