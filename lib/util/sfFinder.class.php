@@ -347,7 +347,7 @@ class sfFinder
 
     if ($this->ignore_version_control)
     {
-      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg');
+      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.gitignore', '.hg');
 
       $finder->discard($ignores)->prune($ignores);
     }
