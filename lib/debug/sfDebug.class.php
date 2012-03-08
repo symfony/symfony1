@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDebug.class.php 31250 2010-10-26 14:18:26Z fabien $
+ * @version    SVN: $Id: sfDebug.class.php 33309 2012-01-20 13:06:21Z fabien $
  */
 class sfDebug
 {
@@ -167,7 +167,7 @@ class sfDebug
       'culture'         => $user->getCulture(),
     );
 
-    if ($user instanceof sfSecurityUser)
+    if ($user instanceof sfBasicSecurityUser)
     {
       $data = array_merge($data, array(
           'authenticated'   => $user->isAuthenticated(),
