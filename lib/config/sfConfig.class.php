@@ -31,7 +31,7 @@ class sfConfig
    */
   public static function get($name, $default = null)
   {
-    return isset(self::$config[$name]) ? self::$config[$name] : $default;
+    return isset(static::$config[$name]) ? static::$config[$name] : $default;
   }
 
   /**
@@ -43,7 +43,7 @@ class sfConfig
    */
   public static function has($name)
   {
-    return array_key_exists($name, self::$config);
+    return array_key_exists($name, static::$config);
   }
 
   /**
@@ -56,7 +56,7 @@ class sfConfig
    */
   public static function set($name, $value)
   {
-    self::$config[$name] = $value;
+    static::$config[$name] = $value;
   }
 
   /**
@@ -69,7 +69,7 @@ class sfConfig
    */
   public static function add($parameters = array())
   {
-    self::$config = array_merge(self::$config, $parameters);
+    static::$config = array_merge(static::$config, $parameters);
   }
 
   /**
@@ -79,7 +79,7 @@ class sfConfig
    */
   public static function getAll()
   {
-    return self::$config;
+    return static::$config;
   }
 
   /**
@@ -87,6 +87,6 @@ class sfConfig
    */
   public static function clear()
   {
-    self::$config = array();
+    static::$config = array();
   }
 }
