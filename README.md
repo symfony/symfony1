@@ -1,8 +1,8 @@
 # Symfony
-## 1.4.18-vend-0.1
+## 1.4.20-vend-0.1
 
 Based on the latest stable version of Symfony 1.4 (at the time of writing:
-1.4.18), with BC-breaking (but important) fixes applied.
+1.4.20), with BC-breaking (but important) fixes applied.
 
 ### Changelog
 
