@@ -46,7 +46,7 @@ abstract class CreoleTypes {
         const NUMERIC = 14;
         const BLOB = 15;
         const CLOB = 16;
-        const LONGVARCHAR = 17;
+        const LONGVARCHAR = 24;
         const DECIMAL = 18;
         const REAL = 19;
         const BINARY = 20;
