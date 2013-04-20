@@ -3,6 +3,7 @@ CHANGELOG
 
 20/04/13: Versions 0.1
 -------------------------
-
+ * Remove Propel and Doctrine plugins
+ * Remove lime and swiftmailer vendor folders
  * Remove all tests
  * Forking Symfony 1.4.20
