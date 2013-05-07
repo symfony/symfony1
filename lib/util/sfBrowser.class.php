@@ -63,35 +63,39 @@ class sfBrowser extends sfBrowserBase
    */
   public function getContext($forceReload = false)
   {
-    if (null === $this->context || $forceReload)
+    if ($forceReload === false)
     {
-      $isContextEmpty = null === $this->context;
-      $context = $isContextEmpty ? sfContext::getInstance() : $this->context;
+      return $this->context;
+    }
 
-      // create configuration
-      $currentConfiguration = $context->getConfiguration();
-      $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+    if ($this->rawConfiguration === null)
+    {
+      $this->context = sfContext::getInstance();
+    }
 
-      // connect listeners
-      $configuration->getEventDispatcher()->connect('application.throw_exception', array($this, 'listenToException'));
-      foreach ($this->listeners as $name => $listener)
-      {
-        $configuration->getEventDispatcher()->connect($name, $listener);
-      }
+    // create configuration
+    $currentConfiguration = $this->context->getConfiguration();
+    $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
 
-      // create context
-      $this->context = sfContext::createInstance($configuration);
-      unset($currentConfiguration);
+    // connect listeners
+    $configuration->getEventDispatcher()->connect('application.throw_exception', array($this, 'listenToException'));
+    foreach ($this->listeners as $name => $listener)
+    {
+      $configuration->getEventDispatcher()->connect($name, $listener);
+    }
 
-      if (!$isContextEmpty)
-      {
-        sfConfig::clear();
-        sfConfig::add($this->rawConfiguration);
-      }
-      else
-      {
-        $this->rawConfiguration = sfConfig::getAll();
-      }
+    // create context
+    $this->context->initialize($configuration);
+    unset($currentConfiguration);
+
+    if ($this->rawConfiguration !== null)
+    {
+      sfConfig::clear();
+      sfConfig::add($this->rawConfiguration);
+    }
+    else
+    {
+      $this->rawConfiguration = sfConfig::getAll();
     }
 
     return $this->context;
