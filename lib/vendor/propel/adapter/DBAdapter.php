@@ -52,13 +52,14 @@ abstract class DBAdapter {
 	 */
 	private static $adapters = array(
 								    'mysql' => 'DBMySQL',
-									'mysqli' => 'DBMySQLi',
+                    'mysqli' => 'DBMySQLi',
 								    'mssql' => 'DBMSSQL',
+                    'mssqlsrv' => 'DBMSSQLSRV',
 								    'sybase' => 'DBSybase',
 								    'oracle' => 'DBOracle',
 								    'pgsql' => 'DBPostgres',
 								    'sqlite' => 'DBSQLite',
-								    '' => 'DBNone',
+								    '' => 'DBNone'
 								);
 
 	/**
