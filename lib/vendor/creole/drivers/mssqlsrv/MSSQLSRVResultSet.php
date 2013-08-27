@@ -140,15 +140,14 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
    * @see ResultSet::getRecordCount()
    */
   function getRecordCount()
-  {
-    throw new Exception("Function not implemented yet");
-
-    $rows = sqlsrv_fetch_array($this->result);
-    if(!$rows)
-    {
-      throw new SQLException("Error getting record count", $this->sqlError());
-    }
-    return count($rows);
+  {    
+    $rows = @sqlsrv_num_rows($this->result);
+    if ($rows === null) {
+        throw new SQLException('Error getting record count', $this->sqlError());
+    }   
+    // adjust count based on emulated LIMIT/OFFSET
+    $rows -= $this->offset;
+    return ($this->limit > 0 && $rows > $this->limit ? $this->limit : $rows);
   }
 
   public function afterLast()
