@@ -2,7 +2,3 @@ set:
   log_errors:                  on
   arg_separator.output:        |
     &amp;
-
-warn:
-  register_globals:            off
-  session.auto_start:          off
