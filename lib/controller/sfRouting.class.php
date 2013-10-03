@@ -110,8 +110,11 @@ class sfRouting
           {
             continue;
           }
-
-          $params[] = $key.'='.$value;
+            if (is_array($value)){
+                $params[] = urldecode(http_build_query(array($key => $value))); 
+            }else{
+                $params[] = $key.'='.$value;
+            }
         }
       }
 
