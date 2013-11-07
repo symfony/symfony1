@@ -86,7 +86,7 @@ function options_for_select($options = array(), $selected = '', $html_options = 
       if (
           (is_array($selected) && in_array(strval($key), $selected, true))
           ||
-          (strval($key) == strval($selected))
+          (!is_array($selected) && strval($key) == strval($selected))
          )
       {
         $option_options['selected'] = 'selected';
