@@ -1537,6 +1537,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             return true;
         }
 
+        if (($old === null || $old instanceof Doctrine_Null) && ($new === null || $new instanceof Doctrine_Null)) {
+            return false;
+        }
+
         if ($type == 'boolean' && (is_bool($old) || is_numeric($old)) && (is_bool($new) || is_numeric($new)) && $old == $new) {
             return false;
         } else if (in_array($type, array('decimal', 'float')) && is_numeric($old) && is_numeric($new)) {

@@ -100,7 +100,7 @@ EOF;
         }
 
         // use the last match as a search string
-        $code = str_replace($match[0], $match[0].PHP_EOL.' * '.PHP_EOL.' * '.implode(PHP_EOL.' * ', array_merge($getters, $setters)), $code);
+        $code = str_replace($match[0], $match[0].PHP_EOL.' *'.PHP_EOL.' * '.implode(PHP_EOL.' * ', array_merge($getters, $setters)), $code);
         file_put_contents($file, $code);
       }
     }

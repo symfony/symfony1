@@ -33,11 +33,16 @@
  * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-final class Doctrine_Null
-{ 
+final class Doctrine_Null implements Countable
+{
+    public function count()
+    {
+        return 0;
+    }
+
     public function exists()
     {
-        return false;    
+        return false;
     }
 
     public function __toString()

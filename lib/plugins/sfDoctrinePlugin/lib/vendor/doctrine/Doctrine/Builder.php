@@ -43,6 +43,7 @@ class Doctrine_Builder
     public function varExport($var)
     {
         $export = var_export($var, true);
+        $export = str_replace(" \n", "\n", $export);
         $export = str_replace("\n", PHP_EOL . str_repeat(' ', 50), $export);
         $export = str_replace('  ', ' ', $export);
         $export = str_replace('array (', 'array(', $export);

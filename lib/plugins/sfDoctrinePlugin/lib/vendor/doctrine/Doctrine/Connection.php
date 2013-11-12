@@ -1204,7 +1204,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function createQuery()
     {
-        return Doctrine_Query::create();
+        return Doctrine_Query::create($this);
     }
 
     /**
