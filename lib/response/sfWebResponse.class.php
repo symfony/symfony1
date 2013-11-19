@@ -328,7 +328,19 @@ class sfWebResponse extends sfResponse
    */
   protected function normalizeHeaderName($name)
   {
-    return preg_replace('/\-(.)/e', "'-'.strtoupper('\\1')", strtr(ucfirst(strtolower($name)), '_', '-'));
+    return preg_replace_callback('/\-(.)/', array($this, 'normalizeHeaderCallback'), strtr(ucfirst(strtolower($name)), '_', '-'));
+  }
+  
+  /**
+   * Callback for the normalizeHeader function.
+   * 
+   * @param string[] $text a regular expression mtch
+   * 
+   * @return string the text in capital letters and leading dash
+   */
+  protected static function normalizeHeaderCallback( $text )
+  {
+    return '-'.strtoupper($text[0]);
   }
 
   /**
