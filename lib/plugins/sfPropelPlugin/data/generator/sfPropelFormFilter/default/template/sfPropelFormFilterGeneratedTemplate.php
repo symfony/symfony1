@@ -13,7 +13,7 @@ abstract class Base<?php echo $this->table->getClassname() ?>FormFilter extends 
   {
     $this->setWidgets(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
-<?php if ($column->isPrimaryKey()) continue ?>
+<?php if ($column->isPrimaryKey()) continue; ?>
       '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
@@ -23,7 +23,7 @@ abstract class Base<?php echo $this->table->getClassname() ?>FormFilter extends 
 
     $this->setValidators(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
-<?php if ($column->isPrimaryKey()) continue ?>
+<?php if ($column->isPrimaryKey()) continue; ?>
       '<?php echo $this->translateColumnName($column) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getName())) ?> => <?php echo $this->getValidatorForColumn($column) ?>,
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
