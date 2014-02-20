@@ -116,7 +116,7 @@ class sfNumberFormat
    * "USD" represents the US Dollar and "EUR" represents the Euro currency.
    * @return string formatted number string 
    */
-  function format($number, $pattern = 'd', $currency = 'USD', $charset = 'UTF-8')
+  function format($number, $pattern = 'd', $currency = 'USD', $charset = 'cp1250')
   {
     $this->setPattern($pattern);
 
