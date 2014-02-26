@@ -1,0 +1,26 @@
+{
+    "name": "symfony/symfony1",
+    "type": "library",
+    "description": "The Symfony PHP framework version 1.x NOT MAINTAINED ANYMORE",
+    "keywords": ["framework"],
+    "homepage": "http://symfony.com/legacy",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "http://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.4"
+    },
+    "autoload": {
+       "classmap": [
+            "lib"
+        ]
+    }
+}
