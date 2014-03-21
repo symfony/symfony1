@@ -379,38 +379,40 @@ class pakeFinder
 
     if (is_dir($dir))
     {
-      $current_dir = opendir($dir);
-      while (false !== $entryname = readdir($current_dir))
+      if ($current_dir = @opendir($dir))
       {
-        if ($entryname == '.' || $entryname == '..') continue;
-
-        $current_entry = $dir.DIRECTORY_SEPARATOR.$entryname;
-        if (is_link($current_entry) && !$this->follow_link)
+        while (false !== $entryname = readdir($current_dir))
         {
-          continue;
-        }
+          if ($entryname == '.' || $entryname == '..') continue;
 
-        if (is_dir($current_entry))
-        {
-          if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
+          $current_entry = $dir.DIRECTORY_SEPARATOR.$entryname;
+          if (is_link($current_entry) && !$this->follow_link)
           {
-            $files[] = realpath($current_entry);
+            continue;
           }
 
-          if (!$this->is_pruned($dir, $entryname))
+          if (is_dir($current_entry))
           {
-            $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
+            if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
+            {
+              $files[] = realpath($current_entry);
+            }
+
+            if (!$this->is_pruned($dir, $entryname))
+            {
+              $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
+            }
+          }
+          else
+          {
+            if (($this->type != 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->size_ok($dir, $entryname) && $this->exec_ok($dir, $entryname))
+            {
+              $files[] = realpath($current_entry);
+            }
           }
         }
-        else
-        {
-          if (($this->type != 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->size_ok($dir, $entryname) && $this->exec_ok($dir, $entryname))
-          {
-            $files[] = realpath($current_entry);
-          }
-        }
+        closedir($current_dir);
       }
-      closedir($current_dir);
     }
 
     return $files;
