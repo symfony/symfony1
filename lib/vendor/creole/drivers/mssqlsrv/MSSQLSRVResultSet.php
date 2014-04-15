@@ -95,7 +95,7 @@ class MSSQLSRVResultSet extends ResultSetCommon implements ResultSet {
 
     // MSSQL rows start w/ 0, but this works, because we are
     // looking to move the position _before_ the next desired position
-    if (!sqlsrv_fetch($this->result, $rownum, $this->offset)) {
+    if (!sqlsrv_fetch($this->result, SQLSRV_SCROLL_ABSOLUTE, $rownum + $this->offset)) {
         return false;
     }
 
