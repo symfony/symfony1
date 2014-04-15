@@ -83,10 +83,4 @@ class MSSQLSRVPreparedStatement extends PreparedStatementCommon implements Prepa
         $this->resultSet->_setLimit($this->limit); 
         return $this->resultSet;
     }
-
-    public function setString($paramIndex, $value)
-    {
-       $value = iconv("utf-8", "windows-1250", $value);
-       parent::setString($paramIndex, $value);
-    }
 }
