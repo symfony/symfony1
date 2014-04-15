@@ -187,6 +187,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   protected function beginTrans()
   {
+    return;
     $result = sqlsrv_begin_transaction( $this->dblink );
     if ( $result === false )
     {
@@ -201,6 +202,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   protected function commitTrans()
   {
+    return;
     $result = sqlsrv_commit( $this->dblink );
     if (!$result) {
       throw new SQLException('Could not commit transaction', $this->sqlError());
@@ -214,6 +216,7 @@ class MSSQLSRVConnection extends ConnectionCommon implements Connection {
    */
   protected function rollbackTrans()
   {
+    return;
     $result = sqlsrv_rollback( $this->dblink );
     if (!$result) {
       throw new SQLException('Could not rollback transaction', $this->sqlError());
