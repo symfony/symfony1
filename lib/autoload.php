@@ -1,0 +1,4 @@
+<?php
+
+sfCoreAutoload::register();
+

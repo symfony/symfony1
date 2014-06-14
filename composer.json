@@ -1,0 +1,17 @@
+
+{
+	"name": "credico/symfony1",
+	"description": "Credicos enhancements for symfony1!",
+	"homepage": "https://github.com/Credico/symfony1",
+	"license": "MIT license",
+	"require": { "php": ">=5.3" },
+	"autoload": {
+		"classmap": [
+			"lib/autoload/sfCoreAutoload.class.php",
+			"lib/plugins/sfPropelPlugin/lib"
+		],
+		"files": ["lib/autoload.php"]
+	}
+}
+
+
