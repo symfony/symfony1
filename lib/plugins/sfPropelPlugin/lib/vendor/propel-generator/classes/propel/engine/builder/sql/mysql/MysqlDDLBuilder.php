@@ -114,16 +114,6 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 
 		foreach ($table->getColumns() as $col) {
 			$entry = $this->getColumnDDL($col);
-			$colinfo = $col->getVendorInfoForType($databaseType);
-			if ( $colinfo->hasParameter('Charset') ) {
-				$entry .= ' CHARACTER SET '.$platform->quote($colinfo->getParamter('Charset'));
-			}
-			if ( $colinfo->hasParameter('Collate') ) {
-				$entry .= ' COLLATE '.$platform->quote($colinfo->getParamter('Collate'));
-			}
-			if ($col->getDescription()) {
-				$entry .= " COMMENT ".$platform->quote($col->getDescription());
-			}
 			$lines[] = $entry;
 		}
 
@@ -153,7 +143,7 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 			}
 		}
 
-		$script .= "Type=$mysqlTableType";
+		$script .= " ENGINE=$mysqlTableType";
 
 		$dbVendorSpecific = $table->getDatabase()->getVendorInfoForType($databaseType);
 		$tableVendorSpecific = $table->getVendorInfoForType($databaseType);
@@ -377,6 +367,9 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 		$sqlType = $domain->getSqlType();
 		$notNullString = $col->getNotNullString();
 		$defaultSetting = $col->getDefaultSetting();
+		$databaseType = $this->getPlatform()->getDatabaseType();
+		$colinfo = $col->getVendorInfoForType($databaseType);
+		$tableVendorSpecific = $col->getTable()->getVendorInfoForType($databaseType);
 
 		// Special handling of TIMESTAMP/DATETIME types ...
 		// See: http://propel.phpdb.org/trac/ticket/538
@@ -404,6 +397,16 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 		}
 		$sb .= " ";
 
+		if ( $colinfo->hasParameter('Charset') ) {
+			$sb .= 'CHARACTER SET '.$colinfo->getParameter('Charset') . ' ';
+		}
+		if ($col->isTextType() && ! $col->isTemporalType() && ($colinfo->hasParameter('Collate') || $tableVendorSpecific->hasParameter('Collate'))) {
+			$sb .= 'COLLATE '.$tableVendorSpecific->getMergedVendorInfo($colinfo)->getParameter('Collate') . ' ';
+		}
+		if ($col->getDescription()) {
+			$sb .= "COMMENT ".$platform->quote($col->getDescription()) . ' ';
+		}
+
 		if ($sqlType == 'TIMESTAMP') {
 			$notNullString = $col->getNotNullString();
 			$defaultSetting = $col->getDefaultSetting();
@@ -415,8 +418,8 @@ CREATE TABLE ".$this->quoteIdentifier($this->prefixTablename($table->getName()))
 			}
 			$sb .= $notNullString . " " . $defaultSetting . " ";
 		} else {
-			$sb .= $defaultSetting . " ";
 			$sb .= $notNullString . " ";
+			$sb .= $defaultSetting . " ";
 		}
 		$sb .= $col->getAutoIncrementString();
 

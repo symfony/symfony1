@@ -399,7 +399,20 @@ class sfPropelDatabaseSchema
           }
         }
       }
-      
+
+      if(array_key_exists('_attributes', $table))
+	  {
+		$attributes = $table['_attributes'];
+	    $xml .= "\n  <vendor type=\"mysql\">\n";
+		if(array_key_exists('charset', $attributes)) {
+	      $xml .= "    <parameter name=\"Charset\" value=\"${attributes['charset']}\" />";
+		}
+		if(array_key_exists('collate', $attributes)) {
+	      $xml .= "    <parameter name=\"Collate\" value=\"${attributes['collate']}\" />";
+		}
+	    $xml .= "  </vendor>\n";
+	  }
+
       // columns
       foreach ($this->getChildren($table) as $col_name => $column)
       {
@@ -779,6 +792,7 @@ class sfPropelDatabaseSchema
     $attributes_string = '';
     if (is_array($column))
     {
+      $columnBody = '';
       foreach ($column as $key => $value)
       {
         if (!in_array($key, array('foreignClass', 'foreignTable', 'foreignReference', 'fkPhpName', 'fkRefPhpName', 'onDelete', 'onUpdate', 'index', 'unique', 'sequence', 'inheritance')))
@@ -803,7 +817,7 @@ class sfPropelDatabaseSchema
             $class   = $class['phpName'];
           }
 
-          $attributes_string .= vsprintf('      <inheritance extends="%s.%s" key="%s" class="%s"%s />', array(
+          $columnBody .= vsprintf('      <inheritance extends="%s.%s" key="%s" class="%s"%s />', array(
             $extended_package,
             $extended_class,
             $key,
@@ -811,13 +825,29 @@ class sfPropelDatabaseSchema
             $package ? " package=\"$package\"" : '',
           ))."\n";
         }
+      }
 
-        $attributes_string .= '    </column>'."\n";
-      }
-      else
-      {
+	  $vendorBodyByType = array();
+	  if (is_array($column) && isset($column['collate']))
+	  {
+		$vendorBodyByType['mysql'][] = '<parameter name="Collate" value="' . $column['collate'] . '"/>';
+	  }
+	  if (is_array($column) && isset($column['charset']))
+	  {
+		$vendorBodyByType['mysql'][] = '<parameter name="Charset" value="' . $column['charset'] . '"/>';
+	  }
+	  foreach($vendorBodyByType as $type => $params)
+	  {
+		$columnBody .= "      <vendor type=\"$type\">\n";
+		$columnBody .= "        " . implode("\n        ", $params) . "\n";
+		$columnBody .= "      </vendor>\n";
+	  }
+
+      if('' == $columnBody) {
         $attributes_string .= " />\n";
-      }
+	  } else {
+        $attributes_string .= " >\n$columnBody    </column>\n";
+	  }
     }
     else
     {
@@ -870,13 +900,13 @@ class sfPropelDatabaseSchema
     {
       if ($column['index'] === 'unique')
       {
-        $attributes_string .= "    <unique>\n";
+        $attributes_string .= "    <unique name=\"$col_name\">\n";
         $attributes_string .= "      <unique-column name=\"$col_name\" />\n";
         $attributes_string .= "    </unique>\n";
       }
       else
       {
-        $attributes_string .= "    <index>\n";
+        $attributes_string .= "    <index name=\"$col_name\">\n";
         $attributes_string .= "      <index-column name=\"$col_name\" />\n";
         $attributes_string .= "    </index>\n";
       }
