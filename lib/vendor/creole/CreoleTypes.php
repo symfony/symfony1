@@ -36,7 +36,7 @@ abstract class CreoleTypes {
         const INTEGER = 5;
         const CHAR = 6;
         const VARCHAR = 7;
-        const TEXT = 17;
+        const TEXT = 24;
         const FLOAT = 8;
         const DOUBLE = 9;
         const DATE = 10;

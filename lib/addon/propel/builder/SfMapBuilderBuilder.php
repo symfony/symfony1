@@ -48,6 +48,14 @@ class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
     {
       $sizes[$col->getPhpName()] = !$col->getSize() ? 'null' : $col->getSize();
     }
-    $script = preg_replace("/\\\$tMap\->addColumn\('([^']+)', '([^']+)', '([^']+)', CreoleTypes\:\:VARCHAR, (false|true)\)/e", '"\\\$tMap->addColumn(\'$1\', \'$2\', \'$3\', CreoleTypes::VARCHAR, $4, {$sizes[\'$2\']})"', $script);
+
+    $script = preg_replace_callback(
+      "/\\\$tMap\->addColumn\('([^']+)', '([^']+)', '([^']+)', CreoleTypes\:\:VARCHAR, (false|true)\)/",
+      function ($m) {
+        return "\\\$tMap->addColumn(\'".$m[1]."\', \'".$m[2]."\', \'".$m[3]."\', CreoleTypes::VARCHAR, ".$m[4].", ".$sizes[$m[2]].")";
+      },
+      $script
+    );
+    
   }
 }
