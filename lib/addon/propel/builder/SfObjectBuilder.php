@@ -196,6 +196,15 @@ $script .= '
     $this->current_i18n[$culture] = $object;
     $this->add'.$className.'($object);
   }
+  
+  public function i18nIsModified()
+  {
+    foreach($this->current_i18n as $i18n_object)
+    {
+      if($i18n_object->isModified())return true;
+    }
+    return false;
+  }
 ';
       }
     }
@@ -230,7 +239,7 @@ $script .= '
     if ($foreign_table->getAttribute('isI18N'))
     {
       $foreign_tables_i18n_table = $this->getDatabase()->getTable($foreign_table->getAttribute('i18nTable'));
-      $value .= ' || $this->'.$matches[2].'->getCurrent'.$foreign_tables_i18n_table->getPhpName().'()->isModified()';
+      $value .= ' || $this->'.$matches[2].'->i18nIsModified()';
     }
 
     return $value;

@@ -92,7 +92,7 @@ class MysqlPlatform extends DefaultPlatform {
 	 * @return     string
 	 */
 	public function escapeText($text) {
-		return mysql_escape_string($text);
+		return addslashes($text);
 	}
 
 	/**

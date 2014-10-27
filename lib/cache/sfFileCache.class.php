@@ -148,7 +148,7 @@ class sfFileCache extends sfCache
   */
   public function setWriteControl($boolean)
   {
-    $this->writeControl = $boolean;
+    $this->writeControl = false;
   }
 
   /**
@@ -480,15 +480,15 @@ class sfFileCache extends sfCache
     {
       clearstatcache(); // because the filesize can be cached by PHP itself...
       $length = @filesize($path.$file);
-      $mqr = get_magic_quotes_runtime();
-      set_magic_quotes_runtime(0);
+      //$mqr = get_magic_quotes_runtime();
+      //set_magic_quotes_runtime(0);
       if ($this->readControl)
       {
         $hashControl = @fread($fp, 32);
         $length = $length - 32;
       }
       $data = ($length) ? @fread($fp, $length) : '';
-      set_magic_quotes_runtime($mqr);
+      //set_magic_quotes_runtime($mqr);
       if ($this->fileLocking)
       {
         @flock($fp, LOCK_UN);
