@@ -398,6 +398,17 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * callback function for preg_replace in normalizeHeaderName
+   * 
+   * @param string $matches
+   * 
+   * @return string Normalized uppercased matches
+   */
+  protected function pregReplaceCallback($matches) {
+    return '-'.strtoupper($matches[1]);
+  }
+  
+  /**
    * Retrieves a normalized Header.
    *
    * @param  string $name  Header name
@@ -406,7 +417,11 @@ class sfWebResponse extends sfResponse
    */
   protected function normalizeHeaderName($name)
   {
-    return preg_replace('/\-(.)/e', "'-'.strtoupper('\\1')", strtr(ucfirst(strtolower($name)), '_', '-'));
+    return preg_replace_callback(
+      '/\-(.)/', 
+      array($this, 'pregReplaceCallback'), 
+      strtr(ucfirst(strtolower($name)), '_', '-')
+    );
   }
 
   /**
