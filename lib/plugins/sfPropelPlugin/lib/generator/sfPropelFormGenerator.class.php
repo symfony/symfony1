@@ -20,8 +20,8 @@
  */
 class sfPropelFormGenerator extends sfGenerator
 {
-  protected
-    $dbMap = null;
+  protected $dbMap = null;
+  protected $cachedManyToManyTables;
 
   /**
    * Initializes the current sfGenerator instance.
@@ -44,6 +44,7 @@ class sfPropelFormGenerator extends sfGenerator
    */
   public function generate($params = array())
   {
+	$this->cachedManyToManyTables = null;
     $this->params = $params;
 
     if (!isset($this->params['connection']))
@@ -118,6 +119,9 @@ class sfPropelFormGenerator extends sfGenerator
    */
   public function getManyToManyTables()
   {
+	if(null !== $this->cachedManyToManyTables) {
+	  return $this->cachedManyToManyTables;
+	}
     $tables = array();
 
     // go through all tables to find m2m relationships
@@ -148,7 +152,7 @@ class sfPropelFormGenerator extends sfGenerator
       }
     }
 
-    return $tables;
+    return $this->cachedManyToManyTables = $tables;
   }
 
   /**
