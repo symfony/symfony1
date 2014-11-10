@@ -493,8 +493,18 @@ class BasePeer
 
 		if ($criteria->isUseTransaction()) $con->beginTransaction();
 
-		$needsComplexCount = ($criteria->getGroupByColumns() || $criteria->getOffset()
-								|| $criteria->getLimit() || $criteria->getHaving() || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers()));
+		$selectColumns = implode(', ', array_merge($criteria->getSelectColumns(), $criteria->getAsColumns()));
+
+		$containsAgregateRegex = '/AVG\(|BIT_AND\(|BIT_OR\(|BIT_XOR\(|COUNT\(|GROUP_CONCAT\(|MAX\(|MIN\(|STD\(|STDDEV_POP\(|STDDEV_SAMP\(|STDDEV\(|SUM\(|VAR_POP\(|VAR_SAMP\(|VARIANCE\(/';
+
+		$needsComplexCount = (
+			$criteria->getGroupByColumns() ||
+			$criteria->getOffset() ||
+			$criteria->getLimit() ||
+			$criteria->getHaving() ||
+			in_array(Criteria::DISTINCT, $criteria->getSelectModifiers()) ||
+			preg_match($containsAgregateRegex, preg_replace('/\s/', '', $selectColumns))
+		);
 
 		try {
 
