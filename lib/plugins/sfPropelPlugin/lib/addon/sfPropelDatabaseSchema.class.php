@@ -886,6 +886,10 @@ class sfPropelDatabaseSchema
       {
         $attributes_string .= " phpName=\"{$column['fkPhpName']}\"";
       }
+      if (isset($column['fkName']))
+      {
+        $attributes_string .= " name=\"{$column['fkName']}\"";
+      }
       if (isset($column['fkRefPhpName']))
       {
         $attributes_string .= " refPhpName=\"{$column['fkRefPhpName']}\"";
