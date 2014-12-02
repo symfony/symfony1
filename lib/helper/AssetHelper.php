@@ -128,7 +128,10 @@ function javascript_include_tag()
     }
 
       $asset_version = sfConfig::get('app_deployment_version');
-      $containsVersionString = stristr($source, 'v=');
+
+      parse_str(parse_url($source, PHP_URL_QUERY), $component);
+      $containsVersionString = array_key_exists('v', $component);
+
       if ($asset_version && !$containsVersionString) {
           $queryStringDelimiter = stristr($source, '?') ? '&amp;' : '?';
           $source .= $queryStringDelimiter . 'v=' . $asset_version;
