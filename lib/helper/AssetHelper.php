@@ -127,6 +127,13 @@ function javascript_include_tag()
       unset($sourceOptions['raw_name']);
     }
 
+      $asset_version = sfConfig::get('app_deployment_version');
+      $containsVersionString = stristr($source, 'v=');
+      if ($asset_version && !$containsVersionString) {
+          $queryStringDelimiter = stristr($source, '?') ? '&amp;' : '?';
+          $source .= $queryStringDelimiter . 'v=' . $asset_version;
+      }
+
     $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
     $tag = content_tag('script', '', $options);
 
