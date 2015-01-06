@@ -86,7 +86,8 @@ class Creole {
                                         'sqlite' => 'creole.drivers.sqlite.SQLiteConnection',
                                         'oracle' => 'creole.drivers.oracle.OCI8Connection',
                                         'mssql' => 'creole.drivers.mssql.MSSQLConnection',
-                                        'odbc' => 'creole.drivers.odbc.ODBCConnection'
+                                        'odbc' => 'creole.drivers.odbc.ODBCConnection',
+                                        'mssqlsrv' => 'creole.drivers.mssqlsrv.MSSQLSRVConnection',
                                        );
 
     /**

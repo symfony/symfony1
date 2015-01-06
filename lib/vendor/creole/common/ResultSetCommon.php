@@ -351,8 +351,17 @@ abstract class ResultSetCommon {
         $idx = (is_int($column) ? $column - 1 : $column);
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
         if ($this->fields[$idx] === null) { return null; }
-        $ts = strtotime($this->fields[$idx]);        
-        if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
+        
+        if ($this->fields[$idx] instanceof DateTime)
+        {
+          $ts = $this->fields[$idx]->getTimestamp();
+        }
+        else
+        {
+          $ts = strtotime($this->fields[$idx]);
+        }
+        
+        if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE          
             throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $this->fields[$idx]);
         }
         if ($format === null) {
@@ -407,7 +416,14 @@ abstract class ResultSetCommon {
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
         if ($this->fields[$idx] === null) { return null; }
         
-        $ts = strtotime($this->fields[$idx]);
+        if ($this->fields[$idx] instanceof DateTime)
+        {
+          $ts = $this->fields[$idx]->getTimestamp();
+        }
+        else
+        {
+          $ts = strtotime($this->fields[$idx]);
+        }
         
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . (is_int($column) ? $column + 1 : $column) . " to timestamp: " . $this->fields[$idx]);
@@ -431,7 +447,15 @@ abstract class ResultSetCommon {
         if (!array_key_exists($idx, $this->fields)) { throw new SQLException("Invalid resultset column: " . $column); }
         if ($this->fields[$idx] === null) { return null; }
         
-        $ts = strtotime($this->fields[$idx]);
+        if ($this->fields[$idx] instanceof DateTime)
+        {
+          $ts = $this->fields[$idx]->getTimestamp();
+        }
+        else
+        {
+          $ts = strtotime($this->fields[$idx]);
+        }
+        
         if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $column . " to timestamp: " . $this->fields[$idx]);
         }
