@@ -18,3 +18,13 @@ INSTALLATION
 ------------
 
 see http://www.symfony-project.org/getting-started/1_4/en/
+
+---------------------------
+SMARKIO ADDITIONS / CHANGES
+---------------------------
+Available on Packagist: smarkio/symfony1
+
+Tag: 1.4.20-1  - 2015/02/24
+---------------------------
+Added import functionality (import other YAML files) to YAML configuration files (tested with app.yml and databases.yml).
+
