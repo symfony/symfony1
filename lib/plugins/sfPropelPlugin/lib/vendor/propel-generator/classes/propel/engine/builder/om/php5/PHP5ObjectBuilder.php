@@ -670,8 +670,13 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @param      string \$format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw ".($useDateTime ? 'DateTime object' : 'unix timestamp integer')." will be returned.";
 		if ($useDateTime) {
-			$script .= "
+            if($this->getTemporalFormat($col) !== null) {
+			    $script .= "
 	 * @return     mixed Formatted date/time value as string or $dateTimeClass object (if format is NULL), NULL if column is NULL" .($handleMysqlDate ? ', and 0 if column value is ' . $mysqlInvalidDateString : '');
+            } else {
+			    $script .= "
+	 * @return     DateTime";
+            }
 		} else {
 			$script .= "
 	 * @return     mixed Formatted date/time value as string or (integer) unix timestamp (if format is NULL), NULL if column is NULL".($handleMysqlDate ? ', and 0 if column value is ' . $mysqlInvalidDateString : '');
@@ -681,6 +686,21 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 */";
 	}
 
+    protected function getTemporalFormat(Column $col) {
+        $defaultfmt = null;
+		// Default date/time formatter strings are specified in build.properties
+		if ($col->getType() === PropelTypes::DATE) {
+			$defaultfmt = $col->getAttribute('defaultDateFormat', $col->getTable()->getAttribute('defaultDateFormat', $this->getBuildProperty('defaultDateFormat')));
+		} elseif ($col->getType() === PropelTypes::TIME) {
+			$defaultfmt = $col->getAttribute('defaultTimeFormat', $col->getTable()->getAttribute('defaultTimeFormat', $this->getBuildProperty('defaultTimeFormat')));
+		} elseif ($col->getType() === PropelTypes::TIMESTAMP) {
+			$defaultfmt = $col->getAttribute('defaultTimeStampFormat', $col->getTable()->getAttribute('defaultTimeStampFormat', $this->getBuildProperty('defaultTimeStampFormat')));
+		}
+		if (empty($defaultfmt) || 'null' === $defaultfmt) {
+            $defaultfmt = null;
+        }
+        return $defaultfmt;
+    }
 
 	/**
 	 * Adds the function declaration for a temporal accessor
@@ -691,18 +711,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	protected function addTemporalAccessorOpen(&$script, Column $col) {
 		$cfc = $col->getPhpName();
 
-		$defaultfmt = null;
-				$visibility = $col->getAccessorVisibility();
-
-		// Default date/time formatter strings are specified in build.properties
-		if ($col->getType() === PropelTypes::DATE) {
-			$defaultfmt = $this->getBuildProperty('defaultDateFormat');
-		} elseif ($col->getType() === PropelTypes::TIME) {
-			$defaultfmt = $this->getBuildProperty('defaultTimeFormat');
-		} elseif ($col->getType() === PropelTypes::TIMESTAMP) {
-			$defaultfmt = $this->getBuildProperty('defaultTimeStampFormat');
-		}
-		if (empty($defaultfmt)) { $defaultfmt = null; }
+		$defaultfmt = $this->getTemporalFormat($col);
+        $visibility = $col->getAccessorVisibility();
 
 		$script .= "
 	".$visibility." function get$cfc(\$format = ".var_export($defaultfmt, true)."";
@@ -728,18 +738,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			$dateTimeClass = 'DateTime';
 		}
 
-		$defaultfmt = null;
-
-		// Default date/time formatter strings are specified in build.properties
-		if ($col->getType() === PropelTypes::DATE) {
-			$defaultfmt = $this->getBuildProperty('defaultDateFormat');
-		} elseif ($col->getType() === PropelTypes::TIME) {
-			$defaultfmt = $this->getBuildProperty('defaultTimeFormat');
-		} elseif ($col->getType() === PropelTypes::TIMESTAMP) {
-			$defaultfmt = $this->getBuildProperty('defaultTimeStampFormat');
-		}
-		if (empty($defaultfmt)) { $defaultfmt = null; }
-
 		$handleMysqlDate = false;
 		if ($this->getPlatform() instanceof MysqlPlatform) {
 			if ($col->getType() === PropelTypes::TIMESTAMP) {
@@ -759,12 +757,21 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 ";
 		}
-		$script .= "
+
+		if ($col->isNotNull() && $col->getTable()->getAttribute('throwOnNull', false)) {
+            $script .= "
+		if (\$this->$clo === null) {
+            throw new Exception('Trying to fetch date that is not set');
+		}
+";
+        } else {
+            $script .= "
 		if (\$this->$clo === null) {
 			return null;
 		}
-
 ";
+        }
+
 		if ($handleMysqlDate) {
 			$script .= "
 		if (\$this->$clo === '$mysqlInvalidDateString') {
@@ -806,7 +813,17 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			return strftime(\$format, \$dt->format('U'));
 		} else {
 			return \$dt->format(\$format);
-		}";
+		}
+";
+
+        if($col->isNotNull()) {
+		    $script .= "    }
+
+   ".$visibility." function getHas$cfc()
+	{
+        return null !== \$this->$clo;";
+        }
+
 	}
 
 
