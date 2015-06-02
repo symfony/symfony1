@@ -491,6 +491,9 @@ class BasePeer
 
 		$stmt = null;
 
+        $criteria = clone $criteria;
+        $criteria->clearOrderByColumns();
+
 		if ($criteria->isUseTransaction()) $con->beginTransaction();
 
 		$selectColumns = implode(', ', array_merge($criteria->getSelectColumns(), $criteria->getAsColumns()));
