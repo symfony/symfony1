@@ -116,6 +116,9 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    */
   public function offsetGet($offset)
   {
+      if(!array_key_exists($offset, $this->value)) {
+          return null;
+      }
     return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
   }
 
