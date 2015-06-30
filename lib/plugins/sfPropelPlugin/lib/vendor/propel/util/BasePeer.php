@@ -907,6 +907,8 @@ class BasePeer
 					$fromClause[] = $leftTable . $leftTableAlias;
 				}
 				$joinTables[] = $rightTable . $rightTableAlias;
+				$rightTable = '`' . $rightTable . '`';
+				$rightTableAlias = ($rightTableAlias !== '') ? ' `' . trim($rightTableAlias) . '`' : '';
 				$joinClause[] = $join->getJoinType() . ' ' . $rightTable . $rightTableAlias . " ON ($condition)";
 			} else {
 			  // implicit join, translates to a where
