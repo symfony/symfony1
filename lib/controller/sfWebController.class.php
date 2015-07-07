@@ -189,6 +189,11 @@ abstract class sfWebController extends sfController
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Redirect to "%s"', $url))));
     }
 
+    //catch redirects with backtrace on dev
+    if ('dev' === getenv('APPLICATION_ENV')) {
+      return $this->catchRedirectOnDev($url, $statusCode);
+    }
+
     // redirect
     $response = $this->context->getResponse();
     $response->clearHttpHeaders();
@@ -204,4 +209,35 @@ abstract class sfWebController extends sfController
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlspecialchars($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
     $response->send();
   }
+    
+    private function catchRedirectOnDev($url, $statusCode)
+    {
+        $html = "<p>Redirect <code>{$statusCode}</code> to <a href=\"{$url}\" id=\"next\">{$url}</a>";
+        $html .= "<br/>Click <code>Enter</code> to follow</p>";
+        $html .= "<p>Function stack:</p>";
+        $html .= "<ul>";
+
+        $stackRowDataPossible = ['class', 'function', 'file', 'line'];
+        $urlTemplate = ini_get('xdebug.file_link_format');
+
+        foreach (array_reverse(xdebug_get_function_stack()) as $row) {
+            $rowN = [];
+            foreach ($stackRowDataPossible as $p) {
+                $rowN[$p] = isset($row[$p]) ? $row[$p] : '';
+            }
+            $url = str_replace('%f', $rowN['file'], $urlTemplate);
+            $url = str_replace('%l', $rowN['line'], $url);
+            $fileLine = "<a href=\"{$url}\">{$rowN['file']}:{$rowN['line']}</a>";
+            $html .= "<li><code>{$rowN['class']}::{$rowN['function']} in {$fileLine}</code></li>";
+        }
+        $html .= "</ul>";
+
+        //allow to hit "enter" to bypass
+        $html .= '<script type="text/javascript">document.getElementById("next").focus();</script>';
+
+        /** @var sfResponse $response */
+        $response = $this->context->getResponse();
+        $response->setContent($html);
+        $response->send();
+    }
 }
