@@ -127,6 +127,16 @@ function javascript_include_tag()
       unset($sourceOptions['raw_name']);
     }
 
+      $asset_version = sfConfig::get('app_deployment_version');
+
+      parse_str(parse_url($source, PHP_URL_QUERY), $component);
+      $containsVersionString = array_key_exists('v', $component);
+
+      if ($asset_version && !$containsVersionString) {
+          $queryStringDelimiter = stristr($source, '?') ? '&amp;' : '?';
+          $source .= $queryStringDelimiter . 'v=' . $asset_version;
+      }
+
     $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
     $tag = content_tag('script', '', $options);
 
