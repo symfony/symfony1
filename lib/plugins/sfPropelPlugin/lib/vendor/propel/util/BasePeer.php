@@ -573,7 +573,7 @@ class BasePeer
 
 				$stmt->bindValue(':p'.$i++, null, PDO::PARAM_NULL);
 
-			} elseif (isset($tableName) ) {
+			} elseif (isset($tableName) && $dbMap->hasTable($tableName)) {
 
 				$cMap = $dbMap->getTable($tableName)->getColumn($columnName);
 				$type = $cMap->getType();
@@ -986,7 +986,7 @@ class BasePeer
 					$columnName = $asColumnName;
 				}
 
-				$column = $tableName ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
+				$column = $tableName && $dbMap->hasTable($tableName) ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
 
 				if ($criteria->isIgnoreCase() && $column && $column->isText()) {
 					$orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . $direction;
