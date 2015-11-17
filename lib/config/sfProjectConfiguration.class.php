@@ -57,16 +57,17 @@ class sfProjectConfiguration implements sfConfigurationPath
     // provide forms the dispatcher
     sfFormSymfony::setEventDispatcher($this->dispatcher);
 
+    $this->setup();
+
+    $this->loadPlugins();
+    
     // Preload app.yml
-    $configCache = $this->getConfigCache();
+    $configCache = new sfConfigCache($this);
     if ($file = $configCache->checkConfig('config/app.yml', true))
     {
       include($file);
     }
-
-    $this->setup();
-
-    $this->loadPlugins();
+    
     $this->setupPlugins();
   }
 
