@@ -212,12 +212,7 @@ class sfConfigCache
    */
   public function getConfigCacheDir()
   {
-    if ($this->configuration instanceof sfProjectConfiguration)
-    {
-      return sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . 'configuration';
-    }
-
-    return sfConfig::get('sf_config_cache_dir');
+    return sfConfig::get('sf_config_cache_dir', sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . 'configuration');
   }
 
   /**
