@@ -135,7 +135,14 @@ class sfAutoload
 
     $file = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
 
-    $this->classes = include($file);
+    $this->classes = @include($file);
+
+    for ($i = 0; false === $this->classes && $i < 5; $i++)
+    {
+      usleep(100000); // wait tenth of a second
+      $file = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
+      $this->classes = @include($file);
+    }
 
     foreach ($this->overriden as $class => $path)
     {
