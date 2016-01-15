@@ -322,7 +322,7 @@ class sfConfigCache
   }
 
   /**
-   * Writes a cache file.
+   * Writes a cache file. It will retry after failure.
    *
    * @param string $config An absolute filesystem path to a configuration file
    * @param string $cache  An absolute filesystem path to the cache file that will be written
@@ -331,6 +331,31 @@ class sfConfigCache
    * @throws sfCacheException If the cache file cannot be written
    */
   protected function writeCacheFile($config, $cache, $data)
+  {
+    for ($retriesLeft = 3; $retriesLeft > 0; $retriesLeft--) {
+      try
+      {
+        $this->writeCacheFileWithoutRetry($config, $cache, $data);
+      } catch (sfCacheException $e)
+      {
+        usleep(rand(100000, 200000)); // wait between 1 tenth and 2 tenth of a second to avoid more race conditions
+        if ($retriesLeft == 1) {
+          throw $e;
+        }
+      }
+    }
+  }
+
+  /**
+   * Writes a cache file.
+   *
+   * @param string $config An absolute filesystem path to a configuration file
+   * @param string $cache  An absolute filesystem path to the cache file that will be written
+   * @param string $data   Data to be written to the cache file
+   *
+   * @throws sfCacheException If the cache file cannot be written
+   */
+  private function writeCacheFileWithoutRetry($config, $cache, $data)
   {
     $current_umask = umask(0000);
     if (!is_dir(dirname($cache)))
@@ -343,13 +368,10 @@ class sfConfigCache
 
     $tmpFile = tempnam(dirname($cache), basename($cache));
 
-    if (!$fp = @fopen($tmpFile, 'wb'))
+    if (false === file_put_contents($tmpFile, $data))
     {
       throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $tmpFile, $config));
     }
-
-    @fwrite($fp, $data);
-    @fclose($fp);
 
     // Hack from Agavi (http://trac.agavi.org/changeset/3979)
     // With php < 5.2.6 on win32, renaming to an already existing file doesn't work, but copy does,
@@ -359,6 +381,9 @@ class sfConfigCache
       if (copy($tmpFile, $cache))
       {
         unlink($tmpFile);
+      } else
+      {
+        throw new sfCacheException(sprintf('Failed to copying cache file "%s" to "%s" generated from configuration file "%s".', $tmpFile, $cache, $config));
       }
     }
 
