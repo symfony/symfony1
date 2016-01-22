@@ -131,8 +131,14 @@ class sfException extends Exception
     $text   = 'Internal Server Error';
 
     $response = null;
-    if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse()))
-    {
+    $htmlMode = true;
+    if (
+      class_exists('sfContext', false)
+      && sfContext::hasInstance()
+      && is_object($request = sfContext::getInstance()->getRequest())
+      && is_object($response = sfContext::getInstance()->getResponse())
+      && $htmlMode = (false === strpos($response->getContentType(), 'text/plain'))
+    ) {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
 
       if (sfConfig::get('sf_logging_enabled'))
@@ -197,7 +203,7 @@ class sfException extends Exception
 
     // when using CLI, we force the format to be TXT. Compare exactly to 
     // the string 'cli' because the php 5.4 server is identified by 'cli-server'
-    if ('cli' == PHP_SAPI)
+    if ('cli' == PHP_SAPI || ! $htmlMode)
     {
       $format = 'txt';
     }
