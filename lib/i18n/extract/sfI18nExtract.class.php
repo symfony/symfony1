@@ -84,6 +84,8 @@ abstract class sfI18nExtract
     foreach ($this->getNewMessages() as $message)
     {
       $messageSource->append($message);
+      Propel::initialize(); 
+      Propel::disableInstancePooling();
     }
 
     $messageSource->save();
@@ -101,6 +103,9 @@ abstract class sfI18nExtract
     foreach ($this->getOldMessages() as $message)
     {
       $messageSource->delete($message);
+      Propel::initialize(); 
+      Propel::disableInstancePooling();
+
     }
   }
 

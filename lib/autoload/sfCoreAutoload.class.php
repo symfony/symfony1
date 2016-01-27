@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.4.20');
+define('SYMFONY_VERSION', '1.5.0');
 
 /**
  * sfCoreAutoload class.
@@ -335,6 +335,7 @@ class sfCoreAutoload
     'sfwebdebuglogger' => 'log/sfWebDebugLogger.class.php',
     'sfmailer' => 'mailer/sfMailer.class.php',
     'sfmailermessageloggerplugin' => 'mailer/sfMailerMessageLoggerPlugin.class.php',
+    'sfnomailer' => 'mailer/sfNoMailer.class.php',
     'sfpearconfig' => 'plugin/sfPearConfig.class.php',
     'sfpeardownloader' => 'plugin/sfPearDownloader.class.php',
     'sfpearenvironment' => 'plugin/sfPearEnvironment.class.php',

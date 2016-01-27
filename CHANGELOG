@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+11/25/12: Versions 1.5.0
+-------------------------
+ * Fork on namespace Feries
+ * Add composer support
+ * Swiftmailer removed from symfony for using instead the packagist version
+ * Fix "mysql has gone away" on gettext extractor
+
 11/25/12: Versions 1.4.20
 -------------------------
 
