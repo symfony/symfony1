@@ -608,4 +608,9 @@ class sfToolkit
 
     return set_include_path(join(PATH_SEPARATOR, $paths));
   }
+
+  public static function camelize($text)
+  {
+    return strtr(ucwords(strtr($text, array('/' => ':: ', '_' => ' ', '-' => ' '))), array(' ' => ''));
+  }
 }
