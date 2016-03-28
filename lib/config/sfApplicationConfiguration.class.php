@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfApplicationConfiguration.class.php 33214 2011-11-19 13:47:24Z fabien $
  */
-abstract class sfApplicationConfiguration extends ProjectConfiguration
+abstract class sfApplicationConfiguration extends ProjectConfiguration implements sfConfigurationPath
 {
   static protected
     $coreLoaded    = false,

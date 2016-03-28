@@ -213,6 +213,7 @@ class sfCoreAutoload
     'sfapplicationconfiguration' => 'config/sfApplicationConfiguration.class.php',
     'sfautoloadconfighandler' => 'config/sfAutoloadConfigHandler.class.php',
     'sfcacheconfighandler' => 'config/sfCacheConfigHandler.class.php',
+    'sfconfigurationpath' => 'config/sfConfigurationPath.class.php',
     'sfcompileconfighandler' => 'config/sfCompileConfigHandler.class.php',
     'sfconfig' => 'config/sfConfig.class.php',
     'sfconfigcache' => 'config/sfConfigCache.class.php',

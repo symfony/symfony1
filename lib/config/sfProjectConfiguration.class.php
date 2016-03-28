@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfProjectConfiguration.class.php 27191 2010-01-26 13:38:49Z FabianLange $
  */
-class sfProjectConfiguration
+class sfProjectConfiguration implements sfConfigurationPath
 {
   protected
     $rootDir               = null,
@@ -60,6 +60,14 @@ class sfProjectConfiguration
     $this->setup();
 
     $this->loadPlugins();
+    
+    // Preload app.yml
+    $configCache = new sfConfigCache($this);
+    if ($file = $configCache->checkConfig('config/app.yml', true))
+    {
+      include($file);
+    }
+    
     $this->setupPlugins();
   }
 

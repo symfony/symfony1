@@ -28,10 +28,7 @@ class sfInflector
   public static function camelize($lower_case_and_underscored_word)
   {
     $tmp = $lower_case_and_underscored_word;
-    $tmp = sfToolkit::pregtr($tmp, array('#/(.?)#e'    => "'::'.strtoupper('\\1')",
-                                         '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
-
-    return $tmp;
+    return sfToolkit::camelize($tmp);;
   }
 
   /**
@@ -118,4 +115,5 @@ class sfInflector
 
     return ucfirst(str_replace('_', ' ', $lower_case_and_underscored_word));
   }
+
 }
