@@ -1,0 +1,21 @@
+{
+  "name": "feries/symfony1",
+  "description": "Fork of symfony 1.4",
+  "license": "MIT",
+  "require": {
+    "swiftmailer/swiftmailer": "~5.4"
+  },
+  "require-dev": {
+    "psr/log": "*"
+  },
+  "type": "library",
+  "autoload": {
+    "files": ["autoload.php"]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.5-dev"
+    }
+  },
+  "bin": ["data/bin/symfony"]
+}
