@@ -30,9 +30,9 @@ class sfConfigCache
   /**
    * Constructor
    *
-   * @param sfApplicationConfiguration $configuration A sfApplicationConfiguration instance
+   * @param sfConfigurationPath $configuration A sfApplicationConfiguration instance
    */
-  public function __construct(sfApplicationConfiguration $configuration)
+  public function __construct(sfConfigurationPath $configuration)
   {
     $this->configuration = $configuration;
   }
@@ -206,11 +206,21 @@ class sfConfigCache
   }
 
   /**
+   * Get configuration cache dir
+   *
+   * @return mixed
+   */
+  public function getConfigCacheDir()
+  {
+    return sfConfig::get('sf_config_cache_dir', sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . 'configuration');
+  }
+
+  /**
    * Clears all configuration cache files.
    */
   public function clear()
   {
-    sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));
+    sfToolkit::clearDirectory($this->getConfigCacheDir());
   }
 
   /**
@@ -232,7 +242,7 @@ class sfConfigCache
     $config  = str_replace(array('\\', '/', ' '), '_', $config);
     $config .= '.php';
 
-    return sfConfig::get('sf_config_cache_dir').'/'.$config;
+    return $this->getConfigCacheDir().'/'.$config;
   }
 
   /**
@@ -275,7 +285,6 @@ class sfConfigCache
     $this->handlers['config_handlers.yml'] = new sfRootConfigHandler();
 
     // application configuration handlers
-
     require $this->checkConfig('config/config_handlers.yml');
 
     // module level configuration handlers

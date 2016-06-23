@@ -94,6 +94,8 @@ class sfYaml
     try
     {
       $ret = $yaml->parse($input);
+
+      self::parseImports($ret, $file);
     }
     catch (Exception $e)
     {
@@ -101,6 +103,66 @@ class sfYaml
     }
 
     return $ret;
+  }
+
+  /**
+   * Parses all imports.
+   *
+   * @param array  $content
+   * @param string $file
+   */
+  private static function parseImports(&$content, $file)
+  {
+    if (!isset($content['imports']) || !is_array($content))
+    {
+      return;
+    }
+    if (!is_array($content['imports']))
+    {
+      throw new InvalidArgumentException(sprintf('The "imports" key should contain an array in %s. Check your YAML syntax.', $file));
+    }
+    $directory = dirname($file);
+    $previous_data = array();
+    foreach ($content['imports'] as $import)
+    {
+      if (!is_array($import))
+      {
+        throw new InvalidArgumentException(sprintf('The values in the "imports" key should be arrays in %s. Check your YAML syntax.', $file));
+      }
+      $previous_data = self::array_merge_recursive2(
+        $previous_data,
+        self::load($directory . DIRECTORY_SEPARATOR . $import['resource'])
+      );
+    }
+    $content = self::array_merge_recursive2(
+      $previous_data,
+      $content
+    );
+    unset($content['imports']);
+  }
+
+  /**
+   * array_merge_recursive2()
+   *
+   * Similar to array_merge_recursive but keyed-valued are always overwritten.
+   * Priority goes to the 2nd array.
+   *
+   * @source http://php.net/manual/en/function.array-merge-recursive.php
+   *
+   * @static yes
+   * @public yes
+   * @param $paArray1 array
+   * @param $paArray2 array
+   * @return array
+   */
+  private static function array_merge_recursive2($paArray1, $paArray2)
+  {
+    if (!is_array($paArray1) or !is_array($paArray2)) { return $paArray2; }
+    foreach ($paArray2 AS $sKey2 => $sValue2)
+    {
+      $paArray1[$sKey2] = self::array_merge_recursive2(@$paArray1[$sKey2], $sValue2);
+    }
+    return $paArray1;
   }
 
   /**

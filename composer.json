@@ -1,0 +1,20 @@
+{
+    "name": "smarkio/symfony1",
+    "description": "Fork of symfony 1.x ",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "http://symfony.com/contributors"
+        }
+    ],
+    "config": {
+        "vendor-dir": "lib/vendor"
+    },
+    "autoload": {
+        "psr-0": {"": "lib/"}
+    }
+}
