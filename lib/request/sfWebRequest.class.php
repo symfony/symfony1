@@ -125,6 +125,10 @@ class sfWebRequest extends sfRequest
           $this->setMethod(self::HEAD);
           break;
 
+        case 'OPTIONS':
+          $this->setMethod(self::OPTIONS);
+          break;
+
         default:
           $this->setMethod(self::GET);
       }
