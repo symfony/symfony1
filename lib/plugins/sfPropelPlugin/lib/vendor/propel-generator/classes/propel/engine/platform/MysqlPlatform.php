@@ -37,7 +37,7 @@ class MysqlPlatform extends DefaultPlatform {
 	protected function initialize()
 	{
 		parent::initialize();
-		$this->setSchemaDomainMapping(new Domain(PropelTypes::BOOLEAN, "TINYINT"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::BOOLEAN, "TINYINT(1)"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::NUMERIC, "DECIMAL"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "TEXT"));
 		$this->setSchemaDomainMapping(new Domain(PropelTypes::BINARY, "BLOB"));
@@ -94,11 +94,7 @@ class MysqlPlatform extends DefaultPlatform {
 	 */
 	public function disconnectedEscapeText($text)
 	{
-		if (function_exists('mysql_escape_string')) {
-			return mysql_escape_string($text);
-		} else {
-			return addslashes($text);
-		}
+		return addslashes($text);
 	}
 
 	/**

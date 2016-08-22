@@ -335,8 +335,8 @@ class sfPatternRouting extends sfRouting
       }
       else
       {
-        $this->cacheChanged = true;
-        $this->cacheData[$cacheKey] = $url;
+        //$this->cacheChanged = true;
+        //$this->cacheData[$cacheKey] = $url;
       }
     }
 
@@ -440,8 +440,8 @@ class sfPatternRouting extends sfRouting
       }
       else
       {
-        $this->cacheChanged = true;
-        $this->cacheData[$cacheKey] = $info;
+        //$this->cacheChanged = true;
+        //$this->cacheData[$cacheKey] = $info;
       }
     }
 
@@ -482,11 +482,62 @@ class sfPatternRouting extends sfRouting
     return false;
   }
 
+	protected function calculateDiscriminatorMap()
+	{
+		$map = array();
+		$wildcards = array();
+		foreach($this->routes as $routeName => $route) {
+			$parameters = $route->getDefaults();
+			if(array_key_exists('module', $parameters)) {
+				$action = array_key_exists('action', $parameters) ? $parameters['action'] : '';
+				$map["{$parameters['module']}/$action"] = array();
+			} else {
+				$wildcards[] = $routeName;
+			}
+		}
+		foreach($this->routes as $routeName => $route) {
+			$parameters = $route->getDefaults();
+			if(array_key_exists('module', $parameters)) {
+				$action = array_key_exists('action', $parameters) ? $parameters['action'] : '';
+				$map["{$parameters['module']}/$action"][] = $routeName;
+			} else {
+				foreach($map as & $routes) {
+					$routes[] = $routeName;
+				}
+			}
+		}
+		return array('wildcards' => $wildcards, 'map' => $map);
+	}
+
+  protected function getDiscriminatorMap()
+  {
+     if(array_key_exists('discriminator_map', $this->cacheData)) {
+       return $this->cacheData['discriminator_map'];
+	 }
+	 $this->cacheChanged = true;
+	 $this->cacheData['discriminator_map'] = $this->calculateDiscriminatorMap();
+	 return $this->cacheData['discriminator_map'];
+  }
+
   protected function getRouteThatMatchesParameters($parameters)
   {
+    $discriminatorMap = $this->getDiscriminatorMap();
+	$parametersWithDefaults = array_replace($this->defaultParameters, $parameters);
+    $possibleMatches = array_keys($this->routes);
+	$action = array_key_exists('action', $parametersWithDefaults) ? $parametersWithDefaults['action'] : '';
+	if(
+		array_key_exists('module', $parametersWithDefaults)
+		&& array_key_exists("{$parametersWithDefaults['module']}/$action", $discriminatorMap['map'])
+	) {
+		$possibleMatches = $discriminatorMap['map']["{$parametersWithDefaults['module']}/$action"];
+	} else {
+		$possibleMatches = $discriminatorMap['wildcards'];
+	}
+
     $this->ensureDefaultParametersAreSet();
-    foreach ($this->routes as $route)
+    foreach ($possibleMatches as $routeName)
     {
+      $route = $this->routes[$routeName];
       if ($route->matchesParameters($parameters, $this->options['context']))
       {
         return $route;

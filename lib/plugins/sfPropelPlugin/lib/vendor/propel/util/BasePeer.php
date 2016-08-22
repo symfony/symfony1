@@ -155,7 +155,7 @@ class BasePeer
 
 			// Execute the statement.
 			try {
-				$sql = "DELETE FROM " . $tableName . " WHERE " .  implode(" AND ", $whereClause);
+				$sql = "DELETE FROM `" . $tableName . "` WHERE " .  implode(" AND ", $whereClause);
 				$stmt = $con->prepare($sql);
 				self::populateStmtValues($stmt, $selectParams, $dbMap, $db);
 				$stmt->execute();
@@ -280,7 +280,7 @@ class BasePeer
 				$columns = array_map(array($adapter, 'quoteIdentifier'), $columns);
 			}
 
-			$sql = 'INSERT INTO ' . $tableName
+			$sql = 'INSERT INTO `' . $tableName . '`'
 			. ' (' . implode(',', $columns) . ')'
 			. ' VALUES (';
 			// . substr(str_repeat("?,", count($columns)), 0, -1) . 
@@ -354,7 +354,7 @@ class BasePeer
 			$stmt = null;
 			try {
 
-				$sql = "UPDATE " . $tableName . " SET ";
+				$sql = "UPDATE `" . $tableName . "` SET ";
 				$p = 1;
 				foreach ($updateTablesColumns[$tableName] as $col) {
 					$updateColumnName = substr($col, strrpos($col, '.') + 1);
@@ -491,10 +491,23 @@ class BasePeer
 
 		$stmt = null;
 
+        $criteria = clone $criteria;
+        $criteria->clearOrderByColumns();
+
 		if ($criteria->isUseTransaction()) $con->beginTransaction();
 
-		$needsComplexCount = ($criteria->getGroupByColumns() || $criteria->getOffset()
-								|| $criteria->getLimit() || $criteria->getHaving() || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers()));
+		$selectColumns = implode(', ', array_merge($criteria->getSelectColumns(), $criteria->getAsColumns()));
+
+		$containsAgregateRegex = '/AVG\(|BIT_AND\(|BIT_OR\(|BIT_XOR\(|COUNT\(|GROUP_CONCAT\(|MAX\(|MIN\(|STD\(|STDDEV_POP\(|STDDEV_SAMP\(|STDDEV\(|SUM\(|VAR_POP\(|VAR_SAMP\(|VARIANCE\(/';
+
+		$needsComplexCount = (
+			$criteria->getGroupByColumns() ||
+			$criteria->getOffset() ||
+			$criteria->getLimit() ||
+			$criteria->getHaving() ||
+			in_array(Criteria::DISTINCT, $criteria->getSelectModifiers()) ||
+			preg_match($containsAgregateRegex, preg_replace('/\s/', '', $selectColumns))
+		);
 
 		try {
 
@@ -560,7 +573,7 @@ class BasePeer
 
 				$stmt->bindValue(':p'.$i++, null, PDO::PARAM_NULL);
 
-			} elseif (isset($tableName) ) {
+			} elseif (isset($tableName) && $dbMap->hasTable($tableName)) {
 
 				$cMap = $dbMap->getTable($tableName)->getColumn($columnName);
 				$type = $cMap->getType();
@@ -894,6 +907,8 @@ class BasePeer
 					$fromClause[] = $leftTable . $leftTableAlias;
 				}
 				$joinTables[] = $rightTable . $rightTableAlias;
+				$rightTable = '`' . $rightTable . '`';
+				$rightTableAlias = ($rightTableAlias !== '') ? ' `' . trim($rightTableAlias) . '`' : '';
 				$joinClause[] = $join->getJoinType() . ' ' . $rightTable . $rightTableAlias . " ON ($condition)";
 			} else {
 			  // implicit join, translates to a where
@@ -971,7 +986,7 @@ class BasePeer
 					$columnName = $asColumnName;
 				}
 
-				$column = $tableName ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
+				$column = $tableName && $dbMap->hasTable($tableName) ? $dbMap->getTable($tableName)->getColumn($columnName) : null;
 
 				if ($criteria->isIgnoreCase() && $column && $column->isText()) {
 					$orderByClause[] = $db->ignoreCaseInOrderBy("$tableAlias.$columnAlias") . $direction;

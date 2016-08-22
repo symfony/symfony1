@@ -77,7 +77,7 @@ class sfPHPView extends sfView
     catch (Exception $e)
     {
       // need to end output buffering before throwing the exception #7596
-      ob_end_clean();
+      @ob_end_clean();
       throw $e;
     }
 

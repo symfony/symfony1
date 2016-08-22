@@ -1520,9 +1520,9 @@ class Criterion  {
 		} else {
 
 			if  ($this->table === null) {
-				$field = $this->column;
+				$field = "`{$this->column}`";
 			} else {
-				$field = $this->table . '.' . $this->column;
+				$field = "`{$this->table}`.`{$this->column}`";
 			}
 
 			// Check to see if table is an alias & store real name, if so

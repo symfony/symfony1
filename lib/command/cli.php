@@ -29,7 +29,7 @@ catch (Exception $e)
   $application->renderException($e);
   $statusCode = $e->getCode();
 
-  exit(is_numeric($statusCode) && $statusCode ? $statusCode : 1);
+  exit(is_numeric($statusCode) && $statusCode ? (int) $statusCode : 1);
 }
 
 exit(is_numeric($statusCode) ? $statusCode : 0);
