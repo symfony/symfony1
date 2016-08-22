@@ -3319,7 +3319,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @throws     PropelException
 	 * @see        save()
 	 */
-	protected function doSave(PropelPDO \$con".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload = false" : "").")
+	protected function doSave(PropelPDO \$con, \$resolveDependencyProblems = false".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload = false" : "").")
 	{
 		\$affectedRows = 0; // initialize var to track total num of affected rows
 		if (!\$this->alreadyInSave) {
@@ -3346,7 +3346,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 				$script .= "
 			if (\$this->$aVarName !== null) {
 				if (\$this->".$aVarName."->isModified() || \$this->".$aVarName."->isNew()) {
-					\$affectedRows += \$this->".$aVarName."->save(\$con);
+					\$affectedRows += \$this->".$aVarName."->save(\$con, true === \$resolveDependencyProblems ? 'skip-dependants' : false);
 				}
 				\$this->set".$this->getFKPhpNameAffix($fk, $plural = false)."(\$this->$aVarName);
 			}
@@ -3423,6 +3423,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$script .= "
 				\$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
+
+			if ('skip-dependants' !== \$resolveDependencyProblems) {
 ";
 
 		foreach ($table->getReferrers() as $refFK) {
@@ -3430,26 +3432,58 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			if ($refFK->isLocalPrimaryKey()) {
 				$varName = $this->getPKRefFKVarName($refFK);
 				$script .= "
-			if (\$this->$varName !== null) {
-				if (!\$this->{$varName}->isDeleted()) {
-						\$affectedRows += \$this->{$varName}->save(\$con);
+				if (\$this->$varName !== null) {
+					if (!\$this->{$varName}->isDeleted()) {
+							\$affectedRows += \$this->{$varName}->save(\$con, \$resolveDependencyProblems);
+					}
 				}
-			}
 ";
 			} else {
 				$collName = $this->getRefFKCollVarName($refFK);
 				$script .= "
-			if (\$this->$collName !== null) {
-				foreach (\$this->$collName as \$referrerFK) {
-					if (!\$referrerFK->isDeleted()) {
-						\$affectedRows += \$referrerFK->save(\$con);
+				if (\$this->$collName !== null) {
+					foreach (\$this->$collName as \$referrerFK) {
+						if (!\$referrerFK->isDeleted()) {
+							\$affectedRows += \$referrerFK->save(\$con, \$resolveDependencyProblems);
+						}
 					}
 				}
-			}
 ";
+
 			} // if refFK->isLocalPrimaryKey()
 
+
 		} /* foreach getReferrers() */
+		$script .= "
+			}
+";
+
+		if (count($table->getForeignKeys())) {
+
+			$script .= "
+			// To avoid problems with cycles in dependecy graphs
+            // we first save all entity dependecies, and afterwards
+            // the dependants
+			if (true === \$resolveDependencyProblems) {
+";
+
+			foreach ($table->getForeignKeys() as $fk)
+			{
+				$aVarName = $this->getFKVarName($fk);
+				$script .= "
+				if (\$this->$aVarName !== null) {
+					if (\$this->".$aVarName."->isModified() || \$this->".$aVarName."->isNew()) {
+						\$affectedRows += \$this->".$aVarName."->save(\$con, \$resolveDependencyProblems);
+					}
+					\$this->set".$this->getFKPhpNameAffix($fk, $plural = false)."(\$this->$aVarName);
+				}
+";
+			} // foreach foreign k
+			$script .= "
+			}
+";
+		} // if (count(foreign keys))
+
 		$script .= "
 			\$this->alreadyInSave = false;
 ";
@@ -3552,7 +3586,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$reloadOnUpdate = $table->isReloadOnUpdate();
 		$reloadOnInsert = $table->isReloadOnInsert();
 		$script .= "
-	public function save(PropelPDO \$con = null".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload = false" : "").")
+	public function save(PropelPDO \$con = null, \$resolveDependencyProblems = false".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload = false" : "").")
 	{";
 	}
 
@@ -3595,7 +3629,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			$script .= "
 			}
 			if (\$ret) {
-				\$affectedRows = \$this->doSave(\$con".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload" : "").");
+				\$affectedRows = \$this->doSave(\$con, \$resolveDependencyProblems".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload" : "").");
 				if (\$isInsert) {
 					\$this->postInsert(\$con);";
 			$this->applyBehaviorModifier('postInsert', $script, "					");
